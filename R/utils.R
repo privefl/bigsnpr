@@ -1,0 +1,1 @@
+printf <- function(...) cat(sprintf(...))
