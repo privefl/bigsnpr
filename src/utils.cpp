@@ -1,22 +1,18 @@
-#include <Rcpp.h>
-
+// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(BH, bigmemory)]]
-#include <bigmemory/BigMatrix.h>
+#include <Rcpp.h>
 #include <bigmemory/MatrixAccessor.hpp>
 
 using namespace Rcpp;
 
-// If your compiler is to old, just disable / remove the following line
-// [[Rcpp::plugins(cpp11)]]
 
-//' @name R_squared_chr
-//' @title Marginally compute R2 with another SNP for each column.
-//' @export
+/******************************************************************************/
+
 // [[Rcpp::export]]
-Rcpp::NumericVector R_squared_chr(const SEXP pBigMat,
-                            const IntegerVector& rowInd,
-                            const IntegerVector& colInd,
-                            NumericVector colMat0) {
+Rcpp::NumericVector R_squared_chr(SEXP pBigMat,
+                                  const IntegerVector& rowInd,
+                                  const IntegerVector& colInd,
+                                  const NumericVector& colMat0) {
 
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
@@ -63,15 +59,14 @@ Rcpp::NumericVector R_squared_chr(const SEXP pBigMat,
   return(res);
 }
 
-// [[Rcpp::export]]
-NumericVector R_squared(const SEXP pBigMat,
-                        const IntegerVector& y,
+/******************************************************************************/
+
+template <typename T>
+NumericVector R_squared(XPtr<BigMatrix> xpMat,
+                        MatrixAccessor<T> macc,
+                        const NumericVector& y,
                         const IntegerVector& rowInd,
                         const NumericVector& weights) {
-
-  XPtr<BigMatrix> xpMat(pBigMat);
-  MatrixAccessor<char> macc(*xpMat);
-
   int n = rowInd.size();
   int m = xpMat->ncol();
 
@@ -113,19 +108,52 @@ NumericVector R_squared(const SEXP pBigMat,
   return(res);
 }
 
+// Dispatch function for R_squared
+//
 // [[Rcpp::export]]
-NumericVector betasRegLin(const SEXP pBigMat,
-                          const IntegerVector& y,
+NumericVector R_squared(SEXP pBigMat,
+                        const NumericVector& y,
+                        const IntegerVector& rowInd,
+                        const NumericVector& weights) {
+  // First we have to tell Rcpp what class to use for big.matrix objects.
+  // This object stores the attributes of the big.matrix object passed to it
+  // by R.
+  XPtr<BigMatrix> xpMat(pBigMat);
+
+  // To access values in the big.matrix, we need to create a MatrixAccessor
+  // object of the appropriate type. Note that in every case we are still
+  // returning a NumericVector: this is because big.matrix objects only store
+  // numeric values in R, even if their type is set to 'char'. The types
+  // simply correspond to the number of bytes used for each element.
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return R_squared(xpMat, MatrixAccessor<char>(*xpMat), y, rowInd, weights);
+  case 2:
+    return R_squared(xpMat, MatrixAccessor<short>(*xpMat), y, rowInd, weights);
+  case 4:
+    return R_squared(xpMat, MatrixAccessor<int>(*xpMat), y, rowInd, weights);
+  case 8:
+    return R_squared(xpMat, MatrixAccessor<double>(*xpMat), y, rowInd, weights);
+  default:
+    // This case should never be encountered unless the implementation of
+    // big.matrix changes, but is necessary to implement shut up compiler
+    // warnings.
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
+}
+
+/******************************************************************************/
+
+template <typename T>
+NumericMatrix betasRegLin(XPtr<BigMatrix> xpMat,
+                          MatrixAccessor<T> macc,
+                          const NumericVector& y,
                           const IntegerVector& rowInd,
                           const NumericVector& weights) {
-
-  XPtr<BigMatrix> xpMat(pBigMat);
-  MatrixAccessor<char> macc(*xpMat);
-
   int n = rowInd.size();
   int m = xpMat->ncol();
 
-  NumericVector res(m);
+  NumericMatrix res(2, m);
 
   double ySum = 0, wSum = 0;
   double tmpW;
@@ -139,7 +167,7 @@ NumericVector betasRegLin(const SEXP pBigMat,
   }
 
   double xSum, xySum, xxSum;
-  double tmp;
+  double tmp, tmpB;
   double num, denoX, xSumd;
 
   for (int j = 0; j < m; j++) {
@@ -154,8 +182,44 @@ NumericVector betasRegLin(const SEXP pBigMat,
     }
     num = xySum - xSum * ySum / wSum;
     denoX = xxSum - xSum * xSum / wSum;
-    res[j] = num / denoX;
+    tmpB = num / denoX;
+    res(1, j) = tmpB;
+    res(0, j) = (ySum - tmpB * xSum) / wSum;
   }
 
   return(res);
+}
+
+// Dispatch function for betasRegLin
+//
+// [[Rcpp::export]]
+NumericMatrix betasRegLin(SEXP pBigMat,
+                          const NumericVector& y,
+                          const IntegerVector& rowInd,
+                          const NumericVector& weights) {
+  // First we have to tell Rcpp what class to use for big.matrix objects.
+  // This object stores the attributes of the big.matrix object passed to it
+  // by R.
+  XPtr<BigMatrix> xpMat(pBigMat);
+
+  // To access values in the big.matrix, we need to create a MatrixAccessor
+  // object of the appropriate type. Note that in every case we are still
+  // returning a NumericVector: this is because big.matrix objects only store
+  // numeric values in R, even if their type is set to 'char'. The types
+  // simply correspond to the number of bytes used for each element.
+  switch(xpMat->matrix_type()) {
+  case 1:
+    return betasRegLin(xpMat, MatrixAccessor<char>(*xpMat), y, rowInd, weights);
+  case 2:
+    return betasRegLin(xpMat, MatrixAccessor<short>(*xpMat), y, rowInd, weights);
+  case 4:
+    return betasRegLin(xpMat, MatrixAccessor<int>(*xpMat), y, rowInd, weights);
+  case 8:
+    return betasRegLin(xpMat, MatrixAccessor<double>(*xpMat), y, rowInd, weights);
+  default:
+    // This case should never be encountered unless the implementation of
+    // big.matrix changes, but is necessary to implement shut up compiler
+    // warnings.
+    throw Rcpp::exception("unknown type detected for big.matrix object!");
+  }
 }

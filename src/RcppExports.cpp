@@ -6,27 +6,27 @@
 using namespace Rcpp;
 
 // R_squared_chr
-Rcpp::NumericVector R_squared_chr(const SEXP pBigMat, const IntegerVector& rowInd, const IntegerVector& colInd, NumericVector colMat0);
+Rcpp::NumericVector R_squared_chr(SEXP pBigMat, const IntegerVector& rowInd, const IntegerVector& colInd, const NumericVector& colMat0);
 RcppExport SEXP mypack_R_squared_chr(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP colMat0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type colMat0(colMat0SEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type colMat0(colMat0SEXP);
     __result = Rcpp::wrap(R_squared_chr(pBigMat, rowInd, colInd, colMat0));
     return __result;
 END_RCPP
 }
 // R_squared
-NumericVector R_squared(const SEXP pBigMat, const IntegerVector& y, const IntegerVector& rowInd, const NumericVector& weights);
+NumericVector R_squared(SEXP pBigMat, const NumericVector& y, const IntegerVector& rowInd, const NumericVector& weights);
 RcppExport SEXP mypack_R_squared(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
     __result = Rcpp::wrap(R_squared(pBigMat, y, rowInd, weights));
@@ -34,13 +34,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // betasRegLin
-NumericVector betasRegLin(const SEXP pBigMat, const IntegerVector& y, const IntegerVector& rowInd, const NumericVector& weights);
+NumericMatrix betasRegLin(SEXP pBigMat, const NumericVector& y, const IntegerVector& rowInd, const NumericVector& weights);
 RcppExport SEXP mypack_betasRegLin(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
     __result = Rcpp::wrap(betasRegLin(pBigMat, y, rowInd, weights));
