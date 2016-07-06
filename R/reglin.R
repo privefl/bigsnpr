@@ -1,11 +1,11 @@
 #' @title Operations of linear regression
 #' @description Operations of \bold{univariate} linear regression
 #' (intercept, slope and coefficient of determination)
-#' on all the columns of a big.matrix.\cr
+#' on all the columns of a \code{\link[bigmemory]{big.matrix}}\cr
 #' In the case of classification, weights are used to make the results independent
 #' from the proportion of cases / controls
 #' (see parameter \emph{weights} of \code{\link[stats]{lm}}).
-#' @param X A \code{\link[bigmemory]{big.matrix}}.
+#' @param X A big.matrix.
 #' @param y Either \itemize{
 #' \item a vector of \{-1, 1\} in the case of classification (suffix Class),
 #' \item a vector of more than two unique values in the case of regression (suffix Reg).
@@ -18,7 +18,7 @@
 #' \item \code{CoeffsReg} and \code{CoeffsClass} return a matrix of
 #' the intercepts (first row) and slopes (second row) of each regression.
 #' }
-#' @example examples/reglin.R
+#' @example examples/example.reglin.R
 #' @name reglin
 NULL
 

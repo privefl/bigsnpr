@@ -1,9 +1,12 @@
 #'@title Read PLINK files
 #'@description Functions to read ped/map or bed/bim/fam files
-#'into a \code{\link[bigmemory]{big.matrix}}
-#'and two \code{\link[data.table]{data.table}} objects.\cr
+#'into a \code{\link[bigmemory]{big.matrix}} (genotypes)
+#'and two \code{\link[data.table]{data.table}} objects
+#'(informations on SNPs and individuals).\cr
 #'The implementation is inspired from the code of
-#'\href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
+#'\href{https://github.com/andrewparkermorgan/argyle}{package argyle}
+#'with some optimizations.\cr
+#'Reading online into a big.matrix is memory-efficient.
 #'@name readplink
 NULL
 
@@ -33,20 +36,21 @@ BedToBig <- function(bedfile, backingfile, block.size = 3000) {
   }
 
   # read map and family files
-  fam <- data.table::fread(famfile)
+  fam <- fread(famfile)
   names(fam) <- c("family.ID", "sample.ID", "paternal.ID",
                   "maternal.ID", "sex", "affection")
-  bim <- data.table::fread(bimfile)
+  bim <- fread(bimfile)
   names(bim) <- c("chromosome", "marker.ID", "genetic.dist",
                   "physical.pos", "allele1", "allele2")
 
   # prepare big.matrix
   n <- nrow(fam)
   m <- nrow(bim)
-  bigGeno <- bigmemory::big.matrix(n, m, type = "char",
-                                   backingfile = backingfile,
-                                   backingpath = "backingfiles",
-                                   descriptorfile = paste0(backingfile, ".desc"))
+  if (!file.exists("backingfiles")) dir.create("backingfiles")
+  bigGeno <- big.matrix(n, m, type = "char",
+                        backingfile = backingfile,
+                        backingpath = "backingfiles",
+                        descriptorfile = paste0(backingfile, ".desc"))
 
   ## block size in bytes: (number of individuals)/4, to nearest byte
   bsz <- ceiling(n/4)
@@ -178,6 +182,7 @@ PedToBig <- function(pedfile, backingfile, block.size) {
   intr <- interactive()
   printf("\nSecond and last read to fill the genotypic matrix\n")
   if (intr) pb <- txtProgressBar(min = 0, max = nb.blocks + 1, style = 3)
+  if (!file.exists("backingfiles")) dir.create("backingfiles")
   bigGeno <- big.matrix(n, m - len, type = "char",
                         backingfile = backingfile,
                         backingpath = "backingfiles",

@@ -5,9 +5,12 @@
 \title{Read PLINK files}
 \description{
 Functions to read ped/map or bed/bim/fam files
-into a \code{\link[bigmemory]{big.matrix}}
-and two \code{\link[data.table]{data.table}} objects.\cr
+into a \code{\link[bigmemory]{big.matrix}} (genotypes)
+and two \code{\link[data.table]{data.table}} objects
+(informations on SNPs and individuals).\cr
 The implementation is inspired from the code of
-\href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
+\href{https://github.com/andrewparkermorgan/argyle}{package argyle}
+with some optimizations.\cr
+Reading online into a big.matrix is memory-efficient.
 }
 

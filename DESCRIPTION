@@ -8,10 +8,7 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 LazyData: TRUE
 LinkingTo: Rcpp, bigmemory, BH
-Imports: Rcpp
-Depends:
-    bigmemory,
-    data.table,
-    foreach,
-    tools
+Imports: Rcpp, tools
+Depends: bigmemory, data.table, foreach
 RoxygenNote: 5.0.1
+Suggests: testthat

@@ -17,7 +17,7 @@ CoeffsReg(X, y, ind.train = seq(nrow(X)))
 CoeffsClass(X, y, ind.train = seq(nrow(X)))
 }
 \arguments{
-\item{X}{A \code{\link[bigmemory]{big.matrix}}.}
+\item{X}{A big.matrix.}
 
 \item{y}{Either \itemize{
 \item a vector of \{-1, 1\} in the case of classification (suffix Class),
@@ -38,7 +38,7 @@ the intercepts (first row) and slopes (second row) of each regression.
 \description{
 Operations of \bold{univariate} linear regression
 (intercept, slope and coefficient of determination)
-on all the columns of a big.matrix.\cr
+on all the columns of a \code{\link[bigmemory]{big.matrix}}\cr
 In the case of classification, weights are used to make the results independent
 from the proportion of cases / controls
 (see parameter \emph{weights} of \code{\link[stats]{lm}}).
