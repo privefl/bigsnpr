@@ -1,3 +1,5 @@
+################################################################################
+
 #' @title Operations of linear regression
 #' @description Operations of \bold{univariate} linear regression
 #' (intercept, slope and coefficient of determination)
@@ -22,12 +24,14 @@
 #' @name reglin
 NULL
 
-#' @name RsqReg
+################################################################################
+
 #' @rdname reglin
 #' @export
 RsqReg <- function(X, y, ind.train = seq(nrow(X))) {
-  len <- length(unique(y[ind.train]))
-  if (len > 2) {
+  if (class(X) != "big.matrix") stop("X must be a big.matrix")
+
+  if (length(unique(y[ind.train])) > 2) {
     return(R_squared(X@address, y, ind.train, rep(1, length(ind.train))))
   } else {
     stop(paste0("y has not enough unique elements.\n",
@@ -35,10 +39,13 @@ RsqReg <- function(X, y, ind.train = seq(nrow(X))) {
   }
 }
 
-#' @name RsqClass
+################################################################################
+
 #' @rdname reglin
 #' @export
 RsqClass <- function(X, y, ind.train = seq(nrow(X))) {
+  if (class(X) != "big.matrix") stop("X must be a big.matrix")
+
   if (all(sort(unique(y)) == c(-1, 1))) {
     prop.case <- mean(y[ind.train] == 1)
     ratio <- 1 / prop.case - 1
@@ -49,13 +56,14 @@ RsqClass <- function(X, y, ind.train = seq(nrow(X))) {
   }
 }
 
+################################################################################
 
-#' @name CoeffsReg
 #' @rdname reglin
 #' @export
 CoeffsReg <- function(X, y, ind.train = seq(nrow(X))) {
-  len <- length(unique(y[ind.train]))
-  if (len > 2) {
+  if (class(X) != "big.matrix") stop("X must be a big.matrix")
+
+  if (length(unique(y[ind.train])) > 2) {
     return(betasRegLin(X@address, y, ind.train, rep(1, length(ind.train))))
   } else {
     stop(paste0("y has not enough unique elements.\n",
@@ -63,10 +71,13 @@ CoeffsReg <- function(X, y, ind.train = seq(nrow(X))) {
   }
 }
 
-#' @name CoeffsClass
+################################################################################
+
 #' @rdname reglin
 #' @export
 CoeffsClass <- function(X, y, ind.train = seq(nrow(X))) {
+  if (class(X) != "big.matrix") stop("X must be a big.matrix")
+
   if (all(sort(unique(y)) == c(-1, 1))) {
     prop.case <- mean(y[ind.train] == 1)
     ratio <- 1 / prop.case - 1
@@ -77,3 +88,4 @@ CoeffsClass <- function(X, y, ind.train = seq(nrow(X))) {
   }
 }
 
+################################################################################

@@ -2,12 +2,13 @@ Package: mypack
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: use authorsR
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Authors@R: person("Florian", "Privé",
+    email = "florian.prive@ensimag.grenoble-inp.fr",
+    role = c("aut", "cre"))
+Description: Fast and memory-efficient analysis of SNP arrays.
+License: GPL-3
 LazyData: TRUE
-LinkingTo: Rcpp, bigmemory, BH
+LinkingTo: RcppArmadillo, Rcpp, bigmemory, BH
 Imports: Rcpp, tools
 Depends: bigmemory, data.table, foreach
 RoxygenNote: 5.0.1

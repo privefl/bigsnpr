@@ -1,3 +1,5 @@
+################################################################################
+
 #'@title Read PLINK files
 #'@description Functions to read ped/map or bed/bim/fam files
 #'into a \code{\link[bigmemory]{big.matrix}} (genotypes)
@@ -7,10 +9,16 @@
 #'\href{https://github.com/andrewparkermorgan/argyle}{package argyle}
 #'with some optimizations.\cr
 #'Reading online into a big.matrix is memory-efficient.
+#'@param bedfile Character vectors containing file path to file with extension .bed.
+#'@param pedfile Character vectors containing file path to file with extension .ped.
+#'@param backingfile Name of the file that will be created.
 #'@name readplink
 NULL
 
+################################################################################
 
+#' @rdname readplink
+#' @export
 BedToBig <- function(bedfile, backingfile, block.size = 3000) {
   ListToInd <- function(list, colOffset) {
     cbind(row = unlist(list),
@@ -75,21 +83,21 @@ BedToBig <- function(bedfile, backingfile, block.size = 3000) {
     if (intr) setTxtProgressBar(pb, k - 1)
     list.ind.na <- list()
     list.geno <- list()
-    size = intervals[k, "size"]
-    geno.mat = matrix(0, n, size)
+    size <- intervals[k, "size"]
+    geno.mat <- matrix(0, n, size)
     for (i in 1:size) {
       geno.raw <- as.logical(rawToBits(readBin(bed, "raw", bsz)))
-      geno1 = geno.raw[s1]
-      geno2 = geno.raw[s2]
+      geno1 <- geno.raw[s1]
+      geno2 <- geno.raw[s2]
       ## express genotypes as minor allele dosage (0,1,2)
-      geno.mat[, i] = geno1 + geno2
+      geno.mat[, i] <- geno1 + geno2
       ## recall that 0/1 is het, but 1/0 is missing
-      list.ind.na[[i]] = which(geno1 & !geno2)
+      list.ind.na[[i]] <- which(geno1 & !geno2)
     }
     rawToBigPart(geno.mat, bigGeno@address, colOffset)
-    ind.na = ListToInd(list.ind.na, colOffset)
-    if (nrow(ind.na) > 0) bigGeno[ind.na] = NA
-    colOffset = colOffset + size
+    ind.na <- ListToInd(list.ind.na, colOffset)
+    if (nrow(ind.na) > 0) bigGeno[ind.na] <- NA
+    colOffset <- colOffset + size
   }
   if (intr) setTxtProgressBar(pb, nb.blocks)
   close(bed)
@@ -102,8 +110,10 @@ BedToBig <- function(bedfile, backingfile, block.size = 3000) {
   return(snp_list)
 }
 
+################################################################################
 
-
+#' @rdname readplink
+#' @export
 PedToBig <- function(pedfile, backingfile, block.size) {
 
   dna.letters = c("A", "C", "T", "G")
@@ -188,7 +198,7 @@ PedToBig <- function(pedfile, backingfile, block.size) {
                         backingpath = "backingfiles",
                         descriptorfile = paste0(backingfile, ".desc"))
   fam <- list()
-  opt.save = options(bigmemory.typecast.warning = FALSE)
+  opt.save <- options(bigmemory.typecast.warning = FALSE)
   ped <- file(pedfile, open = "r")
   for (k in 1:nb.blocks) {
     if (intr) setTxtProgressBar(pb, k - 1)
@@ -207,10 +217,10 @@ PedToBig <- function(pedfile, backingfile, block.size) {
   if (intr) setTxtProgressBar(pb, nb.blocks)
 
   # shape the fam dataset
-  fam <- foreach(i = 1:length(fam), .combine = 'cbind') %do% {
+  fam <- foreach(i = 1:length(fam), .combine = 'rbind') %do% {
     fam[[i]]
   }
-  fam = as.data.table(t(fam))
+  fam <- as.data.table(fam)
   setnames(fam, 1:6, c("family.ID", "sample.ID", "paternal.ID",
                        "maternal.ID", "sex", "affection"))
   AreToBeInt <- function(dt) {
@@ -235,3 +245,5 @@ PedToBig <- function(pedfile, backingfile, block.size) {
 
   return(snp_list)
 }
+
+################################################################################

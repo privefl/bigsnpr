@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 mydata/
+.git
+backingfiles
+examples

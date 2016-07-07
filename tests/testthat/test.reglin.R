@@ -1,3 +1,5 @@
+################################################################################
+
 context("REGLIN")
 
 opt.save <- options(bigmemory.typecast.warning = FALSE)
@@ -8,6 +10,8 @@ N2 <- 1000
 x1 <- rnorm(N1, 0.5)
 x2 <- rnorm(N2, -0.5)
 x <- c(x1, x2)
+
+################################################################################
 
 get_res_weights <- function(x.big, y) {
   res <- matrix(0, 3, ncol(x.big))
@@ -44,6 +48,7 @@ test_that("expect error from regression", {
   expect_error(RsqReg(x.big, y))
 })
 
+################################################################################
 
 get_res <- function(x.big, y) {
   res <- matrix(0, 3, ncol(x.big))
@@ -72,6 +77,8 @@ test_that("expect error from classification", {
   expect_error(CoeffsClass(x.big, y2))
   expect_error(RsqClass(x.big, y2))
 })
+
+################################################################################
 
 ind.train <- sort(sample(length(x), length(x) / 2))
 
@@ -103,4 +110,8 @@ test_that("expect error from classification", {
   expect_error(RsqClass(x.big, y2))
 })
 
+################################################################################
+
 options(opt.save)
+
+################################################################################

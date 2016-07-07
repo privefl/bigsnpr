@@ -1,10 +1,28 @@
 // [[Rcpp::plugins(cpp11)]]
-// [[Rcpp::depends(BH, bigmemory)]]
-#include <Rcpp.h>
+// [[Rcpp::depends(RcppArmadillo, BH, bigmemory)]]
+#include <RcppArmadillo.h>
 #include <bigmemory/MatrixAccessor.hpp>
 
 using namespace Rcpp;
+using namespace arma;
 
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void rawToBigPart(const arma::Mat<unsigned char>& source, SEXP pBigMat, int colOffset = 0) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<char> macc(*xpMat);
+
+  int nrows = source.n_rows;
+  int ncols = source.n_cols;
+
+  for (int i = 0; i < ncols; i++) {
+    memcpy(macc[i+colOffset], source.colptr(i), nrows*sizeof(char));
+  }
+
+  return;
+}
 
 /******************************************************************************/
 
@@ -168,7 +186,7 @@ NumericMatrix betasRegLin(XPtr<BigMatrix> xpMat,
 
   double xSum, xySum, xxSum;
   double tmp, tmpB;
-  double num, denoX, xSumd;
+  double num, denoX;
 
   for (int j = 0; j < m; j++) {
     xSum = xySum = xxSum = 0;
