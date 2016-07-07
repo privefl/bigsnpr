@@ -4,14 +4,63 @@
 #'@description Functions to read ped/map or bed/bim/fam files
 #'into a \code{\link[bigmemory]{big.matrix}} (genotypes)
 #'and two \code{\link[data.table]{data.table}} objects
-#'(informations on SNPs and individuals).\cr
+#'(informations on SNPs and individuals).
+#'For more information on these formats, please visit
+#'\href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
+#'@param bedfile Path to file with extension .bed. You need the corresponding
+#'.bim and .fam in the same directory.
+#'@param pedfile Path to file with extension .ped. You need the corresponding
+#'.map in the same directory.
+#'@param block.size Maximum number of loci read at once (for all individuals).
+#'@param backingfile The root name for the file(s) for the cache of x.
+#'@param backingpath The path to the directory containing the file backing cache.
+#'Default is "backingfiles".
+#'@param readonly Is the \code{big.matrix} readonly ? Default is \code{TRUE}.
+#'@return A named list of 3 elements:\itemize{
+#'\item genotypes: a filebacked \code{big.matrix} representing genotypes.\cr
+#'Each element is either 0, 1, 2 or NA.
+#'\item fam: a \code{data.table} giving some information on the SNPs.
+#'\item map: a \code{data.table} giving some information on the individuals.
+#'}
+#'@section Warnings:
+#'\itemize{
+#'\item Never \code{save} the result as an \code{R} object,
+#'your session will crash when loading it.\cr
+#'To load the object in another session, use \code{AttachBigSNP}.
+#'\item Prefer using bedfiles than pedfiles because
+#' they require minimal space to store and are faster to read.
+#' }
+#'@section Implementation:
 #'The implementation is inspired from the code of
-#'\href{https://github.com/andrewparkermorgan/argyle}{package argyle}
+#'\href{https://github.com/andrewparkermorgan/argyle}{package argyle},
 #'with some optimizations.\cr
-#'Reading online into a big.matrix is memory-efficient.
-#'@param bedfile Character vectors containing file path to file with extension .bed.
-#'@param pedfile Character vectors containing file path to file with extension .ped.
-#'@param backingfile Name of the file that will be created.
+#'Especially, online reading into a \code{big.matrix} makes it memory-efficient.
+#'@examples \dontrun{
+#'
+#'bedfile <- system.file("extdata", "example.bed", package = "mypack")
+#'
+#'if (!file.exists("backingfiles"))
+#'  dir.create("backingfiles")
+#'if (file.exists("backingfiles/test_doc"))
+#'  file.remove("backingfiles/test_doc")
+#'if (file.exists("backingfiles/test_doc.desc"))
+#'  file.remove("backingfiles/test_doc.desc")
+#'if (file.exists("backingfiles/test_doc.rds"))
+#'  file.remove("backingfiles/test_doc.rds")
+#'
+#'# Reading the bedfile and storing the data in directory "backingfiles"
+#'test <- BedToBig(bedfile, 50, "test_doc")
+#'
+#'# Removing the R object
+#'rm(test)
+#'
+#'# Loading it from backing files
+#'test <- AttachBigSNP("test_doc")
+#'
+#'str(test)
+#'print(dim(test$genotypes))
+#'print(test$genotypes[1:8, 1:8])
+#'}
 #'@name readplink
 NULL
 
@@ -19,7 +68,16 @@ NULL
 
 #' @rdname readplink
 #' @export
-BedToBig <- function(bedfile, backingfile, block.size = 3000) {
+BedToBig <- function(bedfile,
+                     block.size,
+                     backingfile,
+                     backingpath = "backingfiles") {
+  if (!file.exists(backingpath))
+    stop(sprintf("Directory \"%s\" doesn't exist", backingpath))
+  if ( file.exists(file.path(backingpath, backingfile)))
+    stop(sprintf("File \"%s\" already exists in directory \"%s\"",
+                 backingfile, backingpath))
+
   ListToInd <- function(list, colOffset) {
     cbind(row = unlist(list),
           col = rep(seq_along(list), sapply(list, length)) + colOffset)
@@ -54,10 +112,9 @@ BedToBig <- function(bedfile, backingfile, block.size = 3000) {
   # prepare big.matrix
   n <- nrow(fam)
   m <- nrow(bim)
-  if (!file.exists("backingfiles")) dir.create("backingfiles")
   bigGeno <- big.matrix(n, m, type = "char",
                         backingfile = backingfile,
-                        backingpath = "backingfiles",
+                        backingpath = backingpath,
                         descriptorfile = paste0(backingfile, ".desc"))
 
   ## block size in bytes: (number of individuals)/4, to nearest byte
@@ -78,11 +135,10 @@ BedToBig <- function(bedfile, backingfile, block.size = 3000) {
   s1 <- seq(1, 2*n, 2)
   s2 <- s1 + 1
 
-  colOffset = 0
+  colOffset <- 0
   for (k in 1:nb.blocks) {
     if (intr) setTxtProgressBar(pb, k - 1)
     list.ind.na <- list()
-    list.geno <- list()
     size <- intervals[k, "size"]
     geno.mat <- matrix(0, n, size)
     for (i in 1:size) {
@@ -99,13 +155,15 @@ BedToBig <- function(bedfile, backingfile, block.size = 3000) {
     if (nrow(ind.na) > 0) bigGeno[ind.na] <- NA
     colOffset <- colOffset + size
   }
-  if (intr) setTxtProgressBar(pb, nb.blocks)
   close(bed)
-  close(pb)
+  if (intr) {
+    setTxtProgressBar(pb, nb.blocks)
+    close(pb)
+  }
 
-  snp_list = list(genotypes = bigGeno, fam = fam, map = bim)
+  snp_list <- list(genotypes = bigGeno, fam = fam, map = bim)
 
-  saveRDS(snp_list, file.path("backingfiles", paste0(backingfile, ".rds")))
+  saveRDS(snp_list, file.path(backingpath, paste0(backingfile, ".rds")))
 
   return(snp_list)
 }
@@ -114,13 +172,21 @@ BedToBig <- function(bedfile, backingfile, block.size = 3000) {
 
 #' @rdname readplink
 #' @export
-PedToBig <- function(pedfile, backingfile, block.size) {
+PedToBig <- function(pedfile,
+                     block.size,
+                     backingfile,
+                     backingpath = "backingfiles") {
+  if (!file.exists(backingpath))
+    stop(sprintf("Directory \"%s\" doesn't exist", backingpath))
+  if ( file.exists(file.path(backingpath, backingfile)))
+    stop(sprintf("File \"%s\" already exists in directory \"%s\"",
+                 backingfile, backingpath))
 
-  dna.letters = c("A", "C", "T", "G")
+  dna.letters <- c("A", "C", "T", "G")
 
   CompareToRef <- function(x, ref, s) {
-    comp1 = ifelse(x[s]     %in% dna.letters, (x[s] != ref), NA)
-    comp2 = ifelse(x[s + 1] %in% dna.letters, (x[s + 1] != ref), NA)
+    comp1 <- ifelse(x[s]     %in% dna.letters, (x[s] != ref), NA)
+    comp2 <- ifelse(x[s + 1] %in% dna.letters, (x[s + 1] != ref), NA)
 
     return(comp1 + comp2)
   }
@@ -146,41 +212,41 @@ PedToBig <- function(pedfile, backingfile, block.size) {
 
   # get the number of SNPs
   ped <- file(pedfile, open = "r")
-  tmp = readLines(ped, n = 1)
+  tmp <- readLines(ped, n = 1)
   close(ped)
-  tmp = strsplit(tmp, " ", fixed = T)
-  m.all = length(tmp[[1]])
-  s = seq(7L, m.all, 2L)
-  m = length(s)
-  map = fread(mapfile)
+  tmp <- strsplit(tmp, " ", fixed = T)
+  m.all <- length(tmp[[1]])
+  s <- seq(7L, m.all, 2L)
+  m <- length(s)
+  map <- data.table::fread(mapfile)
   if (m != nrow(map)) {
     stop(sprintf("%d markers were read from the .map file and
                  %d from the .ped file", nrow(map), m))
   }
-  setnames(map, 1:4, c("chromosome", "marker.ID",
-                       "genetic.dist", "physical.pos"))
+  data.table::setnames(map, 1:4, c("chromosome", "marker.ID",
+                                   "genetic.dist", "physical.pos"))
 
   # first read to get useful infos
   printf("\nBegin first read to get useful infos\n")
-  counts = matrix(0L, m, 4)
-  n = 0L
+  counts <- matrix(0L, m, 4)
+  n <- 0L
   ped <- file(pedfile, open = "r")
   while ((n.part <- length(tmp <- readLines(ped, n = block.size))) > 0) {
     tmp <- strsplit(tmp, " ", fixed = T)
-    counts = counts + sapply(dna.letters, diffRef, tmp = tmp, s = s)
-    n = n + n.part
+    counts <- counts + sapply(dna.letters, diffRef, tmp = tmp, s = s)
+    n <- n + n.part
     printf("%d lines have been read so far\n", n)
   }
   close(ped)
-  ind.rm = which(counts == 0, arr.ind = T)[ ,1]
+  ind.rm <- which(counts == 0, arr.ind = T)[ ,1]
   if ((len <- length(ind.rm)) > 0) {
     printf("\nRemoving %d monoallelic markers\n", len)
     map <- map[-ind.rm]
-    alleles = apply(counts[-ind.rm, ], 1, order)
+    alleles <- apply(counts[-ind.rm, ], 1, order)
   } else {
-    alleles = apply(counts, 1, order)
+    alleles <- apply(counts, 1, order)
   }
-  ref = apply(counts, 1, order)
+  ref <- apply(counts, 1, order)
   rm(counts)
   map[, allele1 := dna.letters[alleles[1, ]]]
   map[, allele2 := dna.letters[alleles[2, ]]]
@@ -192,10 +258,9 @@ PedToBig <- function(pedfile, backingfile, block.size) {
   intr <- interactive()
   printf("\nSecond and last read to fill the genotypic matrix\n")
   if (intr) pb <- txtProgressBar(min = 0, max = nb.blocks + 1, style = 3)
-  if (!file.exists("backingfiles")) dir.create("backingfiles")
   bigGeno <- big.matrix(n, m - len, type = "char",
                         backingfile = backingfile,
-                        backingpath = "backingfiles",
+                        backingpath = backingpath,
                         descriptorfile = paste0(backingfile, ".desc"))
   fam <- list()
   opt.save <- options(bigmemory.typecast.warning = FALSE)
@@ -217,14 +282,14 @@ PedToBig <- function(pedfile, backingfile, block.size) {
   if (intr) setTxtProgressBar(pb, nb.blocks)
 
   # shape the fam dataset
-  fam <- foreach(i = 1:length(fam), .combine = 'rbind') %do% {
+  fam <- foreach(i = 1:length(fam), .combine = 'cbind') %do% {
     fam[[i]]
   }
-  fam <- as.data.table(fam)
+  fam <- as.data.table(t(fam))
   setnames(fam, 1:6, c("family.ID", "sample.ID", "paternal.ID",
                        "maternal.ID", "sex", "affection"))
   AreToBeInt <- function(dt) {
-    dt.names = names(dt)
+    dt.names <- names(dt)
     for (name in dt.names) {
       eval(parse(text = sprintf("
       if (all(grepl(\"^[0-9]+$\", dt$%s))) {
@@ -236,14 +301,33 @@ PedToBig <- function(pedfile, backingfile, block.size) {
   AreToBeInt(fam)
   #fam[!(sex %in% c(1,2)), sex := NA]
   #fam[!(affection %in% c(1,2)), affection := NA]
-  if (intr) setTxtProgressBar(pb, nb.blocks + 1)
-  close(pb)
+  if (intr) {
+    setTxtProgressBar(pb, nb.blocks + 1)
+    close(pb)
+  }
 
-  snp_list = list(genotypes = bigGeno, fam = fam, map = map)
+  snp_list <- list(genotypes = bigGeno, fam = fam, map = map)
 
-  saveRDS(snp_list, file.path("backingfiles", paste0(backingfile, ".rds")))
+  saveRDS(snp_list, file.path(backingpath, paste0(backingfile, ".rds")))
 
   return(snp_list)
+}
+
+################################################################################
+
+#' @rdname readplink
+#' @export
+AttachBigSNP <- function(backingfile, backingpath = "backingfiles", readonly = TRUE) {
+  backingfile <- gsub("\\.rds$", "", backingfile)
+  backingfile <- gsub("\\.desc$", "", backingfile)
+
+  snp.list <- readRDS(file.path(backingpath, paste0(backingfile, ".rds")))
+
+  snp.list$genotypes <-
+    attach.big.matrix(file.path(backingpath, paste0(backingfile, ".desc")),
+                      readonly = readonly)
+
+  return(snp.list)
 }
 
 ################################################################################

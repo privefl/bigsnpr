@@ -35,7 +35,7 @@ x.big <- as.big.matrix(cbind(x, x+1, 2*x))
 x.big2 <- as.big.matrix(round(cbind(x, x+1, 2*x)))
 x.big3 <- as.big.matrix(round(cbind(x, x+1, 2*x)), type = "char")
 
-test_that("equality with lm in case of classificatio", {
+test_that("equality with lm in case of classification", {
   expect_equal(get_res2_class(x.big, y),
                get_res_weights(x.big, y))
   expect_equal(get_res2_class(x.big2, y),

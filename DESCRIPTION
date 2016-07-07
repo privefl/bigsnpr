@@ -1,15 +1,16 @@
+Encoding: UTF-8
 Package: mypack
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Predictive Analysis of SNP Arrays
 Version: 0.1.0
 Authors@R: person("Florian", "Privé",
     email = "florian.prive@ensimag.grenoble-inp.fr",
     role = c("aut", "cre"))
-Description: Fast and memory-efficient analysis of SNP arrays.
+Description: Fast and memory-efficient predictive analysis of SNP arrays.
 License: GPL-3
 LazyData: TRUE
 LinkingTo: RcppArmadillo, Rcpp, bigmemory, BH
 Imports: Rcpp, tools
 Depends: bigmemory, data.table, foreach
 RoxygenNote: 5.0.1
-Suggests: testthat
+Suggests: testthat, snpStats
