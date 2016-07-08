@@ -13,3 +13,7 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
+
+# mypack
+
+[![Travis-CI Build Status](https://travis-ci.org/privefl/mypack.svg?branch=master)](https://travis-ci.org/privefl/mypack)
