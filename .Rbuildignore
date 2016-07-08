@@ -8,3 +8,4 @@ cran-comments.md
 ^README\.Rmd$
 ^README-.*\.png$
 ^\.travis\.yml$
+tests/local_tests
