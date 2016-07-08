@@ -13,4 +13,4 @@ LinkingTo: RcppArmadillo, Rcpp, bigmemory, BH
 Imports: Rcpp, tools, foreach
 Depends: bigmemory, data.table
 RoxygenNote: 5.0.1
-Suggests: testthat, snpStats
+Suggests: testthat
