@@ -9,3 +9,4 @@ cran-comments.md
 ^README-.*\.png$
 ^\.travis\.yml$
 tests/local_tests
+^appveyor\.yml$
