@@ -1,6 +1,5 @@
 ################################################################################
 
-skip_on_cran()
 context("READPLINK")
 
 if (!file.exists("backingfiles")) dir.create("backingfiles")
@@ -33,10 +32,24 @@ if (file.exists("backingfiles/test2")) file.remove("backingfiles/test2")
 if (file.exists("backingfiles/test2.desc")) file.remove("backingfiles/test2.desc")
 if (file.exists("backingfiles/test2.rds")) file.remove("backingfiles/test2.rds")
 
-pedfile <- "../../mydata/example.ped"
+pedfile <- "mydata/example.ped"
 test3 <- PedToBig(pedfile, 50, "test2", "backingfiles")
 
-test_that("same data.tables", {
-  expect_equal(test$fam, test3$fam)
-  expect_equal(test$map, test3$map)
+test_that("Same types in data.tables", {
+  expect_equal(sapply(test$fam, typeof), sapply(test3$fam, typeof))
+  expect_equal(sapply(test$map, typeof), sapply(test3$map, typeof))
+})
+
+test_ref <- function(code) {
+  check1 <- all(code %in% c(2, 20, 11, NA))
+  check2 <- all(code %in% c(0, 11, 22, NA))
+
+  check1 | check2
+}
+
+code.gen <- 10 * test$genotypes[,] + test3$genotypes[,]
+check <- apply(code.gen, 2, test_ref)
+
+test_that("Same genotypes depending on NA/ref", {
+  expect_equal(all(check), TRUE)
 })

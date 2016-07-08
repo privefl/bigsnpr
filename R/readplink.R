@@ -102,20 +102,20 @@ BedToBig <- function(bedfile,
   }
 
   # read map and family files
-  fam <- fread(famfile)
+  fam <- data.table::fread(famfile)
   names(fam) <- c("family.ID", "sample.ID", "paternal.ID",
                   "maternal.ID", "sex", "affection")
-  bim <- fread(bimfile)
+  bim <- data.table::fread(bimfile)
   names(bim) <- c("chromosome", "marker.ID", "genetic.dist",
                   "physical.pos", "allele1", "allele2")
 
   # prepare big.matrix
   n <- nrow(fam)
   m <- nrow(bim)
-  bigGeno <- big.matrix(n, m, type = "char",
-                        backingfile = backingfile,
-                        backingpath = backingpath,
-                        descriptorfile = paste0(backingfile, ".desc"))
+  bigGeno <- bigmemory::big.matrix(n, m, type = "char",
+                                   backingfile = backingfile,
+                                   backingpath = backingpath,
+                                   descriptorfile = paste0(backingfile, ".desc"))
 
   ## block size in bytes: (number of individuals)/4, to nearest byte
   bsz <- ceiling(n/4)
@@ -248,8 +248,8 @@ PedToBig <- function(pedfile,
   }
   ref <- dna.letters[apply(counts, 1, which.min)]
   rm(counts)
-  map[, allele1 := dna.letters[alleles[1, ]]]
-  map[, allele2 := dna.letters[alleles[2, ]]]
+  data.table::set(map, NULL, "allele1", dna.letters[alleles[1, ]])
+  data.table::set(map, NULL, "allele2", dna.letters[alleles[2, ]])
   rm(alleles)
 
   # second read to fill the genotypic matrix
@@ -258,10 +258,10 @@ PedToBig <- function(pedfile,
   intr <- interactive()
   printf("\nSecond and last read to fill the genotypic matrix\n")
   if (intr) pb <- txtProgressBar(min = 0, max = nb.blocks + 1, style = 3)
-  bigGeno <- big.matrix(n, m - len, type = "char",
-                        backingfile = backingfile,
-                        backingpath = backingpath,
-                        descriptorfile = paste0(backingfile, ".desc"))
+  bigGeno <- bigmemory::big.matrix(n, m - len, type = "char",
+                                   backingfile = backingfile,
+                                   backingpath = backingpath,
+                                   descriptorfile = paste0(backingfile, ".desc"))
   fam <- list()
   opt.save <- options(bigmemory.typecast.warning = FALSE)
   ped <- file(pedfile, open = "r")
@@ -282,18 +282,18 @@ PedToBig <- function(pedfile,
   if (intr) setTxtProgressBar(pb, nb.blocks)
 
   # shape the fam dataset
-  fam <- foreach(i = 1:length(fam), .combine = 'cbind') %do% {
-    fam[[i]]
-  }
-  fam <- as.data.table(t(fam))
-  setnames(fam, 1:6, c("family.ID", "sample.ID", "paternal.ID",
-                       "maternal.ID", "sex", "affection"))
+  fam <- foreach::`%do%`(foreach::foreach(i = 1:length(fam),
+                                          .combine = 'cbind'),
+                        fam[[i]])
+  fam <- data.table::as.data.table(t(fam))
+  data.table::setnames(fam, 1:6, c("family.ID", "sample.ID", "paternal.ID",
+                                   "maternal.ID", "sex", "affection"))
   AreToBeInt <- function(dt) {
     dt.names <- names(dt)
     for (name in dt.names) {
       eval(parse(text = sprintf("
       if (all(grepl(\"^[0-9]+$\", dt$%s))) {
-         dt[, %s := as.integer(%s)]
+         data.table::set(dt, NULL, \"%s\", as.integer(dt$%s))
       }", name, name, name)
       ))
     }
@@ -317,15 +317,18 @@ PedToBig <- function(pedfile,
 
 #' @rdname readplink
 #' @export
-AttachBigSNP <- function(backingfile, backingpath = "backingfiles", readonly = TRUE) {
+AttachBigSNP <- function(backingfile,
+                         backingpath = "backingfiles",
+                         readonly = TRUE) {
   backingfile <- gsub("\\.rds$", "", backingfile)
   backingfile <- gsub("\\.desc$", "", backingfile)
 
   snp.list <- readRDS(file.path(backingpath, paste0(backingfile, ".rds")))
 
   snp.list$genotypes <-
-    attach.big.matrix(file.path(backingpath, paste0(backingfile, ".desc")),
-                      readonly = readonly)
+    bigmemory::attach.big.matrix(file.path(backingpath,
+                                           paste0(backingfile, ".desc")),
+                                 readonly = readonly)
 
   return(snp.list)
 }
