@@ -4,3 +4,6 @@ mydata/
 .git
 backingfiles
 examples
+cran-comments.md
+^README\.Rmd$
+^README-.*\.png$

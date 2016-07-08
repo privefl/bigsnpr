@@ -282,9 +282,9 @@ PedToBig <- function(pedfile,
   if (intr) setTxtProgressBar(pb, nb.blocks)
 
   # shape the fam dataset
-  fam <- foreach::`%do%`(foreach::foreach(i = 1:length(fam),
-                                          .combine = 'cbind'),
-                        fam[[i]])
+  obj <- foreach::foreach(i = 1:length(fam), .combine = 'cbind')
+  fun_expr <- function(i) fam[[i]]
+  foreach::`%do%`(obj, fun_expr(i))
   fam <- data.table::as.data.table(t(fam))
   data.table::setnames(fam, 1:6, c("family.ID", "sample.ID", "paternal.ID",
                                    "maternal.ID", "sex", "affection"))
