@@ -27,3 +27,16 @@ test_that("data.frames of same size", {
 })
 
 ################################################################################
+
+if (!file.exists("backingfiles")) dir.create("backingfiles")
+if (file.exists("backingfiles/test2")) file.remove("backingfiles/test2")
+if (file.exists("backingfiles/test2.desc")) file.remove("backingfiles/test2.desc")
+if (file.exists("backingfiles/test2.rds")) file.remove("backingfiles/test2.rds")
+
+pedfile <- "../../mydata/example.ped"
+test3 <- PedToBig(pedfile, 50, "test2", "backingfiles")
+
+test_that("same data.tables", {
+  expect_equal(test$fam, test3$fam)
+  expect_equal(test$map, test3$map)
+})

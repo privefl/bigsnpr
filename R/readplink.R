@@ -227,7 +227,7 @@ PedToBig <- function(pedfile,
                                    "genetic.dist", "physical.pos"))
 
   # first read to get useful infos
-  printf("\nBegin first read to get useful infos\n")
+  printf("\nBegin first read to get useful info\n")
   counts <- matrix(0L, m, 4)
   n <- 0L
   ped <- file(pedfile, open = "r")
@@ -238,7 +238,7 @@ PedToBig <- function(pedfile,
     printf("%d lines have been read so far\n", n)
   }
   close(ped)
-  ind.rm <- which(counts == 0, arr.ind = T)[ ,1]
+  ind.rm <- which(counts == 0, arr.ind = T)[, 1]
   if ((len <- length(ind.rm)) > 0) {
     printf("\nRemoving %d monoallelic markers\n", len)
     map <- map[-ind.rm]
@@ -246,7 +246,7 @@ PedToBig <- function(pedfile,
   } else {
     alleles <- apply(counts, 1, order)
   }
-  ref <- apply(counts, 1, order)
+  ref <- dna.letters[apply(counts, 1, which.min)]
   rm(counts)
   map[, allele1 := dna.letters[alleles[1, ]]]
   map[, allele2 := dna.letters[alleles[2, ]]]
