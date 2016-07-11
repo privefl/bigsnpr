@@ -3,7 +3,7 @@
 #'@title Read PLINK files
 #'@description Functions to read ped/map or bed/bim/fam files
 #'into a \code{\link[bigmemory]{big.matrix}} (genotypes)
-#'and two \code{\link[data.table]{data.table}} objects
+#'and two \code{data.frame} objects
 #'(informations on SNPs and individuals).
 #'For more information on these formats, please visit
 #'\href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
@@ -15,12 +15,12 @@
 #'@param backingfile The root name for the file(s) for the cache of x.
 #'@param backingpath The path to the directory containing the file backing cache.
 #'Default is "backingfiles".
-#'@param readonly Is the \code{big.matrix} readonly ? Default is \code{TRUE}.
+#'@param readonly Is the \code{big.matrix} read only ? Default is \code{TRUE}.
 #'@return A named list of 3 elements:\itemize{
 #'\item genotypes: a filebacked \code{big.matrix} representing genotypes.\cr
 #'Each element is either 0, 1, 2 or NA.
-#'\item fam: a \code{data.table} giving some information on the SNPs.
-#'\item map: a \code{data.table} giving some information on the individuals.
+#'\item fam: a \code{data.frame} giving some information on the SNPs.
+#'\item map: a \code{data.frame} giving some information on the individuals.
 #'}
 #'@section Warnings:
 #'\itemize{
@@ -102,10 +102,10 @@ BedToBig <- function(bedfile,
   }
 
   # read map and family files
-  fam <- data.table::fread(famfile)
+  fam <- data.table::fread(famfile, data.table = FALSE)
   names(fam) <- c("family.ID", "sample.ID", "paternal.ID",
                   "maternal.ID", "sex", "affection")
-  bim <- data.table::fread(bimfile)
+  bim <- data.table::fread(bimfile, data.table = FALSE)
   names(bim) <- c("chromosome", "marker.ID", "genetic.dist",
                   "physical.pos", "allele1", "allele2")
 
@@ -130,8 +130,8 @@ BedToBig <- function(bedfile,
   ## now actually read genotypes block by block
   intervals <- CutBySize(m, block.size)
   nb.blocks <- nrow(intervals)
-  intr <- interactive()
-  if (intr) pb <- txtProgressBar(min = 0, max = nb.blocks, style = 3)
+  if (intr <- interactive())
+    pb <- txtProgressBar(min = 0, max = nb.blocks, style = 3)
   s1 <- seq(1, 2*n, 2)
   s2 <- s1 + 1
 
@@ -218,13 +218,15 @@ PedToBig <- function(pedfile,
   m.all <- length(tmp[[1]])
   s <- seq(7L, m.all, 2L)
   m <- length(s)
-  map <- data.table::fread(mapfile)
+  map <- data.table::fread(mapfile, data.table = FALSE)
   if (m != nrow(map)) {
     stop(sprintf("%d markers were read from the .map file and
                  %d from the .ped file", nrow(map), m))
   }
-  data.table::setnames(map, 1:4, c("chromosome", "marker.ID",
-                                   "genetic.dist", "physical.pos"))
+  #data.table::setnames(map, 1:4, c("chromosome", "marker.ID",
+  #                                 "genetic.dist", "physical.pos"))
+  names(map) <- c("chromosome", "marker.ID", "genetic.dist",
+                  "physical.pos")
 
   # first read to get useful infos
   printf("\nBegin first read to get useful info\n")
@@ -248,16 +250,16 @@ PedToBig <- function(pedfile,
   }
   ref <- dna.letters[apply(counts, 1, which.min)]
   rm(counts)
-  data.table::set(map, NULL, "allele1", dna.letters[alleles[1, ]])
-  data.table::set(map, NULL, "allele2", dna.letters[alleles[2, ]])
+  map$allele1 <- dna.letters[alleles[1, ]]
+  map$allele2 <- dna.letters[alleles[2, ]]
   rm(alleles)
 
   # second read to fill the genotypic matrix
   intervals <- CutBySize(n, block.size)
   nb.blocks <- nrow(intervals)
-  intr <- interactive()
   printf("\nSecond and last read to fill the genotypic matrix\n")
-  if (intr) pb <- txtProgressBar(min = 0, max = nb.blocks + 1, style = 3)
+  if (intr <- interactive())
+    pb <- txtProgressBar(min = 0, max = nb.blocks + 1, style = 3)
   bigGeno <- bigmemory::big.matrix(n, m - len, type = "char",
                                    backingfile = backingfile,
                                    backingpath = backingpath,
@@ -281,26 +283,16 @@ PedToBig <- function(pedfile,
   options(opt.save)
   if (intr) setTxtProgressBar(pb, nb.blocks)
 
-  # shape the fam dataset
-  obj <- foreach::foreach(i = 1:length(fam), .combine = 'cbind')
-  fun_expr <- function(i) fam[[i]]
-  foreach::`%do%`(obj, fun_expr(i))
-  fam <- data.table::as.data.table(t(fam))
-  data.table::setnames(fam, 1:6, c("family.ID", "sample.ID", "paternal.ID",
-                                   "maternal.ID", "sex", "affection"))
-  AreToBeInt <- function(dt) {
-    dt.names <- names(dt)
-    for (name in dt.names) {
-      eval(parse(text = sprintf("
-      if (all(grepl(\"^[0-9]+$\", dt$%s))) {
-         data.table::set(dt, NULL, \"%s\", as.integer(dt$%s))
-      }", name, name, name)
-      ))
-    }
-  }
-  AreToBeInt(fam)
-  #fam[!(sex %in% c(1,2)), sex := NA]
-  #fam[!(affection %in% c(1,2)), affection := NA]
+  # convert the fam list in a data.frame
+  tmpfile.name <- tempfile()
+  cat("", file = tmpfile.name)
+  lapply(fam, function(l) apply(l, 2, function(text)
+    cat(text, file = tmpfile.name, fill = TRUE, append = TRUE)))
+  fam <- data.table::fread(tmpfile.name, data.table = FALSE)
+  names(fam) <- c("family.ID", "sample.ID", "paternal.ID",
+                  "maternal.ID", "sex", "affection")
+  #file.remove(file = tmpfile.name)
+
   if (intr) {
     setTxtProgressBar(pb, nb.blocks + 1)
     close(pb)

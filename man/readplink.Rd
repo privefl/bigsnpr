@@ -33,14 +33,14 @@ Default is "backingfiles".}
 A named list of 3 elements:\itemize{
 \item genotypes: a filebacked \code{big.matrix} representing genotypes.\cr
 Each element is either 0, 1, 2 or NA.
-\item fam: a \code{data.table} giving some information on the SNPs.
-\item map: a \code{data.table} giving some information on the individuals.
+\item fam: a \code{data.frame} giving some information on the SNPs.
+\item map: a \code{data.frame} giving some information on the individuals.
 }
 }
 \description{
 Functions to read ped/map or bed/bim/fam files
 into a \code{\link[bigmemory]{big.matrix}} (genotypes)
-and two \code{\link[data.table]{data.table}} objects
+and two \code{data.frame} objects
 (informations on SNPs and individuals).
 For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
