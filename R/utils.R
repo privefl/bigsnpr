@@ -22,3 +22,17 @@ seq2 <- function(lims) {
 }
 
 ################################################################################
+
+LimsChr <- function(infos, qc = FALSE) {
+  if (qc) {
+    map <- infos$map$chromosome[-infos$indQC]
+  } else {
+    map <- infos$map$chromosome
+  }
+
+  upper <- cumsum(rle(map)$length)
+  lower <- c(1, upper[-length(upper)] + 1)
+  cbind(lower, upper)
+}
+
+################################################################################

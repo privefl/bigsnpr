@@ -1,2 +1,2 @@
-#'@import bigmemory data.table
+#'@import bigmemory
 NULL

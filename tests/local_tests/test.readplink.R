@@ -1,5 +1,7 @@
 ################################################################################
 
+library(mypack)
+library(testthat)
 context("READPLINK")
 
 if (!file.exists("backingfiles")) dir.create("backingfiles")
@@ -35,7 +37,7 @@ if (file.exists("backingfiles/test2.rds")) file.remove("backingfiles/test2.rds")
 pedfile <- "mydata/example.ped"
 test3 <- PedToBig(pedfile, 50, "test2", "backingfiles")
 
-test_that("Same types in data.tables", {
+test_that("Same types in data.frames", {
   expect_equal(sapply(test$fam, typeof), sapply(test3$fam, typeof))
   expect_equal(sapply(test$map, typeof), sapply(test3$map, typeof))
 })
