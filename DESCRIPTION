@@ -13,4 +13,5 @@ LinkingTo: RcppArmadillo, Rcpp, bigmemory, BH
 Imports: Rcpp, tools, foreach, data.table
 Depends: R (>= 3.2.3), bigmemory
 RoxygenNote: 5.0.1
-Suggests: testthat
+Suggests: testthat,
+    covr
