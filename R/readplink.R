@@ -30,7 +30,7 @@
 #'\item Prefer using bedfiles than pedfiles because
 #' they require minimal space to store and are faster to read.
 #' }
-#'@section Implementation:
+#'@note
 #'The implementation is inspired from the code of
 #'\href{https://github.com/andrewparkermorgan/argyle}{package argyle},
 #'with some optimizations.\cr

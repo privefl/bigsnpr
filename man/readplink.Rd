@@ -45,6 +45,12 @@ and two \code{\link[data.table]{data.table}} objects
 For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
 }
+\note{
+The implementation is inspired from the code of
+\href{https://github.com/andrewparkermorgan/argyle}{package argyle},
+with some optimizations.\cr
+Especially, online reading into a \code{big.matrix} makes it memory-efficient.
+}
 \section{Warnings}{
 
 \itemize{
@@ -54,14 +60,6 @@ To load the object in another session, use \code{AttachBigSNP}.
 \item Prefer using bedfiles than pedfiles because
 they require minimal space to store and are faster to read.
 }
-}
-
-\section{Implementation}{
-
-The implementation is inspired from the code of
-\href{https://github.com/andrewparkermorgan/argyle}{package argyle},
-with some optimizations.\cr
-Especially, online reading into a \code{big.matrix} makes it memory-efficient.
 }
 \examples{
 \dontrun{
