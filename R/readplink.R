@@ -1,35 +1,29 @@
 ################################################################################
 
-#'@title Read PLINK files
+#'@title Read PLINK files into a "bigSNP".
 #'@description Functions to read ped/map or bed/bim/fam files
-#'into a \code{\link[bigmemory]{big.matrix}} (genotypes)
-#'and two \code{data.frame} objects
-#'(informations on SNPs and individuals).
+#'into a \code{\link[bigsnpr]{bigSNP}}.\cr
 #'For more information on these formats, please visit
 #'\href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
+#'Prefer using bedfiles than pedfiles because
+#' they require minimal space to store and are faster to read.
 #'@param bedfile Path to file with extension .bed. You need the corresponding
 #'.bim and .fam in the same directory.
 #'@param pedfile Path to file with extension .ped. You need the corresponding
 #'.map in the same directory.
 #'@param block.size Maximum number of loci read at once (for all individuals).
-#'@param backingfile The root name for the file(s) for the cache of x.
+#'@param backingfile The root name for the backing file(s) for the cache of
+#'the resulting object.
 #'@param backingpath The path to the directory containing the file backing cache.
-#'Default is "backingfiles".
+#'Default is "backingfiles". It needs to exist.
 #'@param readonly Is the \code{big.matrix} read only ? Default is \code{TRUE}.
-#'@return A named list of 3 elements:\itemize{
-#'\item genotypes: a filebacked \code{big.matrix} representing genotypes.\cr
-#'Each element is either 0, 1, 2 or NA.
-#'\item fam: a \code{data.frame} giving some information on the SNPs.
-#'\item map: a \code{data.frame} giving some information on the individuals.
-#'}
-#'@section Warnings:
-#'\itemize{
-#'\item Never \code{save} the result as an \code{R} object,
-#'your session will crash when loading it.\cr
-#'To load the object in another session, use \code{AttachBigSNP}.
-#'\item Prefer using bedfiles than pedfiles because
-#' they require minimal space to store and are faster to read.
-#' }
+#'@return A \code{bigSNP}.\cr
+#'In directory \code{backingpath}, reading PLINK files creates
+#'\code{backingfile}.bk, \code{backingfile}.desc and \code{backingfile}.rds.\cr
+#'From now on, you shouldn't read again from PLINK files.
+#'Instead, use \code{AttachBigSNP}
+#'to load this object (possibly enhanced from other functions)
+#' in another session from backing files.
 #'@note
 #'The implementation is inspired from the code of
 #'\href{https://github.com/andrewparkermorgan/argyle}{package argyle},
@@ -37,7 +31,7 @@
 #'Especially, online reading into a \code{big.matrix} makes it memory-efficient.
 #'@examples \dontrun{
 #'
-#'bedfile <- system.file("extdata", "example.bed", package = "mypack")
+#'bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #'
 #'if (!file.exists("backingfiles"))
 #'  dir.create("backingfiles")
@@ -61,6 +55,7 @@
 #'print(dim(test$genotypes))
 #'print(test$genotypes[1:8, 1:8])
 #'}
+#'@seealso \code{\link{dir.create}}
 #'@name readplink
 NULL
 
@@ -113,7 +108,7 @@ BedToBig <- function(bedfile,
   n <- nrow(fam)
   m <- nrow(bim)
   bigGeno <- bigmemory::big.matrix(n, m, type = "char",
-                                   backingfile = backingfile,
+                                   backingfile = paste0(backingfile, ".bk"),
                                    backingpath = backingpath,
                                    descriptorfile = paste0(backingfile, ".desc"))
 
@@ -131,13 +126,13 @@ BedToBig <- function(bedfile,
   intervals <- CutBySize(m, block.size)
   nb.blocks <- nrow(intervals)
   if (intr <- interactive())
-    pb <- txtProgressBar(min = 0, max = nb.blocks, style = 3)
+    pb <- utils::txtProgressBar(min = 0, max = nb.blocks, style = 3)
   s1 <- seq(1, 2*n, 2)
   s2 <- s1 + 1
 
   colOffset <- 0
   for (k in 1:nb.blocks) {
-    if (intr) setTxtProgressBar(pb, k - 1)
+    if (intr) utils::setTxtProgressBar(pb, k - 1)
     list.ind.na <- list()
     size <- intervals[k, "size"]
     geno.mat <- matrix(0, n, size)
@@ -157,11 +152,12 @@ BedToBig <- function(bedfile,
   }
   close(bed)
   if (intr) {
-    setTxtProgressBar(pb, nb.blocks)
+    utils::setTxtProgressBar(pb, nb.blocks)
     close(pb)
   }
 
   snp_list <- list(genotypes = bigGeno, fam = fam, map = bim)
+  class(snp_list) <- "bigSNP"
 
   saveRDS(snp_list, file.path(backingpath, paste0(backingfile, ".rds")))
 
@@ -259,16 +255,16 @@ PedToBig <- function(pedfile,
   nb.blocks <- nrow(intervals)
   printf("\nSecond and last read to fill the genotypic matrix\n")
   if (intr <- interactive())
-    pb <- txtProgressBar(min = 0, max = nb.blocks + 1, style = 3)
+    pb <- utils::txtProgressBar(min = 0, max = nb.blocks + 1, style = 3)
   bigGeno <- bigmemory::big.matrix(n, m - len, type = "char",
-                                   backingfile = backingfile,
+                                   backingfile = paste0(backingfile, ".bk"),
                                    backingpath = backingpath,
                                    descriptorfile = paste0(backingfile, ".desc"))
   fam <- list()
   opt.save <- options(bigmemory.typecast.warning = FALSE)
   ped <- file(pedfile, open = "r")
   for (k in 1:nb.blocks) {
-    if (intr) setTxtProgressBar(pb, k - 1)
+    if (intr) utils::setTxtProgressBar(pb, k - 1)
     tmp <- readLines(ped, n = intervals[k, "size"])
     tmp <- strsplit(tmp, " ", fixed = T)
     fam[[k]] <-  sapply(tmp, head, n = 6L)
@@ -281,7 +277,7 @@ PedToBig <- function(pedfile,
   }
   close(ped)
   options(opt.save)
-  if (intr) setTxtProgressBar(pb, nb.blocks)
+  if (intr) utils::setTxtProgressBar(pb, nb.blocks)
 
   # convert the fam list in a data.frame
   tmpfile.name <- tempfile()
@@ -294,11 +290,12 @@ PedToBig <- function(pedfile,
   #file.remove(file = tmpfile.name)
 
   if (intr) {
-    setTxtProgressBar(pb, nb.blocks + 1)
+    utils::setTxtProgressBar(pb, nb.blocks + 1)
     close(pb)
   }
 
   snp_list <- list(genotypes = bigGeno, fam = fam, map = map)
+  class(snp_list) <- "bigSNP"
 
   saveRDS(snp_list, file.path(backingpath, paste0(backingfile, ".rds")))
 
@@ -312,9 +309,6 @@ PedToBig <- function(pedfile,
 AttachBigSNP <- function(backingfile,
                          backingpath = "backingfiles",
                          readonly = TRUE) {
-  backingfile <- gsub("\\.rds$", "", backingfile)
-  backingfile <- gsub("\\.desc$", "", backingfile)
-
   snp.list <- readRDS(file.path(backingpath, paste0(backingfile, ".rds")))
 
   snp.list$genotypes <-

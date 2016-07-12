@@ -1,3 +1,42 @@
+#'@title Quality control, subset and imputation for a "bigSNP".
+#'@name qcimpute
+#'@param bigsnp A \code{bigSNP}.
+#'@param backingfile The root name for the backing file(s) for the cache of
+#'the resulting object.
+#'@param backingpath The path to the directory containing the file backing cache.
+#'Default is "backingfiles". It needs to exist.
+#'@return A \code{bigSNP}.
+#'@examples #TODO
+NULL
+
+################################################################################
+
+#'@name QC
+#'@description \code{QC}: Quality control (filters)
+#'for a \code{\link{bigSNP}} resulting
+#'in a \code{bigSNP} of lower dimension.
+#'@rdname qcimpute
+#'@export
+QC <- function(bigsnp) {
+  if (class(bigsnp) != "bigSNP") stop("bigsnp must be a bigSNP")
+}
+
+#'@description \code{subset.bigSNP}: an S3 generic function
+#'for \code{subset} with the class \code{bigSNP}.
+#'@param ind.row Indices of the rows (individuals) to keep.
+#'@param ind.col Indices of the columns (SNPs) to keep.
+#'@export
+#'@method subset bigSNP
+#'@name subset.bigSNP
+#'@rdname qcimpute
+subset.bigSNP <- function(bigsnp, ind.row, ind.col,
+                          backingfile,
+                          backingpath = "backingfiles") {
+
+}
+
+################################################################################
+
 impute <- function(X.desc, lims) {
   bigMat <- sub.big.matrix(X.desc, firstCol = lims[1], lastCol = lims[2],
                            backingpath = "backingfiles")
@@ -50,6 +89,11 @@ impute <- function(X.desc, lims) {
   return()
 }
 
+#'@description \code{impute}: Imputation function
+#'for a \code{bigSNP}.
+#'@export
+#'@name impute
+#'@rdname qcimpute
 impute_all <- function(X, celiac, ncores) {
   range.chr <- foreach(chr = 1:22, .combine = 'rbind') %do% {
     range(which(celiac$map$chromosome[-celiac$indQC] == chr))

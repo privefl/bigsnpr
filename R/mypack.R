@@ -1,2 +1,0 @@
-#'@import bigmemory
-NULL

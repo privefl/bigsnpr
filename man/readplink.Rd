@@ -5,7 +5,7 @@
 \alias{BedToBig}
 \alias{PedToBig}
 \alias{readplink}
-\title{Read PLINK files}
+\title{Read PLINK files into a "bigSNP".}
 \usage{
 BedToBig(bedfile, block.size, backingfile, backingpath = "backingfiles")
 
@@ -19,10 +19,11 @@ AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
 
 \item{block.size}{Maximum number of loci read at once (for all individuals).}
 
-\item{backingfile}{The root name for the file(s) for the cache of x.}
+\item{backingfile}{The root name for the backing file(s) for the cache of
+the resulting object.}
 
 \item{backingpath}{The path to the directory containing the file backing cache.
-Default is "backingfiles".}
+Default is "backingfiles". It needs to exist.}
 
 \item{pedfile}{Path to file with extension .ped. You need the corresponding
 .map in the same directory.}
@@ -30,20 +31,21 @@ Default is "backingfiles".}
 \item{readonly}{Is the \code{big.matrix} read only ? Default is \code{TRUE}.}
 }
 \value{
-A named list of 3 elements:\itemize{
-\item genotypes: a filebacked \code{big.matrix} representing genotypes.\cr
-Each element is either 0, 1, 2 or NA.
-\item fam: a \code{data.frame} giving some information on the SNPs.
-\item map: a \code{data.frame} giving some information on the individuals.
-}
+A \code{bigSNP}.\cr
+In directory \code{backingpath}, reading PLINK files creates
+\code{backingfile}.bk, \code{backingfile}.desc and \code{backingfile}.rds.\cr
+From now on, you shouldn't read again from PLINK files.
+Instead, use \code{AttachBigSNP}
+to load this object (possibly enhanced from other functions)
+in another session from backing files.
 }
 \description{
 Functions to read ped/map or bed/bim/fam files
-into a \code{\link[bigmemory]{big.matrix}} (genotypes)
-and two \code{data.frame} objects
-(informations on SNPs and individuals).
+into a \code{\link[bigsnpr]{bigSNP}}.\cr
 For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
+Prefer using bedfiles than pedfiles because
+they require minimal space to store and are faster to read.
 }
 \note{
 The implementation is inspired from the code of
@@ -51,20 +53,10 @@ The implementation is inspired from the code of
 with some optimizations.\cr
 Especially, online reading into a \code{big.matrix} makes it memory-efficient.
 }
-\section{Warnings}{
-
-\itemize{
-\item Never \code{save} the result as an \code{R} object,
-your session will crash when loading it.\cr
-To load the object in another session, use \code{AttachBigSNP}.
-\item Prefer using bedfiles than pedfiles because
-they require minimal space to store and are faster to read.
-}
-}
 \examples{
 \dontrun{
 
-bedfile <- system.file("extdata", "example.bed", package = "mypack")
+bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 
 if (!file.exists("backingfiles"))
  dir.create("backingfiles")
@@ -88,5 +80,8 @@ str(test)
 print(dim(test$genotypes))
 print(test$genotypes[1:8, 1:8])
 }
+}
+\seealso{
+\code{\link{dir.create}}
 }
 
