@@ -2,18 +2,18 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 rawToBigPart <- function(source, pBigMat, colOffset = 0L) {
-    invisible(.Call('mypack_rawToBigPart', PACKAGE = 'mypack', source, pBigMat, colOffset))
+    invisible(.Call('bigsnpr_rawToBigPart', PACKAGE = 'bigsnpr', source, pBigMat, colOffset))
 }
 
 R_squared_chr <- function(pBigMat, rowInd, colInd, colMat0) {
-    .Call('mypack_R_squared_chr', PACKAGE = 'mypack', pBigMat, rowInd, colInd, colMat0)
+    .Call('bigsnpr_R_squared_chr', PACKAGE = 'bigsnpr', pBigMat, rowInd, colInd, colMat0)
 }
 
 R_squared <- function(pBigMat, y, rowInd, weights) {
-    .Call('mypack_R_squared', PACKAGE = 'mypack', pBigMat, y, rowInd, weights)
+    .Call('bigsnpr_R_squared', PACKAGE = 'bigsnpr', pBigMat, y, rowInd, weights)
 }
 
 betasRegLin <- function(pBigMat, y, rowInd, weights) {
-    .Call('mypack_betasRegLin', PACKAGE = 'mypack', pBigMat, y, rowInd, weights)
+    .Call('bigsnpr_betasRegLin', PACKAGE = 'bigsnpr', pBigMat, y, rowInd, weights)
 }
 

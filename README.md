@@ -2,15 +2,15 @@
 
 [![Project Status: WIP ? Initial development is in progress, but there has not yet been a stable, usable release suitable for the
 public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
-[![Travis-CI Build Status](https://travis-ci.org/privefl/mypack.svg?branch=master)](https://travis-ci.org/privefl/mypack)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/privefl/mypack?branch=master&svg=true)](https://ci.appveyor.com/project/privefl/mypack)
-[![Coverage Status](https://img.shields.io/codecov/c/github/privefl/mypack/master.svg)](https://codecov.io/github/privefl/mypack?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/privefl/bigsnpr.svg?branch=master)](https://travis-ci.org/privefl/bigsnpr)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/privefl/bigsnpr?branch=master&svg=true)](https://ci.appveyor.com/project/privefl/bigsnpr)
+[![Coverage Status](https://img.shields.io/codecov/c/github/privefl/bigsnpr/master.svg)](https://codecov.io/github/privefl/bigsnpr?branch=master)
  
 ---
  
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mypack)](http://cran.r-project.org/package=mypack)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bigsnpr)](http://cran.r-project.org/package=bigsnpr)
 [![packageversion](https://img.shields.io/badge/Package%20version-0.1.0-orange.svg?style=flat-square)](commits/master)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2016--07--10-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2016--07--12-yellowgreen.svg)](/commits/master)
 
  
 ---
@@ -24,7 +24,7 @@ public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus
 
 
 
-# mypack
+# bigsnpr
 
 
 

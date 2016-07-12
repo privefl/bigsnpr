@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // rawToBigPart
 void rawToBigPart(const arma::Mat<unsigned char>& source, SEXP pBigMat, int colOffset);
-RcppExport SEXP mypack_rawToBigPart(SEXP sourceSEXP, SEXP pBigMatSEXP, SEXP colOffsetSEXP) {
+RcppExport SEXP bigsnpr_rawToBigPart(SEXP sourceSEXP, SEXP pBigMatSEXP, SEXP colOffsetSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< const arma::Mat<unsigned char>& >::type source(sourceSEXP);
@@ -20,7 +20,7 @@ END_RCPP
 }
 // R_squared_chr
 Rcpp::NumericVector R_squared_chr(SEXP pBigMat, const IntegerVector& rowInd, const IntegerVector& colInd, const NumericVector& colMat0);
-RcppExport SEXP mypack_R_squared_chr(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP colMat0SEXP) {
+RcppExport SEXP bigsnpr_R_squared_chr(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP colMat0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -34,7 +34,7 @@ END_RCPP
 }
 // R_squared
 NumericVector R_squared(SEXP pBigMat, const NumericVector& y, const IntegerVector& rowInd, const NumericVector& weights);
-RcppExport SEXP mypack_R_squared(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
+RcppExport SEXP bigsnpr_R_squared(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -48,7 +48,7 @@ END_RCPP
 }
 // betasRegLin
 NumericMatrix betasRegLin(SEXP pBigMat, const NumericVector& y, const IntegerVector& rowInd, const NumericVector& weights);
-RcppExport SEXP mypack_betasRegLin(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
+RcppExport SEXP bigsnpr_betasRegLin(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
