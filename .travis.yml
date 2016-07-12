@@ -7,10 +7,5 @@ sudo: false
 r_packages:
   - covr
 
-env:
-  - TEST_DIR=tests/testhat
-  - TEST_DIR=tests/localtests
-  - TEST_DIR=examples
-
 after_success:
   - Rscript -e 'covr::codecov()'
