@@ -1,4 +1,4 @@
 library(testthat)
-library(mypack)
+library(bigsnpr)
 
-test_check("mypack")
+test_check("bigsnpr")
