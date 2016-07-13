@@ -7,7 +7,7 @@
 #'\item map: a \code{data.frame} giving some information on the individuals.
 #'}
 #'Others slots will be added by methods of \code{bigSNP},
-#'for instance \code{\link[bigsnpr]{impute}}.
+#'for instance \code{\link[bigsnpr]{Impute}}.
 #'@name bigSNP-class
 #'@aliases bigSNP-class bigSNP
 #'@keywords class

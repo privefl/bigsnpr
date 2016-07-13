@@ -23,16 +23,26 @@ seq2 <- function(lims) {
 
 ################################################################################
 
-LimsChr <- function(infos, qc = FALSE) {
-  if (qc) {
-    map <- infos$map$chromosome[-infos$indQC]
-  } else {
-    map <- infos$map$chromosome
-  }
-
-  upper <- cumsum(rle(map)$length)
+LimsChr <- function(infos) {
+  map.rle <- rle(infos$map$chromosome)
+  upper <- cumsum(map.rle$length)
   lower <- c(1, upper[-length(upper)] + 1)
-  cbind(lower, upper)
+
+  cbind(lower, upper, "chr" = map.rle$values)
 }
 
 ################################################################################
+
+foreach2 <- function(obj, expr_fun, ncores) {
+  if (is.seq <- (ncores == 1)) {
+    foreach::registerDoSEQ()
+  } else {
+    cl <- parallel::makeCluster(ncores)
+    doParallel::registerDoParallel(cl)
+  }
+  res <- eval(parse(text = sprintf("foreach::`%dopar%`(obj, expr_fun(%s))",
+                                   obj$argnames)))
+  if (!is.seq) parallel::stopCluster(cl)
+
+  return(res)
+}
