@@ -33,7 +33,7 @@
 #'
 #'bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #'
-#'if (!file.exists("backingfiles"))
+#'if (!dir.exists("backingfiles"))
 #'  dir.create("backingfiles")
 #'if (file.exists("backingfiles/test_doc"))
 #'  file.remove("backingfiles/test_doc")

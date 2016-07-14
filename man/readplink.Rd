@@ -41,7 +41,7 @@ to load this object in another session from backing files.
 }
 \description{
 Functions to read ped/map or bed/bim/fam files
-into a \code{\link[bigsnpr]{bigSNP}}.\cr
+into a \code{\link{bigSNP}}.\cr
 For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
 Prefer using bedfiles than pedfiles because
@@ -58,7 +58,7 @@ Especially, online reading into a \code{big.matrix} makes it memory-efficient.
 
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 
-if (!file.exists("backingfiles"))
+if (!dir.exists("backingfiles"))
  dir.create("backingfiles")
 if (file.exists("backingfiles/test_doc"))
  file.remove("backingfiles/test_doc")
