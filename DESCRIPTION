@@ -10,7 +10,7 @@ Description: Fast and memory-efficient predictive analysis of SNP arrays.
 License: GPL-3
 LazyData: TRUE
 LinkingTo: RcppArmadillo, Rcpp, bigmemory, BH
-Imports: Rcpp, tools, foreach, data.table
+Imports: Rcpp, tools, foreach, data.table, bigmemory.sri
 Depends: R (>= 3.2.3), bigmemory
 RoxygenNote: 5.0.1
 Suggests: testthat, covr, parallel, doParallel
