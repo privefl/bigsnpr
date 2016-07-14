@@ -40,7 +40,7 @@ foreach2 <- function(obj, expr_fun, ncores) {
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)
   }
-  res <- eval(parse(text = sprintf("foreach::`%dopar%`(obj, expr_fun(%s))",
+  res <- eval(parse(text = sprintf("foreach::`%%dopar%%`(obj, expr_fun(%s))",
                                    obj$argnames)))
   if (!is.seq) parallel::stopCluster(cl)
 

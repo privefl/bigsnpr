@@ -17,3 +17,7 @@ betasRegLin <- function(pBigMat, y, rowInd, weights) {
     .Call('bigsnpr_betasRegLin', PACKAGE = 'bigsnpr', pBigMat, y, rowInd, weights)
 }
 
+deepcopyPart <- function(pBigMat, pBigMat2, rowInd, colInd) {
+    invisible(.Call('bigsnpr_deepcopyPart', PACKAGE = 'bigsnpr', pBigMat, pBigMat2, rowInd, colInd))
+}
+

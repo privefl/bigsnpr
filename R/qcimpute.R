@@ -1,11 +1,7 @@
 #'@title Quality control, subset and imputation for a "bigSNP".
 #'@name qcimpute
 #'@param x A \code{bigSNP}.
-#'@param backingfile The root name for the backing file(s) for the cache of
-#'the resulting object.
-#'@param backingpath The path to the directory containing the file backing cache.
-#'Default is "backingfiles". It needs to exist.
-#'@return A \code{bigSNP}.
+#'@return A new \code{bigSNP}.
 #'@examples #TODO
 NULL
 
@@ -19,6 +15,8 @@ NULL
 #'@export
 QC <- function(x) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
+
+  printf("Not yet implemented\n")
 }
 
 #'@description \code{sub.bigSNP}: a function
@@ -28,10 +26,33 @@ QC <- function(x) {
 #'@export
 #'@name sub.bigSNP
 #'@rdname qcimpute
-sub.bigSNP <- function(x, ind.row, ind.col,
-                          backingfile,
-                          backingpath = "backingfiles") {
+sub.bigSNP <- function(x, ind.row, ind.col) {
+  if (class(x) != "bigSNP") stop("x must be a bigSNP")
 
+  number <- 1
+  while (file.exists(
+    file.path(x$backingpath,
+              paste0(newfile <- paste0(x$backingfile, "_sub", number),
+                     ".desc")))) {
+    number <- number + 1
+  }
+  X2 <- bigmemory::big.matrix(length(ind.row), length(ind.col), type = "char",
+                              backingfile = paste0(newfile, ".bk"),
+                              backingpath = x$backingpath,
+                              descriptorfile = paste0(newfile, ".desc"))
+
+  deepcopyPart((x$genotypes)@address, X2@address, ind.row, ind.col)
+
+  snp_list <- list(genotypes = X2,
+                   fam = x$fam[ind.row, ],
+                   map = x$map[ind.col, ],
+                   backingfile = newfile,
+                   backingpath = x$backingpath)
+  class(snp_list) <- "bigSNP"
+
+  saveRDS(snp_list, file.path(x$backingpath, paste0(newfile, ".rds")))
+
+  return(snp_list)
 }
 
 ################################################################################
@@ -44,13 +65,34 @@ sub.bigSNP <- function(x, ind.row, ind.col,
 #'Default doesn't use parallelism.
 #'@rdname qcimpute
 Impute <- function(x, ncores = 1) {
-  ImputeChr <- function(X.desc, lims) {
+  if (class(x) != "bigSNP") stop("x must be a bigSNP")
+
+  # get descriptors
+  X.desc <- describe(x$genotypes)
+
+  number <- 1
+  while (file.exists(
+    file.path(x$backingpath,
+              paste0(newfile <- paste0(x$backingfile, "_impute", number),
+                     ".desc")))) {
+    number <- number + 1
+  }
+  X2 <- deepcopy(x$genotypes, type = "char",
+                 backingfile = paste0(newfile, ".bk"),
+                 backingpath = x$backingpath,
+                 descriptorfile = paste0(newfile, ".desc"))
+  X2.desc <- describe(X2)
+
+  # function that imputes one chromosome
+  ImputeChr <- function(lims) {
     #printf("Imputing chromosome %d with \"nearest neighbors\"...\n", lims[3])
 
-    bigMat <- sub.big.matrix(X.desc, firstCol = lims[1], lastCol = lims[2],
-                             backingpath = "backingfiles")
+    X <- sub.big.matrix(X.desc, firstCol = lims[1], lastCol = lims[2],
+                             backingpath = x$backingpath)
+    X2 <- sub.big.matrix(X2.desc, firstCol = lims[1], lastCol = lims[2],
+                             backingpath = x$backingpath)
 
-    predictNA <- function(X, ind, ind2) {
+    predictNA <- function(ind, ind2) {
       tmp <- X[, ind]
       indNA <- which(is.na(tmp[, ind2]))
       if (length(indNA) > 0) {
@@ -66,31 +108,30 @@ Impute <- function(x, ncores = 1) {
             cond <- is.na(pred)
           }
 
-          X[i, ind[ind2]] <- round(pred)
+          X2[i, ind[ind2]] <- round(pred)
         }
       }
 
       return(0)
     }
 
-    m <- ncol(bigMat)
+    m <- ncol(X)
 
     opt.save <- options(bigmemory.typecast.warning = FALSE)
 
     # first three columns
     for (j in 1:3) {
-      predictNA(bigMat, 1:7, j)
+      predictNA(1:7, j)
     }
 
     # middle
     for (j in 4:(m-3)) {
-      predictNA(bigMat, j + -3:3, 4)
+      predictNA(j + -3:3, 4)
     }
 
     # last three columns
-    near <- bigMat[, m + -6:0]
     for (j in 5:7) {
-      predictNA(bigMat, m + -6:0, j)
+      predictNA(m + -6:0, j)
     }
 
     options(opt.save)
@@ -99,16 +140,22 @@ Impute <- function(x, ncores = 1) {
   }
 
   range.chr <- LimsChr(x)
-  X.desc <- describe(x$genotypes)
 
-
-  obj <- foreach::foreach(i = 1:nrow(range.chr))
-  expr_fun <- function(i) {
-    ImputeChr(X.desc, range.chr[i, ])
-  }
+  obj <- foreach::foreach(i = 1:nrow(range.chr),
+                          .noexport = c("x", "X2"))
+  expr_fun <- function(i) ImputeChr(range.chr[i, ])
   foreach2(obj, expr_fun, ncores)
 
-  return(0)
+  snp_list <- list(genotypes = X2,
+                   fam = x$fam,
+                   map = x$map,
+                   backingfile = newfile,
+                   backingpath = x$backingpath)
+  class(snp_list) <- "bigSNP"
+
+  saveRDS(snp_list, file.path(x$backingpath, paste0(newfile, ".rds")))
+
+  return(snp_list)
 }
 
 ################################################################################

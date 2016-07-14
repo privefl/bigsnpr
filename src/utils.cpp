@@ -241,3 +241,34 @@ NumericMatrix betasRegLin(SEXP pBigMat,
     throw Rcpp::exception("unknown type detected for big.matrix object!");
   }
 }
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void deepcopyPart(SEXP pBigMat,
+                  SEXP pBigMat2,
+                  const IntegerVector& rowInd,
+                  const IntegerVector& colInd) {
+
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<char> macc(*xpMat);
+  XPtr<BigMatrix> xpMat2(pBigMat2);
+  MatrixAccessor<char> macc2(*xpMat2);
+
+  int n = rowInd.size();
+  int m = colInd.size();
+
+  int indi, indj;
+
+  for (int j = 0; j < m; j++) {
+    indj = colInd[j] - 1;
+    for (int i = 0; i < n; i++) {
+      indi = rowInd[i] - 1;
+      macc2[j][i] = macc[indj][indi];
+    }
+  }
+
+  return;
+}
+
+/******************************************************************************/

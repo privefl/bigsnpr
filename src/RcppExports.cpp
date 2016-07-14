@@ -60,3 +60,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// deepcopyPart
+void deepcopyPart(SEXP pBigMat, SEXP pBigMat2, const IntegerVector& rowInd, const IntegerVector& colInd);
+RcppExport SEXP bigsnpr_deepcopyPart(SEXP pBigMatSEXP, SEXP pBigMat2SEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat2(pBigMat2SEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    deepcopyPart(pBigMat, pBigMat2, rowInd, colInd);
+    return R_NilValue;
+END_RCPP
+}

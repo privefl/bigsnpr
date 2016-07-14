@@ -32,12 +32,12 @@ Default is "backingfiles". It needs to exist.}
 }
 \value{
 A \code{bigSNP}.\cr
-In directory \code{backingpath}, reading PLINK files creates
-\code{backingfile}.bk, \code{backingfile}.desc and \code{backingfile}.rds.\cr
-From now on, you shouldn't read again from PLINK files.
+Reading PLINK files creates
+\code{backingfile}.bk, \code{backingfile}.desc and \code{backingfile}.rds
+in directory \code{backingpath}.\cr
+You shouldn't read from PLINK files more than once.
 Instead, use \code{AttachBigSNP}
-to load this object (possibly enhanced from other functions)
-in another session from backing files.
+to load this object in another session from backing files.
 }
 \description{
 Functions to read ped/map or bed/bim/fam files
