@@ -41,7 +41,7 @@ to load this object in another session from backing files.
 }
 \description{
 Functions to read ped/map or bed/bim/fam files
-into a \code{\link{bigSNP}}.\cr
+into a \code{\link[bigsnpr:bigSNP-class]{bigSNP}}.\cr
 For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
 Prefer using bedfiles than pedfiles because
