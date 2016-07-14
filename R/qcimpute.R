@@ -2,10 +2,10 @@
 #'@name qcimpute
 #'@param x A \code{bigSNP}.
 #'@return A new \code{bigSNP}.
+#'@seealso \code{\link{bigSNP}}
 #'@examples #TODO
 NULL
 
-#@seealso \code{\link{bigSNP}}
 
 ################################################################################
 

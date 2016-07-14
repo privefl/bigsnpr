@@ -40,4 +40,7 @@ for a \code{bigSNP}.
 \examples{
 #TODO
 }
+\seealso{
+\code{\link{bigSNP}}
+}
 
