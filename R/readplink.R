@@ -55,9 +55,11 @@
 #'print(dim(test$genotypes))
 #'print(test$genotypes[1:8, 1:8])
 #'}
-#'@seealso \code{\link{bigSNP}} \code{\link{dir.create}}
+#'@seealso \code{\link{dir.create}}
 #'@name readplink
 NULL
+
+#\code{\link{bigSNP}}
 
 ################################################################################
 
