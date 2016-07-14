@@ -31,13 +31,7 @@ QC <- function(x) {
 sub.bigSNP <- function(x, ind.row, ind.col) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 
-  number <- 1
-  while (file.exists(
-    file.path(x$backingpath,
-              paste0(newfile <- paste0(x$backingfile, "_sub", number),
-                     ".desc")))) {
-    number <- number + 1
-  }
+  newfile <- checkFile(x, "sub")
   X2 <- bigmemory::big.matrix(length(ind.row), length(ind.col), type = "char",
                               backingfile = paste0(newfile, ".bk"),
                               backingpath = x$backingpath,
@@ -72,13 +66,7 @@ Impute <- function(x, ncores = 1) {
   # get descriptors
   X.desc <- describe(x$genotypes)
 
-  number <- 1
-  while (file.exists(
-    file.path(x$backingpath,
-              paste0(newfile <- paste0(x$backingfile, "_impute", number),
-                     ".desc")))) {
-    number <- number + 1
-  }
+  newfile <- checkFile(x, "impute")
   X2 <- deepcopy(x$genotypes, type = "char",
                  backingfile = paste0(newfile, ".bk"),
                  backingpath = x$backingpath,

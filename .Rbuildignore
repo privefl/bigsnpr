@@ -11,3 +11,4 @@ cran-comments.md
 tests/local_tests
 ^appveyor\.yml$
 README.html
+^cran-comments\.md$

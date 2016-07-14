@@ -4,13 +4,92 @@
 #include <bigmemory/MatrixAccessor.hpp>
 
 using namespace Rcpp;
-using namespace arma;
+//using namespace arma;
 
 
 /******************************************************************************/
 
 // [[Rcpp::export]]
-void rawToBigPart(const arma::Mat<unsigned char>& source, SEXP pBigMat, int colOffset = 0) {
+IntegerVector bigcolsums(SEXP pBigMat, const IntegerVector& rowInd) {
+
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<char> macc(*xpMat);
+
+  int n = rowInd.size();
+  int m = xpMat->ncol();
+
+  IntegerVector res(m);
+
+  for (int j = 0; j < m; j++) {
+    for (int i = 0; i < n; i++) {
+      res[j] += macc[j][rowInd[i]-1];
+    }
+  }
+
+  return(res);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void incrSup(SEXP pBigMat, const arma::mat& source) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<double> macc(*xpMat);
+
+  const double* colj;
+
+  for (int j = 0; j < xpMat->ncol(); j++) {
+    colj = source.colptr(j);
+    for (int i = 0; i <= j; i++) {
+      macc[j][i] += colj[i];
+    }
+  }
+
+  return;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void complete(SEXP pBigMat) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<double> macc(*xpMat);
+
+  for (int j = 0; j < xpMat->ncol()-1; j++) {
+    for (int i = j+1; i < xpMat->nrow(); i++) {
+      macc[j][i] = macc[i][j];
+    }
+  }
+
+  return;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+arma::mat& center_p(arma::mat& source, const NumericVector& p) {
+  int n = source.n_rows;
+  int m = source.n_cols;
+
+  double pj, pj_d;
+
+  for (int j = 0; j < m; j++) {
+    pj = p[j];
+    pj_d = sqrt(2 * pj * (1 - pj));
+    for (int i = 0; i < n; i++) {
+      source(i,j) -= 2 * pj;
+      source(i,j) /= pj_d;
+    }
+  }
+
+  return(source);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void rawToBigPart(const arma::Mat<unsigned char>& source,
+                  SEXP pBigMat, int colOffset = 0) {
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 

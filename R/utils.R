@@ -48,3 +48,15 @@ foreach2 <- function(obj, expr_fun, ncores) {
 }
 
 ################################################################################
+
+checkFile <- function(x, type) {
+  number <- 1
+  while (file.exists(
+    file.path(x$backingpath,
+              paste0(newfile <- paste0(x$backingfile, "_", type, number),
+                     ".desc")))) {
+    number <- number + 1
+  }
+
+  newfile
+}

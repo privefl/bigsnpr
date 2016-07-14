@@ -6,6 +6,51 @@
 
 using namespace Rcpp;
 
+// bigcolsums
+IntegerVector bigcolsums(SEXP pBigMat, const IntegerVector& rowInd);
+RcppExport SEXP bigsnpr_bigcolsums(SEXP pBigMatSEXP, SEXP rowIndSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    __result = Rcpp::wrap(bigcolsums(pBigMat, rowInd));
+    return __result;
+END_RCPP
+}
+// incrSup
+void incrSup(SEXP pBigMat, const arma::mat& source);
+RcppExport SEXP bigsnpr_incrSup(SEXP pBigMatSEXP, SEXP sourceSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type source(sourceSEXP);
+    incrSup(pBigMat, source);
+    return R_NilValue;
+END_RCPP
+}
+// complete
+void complete(SEXP pBigMat);
+RcppExport SEXP bigsnpr_complete(SEXP pBigMatSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    complete(pBigMat);
+    return R_NilValue;
+END_RCPP
+}
+// center_p
+arma::mat& center_p(arma::mat& source, const NumericVector& p);
+RcppExport SEXP bigsnpr_center_p(SEXP sourceSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::mat& >::type source(sourceSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
+    __result = Rcpp::wrap(center_p(source, p));
+    return __result;
+END_RCPP
+}
 // rawToBigPart
 void rawToBigPart(const arma::Mat<unsigned char>& source, SEXP pBigMat, int colOffset);
 RcppExport SEXP bigsnpr_rawToBigPart(SEXP sourceSEXP, SEXP pBigMatSEXP, SEXP colOffsetSEXP) {
