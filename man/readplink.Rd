@@ -82,6 +82,6 @@ print(test$genotypes[1:8, 1:8])
 }
 }
 \seealso{
-\code{\link{bigSNP-class}} \code{\link{dir.create}}
+\code{\link{bigSNP}} \code{\link{dir.create}}
 }
 

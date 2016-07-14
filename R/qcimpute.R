@@ -12,7 +12,7 @@ NULL
 #'for a \code{bigSNP} resulting
 #'in a \code{bigSNP} of lower dimension.
 #'@rdname qcimpute
-#'@seealso \code{\link{bigSNP-class}}
+#'@seealso \code{\link{bigSNP}}
 #'@export
 QC <- function(x) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
