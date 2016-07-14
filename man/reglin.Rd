@@ -40,11 +40,11 @@ the intercepts (first row) and slopes (second row) of each regression.
 \description{
 Operations of \bold{univariate} linear regression
 (intercept, slope and coefficient of determination)
-on all the columns of a \code{\link[bigmemory]{big.matrix}}\cr
+on all the columns of a \code{big.matrix}\cr
 In the case of classification,
 weights are used to make the results independent
 from the proportion of cases / controls
-(see parameter \emph{weights} of \code{\link[stats]{lm}}).
+(see parameter \emph{weights} of \code{lm}).
 }
 \examples{
 # Simulating some data
@@ -89,5 +89,8 @@ for (j in 1:ncol(x.big)) {
 print(res)
 print(rbind(CoeffsReg(x.big, y2, ind.train),
             RsqReg(x.big, y2, ind.train)))
+}
+\seealso{
+\code{\link[bigmemory]{big.matrix-class}} \code{\link[stats]{lm}}
 }
 

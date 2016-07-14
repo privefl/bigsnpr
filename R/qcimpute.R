@@ -9,9 +9,10 @@ NULL
 
 #'@name QC
 #'@description \code{QC}: Quality control (filters)
-#'for a \code{\link{bigSNP}} resulting
+#'for a \code{bigSNP} resulting
 #'in a \code{bigSNP} of lower dimension.
 #'@rdname qcimpute
+#'@seealso \code{\link{bigSNP-class}}
 #'@export
 QC <- function(x) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
@@ -57,7 +58,7 @@ sub.bigSNP <- function(x, ind.row, ind.col) {
 
 ################################################################################
 
-#'@description \code{impute}: Imputation function
+#'@description \code{Impute}: Imputation function
 #'for a \code{bigSNP}.
 #'@export
 #'@name Impute

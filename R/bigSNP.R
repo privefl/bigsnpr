@@ -1,6 +1,6 @@
 #'@title A class for analysis of massive SNP arrays.
 #'@description A named list with at least 5 slots:\itemize{
-#'\item genotypes: a filebacked \code{\link[bigmemory]{big.matrix}}
+#'\item genotypes: a filebacked \code{big.matrix}
 #'of type \code{char} representing genotypes.\cr
 #'Each element is either 0, 1, 2 or \code{NA}. Rows are individuals and columns are SNPs.
 #'\item fam: a \code{data.frame} giving some information on the SNPs.
@@ -12,5 +12,5 @@
 #'@name bigSNP-class
 #'@aliases bigSNP-class bigSNP
 #'@keywords class
-#'@seealso \code{\link{readplink}}
+#'@seealso \code{\link[bigmemory]{big.matrix-class}} \code{\link{readplink}}
 NULL

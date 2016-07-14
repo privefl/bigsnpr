@@ -2,7 +2,7 @@
 
 #'@title Read PLINK files into a "bigSNP".
 #'@description Functions to read ped/map or bed/bim/fam files
-#'into a \code{\link[bigsnpr:bigSNP-class]{bigSNP}}.\cr
+#'into a \code{bigSNP}.\cr
 #'For more information on these formats, please visit
 #'\href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
 #'Prefer using bedfiles than pedfiles because
@@ -55,7 +55,7 @@
 #'print(dim(test$genotypes))
 #'print(test$genotypes[1:8, 1:8])
 #'}
-#'@seealso \code{\link{dir.create}}
+#'@seealso \code{\link{bigSNP-class}} \code{\link{dir.create}}
 #'@name readplink
 NULL
 
