@@ -10,7 +10,7 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-IntegerVector bigcolsums(SEXP pBigMat, const IntegerVector& rowInd) {
+IntegerVector bigcolsumsChar(SEXP pBigMat, const IntegerVector& rowInd) {
 
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
@@ -27,6 +27,46 @@ IntegerVector bigcolsums(SEXP pBigMat, const IntegerVector& rowInd) {
   }
 
   return(res);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+NumericVector bigcolsumsDouble(SEXP pBigMat, const IntegerVector& rowInd) {
+
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<double> macc(*xpMat);
+
+  int n = rowInd.size();
+  int m = xpMat->ncol();
+
+  NumericVector res(m);
+
+  for (int j = 0; j < m; j++) {
+    for (int i = 0; i < n; i++) {
+      res[j] += macc[j][rowInd[i]-1];
+    }
+  }
+
+  return(res);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void symCenter(SEXP pBigMat, const NumericVector& means, double mean) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<double> macc(*xpMat);
+
+  int n = xpMat->nrow();
+
+  for (int j = 0; j < n; j++) {
+    for (int i = 0; i < n; i++) {
+      macc[j][i] += mean - means[i] - means[j];
+    }
+  }
+
+  return;
 }
 
 /******************************************************************************/
@@ -67,18 +107,35 @@ void complete(SEXP pBigMat) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-arma::mat& center_p(arma::mat& source, const NumericVector& p) {
+arma::mat& scaling(arma::mat& source,
+                   const NumericVector& mean,
+                   const NumericVector& sd) {
   int n = source.n_rows;
   int m = source.n_cols;
 
-  double pj, pj_d;
+  for (int j = 0; j < m; j++) {
+    for (int i = 0; i < n; i++) {
+      source(i,j) -= mean[j];
+      source(i,j) /= sd[j];
+    }
+  }
+
+  return(source);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+arma::mat& scaling2(arma::mat& source,
+                    const NumericVector& intercept,
+                    const NumericVector& slope) {
+  int n = source.n_rows;
+  int m = source.n_cols;
 
   for (int j = 0; j < m; j++) {
-    pj = p[j];
-    pj_d = sqrt(2 * pj * (1 - pj));
     for (int i = 0; i < n; i++) {
-      source(i,j) -= 2 * pj;
-      source(i,j) /= pj_d;
+      source(i,j) *= slope[j];
+      source(i,j) += intercept[j];
     }
   }
 

@@ -11,7 +11,10 @@
 #'.bim and .fam in the same directory.
 #'@param pedfile Path to file with extension .ped. You need the corresponding
 #'.map in the same directory.
-#'@param block.size Maximum number of loci read at once (for all individuals).
+#'@param block.size \itemize{
+#'\item For bedfiles: maximum number of loci read at once (for all individuals).
+#'\item For pedfiles: maximum number of individuals read at once (for all loci).
+#'}
 #'@param backingfile The root name for the backing file(s) for the cache of
 #'the resulting object.
 #'@param backingpath The path to the directory containing the file backing cache.

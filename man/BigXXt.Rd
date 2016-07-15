@@ -2,8 +2,28 @@
 % Please edit documentation in R/PCA.bigSNP.R
 \name{BigXXt}
 \alias{BigXXt}
-\title{\eqn{X X^t} for genotype matrix of a "bigSNP".}
+\title{\code{Tcrossprod} for the genotype matrix of a "bigSNP".}
 \usage{
-BigXXt(x, block.size, ind.train = seq(nrow(x$genotypes)), to.save = F)
+BigXXt(x, block.size, ind.train = seq(nrow(x$genotypes)), to.save = FALSE)
+}
+\arguments{
+\item{x}{A \code{bigSNP}.}
+
+\item{block.size}{Maximum number of loci read at once (for all individuals).}
+
+\item{ind.train}{An optional vector of the row indices that are used.
+If not specified, all data are used.}
+
+\item{to.save}{Is the result filebacked ? Default is \code{FALSE}.}
+}
+\value{
+A \code{big.matrix} of type \code{double}.
+}
+\description{
+Compute \eqn{X X^T} for the genotype matrix of a "bigSNP"
+with a particular scaling.
+}
+\seealso{
+\code{\link{bigSNP}}
 }
 

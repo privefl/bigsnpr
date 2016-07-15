@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-mydata/
 .git
 backingfiles
 examples
@@ -10,5 +9,7 @@ cran-comments.md
 ^\.travis\.yml$
 tests/local_tests
 ^appveyor\.yml$
-README.html
+README\.html
 ^cran-comments\.md$
+
+R/PCA\.bigSNP\.R

@@ -6,16 +6,40 @@
 
 using namespace Rcpp;
 
-// bigcolsums
-IntegerVector bigcolsums(SEXP pBigMat, const IntegerVector& rowInd);
-RcppExport SEXP bigsnpr_bigcolsums(SEXP pBigMatSEXP, SEXP rowIndSEXP) {
+// bigcolsumsChar
+IntegerVector bigcolsumsChar(SEXP pBigMat, const IntegerVector& rowInd);
+RcppExport SEXP bigsnpr_bigcolsumsChar(SEXP pBigMatSEXP, SEXP rowIndSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
-    __result = Rcpp::wrap(bigcolsums(pBigMat, rowInd));
+    __result = Rcpp::wrap(bigcolsumsChar(pBigMat, rowInd));
     return __result;
+END_RCPP
+}
+// bigcolsumsDouble
+NumericVector bigcolsumsDouble(SEXP pBigMat, const IntegerVector& rowInd);
+RcppExport SEXP bigsnpr_bigcolsumsDouble(SEXP pBigMatSEXP, SEXP rowIndSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    __result = Rcpp::wrap(bigcolsumsDouble(pBigMat, rowInd));
+    return __result;
+END_RCPP
+}
+// symCenter
+void symCenter(SEXP pBigMat, const NumericVector& means, double mean);
+RcppExport SEXP bigsnpr_symCenter(SEXP pBigMatSEXP, SEXP meansSEXP, SEXP meanSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type means(meansSEXP);
+    Rcpp::traits::input_parameter< double >::type mean(meanSEXP);
+    symCenter(pBigMat, means, mean);
+    return R_NilValue;
 END_RCPP
 }
 // incrSup
@@ -39,15 +63,29 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// center_p
-arma::mat& center_p(arma::mat& source, const NumericVector& p);
-RcppExport SEXP bigsnpr_center_p(SEXP sourceSEXP, SEXP pSEXP) {
+// scaling
+arma::mat& scaling(arma::mat& source, const NumericVector& mean, const NumericVector& sd);
+RcppExport SEXP bigsnpr_scaling(SEXP sourceSEXP, SEXP meanSEXP, SEXP sdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< arma::mat& >::type source(sourceSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
-    __result = Rcpp::wrap(center_p(source, p));
+    Rcpp::traits::input_parameter< const NumericVector& >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sd(sdSEXP);
+    __result = Rcpp::wrap(scaling(source, mean, sd));
+    return __result;
+END_RCPP
+}
+// scaling2
+arma::mat& scaling2(arma::mat& source, const NumericVector& intercept, const NumericVector& slope);
+RcppExport SEXP bigsnpr_scaling2(SEXP sourceSEXP, SEXP interceptSEXP, SEXP slopeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< arma::mat& >::type source(sourceSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type intercept(interceptSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type slope(slopeSEXP);
+    __result = Rcpp::wrap(scaling2(source, intercept, slope));
     return __result;
 END_RCPP
 }

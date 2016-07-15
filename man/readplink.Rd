@@ -17,7 +17,10 @@ AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
 \item{bedfile}{Path to file with extension .bed. You need the corresponding
 .bim and .fam in the same directory.}
 
-\item{block.size}{Maximum number of loci read at once (for all individuals).}
+\item{block.size}{\itemize{
+\item For bedfiles: maximum number of loci read at once (for all individuals).
+\item For pedfiles: maximum number of individuals read at once (for all loci).
+}}
 
 \item{backingfile}{The root name for the backing file(s) for the cache of
 the resulting object.}
