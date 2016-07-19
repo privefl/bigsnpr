@@ -61,17 +61,12 @@ Especially, online reading into a \code{big.matrix} makes it memory-efficient.
 
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 
-if (!dir.exists("backingfiles"))
- dir.create("backingfiles")
-if (file.exists("backingfiles/test_doc"))
- file.remove("backingfiles/test_doc")
-if (file.exists("backingfiles/test_doc.desc"))
- file.remove("backingfiles/test_doc.desc")
-if (file.exists("backingfiles/test_doc.rds"))
- file.remove("backingfiles/test_doc.rds")
+# Creating directory for backing files
+if (!dir.exists("backingfiles")) dir.create("backingfiles")
 
 # Reading the bedfile and storing the data in directory "backingfiles"
-test <- BedToBig(bedfile, 50, "test_doc")
+if (!file.exists("backingfiles/test_doc.bk"))
+ test <- BedToBig(bedfile, 50, "test_doc")
 
 # Removing the R object
 rm(test)

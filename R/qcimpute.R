@@ -24,20 +24,28 @@ QC <- function(x) {
 #'@description \code{sub.bigSNP}: a function
 #'to get a subset of an object of class \code{bigSNP}.
 #'@param ind.row Indices of the rows (individuals) to keep.
+#'Negative indices can be used to exclude row indices.
+#'Default: keep them all.
 #'@param ind.col Indices of the columns (SNPs) to keep.
+#'Negative indices can be used to exclude column indices.
+#'Default: keep them all.
 #'@export
 #'@name sub.bigSNP
 #'@rdname qcimpute
-sub.bigSNP <- function(x, ind.row, ind.col) {
+sub.bigSNP <- function(x, ind.row = NULL, ind.col = NULL) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 
-  newfile <- checkFile(x, "sub")
-  X2 <- bigmemory::big.matrix(length(ind.row), length(ind.col), type = "char",
-                              backingfile = paste0(newfile, ".bk"),
-                              backingpath = x$backingpath,
-                              descriptorfile = paste0(newfile, ".desc"))
+  if (is.null(ind.row)) ind.row <- 1:nrow(x$genotypes)
+  if (is.null(ind.col)) ind.col <- 1:ncol(x$genotypes)
 
-  deepcopyPart((x$genotypes)@address, X2@address, ind.row, ind.col)
+  newfile <- checkFile(x, "sub")
+  X2 <- bigmemory::deepcopy(x$genotypes,
+                            rows = ind.row,
+                            cols = ind.col,
+                            type = "char",
+                            backingfile = paste0(newfile, ".bk"),
+                            backingpath = x$backingpath,
+                            descriptorfile = paste0(newfile, ".desc"))
 
   snp_list <- list(genotypes = X2,
                    fam = x$fam[ind.row, ],

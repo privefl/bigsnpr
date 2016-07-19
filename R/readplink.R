@@ -36,17 +36,12 @@
 #'
 #'bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #'
-#'if (!dir.exists("backingfiles"))
-#'  dir.create("backingfiles")
-#'if (file.exists("backingfiles/test_doc"))
-#'  file.remove("backingfiles/test_doc")
-#'if (file.exists("backingfiles/test_doc.desc"))
-#'  file.remove("backingfiles/test_doc.desc")
-#'if (file.exists("backingfiles/test_doc.rds"))
-#'  file.remove("backingfiles/test_doc.rds")
+#'# Creating directory for backing files
+#'if (!dir.exists("backingfiles")) dir.create("backingfiles")
 #'
 #'# Reading the bedfile and storing the data in directory "backingfiles"
-#'test <- BedToBig(bedfile, 50, "test_doc")
+#'if (!file.exists("backingfiles/test_doc.bk"))
+#'  test <- BedToBig(bedfile, 50, "test_doc")
 #'
 #'# Removing the R object
 #'rm(test)
@@ -134,12 +129,12 @@ BedToBig <- function(bedfile,
   s1 <- seq(1, 2*n, 2)
   s2 <- s1 + 1
 
-  colOffset <- 0
+  colOffset <- 0L
   for (k in 1:nb.blocks) {
     if (intr) utils::setTxtProgressBar(pb, k - 1)
     list.ind.na <- list()
     size <- intervals[k, "size"]
-    geno.mat <- matrix(0, n, size)
+    geno.mat <- matrix(0L, n, size)
     for (i in 1:size) {
       geno.raw <- as.logical(rawToBits(readBin(bed, "raw", bsz)))
       geno1 <- geno.raw[s1]

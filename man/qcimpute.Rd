@@ -9,16 +9,20 @@
 \usage{
 QC(x)
 
-sub.bigSNP(x, ind.row, ind.col)
+sub.bigSNP(x, ind.row = NULL, ind.col = NULL)
 
 Impute(x, ncores = 1)
 }
 \arguments{
 \item{x}{A \code{bigSNP}.}
 
-\item{ind.row}{Indices of the rows (individuals) to keep.}
+\item{ind.row}{Indices of the rows (individuals) to keep.
+Negative indices can be used to exclude row indices.
+Default: keep them all.}
 
-\item{ind.col}{Indices of the columns (SNPs) to keep.}
+\item{ind.col}{Indices of the columns (SNPs) to keep.
+Negative indices can be used to exclude column indices.
+Default: keep them all.}
 
 \item{ncores}{Number or cores used.
 Default doesn't use parallelism.}

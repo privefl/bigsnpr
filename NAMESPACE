@@ -2,7 +2,7 @@
 
 export(AttachBigSNP)
 export(BedToBig)
-export(BigXXt)
+export(BigXYt)
 export(CoeffsClass)
 export(CoeffsReg)
 export(Impute)

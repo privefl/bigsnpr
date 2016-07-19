@@ -5,82 +5,136 @@
 
 ################################################################################
 
-#'@name BigXXt
-#'@description Compute \eqn{X X^T} for the genotype matrix of a "bigSNP"
+#'@name BigXYt
+#'@description Compute linear kernel matrices for the genotype matrix of a "bigSNP"
 #'with a particular scaling.
-#'@title \code{Tcrossprod} for the genotype matrix of a "bigSNP".
+#'@title Linear kernel matrices for the genotype matrix of a "bigSNP".
 #'@param x A \code{bigSNP}.
 #'@param block.size Maximum number of loci read at once (for all individuals).
 #'@param ind.train An optional vector of the row indices that are used.
 #' If not specified, all data are used.
-#'@param to.save Is the result filebacked ? Default is \code{FALSE}.
-#'@seealso \code{\link{bigSNP}}
-#'@return A \code{big.matrix} of type \code{double}.
+#'@param use.Eigen Use the \code{Eigen} library to compute \eqn{X X^T}, the default.
+#'If \code{FALSE}, use \code{R}'s \code{tcrossprod}. See details.
+#'@details To compute \eqn{X X^T}, using \code{Eigen} library is faster.
+#'However, if you link \code{R} with an optimized math library,
+#'using \code{R}'s \code{tcrossprod} can be faster.
+#'
+#'For example, you can easily link \code{R} with the
+#'\href{https://software.intel.com/en-us/intel-mkl}{Intel®
+#'Math Kernel Library} (Intel® MKL) through
+#'\href{https://mran.revolutionanalytics.com/open/}{Microsoft
+#'R Open} (MRO). It really improves performance
+#'of \code{R} and \code{RcppArmadillo} matrix computations,
+#'yet not the ones of \code{RcppEigen} (at least not directly).
+#'
+#'So, \enumerate{
+#'\item \code{Eigen} should be prefered if you don't change anything,
+#'\item base \code{R} should be prefered if you use MRO,
+#'\item \code{Eigen} may be prefered if you manage to link \code{RcppEigen}
+#'with the MKL (please \href{mailto:florian.prive.21@gmail.com}{contact me}
+#' if you do!).}
+#'@seealso \code{\link{bigSNP}} \code{\link{tcrossprod}}
+#'@return Either \itemize{
+#'\item A \code{big.matrix} of type \code{double} if all rows are used
+#'in \code{ind.train}.
+#'\item Two \code{big.matrix} of type \code{double}. One for
+#'\eqn{X.train X.train^T} to get Principal Components
+#'and one for \eqn{X.test X.train^T} to project the rest of the data.}
 #'@export
-BigXXt <- function(x, block.size, ind.train = seq(nrow(x$genotypes)),
-                   to.save = FALSE) {
-  n <- length(ind.train)
-  if (to.save) {
-    newfile <- checkFile(x, "PCA")
-    bigK = bigmemory::big.matrix(n, n, type = "double", init = 0,
-                                 backingfile = paste0(newfile, ".bk"),
-                                 backingpath = x$backingpath,
-                                 descriptorfile = paste0(newfile, ".desc"))
+#'@example examples/example.PCA.bigSNP.R
+BigXYt <- function(x,
+                   block.size,
+                   ind.train = NULL,
+                   use.Eigen = TRUE) {
+  if (class(x) != "bigSNP") stop("x must be a bigSNP")
+
+  X <- x$genotypes
+
+  if (isNULL <- is.null(ind.train)) {
+    ind.train <- seq(nrow(X))
+    n <- length(ind.train)
   } else {
-    bigK = bigmemory::big.matrix(n, n, type = "double",
-                                 init = 0, shared = F)
+    n <- length(ind.train)
+    n2 <- nrow(X) - n
+    bigK2 <- bigmemory::big.matrix(n2, n, type = "double",
+                                   init = 0, shared = F)
   }
+  bigK <- bigmemory::big.matrix(n, n, type = "double",
+                                init = 0, shared = F)
 
 
   # compute p
-  p.all <- bigcolsumsChar((x$genotypes)@address, ind.train) / (2*n)
+  p.all <- bigcolsumsChar(X@address, ind.train) / (2*n)
 
   # function to compute X*X^T
-  BigXXt2 <- function(X) {
-    printf("Computation of X * t(X)\n")
-    intervals <- CutBySize(ncol(X), block.size)
-    nb.block <- nrow(intervals)
+  printf("Computation of X * t(X)\n")
+  intervals <- CutBySize(ncol(X), block.size)
+  nb.block <- nrow(intervals)
 
-    if (intr <- interactive()) {
-      pb <- txtProgressBar(min = 0, max = nb.block, style = 3)
-    }
-
-    for (j in 1:nb.block) {
-      if (intr) setTxtProgressBar(pb, j-1)
-      ind <- seq2(intervals[j, ])
-      p.ind <- p.all[ind]
-      mean <- 2*p.ind
-      sd <- sqrt(2*p.ind*(1-p.ind))
-      incrSup(bigK@address, tcrossprod(
-        scaling(X[ind.train, ind], mean, sd)))
-    }
-
-    complete(bigK@address)
-
-    if (intr) {
-      setTxtProgressBar(pb, nb.block)
-      close(pb)
-    }
-
-    return()
+  if (intr <- interactive()) {
+    pb <- txtProgressBar(min = 0, max = nb.block, style = 3)
   }
 
-  # compute K
-  BigXXt2(x$genotypes)
+  for (j in 1:nb.block) {
+    if (intr) setTxtProgressBar(pb, j-1)
+    ind <- seq2(intervals[j, ])
+    p.ind <- p.all[ind]
+    mean <- 2*p.ind
+    sd <- sqrt(2*p.ind*(1-p.ind))
 
-  return(bigK)
+    tmp <- scaling(X[ind.train, ind], mean, sd)
+    if (use.Eigen) {
+      tcrossprodEigen(bigK@address, tmp)
+    } else {
+      incrSup(bigK@address, tcrossprod(tmp))
+    }
+    if (!isNULL) {
+      if (use.Eigen) {
+        tcrossprodEigen2(bigK2@address,
+                         scaling(X[-ind.train, ind], mean, sd),
+                         tmp)
+      } else {
+        incrAll(bigK2@address,
+                tcrossprod(scaling(X[-ind.train, ind], mean, sd), tmp))
+      }
+    }
+  }
+
+  complete(bigK@address)
+
+  if (intr) {
+    setTxtProgressBar(pb, nb.block)
+    close(pb)
+  }
+
+  if (isNULL) {
+    return(bigK)
+  } else {
+    list(bigK, bigK2)
+  }
 }
+
 
 ################################################################################
 
-PCA.bigSNP <- function(x, block.size, k = NULL,
-                       ind.train = seq(nrow(x$genotypes)),
-                       to.save = FALSE) {
-  bigK <- BigXXt(x, block.size, ind.train, to.save)
-  n <- nrow(bigK)
+PCA.bigSNP <- function(x,
+                       block.size,
+                       k = NULL,
+                       ind.train = NULL,
+                       eigvalue.thr = 1e-3,
+                       use.Eigen = TRUE) {
+  res <- BigXYt(x, block.size, ind.train)
+  if (isNULL <- is.null(ind.train)) {
+    bigK <- res
+  } else {
+    bigK  <- res[[1]]
+    bigK2 <- res[[2]]
+  }
 
-  means <- bigcolsumsDouble(bigK, ind.train) / n
-  symCenter(K2, means, mean(means))
+  n <- nrow(bigK)
+  means <- bigcolsumsDouble(bigK) / n
+  symCenter(bigK@address, means, mean(means))
+  if (isNULL) colCenter(bigK2@address, means)
 
   if (is.null(k)) {
     eig <- eigen(bigK[,], symmetric = TRUE)
@@ -91,7 +145,13 @@ PCA.bigSNP <- function(x, block.size, k = NULL,
   alphas <- scaling(eig$vectors,
                     rep(0, length(eig$values)),
                     sqrt(eig$values))
+  m <- ncol(x$genotypes)
+  lastEig <- max(which(eig$values > (eigvalue.thr * m)))
   rm(eig)
+  alphas <- alphas[, 1:lastEig]
+
+  n.all <- nrow(x$genotypes)
+
 }
 
 ################################################################################

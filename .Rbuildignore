@@ -3,7 +3,6 @@
 .git
 backingfiles
 examples
-cran-comments.md
 ^README\.Rmd$
 ^README-.*\.png$
 ^\.travis\.yml$
@@ -12,4 +11,3 @@ tests/local_tests
 README\.html
 ^cran-comments\.md$
 
-R/PCA\.bigSNP\.R

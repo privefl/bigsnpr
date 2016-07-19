@@ -1,11 +1,47 @@
 // [[Rcpp::plugins(cpp11)]]
-// [[Rcpp::depends(RcppArmadillo, BH, bigmemory)]]
-#include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppEigen, BH, bigmemory)]]
+#include <RcppEigen.h>
+#include <bigmemory/BigMatrix.h>
 #include <bigmemory/MatrixAccessor.hpp>
 
 using namespace Rcpp;
-//using namespace arma;
 
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void tcrossprodEigen(SEXP res, const Eigen::Map<Eigen::MatrixXd> bM) {
+
+  XPtr<BigMatrix> xpMatRes(res);
+
+  int n = bM.rows();
+
+  Eigen::Map<Eigen::MatrixXd> bMRes =
+    Eigen::Map<Eigen::MatrixXd>((double*)xpMatRes->matrix(), n, n);
+
+  bMRes.selfadjointView<Eigen::Upper>().rankUpdate(bM);
+
+  return;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void tcrossprodEigen2(SEXP res,
+                      const Eigen::Map<Eigen::MatrixXd> X,
+                      const Eigen::Map<Eigen::MatrixXd> Y) {
+
+  XPtr<BigMatrix> xpMatRes(res);
+
+  Eigen::Map<Eigen::MatrixXd> bMRes =
+    Eigen::Map<Eigen::MatrixXd>((double*)xpMatRes->matrix(),
+                                xpMatRes->nrow(),
+                                xpMatRes->ncol());
+
+  bMRes += X * Y.transpose();
+
+  return;
+}
 
 /******************************************************************************/
 
@@ -32,19 +68,19 @@ IntegerVector bigcolsumsChar(SEXP pBigMat, const IntegerVector& rowInd) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-NumericVector bigcolsumsDouble(SEXP pBigMat, const IntegerVector& rowInd) {
+NumericVector bigcolsumsDouble(SEXP pBigMat) {
 
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<double> macc(*xpMat);
 
-  int n = rowInd.size();
+  int n = xpMat->nrow();
   int m = xpMat->ncol();
 
   NumericVector res(m);
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < n; i++) {
-      res[j] += macc[j][rowInd[i]-1];
+      res[j] += macc[j][i];
     }
   }
 
@@ -72,16 +108,50 @@ void symCenter(SEXP pBigMat, const NumericVector& means, double mean) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-void incrSup(SEXP pBigMat, const arma::mat& source) {
+void colCenter(SEXP pBigMat, const NumericVector& means) {
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<double> macc(*xpMat);
 
-  const double* colj;
+  int n = xpMat->nrow();
+  int m = xpMat->ncol();
+  double mj;
+
+  for (int j = 0; j < m; j++) {
+    mj = means[j];
+    for (int i = 0; i < n; i++) {
+      macc[j][i] -= mj;
+    }
+  }
+
+  return;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void incrSup(SEXP pBigMat, const NumericMatrix& source) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<double> macc(*xpMat);
 
   for (int j = 0; j < xpMat->ncol(); j++) {
-    colj = source.colptr(j);
     for (int i = 0; i <= j; i++) {
-      macc[j][i] += colj[i];
+      macc[j][i] += source(i,j);
+    }
+  }
+
+  return;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+void incrAll(SEXP pBigMat, const NumericMatrix& source) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<double> macc(*xpMat);
+
+  for (int j = 0; j < xpMat->ncol(); j++) {
+    for (int i = 0; i < xpMat->nrow(); i++) {
+      macc[j][i] += source(i,j);
     }
   }
 
@@ -107,11 +177,11 @@ void complete(SEXP pBigMat) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-arma::mat& scaling(arma::mat& source,
-                   const NumericVector& mean,
-                   const NumericVector& sd) {
-  int n = source.n_rows;
-  int m = source.n_cols;
+NumericMatrix& scaling(NumericMatrix& source,
+                       const NumericVector& mean,
+                       const NumericVector& sd) {
+  int n = source.rows();
+  int m = source.cols();
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < n; i++) {
@@ -126,11 +196,11 @@ arma::mat& scaling(arma::mat& source,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-arma::mat& scaling2(arma::mat& source,
-                    const NumericVector& intercept,
-                    const NumericVector& slope) {
-  int n = source.n_rows;
-  int m = source.n_cols;
+NumericMatrix& scaling2(NumericMatrix& source,
+                        const NumericVector& intercept,
+                        const NumericVector& slope) {
+  int n = source.rows();
+  int m = source.cols();
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < n; i++) {
@@ -145,16 +215,19 @@ arma::mat& scaling2(arma::mat& source,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-void rawToBigPart(const arma::Mat<unsigned char>& source,
-                  SEXP pBigMat, int colOffset = 0) {
+void rawToBigPart(const IntegerMatrix& source,
+                  SEXP pBigMat,
+                  int colOffset = 0) {
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
-  int nrows = source.n_rows;
-  int ncols = source.n_cols;
+  int nrows = source.rows();
+  int ncols = source.cols();
 
-  for (int i = 0; i < ncols; i++) {
-    memcpy(macc[i+colOffset], source.colptr(i), nrows*sizeof(char));
+  for (int j = 0; j < ncols; j++) {
+    for (int i = 0; i < nrows; i++) {
+      macc[j+colOffset][i] = source(i, j);
+    }
   }
 
   return;
@@ -380,31 +453,33 @@ NumericMatrix betasRegLin(SEXP pBigMat,
 
 /******************************************************************************/
 
-// [[Rcpp::export]]
-void deepcopyPart(SEXP pBigMat,
-                  SEXP pBigMat2,
-                  const IntegerVector& rowInd,
-                  const IntegerVector& colInd) {
+/* ALREADY IMPLEMENTED IN DEEPCOPY */
 
-  XPtr<BigMatrix> xpMat(pBigMat);
-  MatrixAccessor<char> macc(*xpMat);
-  XPtr<BigMatrix> xpMat2(pBigMat2);
-  MatrixAccessor<char> macc2(*xpMat2);
-
-  int n = rowInd.size();
-  int m = colInd.size();
-
-  int indi, indj;
-
-  for (int j = 0; j < m; j++) {
-    indj = colInd[j] - 1;
-    for (int i = 0; i < n; i++) {
-      indi = rowInd[i] - 1;
-      macc2[j][i] = macc[indj][indi];
-    }
-  }
-
-  return;
-}
+// // [[Rcpp::export]]
+// void deepcopyPart(SEXP pBigMat,
+//                   SEXP pBigMat2,
+//                   const IntegerVector& rowInd,
+//                   const IntegerVector& colInd) {
+//
+//   XPtr<BigMatrix> xpMat(pBigMat);
+//   MatrixAccessor<char> macc(*xpMat);
+//   XPtr<BigMatrix> xpMat2(pBigMat2);
+//   MatrixAccessor<char> macc2(*xpMat2);
+//
+//   int n = rowInd.size();
+//   int m = colInd.size();
+//
+//   int indi, indj;
+//
+//   for (int j = 0; j < m; j++) {
+//     indj = colInd[j] - 1;
+//     for (int i = 0; i < n; i++) {
+//       indi = rowInd[i] - 1;
+//       macc2[j][i] = macc[indj][indi];
+//     }
+//   }
+//
+//   return;
+// }
 
 /******************************************************************************/
