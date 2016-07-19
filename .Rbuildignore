@@ -10,4 +10,4 @@ tests/local_tests
 ^appveyor\.yml$
 README\.html
 ^cran-comments\.md$
-
+^listoftodos.txt$

@@ -1,8 +1,3 @@
-
-################################################################################
-
-
-
 ################################################################################
 
 #'@name BigXYt
@@ -41,7 +36,7 @@
 #'\eqn{X.train X.train^T} to get Principal Components
 #'and one for \eqn{X.test X.train^T} to project the rest of the data.}
 #'@export
-#'@example examples/example.PCA.bigSNP.R
+#'@example examples/example.BigXYt.R
 BigXYt <- function(x,
                    block.size,
                    ind.train = NULL,
@@ -110,31 +105,46 @@ BigXYt <- function(x,
   if (isNULL) {
     return(bigK)
   } else {
-    list(bigK, bigK2)
+    return(list(bigK, bigK2))
   }
 }
 
 
 ################################################################################
 
+#' @name PCA.bigSNP
+#' @title Principal Components of a "bigSNP".
+#' @description Get k or all Principal Components (PCs) of a \code{bigSNP}
+#' @inheritParams BigXYt
+#' @param k Number of PCs to compute. Default is all.
+#' @param eigvalue.thr Threshold to remove "unsignificant" PCs.
+#' Default is \code{1e-3}.
+#' @export
+#' @return A \code{matrix} of PCs.
+#' @details See \code{\link{BigXYt}}.
+#' @example examples/example.PCA.bigSNP.R
+#' @seealso \code{\link{prcomp}}
 PCA.bigSNP <- function(x,
                        block.size,
                        k = NULL,
                        ind.train = NULL,
                        eigvalue.thr = 1e-3,
                        use.Eigen = TRUE) {
-  res <- BigXYt(x, block.size, ind.train)
+  res <- BigXYt(x, block.size, ind.train, use.Eigen)
+  n.all <- nrow(x$genotypes)
   if (isNULL <- is.null(ind.train)) {
     bigK <- res
+    ind.train <- 1:n.all
   } else {
     bigK  <- res[[1]]
     bigK2 <- res[[2]]
   }
+  rm(res)
 
   n <- nrow(bigK)
-  means <- bigcolsumsDouble(bigK) / n
+  means <- bigcolsumsDouble(bigK@address) / n
   symCenter(bigK@address, means, mean(means))
-  if (isNULL) colCenter(bigK2@address, means)
+  if (!isNULL) colCenter(bigK2@address, means)
 
   if (is.null(k)) {
     eig <- eigen(bigK[,], symmetric = TRUE)
@@ -150,8 +160,11 @@ PCA.bigSNP <- function(x,
   rm(eig)
   alphas <- alphas[, 1:lastEig]
 
-  n.all <- nrow(x$genotypes)
+  rotated <- matrix(0, n.all, lastEig)
+  rotated[ind.train, ] <- bigK[,] %*% alphas
+  if (!isNULL) rotated[-ind.train, ] <- bigK2[,] %*% alphas
 
+  return(rotated)
 }
 
 ################################################################################
