@@ -72,11 +72,11 @@ BigXYt <- function(x,
   nb.block <- nrow(intervals)
 
   if (intr <- interactive()) {
-    pb <- txtProgressBar(min = 0, max = nb.block, style = 3)
+    pb <- utils::txtProgressBar(min = 0, max = nb.block, style = 3)
   }
 
   for (j in 1:nb.block) {
-    if (intr) setTxtProgressBar(pb, j-1)
+    if (intr) utils::setTxtProgressBar(pb, j-1)
     ind <- seq2(intervals[j, ])
     p.ind <- p.all[ind]
     mean <- 2*p.ind
@@ -103,7 +103,7 @@ BigXYt <- function(x,
   complete(bigK@address)
 
   if (intr) {
-    setTxtProgressBar(pb, nb.block)
+    utils::setTxtProgressBar(pb, nb.block)
     close(pb)
   }
 
