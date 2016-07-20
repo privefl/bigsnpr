@@ -32,10 +32,9 @@ Get k or all Principal Components (PCs) of a \code{bigSNP}
 \details{
 See \code{\link{BigXYt}}.
 
-Note that for the Eigen decomposition only \code{R} is
-used because is faster (see \href{http://stackoverflow.com/questions/
-38433416/r-eigen-solver-is-faster-than-eigens-one}{stackoverflow}).
-If you want a large number of eigevectors/values you should
+Note that for the Eigen decomposition, only \code{R} is
+used because is faster (see \href{http://goo.gl/UYJcCw}{stackoverflow}).
+If you want a large number of eigenvectors/values, you should
 really considerer using Microsoft R Open for speed.
 }
 \examples{
