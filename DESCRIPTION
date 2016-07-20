@@ -14,6 +14,7 @@ Imports: Rcpp, tools, foreach, data.table, bigmemory.sri, RSpectra, stats
 Depends: R (>= 3.2.3), bigmemory
 RoxygenNote: 5.0.1
 Suggests: testthat, covr, parallel, doParallel, snpStats, pROC, AUC
-Additional_repositories: http://bioconductor.org/packages/2.13/bioc
+SuggestsNote: BioC (>= 3.0)
+Additional_repositories: http://bioconductor.org/packages/release/bioc/
 URL: https://github.com/privefl/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues
