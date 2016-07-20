@@ -4,13 +4,13 @@ Type: Package
 Title: Predictive Analysis of SNP Arrays
 Version: 0.1.0
 Authors@R: person("Florian", "Privé",
-    email = "florian.prive@ensimag.grenoble-inp.fr",
+    email = "florian.prive.21@gmail.com",
     role = c("aut", "cre"))
 Description: Fast and memory-efficient predictive analysis of SNP arrays.
 License: GPL-3
 LazyData: TRUE
 LinkingTo: RcppEigen, Rcpp, bigmemory, BH
-Imports: Rcpp, tools, foreach, data.table, bigmemory.sri, RSpectra, stats
+Imports: Rcpp, tools, foreach, data.table, RSpectra, stats
 Depends: R (>= 3.2.3), bigmemory
 RoxygenNote: 5.0.1
 Suggests: testthat, covr, parallel, doParallel, snpStats, pROC, AUC

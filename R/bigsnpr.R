@@ -1,4 +1,4 @@
-#'@import bigmemory bigmemory.sri
+#'@import bigmemory
 #'@title R Package for analysis of massive SNP arrays.
 #'@description TODO
 #'@name bigsnpr-package
