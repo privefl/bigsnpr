@@ -85,6 +85,6 @@ really considerer using Microsoft R Open for speed.
 }
 }
 \seealso{
-\code{\link{prcomp}}
+\code{\link{bigSNP}} \code{\link{prcomp}}
 }
 
