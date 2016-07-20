@@ -13,4 +13,4 @@ LinkingTo: RcppEigen, Rcpp, bigmemory, BH
 Imports: Rcpp, tools, foreach, data.table, bigmemory.sri, RSpectra, stats
 Depends: R (>= 3.2.3), bigmemory
 RoxygenNote: 5.0.1
-Suggests: testthat, covr, parallel, doParallel
+Suggests: testthat, covr, parallel, doParallel, snpStats, pROC, AUC

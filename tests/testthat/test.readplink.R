@@ -1,7 +1,5 @@
 ################################################################################
-
-library(bigsnpr)
-library(testthat)
+#
 context("READPLINK")
 
 if (!dir.exists("backingfiles")) dir.create("backingfiles")
@@ -10,24 +8,24 @@ if (file.exists("backingfiles/test.bk")) file.remove("backingfiles/test.bk")
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 test <- BedToBig(bedfile, 50, "test", "backingfiles")
 
-# # requireNamespace("snpStats", quietly = TRUE)
-# test2 <- snpStats::read.plink(bedfile)
-# mat.test2 <- as(test2$genotypes, "numeric")
-#
-# ################################################################################
-#
-# test_that("same genotype matrix as snpStats", {
-#   expect_equal(sum(abs(test$genotypes[,] - mat.test2)), 0)
-# })
-#
-# test_that("good class", {
-#   expect_match(class(test), "bigSNP")
-# })
-#
-# test_that("data.frames of same size", {
-#   expect_equal(dim(test$fam), dim(test2$fam))
-#   expect_equal(dim(test$map), dim(test2$map))
-# })
+# requireNamespace("snpStats", quietly = TRUE)
+test2 <- snpStats::read.plink(bedfile)
+mat.test2 <- as(test2$genotypes, "numeric")
+
+################################################################################
+
+test_that("same genotype matrix as snpStats", {
+  expect_equal(sum(abs(test$genotypes[,] - mat.test2)), 0)
+})
+
+test_that("good class", {
+  expect_match(class(test), "bigSNP")
+})
+
+test_that("data.frames of same size", {
+  expect_equal(dim(test$fam), dim(test2$fam))
+  expect_equal(dim(test$map), dim(test2$map))
+})
 
 ################################################################################
 

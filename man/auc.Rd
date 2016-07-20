@@ -47,7 +47,6 @@ DOI=\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
 }
 \seealso{
 pROC::\code{\link[pROC]{auc}} \cr
-AUC::\code{\link[AUC]{auc}} \cr
-Hmisc::\code{\link[Hmisc]{somers2}}
+AUC::\code{\link[AUC]{auc}}
 }
 

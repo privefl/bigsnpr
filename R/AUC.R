@@ -18,8 +18,7 @@
 #' @param seed See \code{\link{set.seed}}. Use it for reproducibility.
 #' @param digits See \code{\link{round}}.
 #' @seealso pROC::\code{\link[pROC]{auc}} \cr
-#' AUC::\code{\link[AUC]{auc}} \cr
-#' Hmisc::\code{\link[Hmisc]{somers2}}
+#' AUC::\code{\link[AUC]{auc}}
 #' @references Tom Fawcett. 2006. An introduction to ROC analysis.
 #' Pattern Recogn. Lett. 27, 8 (June 2006), 861-874.
 #' DOI=\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
