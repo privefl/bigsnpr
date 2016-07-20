@@ -123,8 +123,7 @@ BigXYt <- function(x,
 #' @details See \code{\link{BigXYt}}.
 #'
 #' Note that for the Eigen decomposition, only \code{R} is
-#' used because is faster (see \href{http://stackoverflow.com/questions/
-#' 38433416/r-eigen-solver-is-faster-than-eigens-one}{stackoverflow}).
+#' used because is faster (see \href{http://goo.gl/UYJcCw}{stackoverflow}).
 #' If you want a large number of eigenvectors/values, you should
 #' really considerer using Microsoft R Open for speed.
 #' @example examples/example.PCA.bigSNP.R
