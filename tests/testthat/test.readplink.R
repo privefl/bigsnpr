@@ -4,10 +4,8 @@ library(bigsnpr)
 library(testthat)
 context("READPLINK")
 
-if (!file.exists("backingfiles")) dir.create("backingfiles")
+if (!dir.exists("backingfiles")) dir.create("backingfiles")
 if (file.exists("backingfiles/test.bk")) file.remove("backingfiles/test.bk")
-if (file.exists("backingfiles/test.desc")) file.remove("backingfiles/test.desc")
-if (file.exists("backingfiles/test.rds")) file.remove("backingfiles/test.rds")
 
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 test <- BedToBig(bedfile, 50, "test", "backingfiles")
@@ -33,14 +31,10 @@ test <- BedToBig(bedfile, 50, "test", "backingfiles")
 
 ################################################################################
 
-if (!file.exists("backingfiles")) dir.create("backingfiles")
+if (!dir.exists("backingfiles")) dir.create("backingfiles")
 if (file.exists("backingfiles/test2.bk")) file.remove("backingfiles/test2.bk")
-if (file.exists("backingfiles/test2.desc")) file.remove("backingfiles/test2.desc")
-if (file.exists("backingfiles/test2.rds")) file.remove("backingfiles/test2.rds")
 
-devtools::install_github("privefl/bigsnprdata")
-
-pedfile <- system.file("extdata", "example.ped", package = "bigsnprdata")
+pedfile <- system.file("extdata", "example.ped.gz", package = "bigsnpr")
 
 test3 <- PedToBig(pedfile, 50, "test2", "backingfiles")
 
@@ -64,5 +58,5 @@ code.gen <- 10 * test$genotypes[,] + test3$genotypes[,]
 check <- apply(code.gen, 2, test_ref)
 
 test_that("Same genotypes depending on NA/ref", {
-  expect_equal(all(check), TRUE)
+  expect_true(all(check))
 })

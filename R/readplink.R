@@ -62,17 +62,17 @@ BedToBig <- function(bedfile,
   if (ext != "bed") {
     stop(sprintf("Extension .%s unsupported, requires .bed instead", ext))
   } else {
-    bimfile <- sub(".bed$", ".bim", bedfile)
-    famfile <- sub(".bed$", ".fam", bedfile)
+    bimfile <- sub("\\.bed$", ".bim", bedfile)
+    famfile <- sub("\\.bed$", ".fam", bedfile)
   }
 
   # check if all three files exist
   if (!file.exists(bedfile)) {
-    stop(sprintf("File \"%s\" doesn't exist\n", bedfile))
+    stop(sprintf("File \"%s\" doesn't exist", bedfile))
   } else if (!file.exists(bimfile)) {
-    stop(sprintf("File \"%s\" doesn't exist\n", bimfile))
+    stop(sprintf("File \"%s\" doesn't exist", bimfile))
   } else if (!file.exists(famfile)) {
-    stop(sprintf("File \"%s\" doesn't exist\n", famfile))
+    stop(sprintf("File \"%s\" doesn't exist", famfile))
   }
 
   # read map and family files
@@ -173,18 +173,19 @@ PedToBig <- function(pedfile,
   }
 
   # check extension of file
+  is.ped <- grepl(pattern = "\\.ped(\\.[a-z]+)*$", pedfile)
   ext <- tools::file_ext(pedfile)
-  if (ext != "ped") {
-    stop(sprintf("Extension .%s unsupported, requires .ped instead", ext))
+  if (!is.ped) {
+    stop(sprintf("File \"%s\" is not a pedfile", pedfile))
   } else {
-    mapfile <- sub(".ped$", ".map", pedfile)
+    mapfile <- sub("\\.ped(\\.[a-z]+)*$", ".map", pedfile)
   }
 
   # check if both files exist
   if (!file.exists(pedfile)) {
-    stop(sprintf("File \"%s\" doesn't exist\n", pedfile))
+    stop(sprintf("File \"%s\" doesn't exist", pedfile))
   } else if (!file.exists(mapfile)) {
-    stop(sprintf("File \"%s\" doesn't exist\n", mapfile))
+    stop(sprintf("File \"%s\" doesn't exist", mapfile))
   }
 
   # get the number of SNPs
