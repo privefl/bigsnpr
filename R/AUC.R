@@ -66,7 +66,7 @@ AucSampleConf <- function(pred, y, nboot = 1e5, nsim = 1e4,
   }
 
   res <- replicate(nboot, sampleRes())
-  q <- quantile(res, c(0.025, 0.975))
+  q <- stats::quantile(res, c(0.025, 0.975))
   return(round(c("Mean" = mean(res), q), digits))
 }
 
