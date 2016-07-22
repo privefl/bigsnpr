@@ -9,7 +9,9 @@
 #' they require minimal space to store and are faster to read.
 #'@param bedfile Path to file with extension .bed. You need the corresponding
 #'.bim and .fam in the same directory.
-#'@param pedfile Path to file with extension .ped. You need the corresponding
+#'@param pedfile Path to file with extension .ped (with possible extension
+#'from compression, such as .ped.gz).
+#' You need the corresponding
 #'.map in the same directory.
 #'@param block.size \itemize{
 #'\item For bedfiles: maximum number of loci read at once (for all individuals).

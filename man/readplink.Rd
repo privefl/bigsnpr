@@ -28,7 +28,9 @@ the resulting object.}
 \item{backingpath}{The path to the directory containing the file backing cache.
 Default is "backingfiles". It needs to exist.}
 
-\item{pedfile}{Path to file with extension .ped. You need the corresponding
+\item{pedfile}{Path to file with extension .ped (with possible extension
+from compression, such as .ped.gz).
+You need the corresponding
 .map in the same directory.}
 
 \item{readonly}{Is the \code{big.matrix} read only ? Default is \code{TRUE}.}

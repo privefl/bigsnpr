@@ -3,7 +3,7 @@
 #'@param x A \code{bigSNP}.
 #'@return A new \code{bigSNP}.
 #'@seealso \code{\link{bigSNP}}
-#'@examples #TODO
+#'@example examples/example.sub.bigSNP.R
 NULL
 
 
