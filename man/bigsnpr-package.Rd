@@ -4,6 +4,16 @@
 \alias{bigsnpr}
 \alias{bigsnpr-package}
 \title{R Package for analysis of massive SNP arrays.}
+\arguments{
+\item{x}{A \code{bigSNP}.}
+
+\item{ind.train}{An optional vector of the row indices that are used,
+for the training part.
+If not specified, all data are used.}
+
+\item{ncores}{Number or cores used.
+Default doesn't use parallelism.}
+}
 \description{
 TODO
 }

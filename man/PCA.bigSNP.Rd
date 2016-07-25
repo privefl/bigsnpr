@@ -4,8 +4,8 @@
 \alias{PCA.bigSNP}
 \title{Principal Components of a "bigSNP".}
 \usage{
-PCA.bigSNP(x, block.size, k = NULL, ind.train = NULL,
-  eigvalue.thr = 0.001, use.Eigen = TRUE)
+PCA.bigSNP(x, block.size, k = NULL, ind.train = NULL, thr.eigval = 0.001,
+  use.Eigen = TRUE)
 }
 \arguments{
 \item{x}{A \code{bigSNP}.}
@@ -14,10 +14,11 @@ PCA.bigSNP(x, block.size, k = NULL, ind.train = NULL,
 
 \item{k}{Number of PCs to compute. Default is all.}
 
-\item{ind.train}{An optional vector of the row indices that are used.
+\item{ind.train}{An optional vector of the row indices that are used,
+for the training part.
 If not specified, all data are used.}
 
-\item{eigvalue.thr}{Threshold to remove "unsignificant" PCs.
+\item{thr.eigval}{Threshold to remove "unsignificant" PCs.
 Default is \code{1e-3}.}
 
 \item{use.Eigen}{Use the \code{Eigen} library to compute \eqn{X X^T}, the default.

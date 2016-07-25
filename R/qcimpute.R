@@ -1,9 +1,9 @@
-#'@title Imputation, quality control and subset for a "bigSNP".
-#'@name impute-qc-sub
-#'@param x A \code{bigSNP}.
-#'@return A new \code{bigSNP}.
-#'@seealso \code{\link{bigSNP}}
-#'@example examples/example.sub.bigSNP.R
+#' @title Imputation, quality control and subset for a "bigSNP".
+#' @name impute-qc-sub
+#' @inheritParams bigsnpr-package
+#' @return A new \code{bigSNP}.
+#' @seealso \code{\link{bigSNP}}
+#' @example examples/example.sub.bigSNP.R
 NULL
 
 
@@ -65,8 +65,6 @@ sub.bigSNP <- function(x, ind.row = NULL, ind.col = NULL) {
 #'for a \code{bigSNP}.
 #'@export
 #'@name Impute
-#'@param ncores Number or cores used.
-#'Default doesn't use parallelism.
 #'@rdname impute-qc-sub
 Impute <- function(x, ncores = 1) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")

@@ -1,5 +1,13 @@
 #' @title LD pruning for a "bigSNP"
 #' @name Prune
+#' @inheritParams bigsnpr-package
+#' @param size Radius of the window's size for the LD evaluations.
+#' @param thr.pvalue Threshold on \eqn{-log_{10}(p-value)} to assess
+#' which SNPs are kept. Here, it has the purpose to accelerate computations.
+#' Default is 1.
+#' @param thr.corr Threshold on the correlation between two SNPs.
+#' SNPs which are too correlated with another SNP which is more correlated
+#' with the disease are pruned.
 #' @export
 Prune <- function(x,
                   ind.train = NULL,
@@ -16,7 +24,7 @@ Prune <- function(x,
   if (is.null(ind.train)) ind.train <- 1:nrow(X)
 
   R2 <- RsqClass(X, y, ind.train)
-  lpS <- -log10(pchisq(length(ind.train) * R2, 1, lower.tail = F))
+  lpS <- -log10(stats::pchisq(length(ind.train) * R2, 1, lower.tail = F))
 
   PruneChr <- function(lims) {
     X.chr <- sub.big.matrix(X.desc,

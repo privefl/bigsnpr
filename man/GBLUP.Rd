@@ -4,16 +4,18 @@
 \alias{GBLUP}
 \title{gBLUP of a "bigSNP".}
 \usage{
-GBLUP(x, block.size, ind.train, eigvalue.thr = 0.001, use.Eigen = TRUE)
+GBLUP(x, block.size, ind.train, thr.eigval = 0.001, use.Eigen = TRUE)
 }
 \arguments{
 \item{x}{A \code{bigSNP}.}
 
 \item{block.size}{Maximum number of loci read at once (for all individuals).}
 
-\item{ind.train}{Row indices that are used to predict the others.}
+\item{ind.train}{An optional vector of the row indices that are used,
+for the training part.
+If not specified, all data are used.}
 
-\item{eigvalue.thr}{Threshold to remove eigenvalues to get
+\item{thr.eigval}{Threshold to remove eigenvalues to get
 stability in the inversion of the matrix.
 Default is \code{1e-3}.}
 

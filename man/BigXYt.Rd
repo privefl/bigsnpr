@@ -11,7 +11,8 @@ BigXYt(x, block.size, ind.train = NULL, use.Eigen = TRUE)
 
 \item{block.size}{Maximum number of loci read at once (for all individuals).}
 
-\item{ind.train}{An optional vector of the row indices that are used.
+\item{ind.train}{An optional vector of the row indices that are used,
+for the training part.
 If not specified, all data are used.}
 
 \item{use.Eigen}{Use the \code{Eigen} library to compute \eqn{X X^T}, the default.

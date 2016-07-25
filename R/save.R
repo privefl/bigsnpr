@@ -1,11 +1,15 @@
+################################################################################
+
 #' @title Modify a "bigSNP" and save these modifications.
 #' @description Modify a \code{bigSNP} and save these modifications
-#' in the corresponding .rds file.
+#' in the corresponding .rds file. As \code{bigSNP} is an S3 class, you
+#' can add any slot you want to this class, then use \code{SaveModifs} to
+#' save modifications.
 #' @param x A \code{bigSNP}.
-#' @param to.save Is the modification to be saved ?
-#' @return Nothing.
+#' @return The (modified) \code{bigSNP}.
 #' @name modif-save
 
+################################################################################
 
 
 #' @rdname modif-save
@@ -13,11 +17,15 @@
 SaveModifs <- function(x) {
   saveRDS(x, file.path(x$backingpath, paste0(x$backingfile, ".rds")))
 
-  return()
+  return(x)
 }
 
+################################################################################
 
 #' @rdname modif-save
+#' @description \code{GetPops}: Get populations of individuals by matching
+#' from an external file if it wasn't specified in PLINK files.
+#' It will modify the slot "fam$family.ID".
 #' @param pop.files Character vector of file names where to
 #' find the population of the individuals of the study.
 #' @param col.sample.ID Index of the column containing the
@@ -27,8 +35,7 @@ SaveModifs <- function(x) {
 GetPops <- function(x,
                     pop.files,
                     col.sample.ID,
-                    col.family.ID,
-                    to.save = FALSE) {
+                    col.family.ID) {
   obj <- foreach::foreach(f = pop.files, .combine = 'rbind')
   expr_fun <- function(f) data.table::fread(f, data.table = FALSE)
   data.pop <- foreach2(obj, expr_fun, 1)
@@ -41,9 +48,34 @@ GetPops <- function(x,
     printf("There are %d individuals which have not been matched\n")
   }
 
-  x$fam$family.ID = data.pop[num, col.family.ID]
+  x$fam$family.ID <- data.pop[num, col.family.ID]
 
-  if (to.save) SaveModifs(x)
-
-  return()
+  SaveModifs(x)
 }
+
+################################################################################
+
+#' @rdname modif-save
+#' @description \code{GetPhenos}: Modify phenotypes to be -1 (unaffected),
+#' 1 (affected) or NA (missing).
+#' It will add an slot called "pheno" to the slot "fam".
+#' @param coded01 Are the phenotypes coded 0 (unaffected) / 1 (affected)
+#' rather than respectively 1 and 2? Default is \code{FALSE}.
+#' @export
+GetPhenos <- function(x, coded01 = FALSE) {
+  tmp <- x$fam$affection
+
+  if (coded01) {
+    noNAs <- tmp %in% c(0, 1)
+    tmp[!noNAs] <- NA
+    x$fam$pheno <- tmp * 2 - 1
+  } else {
+    noNAs <- tmp %in% c(1, 2)
+    tmp[!noNAs] <- NA
+    x$fam$pheno <- tmp * 2 - 3
+  }
+
+  SaveModifs(x)
+}
+
+################################################################################

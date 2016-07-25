@@ -7,4 +7,24 @@
 Prune(x, ind.train = NULL, size = 2000, thr.pvalue = 1, thr.corr = 0.2,
   ncores = 1)
 }
+\arguments{
+\item{x}{A \code{bigSNP}.}
+
+\item{ind.train}{An optional vector of the row indices that are used,
+for the training part.
+If not specified, all data are used.}
+
+\item{size}{Radius of the window's size for the LD evaluations.}
+
+\item{thr.pvalue}{Threshold on \eqn{-log_{10}(p-value)} to assess
+which SNPs are kept. Here, it has the purpose to accelerate computations.
+Default is 1.}
+
+\item{thr.corr}{Threshold on the correlation between two SNPs.
+SNPs which are too correlated with another SNP which is more correlated
+with the disease are pruned.}
+
+\item{ncores}{Number or cores used.
+Default doesn't use parallelism.}
+}
 
