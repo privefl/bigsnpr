@@ -1,5 +1,5 @@
-#'@title Quality control, subset and imputation for a "bigSNP".
-#'@name qcimpute
+#'@title Imputation, quality control and subset for a "bigSNP".
+#'@name impute-qc-sub
 #'@param x A \code{bigSNP}.
 #'@return A new \code{bigSNP}.
 #'@seealso \code{\link{bigSNP}}
@@ -13,7 +13,7 @@ NULL
 #'@description \code{QC}: Quality control (filters)
 #'for a \code{bigSNP} resulting
 #'in a \code{bigSNP} of lower dimension.
-#'@rdname qcimpute
+#'@rdname impute-qc-sub
 #'@export
 QC <- function(x) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
@@ -31,7 +31,7 @@ QC <- function(x) {
 #'Default: keep them all.
 #'@export
 #'@name sub.bigSNP
-#'@rdname qcimpute
+#'@rdname impute-qc-sub
 sub.bigSNP <- function(x, ind.row = NULL, ind.col = NULL) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 
@@ -67,7 +67,7 @@ sub.bigSNP <- function(x, ind.row = NULL, ind.col = NULL) {
 #'@name Impute
 #'@param ncores Number or cores used.
 #'Default doesn't use parallelism.
-#'@rdname qcimpute
+#'@rdname impute-qc-sub
 Impute <- function(x, ncores = 1) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 

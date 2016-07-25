@@ -18,6 +18,11 @@ test_that("same genotype matrix as snpStats", {
   expect_equal(sum(abs(test$genotypes[,] - mat.test2)), 0)
 })
 
+test_that("Error", {
+  expect_error(BedToBig(bedfile, 50, "test", "back"))
+  expect_error(BedToBig(bedfile, 50, "test", "backingfiles"))
+})
+
 test_that("good class", {
   expect_match(class(test), "bigSNP")
 })
