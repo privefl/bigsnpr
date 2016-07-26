@@ -1,8 +1,10 @@
 # Sample .travis.yml for R projects
 
 language: r
-warnings_are_errors: true
-sudo: required
+sudo: false
+cache: packages
+
+bioc_required: true
 
 r_packages:
   - covr
