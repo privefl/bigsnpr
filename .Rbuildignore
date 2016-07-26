@@ -11,3 +11,4 @@ tests/local_tests
 README\.html
 ^cran-comments\.md$
 ^listoftodos.txt$
+tmp

@@ -27,4 +27,7 @@ with the disease are pruned.}
 \item{ncores}{Number or cores used.
 Default doesn't use parallelism.}
 }
+\description{
+LD pruning for a \code{bigSNP}.
+}
 

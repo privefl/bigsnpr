@@ -1,4 +1,5 @@
 #' @title LD pruning for a "bigSNP"
+#' @description LD pruning for a \code{bigSNP}.
 #' @name Prune
 #' @inheritParams bigsnpr-package
 #' @param size Radius of the window's size for the LD evaluations.
@@ -19,6 +20,8 @@ Prune <- function(x,
 
   # get descriptors
   X <- x$genotypes
+  y <- x$fam$pheno
+  if (is.null(y)) stop("Please use \"GetPhenos\" to get phenotypes right.")
   X.desc <- describe(X)
 
   if (is.null(ind.train)) ind.train <- 1:nrow(X)
