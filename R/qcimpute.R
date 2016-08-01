@@ -84,9 +84,9 @@ Impute <- function(x, ncores = 1) {
     #printf("Imputing chromosome %d with \"nearest neighbors\"...\n", lims[3])
 
     X <- sub.big.matrix(X.desc, firstCol = lims[1], lastCol = lims[2],
-                             backingpath = x$backingpath)
+                        backingpath = x$backingpath)
     X2 <- sub.big.matrix(X2.desc, firstCol = lims[1], lastCol = lims[2],
-                             backingpath = x$backingpath)
+                         backingpath = x$backingpath)
 
     predictNA <- function(ind, ind2) {
       tmp <- X[, ind]
