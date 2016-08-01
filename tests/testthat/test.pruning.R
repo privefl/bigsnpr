@@ -21,15 +21,6 @@ ind2 <- Prune(test, ncores = 2)
 ind3 <- Prune(test, thr.pvalue = 2)
 ind4 <- Prune(test, thr.corr = 0.5)
 
-R2 <- RsqClass(test$genotypes, test$fam$pheno)
-
-par.save <- par(mfrow=c(1, 2))
-
-plot(R2, type = 'h')
-plot(ind, R2[ind], type = "h")
-
-par(par.save)
-
 ################################################################################
 
 test_that("Same results with parallelism", {
