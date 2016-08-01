@@ -41,13 +41,12 @@ really considerer using Microsoft R Open for speed.
 \examples{
 \dontrun{
 
-  bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-
   # Creating directory for backing files
   if (!dir.exists("backingfiles")) dir.create("backingfiles")
 
   if (!file.exists("backingfiles/test_doc.bk")) {
     # Reading the bedfile and storing the data
+    bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
     test <- BedToBig(bedfile, 50, "test_doc")
   } else {
     # Loading it from backing files

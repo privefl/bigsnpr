@@ -9,6 +9,7 @@
 #' @param thr.corr Threshold on the correlation between two SNPs.
 #' SNPs which are too correlated with another SNP which is more correlated
 #' with the disease are pruned.
+#' @example examples/example.pruning.R
 #' @export
 Prune <- function(x,
                   ind.train = NULL,
