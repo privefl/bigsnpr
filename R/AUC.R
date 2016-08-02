@@ -5,7 +5,7 @@
 #' and possibly its 95\% confidence interval.
 #' @details Other packages provide ways to compute the AUC.
 #' Yet, I found out that when there are equalities, those can
-#' overestimate the true AUC. So, I choose to compute the AUC
+#' overestimate the true AUC. So, I chose to compute the AUC
 #' through an (accurate) estimation of its statistical definition as a
 #' probability: \deqn{\P{score(x_{case}) > score(x_{control})}}
 #' @return The AUC, a probability, and possibly its 2.5\% and 97.5\% quantiles
@@ -22,6 +22,12 @@
 #' @references Tom Fawcett. 2006. An introduction to ROC analysis.
 #' Pattern Recogn. Lett. 27, 8 (June 2006), 861-874.
 #' DOI=\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
+#' @examples
+#' x <- rnorm(100)
+#' z <- rnorm(length(x), x, abs(x))
+#' y <- sign(z)
+#' print(AucSample(x, y))
+#' print(AucSampleConf(x, y, nboot = 1e4, nsim = 1e3))
 #' @name auc
 NULL
 

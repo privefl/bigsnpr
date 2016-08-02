@@ -2,4 +2,7 @@ List of TODOs:
 
 - Add scaling paramater to BigXYt
 - Add reference to scaling in genomics
-- Add other test statistics. Be generic !
+- Add other test statistics. Be generic!
+- Description of package
+- qcimpute
+- add phenotypes to example files
