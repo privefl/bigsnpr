@@ -52,11 +52,9 @@ GetPops <- function(x,
 
     num <- match(x$fam$sample.ID, data.pop[, col.sample.ID])
     no.match <- sum(is.na(num))
-    if (no.match == 0) {
-      printf("Each individual has been matched\n")
-    } else {
-      printf("There are %d individuals which have not been matched\n",
-             no.match)
+    if (no.match != 0) {
+      warning(sprintf(
+        "There are %d individuals which have not been matched", no.match))
     }
 
     x$fam$pop <- data.pop[num, col.family.ID]
@@ -86,6 +84,10 @@ GetPhenos <- function(x, coded01 = FALSE) {
     tmp[!noNAs] <- NA
     x$fam$pheno <- tmp * 2 - 3
   }
+
+  no.match <- sum(!noNAs)
+  if (no.match != 0)
+    warning(sprintf("There are %d missing phenotypes", no.match))
 
   SaveModifs(x)
 }

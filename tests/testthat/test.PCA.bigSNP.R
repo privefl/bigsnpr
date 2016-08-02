@@ -10,7 +10,6 @@ test <- BedToBig(bedfile, 50, "test5", "backingfiles")
 
 ################################################################################
 
-
 # Get the first 10 PCs
 test2 <- PCA.bigSNP(test, block.size = 1000, k = 10)
 
@@ -39,6 +38,15 @@ test4 <- prcomp(test$genotypes[,], scale. = TRUE)
 cor.2PC2 <- abs(diag(cor(test2[, 1:2], test4$x[, 1:2])))
 test_that("Results correlated with prcomp's result", {
   expect_gt(min(cor.2PC2), 0.9)
+})
+
+################################################################################
+
+# Get the first 10 PCs
+test5 <- PCA.bigSNP(test, block.size = 1000, k = 10, use.Eigen = FALSE)
+
+test_that("Same results without Eigen", {
+  expect_equal(max(abs(test2 - test5)), 0)
 })
 
 ################################################################################
