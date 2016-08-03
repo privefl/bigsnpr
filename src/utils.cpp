@@ -37,9 +37,9 @@ IntegerMatrix mycount(const SEXP pBigMat,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-IntegerMatrix mycount2(SEXP pBigMat,
-                       const IntegerVector& indCase,
-                       const IntegerVector& indControl) {
+ListOf<SEXP> mycount2(SEXP pBigMat,
+                      const IntegerVector& indCase,
+                      const IntegerVector& indControl) {
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
@@ -48,52 +48,34 @@ IntegerMatrix mycount2(SEXP pBigMat,
   int m = xpMat->ncol();
 
   char tmp;
+  int ind;
 
-  IntegerMatrix res(8, m);
+  IntegerMatrix res(6, m);
+  IntegerVector res2(nCase+nControl);
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < nCase; i++) {
-      tmp = macc[j][indCase[i]-1];
+      ind = indCase[i]-1;
+      tmp = macc[j][ind];
       if (tmp == NA_CHAR) {
-        (res(3, j))++;
+        (res2[ind])++;
       } else {
         (res(tmp, j))++;
       }
     }
     for (int i = 0; i < nControl; i++) {
-      tmp = macc[j][indControl[i]-1];
+      ind = indControl[i]-1;
+      tmp = macc[j][ind];
       if (tmp == NA_CHAR) {
-        (res(7, j))++;
+        (res2[ind])++;
       } else {
-        (res(tmp+4, j))++;
+        (res(tmp+3, j))++;
       }
     }
   }
 
-  return(res);
-}
-
-/******************************************************************************/
-
-// [[Rcpp::export]]
-IntegerVector mycount3(SEXP pBigMat) {
-  XPtr<BigMatrix> xpMat(pBigMat);
-  MatrixAccessor<char> macc(*xpMat);
-
-  int n = xpMat->nrow();
-  int m = xpMat->ncol();
-
-  IntegerVector res(n);
-
-  for (int j = 0; j < m; j++) {
-    for (int i = 0; i < n; i++) {
-      if (macc[j][i] == NA_CHAR) {
-        (res[i])++;
-      }
-    }
-  }
-
-  return(res);
+  return(List::create(_["counts.col"] = res,
+                      _["counts.row"] = res2));
 }
 
 /******************************************************************************/

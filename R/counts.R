@@ -1,7 +1,7 @@
 ################################################################################
 
 #' @title Counts.
-#' @name counts
+#' @name Counts
 #' @inheritParams bigsnpr-package
 #' @examples
 #' # constructing a fake genotype big.matrix
@@ -17,39 +17,24 @@
 #' fake$fam$pheno <- c(rep(1, 5), rep(-1, 5))
 #'
 #' # Get counts
-#' print(CountByPheno(fake))
-#' print(CountNAByRow(fake))
-NULL
-
-################################################################################
-
-#' @description \code{CountByPheno}: counts the number of 0, 1, 2 and NA
-#' by SNP and phenotype (cases/controls).
-#' @return \code{CountByPheno}: An integer matrix
-#' of size 8*m (m is the number of SNPs).
-#' @rdname counts
+#' print(Counts(fake))
+#' @description Counts the number of 0, 1, 2
+#' by SNP and phenotype (cases/controls) and the number
+#' of NA by individual. The number of NA by SNP can be deduced
+#' using the relation \eqn{n_{NA} = n - (n_0 + n_1 + n_2)}.
+#' @return A list of:\itemize{
+#' \item an integer matrix of size 6*m (m is the number of SNPs),
+#' \item an integer vector of size n (n is the number of individuals).
+#' }
 #' @export
-CountByPheno <- function(x) {
+Counts <- function(x) {
   ind.cases <- which(x$fam$pheno == 1)
   ind.controls <- which(x$fam$pheno == -1)
   res <- mycount2((x$genotypes)@address, ind.cases, ind.controls)
-  row.names(res) <- paste0("nb.", c(paste0(c(0:2, NA), ".case"),
-                                    paste0(c(0:2, NA), ".control")))
+  row.names(res$counts.col) <- paste0("nb.", c(paste0(0:2, ".case"),
+                                            paste0(0:2, ".control")))
 
   return(res)
 }
 
 ################################################################################
-
-#' @description \code{CountNAByRow}: counts the number of NA
-#' by individuals.
-#' @return \code{CountNAByRow}: An integer vector
-#' of size n (n is the number of individuals).
-#' @rdname counts
-#' @export
-CountNAByRow <- function(x) {
-  mycount3((x$genotypes)@address)
-}
-
-################################################################################
-

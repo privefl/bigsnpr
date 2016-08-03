@@ -7,7 +7,7 @@
 \alias{sub.bigSNP}
 \title{Imputation, quality control and subset for a "bigSNP".}
 \usage{
-QC(x)
+QC(x, hwe.pval = NULL, only.control = TRUE)
 
 sub.bigSNP(x, ind.row = NULL, ind.col = NULL)
 

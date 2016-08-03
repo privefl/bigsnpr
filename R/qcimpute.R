@@ -15,8 +15,43 @@ NULL
 #'in a \code{bigSNP} of lower dimension.
 #'@rdname impute-qc-sub
 #'@export
-QC <- function(x) {
+QC <- function(x, hwe.pval = NULL, only.control = TRUE) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
+
+  ### HWE
+  hwe.qc <- function(counts) {
+    if (only.control) {
+      observed <- counts[5:7, ]
+    } else {
+      observed <- counts[1:3, ] + counts[5:7, ]
+    }
+    n <- colSums(observed)
+    q <- (observed[1, ] + observed[2,] / 2) / n
+    p <- 1 - q
+    expected <- n * rbind(q^2, 2*p*q, p^2)
+    bias = TRUE
+    if (bias) {
+      X2 <- colSums((abs(observed - expected) - 0.5)^2 / expected)
+    } else {
+      X2 <- colSums((observed - expected)^2 / expected)
+    }
+    pX2 <- pchisq(X2, 1, lower.tail = F)
+
+    return(which(pX2 < hwe.pval))
+  }
+
+  # col.counts <- CountByPheno(x)
+  # if (is.null(hwe.pval)) {
+  #   ind.hwe.qc <- integer(0)
+  # } else {
+  #   ind.hwe.qc <- hwe.qc(col.counts)
+  # }
+  #
+  # ### NA COL
+  # n <- nrow(x$genotypes)
+  # perc.NA <- 1 - colSums(col.counts) / n
+  #
+  # row.counts <- CountNAByRow(x)
 
   printf("Not yet implemented\n")
 }

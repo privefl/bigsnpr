@@ -9,10 +9,6 @@ mycount2 <- function(pBigMat, indCase, indControl) {
     .Call('bigsnpr_mycount2', PACKAGE = 'bigsnpr', pBigMat, indCase, indControl)
 }
 
-mycount3 <- function(pBigMat) {
-    .Call('bigsnpr_mycount3', PACKAGE = 'bigsnpr', pBigMat)
-}
-
 tcrossprodEigen <- function(res, bM) {
     invisible(.Call('bigsnpr_tcrossprodEigen', PACKAGE = 'bigsnpr', res, bM))
 }
