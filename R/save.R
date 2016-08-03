@@ -10,6 +10,7 @@
 #' @name modif-save
 #' @example examples/example.save.R
 #' @seealso \code{\link{rle}}
+NULL
 
 ################################################################################
 

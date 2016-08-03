@@ -6,6 +6,43 @@
 
 using namespace Rcpp;
 
+// mycount
+IntegerMatrix mycount(const SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
+RcppExport SEXP bigsnpr_mycount(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
+    __result = Rcpp::wrap(mycount(pBigMat, indCase, indControl));
+    return __result;
+END_RCPP
+}
+// mycount2
+IntegerMatrix mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
+RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
+    __result = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
+    return __result;
+END_RCPP
+}
+// mycount3
+IntegerVector mycount3(SEXP pBigMat);
+RcppExport SEXP bigsnpr_mycount3(SEXP pBigMatSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    __result = Rcpp::wrap(mycount3(pBigMat));
+    return __result;
+END_RCPP
+}
 // tcrossprodEigen
 void tcrossprodEigen(SEXP res, const Eigen::Map<Eigen::MatrixXd> bM);
 RcppExport SEXP bigsnpr_tcrossprodEigen(SEXP resSEXP, SEXP bMSEXP) {

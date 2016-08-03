@@ -10,6 +10,95 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
+IntegerMatrix mycount(const SEXP pBigMat,
+                      const IntegerVector& indCase,
+                      const IntegerVector& indControl) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<char> macc(*xpMat);
+
+  int nCase = indCase.size();
+  int nControl = indControl.size();
+  int m = xpMat->ncol();
+
+  IntegerMatrix res(6, m);
+
+  for (int j = 0; j < m; j++) {
+    for (int i = 0; i < nCase; i++) {
+      (res(macc[j][indCase[i]-1], j))++;
+    }
+    for (int i = 0; i < nControl; i++) {
+      (res(macc[j][indControl[i]-1]+3, j))++;
+    }
+  }
+
+  return(res);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+IntegerMatrix mycount2(SEXP pBigMat,
+                       const IntegerVector& indCase,
+                       const IntegerVector& indControl) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<char> macc(*xpMat);
+
+  int nCase = indCase.size();
+  int nControl = indControl.size();
+  int m = xpMat->ncol();
+
+  char tmp;
+
+  IntegerMatrix res(8, m);
+
+  for (int j = 0; j < m; j++) {
+    for (int i = 0; i < nCase; i++) {
+      tmp = macc[j][indCase[i]-1];
+      if (tmp == NA_CHAR) {
+        (res(3, j))++;
+      } else {
+        (res(tmp, j))++;
+      }
+    }
+    for (int i = 0; i < nControl; i++) {
+      tmp = macc[j][indControl[i]-1];
+      if (tmp == NA_CHAR) {
+        (res(7, j))++;
+      } else {
+        (res(tmp+4, j))++;
+      }
+    }
+  }
+
+  return(res);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+IntegerVector mycount3(SEXP pBigMat) {
+  XPtr<BigMatrix> xpMat(pBigMat);
+  MatrixAccessor<char> macc(*xpMat);
+
+  int n = xpMat->nrow();
+  int m = xpMat->ncol();
+
+  IntegerVector res(n);
+
+  for (int j = 0; j < m; j++) {
+    for (int i = 0; i < n; i++) {
+      if (macc[j][i] == NA_CHAR) {
+        (res[i])++;
+      }
+    }
+  }
+
+  return(res);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
 void tcrossprodEigen(SEXP res, const Eigen::Map<Eigen::MatrixXd> bM) {
 
   XPtr<BigMatrix> xpMatRes(res);
