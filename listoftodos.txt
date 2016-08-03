@@ -7,3 +7,5 @@ List of TODOs:
 - qcimpute
 - add phenotypes to example files
 - imbreeding coeff F ?
+- add default values for qc ?
+- maf = 0 pour controls et maf > 0 pour cases ?

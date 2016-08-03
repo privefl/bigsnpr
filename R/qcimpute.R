@@ -9,21 +9,34 @@ NULL
 
 ################################################################################
 
-#'@name QC
-#'@description \code{QC}: Quality control (filters)
-#'for a \code{bigSNP} resulting
-#'in a \code{bigSNP} of lower dimension.
-#'@rdname impute-qc-sub
-#'@export
-QC <- function(x, hwe.pval = NULL, only.control = TRUE) {
+#' @name QC
+#' @description \code{QC}: Quality control (filters)
+#' for a \code{bigSNP} resulting
+#' in a \code{bigSNP} of lower dimension.
+#' @param hwe.pval Level threshold (allowed type-I error) to test deviations
+#' from Hardy–Weinberg equilibrium (HWE). Usually, \code{0.05} is used.
+#' Default don't test for HWE.
+#' @param only.control Use only controls (not cases) to test HWE and to
+#' compute MAFs.
+#' @param row.cr.min Minimun individuals' call rate that is allowed.
+#' @param col.cr.min Minimum SNPs' call rate that is allowed.
+#' @param maf.min Minimum Minor Allele Frequency that is allowed.
+#' Usually, \code{0.01} is used. Default removes SNPs that have a zero MAF.
+#' @rdname impute-qc-sub
+#' @export
+QC <- function(x, row.cr.min,
+               col.cr.min,
+               hwe.pval = NULL,
+               maf.min = NULL,
+               only.control = TRUE) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 
   ### HWE
-  hwe.qc <- function(counts) {
+  hwe.maf.qc <- function(counts) {
     if (only.control) {
-      observed <- counts[5:7, ]
+      observed <- counts[4:6, ]
     } else {
-      observed <- counts[1:3, ] + counts[5:7, ]
+      observed <- counts[1:3, ] + counts[4:6, ]
     }
     n <- colSums(observed)
     q <- (observed[1, ] + observed[2,] / 2) / n
@@ -35,23 +48,31 @@ QC <- function(x, hwe.pval = NULL, only.control = TRUE) {
     } else {
       X2 <- colSums((observed - expected)^2 / expected)
     }
-    pX2 <- pchisq(X2, 1, lower.tail = F)
+    pX2 <- stats::pchisq(X2, 1, lower.tail = F)
 
-    return(which(pX2 < hwe.pval))
+    maf <- pmin(p, q)
+
+    return(list(ind.hwe.qc = which(pX2 < hwe.pval),
+                ind.maf.qc = which(maf < maf.min | maf == 0)))
   }
 
-  # col.counts <- CountByPheno(x)
-  # if (is.null(hwe.pval)) {
-  #   ind.hwe.qc <- integer(0)
-  # } else {
-  #   ind.hwe.qc <- hwe.qc(col.counts)
-  # }
-  #
-  # ### NA COL
-  # n <- nrow(x$genotypes)
-  # perc.NA <- 1 - colSums(col.counts) / n
-  #
-  # row.counts <- CountNAByRow(x)
+  tmp <- Counts(x)
+  tmp2 <- hwe.maf.qc(tmp$counts.col)
+
+
+  ### NA COL
+  n <- nrow(x$genotypes)
+  call.rate.col <- colSums(tmp$counts.col) / n
+  ind.cr.col.qc <- which(call.rate.col < col.cr.min)
+
+  ### NA ROW
+  m <- ncol(x$genotypes)
+  call.rate.row <- 1 - tmp$counts.row / m
+  ind.cr.row.qc <- which(call.rate.row < row.cr.min)
+
+  ### Regroup everything
+  ind.qc.col <- c(unlist(tmp2), ind.cr.col.qc)
+  ind.qc.col <- c(ind.cr.row.qc)
 
   printf("Not yet implemented\n")
 }

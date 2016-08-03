@@ -7,7 +7,8 @@
 \alias{sub.bigSNP}
 \title{Imputation, quality control and subset for a "bigSNP".}
 \usage{
-QC(x, hwe.pval = NULL, only.control = TRUE)
+QC(x, row.cr.min, col.cr.min, hwe.pval = NULL, maf.min = NULL,
+  only.control = TRUE)
 
 sub.bigSNP(x, ind.row = NULL, ind.col = NULL)
 
@@ -15,6 +16,20 @@ Impute(x, ncores = 1)
 }
 \arguments{
 \item{x}{A \code{bigSNP}.}
+
+\item{row.cr.min}{Minimun individuals' call rate that is allowed.}
+
+\item{col.cr.min}{Minimum SNPs' call rate that is allowed.}
+
+\item{hwe.pval}{Level threshold (allowed type-I error) to test deviations
+from Hardy–Weinberg equilibrium (HWE). Usually, \code{0.05} is used.
+Default don't test for HWE.}
+
+\item{maf.min}{Minimum Minor Allele Frequency that is allowed.
+Usually, \code{0.01} is used. Default removes SNPs that have a zero MAF.}
+
+\item{only.control}{Use only controls (not cases) to test HWE and to
+compute MAFs.}
 
 \item{ind.row}{Indices of the rows (individuals) to keep.
 Negative indices can be used to exclude row indices.
