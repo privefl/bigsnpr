@@ -6,4 +6,4 @@ src/*.o
 src/*.so
 src/*.dll
 backingfiles
-^README\.html$
+README.html
