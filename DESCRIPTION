@@ -13,7 +13,7 @@ LinkingTo: RcppEigen, Rcpp, bigmemory, BH
 Imports: Rcpp, tools, foreach, data.table, RSpectra, stats
 Depends: R (>= 3.2.3), bigmemory
 RoxygenNote: 5.0.1
-Suggests: testthat, covr, parallel, doParallel, snpStats, pROC, AUC
+Suggests: testthat, covr, parallel, doParallel, gaston
 biocViews: Software, SNP
 URL: https://github.com/privefl/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues

@@ -9,3 +9,8 @@ List of TODOs:
 - imbreeding coeff F ?
 - add default values for qc ?
 - maf = 0 pour controls et maf > 0 pour cases ?
+- PRS2 ==  ?
+- PRS3 -> logOR(Gi:G0) (p83)
+- tester l'ordre maintenu avec sub.bigSNP et -ind.
+- implementer Cochran, Pearson, les deux exacts tests (combiner 3 ?)
+- add "easy-to-use, efficient, flexible and scalable" to description
