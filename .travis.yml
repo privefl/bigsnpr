@@ -4,10 +4,6 @@ language: r
 sudo: false
 cache: packages
 
-env:
- global:
-   - CRAN: http://cran.rstudio.com
-
 notifications:
   email:
     on_success: change
