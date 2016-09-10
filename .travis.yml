@@ -4,6 +4,12 @@ language: r
 sudo: false
 cache: packages
 
+bioc_required: true
+
+env:
+ global:
+   - CRAN: http://cran.rstudio.com
+
 notifications:
   email:
     on_success: change
