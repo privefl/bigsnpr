@@ -1,4 +1,3 @@
-// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppEigen, BH, bigmemory)]]
 #include <RcppEigen.h>
 #include <bigmemory/BigMatrix.h>
