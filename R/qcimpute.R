@@ -1,3 +1,5 @@
+################################################################################
+
 #' @title Imputation, quality control and subset for a "bigSNP".
 #' @name impute-qc-sub
 #' @inheritParams bigsnpr-package
@@ -72,10 +74,14 @@ QC <- function(x, row.cr.min,
 
   ### Regroup everything
   ind.qc.col <- c(unlist(tmp2), ind.cr.col.qc)
-  ind.qc.col <- c(ind.cr.row.qc)
+  ind.qc.row <- c(ind.cr.row.qc)
 
-  printf("Not yet implemented\n")
+  printf("Not yet completed\n")
+
+  return(sub.bigSNP(x, ind.row = -ind.qc.row, ind.col = -ind.qc.col))
 }
+
+################################################################################
 
 #'@description \code{sub.bigSNP}: a function
 #'to get a subset of an object of class \code{bigSNP}.
