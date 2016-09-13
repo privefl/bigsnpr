@@ -47,7 +47,8 @@ if (!file.exists("backingfiles/test_doc.bk")) {
 test$fam$pheno <- sample(c(-1, 1), size = nrow(test$fam),
                          replace = TRUE)
 
-ind <- Prune(test, ncores = 2)
+ind <- Prune(test)
+# ind <- Prune(test, ncores = 2)
 
 R2 <- RsqClass(test$genotypes, test$fam$pheno)
 

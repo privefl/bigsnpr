@@ -257,7 +257,7 @@ PedToBig <- function(pedfile,
     } else {
       tmp <- t(sapply(tmp, CompareToRef, ref = ref, s = s))
     }
-    bigGeno[seq2(intervals[k, ]), ] <- tmp
+    bigGeno[seq2(intervals[k, ]), ] <- as.integer(tmp)
   }
   close(ped)
   options(opt.save)
