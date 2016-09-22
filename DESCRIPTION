@@ -6,12 +6,14 @@ Version: 0.1.0
 Authors@R: person("Florian", "Privé",
     email = "florian.prive.21@gmail.com",
     role = c("aut", "cre"))
-Description: Fast and memory-efficient predictive analysis of SNP arrays.
+Description: Easy-to-use, efficient, flexible and scalable
+    tools for predictive analysis based on SNP arrays.
 License: GPL-3
 LazyData: TRUE
-LinkingTo: RcppEigen, Rcpp, bigmemory, BH
-Imports: Rcpp, tools, foreach, data.table, RSpectra, stats
-Depends: R (>= 3.2.3), bigmemory
+LinkingTo: Rcpp, bigmemory, BH
+Imports: Rcpp, foreach, data.table
+Depends: R (>= 3.2.3), bigmemory, bigstatsr
+Remotes: privefl/bigstatsr
 RoxygenNote: 5.0.1
 Suggests: testthat, covr, parallel, doParallel, gaston
 URL: https://github.com/privefl/bigsnpr

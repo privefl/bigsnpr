@@ -2,7 +2,8 @@
 #' @useDynLib bigsnpr
 #' @importFrom Rcpp sourceCpp
 #' @title R Package for analysis of massive SNP arrays.
-#' @description TODO
+#' @description Easy-to-use, efficient, flexible and scalable
+#' tools for predictive analysis of SNP arrays.
 #' @name bigsnpr-package
 #' @param x A \code{bigSNP}.
 #' @param ind.train An optional vector of the row indices that are used,

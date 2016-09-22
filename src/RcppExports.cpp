@@ -32,29 +32,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tcrossprodEigen
-void tcrossprodEigen(SEXP res, const Eigen::Map<Eigen::MatrixXd> bM);
-RcppExport SEXP bigsnpr_tcrossprodEigen(SEXP resSEXP, SEXP bMSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type res(resSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type bM(bMSEXP);
-    tcrossprodEigen(res, bM);
-    return R_NilValue;
-END_RCPP
-}
-// tcrossprodEigen2
-void tcrossprodEigen2(SEXP res, const Eigen::Map<Eigen::MatrixXd> X, const Eigen::Map<Eigen::MatrixXd> Y);
-RcppExport SEXP bigsnpr_tcrossprodEigen2(SEXP resSEXP, SEXP XSEXP, SEXP YSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type res(resSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type Y(YSEXP);
-    tcrossprodEigen2(res, X, Y);
-    return R_NilValue;
-END_RCPP
-}
 // bigcolsumsChar
 IntegerVector bigcolsumsChar(SEXP pBigMat, const IntegerVector& rowInd);
 RcppExport SEXP bigsnpr_bigcolsumsChar(SEXP pBigMatSEXP, SEXP rowIndSEXP) {
@@ -101,64 +78,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// incrSup
-void incrSup(SEXP pBigMat, const NumericMatrix& source);
-RcppExport SEXP bigsnpr_incrSup(SEXP pBigMatSEXP, SEXP sourceSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type source(sourceSEXP);
-    incrSup(pBigMat, source);
-    return R_NilValue;
-END_RCPP
-}
-// incrAll
-void incrAll(SEXP pBigMat, const NumericMatrix& source);
-RcppExport SEXP bigsnpr_incrAll(SEXP pBigMatSEXP, SEXP sourceSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type source(sourceSEXP);
-    incrAll(pBigMat, source);
-    return R_NilValue;
-END_RCPP
-}
-// complete
-void complete(SEXP pBigMat);
-RcppExport SEXP bigsnpr_complete(SEXP pBigMatSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    complete(pBigMat);
-    return R_NilValue;
-END_RCPP
-}
-// scaling
-NumericMatrix& scaling(NumericMatrix& source, const NumericVector& mean, const NumericVector& sd);
-RcppExport SEXP bigsnpr_scaling(SEXP sourceSEXP, SEXP meanSEXP, SEXP sdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix& >::type source(sourceSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type sd(sdSEXP);
-    rcpp_result_gen = Rcpp::wrap(scaling(source, mean, sd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// scaling2
-NumericMatrix& scaling2(NumericMatrix& source, const NumericVector& intercept, const NumericVector& slope);
-RcppExport SEXP bigsnpr_scaling2(SEXP sourceSEXP, SEXP interceptSEXP, SEXP slopeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix& >::type source(sourceSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type intercept(interceptSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type slope(slopeSEXP);
-    rcpp_result_gen = Rcpp::wrap(scaling2(source, intercept, slope));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rawToBigPart
 void rawToBigPart(const IntegerMatrix& source, SEXP pBigMat, int colOffset);
 RcppExport SEXP bigsnpr_rawToBigPart(SEXP sourceSEXP, SEXP pBigMatSEXP, SEXP colOffsetSEXP) {
@@ -182,34 +101,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type colMat0(colMat0SEXP);
     rcpp_result_gen = Rcpp::wrap(R_squared_chr(pBigMat, rowInd, colInd, colMat0));
-    return rcpp_result_gen;
-END_RCPP
-}
-// R_squared
-NumericVector R_squared(SEXP pBigMat, const NumericVector& y, const IntegerVector& rowInd, const NumericVector& weights);
-RcppExport SEXP bigsnpr_R_squared(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
-    rcpp_result_gen = Rcpp::wrap(R_squared(pBigMat, y, rowInd, weights));
-    return rcpp_result_gen;
-END_RCPP
-}
-// betasRegLin
-NumericMatrix betasRegLin(SEXP pBigMat, const NumericVector& y, const IntegerVector& rowInd, const NumericVector& weights);
-RcppExport SEXP bigsnpr_betasRegLin(SEXP pBigMatSEXP, SEXP ySEXP, SEXP rowIndSEXP, SEXP weightsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
-    rcpp_result_gen = Rcpp::wrap(betasRegLin(pBigMat, y, rowInd, weights));
     return rcpp_result_gen;
 END_RCPP
 }

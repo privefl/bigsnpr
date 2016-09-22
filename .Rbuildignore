@@ -7,8 +7,7 @@ examples
 ^README-.*\.png$
 ^\.travis\.yml$
 tests/local_tests
-^appveyor\.yml$
 README\.html
 ^cran-comments\.md$
-^listoftodos.txt$
 tmp-tests
+tmp-save

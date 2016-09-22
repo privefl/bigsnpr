@@ -4,13 +4,11 @@
 \alias{PCA.bigSNP}
 \title{Principal Components of a "bigSNP".}
 \usage{
-PCA.bigSNP(x, block.size, k = NULL, ind.train = NULL, thr.eigval = 0.001,
-  use.Eigen = TRUE)
+PCA.bigSNP(x, block.size, k = NULL, ind.train = NULL, scaling = "none",
+  thr.eigval = 0.001, use.Eigen = TRUE, progress = TRUE)
 }
 \arguments{
-\item{x}{A \code{bigSNP}.}
-
-\item{block.size}{Maximum number of loci read at once (for all individuals).}
+\item{block.size}{Maximum number of columns read at once.}
 
 \item{k}{Number of PCs to compute. Default is all.}
 
@@ -18,11 +16,27 @@ PCA.bigSNP(x, block.size, k = NULL, ind.train = NULL, thr.eigval = 0.001,
 for the training part.
 If not specified, all data are used.}
 
+\item{scaling}{Scaling to be used, either one of
+\itemize{
+\item "none",
+\item "center": center columns,
+\item "scale": center columns and divide by sd,
+\item "binom": use \eqn{(x-2p)/sqrt(2p(1-p))} (Patterson 2006),
+where p is the MAF,
+\item "y-aware": center columns and  multiply by beta of
+univariate linear regression.
+See \href{https://goo.gl/8G8WMa}{this blog post}.
+}}
+
 \item{thr.eigval}{Threshold to remove "unsignificant" PCs.
 Default is \code{1e-3}.}
 
-\item{use.Eigen}{Use the \code{Eigen} library to compute \eqn{X X^T}, the default.
+\item{use.Eigen}{Use the \code{Eigen} library to compute
+\eqn{X X^T}? \code{TRUE} is the default.
 If \code{FALSE}, use \code{R}'s \code{tcrossprod}. See details.}
+
+\item{progress}{Use a progress bar for the computation
+of the correlation matrix? Default is \code{TRUE}.}
 }
 \value{
 A \code{matrix} of PCs.
@@ -31,7 +45,7 @@ A \code{matrix} of PCs.
 Get k or all Principal Components (PCs) of a \code{bigSNP}
 }
 \details{
-See \code{\link{BigXYt}}.
+See \code{\link[bigstatsr]{BigXYt}}.
 
 Note that for the Eigen decomposition, only \code{R} is
 used because is faster (see \href{http://goo.gl/UYJcCw}{stackoverflow}).
@@ -83,6 +97,10 @@ really considerer using Microsoft R Open for speed.
   test4 <- prcomp(test$genotypes[,], scale. = TRUE)
   plot(test4$x, col = grp.pop)
 }
+}
+\references{
+Patterson N, Price AL, Reich D (2006) Population Structure and
+Eigenanalysis. PLoS Genet 2(12): e190. doi: 10.1371/journal.pgen.0020190
 }
 \seealso{
 \code{\link{bigSNP}} \code{\link{prcomp}}

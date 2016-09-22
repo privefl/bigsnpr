@@ -15,7 +15,8 @@ If not specified, all data are used.}
 Default doesn't use parallelism.}
 }
 \description{
-TODO
+Easy-to-use, efficient, flexible and scalable
+tools for predictive analysis of SNP arrays.
 }
 \keyword{package}
 

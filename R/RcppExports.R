@@ -9,14 +9,6 @@ mycount2 <- function(pBigMat, indCase, indControl) {
     .Call('bigsnpr_mycount2', PACKAGE = 'bigsnpr', pBigMat, indCase, indControl)
 }
 
-tcrossprodEigen <- function(res, bM) {
-    invisible(.Call('bigsnpr_tcrossprodEigen', PACKAGE = 'bigsnpr', res, bM))
-}
-
-tcrossprodEigen2 <- function(res, X, Y) {
-    invisible(.Call('bigsnpr_tcrossprodEigen2', PACKAGE = 'bigsnpr', res, X, Y))
-}
-
 bigcolsumsChar <- function(pBigMat, rowInd) {
     .Call('bigsnpr_bigcolsumsChar', PACKAGE = 'bigsnpr', pBigMat, rowInd)
 }
@@ -33,39 +25,11 @@ colCenter <- function(pBigMat, means) {
     invisible(.Call('bigsnpr_colCenter', PACKAGE = 'bigsnpr', pBigMat, means))
 }
 
-incrSup <- function(pBigMat, source) {
-    invisible(.Call('bigsnpr_incrSup', PACKAGE = 'bigsnpr', pBigMat, source))
-}
-
-incrAll <- function(pBigMat, source) {
-    invisible(.Call('bigsnpr_incrAll', PACKAGE = 'bigsnpr', pBigMat, source))
-}
-
-complete <- function(pBigMat) {
-    invisible(.Call('bigsnpr_complete', PACKAGE = 'bigsnpr', pBigMat))
-}
-
-scaling <- function(source, mean, sd) {
-    .Call('bigsnpr_scaling', PACKAGE = 'bigsnpr', source, mean, sd)
-}
-
-scaling2 <- function(source, intercept, slope) {
-    .Call('bigsnpr_scaling2', PACKAGE = 'bigsnpr', source, intercept, slope)
-}
-
 rawToBigPart <- function(source, pBigMat, colOffset = 0L) {
     invisible(.Call('bigsnpr_rawToBigPart', PACKAGE = 'bigsnpr', source, pBigMat, colOffset))
 }
 
 R_squared_chr <- function(pBigMat, rowInd, colInd, colMat0) {
     .Call('bigsnpr_R_squared_chr', PACKAGE = 'bigsnpr', pBigMat, rowInd, colInd, colMat0)
-}
-
-R_squared <- function(pBigMat, y, rowInd, weights) {
-    .Call('bigsnpr_R_squared', PACKAGE = 'bigsnpr', pBigMat, y, rowInd, weights)
-}
-
-betasRegLin <- function(pBigMat, y, rowInd, weights) {
-    .Call('bigsnpr_betasRegLin', PACKAGE = 'bigsnpr', pBigMat, y, rowInd, weights)
 }
 
