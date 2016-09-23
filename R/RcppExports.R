@@ -9,27 +9,11 @@ mycount2 <- function(pBigMat, indCase, indControl) {
     .Call('bigsnpr_mycount2', PACKAGE = 'bigsnpr', pBigMat, indCase, indControl)
 }
 
-bigcolsumsChar <- function(pBigMat, rowInd) {
-    .Call('bigsnpr_bigcolsumsChar', PACKAGE = 'bigsnpr', pBigMat, rowInd)
-}
-
-bigcolsumsDouble <- function(pBigMat) {
-    .Call('bigsnpr_bigcolsumsDouble', PACKAGE = 'bigsnpr', pBigMat)
-}
-
-symCenter <- function(pBigMat, means, mean) {
-    invisible(.Call('bigsnpr_symCenter', PACKAGE = 'bigsnpr', pBigMat, means, mean))
-}
-
-colCenter <- function(pBigMat, means) {
-    invisible(.Call('bigsnpr_colCenter', PACKAGE = 'bigsnpr', pBigMat, means))
+R_squared_chr <- function(pBigMat, rowInd, colInd, colMat0) {
+    .Call('bigsnpr_R_squared_chr', PACKAGE = 'bigsnpr', pBigMat, rowInd, colInd, colMat0)
 }
 
 rawToBigPart <- function(source, pBigMat, colOffset = 0L) {
     invisible(.Call('bigsnpr_rawToBigPart', PACKAGE = 'bigsnpr', source, pBigMat, colOffset))
-}
-
-R_squared_chr <- function(pBigMat, rowInd, colInd, colMat0) {
-    .Call('bigsnpr_R_squared_chr', PACKAGE = 'bigsnpr', pBigMat, rowInd, colInd, colMat0)
 }
 

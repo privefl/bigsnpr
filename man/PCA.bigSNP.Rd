@@ -4,10 +4,13 @@
 \alias{PCA.bigSNP}
 \title{Principal Components of a "bigSNP".}
 \usage{
-PCA.bigSNP(x, block.size, k = NULL, ind.train = NULL, scaling = "none",
-  thr.eigval = 0.001, use.Eigen = TRUE, progress = TRUE)
+PCA.bigSNP(x, block.size, k = NULL, ind.train = seq(nrow(X)),
+  scaling = "none", thr.eigval = 0.001, use.Eigen = TRUE,
+  progress = TRUE)
 }
 \arguments{
+\item{x}{A \code{bigSNP}.}
+
 \item{block.size}{Maximum number of columns read at once.}
 
 \item{k}{Number of PCs to compute. Default is all.}

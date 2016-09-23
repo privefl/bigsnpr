@@ -34,7 +34,7 @@ QC <- function(x, row.cr.min,
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 
   ### HWE
-  hwe.maf.qc <- function(counts) {
+  hwe.maf.qc <- function(counts) { # a sortir et retester
     if (only.control) {
       observed <- counts[4:6, ]
     } else {

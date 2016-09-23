@@ -9,9 +9,9 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-IntegerMatrix mycount(const SEXP pBigMat,
-                      const IntegerVector& indCase,
-                      const IntegerVector& indControl) {
+ListOf<IntegerMatrix> mycount(SEXP pBigMat,
+                              const IntegerVector& indCase,
+                              const IntegerVector& indControl) {
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
@@ -19,18 +19,20 @@ IntegerMatrix mycount(const SEXP pBigMat,
   int nControl = indControl.size();
   int m = xpMat->ncol();
 
-  IntegerMatrix res(6, m);
+  IntegerMatrix resCase(3, m);
+  IntegerMatrix resControl(3, m);
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < nCase; i++) {
-      (res(macc[j][indCase[i]-1], j))++;
+      (resCase(macc[j][indCase[i]-1], j))++;
     }
     for (int i = 0; i < nControl; i++) {
-      (res(macc[j][indControl[i]-1]+3, j))++;
+      (resControl(macc[j][indControl[i]-1], j))++;
     }
   }
 
-  return(res);
+  return(List::create(_["cases"] = resCase,
+                      _["controls"] = resControl));
 }
 
 /******************************************************************************/
@@ -49,7 +51,8 @@ ListOf<SEXP> mycount2(SEXP pBigMat,
   char tmp;
   int ind;
 
-  IntegerMatrix res(6, m);
+  IntegerMatrix resCase(3, m);
+  IntegerMatrix resControl(3, m);
   IntegerVector res2(nCase+nControl);
 
   for (int j = 0; j < m; j++) {
@@ -59,7 +62,7 @@ ListOf<SEXP> mycount2(SEXP pBigMat,
       if (isna(tmp)) {
         (res2[ind])++;
       } else {
-        (res(tmp, j))++;
+        (resCase(tmp, j))++;
       }
     }
     for (int i = 0; i < nControl; i++) {
@@ -68,13 +71,14 @@ ListOf<SEXP> mycount2(SEXP pBigMat,
       if (isna(tmp)) {
         (res2[ind])++;
       } else {
-        (res(tmp+3, j))++;
+        (resControl(tmp, j))++;
       }
     }
   }
 
-  return(List::create(_["counts.col"] = res,
-                      _["counts.row"] = res2));
+  return(List::create(_["cols.cases"] = resCase,
+                      _["cols.controls"] = resControl,
+                      _["rows"] = res2));
 }
 
 /******************************************************************************/
