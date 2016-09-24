@@ -39,7 +39,6 @@
 #'@name readplink
 NULL
 
-
 ################################################################################
 
 #' @rdname readplink
@@ -48,11 +47,7 @@ BedToBig <- function(bedfile,
                      block.size,
                      backingfile,
                      backingpath = "backingfiles") {
-  if (!file.exists(backingpath))
-    stop(sprintf("Directory \"%s\" doesn't exist", backingpath))
-  if ( file.exists(file.path(backingpath, backingfile)))
-    stop(sprintf("File \"%s\" already exists in directory \"%s\"",
-                 backingfile, backingpath))
+  checkExists(backingfile, backingpath)
 
   ListToInd <- function(list, colOffset) {
     cbind(row = unlist(list),
@@ -155,11 +150,7 @@ PedToBig <- function(pedfile,
                      block.size,
                      backingfile,
                      backingpath = "backingfiles") {
-  if (!file.exists(backingpath))
-    stop(sprintf("Directory \"%s\" doesn't exist", backingpath))
-  if ( file.exists(file.path(backingpath, backingfile)))
-    stop(sprintf("File \"%s\" already exists in directory \"%s\"",
-                 backingfile, backingpath))
+  checkExists(backingfile, backingpath)
 
   dna.letters <- c("A", "C", "T", "G")
 
@@ -176,7 +167,6 @@ PedToBig <- function(pedfile,
 
   # check extension of file
   is.ped <- grepl(pattern = "\\.ped(\\.[a-z]+)*$", pedfile)
-  ext <- tools::file_ext(pedfile)
   if (!is.ped) {
     stop(sprintf("File \"%s\" is not a pedfile", pedfile))
   } else {

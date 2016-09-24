@@ -1,5 +1,16 @@
 ################################################################################
 
+checkExists <- function(backingfile, backingpath) {
+  # check directory and future file
+  if (!file.exists(backingpath))
+    stop(sprintf("Directory \"%s\" doesn't exist", backingpath))
+  if (file.exists(file.path(backingpath, paste0(backingfile, ".bk"))))
+    stop(sprintf("File \"%s.bk\" already exists in directory \"%s\"",
+                 backingfile, backingpath))
+}
+
+################################################################################
+
 check_x <- function(x) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 }
@@ -57,10 +68,9 @@ foreach2 <- function(obj, expr_fun, ncores) {
 
 checkFile <- function(x, type) {
   number <- 1
-  while (file.exists(
-    file.path(x$backingpath,
-              paste0(newfile <- paste0(x$backingfile, "_", type, number),
-                     ".desc")))) {
+  while (file.exists(file.path(
+    x$backingpath,
+    paste0(newfile <- paste0(x$backingfile, "_", type, number), ".bk")))) {
     number <- number + 1
   }
 

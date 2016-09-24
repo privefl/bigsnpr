@@ -4,7 +4,7 @@ language: r
 sudo: false
 cache: packages
 
-bioc_required: true
+#bioc_required: true
 
 env:
  global:
