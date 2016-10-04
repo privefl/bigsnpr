@@ -31,8 +31,6 @@ Counts <- function(x) {
   ind.cases <- which(x$fam$pheno == 1)
   ind.controls <- which(x$fam$pheno == -1)
   res <- mycount2((x$genotypes)@address, ind.cases, ind.controls)
-  row.names(res$counts.col) <- paste0("nb.", c(paste0(0:2, ".case"),
-                                            paste0(0:2, ".control")))
 
   return(res)
 }

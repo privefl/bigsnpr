@@ -27,7 +27,7 @@ Prune <- function(x,
 
   if (is.null(ind.train)) ind.train <- 1:nrow(X)
 
-  R2 <- RsqClass(X, y, ind.train)
+  R2 <- bigstatsr::RsqClass(X, y, ind.train)
   lpS <- -log10(stats::pchisq(length(ind.train) * R2, 1, lower.tail = F))
 
   PruneChr <- function(lims) {

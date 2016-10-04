@@ -3,102 +3,28 @@
 #' @title Imputation, quality control and subset for a "bigSNP".
 #' @name impute-qc-sub
 #' @inheritParams bigsnpr-package
-#' @return A new \code{bigSNP}.
-#' @seealso \code{\link{bigSNP}}
+#' @return A new `bigSNP`.
+#' @seealso [bigSNP][bigSNP-class]
 #' @example examples/example.sub.bigSNP.R
 NULL
 
 
 ################################################################################
 
-#' @name QC
-#' @description \code{QC}: Quality control (filters)
-#' for a \code{bigSNP} resulting
-#' in a \code{bigSNP} of lower dimension.
-#' @param hwe.pval Level threshold (allowed type-I error) to test deviations
-#' from Hardy–Weinberg equilibrium (HWE). Usually, \code{0.05} is used.
-#' Default don't test for HWE.
-#' @param only.control Use only controls (not cases) to test HWE and to
-#' compute MAFs.
-#' @param row.cr.min Minimun individuals' call rate that is allowed.
-#' @param col.cr.min Minimum SNPs' call rate that is allowed.
-#' @param maf.min Minimum Minor Allele Frequency that is allowed.
-#' Usually, \code{0.01} is used. Default removes SNPs that have a zero MAF.
-#' @rdname impute-qc-sub
+#' @description `sub.bigSNP`: a function
+#' to get a subset of an object of class `bigSNP`.
+#' @param ind.row Indices of the rows (individuals) to keep.
+#' Negative indices can be used to exclude row indices.
+#' Default: keep them all.
+#' @param ind.col Indices of the columns (SNPs) to keep.
+#' Negative indices can be used to exclude column indices.
+#' Default: keep them all.
 #' @export
-QC <- function(x, row.cr.min,
-               col.cr.min,
-               hwe.pval = NULL,
-               maf.min = NULL,
-               only.control = TRUE) {
-  if (class(x) != "bigSNP") stop("x must be a bigSNP")
-
-  ### HWE
-  hwe.maf.qc <- function(counts) { # a sortir et retester
-    if (only.control) {
-      observed <- counts[4:6, ]
-    } else {
-      observed <- counts[1:3, ] + counts[4:6, ]
-    }
-    n <- colSums(observed)
-    q <- (observed[1, ] + observed[2,] / 2) / n
-    p <- 1 - q
-    expected <- n * rbind(q^2, 2*p*q, p^2)
-    bias = TRUE
-    if (bias) {
-      X2 <- colSums((abs(observed - expected) - 0.5)^2 / expected)
-    } else {
-      X2 <- colSums((observed - expected)^2 / expected)
-    }
-    pX2 <- stats::pchisq(X2, 1, lower.tail = F)
-
-    maf <- pmin(p, q)
-
-    return(list(ind.hwe.qc = which(pX2 < hwe.pval),
-                ind.maf.qc = which(maf < maf.min | maf == 0)))
-  }
-
-  tmp <- Counts(x)
-  tmp2 <- hwe.maf.qc(tmp$counts.col)
-
-
-  ### NA COL
-  n <- nrow(x$genotypes)
-  call.rate.col <- colSums(tmp$counts.col) / n
-  ind.cr.col.qc <- which(call.rate.col < col.cr.min)
-
-  ### NA ROW
-  m <- ncol(x$genotypes)
-  call.rate.row <- 1 - tmp$counts.row / m
-  ind.cr.row.qc <- which(call.rate.row < row.cr.min)
-
-  ### Regroup everything
-  ind.qc.col <- c(unlist(tmp2), ind.cr.col.qc)
-  ind.qc.row <- c(ind.cr.row.qc)
-
-  printf("Not yet completed\n")
-
-  return(sub.bigSNP(x, ind.row = -ind.qc.row, ind.col = -ind.qc.col))
-}
-
-################################################################################
-
-#'@description \code{sub.bigSNP}: a function
-#'to get a subset of an object of class \code{bigSNP}.
-#'@param ind.row Indices of the rows (individuals) to keep.
-#'Negative indices can be used to exclude row indices.
-#'Default: keep them all.
-#'@param ind.col Indices of the columns (SNPs) to keep.
-#'Negative indices can be used to exclude column indices.
-#'Default: keep them all.
-#'@export
-#'@name sub.bigSNP
-#'@rdname impute-qc-sub
-sub.bigSNP <- function(x, ind.row = NULL, ind.col = NULL) {
-  if (class(x) != "bigSNP") stop("x must be a bigSNP")
-
-  if (is.null(ind.row)) ind.row <- 1:nrow(x$genotypes)
-  if (is.null(ind.col)) ind.col <- 1:ncol(x$genotypes)
+#' @name sub.bigSNP
+#' @rdname impute-qc-sub
+sub.bigSNP <- function(x, ind.row = seq(nrow(x$genotypes)),
+                       ind.col = seq(ncol(x$genotypes))) {
+  check_x(x)
 
   newfile <- checkFile(x, "sub")
   X2 <- bigmemory::deepcopy(x$genotypes,
@@ -123,12 +49,84 @@ sub.bigSNP <- function(x, ind.row = NULL, ind.col = NULL) {
 
 ################################################################################
 
-#'@description \code{Impute}: Imputation function
-#'for a \code{bigSNP}.
+#' @name QC
+#' @description `QC`: Quality control (filters)
+#' for a `bigSNP` resulting in a `bigSNP` of lower dimension.
+#' @param hwe.pval Level threshold (allowed type-I error) to test deviations
+#' from Hardy–Weinberg equilibrium (HWE) from controls only. Default is `1e-6`.
+#' @param rm.sex Keep only SNPs on the first 22 chrosmosomes? Default is `FALSE`.
+#' @param row.cr.min Minimun individuals' call rate that is allowed.
+#' Default is 95\%.
+#' @param col.cr.min Minimum SNPs' call rate that is allowed. Default is 95\%.
+#' @param maf.min Minimum Minor Allele Frequency that is allowed.
+#' Usually, `0.01` is used. Default only removes SNPs that have a zero MAF.
+#' @rdname impute-qc-sub
+#' @export
+QC <- function(x, row.cr.min = 0.95,
+               col.cr.min = 0.95,
+               hwe.pval = 1e-6,
+               maf.min = NULL,
+               rm.sex = FALSE) {
+  check_x(x)
+
+  counts <- Counts(x)
+
+  ### HWE
+  hwe.qc <- function(observed) {
+    n <- colSums(observed)
+    q <- (observed[1, ] + observed[2,] / 2) / n
+    p <- 1 - q
+    expected <- n * rbind(q^2, 2*p*q, p^2)
+
+    #X2 <- colSums((abs(observed - expected) - 0.5)^2 / expected)
+    X2 <- colSums((observed - expected)^2 / expected)
+    pX2 <- stats::pchisq(X2, 1, lower.tail = F)
+
+    return(which(pX2 < hwe.pval))
+  }
+  ind.hwe.qc <- hwe.qc(counts$cols.controls) # only controls
+
+  ### MAF
+  # controls + cases
+  observed <- counts$cols.controls + counts$cols.cases
+  n <- colSums(observed)
+  q <- (observed[1, ] + observed[2,] / 2) / n
+  maf <- pmin(q, 1 - q)
+  ind.maf.qc <- which(maf < maf.min | maf == 0)
+
+  ### NA COL
+  n.all <- nrow(x$genotypes)
+  call.rate.col <- n / n.all
+  ind.cr.col.qc <- which(call.rate.col < col.cr.min)
+
+  ### NOT AUTOSOMAL
+  if (rm.sex) {
+    ind.sex <- which(x$map$chromosome > 22)
+  } else {
+    ind.sex <- integer(0)
+  }
+
+  ### NA ROW
+  m.all <- ncol(x$genotypes)
+  call.rate.row <- 1 - counts$rows / m.all
+  ind.cr.row.qc <- which(call.rate.row < row.cr.min)
+
+  ### Regroup everything
+  ind.qc.col <- c(ind.hwe.qc, ind.maf.qc, ind.cr.col.qc, ind.sex)
+  ind.qc.row <- c(ind.cr.row.qc)
+
+  return(sub.bigSNP(x, ind.row = -ind.qc.row, ind.col = -ind.qc.col))
+}
+
+################################################################################
+
+#'@description `Impute`: Imputation function
+#'for a `bigSNP`.
+#'@param verbose Print progress? Default is `FALSE`.
 #'@export
 #'@name Impute
 #'@rdname impute-qc-sub
-Impute <- function(x, ncores = 1) {
+Impute <- function(x, ncores = 1, verbose = FALSE) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
 
   # get descriptors
@@ -143,7 +141,8 @@ Impute <- function(x, ncores = 1) {
 
   # function that imputes one chromosome
   ImputeChr <- function(lims) {
-    #printf("Imputing chromosome %d with \"nearest neighbors\"...\n", lims[3])
+    if (verbose)
+      printf("Imputing chromosome %d with \"nearest neighbors\"...\n", lims[3])
 
     X <- sub.big.matrix(X.desc, firstCol = lims[1], lastCol = lims[2],
                         backingpath = x$backingpath)
@@ -194,6 +193,9 @@ Impute <- function(x, ncores = 1) {
 
     options(opt.save)
 
+    if (verbose)
+      printf("Done imputing chromosome %d.\n", lims[3])
+
     return(0)
   }
 
@@ -202,7 +204,8 @@ Impute <- function(x, ncores = 1) {
   obj <- foreach::foreach(i = 1:nrow(range.chr),
                           .noexport = c("x", "X2"))
   expr_fun <- function(i) ImputeChr(range.chr[i, ])
-  foreach2(obj, expr_fun, ncores)
+  foreach2(obj, expr_fun, ncores,
+           outfile = ifelse(verbose, "", NULL))
 
   snp_list <- list(genotypes = X2,
                    fam = x$fam,

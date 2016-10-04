@@ -1,4 +1,4 @@
-#' @import bigmemory
+#' @import bigmemory bigstatsr
 #' @useDynLib bigsnpr
 #' @importFrom Rcpp sourceCpp
 #' @title R Package for analysis of massive SNP arrays.
