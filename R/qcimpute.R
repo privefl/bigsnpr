@@ -27,13 +27,13 @@ sub.bigSNP <- function(x, ind.row = seq(nrow(x$genotypes)),
   check_x(x)
 
   newfile <- checkFile(x, "sub")
-  X2 <- bigmemory::deepcopy(x$genotypes,
-                            rows = ind.row,
-                            cols = ind.col,
-                            type = "char",
-                            backingfile = paste0(newfile, ".bk"),
-                            backingpath = x$backingpath,
-                            descriptorfile = paste0(newfile, ".desc"))
+  X2 <- deepcopy(x$genotypes,
+                 rows = ind.row,
+                 cols = ind.col,
+                 type = "char",
+                 backingfile = paste0(newfile, ".bk"),
+                 backingpath = x$backingpath,
+                 descriptorfile = paste0(newfile, ".desc"))
 
   snp_list <- list(genotypes = X2,
                    fam = x$fam[ind.row, ],
