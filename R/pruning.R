@@ -11,7 +11,7 @@
 #' with the disease are pruned.
 #' @example examples/example.pruning.R
 #' @export
-Prune <- function(x,
+Prune <- function(x, # Revoir et commenter le code
                   ind.train = NULL,
                   size = 2000,
                   thr.pvalue = 1,
