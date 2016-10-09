@@ -7,29 +7,16 @@
 \alias{sub.bigSNP}
 \title{Imputation, quality control and subset for a "bigSNP".}
 \usage{
-QC(x, row.cr.min, col.cr.min, hwe.pval = NULL, maf.min = NULL,
-  only.control = TRUE)
+sub.bigSNP(x, ind.row = seq(nrow(x$genotypes)),
+  ind.col = seq(ncol(x$genotypes)))
 
-sub.bigSNP(x, ind.row = NULL, ind.col = NULL)
+QC(x, row.cr.min = 0.95, col.cr.min = 0.95, hwe.pval = 1e-06,
+  maf.min = NULL, rm.sex = FALSE)
 
-Impute(x, ncores = 1)
+Impute(x, ncores = 1, verbose = FALSE)
 }
 \arguments{
 \item{x}{A \code{bigSNP}.}
-
-\item{row.cr.min}{Minimun individuals' call rate that is allowed.}
-
-\item{col.cr.min}{Minimum SNPs' call rate that is allowed.}
-
-\item{hwe.pval}{Level threshold (allowed type-I error) to test deviations
-from Hardy–Weinberg equilibrium (HWE). Usually, \code{0.05} is used.
-Default don't test for HWE.}
-
-\item{maf.min}{Minimum Minor Allele Frequency that is allowed.
-Usually, \code{0.01} is used. Default removes SNPs that have a zero MAF.}
-
-\item{only.control}{Use only controls (not cases) to test HWE and to
-compute MAFs.}
 
 \item{ind.row}{Indices of the rows (individuals) to keep.
 Negative indices can be used to exclude row indices.
@@ -39,19 +26,33 @@ Default: keep them all.}
 Negative indices can be used to exclude column indices.
 Default: keep them all.}
 
+\item{row.cr.min}{Minimun individuals' call rate that is allowed.
+Default is 95\%.}
+
+\item{col.cr.min}{Minimum SNPs' call rate that is allowed. Default is 95\%.}
+
+\item{hwe.pval}{Level threshold (allowed type-I error) to test deviations
+from Hardy–Weinberg equilibrium (HWE) from controls only. Default is \code{1e-6}.}
+
+\item{maf.min}{Minimum Minor Allele Frequency that is allowed.
+Usually, \code{0.01} is used. Default only removes SNPs that have a zero MAF.}
+
+\item{rm.sex}{Keep only SNPs on the first 22 chrosmosomes? Default is \code{FALSE}.}
+
 \item{ncores}{Number or cores used.
 Default doesn't use parallelism.}
+
+\item{verbose}{Print progress? Default is \code{FALSE}.}
 }
 \value{
 A new \code{bigSNP}.
 }
 \description{
-\code{QC}: Quality control (filters)
-for a \code{bigSNP} resulting
-in a \code{bigSNP} of lower dimension.
-
 \code{sub.bigSNP}: a function
 to get a subset of an object of class \code{bigSNP}.
+
+\code{QC}: Quality control (filters)
+for a \code{bigSNP} resulting in a \code{bigSNP} of lower dimension.
 
 \code{Impute}: Imputation function
 for a \code{bigSNP}.
@@ -99,6 +100,6 @@ for a \code{bigSNP}.
 }
 }
 \seealso{
-\code{\link{bigSNP}}
+\link[=bigSNP-class]{bigSNP}
 }
 

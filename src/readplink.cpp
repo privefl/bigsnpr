@@ -1,6 +1,7 @@
 // [[Rcpp::depends(BH, bigmemory)]]
 #include <Rcpp.h>
 #include <bigmemory/MatrixAccessor.hpp>
+#include <bigmemory/isna.hpp>
 
 using namespace Rcpp;
 
@@ -16,10 +17,16 @@ void rawToBigPart(const IntegerMatrix& source,
 
   int nrows = source.rows();
   int ncols = source.cols();
+  int tmp;
 
   for (int j = 0; j < ncols; j++) {
     for (int i = 0; i < nrows; i++) {
-      macc[j+colOffset][i] = source(i, j);
+      tmp = source(i, j);
+      if (isna(tmp)) {
+        macc[j+colOffset][i] = NA_CHAR;
+      } else {
+        macc[j+colOffset][i] = tmp;
+      }
     }
   }
 

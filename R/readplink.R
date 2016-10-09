@@ -103,29 +103,32 @@ BedToBig <- function(bedfile,
   nb.blocks <- nrow(intervals)
   if (intr <- interactive())
     pb <- utils::txtProgressBar(min = 0, max = nb.blocks, style = 3)
+
+  opt.save <- options(bigmemory.typecast.warning = FALSE)
+  colOffset <- 0L
   s1 <- seq(1, 2*n, 2)
   s2 <- s1 + 1
-
-  colOffset <- 0L
   for (k in 1:nb.blocks) {
     if (intr) utils::setTxtProgressBar(pb, k - 1)
     list.ind.na <- list()
     size <- intervals[k, "size"]
     geno.mat <- matrix(0L, n, size)
-    for (i in 1:size) {
+    for (j in 1:size) {
       geno.raw <- as.logical(rawToBits(readBin(bed, "raw", bsz)))
       geno1 <- geno.raw[s1]
       geno2 <- geno.raw[s2]
       ## express genotypes as minor allele dosage (0,1,2)
-      geno.mat[, i] <- geno1 + geno2
+      geno.mat[, j] <- geno1 + geno2
       ## recall that 0/1 is het, but 1/0 is missing
-      list.ind.na[[i]] <- which(geno1 & !geno2)
+      geno.mat[geno1 & !geno2, j] <- NA
     }
-    rawToBigPart(geno.mat, bigGeno@address, colOffset)
-    ind.na <- ListToInd(list.ind.na, colOffset)
-    if (nrow(ind.na) > 0) bigGeno[ind.na] <- NA
+    bigGeno[, 1:size + colOffset] <- geno.mat
+    #rawToBigPart(geno.mat, bigGeno@address, colOffset)
+    #ind.na <- ListToInd(list.ind.na, colOffset)
+    #if (nrow(ind.na) > 0) bigGeno[ind.na] <- NA
     colOffset <- colOffset + size
   }
+  options(opt.save)
   close(bed)
   if (intr) {
     utils::setTxtProgressBar(pb, nb.blocks)
