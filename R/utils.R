@@ -2,7 +2,7 @@
 
 checkExists <- function(backingfile, backingpath) {
   # check directory and future file
-  if (!file.exists(backingpath))
+  if (!dir.exists(backingpath))
     stop(sprintf("Directory \"%s\" doesn't exist", backingpath))
   if (file.exists(file.path(backingpath, paste0(backingfile, ".bk"))))
     stop(sprintf("File \"%s.bk\" already exists in directory \"%s\"",
