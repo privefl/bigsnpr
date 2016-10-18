@@ -11,8 +11,17 @@ checkExists <- function(backingfile, backingpath) {
 
 ################################################################################
 
-check_x <- function(x) {
+check_x <- function(x, check.y = FALSE) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP")
+
+  X <- x$genotypes
+
+  if (check.y) {
+    y <- x$fam$pheno
+    bigstatsr::check_X(X, y, y.type = "class")
+  } else {
+    bigstatsr::check_X(X)
+  }
 }
 
 ################################################################################
