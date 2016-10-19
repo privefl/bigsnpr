@@ -1,0 +1,48 @@
+---
+title: "Weights or not?"
+author: "Florian Privé"
+date: "19 octobre 2016"
+output: html_document
+---
+
+```{r}
+N <- 1e3
+M <- 1e4
+K <- 5 # proportion of controls/cases
+
+library(bigmemory)
+X <- as.big.matrix(matrix(rnorm(N*M), N, M))
+y <- sample(c(rep(-1, K), 1), size = N, replace = TRUE)
+```
+
+```{r}
+R2stats <- function(X, y, weighted = FALSE) {
+  n <- nrow(X)
+  R2 <- bigstatsr::RsqClass(X, y, ind.train = seq(n), 
+                            weighted = weighted)
+  if (weighted) {
+    n2 <- sum(y == -1) + K * sum(y == 1)
+    print(n2)
+    S <- n2 * R2
+  } else {
+    S <- n * R2
+  }
+    
+    
+  pS <- pchisq(S, 1, lower.tail = FALSE)
+  list(S = S, pS = pS)
+}
+```
+
+```{r}
+R2 <- R2stats(X, y)
+hist(R2$pS, probability = TRUE)
+ks.test(R2$pS, "punif")
+```
+
+```{r}
+R2w <- R2stats(X, y, weighted = TRUE)
+hist(R2w$pS, probability = TRUE)
+ks.test(R2w$pS, "punif")
+```
+

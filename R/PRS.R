@@ -40,7 +40,7 @@ R2stats <- function(x, ind.train, weighted = FALSE) {
 #' @export
 #'
 #' @examples
-PRS1 <- function(x, ind.train, ind.test, # TODO: pruning pas encore implémenté
+PRS1 <- function(x, ind.train, ind.test,
                  fun.stats,
                  weighted = FALSE,
                  thr.list = 0,
