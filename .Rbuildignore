@@ -11,3 +11,4 @@ README\.html
 ^cran-comments\.md$
 tmp-tests
 tmp-save
+tmp-protocols
