@@ -39,7 +39,7 @@ ZCATT <- function(counts, x) {
 #' @return A numeric vector of the column statistics.
 #' @export
 MAX3 <- function(x, ind.train = seq(nrow(x$genotypes))) {
-  check_x(x)
+  check_x(x, check.y = TRUE)
 
   cases <- (x$fam$pheno == 1)
 

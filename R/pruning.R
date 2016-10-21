@@ -2,6 +2,13 @@
 #' @description LD pruning for a \code{bigSNP}.
 #' @name Prune
 #' @inheritParams bigsnpr-package
+#' @param S Numeric vector of summary statistics computed
+#' only with `ind.train`.
+#' @param pS Numeric vector of p-values associated with S.
+#' **`pS` needs to be computed through a decreasing function of `S`**.
+#' For example, if `S` follows the standard normal distribution,
+#' you should use `abs(S)` instead and compute
+#' `pS = 2 * pnorm(abs(S), lower.tail = FALSE)`.
 #' @param size Radius of the window's size for the LD evaluations.
 #' @param thr.pvalue Threshold on \eqn{-log_{10}(p-value)} to assess
 #' which SNPs are kept. Here, it has the purpose to accelerate computations.
@@ -11,24 +18,23 @@
 #' with the disease are pruned.
 #' @example examples/example.pruning.R
 #' @export
-Prune <- function(x, # Revoir et commenter le code
-                  ind.train = NULL,
-                  size = 2000,
+Prune <- function(x,
+                  ind.train = seq(nrow(X)),
+                  fun.stats,
                   thr.pvalue = 1,
+                  size = 2000,
                   thr.corr = 0.2,
                   ncores = 1) {
-  if (class(x) != "bigSNP") stop("x must be a bigSNP")
+  check_x(x, check.y = TRUE)
 
   # get descriptors
   X <- x$genotypes
   y <- x$fam$pheno
-  if (is.null(y)) stop("Please use \"GetPhenos\" to get phenotypes right.")
   X.desc <- describe(X)
 
-  if (is.null(ind.train)) ind.train <- 1:nrow(X)
-
-  R2 <- bigstatsr::RsqClass(X, y, ind.train)
-  lpS <- -log10(stats::pchisq(length(ind.train) * R2, 1, lower.tail = F))
+  tmp <- fun.stats(x, ind.train)
+  S <- tmp$S
+  lpS <- -log10(tmp$pS)
 
   PruneChr <- function(lims) {
     X.chr <- sub.big.matrix(X.desc,
@@ -37,13 +43,12 @@ Prune <- function(x, # Revoir et commenter le code
                             backingpath = x$backingpath)
 
     ind.chr <- seq2(lims)
-    R2.chr <- R2[ind.chr]
-    ind.col <- which(lpS[ind.chr] > thr.pvalue)
-    ind.col.chr <- which(ind.chr %in% ind.col)
+    S.chr <- S[ind.chr]
+    ind.col.chr <- which(lpS[ind.chr] > thr.pvalue)
     ind.keep <- list()
     l <- Inf
     while (l > 0) {
-      ind <- ind.col.chr[which.max(R2.chr[ind.col.chr])]
+      ind <- ind.col.chr[which.max(S.chr[ind.col.chr])]
       ind.keep[length(ind.keep) + 1] <- ind.chr[ind]
 
       ind.col.chr.tmp <- intersect(ind.col.chr, ind + -size:size)

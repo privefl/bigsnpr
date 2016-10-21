@@ -4,8 +4,8 @@
 \alias{Prune}
 \title{LD pruning for a "bigSNP"}
 \usage{
-Prune(x, ind.train = NULL, size = 2000, thr.pvalue = 1, thr.corr = 0.2,
-  ncores = 1)
+Prune(x, ind.train = seq(nrow(X)), fun.stats, thr.pvalue = 1, size = 2000,
+  thr.corr = 0.2, ncores = 1)
 }
 \arguments{
 \item{x}{A \code{bigSNP}.}
@@ -14,11 +14,11 @@ Prune(x, ind.train = NULL, size = 2000, thr.pvalue = 1, thr.corr = 0.2,
 for the training part.
 If not specified, all data are used.}
 
-\item{size}{Radius of the window's size for the LD evaluations.}
-
 \item{thr.pvalue}{Threshold on \eqn{-log_{10}(p-value)} to assess
 which SNPs are kept. Here, it has the purpose to accelerate computations.
 Default is 1.}
+
+\item{size}{Radius of the window's size for the LD evaluations.}
 
 \item{thr.corr}{Threshold on the correlation between two SNPs.
 SNPs which are too correlated with another SNP which is more correlated
@@ -26,6 +26,15 @@ with the disease are pruned.}
 
 \item{ncores}{Number or cores used.
 Default doesn't use parallelism.}
+
+\item{S}{Numeric vector of summary statistics computed
+only with \code{ind.train}.}
+
+\item{pS}{Numeric vector of p-values associated with S.
+\strong{\code{pS} needs to be computed through a decreasing function of \code{S}}.
+For example, if \code{S} follows the standard normal distribution,
+you should use \code{abs(S)} instead and compute
+\code{pS = 2 * pnorm(abs(S), lower.tail = FALSE)}.}
 }
 \description{
 LD pruning for a \code{bigSNP}.

@@ -115,7 +115,11 @@ QC <- function(x, row.cr.min = 0.95,
   ind.qc.col <- c(ind.hwe.qc, ind.maf.qc, ind.cr.col.qc, ind.sex)
   ind.qc.row <- c(ind.cr.row.qc)
 
-  return(sub.bigSNP(x, ind.row = -ind.qc.row, ind.col = -ind.qc.col))
+  return(sub.bigSNP(x,
+                    ind.row = `if`(length(ind.qc.row) > 0,
+                                   -ind.qc.row, seq(n.all)),
+                    ind.col = `if`(length(ind.qc.col) > 0,
+                                   -ind.qc.col, seq(m.all))))
 }
 
 ################################################################################
@@ -127,7 +131,7 @@ QC <- function(x, row.cr.min = 0.95,
 #'@name Impute
 #'@rdname impute-qc-sub
 Impute <- function(x, ncores = 1, verbose = FALSE) {
-  if (class(x) != "bigSNP") stop("x must be a bigSNP")
+  check_x(x)
 
   # get descriptors
   X.desc <- describe(x$genotypes)
@@ -202,8 +206,11 @@ Impute <- function(x, ncores = 1, verbose = FALSE) {
   range.chr <- LimsChr(x)
 
   obj <- foreach::foreach(i = 1:nrow(range.chr),
-                          .noexport = c("x", "X2"))
-  expr_fun <- function(i) ImputeChr(range.chr[i, ])
+                          .noexport = c("x", "X2"),
+                          .packages = "bigmemory")
+  expr_fun <- function(i) {
+    ImputeChr(range.chr[i, ])
+  }
   foreach2(obj, expr_fun, ncores,
            outfile = ifelse(verbose, "", NULL))
 

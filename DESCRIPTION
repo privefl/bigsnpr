@@ -11,9 +11,9 @@ Description: Easy-to-use, efficient, flexible and scalable
 License: GPL-3
 LazyData: TRUE
 LinkingTo: Rcpp, bigmemory, BH
-Imports: Rcpp, foreach, data.table
-Depends: R (>= 3.2.3), bigmemory, bigstatsr
-Remotes: privefl/bigstatsr
+Imports: Rcpp, foreach, data.table, bigstatsr
+Depends: R (>= 3.2.3), bigmemory
+Remotes: privefl/bigmemory, privefl/bigstatsr
 RoxygenNote: 5.0.1.9000
 Roxygen: list(markdown = TRUE)
 Suggests: testthat, covr, parallel, doParallel, gaston
