@@ -10,7 +10,7 @@ Description: Easy-to-use, efficient, flexible and scalable
     tools for predictive analysis based on SNP arrays.
 License: GPL-3
 LazyData: TRUE
-LinkingTo: Rcpp, bigmemory, BH
+LinkingTo: Rcpp, bigmemory, BH, RcppArmadillo
 Imports: Rcpp, foreach, data.table, bigstatsr
 Depends: R (>= 3.2.3), bigmemory
 Remotes: privefl/bigmemory, privefl/bigstatsr

@@ -30,8 +30,7 @@ printf <- function(...) cat(sprintf(...))
 
 ################################################################################
 
-CutBySize <- function(m, block.size) {
-  nb <- ceiling(m / block.size)
+CutBySize <- function(m, block.size, nb = ceiling(m / block.size)) {
   int <- m / nb
 
   upper <- round(1:nb * int)
