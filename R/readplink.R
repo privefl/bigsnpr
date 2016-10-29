@@ -49,11 +49,6 @@ BedToBig <- function(bedfile,
                      backingpath = "backingfiles") {
   checkExists(backingfile, backingpath)
 
-  ListToInd <- function(list, colOffset) {
-    cbind(row = unlist(list),
-          col = rep(seq_along(list), sapply(list, length)) + colOffset)
-  }
-
   # check extension of file
   ext <- tools::file_ext(bedfile)
   if (ext != "bed") {
@@ -110,7 +105,6 @@ BedToBig <- function(bedfile,
   s2 <- s1 + 1
   for (k in 1:nb.blocks) {
     if (intr) utils::setTxtProgressBar(pb, k - 1)
-    list.ind.na <- list()
     size <- intervals[k, "size"]
     geno.mat <- matrix(0L, n, size)
     for (j in 1:size) {
@@ -123,9 +117,6 @@ BedToBig <- function(bedfile,
       geno.mat[geno1 & !geno2, j] <- NA
     }
     bigGeno[, 1:size + colOffset] <- geno.mat
-    #rawToBigPart(geno.mat, bigGeno@address, colOffset)
-    #ind.na <- ListToInd(list.ind.na, colOffset)
-    #if (nrow(ind.na) > 0) bigGeno[ind.na] <- NA
     colOffset <- colOffset + size
   }
   options(opt.save)
