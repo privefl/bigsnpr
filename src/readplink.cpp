@@ -7,6 +7,7 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
+//' @export
 // [[Rcpp::export]]
 void rawToBigPart(SEXP pBigMat,
                   const RawVector& source,
