@@ -1,5 +1,9 @@
 ################################################################################
 
+NA_CHAR <- -128
+
+################################################################################
+
 checkExists <- function(backingfile, backingpath) {
   # check directory and future file
   if (!dir.exists(backingpath))

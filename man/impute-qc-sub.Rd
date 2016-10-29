@@ -16,7 +16,7 @@ QC(x, row.cr.min = 0.95, col.cr.min = 0.95, hwe.pval = 1e-06,
 Impute(x, ncores = 1, verbose = FALSE)
 }
 \arguments{
-\item{x}{A \code{bigSNP}.}
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{ind.row}{Indices of the rows (individuals) to keep.
 Negative indices can be used to exclude row indices.
@@ -39,8 +39,7 @@ Usually, \code{0.01} is used. Default only removes SNPs that have a zero MAF.}
 
 \item{rm.sex}{Keep only SNPs on the first 22 chrosmosomes? Default is \code{FALSE}.}
 
-\item{ncores}{Number or cores used.
-Default doesn't use parallelism.}
+\item{ncores}{Number or cores used. Default doesn't use parallelism.}
 
 \item{verbose}{Print progress? Default is \code{FALSE}.}
 }

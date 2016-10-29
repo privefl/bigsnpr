@@ -7,7 +7,7 @@
 crossval.ext(x, fun.model, K)
 }
 \arguments{
-\item{x}{A \code{bigSNP}.}
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{fun.model}{Function that is used to train and
 predict a particular model. Its first 3 parameters

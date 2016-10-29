@@ -8,11 +8,10 @@ Prune(x, ind.train = seq(nrow(X)), fun.stats, thr.pvalue = 1, size = 2000,
   thr.corr = 0.2, ncores = 1)
 }
 \arguments{
-\item{x}{A \code{bigSNP}.}
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part.
-If not specified, all data are used.}
+for the training part. If not specified, all data are used.}
 
 \item{thr.pvalue}{Threshold on \eqn{-log_{10}(p-value)} to assess
 which SNPs are kept. Here, it has the purpose to accelerate computations.
@@ -24,8 +23,7 @@ Default is 1.}
 SNPs which are too correlated with another SNP which is more correlated
 with the disease are pruned.}
 
-\item{ncores}{Number or cores used.
-Default doesn't use parallelism.}
+\item{ncores}{Number or cores used. Default doesn't use parallelism.}
 
 \item{S}{Numeric vector of summary statistics computed
 only with \code{ind.train}.}
