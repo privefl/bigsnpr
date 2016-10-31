@@ -19,15 +19,19 @@ ListOf<IntegerMatrix> mycount(SEXP pBigMat,
   int nControl = indControl.size();
   int m = xpMat->ncol();
 
+  // indices begin at 1 in R and 0 in C++
+  IntegerVector cases = indCase - 1;
+  IntegerVector controls = indControl - 1;
+
   IntegerMatrix resCase(3, m);
   IntegerMatrix resControl(3, m);
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < nCase; i++) {
-      (resCase(macc[j][indCase[i]-1], j))++;
+      (resCase(macc[j][cases[i]], j))++;
     }
     for (int i = 0; i < nControl; i++) {
-      (resControl(macc[j][indControl[i]-1], j))++;
+      (resControl(macc[j][controls[i]], j))++;
     }
   }
 
@@ -48,6 +52,10 @@ ListOf<SEXP> mycount2(SEXP pBigMat,
   int nControl = indControl.size();
   int m = xpMat->ncol();
 
+  // indices begin at 1 in R and 0 in C++
+  IntegerVector cases = indCase - 1;
+  IntegerVector controls = indControl - 1;
+
   char tmp;
   int ind;
 
@@ -57,7 +65,7 @@ ListOf<SEXP> mycount2(SEXP pBigMat,
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < nCase; i++) {
-      ind = indCase[i]-1;
+      ind = cases[i];
       tmp = macc[j][ind];
       if (isna(tmp)) {
         (res2[ind])++;
@@ -66,7 +74,7 @@ ListOf<SEXP> mycount2(SEXP pBigMat,
       }
     }
     for (int i = 0; i < nControl; i++) {
-      ind = indControl[i]-1;
+      ind = controls[i];
       tmp = macc[j][ind];
       if (isna(tmp)) {
         (res2[ind])++;

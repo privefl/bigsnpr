@@ -120,8 +120,9 @@ BedToBig5 <- function(bedfile,
 bedfile2 <- "../stage-timc/Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
 
 print(system.time(
-  test <- BedToBig5(bedfile2, block.size = 500, backingfile = "test2",
-                    ncores = 4)
+  test <- BedToBig5(bedfile2, block.size = 500, backingfile = "test7",
+                    ncores = 6)
 ))
 # 74 sec just to read binary to logical
 # 308 with 4 cores...
+# linux: 18sec, no need parallel, already fast enough

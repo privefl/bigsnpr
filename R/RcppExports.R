@@ -25,7 +25,6 @@ R_squared_chr <- function(pBigMat, rowInd, colInd, colMat0) {
     .Call('bigsnpr_R_squared_chr', PACKAGE = 'bigsnpr', pBigMat, rowInd, colInd, colMat0)
 }
 
-#' @export
 rawToBigPart <- function(pBigMat, source, tab, size, colOffset, n, bsz) {
     invisible(.Call('bigsnpr_rawToBigPart', PACKAGE = 'bigsnpr', pBigMat, source, tab, size, colOffset, n, bsz))
 }

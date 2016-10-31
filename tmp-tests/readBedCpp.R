@@ -73,12 +73,15 @@ true <- AttachBigSNP("test_doc")
 all.equal(test$genotypes[,], true$genotypes[,])
 
 
-bedfile2 <- "../stage-timc/Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
+bedfile2 <- "../thesis-celiac/Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
+#"../stage-timc/Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
 
 print(system.time(
-  test2 <- BedToBig2(bedfile2, backingfile = "test5")
-)) # Windows: 10 min
-
-print(system.time(
-  test3 <- BedToBig(bedfile2, block.size = 1e3, backingfile = "test7")
+  test2 <- BedToBig2(bedfile2, backingfile = "test2")
 ))
+# Windows: 10 min
+# Linux: 30 sec
+
+# print(system.time(
+#   test3 <- BedToBig(bedfile2, block.size = 1e3, backingfile = "test7")
+# ))

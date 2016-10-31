@@ -20,6 +20,9 @@ Rcpp::NumericVector R_squared_chr(SEXP pBigMat,
   int m = colInd.size();
   double nd = (double)n;
 
+  // indices begin at 1 in R and 0 in C++
+  IntegerVector trains = rowInd - 1;
+
   NumericVector res(m);
 
   double ySum = 0, yySum = 0;
@@ -27,8 +30,7 @@ Rcpp::NumericVector R_squared_chr(SEXP pBigMat,
   int indi;
 
   for (int i = 0; i < n; i++) {
-    indi = rowInd[i] - 1;
-    tmpY = colMat0[indi];
+    tmpY = colMat0[trains[i]];
     ySum += tmpY;
     yySum += tmpY * tmpY;
   }
@@ -43,7 +45,7 @@ Rcpp::NumericVector R_squared_chr(SEXP pBigMat,
     indj = colInd[j] - 1;
     xSum = xySum = xxSum = 0;
     for (int i = 0; i < n; i++) {
-      indi = rowInd[i] - 1;
+      indi = trains[i];
       tmp = macc[indj][indi];
       xSum += tmp;
       xySum += tmp * colMat0[indi];

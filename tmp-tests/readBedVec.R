@@ -74,7 +74,7 @@ BedToBig3 <- function(bedfile,
   colOffset <- 0
   for (k in 1:nb.blocks) {
     size <- intervals[k, "size"]
-    rawToBigPart(xpMat = bigGeno@address,
+    rawToBigPart(bigGeno@address,
                  source = readBin(bed, "raw", bsz * size),
                  tab = geno,
                  size = size, colOffset = colOffset,
@@ -97,7 +97,7 @@ BedToBig3 <- function(bedfile,
 bedfile2 <- "../stage-timc/Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
 
 print(system.time(
-  test <- BedToBig3(bedfile2, block.size = 500, backingfile = "test5")
+  test <- BedToBig3(bedfile2, block.size = 500, backingfile = "test4")
 ))
-# 74 sec just to read binary to logical
 # 340 youpi!
+# linux: 13 sec -> fastest

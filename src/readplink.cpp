@@ -7,7 +7,6 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-//' @export
 // [[Rcpp::export]]
 void rawToBigPart(SEXP pBigMat,
                   const RawVector& source,
@@ -17,8 +16,9 @@ void rawToBigPart(SEXP pBigMat,
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
-  int i, j, j_off, k, l, t, c = 0;
+  int i, j, j_off, k, l, t, c;
 
+  c = 0;
   for (j = 0; j < size; j++) {
     j_off = j + colOffset;
     i = 0;

@@ -5,6 +5,8 @@
 using namespace Rcpp;
 
 
+/******************************************************************************/
+
 // [[Rcpp::export]]
 NumericVector prs2(SEXP pBigMat,
                    const NumericMatrix& odds,
@@ -16,18 +18,23 @@ NumericVector prs2(SEXP pBigMat,
   int n = indTest.size();
   int m = indCol.size();
 
-  NumericVector res(n);
+  // indices begin at 1 in R and 0 in C++
+  IntegerVector tests = indTest - 1;
 
-  for (int j = 0; j < m; j++) {
-    int k = indCol[j]-1;
-    for (int i = 0; i < n; i++) {
-      res[i] += odds(macc[k][indTest[i]-1], k);
+  NumericVector res(n);
+  int i, j, k;
+
+  for (j = 0; j < m; j++) {
+    k = indCol[j]-1;
+    for (i = 0; i < n; i++) {
+      res[i] += odds(macc[k][tests[i]], k);
     }
   }
 
   return(res);
 }
 
+/******************************************************************************/
 
 // [[Rcpp::export]]
 NumericVector prs1(SEXP pBigMat,
@@ -40,14 +47,19 @@ NumericVector prs1(SEXP pBigMat,
   int n = indTest.size();
   int m = indCol.size();
 
+  // indices begin at 1 in R and 0 in C++
+  IntegerVector tests = indTest - 1;
+
   NumericVector res(n);
 
   for (int j = 0; j < m; j++) {
     int k = indCol[j]-1;
     for (int i = 0; i < n; i++) {
-      res[i] += macc[k][indTest[i]-1] * betas[k];
+      res[i] += macc[k][tests[i]] * betas[k];
     }
   }
 
   return(res);
 }
+
+/******************************************************************************/
