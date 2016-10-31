@@ -7,6 +7,9 @@
 PRS1(x, ind.train, ind.test, fun.stats, weighted = FALSE, thr.list = 0,
   pruning = FALSE, K = 10, fun.model = NULL, ...)
 }
+\arguments{
+\item{...}{}
+}
 \description{
 Title
 }

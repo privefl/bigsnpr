@@ -4,7 +4,7 @@
 \name{bigsnpr-package}
 \alias{bigsnpr}
 \alias{bigsnpr-package}
-\title{Predictive Analysis of Massive SNP Arrays}
+\title{bigsnpr: Predictive Analysis of Massive SNP Arrays}
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
@@ -18,5 +18,17 @@ for the training part. If not specified, all data are used.}
 \description{
 Easy-to-use, efficient, flexible and scalable tools
 for predictive analysis based on SNP arrays (case-control studies).
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/privefl/bigsnpr}
+  \item Report bugs at \url{https://github.com/privefl/bigsnpr/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Florian Privé \email{florian.prive.21@gmail.com}
+
 }
 

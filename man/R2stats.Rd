@@ -6,6 +6,9 @@
 \usage{
 R2stats(x, ind.train, weighted = FALSE)
 }
+\arguments{
+\item{weighted}{}
+}
 \description{
 Title
 }
