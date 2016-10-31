@@ -91,3 +91,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rawToBigPart
+void rawToBigPart(SEXP pBigMat, const RawVector& source, const IntegerMatrix& tab, int size, int colOffset, int n, int bsz);
+RcppExport SEXP bigsnpr_rawToBigPart(SEXP pBigMatSEXP, SEXP sourceSEXP, SEXP tabSEXP, SEXP sizeSEXP, SEXP colOffsetSEXP, SEXP nSEXP, SEXP bszSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const RawVector& >::type source(sourceSEXP);
+    Rcpp::traits::input_parameter< const IntegerMatrix& >::type tab(tabSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type colOffset(colOffsetSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type bsz(bszSEXP);
+    rawToBigPart(pBigMat, source, tab, size, colOffset, n, bsz);
+    return R_NilValue;
+END_RCPP
+}

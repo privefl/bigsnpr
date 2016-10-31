@@ -16,8 +16,7 @@ PCA.bigSNP(x, block.size, k = NULL, ind.train = seq(nrow(X)),
 \item{k}{Number of PCs to compute. Default is all.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part.
-If not specified, all data are used.}
+for the training part. If not specified, all data are used.}
 
 \item{scaling}{Scaling to be used, either one of
 \itemize{

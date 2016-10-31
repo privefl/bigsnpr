@@ -1,43 +1,10 @@
-################################################################################
+Rcpp::sourceCpp('src/readplink.cpp')
+source('R/utils.R')
 
-#' @title Read PLINK files into a "bigSNP".
-#' @description Functions to read bed/bim/fam files
-#' into a `bigSNP`.\cr
-#' For more information on these formats, please visit
-#' \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
-#' For other formats, please use PLINK to convert them in bedfiles,
-#' which require minimal space to store and are faster to read.
-#' @param bedfile Path to file with extension .bed. You need the corresponding
-#' .bim and .fam in the same directory.
-#' @param backingfile The root name for the backing file(s) for the cache of
-#' the resulting object.
-#' @param backingpath The path to the directory containing the file backing cache.
-#' Default is "backingfiles". It needs to exist (use [dir.create]).
-#' @param readonly Is the \code{big.matrix} read only? Default is \code{TRUE}.
-#' @return A \code{bigSNP}.\cr
-#' Reading PLINK files creates
-#' \code{backingfile}.bk, \code{backingfile}.desc and \code{backingfile}.rds
-#' in directory \code{backingpath}.\cr
-#' You shouldn't read from PLINK files more than once.
-#' Instead, use \code{AttachBigSNP}
-#' to load this object in another session from backing files.
-#' @Implementation
-#' The implementation was originally inspired from the code of
-#' \href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
-#' I did many optimizations. Especially, online reading
-#' into a \code{big.matrix} makes it memory-efficient.
-#' @example examples/example.readplink.R
-#' @name readplink
-NULL
-
-################################################################################
-
-#' @rdname readplink
-#' @export
-BedToBig <- function(bedfile,
-                     block.size,
-                     backingfile,
-                     backingpath = "backingfiles") {
+BedToBig3 <- function(bedfile,
+                      block.size,
+                      backingfile,
+                      backingpath = "backingfiles") {
   checkExists(backingfile, backingpath)
 
   # check extension of file
@@ -107,7 +74,7 @@ BedToBig <- function(bedfile,
   colOffset <- 0
   for (k in 1:nb.blocks) {
     size <- intervals[k, "size"]
-    rawToBigPart(bigGeno@address,
+    rawToBigPart(xpMat = bigGeno@address,
                  source = readBin(bed, "raw", bsz * size),
                  tab = geno,
                  size = size, colOffset = colOffset,
@@ -127,25 +94,10 @@ BedToBig <- function(bedfile,
   snp_list
 }
 
-################################################################################
+bedfile2 <- "../stage-timc/Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
 
-#' @rdname readplink
-#' @export
-AttachBigSNP <- function(backingfile,
-                         backingpath = "backingfiles",
-                         readonly = TRUE) {
-  snp.list <- readRDS(file.path(backingpath, paste0(backingfile, ".rds")))
-
-  snp.list$genotypes <-
-    bigmemory::attach.big.matrix(file.path(backingpath,
-                                           paste0(backingfile, ".desc")),
-                                 readonly = readonly)
-
-  snp.list$backingfile <- backingfile
-  snp.list$backingpath <- backingpath
-
-  return(snp.list)
-}
-
-################################################################################
-
+print(system.time(
+  test <- BedToBig3(bedfile2, block.size = 500, backingfile = "test5")
+))
+# 74 sec just to read binary to logical
+# 340 youpi!

@@ -7,11 +7,10 @@
 MAX3(x, ind.train = seq(nrow(x$genotypes)))
 }
 \arguments{
-\item{x}{A \code{bigSNP}.}
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part.
-If not specified, all data are used.}
+for the training part. If not specified, all data are used.}
 }
 \value{
 A numeric vector of the column statistics.

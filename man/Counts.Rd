@@ -7,7 +7,7 @@
 Counts(x)
 }
 \arguments{
-\item{x}{A \code{bigSNP}.}
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
 }
 \value{
 A list of:\itemize{

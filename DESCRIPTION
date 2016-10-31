@@ -1,21 +1,21 @@
 Encoding: UTF-8
 Package: bigsnpr
 Type: Package
-Title: Predictive Analysis of SNP Arrays
+Title: Predictive Analysis of Massive SNP Arrays
 Version: 0.1.0
 Authors@R: person("Florian", "Privé",
     email = "florian.prive.21@gmail.com",
     role = c("aut", "cre"))
-Description: Easy-to-use, efficient, flexible and scalable
-    tools for predictive analysis based on SNP arrays.
+Description: Easy-to-use, efficient, flexible and scalable tools
+    for predictive analysis based on SNP arrays (case-control studies).
 License: GPL-3
 LazyData: TRUE
 LinkingTo: Rcpp, bigmemory, BH, RcppArmadillo
-Imports: Rcpp, foreach, data.table, bigstatsr
+Imports: Rcpp, data.table, bigstatsr, foreach, parallel, doParallel
 Depends: R (>= 3.2.3), bigmemory
 Remotes: privefl/bigmemory, privefl/bigstatsr
 RoxygenNote: 5.0.1.9000
 Roxygen: list(markdown = TRUE)
-Suggests: testthat, covr, parallel, doParallel, gaston
+Suggests: testthat, covr, gaston
 URL: https://github.com/privefl/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues

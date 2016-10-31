@@ -3,13 +3,10 @@
 \name{readplink}
 \alias{AttachBigSNP}
 \alias{BedToBig}
-\alias{PedToBig}
 \alias{readplink}
 \title{Read PLINK files into a "bigSNP".}
 \usage{
 BedToBig(bedfile, block.size, backingfile, backingpath = "backingfiles")
-
-PedToBig(pedfile, block.size, backingfile, backingpath = "backingfiles")
 
 AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
 }
@@ -17,23 +14,13 @@ AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
 \item{bedfile}{Path to file with extension .bed. You need the corresponding
 .bim and .fam in the same directory.}
 
-\item{block.size}{\itemize{
-\item For bedfiles: maximum number of loci read at once (for all individuals).
-\item For pedfiles: maximum number of individuals read at once (for all loci).
-}}
-
 \item{backingfile}{The root name for the backing file(s) for the cache of
 the resulting object.}
 
 \item{backingpath}{The path to the directory containing the file backing cache.
-Default is "backingfiles". It needs to exist.}
+Default is "backingfiles". It needs to exist (use \link{dir.create}).}
 
-\item{pedfile}{Path to file with extension .ped (with possible extension
-from compression, such as .ped.gz).
-You need the corresponding
-.map in the same directory.}
-
-\item{readonly}{Is the \code{big.matrix} read only ? Default is \code{TRUE}.}
+\item{readonly}{Is the \code{big.matrix} read only? Default is \code{TRUE}.}
 }
 \value{
 A \code{bigSNP}.\cr
@@ -45,18 +32,12 @@ Instead, use \code{AttachBigSNP}
 to load this object in another session from backing files.
 }
 \description{
-Functions to read ped/map or bed/bim/fam files
+Functions to read bed/bim/fam files
 into a \code{bigSNP}.\cr
 For more information on these formats, please visit
-\href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#ped}{PLINK webpage}.
-Prefer using bedfiles than pedfiles because
-they require minimal space to store and are faster to read.
-}
-\note{
-The implementation is inspired from the code of
-\href{https://github.com/andrewparkermorgan/argyle}{package argyle},
-with some optimizations.\cr
-Especially, online reading into a \code{big.matrix} makes it memory-efficient.
+\href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
+For other formats, please use PLINK to convert them in bedfiles,
+which require minimal space to store and are faster to read.
 }
 \examples{
 \dontrun{
@@ -80,8 +61,5 @@ Especially, online reading into a \code{big.matrix} makes it memory-efficient.
   print(dim(test$genotypes))
   print(test$genotypes[1:8, 1:8])
 }
-}
-\seealso{
-\code{\link{bigSNP}} \code{\link{dir.create}}
 }
 
