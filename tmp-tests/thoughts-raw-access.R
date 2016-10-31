@@ -24,6 +24,13 @@ getCode <- function() {
 }
 geno <- getCode()
 
-`[.bigBed` <- function(x) {
-  x$X
+`[.bigBed` <- function(x, indi = "missing", indj = "missing") {
+  tmp <- indi - 1
+  indi.q <- tmp %/% 4 + 1
+  indi.r <- tmp %% 4 + 1
+  x$tab[cbind(indi.r, x$X[indi.q, indj] + 1)]
 }
+
+x <- list(X = celiac$genotypes, tab = geno)
+class(x) <- "bigBed"
+x[1:5, ]

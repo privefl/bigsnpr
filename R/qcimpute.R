@@ -212,7 +212,7 @@ Impute <- function(x, ncores = 1, verbose = FALSE) {
     ImputeChr(range.chr[i, ])
   }
   foreach2(obj, expr_fun, ncores,
-           outfile = ifelse(verbose, "", NULL))
+           outfile = `if`(verbose, "", NULL))
 
   snp_list <- list(genotypes = X2,
                    fam = x$fam,

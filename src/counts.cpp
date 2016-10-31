@@ -42,41 +42,6 @@ ListOf<IntegerMatrix> mycount(SEXP pBigMat,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-ListOf<IntegerMatrix> mycount3(SEXP pBigMat,
-                               const IntegerVector& indCase,
-                               const IntegerVector& indControl) {
-  XPtr<BigMatrix> xpMat(pBigMat);
-  MatrixAccessor<char> macc(*xpMat);
-
-  int nCase = indCase.size();
-  int nControl = indControl.size();
-  int m = xpMat->ncol();
-
-  // indices begin at 1 in R and 0 in C++
-  IntegerVector cases = indCase - 1;
-  IntegerVector controls = indControl - 1;
-  char* macc_j;
-
-  IntegerMatrix resCase(3, m);
-  IntegerMatrix resControl(3, m);
-
-  for (int j = 0; j < m; j++) {
-    macc_j = macc[j];
-    for (int i = 0; i < nCase; i++) {
-      (resCase(macc_j[cases[i]], j))++;
-    }
-    for (int i = 0; i < nControl; i++) {
-      (resControl(macc_j[controls[i]], j))++;
-    }
-  }
-
-  return(List::create(_["cases"] = resCase,
-                      _["controls"] = resControl));
-}
-
-/******************************************************************************/
-
-// [[Rcpp::export]]
 ListOf<SEXP> mycount2(SEXP pBigMat,
                       const IntegerVector& indCase,
                       const IntegerVector& indControl) {
