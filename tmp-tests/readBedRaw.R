@@ -79,10 +79,10 @@ BedToBig4 <- function(bedfile,
   snp_list
 }
 
-bedfile2 <- "../stage-timc/Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
+bedfile2 <- "../Dubois2010_data/FinnuncorrNLITUK1UK3hap300.bed"
 
 print(system.time(
-  test <- BedToBig4(bedfile2, block.size = 500, backingfile = "test6")
+  celiacRaw <- BedToBig4(bedfile2, block.size = 500, backingfile = "celiacRaw")
 ))
 # 74 sec just to read binary to logical
 # 89 sec write raw data

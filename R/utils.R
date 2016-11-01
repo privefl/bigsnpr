@@ -1,6 +1,35 @@
 ################################################################################
 
-NA_CHAR <- -128
+getCode <- function(NA_CHAR = -128L) {
+  all.raws <- as.raw(0:255)
+  geno.raw <- as.logical(rawToBits(all.raws))
+  s <- c(TRUE, FALSE)
+  geno1 <- geno.raw[s]
+  geno2 <- geno.raw[!s]
+  geno <- geno1 + geno2
+  geno[geno1 & !geno2] <- NA_CHAR
+  dim(geno) <- c(4, 256)
+  geno
+}
+
+getInverseCode <- function() {
+  geno <- getCode(3) + 1
+  r <- raw(256)
+  dim(r) <- rep(4, 4)
+  for (i in 1:256) {
+    ind <- geno[, i]
+    r[ind[1], ind[2], ind[3], ind[4]] <- as.raw(i - 1)
+  }
+  r
+}
+
+################################################################################
+
+NAMES.MAP <- c("chromosome", "marker.ID", "genetic.dist",
+               "physical.pos", "allele1", "allele2")
+
+NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
+               "maternal.ID", "sex", "affection")
 
 ################################################################################
 

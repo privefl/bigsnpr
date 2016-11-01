@@ -1,36 +1,26 @@
-x <- sample.int(1e6)
+source("R/utils.R")
 
-x2 <- x - 1
-x3 <- x2 %% 4
-x4 <- x2 %/% 4
+require(bigsnpr)
 
-print(all.equal(x4 * 4 + x3 + 1, x))
+celiac <- AttachBigSNP("celiac")
+X <- celiac$genotypes
+n <- nrow(X)
 
-x <- integer(10)
-x[] <- rep(1:3, 10)
+celiacRaw <- AttachBigSNP("celiacRaw")
 
+x <- list(X = celiacRaw$genotypes, tab = getCode(),
+          q = as.integer(seq(0, n-1) %/% 4),
+          r = as.integer(seq(0, n-1) %% 4))
+class(x) <- "bigRaw"
 
-# match each possible code
-getCode <- function() {
-  all.raws <- as.raw(0:255)
-  geno.raw <- as.logical(rawToBits(all.raws))
-  s <- c(TRUE, FALSE)
-  geno1 <- geno.raw[s]
-  geno2 <- geno.raw[!s]
-  geno <- geno1 + geno2
-  geno[geno1 & !geno2] <- -128
-  dim(geno) <- c(4, 256)
-  geno
-}
-geno <- getCode()
-
-`[.bigBed` <- function(x, indi = "missing", indj = "missing") {
-  tmp <- indi - 1
-  indi.q <- tmp %/% 4 + 1
-  indi.r <- tmp %% 4 + 1
-  x$tab[cbind(indi.r, x$X[indi.q, indj] + 1)]
+`[.bigRaw` <- function(x, ind_i = seq(nrow(X)), ind_j) {
+  rawToBigPart2((x$X)@address, ind_i, ind_j, x$tab, x$q, x$r)
 }
 
-x <- list(X = celiac$genotypes, tab = geno)
-class(x) <- "bigBed"
-x[1:5, ]
+
+require(microbenchmark)
+print(microbenchmark(
+  x[1:10, 1:5 + 10000],  # 13 ms
+  X[1:10, 1:5 + 10000]   # 54 ms
+))
+

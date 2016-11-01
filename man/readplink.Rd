@@ -39,6 +39,12 @@ For more information on these formats, please visit
 For other formats, please use PLINK to convert them in bedfiles,
 which require minimal space to store and are faster to read.
 }
+\note{
+The implementation was originally inspired from the code of
+\href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
+I did many optimizations. Especially, online reading
+into a \code{big.matrix} makes it memory-efficient.
+}
 \examples{
 \dontrun{
 
