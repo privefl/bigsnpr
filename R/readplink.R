@@ -21,7 +21,7 @@
 #' You shouldn't read from PLINK files more than once.
 #' Instead, use \code{AttachBigSNP}
 #' to load this object in another session from backing files.
-#' @Implementation
+#' @note
 #' The implementation was originally inspired from the code of
 #' \href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
 #' I did many optimizations. Especially, online reading
@@ -83,17 +83,6 @@ BedToBig <- function(bedfile,
   }
 
   # match each possible code
-  getCode <- function() {
-    all.raws <- as.raw(0:255)
-    geno.raw <- as.logical(rawToBits(all.raws))
-    s <- c(TRUE, FALSE)
-    geno1 <- geno.raw[s]
-    geno2 <- geno.raw[!s]
-    geno <- geno1 + geno2
-    geno[geno1 & !geno2] <- NA_CHAR
-    dim(geno) <- c(4, 256)
-    geno
-  }
   geno <- getCode()
 
   ## block size in bytes: (number of individuals)/4, to nearest byte
@@ -149,3 +138,39 @@ AttachBigSNP <- function(backingfile,
 
 ################################################################################
 
+#' Title
+#'
+#' @param x
+#' @param bedfile
+#'
+#' @return
+#' @export
+#'
+#' @examples
+BigToBed <- function(x, bedfile) {
+  check_x(x)
+
+  # check extension of file
+  ext <- tools::file_ext(bedfile)
+  if (ext != "bed") {
+    stop(sprintf("Extension .%s unsupported, requires .bed instead", ext))
+  } else {
+    bimfile <- sub("\\.bed$", ".bim", bedfile)
+    famfile <- sub("\\.bed$", ".fam", bedfile)
+  }
+
+  if (file.exists(bedfile))
+    stop(sprintf("File %s already exists", bedfile))
+
+  # write map and family files
+  write.table(x$fam[NAMES.FAM], file = famfile, quote = FALSE,
+              sep = "\t", row.names = FALSE, col.names = FALSE)
+  write.table(x$map[NAMES.MAP], file = bimfile, quote = FALSE,
+              sep = "\t", row.names = FALSE, col.names = FALSE)
+
+  ## write bed file
+  X <- celiac$genotypes
+  writebina(bedfile, X@address, getInverseCode())
+
+  bedfile
+}
