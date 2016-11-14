@@ -1,6 +1,6 @@
 require(HiLMM)
 
-data_sim <- data_simu(n = 1e3, N = 1e4, eta_star = 0.9, q = 0.5)
+data_sim <- data_simu(n = 1e3, N = 1e4, eta_star = 0.98, q = 0.05)
 W <- data_sim$W
 Y <- data_sim$Y
 
@@ -29,7 +29,7 @@ eta <- seq(0.001, 0.999, 0.001)
 tmp2 <- eta %o% tmp1 + 1
 
 test <- sapply(seq(0.01, 0.99, 0.01), tosolve)
-plot(test, type = "l")
+plot(seq(0.01, 0.99, 0.01), test, type = "l")
 test2 <- optimize(tosolve, lower = 0.01, upper = 0.99)
 print(test2$minimum)
 test3 <- estim_herit2(Y, W)

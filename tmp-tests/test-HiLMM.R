@@ -1,6 +1,6 @@
 require(HiLMM)
 
-data_sim <- data_simu(n = 1e3, N = 1e4, eta_star = 0.99, q = 0.01)
+data_sim <- data_simu(n = 1e3, N = 1e4, eta_star = 0.98, q = 0.01)
 
 # print(system.time(
 #   test <- estim_herit(Y = data_sim$Y, W = data_sim$W)
@@ -8,15 +8,15 @@ data_sim <- data_simu(n = 1e3, N = 1e4, eta_star = 0.99, q = 0.01)
 # str(test)
 
 
-estim_herit2 <- function(Y, W, eta_init = c(0.1, 0.5, 0.9), nb_iter = 20) {
+estim_herit2 <- function(Y, W, eta_init = 0.00001, nb_iter = 20) {
   n <- nrow(W)
   N <- ncol(W)
 
   Z <- scale(W, center = TRUE, scale = TRUE)
   M <- tcrossprod(Z) / N
   eigs <- eigen(M, symmetric = TRUE)
-  lambda <- eigs$values
-  Y_tilde <- crossprod(eigs$vectors, Y)
+  lambda <- eigs$values[-n]
+  Y_tilde <- crossprod(eigs$vectors[, -n], Y)
 
   tmp1 <- lambda - 1
   Y_tilde2 <- Y_tilde^2

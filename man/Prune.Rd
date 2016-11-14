@@ -5,7 +5,7 @@
 \title{LD pruning for a "bigSNP"}
 \usage{
 Prune(x, ind.train = seq(nrow(X)), fun.stats, thr.pvalue = 1, size = 2000,
-  thr.corr = 0.2, ncores = 1)
+  thr.corr = 0.2, ncores = 1, ...)
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}

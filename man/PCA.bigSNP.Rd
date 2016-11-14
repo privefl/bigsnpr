@@ -11,12 +11,7 @@ PCA.bigSNP(x, block.size, k = NULL, ind.train = seq(nrow(X)),
 \arguments{
 \item{x}{A \code{bigSNP}.}
 
-\item{block.size}{Maximum number of columns read at once.}
-
 \item{k}{Number of PCs to compute. Default is all.}
-
-\item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all data are used.}
 
 \item{scaling}{Scaling to be used, either one of
 \itemize{
@@ -32,13 +27,6 @@ See \href{https://goo.gl/8G8WMa}{this blog post}.
 
 \item{thr.eigval}{Threshold to remove "unsignificant" PCs.
 Default is \code{1e-3}.}
-
-\item{use.Eigen}{Use the \code{Eigen} library to compute
-\eqn{X X^T}? \code{TRUE} is the default.
-If \code{FALSE}, use \code{R}'s \code{tcrossprod}. See details.}
-
-\item{progress}{Use a progress bar for the computation
-of the correlation matrix? Default is \code{TRUE}.}
 }
 \value{
 A \code{matrix} of PCs.

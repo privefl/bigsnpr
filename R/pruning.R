@@ -24,32 +24,35 @@ Prune <- function(x,
                   thr.pvalue = 1,
                   size = 2000,
                   thr.corr = 0.2,
-                  ncores = 1) {
+                  ncores = 1,
+                  ...) {
   check_x(x, check.y = TRUE)
 
   # get descriptors
   X <- x$genotypes
-  y <- x$fam$pheno
   X.desc <- describe(X)
 
-  tmp <- fun.stats(x, ind.train)
-  S <- tmp$S
-  lpS <- -log10(tmp$pS)
+  # export function and backingpath (force eval of promise)
+  FUN <- fun.stats
+  PATH <- x$backingpath
+
 
   PruneChr <- function(lims) {
     X.chr <- sub.big.matrix(X.desc,
                             firstCol = lims[1],
                             lastCol = lims[2],
-                            backingpath = x$backingpath)
+                            backingpath = PATH)
 
-    ind.chr <- seq2(lims)
-    S.chr <- S[ind.chr]
-    ind.col.chr <- which(lpS[ind.chr] > thr.pvalue)
+    tmp <- FUN(X.chr, ind.train, ...)
+    S.chr <- tmp$S
+    ind.col.chr <- which(tmp$pS < 10^(-thr.pvalue))
+    rm(tmp)
+
     ind.keep <- list()
     l <- Inf
     while (l > 0) {
       ind <- ind.col.chr[which.max(S.chr[ind.col.chr])]
-      ind.keep[length(ind.keep) + 1] <- ind.chr[ind]
+      ind.keep[[length(ind.keep) + 1]] <- ind
 
       ind.col.chr.tmp <- intersect(ind.col.chr, ind + -size:size)
 
@@ -64,14 +67,12 @@ Prune <- function(x,
       #print(l)
     }
 
-    sort(unlist(ind.keep))
+    sort(seq2(lims)[unlist(ind.keep)])
   }
 
   range.chr <- LimsChr(x)
 
-  obj <- foreach::foreach(i = 1:nrow(range.chr),
-                          .combine = 'c',
-                          .noexport = 'x')
+  obj <- foreach::foreach(i = 1:nrow(range.chr), .combine = 'c')
   expr_fun <- function(i) PruneChr(range.chr[i, ])
   foreach2(obj, expr_fun, ncores)
 }
