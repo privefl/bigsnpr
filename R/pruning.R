@@ -24,26 +24,35 @@ Prune <- function(x,
                   thr.pvalue = 1,
                   size = 2000,
                   thr.corr = 0.2,
-                  ncores = 1,
-                  ...) {
-  check_x(x, check.y = TRUE)
+                  ncores = 1) {
+  #check_x(x, check.y = TRUE)
 
   # get descriptors
   X <- x$genotypes
   X.desc <- describe(X)
 
-  # export function and backingpath (force eval of promise)
-  FUN <- fun.stats
+  # export fun.stats and backingpath (force eval of promise)
   PATH <- x$backingpath
+  #FUN <- fun.stats
 
 
-  PruneChr <- function(lims) {
+  range.chr <- LimsChr(x)
+
+  if (is.seq <- (ncores == 1)) {
+    registerDoSEQ()
+  } else {
+    cl <- parallel::makeCluster(ncores)
+    doParallel::registerDoParallel(cl)
+  }
+  res <- foreach(i = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
+    lims <- range.chr[i, ]
+
     X.chr <- sub.big.matrix(X.desc,
                             firstCol = lims[1],
                             lastCol = lims[2],
                             backingpath = PATH)
 
-    tmp <- FUN(X.chr, ind.train, ...)
+    tmp <- fun.stats(X.chr, ind.train)
     S.chr <- tmp$S
     ind.col.chr <- which(tmp$pS < 10^(-thr.pvalue))
     rm(tmp)
@@ -69,10 +78,7 @@ Prune <- function(x,
 
     sort(seq2(lims)[unlist(ind.keep)])
   }
+  if (!is.seq) parallel::stopCluster(cl)
 
-  range.chr <- LimsChr(x)
-
-  obj <- foreach::foreach(i = 1:nrow(range.chr), .combine = 'c')
-  expr_fun <- function(i) PruneChr(range.chr[i, ])
-  foreach2(obj, expr_fun, ncores)
+  res
 }

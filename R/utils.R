@@ -33,6 +33,12 @@ NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
 
 ################################################################################
 
+detect_MRO <- function() {
+  is.element("RevoUtilsMath", rownames(installed.packages()))
+}
+
+################################################################################
+
 checkExists <- function(backingfile, backingpath) {
   # check directory and future file
   if (!dir.exists(backingpath))
