@@ -12,8 +12,5 @@ public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus
  
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bigsnpr
-
-
-
+![](bigsnpr.png)
 
