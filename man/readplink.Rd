@@ -6,7 +6,8 @@
 \alias{AttachBigSNP}
 \title{Read PLINK files into a "bigSNP".}
 \usage{
-BedToBig(bedfile, block.size, backingfile, backingpath = "backingfiles")
+BedToBig(bedfile, block.size = 1000, backingfile,
+  backingpath = "backingfiles")
 
 AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
 }

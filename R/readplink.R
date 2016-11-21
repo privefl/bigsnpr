@@ -169,7 +169,7 @@ BigToBed <- function(x, bedfile) {
               sep = "\t", row.names = FALSE, col.names = FALSE)
 
   ## write bed file
-  X <- celiac$genotypes
+  X <- x$genotypes
   writebina(bedfile, X@address, getInverseCode())
 
   bedfile

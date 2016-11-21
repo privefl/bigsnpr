@@ -8,10 +8,10 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-Rcpp::NumericVector R_squared_chr(SEXP pBigMat,
-                                  const IntegerVector& rowInd,
-                                  const IntegerVector& colInd,
-                                  const NumericVector& colMat0) {
+NumericVector R_squared_chr(SEXP pBigMat,
+                            const IntegerVector& rowInd,
+                            const IntegerVector& colInd,
+                            const NumericVector& colMat0) {
 
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
