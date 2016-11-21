@@ -35,7 +35,7 @@ NULL
 #' @rdname readplink
 #' @export
 BedToBig <- function(bedfile,
-                     block.size,
+                     block.size = 1000,
                      backingfile,
                      backingpath = "backingfiles") {
   checkExists(backingfile, backingpath)
