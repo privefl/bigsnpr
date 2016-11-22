@@ -78,7 +78,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // R_squared_chr
-Rcpp::NumericVector R_squared_chr(SEXP pBigMat, const IntegerVector& rowInd, const IntegerVector& colInd, const NumericVector& colMat0);
+NumericVector R_squared_chr(SEXP pBigMat, const IntegerVector& rowInd, const IntegerVector& colInd, const NumericVector& colMat0);
 RcppExport SEXP bigsnpr_R_squared_chr(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP colMat0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
@@ -88,6 +88,24 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type colMat0(colMat0SEXP);
     __result = Rcpp::wrap(R_squared_chr(pBigMat, rowInd, colInd, colMat0));
+    return __result;
+END_RCPP
+}
+// R_squared_chr2
+LogicalVector& R_squared_chr2(SEXP pBigMat, const IntegerVector& rowInd, LogicalVector& keep, const NumericVector& mafX, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
+RcppExport SEXP bigsnpr_R_squared_chr2(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP keepSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< LogicalVector& >::type keep(keepSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type mafX(mafXSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
+    __result = Rcpp::wrap(R_squared_chr2(pBigMat, rowInd, keep, mafX, sumX, denoX, size, thr));
     return __result;
 END_RCPP
 }

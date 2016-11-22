@@ -82,3 +82,68 @@ Prune <- function(x,
 
   res
 }
+
+#' Title
+#'
+#' @param x
+#' @param ind.train
+#' @param size
+#' @param thr.corr
+#' @param ncores
+#'
+#' @return
+#' @export
+#'
+#' @examples
+PrunePlink <- function(x,
+                  ind.train = seq(nrow(X)),
+                  size = 50,
+                  thr.corr = 0.5,
+                  ncores = 1) {
+  #check_x(x, check.y = TRUE)
+
+  # get descriptors
+  X <- x$genotypes
+  X.desc <- describe(X)
+
+  # export backingpath (force eval of promise)
+  PATH <- x$backingpath
+
+  range.chr <- LimsChr(x)
+
+  if (is.seq <- (ncores == 1)) {
+    registerDoSEQ()
+  } else {
+    cl <- parallel::makeCluster(ncores)
+    doParallel::registerDoParallel(cl)
+  }
+  res <- foreach(i = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
+    lims <- range.chr[i, ]
+
+    X.chr <- sub.big.matrix(X.desc,
+                            firstCol = lims[1],
+                            lastCol = lims[2],
+                            backingpath = PATH)
+
+    stats <- big_colstats(X.chr, ind.train)
+    keep <- rep(TRUE, ncol(X.chr))
+    n <- length(ind.train)
+    p <- stats$sum / (2 * n)
+    maf <- pmin(p, 1 - p)
+    denoX <- (n - 1) * stats$var
+
+    keep <- R_squared_chr2(X.chr@address,
+                           rowInd = ind.train,
+                           keep = keep,
+                           mafX = maf,
+                           sumX = stats$sum,
+                           denoX = denoX,
+                           size = size,
+                           thr = thr.corr)
+
+    seq2(lims)[which(keep)]
+  }
+  if (!is.seq) parallel::stopCluster(cl)
+
+  res
+}

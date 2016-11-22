@@ -25,6 +25,10 @@ R_squared_chr <- function(pBigMat, rowInd, colInd, colMat0) {
     .Call('bigsnpr_R_squared_chr', PACKAGE = 'bigsnpr', pBigMat, rowInd, colInd, colMat0)
 }
 
+R_squared_chr2 <- function(pBigMat, rowInd, keep, mafX, sumX, denoX, size, thr) {
+    .Call('bigsnpr_R_squared_chr2', PACKAGE = 'bigsnpr', pBigMat, rowInd, keep, mafX, sumX, denoX, size, thr)
+}
+
 rawToBigPart <- function(pBigMat, source, tab, size, colOffset, n, bsz) {
     invisible(.Call('bigsnpr_rawToBigPart', PACKAGE = 'bigsnpr', pBigMat, source, tab, size, colOffset, n, bsz))
 }

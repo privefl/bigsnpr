@@ -6,23 +6,32 @@ require(bigsnpr)
 
 celiac3 <- AttachBigSNP("celiac-begin")
 X <- celiac3$genotypes
+print(dim(X))
 
 require(bigstatsr)
+Rcpp::sourceCpp('tmp-tests/test-plink-pruning.cpp')
 
-size <- 50
-thr <- 0.5
+prune2 <- function(X, size = 50, thr = 0.5) {
+  stats <- big_colstats(X)
+  keep <- rep(TRUE, ncol(X))
+  n <- nrow(X)
+  p <- stats$sum / (2 * n)
+  maf <- pmin(p, 1 - p)
+  denoX <- (n - 1) * stats$var
 
-stats <- big_colstats(X)
-keep <- rep(TRUE, ncol(X))
-p <- stats$sum / (2 * nrow(X))
-maf <- pmin(p, 1 - p)
+  keep <- R_squared_chr2(X@address,
+                         keep = keep,
+                         mafX = maf,
+                         sumX = stats$sum,
+                         denoX = denoX,
+                         size = size,
+                         thr = thr)
+}
 
-test <- R_squared_chr2(X@address, keep,
-                       maf, stats$sum, sqrt(stats$var),
-                       size, thr)
+print(system.time(test <- prune2(X))) # 2 sec versus 8 min
 ind <- which(test)
 
+# after plink --indep-pairwise 50 1 0.5
 snps <- scan("../plink-1.07-x86_64/plink.prune.in", what = "character")
 ind2 <- which(celiac3$map$marker.ID %in% snps)
-
-all.equal(ind, ind2)
+print(all.equal(ind, ind2))

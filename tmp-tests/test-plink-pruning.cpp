@@ -12,7 +12,7 @@ LogicalVector& R_squared_chr2(SEXP pBigMat,
                               LogicalVector& keep,
                               const NumericVector& mafX,
                               const NumericVector& sumX,
-                              const NumericVector& sdX,
+                              const NumericVector& denoX,
                               int size,
                               double thr) {
   // Assert that keep[j] == TRUE
@@ -35,7 +35,7 @@ LogicalVector& R_squared_chr2(SEXP pBigMat,
             xySum += macc[j][i] * macc[j0][i];
           }
           num = xySum - sumX[j] * sumX[j0] / nd;
-          r2 = num * num / (sdX[j] * sdX[j0]);
+          r2 = num * num / (denoX[j] * denoX[j0]);
           if (r2 > thr) { // prune one of them
             if (mafX[j0] < mafX[j]) { // prune the one with smaller maf
               keep[j0] = false;
@@ -58,13 +58,13 @@ LogicalVector& R_squared_chr2(SEXP pBigMat,
             xySum += macc[j][i] * macc[j0][i];
           }
           num = xySum - sumX[j] * sumX[j0] / nd;
-          r2 = num * num / (sdX[j] * sdX[j0]);
+          r2 = num * num / (denoX[j] * denoX[j0]);
           if (r2 > thr) { // prune one of them
-            if (mafX[j0] < mafX[j]) { // prune the one with smaller maf
+            if (mafX[j] < mafX[j0]) { // prune the one with smaller maf
+              keep[j] = false;
+            } else {
               keep[j0] = false;
               break;
-            } else {
-              keep[j] = false;
             }
           }
         }

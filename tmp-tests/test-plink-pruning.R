@@ -17,7 +17,7 @@ require(bigsnpr)
 celiac3 <- AttachBigSNP("celiac-begin")
 X <- celiac3$genotypes
 
-# after plink --indep-pairwise 50 5 0.5
+# after plink --indep-pairwise 50 5 0.5 -> step 1 now
 snps <- scan("../plink-1.07-x86_64/plink.prune.in", what = "character")
 # deterministic -> OK
 
