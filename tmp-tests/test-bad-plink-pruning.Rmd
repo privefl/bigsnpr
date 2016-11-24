@@ -1,0 +1,89 @@
+---
+title: "Why PLINK pruning is baaaaaaad"
+author: "Florian Privé"
+date: "24 novembre 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Simulation
+
+I generated a SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation > 0.2 with its direct neighbours and only with them. Moreover, the SNPs have an increasing MAF.
+
+```{r}
+
+gen <- function(n, m) {
+  I <- 1:m
+  p <- I / (2 * m + 1)
+
+  mat <- outer(I, I, FUN = function(i, j) {
+    1 / (abs(i - j) + 1)
+  })
+
+  2 * bindata::rmvbin(n, p, bincorr = mat)
+}
+
+set.seed(1)
+X <- gen(500, 10)
+print(head(X))
+print(round(cor(X)^2, 2))
+print(colMeans(X) / 2)
+```
+
+## Pruning
+
+I then pseudo-convert the SNP matrix in my format `BigSNP` and use my reimplementation of PLINK pruning on this dataset.
+
+```{r}
+toBigSNP <- function(X) {
+  n <- nrow(X)
+  m <- ncol(X)
+  tmp <- tempdir()
+  file <- basename(tmp)
+  path = tools::file_path_as_absolute(tmp)
+  res <- list(
+    genotypes = as.big.matrix(X, type = "char", 
+                              backingfile = file,
+                              backingpath = path),
+    fam = data.frame(
+      family.ID = 0,
+      sample.ID = paste0("ind-", 1:n),
+      paternal.ID = 0,
+      maternal.ID = 0,
+      sex = 0,
+      affection = 0
+    ),
+    map = data.frame(
+      chromosome = 1,
+      marker.ID = paste0("snp-", 1:m),
+      genetic.dist = 0,
+      physical.pos = 1:m,
+      allele1 = ifelse(s <- sample(c(TRUE, FALSE), m, replace = TRUE), "A", "T"),
+      allele2 = ifelse(s, "T", "A")
+    ),
+    backingfile = file,
+    backingpath = path
+  )
+
+  class(res) <- "bigSNP"
+
+  res
+}
+
+require(bigsnpr, quietly = TRUE)
+
+suppressWarnings(x <- toBigSNP(X))
+test <- PrunePlink(x, size = 10, thr.corr = 0.2)
+print(test)
+```
+
+## Results and conclusion
+
+First SNP is pruned because of the second. The second is pruned because of the third and so on. In the end, only the last SNP (10th) remains.
+
+On the contrary, a "clumping" approach would consider the SNPs sorted (in a decreasing order) by a statistic (here the MAF). So the last SNP (10th) would be consider first and the 9th SNP would be pruned. Then the 8th SNP would be considered and then the 7th SNP would be pruned and so on. So, the even SNP would be kept and the odd SNPs would be pruned.
+
+__Your choice ?__
