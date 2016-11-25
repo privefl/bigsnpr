@@ -19,30 +19,48 @@ NULL
 #' @param ind.col Indices of the columns (SNPs) to keep.
 #' Negative indices can be used to exclude column indices.
 #' Default: keep them all.
+#' @param backed Should the new `bigSNP` be filebacked? Default is `TRUE`.
 #' @export
 #' @name sub.bigSNP
 #' @rdname impute-qc-sub
 sub.bigSNP <- function(x, ind.row = seq(nrow(x$genotypes)),
-                       ind.col = seq(ncol(x$genotypes))) {
+                       ind.col = seq(ncol(x$genotypes)),
+                       backed = TRUE) {
   check_x(x)
 
-  newfile <- checkFile(x, "sub")
-  X2 <- deepcopy(x$genotypes,
-                 rows = ind.row,
-                 cols = ind.col,
-                 type = "char",
-                 backingfile = paste0(newfile, ".bk"),
-                 backingpath = x$backingpath,
-                 descriptorfile = paste0(newfile, ".desc"))
+  if (backed) {
+    newfile <- checkFile(x, "sub")
+    X2 <- deepcopy(x$genotypes,
+                   rows = ind.row,
+                   cols = ind.col,
+                   # type = "char",
+                   backingfile = paste0(newfile, ".bk"),
+                   backingpath = x$backingpath,
+                   descriptorfile = paste0(newfile, ".desc"))
 
-  snp_list <- list(genotypes = X2,
-                   fam = x$fam[ind.row, ],
-                   map = x$map[ind.col, ],
-                   backingfile = newfile,
-                   backingpath = x$backingpath)
-  class(snp_list) <- "bigSNP"
+    snp_list <- list(genotypes = X2,
+                     fam = x$fam[ind.row, ],
+                     map = x$map[ind.col, ],
+                     backingfile = newfile,
+                     backingpath = x$backingpath)
+    class(snp_list) <- "bigSNP"
 
-  saveRDS(snp_list, file.path(x$backingpath, paste0(newfile, ".rds")))
+    saveRDS(snp_list, file.path(x$backingpath, paste0(newfile, ".rds")))
+
+  } else {
+    X2 <- deepcopy(x$genotypes,
+                   rows = ind.row,
+                   cols = ind.col,
+                   # type = "char",
+                   shared = TRUE)
+
+    snp_list <- list(genotypes = X2,
+                     fam = x$fam[ind.row, ],
+                     map = x$map[ind.col, ],
+                     backingfile = NULL,
+                     backingpath = NULL)
+    class(snp_list) <- "bigSNP"
+  }
 
   return(snp_list)
 }

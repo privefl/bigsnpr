@@ -99,6 +99,7 @@ PrunePlink <- function(x,
                   ind.train = seq(nrow(X)),
                   size = 50,
                   thr.corr = 0.5,
+                  exclude = NULL,
                   ncores = 1) {
   #check_x(x, check.y = TRUE)
 
@@ -127,6 +128,7 @@ PrunePlink <- function(x,
 
     stats <- big_colstats(X.chr, ind.train)
     keep <- rep(TRUE, ncol(X.chr))
+    keep[match(exclude, seq2(lims))] <- FALSE
     n <- length(ind.train)
     p <- stats$sum / (2 * n)
     maf <- pmin(p, 1 - p)

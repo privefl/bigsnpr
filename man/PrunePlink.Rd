@@ -5,7 +5,7 @@
 \title{Title}
 \usage{
 PrunePlink(x, ind.train = seq(nrow(X)), size = 50, thr.corr = 0.5,
-  ncores = 1)
+  exclude = NULL, ncores = 1)
 }
 \arguments{
 \item{ncores}{}
