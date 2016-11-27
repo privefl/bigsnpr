@@ -4,7 +4,7 @@
 \alias{auc}
 \alias{AucSample}
 \alias{AucSampleConf}
-\title{AUC.}
+\title{AUC}
 \usage{
 AucSample(pred, y, nsim = 1e+07, seed = NULL, digits = 3)
 
@@ -35,12 +35,13 @@ and possibly its 95\% confidence interval.
 }
 \details{
 Other packages provide ways to compute the AUC.
-Yet, I found out that when there are equalities, those can
-overestimate the true AUC. So, I chose to compute the AUC
-through an (accurate) estimation of its statistical definition as a
-probability: \deqn{\P{score(x_{case}) > score(x_{control})}}
+I chose to compute the AUC through its statistical definition as a
+probability: \deqn{\P{score(x_{case}) > score(x_{control})}}.
+Note that I consider equality between scores as a 50%-probability of
+one being greater than the other.
 }
 \examples{
+AucSample(c(0, 0), c(-1, 1)) # Equality of scores
 x <- rnorm(100)
 z <- rnorm(length(x), x, abs(x))
 y <- sign(z)
@@ -50,10 +51,9 @@ print(AucSampleConf(x, y, nboot = 1e4, nsim = 1e3))
 \references{
 Tom Fawcett. 2006. An introduction to ROC analysis.
 Pattern Recogn. Lett. 27, 8 (June 2006), 861-874.
-DOI=\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
+doi:\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
 }
 \seealso{
-pROC::\code{\link[pROC]{auc}} \cr
-AUC::\code{\link[AUC]{auc}}
+\link[pROC:auc]{pROC::auc} \cr \link[AUC:auc]{AUC::auc}
 }
 
