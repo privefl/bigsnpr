@@ -127,7 +127,8 @@ PrunePlink <- function(x,
                             backingpath = PATH)
 
     stats <- big_colstats(X.chr, ind.train)
-    keep <- rep(TRUE, ncol(X.chr))
+    m.chr <- ncol(X.chr)
+    keep <- rep(TRUE, m.chr)
     keep[match(exclude, seq2(lims))] <- FALSE
     n <- length(ind.train)
     p <- stats$sum / (2 * n)
@@ -140,7 +141,7 @@ PrunePlink <- function(x,
                            mafX = maf,
                            sumX = stats$sum,
                            denoX = denoX,
-                           size = size,
+                           size = min(size, m.chr),
                            thr = thr.corr)
 
     seq2(lims)[which(keep)]
