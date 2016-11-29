@@ -60,7 +60,7 @@ AucSample <- function(pred, y, nsim = 1e7, seed = NULL, digits = 3) {
 #' @name AucSampleConf
 #' @rdname auc
 #' @export
-AucSampleConf <- function(pred, y, nboot = 1e5, nsim = 1e4,
+AucSampleConf <- function(pred, y, nboot = 1e4, nsim = 1e4,
                          seed = NULL, digits = 3) {
   pred.case    <- pred[y == 1]
   pred.control <- pred[y == -1]
@@ -82,7 +82,7 @@ AucSampleConf <- function(pred, y, nboot = 1e5, nsim = 1e4,
   res <- replicate(nboot, sampleRes())
   q <- stats::quantile(res, c(0.025, 0.975))
 
-  round(c("Mean" = mean(res), q), digits)
+  round(c("Mean" = mean(res), q, "Sd" = sd(res)), digits)
 }
 
 ################################################################################
