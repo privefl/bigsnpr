@@ -8,7 +8,7 @@
 \usage{
 AucSample(pred, y, nsim = 1e+07, seed = NULL, digits = 3)
 
-AucSampleConf(pred, y, nboot = 1e+05, nsim = 10000, seed = NULL,
+AucSampleConf(pred, y, nboot = 10000, nsim = 10000, seed = NULL,
   digits = 3)
 }
 \arguments{
