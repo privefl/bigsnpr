@@ -51,7 +51,7 @@ print(AucSampleConf(x, y, nboot = 1e4, nsim = 1e3))
 \references{
 Tom Fawcett. 2006. An introduction to ROC analysis.
 Pattern Recogn. Lett. 27, 8 (June 2006), 861-874.
-doi:\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
+\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
 }
 \seealso{
 \link[pROC:auc]{pROC::auc} \cr \link[AUC:auc]{AUC::auc}

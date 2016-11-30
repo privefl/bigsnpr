@@ -24,7 +24,7 @@
 #' @seealso [pROC::auc] \cr [AUC::auc]
 #' @references Tom Fawcett. 2006. An introduction to ROC analysis.
 #' Pattern Recogn. Lett. 27, 8 (June 2006), 861-874.
-#' doi:\url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
+#' \url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
 #' @examples
 #' AucSample(c(0, 0), c(-1, 1)) # Equality of scores
 #' x <- rnorm(100)

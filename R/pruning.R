@@ -150,3 +150,30 @@ PrunePlink <- function(x,
 
   res
 }
+
+#' Title
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
+excludeLDreg <- function(x) {
+  url <- "http://genome.sph.umich.edu/wiki/Regions_of_high_linkage_disequilibrium_%28LD%29"
+  tables <- XML::readHTMLTable(url, header = TRUE, which = 1,
+                          colClasses = c(rep("integer", 3), "character"),
+                          stringsAsFactors = FALSE)
+  names(tables) <- c("Chr", "Start", "Stop", "ID")
+
+  chrs <- x$map$chromosome
+  pos <- x$map$physical.pos
+
+  require(foreach)
+  LD <- foreach(i = 1:nrow(tables), .combine = 'c') %do% {
+    chr = tables[i, "Chr"]
+    start = tables[i, "Start"]
+    end = tables[i, "Stop"]
+    which((chrs == chr) & (pos >= start) & (pos <= end))
+  }
+}

@@ -6,6 +6,9 @@
 \alias{bigsnpr-package}
 \title{bigsnpr: Predictive Analysis of Massive SNP Arrays}
 \arguments{
+\item{X}{A \link[bigmemory:big.matrix-class]{big.matrix}.
+You shouldn't have missing values in your data.}
+
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
