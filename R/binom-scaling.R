@@ -21,13 +21,13 @@
 #' p <- 0.2
 #' a[] <- rbinom(length(a), 2, p)
 #' X <- as.big.matrix(a, type = "char")
-#' X.svd <- bigstatsr::big_SVD(X, fun.scaling = scale_binom)
+#' X.svd <- bigstatsr::big_SVD(X, fun.scaling = snp_scaleBinom)
 #' str(X.svd)
 #' plot(X.svd$means)
 #' abline(h = 2 * p, col = "red")
 #' plot(X.svd$sds)
 #' abline(h = sqrt(2 * p * (1 - p)), col = "red")
-scale_binom <- function(X, ind.train) {
+snp_scaleBinom <- function(X, ind.train) {
   means <- bigstatsr::big_colstats(X, ind.train)$sum /
     length(ind.train)
   p <- means / 2

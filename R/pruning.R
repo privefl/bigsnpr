@@ -1,31 +1,53 @@
-#' @title LD pruning for a "bigSNP"
-#' @description LD pruning for a \code{bigSNP}.
-#' @name Prune
+#' LD clumping
+#'
+#' LD clumping (and thresholding) for a `bigSNP`.
+#'
+#' @name pruning
+#'
 #' @inheritParams bigsnpr-package
-#' @param S Numeric vector of summary statistics computed
-#' only with `ind.train`.
-#' @param pS Numeric vector of p-values associated with S.
-#' **`pS` needs to be computed through a decreasing function of `S`**.
-#' For example, if `S` follows the standard normal distribution,
+#'
+#' @param fun.stats A function that takes a `big.matrix` __`X`__ and
+#' __`ind.train`__ as parameters and returns a named list of __`S`__ and
+#' __`pS`__ for every column, which are statistics and associated p-values.
+#' **__`pS`__ needs to be computed through a decreasing function of `S`**.
+#' For example, if __`S`__ follows the standard normal distribution,
 #' you should use `abs(S)` instead and compute
 #' `pS = 2 * pnorm(abs(S), lower.tail = FALSE)`.
+#'
 #' @param size Radius of the window's size for the LD evaluations.
+#' Default is `1000`, which seems pretty conservative for a standard
+#' chip of less than a million SNPs.
+#'
 #' @param thr.pvalue Threshold on \eqn{-log_{10}(p-value)} to assess
-#' which SNPs are kept. Here, it has the purpose to accelerate computations.
-#' Default is 1.
+#' which SNPs are kept. A default of `1` is very conservative and
+#' has the purpose to accelerate computations.
+#'
 #' @param thr.corr Threshold on the correlation between two SNPs.
 #' SNPs which are too correlated with another SNP which is more correlated
 #' with the disease are pruned.
+#'
+#' @param exclude Vector of indices of SNPs to exclude anyway. For example,
+#' can be used to exclude long-range LD regions (see Price2008)
+#'
+#' @references Price AL, Weale ME, Patterson N, et al.
+#' Long-Range LD Can Confound Genome Scans in Admixed Populations.
+#' Am J Hum Genet. 2008;83(1):132-135.
+#' \link{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}.
+#'
 #' @example examples/example.pruning.R
+NULL
+
 #' @export
-Prune <- function(x,
+#' @rdname snp_pruning
+snp_clump <- function(x,
                   ind.train = seq(nrow(X)),
                   fun.stats,
                   thr.pvalue = 1,
-                  size = 2000,
+                  size = 1000,
                   thr.corr = 0.2,
+                  exclude = NULL,
                   ncores = 1) {
-  #check_x(x, check.y = TRUE)
+  check_x(x)
 
   # get descriptors
   X <- x$genotypes
@@ -35,7 +57,6 @@ Prune <- function(x,
   PATH <- x$backingpath
   #FUN <- fun.stats
 
-
   range.chr <- LimsChr(x)
 
   if (is.seq <- (ncores == 1)) {
@@ -44,8 +65,8 @@ Prune <- function(x,
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)
   }
-  res <- foreach(i = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
-    lims <- range.chr[i, ]
+  res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
+    lims <- range.chr[ic, ]
 
     X.chr <- sub.big.matrix(X.desc,
                             firstCol = lims[1],
@@ -83,19 +104,9 @@ Prune <- function(x,
   res
 }
 
-#' Title
-#'
-#' @param x
-#' @param ind.train
-#' @param size
-#' @param thr.corr
-#' @param ncores
-#'
-#' @return
 #' @export
-#'
-#' @examples
-PrunePlink <- function(x,
+#' @rdname snp_pruning
+snp_prune <- function(x,
                   ind.train = seq(nrow(X)),
                   size = 50,
                   thr.corr = 0.5,

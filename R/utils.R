@@ -1,5 +1,6 @@
 ################################################################################
 
+# functions for encoding/decoding bed files
 getCode <- function(NA_CHAR = -128L) {
   all.raws <- as.raw(0:255)
   geno.raw <- as.logical(rawToBits(all.raws))
@@ -99,26 +100,6 @@ LimsChr <- function(infos) {
 
 ################################################################################
 
-foreach2 <- function(obj, expr_fun, ncores, outfile = NULL) {
-  if (is.seq <- (ncores == 1)) {
-    foreach::registerDoSEQ()
-  } else {
-    if (is.null(outfile)) {
-      cl <- parallel::makeCluster(ncores)
-    } else {
-      cl <- parallel::makeCluster(ncores, outfile = outfile)
-    }
-    doParallel::registerDoParallel(cl)
-  }
-  res <- eval(parse(text = sprintf("foreach::`%%dopar%%`(obj, expr_fun(%s))",
-                                   obj$argnames)))
-  if (!is.seq) parallel::stopCluster(cl)
-
-  return(res)
-}
-
-################################################################################
-
 checkFile <- function(x, type) {
   number <- 1
   while (file.exists(file.path(
@@ -128,6 +109,17 @@ checkFile <- function(x, type) {
   }
 
   newfile
+}
+
+################################################################################
+
+transform_levels <- function(y, new.levels = 0:1) {
+  y2 <- factor(y, ordered = TRUE)
+  lvl <- levels(y2)
+  if (length(lvl) != 2)
+    stop("You must have exactly two levels in y.")
+  levels(y2) <- new.levels
+  as.numeric(as.character(y2))
 }
 
 ################################################################################

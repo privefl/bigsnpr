@@ -2,19 +2,20 @@
 % Please edit documentation in R/AUC.R
 \name{auc}
 \alias{auc}
-\alias{AucSample}
-\alias{AucSampleConf}
+\alias{snp_aucSample}
+\alias{snp_aucSampleConf}
 \title{AUC}
 \usage{
-AucSample(pred, y, nsim = 1e+07, seed = NULL, digits = 3)
+snp_aucSample(pred, target, nsim = 1e+07, seed = NULL, digits = 3)
 
-AucSampleConf(pred, y, nboot = 10000, nsim = 10000, seed = NULL,
+snp_aucSampleConf(pred, target, nboot = 10000, nsim = 10000, seed = NULL,
   digits = 3)
 }
 \arguments{
 \item{pred}{Vector of predictions.}
 
-\item{y}{Vector of true values (for the same individuals).}
+\item{target}{Vector of true labels (must have exactly two levels,
+no missing values).}
 
 \item{nsim}{Number of pairs (case/control) that are compared
 in order to approximate the probability.}
@@ -23,7 +24,7 @@ in order to approximate the probability.}
 
 \item{digits}{See \code{\link{round}}.}
 
-\item{nboot}{Number of bootstrap samples to evaluate 95\% CI.}
+\item{nboot}{Number of bootstrap samples to evaluate the 95\% CI.}
 }
 \value{
 The AUC, a probability, and possibly its 2.5\% and 97.5\% quantiles
@@ -41,12 +42,13 @@ Note that I consider equality between scores as a 50%-probability of
 one being greater than the other.
 }
 \examples{
-AucSample(c(0, 0), c(-1, 1)) # Equality of scores
+snp_aucSample(c(0, 0), 0:1) # Equality of scores
+snp_aucSample(c(0.2, 0.1, 1), c(-1, -1, 1)) # Perfect AUC
 x <- rnorm(100)
 z <- rnorm(length(x), x, abs(x))
 y <- sign(z)
-print(AucSample(x, y))
-print(AucSampleConf(x, y, nboot = 1e4, nsim = 1e3))
+print(snp_aucSample(x, y))
+print(snp_aucSampleConf(x, y, nboot = 1e4, nsim = 1e3))
 }
 \references{
 Tom Fawcett. 2006. An introduction to ROC analysis.
