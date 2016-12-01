@@ -124,10 +124,11 @@ $(document).ready(function () {
 </div>
 
 
-<p>In this short document, I will show why clumping should be prefered over pruning for SNP arrays.</p>
+<p>In this short document, I will show why clumping should be preferred over pruning for single-nucleotide polymorphism (SNP) arrays.</p>
+<p>Pruning and clumping are used to keep a subset of SNPs that are nearly uncorrelated with each other. For instance, pruning is used before Principal Component Analysis to avoid capturing too much variance of linkage disequilibrium (LD) regions. Clumping is used to keep only one representative SNP per region of LD, for example when reporting p-values of genome-wide association studies (GWAS).</p>
 <div id="simulation" class="section level2">
 <h2>Simulation</h2>
-<p>I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation &gt; 0.2 with its direct neighbours and only with them. Moreover, the SNPs have an increasing MAF.</p>
+<p>I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation &gt; 0.2 with its direct neighbors and only with them. Moreover, the SNPs have an increasing MAF.</p>
 <pre class="r"><code>gen &lt;- function(n, m) {
   I &lt;- 1:m
   p &lt;- I / (2 * m + 1)
@@ -136,43 +137,61 @@ $(document).ready(function () {
     1 / (abs(i - j) + 1)
   })
 
-  2 * bindata::rmvbin(n, p, bincorr = mat)
+  bindata::rmvbin(n, p, bincorr = mat) + 
+    bindata::rmvbin(n, p, bincorr = mat)
 }
 
 set.seed(1)
 X &lt;- gen(500, 10)
-print(head(X))</code></pre>
-<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-## [1,]    0    0    0    2    0    0    2    2    2     2
-## [2,]    0    0    0    0    0    0    2    2    2     2
-## [3,]    0    0    0    0    0    0    0    0    0     0
-## [4,]    0    0    0    0    0    0    0    0    2     2
-## [5,]    0    0    0    0    0    0    0    2    2     2
-## [6,]    0    0    0    0    2    2    0    0    2     2</code></pre>
+print(head(X, 20))</code></pre>
+<pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+##  [1,]    0    0    0    1    0    0    1    1    1     1
+##  [2,]    0    0    0    0    0    0    1    1    1     1
+##  [3,]    0    1    1    0    0    0    0    0    0     1
+##  [4,]    0    0    0    0    0    0    0    0    1     1
+##  [5,]    0    0    0    0    0    0    0    1    1     1
+##  [6,]    0    0    0    0    1    1    0    0    1     1
+##  [7,]    1    0    1    0    1    1    1    2    2     1
+##  [8,]    1    1    1    1    1    1    0    1    1     1
+##  [9,]    0    0    0    0    0    1    1    0    1     1
+## [10,]    0    0    1    1    1    1    1    1    1     1
+## [11,]    0    1    1    0    0    2    2    2    2     1
+## [12,]    0    0    0    0    0    0    0    0    0     0
+## [13,]    0    0    0    0    0    0    1    0    1     1
+## [14,]    0    0    0    0    0    0    0    0    1     1
+## [15,]    0    0    0    0    0    0    1    0    0     0
+## [16,]    0    0    0    0    0    0    0    1    1     1
+## [17,]    0    0    1    1    0    1    0    0    1     1
+## [18,]    1    1    2    1    1    2    2    2    2     2
+## [19,]    0    1    0    0    0    1    2    1    1     0
+## [20,]    0    0    0    0    0    0    1    1    0     0</code></pre>
 <pre class="r"><code>print(round(cor(X)^2, 2)) # squared correlation between SNPs</code></pre>
 <pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-##  [1,] 1.00 0.23 0.11 0.07 0.05 0.05 0.03 0.03 0.01  0.01
-##  [2,] 0.23 1.00 0.21 0.14 0.06 0.06 0.03 0.02 0.00  0.02
-##  [3,] 0.11 0.21 1.00 0.32 0.15 0.13 0.10 0.07 0.02  0.02
-##  [4,] 0.07 0.14 0.32 1.00 0.29 0.15 0.07 0.07 0.01  0.02
-##  [5,] 0.05 0.06 0.15 0.29 1.00 0.31 0.11 0.08 0.03  0.03
-##  [6,] 0.05 0.06 0.13 0.15 0.31 1.00 0.23 0.11 0.04  0.04
-##  [7,] 0.03 0.03 0.10 0.07 0.11 0.23 1.00 0.26 0.13  0.06
-##  [8,] 0.03 0.02 0.07 0.07 0.08 0.11 0.26 1.00 0.31  0.14
-##  [9,] 0.01 0.00 0.02 0.01 0.03 0.04 0.13 0.31 1.00  0.25
-## [10,] 0.01 0.02 0.02 0.02 0.03 0.04 0.06 0.14 0.25  1.00</code></pre>
+##  [1,] 1.00 0.23 0.13 0.08 0.05 0.03 0.02 0.01 0.01  0.00
+##  [2,] 0.23 1.00 0.21 0.09 0.05 0.05 0.01 0.01 0.01  0.01
+##  [3,] 0.13 0.21 1.00 0.25 0.12 0.10 0.06 0.06 0.02  0.01
+##  [4,] 0.08 0.09 0.25 1.00 0.31 0.16 0.07 0.07 0.03  0.04
+##  [5,] 0.05 0.05 0.12 0.31 1.00 0.29 0.11 0.10 0.07  0.04
+##  [6,] 0.03 0.05 0.10 0.16 0.29 1.00 0.25 0.17 0.08  0.06
+##  [7,] 0.02 0.01 0.06 0.07 0.11 0.25 1.00 0.23 0.13  0.07
+##  [8,] 0.01 0.01 0.06 0.07 0.10 0.17 0.23 1.00 0.28  0.14
+##  [9,] 0.01 0.01 0.02 0.03 0.07 0.08 0.13 0.28 1.00  0.31
+## [10,] 0.00 0.01 0.01 0.04 0.04 0.06 0.07 0.14 0.31  1.00</code></pre>
 <pre class="r"><code>print(colMeans(X) / 2) # MAF of SNPs</code></pre>
-<pre><code>##  [1] 0.052 0.094 0.168 0.188 0.244 0.282 0.346 0.396 0.416 0.446</code></pre>
+<pre><code>##  [1] 0.043 0.091 0.154 0.177 0.234 0.283 0.338 0.372 0.436 0.450</code></pre>
 </div>
 <div id="pruning" class="section level2">
 <h2>Pruning</h2>
-<p>I then pseudo-convert the SNP matrix in my format <code>BigSNP</code> and use my reimplementation of PLINK pruning on this dataset (similar to <code>--indep-pairwise 10 1 0.2</code>)</p>
+<p>I then pseudo-convert the SNP matrix in my format <code>BigSNP</code> and use my re-implementation of PLINK pruning on this dataset (similar to <code>--indep-pairwise 10 1 0.2</code>)</p>
 </div>
 <div id="results-and-conclusion" class="section level2">
 <h2>Results and conclusion</h2>
 <p>The first SNP is pruned because of its correlation with the second. The second SNP is pruned because of its correlation with the third and so on. In the end, only the last SNP (10th) is kept with the LD pruning procedure of PLINK.</p>
 <p>On the contrary, a clumping approach would consider the SNPs sorted (in a decreasing order) by a statistic (here the MAF). So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned.</p>
-<p><strong>Your choice?</strong></p>
+</div>
+<div id="acknowledgements" class="section level2">
+<h2>Acknowledgements</h2>
+<p>I thank Michael G.B. Blum and Hugues Aschard, my two thesis supervisors, for thoughtful comments.</p>
 </div>
 
 

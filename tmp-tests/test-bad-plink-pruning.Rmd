@@ -9,11 +9,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-In this short document, I will show why clumping should be prefered over pruning for SNP arrays.
+In this short document, I will show why clumping should be preferred over pruning for single-nucleotide polymorphism (SNP) arrays. 
+
+Pruning and clumping are used to keep a subset of SNPs that are nearly uncorrelated with each other. For instance, pruning is used before Principal Component Analysis to avoid capturing too much variance of linkage disequilibrium (LD) regions. Clumping is used to keep only one representative SNP per region of LD, for example when reporting p-values of genome-wide association studies (GWAS).
 
 ## Simulation
 
-I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation > 0.2 with its direct neighbours and only with them. Moreover, the SNPs have an increasing MAF.
+I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation > 0.2 with its direct neighbors and only with them. Moreover, the SNPs have an increasing MAF.
 
 ```{r}
 
@@ -25,19 +27,20 @@ gen <- function(n, m) {
     1 / (abs(i - j) + 1)
   })
 
-  2 * bindata::rmvbin(n, p, bincorr = mat)
+  bindata::rmvbin(n, p, bincorr = mat) + 
+    bindata::rmvbin(n, p, bincorr = mat)
 }
 
 set.seed(1)
 X <- gen(500, 10)
-print(head(X))
+print(head(X, 20))
 print(round(cor(X)^2, 2)) # squared correlation between SNPs
 print(colMeans(X) / 2) # MAF of SNPs
 ```
 
 ## Pruning
 
-I then pseudo-convert the SNP matrix in my format `BigSNP` and use my reimplementation of PLINK pruning on this dataset (similar to `--indep-pairwise 10 1 0.2`)
+I then pseudo-convert the SNP matrix in my format `BigSNP` and use my re-implementation of PLINK pruning on this dataset (similar to `--indep-pairwise 10 1 0.2`)
 
 ## Results and conclusion
 
@@ -50,4 +53,6 @@ On the contrary, a clumping approach would consider the SNPs sorted
 (in a decreasing order) by a statistic (here the MAF). So the last SNP
 (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned.
 
-__Your choice?__
+## Acknowledgements 
+
+I thank Michael G.B. Blum and Hugues Aschard, my two thesis supervisors, for thoughtful comments.
