@@ -48,11 +48,11 @@ I then pseudo-convert the SNP matrix in my format `BigSNP` and use my re-impleme
 The first SNP is pruned because of its correlation with the second. The
 second SNP is pruned because of its correlation with the third and so
 on. In the end, only the last SNP (10th) is kept with the LD pruning
-procedure of PLINK.
+procedure of PLINK, which corresponds to less than 18% of the total variance.
 
 On the contrary, a clumping approach would consider the SNPs sorted
 (in a decreasing order) by a statistic (here the MAF). So the last SNP
-(10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned.
+(10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.
 
 So, pruning remove SNPs in a way that can leave regions of the genome with no representative SNP at all.
 
