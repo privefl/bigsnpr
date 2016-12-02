@@ -14,3 +14,5 @@ public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus
 
 ![](bigsnpr.png)
 
+# This package is under heavy dev
+
