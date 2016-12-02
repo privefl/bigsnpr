@@ -1,5 +1,5 @@
 ---
-title: "Why clumping should be prefered over pruning"
+title: "Why clumping should be preferred over pruning"
 author: "Florian Privé"
 date: "November 24, 2016"
 output: html_document
