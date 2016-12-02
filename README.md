@@ -12,5 +12,10 @@ public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus
  
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-![](bigsnpr.png)
+<center>
+![](https://github.com/privefl/bigsnpr/raw/master/bigsnpr.png)
+</center>
+
+# This package is under heavy dev
+
 
