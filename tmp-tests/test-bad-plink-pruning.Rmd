@@ -11,7 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 In this short document, I will show why clumping should be preferred over pruning for single-nucleotide polymorphism (SNP) arrays. 
 
-Pruning and clumping are used to keep a subset of SNPs that are nearly uncorrelated with each other. For instance, pruning is used before Principal Component Analysis to avoid capturing too much variance of linkage disequilibrium (LD) regions. Clumping is used to keep only one representative SNP per region of LD, for example when reporting p-values of genome-wide association studies (GWAS).
+Pruning and clumping are used to keep a subset of SNPs that are nearly uncorrelated with each other. For instance, pruning is used before Principal Component Analysis to avoid capturing too much variance of linkage disequilibrium (LD) regions. Clumping is used to keep only one representative SNP per region of LD.
+<!-- , for example when reporting p-values of genome-wide association studies (GWAS). -->
 
 ## Simulation
 
@@ -53,8 +54,8 @@ On the contrary, a clumping approach would consider the SNPs sorted
 (in a decreasing order) by a statistic (here the MAF). So the last SNP
 (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned.
 
-CONCLU sur 8 sans repsentatifs
+So, pruning remove SNPs in a way that can leave regions of the genome with no representative SNP at all.
 
-## Acknowledgements 
+<!-- ## Acknowledgements  -->
 
-I thank Michael G.B. Blum and Hugues Aschard, my two thesis supervisors, for thoughtful comments.
+<!-- I thank Michael G.B. Blum and Hugues Aschard, my two thesis supervisors, for thoughtful comments. -->
