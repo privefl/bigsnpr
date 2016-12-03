@@ -1,8 +1,8 @@
+################################################################################
+
 #' LD clumping
 #'
 #' LD clumping (and thresholding) for a `bigSNP`.
-#'
-#' @name pruning
 #'
 #' @inheritParams bigsnpr-package
 #'
@@ -15,35 +15,35 @@
 #' `pS = 2 * pnorm(abs(S), lower.tail = FALSE)`.
 #'
 #' @param size Radius of the window's size for the LD evaluations.
-#' Default is `1000`, which seems pretty conservative for a standard
-#' chip of less than a million SNPs.
+#' Default is `500` for clumping and `50` for pruning. This should be
+#' adjusted for different number of SNPs (this corresponds to the defaults
+#' I use for a chip of 500K SNPs).
 #'
 #' @param thr.pvalue Threshold on \eqn{-log_{10}(p-value)} to assess
-#' which SNPs are kept. A default of `1` is very conservative and
+#' which SNPs are kept. A value of `1` is very conservative and
 #' has the purpose to accelerate computations.
+#' A value of `0` means no thresholding and is the default.
 #'
 #' @param thr.corr Threshold on the correlation between two SNPs.
-#' SNPs which are too correlated with another SNP which is more correlated
-#' with the disease are pruned.
+#' Default is `0.2`.
 #'
 #' @param exclude Vector of indices of SNPs to exclude anyway. For example,
-#' can be used to exclude long-range LD regions (see Price2008)
+#' can be used to exclude long-range LD regions (see Price2008).
 #'
 #' @references Price AL, Weale ME, Patterson N, et al.
 #' Long-Range LD Can Confound Genome Scans in Admixed Populations.
 #' Am J Hum Genet. 2008;83(1):132-135.
-#' \link{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}.
+#' \url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}.
 #'
-#' @example examples/example.pruning.R
-NULL
-
+#' @details I recommend to use clumping rather than pruning.
+#' See \url{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}.
+#'
 #' @export
-#' @rdname snp_pruning
-snp_clump <- function(x,
+snp_clumping <- function(x,
                   ind.train = seq(nrow(X)),
                   fun.stats,
-                  thr.pvalue = 1,
-                  size = 1000,
+                  thr.pvalue = 0,
+                  size = 500,
                   thr.corr = 0.2,
                   exclude = NULL,
                   ncores = 1) {
@@ -104,15 +104,23 @@ snp_clump <- function(x,
   res
 }
 
+################################################################################
+
+#' LD pruning
+#'
+#' LD pruning (and thresholding) for a `bigSNP`.
+#' Similar to --indep-pairwise size 1 thr.corr
+#'
+#' @inherit snp_clumping params references
+#'
 #' @export
-#' @rdname snp_pruning
 snp_prune <- function(x,
                   ind.train = seq(nrow(X)),
                   size = 50,
-                  thr.corr = 0.5,
+                  thr.corr = 0.2,
                   exclude = NULL,
                   ncores = 1) {
-  #check_x(x, check.y = TRUE)
+  check_x(x)
 
   # get descriptors
   X <- x$genotypes
@@ -129,8 +137,8 @@ snp_prune <- function(x,
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)
   }
-  res <- foreach(i = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
-    lims <- range.chr[i, ]
+  res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
+    lims <- range.chr[ic, ]
 
     X.chr <- sub.big.matrix(X.desc,
                             firstCol = lims[1],
@@ -162,29 +170,32 @@ snp_prune <- function(x,
   res
 }
 
-#' Title
+################################################################################
+
+#' Get SNPs of long-range LD regions
 #'
-#' @param x
+#' @inheritParams bigsnpr-package
 #'
-#' @return
+#' @param LD.regions A `data.frame` with columns "Chr", "Start" and "Stop".
+#' Default use the table of 34 long-range LD regions that you can find there:
+#' \url{https://goo.gl/0Ou7uI}.
+#'
+#' @return A vector of SNP indices to be used as the __`exclude`__ parameter of
+#' `snp_pruning` or `snp_clumping`.
 #' @export
+#' @import foreach
 #'
 #' @examples
-excludeLDreg <- function(x) {
-  url <- "http://genome.sph.umich.edu/wiki/Regions_of_high_linkage_disequilibrium_%28LD%29"
-  tables <- XML::readHTMLTable(url, header = TRUE, which = 1,
-                          colClasses = c(rep("integer", 3), "character"),
-                          stringsAsFactors = FALSE)
-  names(tables) <- c("Chr", "Start", "Stop", "ID")
-
+excludeLDreg <- function(x, LD.regions = LD.wiki34) {
   chrs <- x$map$chromosome
   pos <- x$map$physical.pos
 
-  require(foreach)
-  LD <- foreach(i = 1:nrow(tables), .combine = 'c') %do% {
-    chr = tables[i, "Chr"]
-    start = tables[i, "Start"]
-    end = tables[i, "Stop"]
+  foreach(i = 1:nrow(LD.regions), .combine = 'c') %do% {
+    chr = LD.regions[i, "Chr"]
+    start = LD.regions[i, "Start"]
+    end = LD.regions[i, "Stop"]
     which((chrs == chr) & (pos >= start) & (pos <= end))
   }
 }
+
+################################################################################

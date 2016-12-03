@@ -2,11 +2,7 @@
 
 context("PRUNE")
 
-if (!dir.exists("backingfiles")) dir.create("backingfiles")
-if (file.exists("backingfiles/test3.bk")) file.remove("backingfiles/test3.bk")
-
-bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-test <- BedToBig(bedfile, 50, "test3", "backingfiles")
+test <- snp_readExample("test-pruning")
 
 test_that("Phenotypes needs to be defined", {
   expect_error(Prune(test))

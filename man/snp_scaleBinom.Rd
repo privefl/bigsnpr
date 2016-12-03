@@ -4,7 +4,7 @@
 \alias{snp_scaleBinom}
 \title{Binomial(2, p) scaling}
 \usage{
-snp_scaleBinom(X, ind.train)
+snp_scaleBinom(X, ind.train = seq(nrow(X)))
 }
 \arguments{
 \item{X}{A \link[bigmemory:big.matrix-class]{big.matrix}.

@@ -2,14 +2,22 @@
 % Please edit documentation in R/pruning.R
 \name{excludeLDreg}
 \alias{excludeLDreg}
-\title{Title}
+\title{Get SNPs of long-range LD regions}
 \usage{
-excludeLDreg(x)
+excludeLDreg(x, LD.regions = LD.wiki34)
 }
 \arguments{
-\item{x}{}
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
+
+\item{LD.regions}{A \code{data.frame} with columns "Chr", "Start" and "Stop".
+Default use the table of 34 long-range LD regions that you can find there:
+\url{https://goo.gl/0Ou7uI}.}
+}
+\value{
+A vector of SNP indices to be used as the \strong{\code{exclude}} parameter of
+\code{snp_pruning} or \code{snp_clumping}.
 }
 \description{
-Title
+Get SNPs of long-range LD regions
 }
 

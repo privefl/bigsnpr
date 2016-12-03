@@ -13,3 +13,4 @@
 ^tmp-files$
 ^vignettes$
 ^docs$
+^data-raw$

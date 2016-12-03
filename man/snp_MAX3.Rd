@@ -4,13 +4,18 @@
 \alias{snp_MAX3}
 \title{MAX3 statistic}
 \usage{
-snp_MAX3(x, ind.train = seq(nrow(X)))
+snp_MAX3(x, ind.train = seq(nrow(X)), val = c(0, 0.5, 1))
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
 for the training part. If not specified, all data are used.}
+
+\item{val}{Computing \code{ZCATT(x)} for \code{x} in \code{val}. Default is \code{c(0, 0.5, 1)}
+and corresponds to the \emph{MAX3} statistic. Only \code{c(0, 1)} corresponds to
+\emph{MAX2}. And only \code{0.5} corresponds to the Armatige trend test.
+\code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.}
 }
 \value{
 A named list of \strong{\code{S}} and \strong{\code{pS}} for every column,
@@ -26,7 +31,7 @@ and then compute the MAX3 statistic.
 set.seed(1)
 
 # constructing a fake genotype big.matrix
-a <- big.matrix(10, 15, type = "char")
+a <- big.matrix(10, 15, type = "char", shared = FALSE)
 a[] <- sample(c(0, 1, 2), 150, TRUE)
 print(a[,])
 
@@ -40,5 +45,10 @@ fake$fam$affection <- c(rep(1, 5), rep(-1, 5))
 # Get MAX3 statistics
 print(snp_MAX3(fake))
 
+}
+\references{
+Zheng, G., Yang, Y., Zhu, X., & Elston, R. (2012).
+Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
+\url{http://dx.doi.org/10.1007/978-1-4614-2245-7_6}.
 }
 
