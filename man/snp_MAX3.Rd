@@ -16,7 +16,7 @@ for the training part. If not specified, all data are used.}
 A named list of \strong{\code{S}} and \strong{\code{pS}} for every column,
 which are MAX3 statistics and associated p-values. \strong{P-values are in
 fact the minimum of the 3 p-values of each test separately.} One can use
-genomic control to reclase these p-values.
+genomic control to rescale these p-values.
 }
 \description{
 Counts the number of 0, 1, 2 by SNP and phenotype (cases/controls)

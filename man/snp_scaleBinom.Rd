@@ -26,10 +26,12 @@ but as the \strong{\code{fun.scaling}} parameter of other functions
 of package \strong{\code{bigstatsr}}.
 }
 \examples{
+set.seed(1)
+
 a <- matrix(0, 43, 17)
 p <- 0.2
 a[] <- rbinom(length(a), 2, p)
-X <- as.big.matrix(a, type = "char")
+X <- as.big.matrix(a, type = "char", shared = FALSE)
 X.svd <- bigstatsr::big_SVD(X, fun.scaling = snp_scaleBinom)
 str(X.svd)
 plot(X.svd$means)
@@ -42,6 +44,6 @@ This scaling is widely used for SNP arrays.
 Patterson N, Price AL, Reich D (2006)
 Population Structure and Eigenanalysis.
 PLoS Genet 2(12): e190.
-\link{http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.0020190}.
+\url{http://dx.doi.org/10.1371/journal.pgen.0020190}.
 }
 

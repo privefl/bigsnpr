@@ -98,7 +98,9 @@ save these modifications in the corresponding .rds backing file.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>#reading example</span>
+    <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>1</span>)
+
+<span class='co'>#reading example</span>
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readplink.html'>snp_readExample</a></span>()
 
 <span class='co'># I can add whatever I want to a S3 class</span>
@@ -110,7 +112,7 @@ save these modifications in the corresponding .rds backing file.</p>
 #&gt;  $ physical.pos: int  0 1000 2000 3000 4000 5000 6000 7000 8000 9000 ...
 #&gt;  $ allele1     : chr  &quot;A&quot; &quot;T&quot; &quot;T&quot; &quot;T&quot; ...
 #&gt;  $ allele2     : chr  &quot;T&quot; &quot;A&quot; &quot;A&quot; &quot;A&quot; ...
-#&gt;  $ p-values    : num  0.322 0.51 0.924 0.511 0.258 ...</div><div class='input'>
+#&gt;  $ p-values    : num  0.2672 0.3861 0.0134 0.3824 0.8697 ...</div><div class='input'>
 <span class='co'># reading again</span>
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readplink.html'>snp_readExample</a></span>()
 <span class='fu'>str</span>(<span class='no'>test</span>$<span class='no'>map</span>) <span class='co'># new slot wasn't saved</span></div><div class='output co'>#&gt; &#39;data.frame&#39;:	4542 obs. of  6 variables:

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get population infos — snp_getPops • bigsnpr</title>
+<title>MAX3 statistic — snp_MAX3 • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -74,60 +74,47 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get population infos</h1>
+    <h1>MAX3 statistic</h1>
     </div>
 
     
-    <p>Get populations of individuals by matching from an external file and
-<strong>overwrite</strong> the slot <strong><code>family.ID</code></strong> of the slot <code>fam</code>.</p>
+    <p>Counts the number of 0, 1, 2 by SNP and phenotype (cases/controls)
+and then compute the MAX3 statistic.</p>
     
 
-    <pre><span class='fu'>snp_getPops</span>(<span class='no'>x</span>, <span class='no'>pop.files</span>, <span class='no'>col.sample.ID</span>, <span class='no'>col.family.ID</span>, <span class='no'>...</span>)</pre>
+    <pre><span class='fu'>snp_MAX3</span>(<span class='no'>x</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>pop.files</dt>
-      <dd>Character vector of file names where to
-find the population of the individuals of the study.</dd>
-      <dt>col.sample.ID</dt>
-      <dd>Index of the column containing the
-sample IDs to match with those of the study.</dd>
-      <dt>col.family.ID</dt>
-      <dd>Index of the column containt the populations.</dd>
-      <dt>...</dt>
-      <dd>Any additional parameter to pass to <a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a>.</dd>
+      <dt>x</dt>
+      <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
+      <dt>ind.train</dt>
+      <dd>An optional vector of the row indices that are used,
+for the training part. If not specified, all data are used.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The modified <code>bigSNP</code> (modifications are saved in .rds).</p>
+    <p>A named list of <strong><code>S</code></strong> and <strong><code>pS</code></strong> for every column,
+which are MAX3 statistics and associated p-values. <strong>P-values are in
+fact the minimum of the 3 p-values of each test separately.</strong> One can use
+genomic control to rescale these p-values.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readplink.html'>snp_readExample</a></span>()
+    <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>1</span>)
 
-<span class='co'># Just after reading</span>
-<span class='fu'>print</span>(<span class='fu'>rle</span>(<span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>family.ID</span>))</div><div class='output co'>#&gt; Run Length Encoding
-#&gt;   lengths: int [1:19] 34 28 15 35 31 25 30 35 35 20 ...
-#&gt;   values : chr [1:19] &quot;POP1&quot; &quot;POP2&quot; &quot;POP3&quot; &quot;POP4&quot; &quot;POP5&quot; &quot;POP6&quot; &quot;POP7&quot; ...</div><div class='input'>
-<span class='co'># Get populations clusters from external files</span>
-<span class='no'>files</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='fu'>paste0</span>(<span class='st'>"cluster"</span>, <span class='fl'>1</span>:<span class='fl'>3</span>), <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='fu'>print</span>(<span class='kw'>data.table</span><span class='kw'>::</span><span class='fu'>fread</span>(<span class='no'>files</span>[<span class='fl'>1</span>]))</div><div class='output co'>#&gt;       V1     V2      V3
-#&gt;   1:   1   IND0 POP-1-5
-#&gt;   2:   2   IND1 POP-1-5
-#&gt;   3:   3   IND2 POP-1-5
-#&gt;   4:   4   IND3 POP-1-5
-#&gt;   5:   5   IND4 POP-1-5
-#&gt;  ---                   
-#&gt; 139: 139 IND138 POP-1-5
-#&gt; 140: 140 IND139 POP-1-5
-#&gt; 141: 141 IND140 POP-1-5
-#&gt; 142: 142 IND141 POP-1-5
-#&gt; 143: 143 IND142 POP-1-5</div><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_getPops</span>(<span class='no'>test</span>, <span class='kw'>pop.files</span> <span class='kw'>=</span> <span class='no'>files</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-                    <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>3</span>)
-<span class='fu'>print</span>(<span class='fu'>rle</span>(<span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>family.ID</span>))</div><div class='output co'>#&gt; Run Length Encoding
-#&gt;   lengths: int [1:3] 143 167 207
-#&gt;   values : chr [1:3] &quot;POP-1-5&quot; &quot;POP-6-11&quot; &quot;POP-12-19&quot;</div></pre>
+<span class='co'># constructing a fake genotype big.matrix</span>
+<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'>big.matrix</span>(<span class='fl'>10</span>, <span class='fl'>15</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"char"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in big.matrix(10, 15, type = &quot;char&quot;): Error: memory could not be allocated for instance of type big.matrix</span></div><div class='input'><span class='no'>a</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>), <span class='fl'>150</span>, <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in a[] &lt;- sample(c(0, 1, 2), 150, TRUE): objet &#39;a&#39; introuvable</span></div><div class='input'><span class='fu'>print</span>(<span class='no'>a</span>[,])</div><div class='output co'>#&gt; <span class='error'>Error in print(a[, ]): objet &#39;a&#39; introuvable</span></div><div class='input'>
+<span class='co'># constructing a fake incomplete bigSNP with 10 individuals and 15 SNPs</span>
+<span class='co'># where the 5 first individuals are cases and the 5 last are controls.</span>
+<span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>()
+<span class='fu'>class</span>(<span class='no'>fake</span>) <span class='kw'>&lt;-</span> <span class='st'>"bigSNP"</span>
+<span class='no'>fake</span>$<span class='no'>genotypes</span> <span class='kw'>&lt;-</span> <span class='no'>a</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): objet &#39;a&#39; introuvable</span></div><div class='input'><span class='no'>fake</span>$<span class='no'>fam</span>$<span class='no'>affection</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fl'>5</span>), <span class='fu'>rep</span>(-<span class='fl'>1</span>, <span class='fl'>5</span>))
+
+<span class='co'># Get MAX3 statistics</span>
+<span class='fu'>print</span>(<span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>))</div><div class='output co'>#&gt; <span class='error'>Error in check_x(x): x$genotypes must be a big.matrix.</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

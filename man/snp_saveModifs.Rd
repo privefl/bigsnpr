@@ -19,6 +19,8 @@ to an object of this class, then use \code{snp_saveModifs} to
 save these modifications in the corresponding .rds backing file.
 }
 \examples{
+set.seed(1)
+
 #reading example
 test <- snp_readExample()
 

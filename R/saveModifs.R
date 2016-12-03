@@ -10,6 +10,8 @@
 #' @inheritParams bigsnpr-package
 #' @return The (saved) \code{bigSNP}.
 #' @examples
+#' set.seed(1)
+#'
 #' #reading example
 #' test <- snp_readExample()
 #'

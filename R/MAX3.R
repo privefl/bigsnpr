@@ -42,7 +42,7 @@ ZCATT <- function(counts, x) {
 #' @return A named list of __`S`__ and __`pS`__ for every column,
 #' which are MAX3 statistics and associated p-values. __P-values are in
 #' fact the minimum of the 3 p-values of each test separately.__ One can use
-#' genomic control to reclase these p-values.
+#' genomic control to rescale these p-values.
 #' @export
 snp_MAX3 <- function(x, ind.train = seq(nrow(X))) {
   check_x(x)
