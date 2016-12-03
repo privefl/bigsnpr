@@ -4,12 +4,15 @@
 \alias{readplink}
 \alias{BedToBig}
 \alias{AttachBigSNP}
+\alias{snp_readExample}
 \title{Read PLINK files into a "bigSNP".}
 \usage{
 BedToBig(bedfile, block.size = 1000, backingfile,
   backingpath = "backingfiles")
 
 AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
+
+snp_readExample(backingfile = "test_doc", backingpath = "backingfiles")
 }
 \arguments{
 \item{bedfile}{Path to file with extension .bed. You need the corresponding

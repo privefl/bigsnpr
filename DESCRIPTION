@@ -19,7 +19,8 @@ Roxygen: list(markdown = TRUE)
 Suggests: testthat, covr, gaston
 URL: https://github.com/privefl/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues
-Collate: 
+Collate:
+    'readplink.R'
     'AUC.R'
     'GBLUP.R'
     'GWAS.R'
@@ -33,7 +34,5 @@ Collate:
     'crossval.R'
     'pruning.R'
     'qcimpute.R'
-    'readplink.R'
-    'foreach'
     'saveModifs.R'
     'utils.R'

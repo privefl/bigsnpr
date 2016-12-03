@@ -68,6 +68,19 @@ check_x <- function(x, check.y = FALSE) {
 
 ################################################################################
 
+dir.create2 <- function(path) {
+  if (!dir.exists(path)) {
+    printf("Creating directory \"%s\"..\n", path)
+    dir.create(path)
+  }
+}
+
+unlink2 <- function(path) {
+  if (file.exists(path)) unlink(path)
+}
+
+################################################################################
+
 printf <- function(...) cat(sprintf(...))
 
 ################################################################################

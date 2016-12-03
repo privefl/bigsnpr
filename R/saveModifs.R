@@ -1,35 +1,48 @@
 ################################################################################
 
-#' Modify a "bigSNP"
+#' Save modifications for a "bigSNP"
 #'
-#' Modify a \code{bigSNP} and save these modifications
-#' in the corresponding .rds file. As \code{bigSNP} is an S3 class, you
-#' can add any slot you want to this class, then use \code{snp_saveModifs} to
-#' save modifications in the corresponding .rds backing file.
+#' Save a \code{bigSNP} after having made some modifications to it.
+#' As \code{bigSNP} is an S3 class, you can add any slot you want
+#' to an object of this class, then use \code{snp_saveModifs} to
+#' save these modifications in the corresponding .rds backing file.
 #'
 #' @inheritParams bigsnpr-package
-#' @return The (modified) \code{bigSNP}.
-#' @name modif-save
-#' @example examples/example.save.R
-NULL
-
-################################################################################
-
-
-#' @rdname modif-save
+#' @return The (saved) \code{bigSNP}.
+#' @examples
+#' #reading example
+#' test <- snp_readExample()
+#'
+#' # I can add whatever I want to a S3 class
+#' test$map$`p-values` <- runif(nrow(test$map))
+#' str(test$map)
+#'
+#' # reading again
+#' test <- snp_readExample()
+#' str(test$map) # new slot wasn't saved
+#'
+#' # save it
+#' test$map$`p-values` <- runif(nrow(test$map))
+#' test <- snp_saveModifs(test)
+#'
+#' # reading again
+#' test <- snp_readExample()
+#' str(test$map) # it is saved now
+#'
 #' @export
 snp_saveModifs <- function(x) {
   saveRDS(x, file.path(x$backingpath, paste0(x$backingfile, ".rds")))
 
-  return(x)
+  x
 }
 
 ################################################################################
 
-#' @rdname modif-save
-#' @description `GetPops`: Get populations of individuals by matching
-#' from an external file and __overwrite__ the slot __`family.ID`__
-#' of the slot `fam`.
+#' Get population infos
+#'
+#' Get populations of individuals by matching from an external file and
+#' __overwrite__ the slot __`family.ID`__ of the slot `fam`.
+#'
 #' @param pop.files Character vector of file names where to
 #' find the population of the individuals of the study.
 #' @param col.sample.ID Index of the column containing the
@@ -37,12 +50,26 @@ snp_saveModifs <- function(x) {
 #' @param col.family.ID Index of the column containt the populations.
 #' @param ... Any additional parameter to pass to [fread][data.table::fread].
 #' @export
-#' @include foreach
-GetPops <- function(x,
-                    pop.files = NULL,
-                    col.sample.ID,
-                    col.family.ID,
-                    ...) {
+#'
+#' @return The modified `bigSNP` (modifications are saved in .rds).
+#' @import foreach
+#' @examples
+#' test <- snp_readExample()
+#'
+#' # Just after reading
+#' print(rle(test$fam$family.ID))
+#'
+#' # Get populations clusters from external files
+#' files <- system.file("extdata", paste0("cluster", 1:3), package = "bigsnpr")
+#' print(data.table::fread(files[1]))
+#' test <- snp_getPops(test, pop.files = files, col.sample.ID = 2,
+#'                     col.family.ID = 3)
+#' print(rle(test$fam$family.ID))
+snp_getPops <- function(x,
+                        pop.files,
+                        col.sample.ID,
+                        col.family.ID,
+                        ...) {
   data.pop <- foreach(f = pop.files, .combine = 'rbind') %do% {
     data.table::fread(f, data.table = FALSE)
   }

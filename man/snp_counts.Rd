@@ -46,7 +46,13 @@ fake$genotypes <- a
 fake$fam$affection <- c(rep(2, 5), rep(1, 5))
 
 # Get counts
-print(snp_counts(fake))
+print(test1 <- snp_counts(fake))
+print(test2 <- snp_counts(fake, has.pheno = FALSE))
+
+# Same results
+test1$cols <- test1$cols.controls + test1$cols.cases
+print(all.equal(test1$cols, test2$cols))
+print(all.equal(test1$rows, test2$rows))
 
 }
 

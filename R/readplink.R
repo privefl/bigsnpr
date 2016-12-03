@@ -174,3 +174,23 @@ BigToBed <- function(x, bedfile) {
 
   bedfile
 }
+
+################################################################################
+
+#' @rdname readplink
+#' @export
+snp_readExample <- function(backingfile = "test_doc",
+                            backingpath = "backingfiles") {
+  # Creating directory for backing files
+  dir.create2(backingpath)
+
+  path <- file.path(backingpath, paste0(backingfile, ".bk"))
+  unlink2(path) # delete if exists
+
+  # Reading the bedfile and storing the data
+  bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+  test <- BedToBig(bedfile, backingfile = backingfile,
+                   backingpath = backingpath)
+}
+
+################################################################################

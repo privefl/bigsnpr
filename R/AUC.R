@@ -65,7 +65,7 @@ snp_aucSample <- function(pred, target, nsim = 1e7, seed = NULL, digits = 3) {
 #' @rdname auc
 #' @export
 snp_aucSampleConf <- function(pred, target, nboot = 1e4, nsim = 1e4,
-                          seed = NULL, digits = 3) {
+                              seed = NULL, digits = 3) {
   y <- transform_levels(target)
 
   pred.case    <- pred[y == 1]
