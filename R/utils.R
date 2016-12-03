@@ -51,19 +51,10 @@ checkExists <- function(backingfile, backingpath) {
 
 ################################################################################
 
-check_x <- function(x, check.y = FALSE) {
+check_x <- function(x) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP.")
-
-  X <- x$genotypes
-  if (class(X) != "big.matrix") stop("X must be a big.matrix.")
-
-  if (check.y) {
-    y <- x$fam$pheno
-    if (is.null(y))
-      stop("Please use _GetPhenos_ before using this function.")
-    if (!isTRUE(all.equal(sort(unique(y)), c(-1, 1))))
-      stop("y should be a vector of 1 (cases) and -1 (controls).")
-  }
+  if (class(x$genotypes) != "big.matrix")
+    stop("x$genotypes must be a big.matrix.")
 }
 
 ################################################################################

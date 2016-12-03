@@ -37,11 +37,13 @@ and possibly its 95\% confidence interval.
 \details{
 Other packages provide ways to compute the AUC.
 I chose to compute the AUC through its statistical definition as a
-probability: \deqn{\P{score(x_{case}) > score(x_{control})}}.
+probability: \deqn{P(score(x_{case}) > score(x_{control}))}.
 Note that I consider equality between scores as a 50%-probability of
 one being greater than the other.
 }
 \examples{
+set.seed(1)
+
 snp_aucSample(c(0, 0), 0:1) # Equality of scores
 snp_aucSample(c(0.2, 0.1, 1), c(-1, -1, 1)) # Perfect AUC
 x <- rnorm(100)

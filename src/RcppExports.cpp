@@ -6,32 +6,6 @@
 
 using namespace Rcpp;
 
-// mycount
-ListOf<IntegerMatrix> mycount(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
-RcppExport SEXP bigsnpr_mycount(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
-    rcpp_result_gen = Rcpp::wrap(mycount(pBigMat, indCase, indControl));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mycount2
-ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
-RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
-    rcpp_result_gen = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
-    return rcpp_result_gen;
-END_RCPP
-}
 // wcrossprod
 ListOf<SEXP> wcrossprod(SEXP pBigMat, arma::mat& covar, const arma::vec& y, const arma::vec& z0, const arma::vec& w0, double tol, int maxiter);
 RcppExport SEXP bigsnpr_wcrossprod(SEXP pBigMatSEXP, SEXP covarSEXP, SEXP ySEXP, SEXP z0SEXP, SEXP w0SEXP, SEXP tolSEXP, SEXP maxiterSEXP) {
@@ -74,6 +48,32 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type indTest(indTestSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type indCol(indColSEXP);
     rcpp_result_gen = Rcpp::wrap(prs1(pBigMat, betas, indTest, indCol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mycount
+ListOf<IntegerMatrix> mycount(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
+RcppExport SEXP bigsnpr_mycount(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
+    rcpp_result_gen = Rcpp::wrap(mycount(pBigMat, indCase, indControl));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mycount2
+ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
+RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
+    rcpp_result_gen = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
     return rcpp_result_gen;
 END_RCPP
 }

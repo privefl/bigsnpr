@@ -26,7 +26,7 @@ for the training part. If not specified, all data are used.}
 }
 \description{
 Easy-to-use, efficient, flexible and scalable tools
-for predictive analysis based on SNP arrays (case-control studies).
+for predictive analysis based on SNP arrays.
 }
 \seealso{
 Useful links:

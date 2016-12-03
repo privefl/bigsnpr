@@ -15,12 +15,17 @@ ZCATT <- function(counts, x) {
 
 ################################################################################
 
-#' @title MAX3 statistic.
-#' @name MAX3
+#' MAX3 statistic
+#'
+#' Counts the number of 0, 1, 2 by SNP and phenotype (cases/controls)
+#' and then compute the MAX3 statistic.
+#'
 #' @inheritParams bigsnpr-package
 #' @examples
+#' set.seed(1)
+#'
 #' # constructing a fake genotype big.matrix
-#' a <- big.matrix(10, 15, type = "char", shared = FALSE)
+#' a <- big.matrix(10, 15, type = "char")
 #' a[] <- sample(c(0, 1, 2), 150, TRUE)
 #' print(a[,])
 #'
@@ -29,29 +34,34 @@ ZCATT <- function(counts, x) {
 #' fake <- list()
 #' class(fake) <- "bigSNP"
 #' fake$genotypes <- a
-#' fake$fam$pheno <- c(rep(1, 5), rep(-1, 5))
+#' fake$fam$affection <- c(rep(1, 5), rep(-1, 5))
 #'
 #' # Get MAX3 statistics
-#' print(MAX3(fake))
-#' @description Counts the number of 0, 1, 2
-#' by SNP and phenotype (cases/controls) and then
-#' compute the MAX3 statistic.
-#' @return A numeric vector of the column statistics.
+#' print(snp_MAX3(fake))
+#'
+#' @return A named list of __`S`__ and __`pS`__ for every column,
+#' which are MAX3 statistics and associated p-values. __P-values are in
+#' fact the minimum of the 3 p-values of each test separately.__ One can use
+#' genomic control to reclase these p-values.
 #' @export
-MAX3 <- function(x, ind.train = seq(nrow(x$genotypes))) {
-  check_x(x, check.y = TRUE)
+snp_MAX3 <- function(x, ind.train = seq(nrow(X))) {
+  check_x(x)
 
-  cases <- (x$fam$pheno == 1)
+  X <- x$genotypes
+  y <- transform_levels(x$fam$affection)
+
+  cases <- (y == 1)
 
   ind.cases <- intersect(ind.train, which(cases))
   ind.controls <- intersect(ind.train, which(!cases))
 
-  counts <- mycount((x$genotypes)@address, ind.cases, ind.controls)
+  counts <- mycount(X@address, ind.cases, ind.controls)
 
   stats <- sapply(c(0, 0.5, 1), function(x) ZCATT(counts, x = x))
   stats <- replace(stats, is.na(stats), 0)
+  S <- apply(stats^2, 1, max)
 
-  apply(abs(stats), 1, max)
+  list(S = S, pS = pchisq(S, df = 1, lower.tail = FALSE))
 }
 
 ################################################################################

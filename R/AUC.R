@@ -27,6 +27,8 @@
 #' Pattern Recogn. Lett. 27, 8 (June 2006), 861-874.
 #' \url{http://dx.doi.org/10.1016/j.patrec.2005.10.010}.
 #' @examples
+#' set.seed(1)
+#'
 #' snp_aucSample(c(0, 0), 0:1) # Equality of scores
 #' snp_aucSample(c(0.2, 0.1, 1), c(-1, -1, 1)) # Perfect AUC
 #' x <- rnorm(100)
