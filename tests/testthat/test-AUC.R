@@ -5,12 +5,12 @@ context("AUC")
 x <- rnorm(134)
 y <- sample(c(-1, 1), size = length(x), replace = TRUE)
 
+################################################################################
+
 auc <- snp_aucSample(x, y, nsim = 1e6, seed = 1)
 auc2 <- snp_aucSample(x, y, nsim = 1e6, seed = 1)
 auc.conf <- snp_aucSampleConf(x, y, nboot = 1e4, nsim = 1e3, seed = 1)
 auc.conf2 <- snp_aucSampleConf(x, y, nboot = 1e4, nsim = 1e3, seed = 1)
-
-################################################################################
 
 test_that("Same results of AUC with seed", {
   expect_equal(auc, auc2)

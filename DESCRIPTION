@@ -7,7 +7,7 @@ Authors@R: person("Florian", "Privé",
     email = "florian.prive.21@gmail.com",
     role = c("aut", "cre"))
 Description: Easy-to-use, efficient, flexible and scalable tools
-    for predictive analysis based on SNP arrays (case-control studies).
+    for predictive analysis based on SNP arrays.
 License: GPL-3
 LazyData: TRUE
 LinkingTo: Rcpp, bigmemory, BH, RcppArmadillo

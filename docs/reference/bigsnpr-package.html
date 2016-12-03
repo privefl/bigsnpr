@@ -90,6 +90,12 @@ for predictive analysis based on SNP arrays (case-control studies).</p>
 You shouldn&#39;t have missing values in your data.</dd>
       <dt>x</dt>
       <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
+      <dt>has.pheno</dt>
+      <dd>Does <strong><code>x</code></strong> has well-specified phenotypes?
+i.e. <code>x$fam$affection</code> is a vector with exactly two values
+(and the value coding for cases is larger than the value coding
+for controls). So, in particular, no missing value is allowed.
+Default is <code>TRUE</code>.</dd>
       <dt>ind.train</dt>
       <dd>An optional vector of the row indices that are used,
 for the training part. If not specified, all data are used.</dd>

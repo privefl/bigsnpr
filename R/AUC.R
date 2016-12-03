@@ -7,7 +7,7 @@
 #'
 #' @details Other packages provide ways to compute the AUC.
 #' I chose to compute the AUC through its statistical definition as a
-#' probability: \deqn{\P{score(x_{case}) > score(x_{control})}}.
+#' probability: \deqn{P(score(x_{case}) > score(x_{control}))}.
 #' Note that I consider equality between scores as a 50%-probability of
 #' one being greater than the other.
 #'
