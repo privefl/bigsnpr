@@ -11,6 +11,12 @@ You shouldn't have missing values in your data.}
 
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
+\item{has.pheno}{Does \strong{\code{x}} has well-specified phenotypes?
+i.e. \code{x$fam$affection} is a vector with exactly two values
+(and the value coding for cases is larger than the value coding
+for controls). So, in particular, no missing value is allowed.
+Default is \code{TRUE}.}
+
 \item{ind.train}{An optional vector of the row indices that are used,
 for the training part. If not specified, all data are used.}
 
