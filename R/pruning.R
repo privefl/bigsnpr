@@ -1,4 +1,4 @@
-################################################################################
+#################################################################################
 
 #' LD clumping
 #'
@@ -14,8 +14,8 @@
 #' you should use `abs(S)` instead and compute
 #' `pS = 2 * pnorm(abs(S), lower.tail = FALSE)`.
 #'
-#' @param size Radius of the window's size for the LD evaluations.
-#' Default is `500` for clumping and `50` for pruning. This should be
+#' @param size __Radius__ of the window's size for the LD evaluations.
+#' Default is `500` for clumping. This should be
 #' adjusted for different number of SNPs (this corresponds to the defaults
 #' I use for a chip of 500K SNPs).
 #'
@@ -35,8 +35,8 @@
 #' Am J Hum Genet. 2008;83(1):132-135.
 #' \url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}.
 #'
-#' @details I recommend to use clumping rather than pruning.
-#' See \url{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}.
+#' @details I recommend to use clumping rather than pruning. See
+#' \url{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}.
 #'
 #' @export
 snp_clumping <- function(x,
@@ -109,12 +109,21 @@ snp_clumping <- function(x,
 #' LD pruning
 #'
 #' LD pruning (and thresholding) for a `bigSNP`.
-#' Similar to --indep-pairwise size 1 thr.corr
+#' Similar to `--indep-pairwise size 1 thr.corr` (`step` is fixed to 1).
 #'
 #' @inherit snp_clumping params references
+#' @param size __Diameter__ of the window's size for the LD evaluations.
+#' Default is `50` for pruning (default in PLINK) and should be adjusted
+#' for different number of SNPs.
+#'
+#' @references Purcell, S., Neale, B., Todd-Brown, K., Thomas, L., Ferreira,
+#' M., & Bender, D. et al. (2007). PLINK: A Tool Set for
+#' Whole-Genome Association and Population-Based Linkage Analyses.
+#' The American Journal Of Human Genetics, 81(3), 559-575.
+#' \url{http://dx.doi.org/10.1086/519795}.
 #'
 #' @export
-snp_prune <- function(x,
+snp_pruning <- function(x,
                   ind.train = seq(nrow(X)),
                   size = 50,
                   thr.corr = 0.2,

@@ -15,7 +15,7 @@ for the training part. If not specified, all data are used.}
 \item{val}{Computing \code{ZCATT(x)} for \code{x} in \code{val}. Default is \code{c(0, 0.5, 1)}
 and corresponds to the \emph{MAX3} statistic. Only \code{c(0, 1)} corresponds to
 \emph{MAX2}. And only \code{0.5} corresponds to the Armatige trend test.
-\code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.}
+Finally, \code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.}
 }
 \value{
 A named list of \strong{\code{S}} and \strong{\code{pS}} for every column,

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get SNPs of long-range LD regions — excludeLDreg • bigsnpr</title>
+<title>LD pruning — snp_prune • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -74,29 +74,45 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get SNPs of long-range LD regions</h1>
+    <h1>LD pruning</h1>
     </div>
 
     
-    <p>Get SNPs of long-range LD regions</p>
+    <p>LD pruning (and thresholding) for a <code>bigSNP</code>.
+Similar to --indep-pairwise size 1 thr.corr</p>
     
 
-    <pre><span class='fu'>excludeLDreg</span>(<span class='no'>x</span>, <span class='kw'>LD.regions</span> <span class='kw'>=</span> <span class='no'>LD.wiki34</span>)</pre>
+    <pre><span class='fu'>snp_prune</span>(<span class='no'>x</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>x</dt>
       <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
-      <dt>LD.regions</dt>
-      <dd>A <code>data.frame</code> with columns &quot;Chr&quot;, &quot;Start&quot; and &quot;Stop&quot;.
-Default use the table of 34 long-range LD regions that you can find there:
-<a href = 'https://goo.gl/0Ou7uI'>https://goo.gl/0Ou7uI</a>.</dd>
+      <dt>ind.train</dt>
+      <dd>An optional vector of the row indices that are used,
+for the training part. If not specified, all data are used.</dd>
+      <dt>size</dt>
+      <dd>Radius of the window&#39;s size for the LD evaluations.
+Default is <code>500</code> for clumping and <code>50</code> for pruning. This should be
+adjusted for different number of SNPs (this corresponds to the defaults
+I use for a chip of 500K SNPs).</dd>
+      <dt>thr.corr</dt>
+      <dd>Threshold on the correlation between two SNPs.
+Default is <code>0.2</code>.</dd>
+      <dt>exclude</dt>
+      <dd>Vector of indices of SNPs to exclude anyway. For example,
+can be used to exclude long-range LD regions (see Price2008).</dd>
+      <dt>ncores</dt>
+      <dd>Number or cores used. Default doesn&#39;t use parallelism.</dd>
     </dl>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>A vector of SNP indices to be used as the <strong><code>exclude</code></strong> parameter of
-<code>snp_pruning</code> or <code>snp_clumping</code>.</p>
+    <p>Price AL, Weale ME, Patterson N, et al.
+Long-Range LD Can Confound Genome Scans in Admixed Populations.
+Am J Hum Genet. 2008;83(1):132-135.
+<a href = 'http://dx.doi.org/10.1016/j.ajhg.2008.06.005'>http://dx.doi.org/10.1016/j.ajhg.2008.06.005</a>.</p>
     
 
   </div>
@@ -105,7 +121,7 @@ Default use the table of 34 long-range LD regions that you can find there:
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>

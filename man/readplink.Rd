@@ -5,6 +5,7 @@
 \alias{BedToBig}
 \alias{AttachBigSNP}
 \alias{snp_readExample}
+\alias{snp_readHapMap3}
 \title{Read PLINK files into a "bigSNP".}
 \usage{
 BedToBig(bedfile, block.size = 1000, backingfile,
@@ -13,6 +14,8 @@ BedToBig(bedfile, block.size = 1000, backingfile,
 AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
 
 snp_readExample(backingfile = "test_doc", backingpath = "backingfiles")
+
+snp_readHapMap3(backingfile = "test_HapMap3", backingpath = "backingfiles")
 }
 \arguments{
 \item{bedfile}{Path to file with extension .bed. You need the corresponding

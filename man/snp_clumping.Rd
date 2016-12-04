@@ -26,8 +26,8 @@ which SNPs are kept. A value of \code{1} is very conservative and
 has the purpose to accelerate computations.
 A value of \code{0} means no thresholding and is the default.}
 
-\item{size}{Radius of the window's size for the LD evaluations.
-Default is \code{500} for clumping and \code{50} for pruning. This should be
+\item{size}{\strong{Radius} of the window's size for the LD evaluations.
+Default is \code{500} for clumping. This should be
 adjusted for different number of SNPs (this corresponds to the defaults
 I use for a chip of 500K SNPs).}
 
@@ -43,8 +43,8 @@ can be used to exclude long-range LD regions (see Price2008).}
 LD clumping (and thresholding) for a \code{bigSNP}.
 }
 \details{
-I recommend to use clumping rather than pruning.
-See \url{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}.
+I recommend to use clumping rather than pruning. See
+\url{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}.
 }
 \references{
 Price AL, Weale ME, Patterson N, et al.

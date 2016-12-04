@@ -194,3 +194,21 @@ snp_readExample <- function(backingfile = "test_doc",
 }
 
 ################################################################################
+
+#' @rdname readplink
+#' @export
+snp_readHapMap3 <- function(backingfile = "test_HapMap3",
+                             backingpath = "backingfiles") {
+  # Creating directory for backing files
+  dir.create2(backingpath)
+
+  path <- file.path(backingpath, paste0(backingfile, ".bk"))
+  unlink2(path) # delete if exists
+
+  # Reading the bedfile and storing the data
+  bedfile <- system.file("extdata", "HapMap3.bed", package = "bigsnpr")
+  test <- BedToBig(bedfile, backingfile = backingfile,
+                   backingpath = backingpath)
+}
+
+################################################################################

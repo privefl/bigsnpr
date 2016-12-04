@@ -10,41 +10,61 @@ storage.mode(Chr1) <- "double"
 ind.train <- sort(sample(ind, 8000))
 ind.test <- setdiff(ind, ind.train)
 
-indNA <- runif(1, 1200, 1800)
+size <- 200
+s <- setdiff(-size:size, 0)
 
-dtrain <- xgb.DMatrix(data = Chr1[ind.train, -indNA],
-                      label = Chr1[ind.train, indNA])
-dtest <- xgb.DMatrix(data = Chr1[ind.test, -indNA],
-                     label = Chr1[ind.test, indNA])
-watchlist <- list(train=dtrain, test=dtest)
+assess <- function(indNA, param, ...) {
+  dtrain <- xgb.DMatrix(data = Chr1[ind.train, indNA + s],
+                        label = (Chr1[ind.train, indNA]))
+  dtest <- xgb.DMatrix(data = Chr1[ind.test, indNA + s],
+                       label = (Chr1[ind.test, indNA]))
+  watchlist <- list(train=dtrain, test=dtest)
 
-bst <- xgb.train(data = dtrain, max_depth=3, eta=0.3, nthread = 1,
-                 nrounds=5, watchlist=watchlist, silent = 0,
-                 objective = "multi:softprob", num_class = 3,
-                 alpha = 1, lambda = 1)
-# 14% with multi:softprob
-# NEED TO ORDER -> define cusomized obj?
+  bst <- xgb.train(param, data = dtrain, nthread = 1,
+                   watchlist=watchlist, ...)
 
-matrix(predict(bst, dtest)[1:18], 3)
+  print(indNA)
+  importance_matrix <- xgb.importance(model = bst)
+  print(importance_matrix)
+  xgb.plot.importance(importance_matrix = importance_matrix)
 
+  pred <- predict(bst, dtest)
+  pred2 <- round(pred)
+  true <- getinfo(dtest, "label")
+  table(pred2, true)
+  mean(round(pred) != true)
+}
 
+assess2 <- function(indNA, param, ...) {
+  bst <- xgboost(params = param, data = Chr1[ind.train, indNA + s],
+                 label = Chr1[ind.train, indNA],
+                 nthread = 1, ...)
+  pred <- predict(bst, Chr1[ind.test, indNA + s])
+  true <- Chr1[ind.test, indNA]
+  mean(round(pred) != true)
+}
 
-
-pred <- predict(bst, dtest)
-true <- getinfo(dtest, "label")
-table(pred, true)
-#plot(pred, true)
-ind2 <- which(round(pred) != true)
-print(ind3 <- ind.test[ind2])
-celiac$fam$pop[ind3]
-mean(round(pred) != true)
-
-
-importance_matrix <- xgb.importance(model = bst)
-print(importance_matrix)
-xgb.plot.importance(importance_matrix = importance_matrix)
-plot(importance_matrix$Feature,
-     importance_matrix$Importance, type = "h", xlim = indNA + c(-10, 10))
-summary(lm(Chr1[, indNA] ~ Chr1[, 9]))
-summary(lm(Chr1[, indNA] ~ Chr1[, 991]))
-# Beware that indices begin at 0!!
+require(foreach)
+res <- foreach(i = 1:20, .combine = 'cbind') %do% {
+  indNA <- round(runif(1, 1200, 1800))
+  time1 <- system.time(
+    xgb1 <- assess2(indNA, param = list(max_depth=5, eta=0.3,
+                                        alpha = 10, lambda = 10),
+                    verbose = 0, nrounds = 100)
+  )[3]
+  time2 <- system.time(
+    xgb2 <- assess2(indNA, param = list(max_depth=5, eta=0.3,
+                                        alpha = 20, lambda = 20),
+                    verbose = 0, nrounds = 100)
+  )[3]
+  c(xgb1, xgb2, time1, time2)
+}
+plot(t(res))
+abline(0, 1, col = "red")
+rowMeans(res)
+# reg:linear faster and maybe better than multi:softmax
+# booster = "gblinear" is faster but worst than the default gbtree
+# alpha = 1000 is baaaad
+# alpha = 10 is better
+# max_depth = 5 is better
+# eta = 0.3 is better than 1

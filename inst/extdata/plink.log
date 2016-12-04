@@ -1,0 +1,45 @@
+
+@----------------------------------------------------------@
+|        PLINK!       |     v1.07      |   10/Aug/2009     |
+|----------------------------------------------------------|
+|  (C) 2009 Shaun Purcell, GNU General Public License, v2  |
+|----------------------------------------------------------|
+|  For documentation, citation & bug-report instructions:  |
+|        http://pngu.mgh.harvard.edu/purcell/plink/        |
+@----------------------------------------------------------@
+
+Skipping web check... [ --noweb ] 
+Writing this text to log file [ plink.log ]
+Analysis started: Sun Dec  4 09:58:03 2016
+
+Options in effect:
+	--bfile HapMap3
+	--missing
+	--noweb
+
+Reading map (extended format) from [ HapMap3.bim ] 
+14389 markers to be included from [ HapMap3.bim ]
+Reading pedigree information from [ HapMap3.fam ] 
+957 individuals read from [ HapMap3.fam ] 
+957 individuals with nonmissing phenotypes
+Assuming a disease phenotype (1=unaff, 2=aff, 0=miss)
+Missing phenotype value is also -9
+957 cases, 0 controls and 0 missing
+470 males, 487 females, and 0 of unspecified sex
+Reading genotype bitfile from [ HapMap3.bed ] 
+Detected that binary PED file is v1.00 SNP-major mode
+Before frequency and genotyping pruning, there are 14389 SNPs
+957 founders and 0 non-founders found
+1 heterozygous haploid genotypes; set to missing
+Writing list of heterozygous haploid genotypes to [ plink.hh ]
+Writing individual missingness information to [ plink.imiss ] 
+Writing locus missingness information to [ plink.lmiss ] 
+Total genotyping rate in remaining individuals is 0.998459
+0 SNPs failed missingness test ( GENO > 1 )
+0 SNPs failed frequency test ( MAF < 0 )
+After frequency and genotyping pruning, there are 14389 SNPs
+After filtering, 957 cases, 0 controls and 0 missing
+After filtering, 470 males, 487 females, and 0 of unspecified sex
+
+Analysis finished: Sun Dec  4 09:58:04 2016
+
