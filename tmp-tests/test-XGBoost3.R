@@ -1,7 +1,9 @@
 require(bigsnpr)
+require(xgboost)
 
-celiac <- AttachBigSNP("celiac_sub2_impute1",
-                       backingpath = "../thesis-celiac/backingfiles/")
+celiac <- AttachBigSNP("celiac_impute1_sub1")
+# celiac <- AttachBigSNP("celiac_sub2_impute1",
+#                        backingpath = "../thesis-celiac/backingfiles/")
 X <- celiac$genotypes
 
 ind <- which(celiac$fam$pheno == -1)
@@ -13,8 +15,10 @@ ind.test <- setdiff(ind, ind.train)
 
 size <- 200
 s <- setdiff(-size:size, 0)
+size2 <- 50
+s2 <- setdiff(-size2:size2, 0)
 
-require(xgboost)
+
 assess <- function(indNA, param, ...) {
   dtrain <- xgb.DMatrix(data = Chr1[ind.train, indNA + s],
                         label = (Chr1[ind.train, indNA]))
@@ -25,11 +29,13 @@ assess <- function(indNA, param, ...) {
   bst <- xgb.train(param, data = dtrain, nthread = 1,
                    watchlist=watchlist, ...)
 
-  pred <- predict(bst, dtest)
-  true <- getinfo(dtest, "label")
-  pred2 <- predict(bst, dtrain)
-  true2 <- getinfo(dtrain, "label")
-  print(mean(round(pred2) != true2))
+  labels <- getinfo(dtrain, "label")
+  m <- mean(labels)
+  a <- 0.5 - m
+  b <- 1.5 - m
+  preds <- predict(bst, Chr1[ind.test, indNA + s])
+  pred <- (preds > a) + (preds > b)
+  true <- Chr1[ind.test, indNA]
   mean(round(pred) != true)
 }
 
@@ -42,16 +48,24 @@ assess2 <- function(indNA, param, ...) {
   mean(round(pred) != true)
 }
 
+assess3 <- function(indNA, param, ...) {
+  bst <- xgboost(params = param, data = Chr1[ind.train, indNA + s2],
+                 label = Chr1[ind.train, indNA],
+                 nthread = 1, ...)
+  pred <- predict(bst, Chr1[ind.test, indNA + s2])
+  true <- Chr1[ind.test, indNA]
+  mean(round(pred) != true)
+}
+
 require(foreach)
 res <- foreach(i = 1:20, .combine = 'cbind') %do% {
   indNA <- round(runif(1, 1200, 1800))
   time1 <- system.time(
-    xgb1 <- assess2(indNA, param = list(max_depth=5,
-                                        colsample_bylevel = 1),
+    xgb1 <- assess3(indNA, param = list(max_depth=5, colsample_bylevel = 1),
                     verbose = 0, nrounds = 50)
   )[3]
   time2 <- system.time(
-    xgb2 <- assess2(indNA, param = list(max_depth=5, colsample_bylevel = 0.5),
+    xgb2 <- assess3(indNA, param = list(max_depth=5, colsample_bylevel = 0.5),
                     verbose = 0, nrounds = 50)
   )[3]
   c(xgb1, xgb2, time1, time2)
@@ -83,9 +97,9 @@ rowMeans(res)
 #                  nthread = 1, nrounds = 100)
 # )) # algo seems to be linear with nb of indiv
 
-print(system.time(print(
-  assess2(indNA, param = list(colsample_bylevel = 0.5),
-         verbose = 0, nrounds = 20)
-)))
+# print(system.time(print(
+#   assess2(indNA, param = list(colsample_bylevel = 0.5),
+#          verbose = 0, nrounds = 20)
+# )))
 
 

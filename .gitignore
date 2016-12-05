@@ -8,3 +8,4 @@ src/*.dll
 backingfiles
 README.html
 tmp-files
+xgboost.model
