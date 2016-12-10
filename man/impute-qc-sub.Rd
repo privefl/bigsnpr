@@ -41,7 +41,7 @@ Usually, \code{0.01} is used. Default only removes SNPs that have a zero MAF.}
 
 \item{rm.sex}{Keep only SNPs on the first 22 chrosmosomes? Default is \code{FALSE}.}
 
-\item{ncores}{Number or cores used. Default doesn't use parallelism.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.}
 
 \item{verbose}{Print progress? Default is \code{FALSE}.}
 }

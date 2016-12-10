@@ -198,7 +198,7 @@ snp_readExample <- function(backingfile = "test_doc",
 #' @rdname readplink
 #' @export
 snp_readHapMap3 <- function(backingfile = "test_HapMap3",
-                             backingpath = "backingfiles") {
+                            backingpath = "backingfiles") {
   # Creating directory for backing files
   dir.create2(backingpath)
 

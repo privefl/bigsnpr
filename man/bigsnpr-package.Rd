@@ -22,7 +22,7 @@ for the training part. If not specified, all data are used.}
 
 \item{block.size}{Maximum number of loci read at once (for all individuals).}
 
-\item{ncores}{Number or cores used. Default doesn't use parallelism.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.}
 }
 \description{
 Easy-to-use, efficient, flexible and scalable tools

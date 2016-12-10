@@ -6,6 +6,19 @@
 
 using namespace Rcpp;
 
+// mycount2
+ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
+RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
+    rcpp_result_gen = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
+    return rcpp_result_gen;
+END_RCPP
+}
 // wcrossprod
 ListOf<SEXP> wcrossprod(SEXP pBigMat, arma::mat& covar, const arma::vec& y, const arma::vec& z0, const arma::vec& w0, double tol, int maxiter);
 RcppExport SEXP bigsnpr_wcrossprod(SEXP pBigMatSEXP, SEXP covarSEXP, SEXP ySEXP, SEXP z0SEXP, SEXP w0SEXP, SEXP tolSEXP, SEXP maxiterSEXP) {
@@ -51,36 +64,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// mycount2
-ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
-RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
-    rcpp_result_gen = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
-    return rcpp_result_gen;
-END_RCPP
-}
-// R_squared_chr
-NumericVector R_squared_chr(SEXP pBigMat, const IntegerVector& rowInd, const IntegerVector& colInd, const NumericVector& colMat0);
-RcppExport SEXP bigsnpr_R_squared_chr(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP colMat0SEXP) {
+// clumping
+LogicalVector clumping(SEXP pBigMat, const IntegerVector& rowInd, const IntegerVector& colInd, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
+RcppExport SEXP bigsnpr_clumping(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type colMat0(colMat0SEXP);
-    rcpp_result_gen = Rcpp::wrap(R_squared_chr(pBigMat, rowInd, colInd, colMat0));
+    Rcpp::traits::input_parameter< LogicalVector& >::type remain(remainSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
+    rcpp_result_gen = Rcpp::wrap(clumping(pBigMat, rowInd, colInd, remain, sumX, denoX, size, thr));
     return rcpp_result_gen;
 END_RCPP
 }
-// R_squared_chr2
-LogicalVector& R_squared_chr2(SEXP pBigMat, const IntegerVector& rowInd, LogicalVector& keep, const NumericVector& mafX, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP bigsnpr_R_squared_chr2(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP keepSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+// pruning
+LogicalVector& pruning(SEXP pBigMat, const IntegerVector& rowInd, LogicalVector& keep, const NumericVector& mafX, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
+RcppExport SEXP bigsnpr_pruning(SEXP pBigMatSEXP, SEXP rowIndSEXP, SEXP keepSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -92,7 +96,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
-    rcpp_result_gen = Rcpp::wrap(R_squared_chr2(pBigMat, rowInd, keep, mafX, sumX, denoX, size, thr));
+    rcpp_result_gen = Rcpp::wrap(pruning(pBigMat, rowInd, keep, mafX, sumX, denoX, size, thr));
     return rcpp_result_gen;
 END_RCPP
 }

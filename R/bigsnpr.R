@@ -18,5 +18,5 @@
 #'
 #' @param block.size Maximum number of loci read at once (for all individuals).
 #'
-#' @param ncores Number or cores used. Default doesn't use parallelism.
+#' @param ncores Number of cores used. Default doesn't use parallelism.
 "_PACKAGE"
