@@ -21,6 +21,7 @@
 #' @param nsim Number of pairs (case/control) that are compared
 #' in order to approximate the probability.
 #' @param seed See \code{\link{set.seed}}. Use it for reproducibility.
+#' Default doesn't set any seed.
 #' @param digits See \code{\link{round}}.
 #' @seealso [pROC::auc] \cr [AUC::auc]
 #' @references Tom Fawcett. 2006. An introduction to ROC analysis.
@@ -44,13 +45,13 @@ NULL
 #' @name snp_aucSample
 #' @rdname auc
 #' @export
-snp_aucSample <- function(pred, target, nsim = 1e7, seed = NULL, digits = 3) {
+snp_aucSample <- function(pred, target, nsim = 1e7, seed = NA, digits = 3) {
   y <- transform_levels(target)
 
   pred.case    <- pred[y == 1]
   pred.control <- pred[y == 0]
 
-  set.seed(seed)
+  if (!is.na(seed)) set.seed(seed)
 
   pred.case.sample    <- sample(pred.case,    nsim, replace = TRUE)
   pred.control.sample <- sample(pred.control, nsim, replace = TRUE)
@@ -67,13 +68,13 @@ snp_aucSample <- function(pred, target, nsim = 1e7, seed = NULL, digits = 3) {
 #' @rdname auc
 #' @export
 snp_aucSampleConf <- function(pred, target, nboot = 1e4, nsim = 1e4,
-                              seed = NULL, digits = 3) {
+                              seed = NA, digits = 3) {
   y <- transform_levels(target)
 
   pred.case    <- pred[y == 1]
   pred.control <- pred[y == 0]
 
-  set.seed(seed)
+  if (!is.na(seed)) set.seed(seed)
 
   sampleRes <- function() {
     ind.case <- sample(length(pred.case), replace = TRUE)
