@@ -22,4 +22,3 @@ A list of each turn's score.
 \description{
 K-fold cross-validation of \code{fun.model} on \code{x}.
 }
-

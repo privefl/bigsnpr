@@ -12,4 +12,3 @@ GWAS(x, covar = NULL, ncores = 1, tol = 1e-08, maxiter = 100)
 \description{
 Title
 }
-

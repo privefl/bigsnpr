@@ -69,10 +69,37 @@ in \href{http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune}{PLINK}
 I recommend to use clumping rather than pruning. See
 \href{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}{this article}.
 }
+\examples{
+set.seed(1)
+
+test <- snp_readExample() # need another example
+X <- test$genotypes
+print(n <- nrow(X))
+print(m <- ncol(X))
+
+# pruning / clumping with MAF
+ind.keep <- snp_pruning(test, thr.corr = 0.1)
+print(length(ind.keep) / m)
+
+p <- bigstatsr::big_colstats(X)$sum / (2 * n)
+maf <- pmin(p, 1 - p)
+ind.keep2 <- snp_clumping(test, S = maf, thr.corr = 0.1)
+
+# clumping for PRS
+test$fam$affection <- sample(1:2, size = n, replace = TRUE)
+zcatt <- snp_MAX3(test, val = 0.5)
+R2 <- bigstatsr::big_univRegLin(X, test$fam$affection)["R2", ]
+plot(zcatt$S, n * R2) # same thing
+ind.keep3 <- snp_clumping(test, S = zcatt$S, thr.corr = 0.1)
+print(length(ind.keep3))
+# thresholding though the exclude parameter
+ind.keep4 <- snp_clumping(test, S = zcatt$S, thr.corr = 0.1,
+                          exclude = which(-log10(zcatt$pS) > 1))
+print(length(ind.keep4))
+}
 \references{
 Price AL, Weale ME, Patterson N, et al.
 Long-Range LD Can Confound Genome Scans in Admixed Populations.
 Am J Hum Genet. 2008;83(1):132-135.
 \href{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}{DOI}
 }
-

@@ -82,9 +82,9 @@
 and possibly its 95% confidence interval.</p>
     
 
-    <pre><span class='fu'>snp_aucSample</span>(<span class='no'>pred</span>, <span class='no'>target</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>1e+07</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+    <pre><span class='fu'>snp_aucSample</span>(<span class='no'>pred</span>, <span class='no'>target</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>1e+07</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>)
 
-<span class='fu'>snp_aucSampleConf</span>(<span class='no'>pred</span>, <span class='no'>target</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'>snp_aucSampleConf</span>(<span class='no'>pred</span>, <span class='no'>target</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>nsim</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -98,7 +98,8 @@ no missing values).</dd>
       <dd>Number of pairs (case/control) that are compared
 in order to approximate the probability.</dd>
       <dt>seed</dt>
-      <dd>See <code>set.seed</code>. Use it for reproducibility.</dd>
+      <dd>See <code>set.seed</code>. Use it for reproducibility.
+Default doesn&#39;t set any seed.</dd>
       <dt>digits</dt>
       <dd>See <code>round</code>.</dd>
       <dt>nboot</dt>

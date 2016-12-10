@@ -26,4 +26,3 @@ the best scores (in average) of the model.
 Internal K-fold cross-validation of \code{fun.model} on \code{x}
 in order to tune hyper-parameters.
 }
-

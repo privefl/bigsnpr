@@ -40,4 +40,3 @@ Useful links:
 \strong{Maintainer}: Florian Privé \email{florian.prive.21@gmail.com}
 
 }
-

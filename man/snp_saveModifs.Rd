@@ -41,4 +41,3 @@ test <- snp_readExample()
 str(test$map) # it is saved now
 
 }
-

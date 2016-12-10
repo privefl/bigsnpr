@@ -44,6 +44,8 @@
 #' @details I recommend to use clumping rather than pruning. See
 #' [this article](https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html).
 #'
+#' @example examples/example-pruning.R
+#'
 #' @name pruning-clumping
 NULL
 

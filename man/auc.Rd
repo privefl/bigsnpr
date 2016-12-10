@@ -6,9 +6,9 @@
 \alias{snp_aucSampleConf}
 \title{AUC}
 \usage{
-snp_aucSample(pred, target, nsim = 1e+07, seed = NULL, digits = 3)
+snp_aucSample(pred, target, nsim = 1e+07, seed = NA, digits = 3)
 
-snp_aucSampleConf(pred, target, nboot = 10000, nsim = 10000, seed = NULL,
+snp_aucSampleConf(pred, target, nboot = 10000, nsim = 10000, seed = NA,
   digits = 3)
 }
 \arguments{
@@ -20,7 +20,8 @@ no missing values).}
 \item{nsim}{Number of pairs (case/control) that are compared
 in order to approximate the probability.}
 
-\item{seed}{See \code{\link{set.seed}}. Use it for reproducibility.}
+\item{seed}{See \code{\link{set.seed}}. Use it for reproducibility.
+Default doesn't set any seed.}
 
 \item{digits}{See \code{\link{round}}.}
 
@@ -60,4 +61,3 @@ Pattern Recogn. Lett. 27, 8 (June 2006), 861-874.
 \seealso{
 \link[pROC:auc]{pROC::auc} \cr \link[AUC:auc]{AUC::auc}
 }
-

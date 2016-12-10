@@ -13,4 +13,3 @@ PRS1(x, ind.train, ind.test, fun.stats, weighted = FALSE, thr.list = 0,
 \description{
 Title
 }
-

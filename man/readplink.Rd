@@ -75,4 +75,3 @@ into a \code{big.matrix} makes it memory-efficient.
   print(test$genotypes[1:8, 1:8])
 }
 }
-

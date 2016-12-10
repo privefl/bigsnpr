@@ -103,4 +103,3 @@ for a \code{bigSNP}.
 \seealso{
 \link[=bigSNP-class]{bigSNP}
 }
-

@@ -12,4 +12,3 @@ BigToBed(x, bedfile)
 \description{
 Title
 }
-

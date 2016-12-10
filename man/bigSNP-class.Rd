@@ -22,4 +22,3 @@ containing the file backing cache.}
 \code{\link[bigmemory]{big.matrix-class}} \code{\link{readplink}}
 }
 \keyword{class}
-

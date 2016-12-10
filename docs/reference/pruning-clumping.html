@@ -161,6 +161,28 @@ Am J Hum Genet. 2008;83(1):132-135.
 <a href = 'DOI'>http://dx.doi.org/10.1016/j.ajhg.2008.06.005</a></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>1</span>)
+
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readplink.html'>snp_readExample</a></span>() <span class='co'># need another example</span>
+<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
+<span class='fu'>print</span>(<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fu'>nrow</span>(<span class='no'>X</span>))</div><div class='output co'>#&gt; [1] 517</div><div class='input'><span class='fu'>print</span>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>ncol</span>(<span class='no'>X</span>))</div><div class='output co'>#&gt; [1] 4542</div><div class='input'>
+<span class='co'># pruning / clumping with MAF</span>
+<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pruning</span>(<span class='no'>test</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
+<span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep</span>) / <span class='no'>m</span>)</div><div class='output co'>#&gt; [1] 0.9817261</div><div class='input'>
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='kw'>bigstatsr</span><span class='kw'>::</span><span class='fu'>big_colstats</span>(<span class='no'>X</span>)$<span class='no'>sum</span> / (<span class='fl'>2</span> * <span class='no'>n</span>)
+<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'>pmin</span>(<span class='no'>p</span>, <span class='fl'>1</span> - <span class='no'>p</span>)
+<span class='no'>ind.keep2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
+
+<span class='co'># clumping for PRS</span>
+<span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span> <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>zcatt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_MAX3.html'>snp_MAX3</a></span>(<span class='no'>test</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+<span class='no'>R2</span> <span class='kw'>&lt;-</span> <span class='kw'>bigstatsr</span><span class='kw'>::</span><span class='fu'>big_univRegLin</span>(<span class='no'>X</span>, <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span>)[<span class='st'>"R2"</span>, ]
+<span class='fu'>plot</span>(<span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='no'>n</span> * <span class='no'>R2</span>) <span class='co'># same thing</span></div><img src='pruning-clumping-8.png' alt='' width='540' height='400' /><div class='input'><span class='no'>ind.keep3</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
+<span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep3</span>))</div><div class='output co'>#&gt; [1] 3934</div><div class='input'><span class='co'># thresholding though the exclude parameter</span>
+<span class='no'>ind.keep4</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+                          <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='fu'>which</span>(-<span class='fu'>log10</span>(<span class='no'>zcatt</span>$<span class='no'>pS</span>) <span class='kw'>&gt;</span> <span class='fl'>1</span>))
+<span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep4</span>))</div><div class='output co'>#&gt; [1] 3591</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -172,7 +194,9 @@ Am J Hum Genet. 2008;83(1):132-135.
       <li><a href="#details">Details</a></li>
 
       <li><a href="#references">References</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -55,4 +55,3 @@ print(all.equal(test1$cols, test2$cols))
 print(all.equal(test1$rows, test2$rows))
 
 }
-

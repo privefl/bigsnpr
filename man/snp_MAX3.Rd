@@ -51,4 +51,3 @@ Zheng, G., Yang, Y., Zhu, X., & Elston, R. (2012).
 Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 \url{http://dx.doi.org/10.1007/978-1-4614-2245-7_6}.
 }
-

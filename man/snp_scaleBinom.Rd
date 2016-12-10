@@ -46,4 +46,3 @@ Population Structure and Eigenanalysis.
 PLoS Genet 2(12): e190.
 \url{http://dx.doi.org/10.1371/journal.pgen.0020190}.
 }
-

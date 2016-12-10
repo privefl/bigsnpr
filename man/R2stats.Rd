@@ -12,4 +12,3 @@ R2stats(x, ind.train, weighted = FALSE)
 \description{
 Title
 }
-

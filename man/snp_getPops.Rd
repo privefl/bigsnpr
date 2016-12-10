@@ -37,4 +37,3 @@ test <- snp_getPops(test, pop.files = files, col.sample.ID = 2,
                     col.family.ID = 3)
 print(rle(test$fam$family.ID))
 }
-
