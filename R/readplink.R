@@ -108,7 +108,7 @@ BedToBig <- function(bedfile,
 
   snp_list <- list(genotypes = bigGeno, fam = fam, map = bim,
                    backingfile = backingfile,
-                   backingpath = backingpath)
+                   backingpath = normalizePath(backingpath))
   class(snp_list) <- "bigSNP"
 
   saveRDS(snp_list, file.path(backingpath, paste0(backingfile, ".rds")))

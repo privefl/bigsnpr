@@ -10,36 +10,42 @@
 
 Skipping web check... [ --noweb ] 
 Writing this text to log file [ plink.log ]
-Analysis started: Sun Dec  4 09:58:03 2016
+Analysis started: Sat Dec 10 21:56:34 2016
 
 Options in effect:
-	--bfile HapMap3
-	--missing
+	--bfile /home/privef/Bureau/bigsnpr/inst/extdata/example
+	--indep-pairwise 50 1 0.05
 	--noweb
 
-Reading map (extended format) from [ HapMap3.bim ] 
-14389 markers to be included from [ HapMap3.bim ]
-Reading pedigree information from [ HapMap3.fam ] 
-957 individuals read from [ HapMap3.fam ] 
-957 individuals with nonmissing phenotypes
+Reading map (extended format) from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.bim ] 
+4542 markers to be included from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.bim ]
+Reading pedigree information from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.fam ] 
+517 individuals read from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.fam ] 
+0 individuals with nonmissing phenotypes
 Assuming a disease phenotype (1=unaff, 2=aff, 0=miss)
 Missing phenotype value is also -9
-957 cases, 0 controls and 0 missing
-470 males, 487 females, and 0 of unspecified sex
-Reading genotype bitfile from [ HapMap3.bed ] 
+0 cases, 0 controls and 517 missing
+0 males, 0 females, and 517 of unspecified sex
+Warning, found 517 individuals with ambiguous sex codes
+These individuals will be set to missing ( or use --allow-no-sex )
+Writing list of these individuals to [ plink.nosex ]
+Reading genotype bitfile from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.bed ] 
 Detected that binary PED file is v1.00 SNP-major mode
-Before frequency and genotyping pruning, there are 14389 SNPs
-957 founders and 0 non-founders found
-1 heterozygous haploid genotypes; set to missing
-Writing list of heterozygous haploid genotypes to [ plink.hh ]
-Writing individual missingness information to [ plink.imiss ] 
-Writing locus missingness information to [ plink.lmiss ] 
-Total genotyping rate in remaining individuals is 0.998459
+Before frequency and genotyping pruning, there are 4542 SNPs
+517 founders and 0 non-founders found
+Total genotyping rate in remaining individuals is 1
 0 SNPs failed missingness test ( GENO > 1 )
 0 SNPs failed frequency test ( MAF < 0 )
-After frequency and genotyping pruning, there are 14389 SNPs
-After filtering, 957 cases, 0 controls and 0 missing
-After filtering, 470 males, 487 females, and 0 of unspecified sex
+After frequency and genotyping pruning, there are 4542 SNPs
+After filtering, 0 cases, 0 controls and 517 missing
+After filtering, 0 males, 0 females, and 517 of unspecified sex
+Performing LD-based pruning...
+Writing pruned-in SNPs to [ plink.prune.in ]
+Writing pruned-out SNPs to [ plink.prune.out ]
+Scanning from chromosome 1 to 1
 
-Analysis finished: Sun Dec  4 09:58:04 2016
+Scan region on chromosome 1 from [ SNP0 ] to [ SNP4541 ]
+For chromosome 1, 159 SNPs pruned out, 4383 remaining
+
+Analysis finished: Sat Dec 10 21:57:37 2016
 
