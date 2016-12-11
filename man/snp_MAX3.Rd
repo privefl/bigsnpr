@@ -12,9 +12,10 @@ snp_MAX3(x, ind.train = seq(nrow(X)), val = c(0, 0.5, 1))
 \item{ind.train}{An optional vector of the row indices that are used,
 for the training part. If not specified, all data are used.}
 
-\item{val}{Computing \code{ZCATT(x)} for \code{x} in \code{val}. Default is \code{c(0, 0.5, 1)}
-and corresponds to the \emph{MAX3} statistic. Only \code{c(0, 1)} corresponds to
-\emph{MAX2}. And only \code{0.5} corresponds to the Armatige trend test.
+\item{val}{Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
+Default is \code{c(0, 0.5, 1)} and corresponds to the \emph{MAX3} statistic.
+Only \code{c(0, 1)} corresponds to \emph{MAX2}.
+And only \code{0.5} corresponds to the Armatige trend test.
 Finally, \code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.}
 }
 \value{

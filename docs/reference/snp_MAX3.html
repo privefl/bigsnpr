@@ -92,9 +92,10 @@ and then compute the MAX3 statistic.</p>
       <dd>An optional vector of the row indices that are used,
 for the training part. If not specified, all data are used.</dd>
       <dt>val</dt>
-      <dd>Computing <code>ZCATT(x)</code> for <code>x</code> in <code>val</code>. Default is <code>c(0, 0.5, 1)</code>
-and corresponds to the <em>MAX3</em> statistic. Only <code>c(0, 1)</code> corresponds to
-<em>MAX2</em>. And only <code>0.5</code> corresponds to the Armatige trend test.
+      <dd>Computing \(\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)\).
+Default is <code>c(0, 0.5, 1)</code> and corresponds to the <em>MAX3</em> statistic.
+Only <code>c(0, 1)</code> corresponds to <em>MAX2</em>.
+And only <code>0.5</code> corresponds to the Armatige trend test.
 Finally, <code>seq(0, 1, length.out = L)</code> corresponds to <em>MAXL</em>.</dd>
     </dl>
     

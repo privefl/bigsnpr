@@ -36,16 +36,18 @@ ZCATT <- function(counts, val) {
 #'
 #' @inheritParams bigsnpr-package
 #'
-#' @param val Computing `ZCATT(x)` for `x` in `val`. Default is `c(0, 0.5, 1)`
-#' and corresponds to the _MAX3_ statistic. Only `c(0, 1)` corresponds to
-#' _MAX2_. And only `0.5` corresponds to the Armatige trend test.
+#' @param val
+#' Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
+#' Default is `c(0, 0.5, 1)` and corresponds to the _MAX3_ statistic.
+#' Only `c(0, 1)` corresponds to _MAX2_.
+#' And only `0.5` corresponds to the Armatige trend test.
 #' Finally, `seq(0, 1, length.out = L)` corresponds to _MAXL_.
 #'
 #' @examples
 #' set.seed(1)
 #'
 #' # constructing a fake genotype big.matrix
-#' a <- big.matrix(10, 15, type = "char", shared = FALSE)
+#' a <- big.matrix(10, 12, type = "char", shared = FALSE)
 #' a[] <- sample(c(0, 1, 2), 150, TRUE)
 #' print(a[,])
 #'
