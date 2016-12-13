@@ -119,19 +119,18 @@ BedToBig <- function(bedfile,
 ################################################################################
 
 #' @rdname readplink
+#' @param backingfile The path of one of the three (.bk, .desc or .rds)
+#' backing files for the cache of the resulting object.
 #' @export
-AttachBigSNP <- function(backingfile,
-                         backingpath = "backingfiles",
-                         readonly = TRUE) {
-  snp.list <- readRDS(file.path(backingpath, paste0(backingfile, ".rds")))
+AttachBigSNP <- function(backingfile, readonly = TRUE) {
+  root <- tools::file_path_sans_ext(backingfile)
+  snp.list <- readRDS(paste0(root, ".rds"))
 
-  snp.list$genotypes <-
-    bigmemory::attach.big.matrix(file.path(backingpath,
-                                           paste0(backingfile, ".desc")),
-                                 readonly = readonly)
+  snp.list$genotypes <- attach.big.matrix(paste0(root, ".desc"),
+                                          readonly = readonly)
 
-  snp.list$backingfile <- backingfile
-  snp.list$backingpath <- backingpath
+  snp.list$backingfile <- basename(root)
+  snp.list$backingpath <- normalizePath(dirname(root))
 
   return(snp.list)
 }
@@ -178,6 +177,7 @@ BigToBed <- function(x, bedfile) {
 ################################################################################
 
 #' @rdname readplink
+#'
 #' @export
 snp_readExample <- function(backingfile = "test_doc",
                             backingpath = "backingfiles") {

@@ -11,7 +11,7 @@
 BedToBig(bedfile, block.size = 1000, backingfile,
   backingpath = "backingfiles")
 
-AttachBigSNP(backingfile, backingpath = "backingfiles", readonly = TRUE)
+AttachBigSNP(backingfile, readonly = TRUE)
 
 snp_readExample(backingfile = "test_doc", backingpath = "backingfiles")
 
@@ -28,6 +28,9 @@ the resulting object.}
 Default is "backingfiles". It needs to exist (use \link{dir.create}).}
 
 \item{readonly}{Is the \code{big.matrix} read only? Default is \code{TRUE}.}
+
+\item{backingfile}{The path of one of the three (.bk, .desc or .rds)
+backing files for the cache of the resulting object.}
 }
 \value{
 A \code{bigSNP}.\cr

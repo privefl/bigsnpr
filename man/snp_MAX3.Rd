@@ -32,7 +32,7 @@ and then compute the MAX3 statistic.
 set.seed(1)
 
 # constructing a fake genotype big.matrix
-a <- big.matrix(10, 15, type = "char", shared = FALSE)
+a <- big.matrix(10, 12, type = "char", shared = FALSE)
 a[] <- sample(c(0, 1, 2), 150, TRUE)
 print(a[,])
 
