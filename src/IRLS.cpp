@@ -15,17 +15,21 @@ ListOf<SEXP> wcrossprod(SEXP pBigMat,
                         const arma::vec& y,
                         const arma::vec& z0,
                         const arma::vec& w0,
+                        const IntegerVector& rowInd,
                         double tol,
                         int maxiter) {
   XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
-  int n = xpMat->nrow();
+  int n = rowInd.size();
   int m = xpMat->ncol();
   arma::mat tcovar, tmp;
   arma::vec p, w, z, betas_old, betas_new, Xb;
   double diff;
   int c;
+
+  // indices begin at 1 in R and 0 in C++
+  IntegerVector trains = rowInd - 1;
 
   NumericVector res(m);
   NumericVector var(m);
@@ -33,7 +37,7 @@ ListOf<SEXP> wcrossprod(SEXP pBigMat,
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < n; i++) {
-      covar(i, 0) = macc[j][i];
+      covar(i, 0) = macc[j][rowInd[i]];
     }
     z = z0;
     w = w0;

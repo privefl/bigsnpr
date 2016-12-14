@@ -12,24 +12,28 @@
 #' @export
 #'
 #' @examples
-GWAS <- function(x, covar = NULL, ncores = 1, tol = 1e-8, maxiter = 100) {
-  check_x(x, check.y = TRUE)
+snp_logitGWAS <- function(x, ind.train = seq(nrow(X)),
+                       covar = NULL, ncores = 1,
+                       tol = 1e-8, maxiter = 100) {
+  check_x(x)
 
   X <- x$genotypes
   X.desc <- describe(X)
-  y <- (x$fam$pheno + 1) / 2
+  y.train <- transform_levels(x$fam$affection[ind.train])
+  n <- length(ind.train)
 
   if (is.null(covar)) {
-    n <- nrow(X)
     covar <- cbind(rep(0, n), rep(1, n))
   } else {
     covar <- cbind(0, 1, covar)
   }
+  stopifnot(n == nrow(covar))
 
-  mod0 = glm(y ~ covar - 1, family = binomial)
-  p0 = mod0$fitted
-  w0 = p0 * (1 - p0)
-  z0 = log(p0 / (1 - p0)) + (y - p0) / w0
+  # no intercept because already in covar
+  mod0 <- stats::glm(y.train ~ covar - 1, family = binomial)
+  p0 <- mod0$fitted
+  w0 <- p0 * (1 - p0)
+  z0 <- log(p0 / (1 - p0)) + (y.train - p0) / w0
   rm(mod0, p0)
 
   PATH <- x$backingpath
@@ -52,8 +56,8 @@ GWAS <- function(x, covar = NULL, ncores = 1, tol = 1e-8, maxiter = 100) {
     # https://www.r-bloggers.com/too-much-parallelism-is-as-bad/
     multi <- (!is.seq) && detect_MRO()
     if (multi) nthreads.save <- RevoUtilsMath::setMKLthreads(1)
-    res <- wcrossprod(X.part@address, covar, y, z0, w0,
-                      tol, maxiter)
+    res <- wcrossprod(X.part@address, covar, y.train, z0, w0,
+                      ind.train, tol, maxiter)
     if (multi) RevoUtilsMath::setMKLthreads(nthreads.save)
 
     indNoConv <- which(!res$conv)
@@ -62,7 +66,7 @@ GWAS <- function(x, covar = NULL, ncores = 1, tol = 1e-8, maxiter = 100) {
                    "using glm for those instead.\n", sep = "; "), l)
 
       for (j in indNoConv) {
-        mod <- glm(y ~ X.part[, j] + covar - 1, family = binomial)
+        mod <- glm(y.train ~ X.part[ind.train, j] + covar - 1, family = binomial)
         coeffs <- summary(mod)$coefficients
         res$betas[j] <- coeffs[1]
         res$std[j] <- coeffs[2]

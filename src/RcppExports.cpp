@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // wcrossprod
-ListOf<SEXP> wcrossprod(SEXP pBigMat, arma::mat& covar, const arma::vec& y, const arma::vec& z0, const arma::vec& w0, double tol, int maxiter);
-RcppExport SEXP bigsnpr_wcrossprod(SEXP pBigMatSEXP, SEXP covarSEXP, SEXP ySEXP, SEXP z0SEXP, SEXP w0SEXP, SEXP tolSEXP, SEXP maxiterSEXP) {
+ListOf<SEXP> wcrossprod(SEXP pBigMat, arma::mat& covar, const arma::vec& y, const arma::vec& z0, const arma::vec& w0, const IntegerVector& rowInd, double tol, int maxiter);
+RcppExport SEXP bigsnpr_wcrossprod(SEXP pBigMatSEXP, SEXP covarSEXP, SEXP ySEXP, SEXP z0SEXP, SEXP w0SEXP, SEXP rowIndSEXP, SEXP tolSEXP, SEXP maxiterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,9 +17,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type z0(z0SEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type w0(w0SEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
-    rcpp_result_gen = Rcpp::wrap(wcrossprod(pBigMat, covar, y, z0, w0, tol, maxiter));
+    rcpp_result_gen = Rcpp::wrap(wcrossprod(pBigMat, covar, y, z0, w0, rowInd, tol, maxiter));
     return rcpp_result_gen;
 END_RCPP
 }
