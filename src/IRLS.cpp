@@ -37,7 +37,7 @@ ListOf<SEXP> wcrossprod(SEXP pBigMat,
 
   for (int j = 0; j < m; j++) {
     for (int i = 0; i < n; i++) {
-      covar(i, 0) = macc[j][rowInd[i]];
+      covar(i, 0) = macc[j][trains[i]];
     }
     z = z0;
     w = w0;
