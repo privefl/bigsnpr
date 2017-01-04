@@ -20,7 +20,7 @@
 #' @param size
 #' This parameter should be adjusted with respect to the number of SNPs.
 #' - for clumping: __Radius__ of the window's size for the LD evaluations.
-#' Default is `500` (I use this for a chip of 500K SNPs).
+#' Default is `1000` (I use this for a chip of 500K SNPs).
 #' - for pruning: __Diameter__ of the window's size for the LD evaluations.
 #' Default is `50` (as in PLINK).
 #'
@@ -55,7 +55,7 @@ NULL
 #' @rdname pruning-clumping
 snp_clumping <- function(x, S,
                          ind.train = seq(nrow(X)),
-                         size = 500,
+                         size = 1000,
                          thr.corr = 0.5,
                          exclude = NULL,
                          ncores = 1) {

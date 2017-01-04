@@ -13,7 +13,7 @@ LazyData: TRUE
 LinkingTo: Rcpp, bigmemory, BH, RcppArmadillo
 Imports: Rcpp, data.table, bigstatsr, foreach, parallel, doParallel
 Depends: R (>= 3.2.3), bigmemory
-Remotes: privefl/bigmemory, privefl/bigstatsr
+Remotes: kaneplusplus/bigmemory, privefl/bigstatsr
 RoxygenNote: 5.0.1.9000
 Roxygen: list(markdown = TRUE)
 Suggests: testthat, covr, gaston

@@ -127,7 +127,7 @@ snp_clumping <- function(x,
 #' @rdname pruning-clumping
 snp_clumping2 <- function(x, S,
                           ind.train = seq(nrow(X)),
-                          size = 500,
+                          size = 1000,
                           thr.corr = 0.2,
                           exclude = NULL,
                           ncores = 1) {

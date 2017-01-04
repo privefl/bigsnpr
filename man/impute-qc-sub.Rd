@@ -8,7 +8,7 @@
 \title{Imputation, quality control and subset for a "bigSNP".}
 \usage{
 sub.bigSNP(x, ind.row = seq(nrow(x$genotypes)),
-  ind.col = seq(ncol(x$genotypes)), backed = TRUE)
+  ind.col = seq(ncol(x$genotypes)), backed = TRUE, shared = TRUE)
 
 QC(x, row.cr.min = 0.95, col.cr.min = 0.95, hwe.pval = 1e-06,
   maf.min = NULL, rm.sex = FALSE)
@@ -27,6 +27,8 @@ Negative indices can be used to exclude column indices.
 Default: keep them all.}
 
 \item{backed}{Should the new \code{bigSNP} be filebacked? Default is \code{TRUE}.}
+
+\item{shared}{Should the new genotype matrix be shared? Default is \code{TRUE}.}
 
 \item{row.cr.min}{Minimun individuals' call rate that is allowed.
 Default is 95\%.}
