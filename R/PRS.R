@@ -134,7 +134,7 @@ PRS <- function(x, betas, S, lpS,
   res.all <- foreach(j = 1:n.thr, .combine = 'c') %do% {
     ind.col <- which(lpS > thr.list[j])
     if (length(ind.col)) {
-      scores <- prs1(X@address, betas, ind.train, ind.col)
+      scores <- prs1(X@address, betas, ind.test, ind.col)
       snp_aucSample(scores, y[ind.test])
     } else {
       NA

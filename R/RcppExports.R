@@ -5,10 +5,6 @@ wcrossprod <- function(pBigMat, covar, y, z0, w0, rowInd, tol, maxiter) {
     .Call('bigsnpr_wcrossprod', PACKAGE = 'bigsnpr', pBigMat, covar, y, z0, w0, rowInd, tol, maxiter)
 }
 
-prs2 <- function(pBigMat, odds, indTest, indCol) {
-    .Call('bigsnpr_prs2', PACKAGE = 'bigsnpr', pBigMat, odds, indTest, indCol)
-}
-
 prs1 <- function(pBigMat, betas, indTest, indCol) {
     .Call('bigsnpr_prs1', PACKAGE = 'bigsnpr', pBigMat, betas, indTest, indCol)
 }

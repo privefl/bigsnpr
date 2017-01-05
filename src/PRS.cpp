@@ -37,11 +37,11 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-NumericVector prs1(XPtr<BigMatrix> xpMat,
+NumericVector prs1(SEXP pBigMat,
                    const NumericVector& betas,
                    const IntegerVector& indTest,
                    const IntegerVector& indCol) {
-
+  XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
   int n = indTest.size();

@@ -24,20 +24,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// prs2
-NumericVector prs2(SEXP pBigMat, const NumericMatrix& odds, const IntegerVector& indTest, const IntegerVector& indCol);
-RcppExport SEXP bigsnpr_prs2(SEXP pBigMatSEXP, SEXP oddsSEXP, SEXP indTestSEXP, SEXP indColSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type odds(oddsSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indTest(indTestSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indCol(indColSEXP);
-    rcpp_result_gen = Rcpp::wrap(prs2(pBigMat, odds, indTest, indCol));
-    return rcpp_result_gen;
-END_RCPP
-}
 // prs1
 NumericVector prs1(SEXP pBigMat, const NumericVector& betas, const IntegerVector& indTest, const IntegerVector& indCol);
 RcppExport SEXP bigsnpr_prs1(SEXP pBigMatSEXP, SEXP betasSEXP, SEXP indTestSEXP, SEXP indColSEXP) {
