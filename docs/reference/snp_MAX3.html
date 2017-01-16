@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -49,17 +49,27 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Manual</a>
+</li>
+<li>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://privefl.github.io/about.html">
+    <span class="fa fa-user"></span>
+     
+    About
+  </a>
+</li>
+<li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -90,7 +100,7 @@ and then compute the MAX3 statistic.</p>
       <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
       <dt>ind.train</dt>
       <dd>An optional vector of the row indices that are used,
-for the training part. If not specified, all data are used.</dd>
+for the training part. If not specified, all rows are used.</dd>
       <dt>val</dt>
       <dd>Computing \(\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)\).
 Default is <code>c(0, 0.5, 1)</code> and corresponds to the <em>MAX3</em> statistic.
@@ -117,30 +127,19 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
     <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>1</span>)
 
 <span class='co'># constructing a fake genotype big.matrix</span>
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'>big.matrix</span>(<span class='fl'>10</span>, <span class='fl'>15</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"char"</span>, <span class='kw'>shared</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'>big.matrix</span>(<span class='fl'>10</span>, <span class='fl'>12</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"char"</span>, <span class='kw'>shared</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>a</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>), <span class='fl'>150</span>, <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Assignment will down cast from double to char
-#&gt; Hint: To remove this warning type:  options(bigmemory.typecast.warning=FALSE)</div><div class='output co'>#&gt; <span class='warning'>Warning: </span></div><div class='input'><span class='fu'>print</span>(<span class='no'>a</span>[,])</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
-#&gt;  [1,]    0    0    2    1    2    1    2    1    1     0     1     2     2
-#&gt;  [2,]    1    0    0    1    1    2    0    2    2     0     1     2     1
-#&gt;  [3,]    1    2    1    1    2    1    1    1    1     1     0     1     1
-#&gt;  [4,]    2    1    0    0    1    0    0    1    0     2     2     1     0
-#&gt;  [5,]    0    2    0    2    1    0    1    1    2     2     1     0     2
-#&gt;  [6,]    2    1    1    2    2    0    0    2    0     2     0     0     1
-#&gt;  [7,]    2    2    0    2    0    0    1    2    2     1     0     2     1
-#&gt;  [8,]    1    2    1    0    1    1    2    1    0     1     1     0     0
-#&gt;  [9,]    1    1    2    2    2    1    0    2    0     2     2     1     0
-#&gt; [10,]    0    2    1    1    2    1    2    2    0     1     1     1     1
-#&gt;       [,14] [,15]
-#&gt;  [1,]     1     2
-#&gt;  [2,]     0     1
-#&gt;  [3,]     0     0
-#&gt;  [4,]     1     0
-#&gt;  [5,]     2     2
-#&gt;  [6,]     1     1
-#&gt;  [7,]     1     0
-#&gt;  [8,]     1     2
-#&gt;  [9,]     2     0
-#&gt; [10,]     1     2</div><div class='input'>
+#&gt; Hint: To remove this warning type:  options(bigmemory.typecast.warning=FALSE)</div><div class='output co'>#&gt; <span class='warning'>Warning: </span></div><div class='output co'>#&gt; <span class='error'>Error in SetAll.bm(x, value): number of items to replace is not a multiple of replacement length</span></div><div class='input'><span class='fu'>print</span>(<span class='no'>a</span>[,])</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+#&gt;  [1,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [2,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [3,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [4,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [5,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [6,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [7,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [8,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt;  [9,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
+#&gt; [10,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</div><div class='input'>
 <span class='co'># constructing a fake incomplete bigSNP with 10 individuals and 15 SNPs</span>
 <span class='co'># where the 5 first individuals are cases and the 5 last are controls.</span>
 <span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>()
@@ -150,14 +149,10 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 
 <span class='co'># Get MAX3 statistics</span>
 <span class='fu'>print</span>(<span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>))</div><div class='output co'>#&gt; $S
-#&gt;  [1] 0.6666667 2.5000000 1.6666667 1.6666667 1.1111111 1.1111111 0.4761905
-#&gt;  [8] 3.6000000 3.6000000 2.5000000 0.4761905 0.6666667 2.5000000 2.5000000
-#&gt; [15] 0.0000000
+#&gt;  [1] 0 0 0 0 0 0 0 0 0 0 0 0
 #&gt; 
 #&gt; $pS
-#&gt;  [1] 0.41421618 0.11384630 0.19670560 0.19670560 0.29184055 0.29184055
-#&gt;  [7] 0.49015296 0.05777957 0.05777957 0.11384630 0.49015296 0.41421618
-#&gt; [13] 0.11384630 0.11384630 1.00000000
+#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
