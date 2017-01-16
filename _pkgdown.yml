@@ -1,0 +1,20 @@
+templates:
+  params:
+    bootswatch: cosmo
+
+navbar:
+  title: "bigsnpr"
+  type: inverse
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Manual"
+      href: reference/index.html
+    - text: "Vignettes"
+      href: articles/index.html
+  right:
+    - text: "About"
+      icon: fa-user
+      href: https://privefl.github.io/about.html
+    - icon: fa-github
+      href: https://github.com/privefl/bigsnpr

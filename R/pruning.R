@@ -65,10 +65,7 @@ snp_clumping <- function(x, S,
   X <- x$genotypes
   X.desc <- describe(X)
 
-  # export fun.stats and backingpath (force eval of promise)
-  PATH <- x$backingpath
-  #FUN <- fun.stats
-
+  # get ranges of chromosomes
   range.chr <- LimsChr(x)
 
   if (is.seq <- (ncores == 1)) {
@@ -80,10 +77,7 @@ snp_clumping <- function(x, S,
   res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
     lims <- range.chr[ic, ]
 
-    X.chr <- sub.big.matrix(X.desc,
-                            firstCol = lims[1],
-                            lastCol = lims[2],
-                            backingpath = PATH)
+    X <- attach.big.matrix(X.desc)
 
     # init
     ind.chr <- seq2(lims)
@@ -92,15 +86,15 @@ snp_clumping <- function(x, S,
     remain[match(exclude, ind.chr)] <- FALSE
 
     # cache some computations
-    stats <- bigstatsr::big_colstats(X.chr, ind.train)
+    stats <- bigstatsr::big_colstats(X, ind.train, ind.chr)
     n <- length(ind.train)
-    p <- stats$sum / (2 * n)
     denoX <- (n - 1) * stats$var
 
-
-    keep <- clumping(X.chr@address,
+    # main algo
+    keep <- clumping(X@address,
                      rowInd = ind.train,
-                     colInd = ord.chr,
+                     colInd = ind.chr,
+                     ordInd = ord.chr,
                      remain = remain,
                      sumX = stats$sum,
                      denoX = denoX,
@@ -130,9 +124,7 @@ snp_pruning <- function(x,
   X <- x$genotypes
   X.desc <- describe(X)
 
-  # export backingpath (force eval of promise)
-  PATH <- x$backingpath
-
+  # get ranges of chromosomes
   range.chr <- LimsChr(x)
 
   if (is.seq <- (ncores == 1)) {
@@ -144,13 +136,11 @@ snp_pruning <- function(x,
   res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
     lims <- range.chr[ic, ]
 
-    X.chr <- sub.big.matrix(X.desc,
-                            firstCol = lims[1],
-                            lastCol = lims[2],
-                            backingpath = PATH)
+    X <- attach.big.matrix(X.desc)
 
-    stats <- bigstatsr::big_colstats(X.chr, ind.train)
+    # cache some computations
     ind.chr <- seq2(lims)
+    stats <- bigstatsr::big_colstats(X, ind.train, ind.chr)
     m.chr <- length(ind.chr)
     keep <- rep(TRUE, m.chr)
     keep[match(exclude, ind.chr)] <- FALSE
@@ -159,8 +149,10 @@ snp_pruning <- function(x,
     maf <- pmin(p, 1 - p)
     denoX <- (n - 1) * stats$var
 
-    keep <- pruning(X.chr@address,
+    # main algo
+    keep <- pruning(X@address,
                     rowInd = ind.train,
+                    colInd = ind.chr,
                     keep = keep,
                     mafX = maf,
                     sumX = stats$sum,

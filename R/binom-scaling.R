@@ -1,9 +1,11 @@
+################################################################################
+
 #' Binomial(2, p) scaling
 #'
 #' @inheritParams bigsnpr-package
 #'
 #' @return A named list of two vectors __`mean`__ and __`sd`__
-#' which are as long as the number of columns of __`X`__.
+#' which are as long as the length of __`ind.col`__.
 #'
 #' @details You will probably not use this function as is
 #' but as the __`fun.scaling`__ parameter of other functions
@@ -29,10 +31,29 @@
 #' abline(h = 2 * p, col = "red")
 #' plot(X.svd$sds)
 #' abline(h = sqrt(2 * p * (1 - p)), col = "red")
-snp_scaleBinom <- function(X, ind.train = seq(nrow(X))) {
-  means <- bigstatsr::big_colstats(X, ind.train)$sum /
+snp_scaleBinom <- function(X, ind.train = seq(nrow(X)),
+                           ind.col = seq(ncol(X))) {
+  means <- bigstatsr::big_colstats(X, ind.train, ind.col)$sum /
     length(ind.train)
   p <- means / 2
   sds <- sqrt(2 * p * (1 - p))
   list(mean = means, sd = sds)
+}
+
+################################################################################
+
+#' Title
+#'
+#' @param X
+#' @param ind.train
+#' @param ind.col
+#'
+#' @return
+#' @export
+#'
+#' @examples
+snp_MAF <- function(X, ind.train = seq(nrow(X)), ind.col = seq(ncol(X))) {
+  p <- bigstatsr::big_colstats(X, ind.train, ind.col)$sum /
+    (2 * length(ind.train))
+  pmin(p, 1 - p)
 }

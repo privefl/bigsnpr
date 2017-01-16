@@ -18,7 +18,10 @@ for controls). So, in particular, no missing value is allowed.
 Default is \code{TRUE}.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all data are used.}
+for the training part. If not specified, all rows are used.}
+
+\item{ind.col}{An optional vector of the column indices that are used.
+If not specified, all columns are used.}
 
 \item{block.size}{Maximum number of loci read at once (for all individuals).}
 
@@ -31,7 +34,7 @@ for predictive analysis based on SNP arrays.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/privefl/bigsnpr}
+  \item \url{https://privefl.github.io/bigsnpr}
   \item Report bugs at \url{https://github.com/privefl/bigsnpr/issues}
 }
 

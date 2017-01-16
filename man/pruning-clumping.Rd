@@ -25,7 +25,7 @@ For example, if \code{S} follows the standard normal distribution,
 you should probably use \code{abs(S)} instead.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all data are used.}
+for the training part. If not specified, all rows are used.}
 
 \item{size}{This parameter should be adjusted with respect to the number of SNPs.
 \itemize{
