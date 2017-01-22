@@ -95,3 +95,49 @@ PRS1 <- function(x, ind.train, ind.test,
 }
 
 ################################################################################
+
+#' Title
+#'
+#' @param x
+#' @param S
+#' @param lpS
+#' @param ind.train
+#' @param ind.test
+#' @param thr.list
+#' @param pruning
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+PRS <- function(x, betas, S, lpS,
+                ind.train = seq(nrow(X)),
+                ind.test,
+                thr.list = 0,
+                pruning = TRUE,
+                ncores = 1,
+                ...) {
+  check_x(x)
+  X <- x$genotypes
+  y <- transform_levels(x$fam$affection)
+
+  # pruning
+  if (pruning) {
+    ind.keep <- snp_clumping(x, S, ind.train, ncores = ncores, ...)
+    print(length(ind.keep))
+    lpS[-ind.keep] <- -1 # artificially remove them
+  }
+
+  n.thr <- length(thr.list)
+
+  res.all <- foreach(j = 1:n.thr, .combine = 'c') %do% {
+    ind.col <- which(lpS > thr.list[j])
+    if (length(ind.col)) {
+      scores <- prs1(X@address, betas, ind.test, ind.col)
+      snp_aucSample(scores, y[ind.test])
+    } else {
+      NA
+    }
+  }
+}

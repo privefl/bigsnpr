@@ -14,7 +14,10 @@
 #' Default is `TRUE`.
 #'
 #' @param ind.train An optional vector of the row indices that are used,
-#' for the training part. If not specified, all data are used.
+#' for the training part. If not specified, all rows are used.
+#'
+#' @param ind.col An optional vector of the column indices that are used.
+#' If not specified, all columns are used.
 #'
 #' @param block.size Maximum number of loci read at once (for all individuals).
 #'

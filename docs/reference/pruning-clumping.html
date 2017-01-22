@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -49,17 +49,27 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Manual</a>
+</li>
+<li>
+  <a href="../articles/index.html">Vignettes</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
+  <a href="https://privefl.github.io/about.html">
+    <span class="fa fa-user"></span>
+     
+    About
+  </a>
+</li>
+<li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -91,7 +101,7 @@ in <a href = 'PLINK'>http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#pr
 </ul></p>
     
 
-    <pre><span class='fu'>snp_clumping</span>(<span class='no'>x</span>, <span class='no'>S</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+    <pre><span class='fu'>snp_clumping</span>(<span class='no'>x</span>, <span class='no'>S</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
 <span class='fu'>snp_pruning</span>(<span class='no'>x</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
@@ -111,12 +121,12 @@ For example, if <code>S</code> follows the standard normal distribution,
 you should probably use <code>abs(S)</code> instead.</dd>
       <dt>ind.train</dt>
       <dd>An optional vector of the row indices that are used,
-for the training part. If not specified, all data are used.</dd>
+for the training part. If not specified, all rows are used.</dd>
       <dt>size</dt>
       <dd>This parameter should be adjusted with respect to the number of SNPs.
 <ul>
 <li> for clumping: <strong>Radius</strong> of the window&#39;s size for the LD evaluations.
-Default is <code>500</code> (I use this for a chip of 500K SNPs).
+Default is <code>1000</code> (I use this for a chip of 500K SNPs).
 </li>
 <li> for pruning: <strong>Diameter</strong> of the window&#39;s size for the LD evaluations.
 Default is <code>50</code> (as in PLINK).
@@ -178,11 +188,11 @@ Am J Hum Genet. 2008;83(1):132-135.
 <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span> <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>zcatt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_MAX3.html'>snp_MAX3</a></span>(<span class='no'>test</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 <span class='no'>R2</span> <span class='kw'>&lt;-</span> <span class='kw'>bigstatsr</span><span class='kw'>::</span><span class='fu'>big_univRegLin</span>(<span class='no'>X</span>, <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span>)[<span class='st'>"R2"</span>, ]
-<span class='fu'>plot</span>(<span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='no'>n</span> * <span class='no'>R2</span>) <span class='co'># same thing</span></div><img src='pruning-clumping-8.png' alt='' width='540' height='400' /><div class='input'><span class='no'>ind.keep3</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
-<span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep3</span>))</div><div class='output co'>#&gt; [1] 3934</div><div class='input'><span class='co'># thresholding though the exclude parameter</span>
+<span class='fu'>plot</span>(<span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='no'>n</span> * <span class='no'>R2</span>) <span class='co'># same thing</span></div><div class='output co'>#&gt; <span class='error'>Error in xy.coords(x, y, xlabel, ylabel, log): &#39;x&#39; and &#39;y&#39; lengths differ</span></div><div class='input'><span class='no'>ind.keep3</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
+<span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep3</span>))</div><div class='output co'>#&gt; [1] 3611</div><div class='input'><span class='co'># thresholding though the exclude parameter</span>
 <span class='no'>ind.keep4</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
                           <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='fu'>which</span>(-<span class='fu'>log10</span>(<span class='no'>zcatt</span>$<span class='no'>pS</span>) <span class='kw'>&gt;</span> <span class='fl'>1</span>))
-<span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep4</span>))</div><div class='output co'>#&gt; [1] 3591</div></pre>
+<span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep4</span>))</div><div class='output co'>#&gt; [1] 3300</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

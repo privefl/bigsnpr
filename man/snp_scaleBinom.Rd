@@ -4,18 +4,21 @@
 \alias{snp_scaleBinom}
 \title{Binomial(2, p) scaling}
 \usage{
-snp_scaleBinom(X, ind.train = seq(nrow(X)))
+snp_scaleBinom(X, ind.train = seq(nrow(X)), ind.col = seq(ncol(X)))
 }
 \arguments{
 \item{X}{A \link[bigmemory:big.matrix-class]{big.matrix}.
 You shouldn't have missing values in your data.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all data are used.}
+for the training part. If not specified, all rows are used.}
+
+\item{ind.col}{An optional vector of the column indices that are used.
+If not specified, all columns are used.}
 }
 \value{
 A named list of two vectors \strong{\code{mean}} and \strong{\code{sd}}
-which are as long as the number of columns of \strong{\code{X}}.
+which are as long as the length of \strong{\code{ind.col}}.
 }
 \description{
 Binomial(2, p) scaling

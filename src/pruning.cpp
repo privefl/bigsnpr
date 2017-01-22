@@ -1,45 +1,38 @@
-// [[Rcpp::depends(BH, bigmemory)]]
-#include <Rcpp.h>
-#include <bigmemory/MatrixAccessor.hpp>
+/******************************************************************************/
 
-using namespace Rcpp;
-
+#include "bigsnpr.h"
 
 /******************************************************************************/
 
 // [[Rcpp::export]]
-LogicalVector clumping(SEXP pBigMat,
+LogicalVector clumping(XPtr<BigMatrix> xpMat,
                        const IntegerVector& rowInd,
                        const IntegerVector& colInd,
+                       const IntegerVector& ordInd,
                        LogicalVector& remain,
                        const NumericVector& sumX,
                        const NumericVector& denoX,
                        int size,
                        double thr) {
+  SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
 
-  XPtr<BigMatrix> xpMat(pBigMat);
-  MatrixAccessor<char> macc(*xpMat);
-
-  int n = rowInd.size();
-  int m = colInd.size();
+  int n = macc.nrow();
+  int m = macc.ncol();
   double nd = (double)n;
 
-  // indices begin at 1 in R and 0 in C++
-  IntegerVector trains = rowInd - 1;
   double xySum, num, r2;
-  int i, ind_i, j, j0, k;
+  int i, j, j0, k;
 
-  LogicalVector keep(m);
+  LogicalVector keep(m); // init with all false
 
   for (k = 0; k < m; k++) {
-    j0 = colInd[k] - 1;
+    j0 = ordInd[k] - 1;
     if (remain[j0]) { // if already excluded, goto next
       for (j = max(0, j0 - size); j < min(m, j0 + size); j++) {
         if (remain[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
-            ind_i = trains[i];
-            xySum += macc[j][ind_i] * macc[j0][ind_i];
+            xySum += macc(i, j) * macc(i, j0);
           }
           num = xySum - sumX[j] * sumX[j0] / nd;
           r2 = num * num / (denoX[j] * denoX[j0]);
@@ -57,8 +50,9 @@ LogicalVector clumping(SEXP pBigMat,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-LogicalVector& pruning(SEXP pBigMat,
+LogicalVector& pruning(XPtr<BigMatrix> xpMat,
                        const IntegerVector& rowInd,
+                       const IntegerVector& colInd,
                        LogicalVector& keep,
                        const NumericVector& mafX,
                        const NumericVector& sumX,
@@ -66,18 +60,14 @@ LogicalVector& pruning(SEXP pBigMat,
                        int size,
                        double thr) {
   // Assert that keep[j] == TRUE
-  XPtr<BigMatrix> xpMat(pBigMat);
-  MatrixAccessor<char> macc(*xpMat);
+  SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
 
-  // indices begin at 1 in R and 0 in C++
-  IntegerVector trains = rowInd - 1;
-
-  int n = rowInd.size();
+  int n = macc.nrow();
   double nd = (double)n;
-  int m = xpMat->ncol();
+  int m = macc.ncol();
   double xySum, num, r2;
 
-  int j0, j, i, ind_i;
+  int j0, j, i;
 
   for (j0 = 1; j0 < size; j0++) {
     if (keep[j0]) { // if already excluded, goto next
@@ -85,8 +75,7 @@ LogicalVector& pruning(SEXP pBigMat,
         if (keep[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
-            ind_i = trains[i];
-            xySum += macc[j][ind_i] * macc[j0][ind_i];
+            xySum += macc(i, j) * macc(i, j0);
           }
           num = xySum - sumX[j] * sumX[j0] / nd;
           r2 = num * num / (denoX[j] * denoX[j0]);
@@ -109,8 +98,7 @@ LogicalVector& pruning(SEXP pBigMat,
         if (keep[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
-            ind_i = trains[i];
-            xySum += macc[j][ind_i] * macc[j0][ind_i];
+            xySum += macc(i, j) * macc(i, j0);
           }
           num = xySum - sumX[j] * sumX[j0] / nd;
           r2 = num * num / (denoX[j] * denoX[j0]);

@@ -7,7 +7,7 @@
 \alias{snp_indLRLDR}
 \title{LD pruning and clumping}
 \usage{
-snp_clumping(x, S, ind.train = seq(nrow(X)), size = 500, thr.corr = 0.5,
+snp_clumping(x, S, ind.train = seq(nrow(X)), size = 1000, thr.corr = 0.5,
   exclude = NULL, ncores = 1)
 
 snp_pruning(x, ind.train = seq(nrow(X)), size = 50, thr.corr = 0.5,
@@ -25,12 +25,12 @@ For example, if \code{S} follows the standard normal distribution,
 you should probably use \code{abs(S)} instead.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all data are used.}
+for the training part. If not specified, all rows are used.}
 
 \item{size}{This parameter should be adjusted with respect to the number of SNPs.
 \itemize{
 \item for clumping: \strong{Radius} of the window's size for the LD evaluations.
-Default is \code{500} (I use this for a chip of 500K SNPs).
+Default is \code{1000} (I use this for a chip of 500K SNPs).
 \item for pruning: \strong{Diameter} of the window's size for the LD evaluations.
 Default is \code{50} (as in PLINK).
 }}

@@ -20,12 +20,13 @@ NULL
 #' Negative indices can be used to exclude column indices.
 #' Default: keep them all.
 #' @param backed Should the new `bigSNP` be filebacked? Default is `TRUE`.
+#' @param shared Should the new genotype matrix be shared? Default is `TRUE`.
 #' @export
 #' @name sub.bigSNP
 #' @rdname impute-qc-sub
 sub.bigSNP <- function(x, ind.row = seq(nrow(x$genotypes)),
                        ind.col = seq(ncol(x$genotypes)),
-                       backed = TRUE) {
+                       backed = TRUE, shared = TRUE) {
   check_x(x)
 
   if (backed) {
@@ -52,7 +53,7 @@ sub.bigSNP <- function(x, ind.row = seq(nrow(x$genotypes)),
                    rows = ind.row,
                    cols = ind.col,
                    # type = "char",
-                   shared = TRUE)
+                   shared = shared)
 
     snp_list <- list(genotypes = X2,
                      fam = x$fam[ind.row, ],
@@ -87,7 +88,7 @@ QC <- function(x, row.cr.min = 0.95,
                rm.sex = FALSE) {
   check_x(x)
 
-  counts <- Counts(x)
+  counts <- snp_counts(x)
 
   ### HWE
   hwe.qc <- function(observed) {
@@ -98,7 +99,7 @@ QC <- function(x, row.cr.min = 0.95,
 
     #X2 <- colSums((abs(observed - expected) - 0.5)^2 / expected)
     X2 <- colSums((observed - expected)^2 / expected)
-    pX2 <- stats::pchisq(X2, 1, lower.tail = F)
+    pX2 <- stats::pchisq(X2, 1, lower.tail = FALSE)
 
     return(which(pX2 < hwe.pval))
   }
@@ -161,8 +162,18 @@ Impute <- function(x, ncores = 1, verbose = FALSE) {
                  descriptorfile = paste0(newfile, ".desc"))
   X2.desc <- describe(X2)
 
+  range.chr <- LimsChr(x)
+
   # function that imputes one chromosome
-  ImputeChr <- function(lims) {
+  if (is.seq <- (ncores == 1)) {
+    registerDoSEQ()
+  } else {
+    cl <- parallel::makeCluster(ncores, outfile = `if`(verbose, "", NULL))
+    doParallel::registerDoParallel(cl)
+  }
+  res <- foreach(ic = seq_len(nrow(range.chr))) %dopar% {
+    lims <- range.chr[ic, ]
+
     if (verbose)
       printf("Imputing chromosome %d with \"nearest neighbors\"...\n", lims[3])
 
@@ -220,17 +231,7 @@ Impute <- function(x, ncores = 1, verbose = FALSE) {
 
     return(0)
   }
-
-  range.chr <- LimsChr(x)
-
-  obj <- foreach::foreach(i = 1:nrow(range.chr),
-                          .noexport = c("x", "X2"),
-                          .packages = "bigmemory")
-  expr_fun <- function(i) {
-    ImputeChr(range.chr[i, ])
-  }
-  foreach2(obj, expr_fun, ncores,
-           outfile = `if`(verbose, "", NULL))
+  if (!is.seq) parallel::stopCluster(cl)
 
   snp_list <- list(genotypes = X2,
                    fam = x$fam,

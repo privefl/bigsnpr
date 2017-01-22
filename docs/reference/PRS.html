@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>K-fold cross-validation. — crossval.int • bigsnpr</title>
+<title>Title — PRS • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,35 +84,21 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>K-fold cross-validation.</h1>
+    <h1>Title</h1>
     </div>
 
     
-    <p>Internal K-fold cross-validation of <code>fun.model</code> on <code>x</code>
-in order to tune hyper-parameters.</p>
+    <p>Title</p>
     
 
-    <pre><span class='fu'>crossval.int</span>(<span class='no'>x</span>, <span class='no'>fun.model</span>, <span class='no'>ind.train</span>, <span class='no'>K</span>)</pre>
+    <pre><span class='fu'>PRS</span>(<span class='no'>x</span>, <span class='no'>betas</span>, <span class='no'>S</span>, <span class='no'>lpS</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='no'>ind.test</span>, <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>pruning</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>x</dt>
-      <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
-      <dt>fun.model</dt>
-      <dd>Function that is used to train and
-predict a particular model. Its first 3 parameters
-should be <code>x</code>, <code>ind.train</code> and <code>ind.test</code> and it should
-have a parameter <code>fun.model</code> with <code>NULL</code> as default value.</dd>
-      <dt>ind.train</dt>
-      <dd>Indices used as training set by the model.</dd>
-      <dt>K</dt>
-      <dd>Number of turns in the cross-validation.</dd>
+      <dt>...</dt>
+      <dd></dd>
     </dl>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The position of the parameter which has given
-the best scores (in average) of the model.</p>
     
 
   </div>
@@ -120,9 +106,7 @@ the best scores (in average) of the model.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
