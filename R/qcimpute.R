@@ -224,7 +224,7 @@ Impute <- function(x, ncores = 1, verbose = FALSE) {
       predictNA(m + -6:0, j)
     }
 
-    options(opt.save)
+    on.exit(options(opt.save), add = TRUE)
 
     if (verbose)
       printf("Done imputing chromosome %d.\n", lims[3])
