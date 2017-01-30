@@ -10,12 +10,11 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-void rawToBigPart(SEXP pBigMat,
+void rawToBigPart(XPtr<BigMatrix> xpMat,
                   const RawVector& source,
                   const IntegerMatrix& tab,
                   int size, int colOffset,
                   int n, int bsz) {
-  XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
   int i, j, j_off, k, l, t, c;
@@ -35,51 +34,45 @@ void rawToBigPart(SEXP pBigMat,
 
 /******************************************************************************/
 
-char replaceNA(char x) {
+inline char replaceNA(char x) {
   return(isna(x) ? 3 : x);
 }
 
 // [[Rcpp::export]]
 void writebina(const char * filename,
-               SEXP pBigMat,
+               XPtr<BigMatrix> xpMat,
                const RawVector& tab) {
-  XPtr<BigMatrix> xpMat(pBigMat);
   MatrixAccessor<char> macc(*xpMat);
 
-  int n = xpMat->nrow();
-  int q = n / 4;
-  int r = n % 4;
-  int m = xpMat->ncol();
+  int n = macc.nrow();
+  int m = macc.ncol();
+  int length = ceil(n / 4);
 
-  int length = q + (r > 0);
-  char buffer[length];
+  char buffer[max(3, length)];
   ofstream myFile(filename, ios::out | ios::binary);
+
+  // magic number
   buffer[0] = 108; buffer[1] = 27; buffer[2] = 1;
   myFile.write(buffer, 3);
 
-  int i, j, k, ind;
+  int i, j, k, ind, coef;
 
   for (j = 0; j < m; j++) {
-    i = 0;
-    for (k = 0; k < q; k++) {
-      ind = replaceNA(macc[j][i++]);
-      ind += 4 * replaceNA(macc[j][i++]);
-      ind += 16 * replaceNA(macc[j][i++]);
-      ind += 64 * replaceNA(macc[j][i++]);
-      buffer[k] = tab[ind];
+    k = 0;
+    for (i = 0; i <= n-4; i += 4) {
+      ind = (replaceNA(macc[j][i]) + 4 * replaceNA(macc[j][i+1])) +
+        (16 * replaceNA(macc[j][i+2]) + 64 * replaceNA(macc[j][i+3]));
+      buffer[k++] = tab[ind];
     }
-    if (r > 0) {
-      ind = replaceNA(macc[j][i++]);
-      if (r > 1) {
-        ind += 4 * replaceNA(macc[j][i++]);
-        if (r > 2) {
-          ind += 16 * replaceNA(macc[j][i++]);
-        }
-      }
-      buffer[q] = tab[ind];
+    ind = 0; coef = 1;
+    for (; i < n; i++) {
+      ind += coef * replaceNA(macc[j][i]);
+      coef *= 4;
     }
+    buffer[k] = tab[ind];
     myFile.write(buffer, length);
   }
+
   myFile.close();
 }
 

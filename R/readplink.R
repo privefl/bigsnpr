@@ -1,43 +1,42 @@
 ################################################################################
 
-#' @title Read PLINK files into a "bigSNP".
-#' @description Functions to read bed/bim/fam files
-#' into a `bigSNP`.\cr
+#' Read PLINK files into a "bigSNP".
+#'
+#' Functions to read bed/bim/fam files into a [bigSNP][bigSNP-class].
+#' __You shouldn't read from PLINK files more than once.__
+#'
 #' For more information on these formats, please visit
 #' \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
 #' For other formats, please use PLINK to convert them in bedfiles,
 #' which require minimal space to store and are faster to read.
-#' @param bedfile Path to file with extension .bed. You need the corresponding
-#' .bim and .fam in the same directory.
+#'
+#' @param bedfile Path to file with extension ".bed" to read.
+#' You need the corresponding ".bim" and ".fam" in the same directory.
 #' @param backingfile The root name for the backing file(s) for the cache of
-#' the resulting object.
-#' @param backingpath The path to the directory containing the file backing cache.
-#' Default is "backingfiles". It needs to exist (use [dir.create]).
-#' @param readonly Is the \code{big.matrix} read only? Default is \code{TRUE}.
-#' @return A \code{bigSNP}.\cr
-#' Reading PLINK files creates
-#' \code{backingfile}.bk, \code{backingfile}.desc and \code{backingfile}.rds
-#' in directory \code{backingpath}.\cr
-#' You shouldn't read from PLINK files more than once.
-#' Instead, use \code{AttachBigSNP}
+#' the [bigSNP][bigSNP-class] object.
+#' @param backingpath The path to the directory containing the backing files.
+#' Default is `"backingfiles"`.
+#'
+#' @return A [bigSNP][bigSNP-class]. It also creates
+#' \code{<backingfile>}.bk, \code{<backingfile>}.desc and
+#' \code{<backingfile>}.rds in directory \code{<backingpath>}, which
+#' are the backing files of this `bigSNP`.\cr
+#' __You shouldn't read from PLINK files more than once.__ Instead, use [snp_attach]
 #' to load this object in another session from backing files.
+#'
 #' @note
 #' The implementation was originally inspired from the code of
 #' \href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
 #' I did many optimizations. Especially, online reading
 #' into a \code{big.matrix} makes it memory-efficient.
+#'
 #' @example examples/example.readplink.R
-#' @name readplink
-NULL
-
-################################################################################
-
-#' @rdname readplink
 #' @export
-BedToBig <- function(bedfile,
-                     block.size = 1000,
-                     backingfile,
-                     backingpath = "backingfiles") {
+snp_readBed <- function(bedfile,
+                        block.size = 1000,
+                        backingfile,
+                        backingpath = "backingfiles") {
+  backingpath <- path.expand(backingpath)
   checkExists(backingfile, backingpath)
 
   # check extension of file
@@ -60,27 +59,24 @@ BedToBig <- function(bedfile,
 
   # read map and family files
   fam <- data.table::fread(famfile, data.table = FALSE)
-  names(fam) <- c("family.ID", "sample.ID", "paternal.ID",
-                  "maternal.ID", "sex", "affection")
+  names(fam) <- NAMES.FAM
   bim <- data.table::fread(bimfile, data.table = FALSE)
-  names(bim) <- c("chromosome", "marker.ID", "genetic.dist",
-                  "physical.pos", "allele1", "allele2")
+  names(bim) <- NAMES.MAP
 
   # prepare big.matrix
   n <- nrow(fam)
   m <- nrow(bim)
-  bigGeno <- bigmemory::big.matrix(n, m, type = "char",
-                                   backingfile = paste0(backingfile, ".bk"),
-                                   backingpath = backingpath,
-                                   descriptorfile = paste0(backingfile, ".desc"))
+  bigGeno <- big.matrix(n, m, type = "char",
+                        backingfile = paste0(backingfile, ".bk"),
+                        backingpath = backingpath,
+                        descriptorfile = paste0(backingfile, ".desc"))
 
 
   ## open bed file and check its magic number
   bed <- file(bedfile, open = "rb")
   magic <- readBin(bed, "raw", 3)
-  if (!all(magic == c("6c", "1b", "01"))) {
+  if (!all(magic == c("6c", "1b", "01")))
     stop("Wrong magic number for bed file; should be -- 0x6c 0x1b 0x01 --.")
-  }
 
   # match each possible code
   geno <- getCode()
@@ -119,10 +115,11 @@ BedToBig <- function(bedfile,
 ################################################################################
 
 #' @rdname readplink
-#' @param backingfile The path of one of the three (.bk, .desc or .rds)
+#' @param backingfile The path of one of the three (".bk", ".desc" or ".rds")
 #' backing files for the cache of the resulting object.
+#' @param readonly Is the \code{big.matrix} read only? Default is \code{TRUE}.
 #' @export
-AttachBigSNP <- function(backingfile, readonly = TRUE) {
+snp_attach <- function(backingfile, readonly = TRUE) {
   root <- tools::file_path_sans_ext(backingfile)
   snp.list <- readRDS(paste0(root, ".rds"))
 
@@ -132,21 +129,44 @@ AttachBigSNP <- function(backingfile, readonly = TRUE) {
   snp.list$backingfile <- basename(root)
   snp.list$backingpath <- normalizePath(dirname(root))
 
-  return(snp.list)
+  snp.list
 }
 
 ################################################################################
 
-#' Title
+#' Read|write PLINK files into|from a "bigSNP".
 #'
-#' @param x
-#' @param bedfile
+#' Functions to read|write bed/bim/fam files into|from a [bigSNP][bigSNP-class].
+#' \cr For more information on these formats, please visit
+#' \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
+#' For other formats, please use PLINK to convert them in bedfiles,
+#' which require minimal space to store and are faster to read.
 #'
-#' @return
+#' @param bedfile Path to file with extension ".bed" to read|create.
+#' When reading, you need the corresponding ".bim" and ".fam"
+#' in the same directory.
+#' @param backingfile The root name for the backing file(s) for the cache of
+#' the [bigSNP][bigSNP-class] object.
+#' @param backingpath The path to the directory containing the file backing cache.
+#' Default is `"backingfiles"`.
+#' @param readonly Is the \code{big.matrix} read only? Default is \code{TRUE}.
+#'
+#' @return A [bigSNP][bigSNP-class].\cr Reading PLINK files creates
+#' \code{<backingfile>}.bk, \code{<backingfile>}.desc and
+#' \code{<backingfile>}.rds in directory \code{<backingpath>}.\cr
+#' __You shouldn't read from PLINK files more than once.__
+#' Instead, use \code{AttachBigSNP}
+#' to load this object in another session from backing files.
+#'
+#' @note
+#' The implementation was originally inspired from the code of
+#' \href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
+#' I did many optimizations. Especially, online reading
+#' into a \code{big.matrix} makes it memory-efficient.
+#'
+#' @example examples/example.readplink.R
 #' @export
-#'
-#' @examples
-BigToBed <- function(x, bedfile) {
+snp_writeBed <- function(x, bedfile) {
   check_x(x)
 
   # check extension of file
@@ -189,26 +209,7 @@ snp_readExample <- function(backingfile = "test_doc",
 
   # Reading the bedfile and storing the data
   bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-  test <- BedToBig(bedfile, backingfile = backingfile,
-                   backingpath = backingpath)
-}
-
-################################################################################
-
-#' @rdname readplink
-#' @export
-snp_readHapMap3 <- function(backingfile = "test_HapMap3",
-                            backingpath = "backingfiles") {
-  # Creating directory for backing files
-  dir.create2(backingpath)
-
-  path <- file.path(backingpath, paste0(backingfile, ".bk"))
-  unlink2(path) # delete if exists
-
-  # Reading the bedfile and storing the data
-  bedfile <- system.file("extdata", "HapMap3.bed", package = "bigsnpr")
-  test <- BedToBig(bedfile, backingfile = backingfile,
-                   backingpath = backingpath)
+  BedToBig(bedfile, backingfile = backingfile, backingpath = backingpath)
 }
 
 ################################################################################

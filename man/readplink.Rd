@@ -2,49 +2,48 @@
 % Please edit documentation in R/readplink.R
 \name{readplink}
 \alias{readplink}
-\alias{BedToBig}
-\alias{AttachBigSNP}
+\alias{snp_readBed}
+\alias{snp_attach}
+\alias{snp_writeBed}
 \alias{snp_readExample}
-\alias{snp_readHapMap3}
-\title{Read PLINK files into a "bigSNP".}
+\title{Read|write PLINK files into|from a "bigSNP".}
 \usage{
-BedToBig(bedfile, block.size = 1000, backingfile,
+snp_readBed(bedfile, block.size = 1000, backingfile,
   backingpath = "backingfiles")
 
-AttachBigSNP(backingfile, readonly = TRUE)
+snp_attach(backingfile, readonly = TRUE)
+
+snp_writeBed(x, bedfile)
 
 snp_readExample(backingfile = "test_doc", backingpath = "backingfiles")
-
-snp_readHapMap3(backingfile = "test_HapMap3", backingpath = "backingfiles")
 }
 \arguments{
-\item{bedfile}{Path to file with extension .bed. You need the corresponding
-.bim and .fam in the same directory.}
+\item{bedfile}{Path to file with extension ".bed" to read|create.
+When reading, you need the corresponding ".bim" and ".fam"
+in the same directory.}
 
 \item{backingfile}{The root name for the backing file(s) for the cache of
-the resulting object.}
+the \link[=bigSNP-class]{bigSNP} object.}
 
 \item{backingpath}{The path to the directory containing the file backing cache.
-Default is "backingfiles". It needs to exist (use \link{dir.create}).}
+Default is \code{"backingfiles"}.}
 
 \item{readonly}{Is the \code{big.matrix} read only? Default is \code{TRUE}.}
 
-\item{backingfile}{The path of one of the three (.bk, .desc or .rds)
+\item{backingfile}{The path of one of the three (".bk", ".desc" or ".rds")
 backing files for the cache of the resulting object.}
 }
 \value{
-A \code{bigSNP}.\cr
-Reading PLINK files creates
-\code{backingfile}.bk, \code{backingfile}.desc and \code{backingfile}.rds
-in directory \code{backingpath}.\cr
-You shouldn't read from PLINK files more than once.
+A \link[=bigSNP-class]{bigSNP}.\cr Reading PLINK files creates
+\code{<backingfile>}.bk, \code{<backingfile>}.desc and
+\code{<backingfile>}.rds in directory \code{<backingpath>}.\cr
+\strong{You shouldn't read from PLINK files more than once.}
 Instead, use \code{AttachBigSNP}
 to load this object in another session from backing files.
 }
 \description{
-Functions to read bed/bim/fam files
-into a \code{bigSNP}.\cr
-For more information on these formats, please visit
+Functions to read|write bed/bim/fam files into|from a \link[=bigSNP-class]{bigSNP}.
+\cr For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
 For other formats, please use PLINK to convert them in bedfiles,
 which require minimal space to store and are faster to read.

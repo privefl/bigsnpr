@@ -7,19 +7,6 @@
 
 using namespace Rcpp;
 
-// mycount2
-ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
-RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
-    rcpp_result_gen = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
-    return rcpp_result_gen;
-END_RCPP
-}
 // prs1
 NumericVector prs1(SEXP pBigMat, const NumericVector& betas, const IntegerVector& indTest, const IntegerVector& indCol);
 RcppExport SEXP bigsnpr_prs1(SEXP pBigMatSEXP, SEXP betasSEXP, SEXP indTestSEXP, SEXP indColSEXP) {
@@ -31,6 +18,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type indTest(indTestSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type indCol(indColSEXP);
     rcpp_result_gen = Rcpp::wrap(prs1(pBigMat, betas, indTest, indCol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mycount2
+ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
+RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
+    rcpp_result_gen = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -73,30 +73,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // rawToBigPart
-void rawToBigPart(SEXP pBigMat, const RawVector& source, const IntegerMatrix& tab, int size, int colOffset, int n, int bsz);
-RcppExport SEXP bigsnpr_rawToBigPart(SEXP pBigMatSEXP, SEXP sourceSEXP, SEXP tabSEXP, SEXP sizeSEXP, SEXP colOffsetSEXP, SEXP nSEXP, SEXP bszSEXP) {
+void rawToBigPart(XPtr<BigMatrix> xpMat, const RawVector& source, const IntegerMatrix& tab, int size, int colOffset, int n, int bsz);
+RcppExport SEXP bigsnpr_rawToBigPart(SEXP xpMatSEXP, SEXP sourceSEXP, SEXP tabSEXP, SEXP sizeSEXP, SEXP colOffsetSEXP, SEXP nSEXP, SEXP bszSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
     Rcpp::traits::input_parameter< const RawVector& >::type source(sourceSEXP);
     Rcpp::traits::input_parameter< const IntegerMatrix& >::type tab(tabSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< int >::type colOffset(colOffsetSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< int >::type bsz(bszSEXP);
-    rawToBigPart(pBigMat, source, tab, size, colOffset, n, bsz);
+    rawToBigPart(xpMat, source, tab, size, colOffset, n, bsz);
     return R_NilValue;
 END_RCPP
 }
 // writebina
-void writebina(const char * filename, SEXP pBigMat, const RawVector& tab);
-RcppExport SEXP bigsnpr_writebina(SEXP filenameSEXP, SEXP pBigMatSEXP, SEXP tabSEXP) {
+void writebina(const char * filename, XPtr<BigMatrix> xpMat, const RawVector& tab);
+RcppExport SEXP bigsnpr_writebina(SEXP filenameSEXP, SEXP xpMatSEXP, SEXP tabSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char * >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
     Rcpp::traits::input_parameter< const RawVector& >::type tab(tabSEXP);
-    writebina(filename, pBigMat, tab);
+    writebina(filename, xpMat, tab);
     return R_NilValue;
 END_RCPP
 }

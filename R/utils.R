@@ -34,19 +34,17 @@ NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
 
 ################################################################################
 
-detect_MRO <- function() {
-  is.element("RevoUtilsMath", rownames(installed.packages()))
-}
-
-################################################################################
-
 checkExists <- function(backingfile, backingpath) {
   # check directory and future file
-  if (!dir.exists(backingpath))
-    stop(sprintf("Directory \"%s\" doesn't exist", backingpath))
-  if (file.exists(file.path(backingpath, paste0(backingfile, ".bk"))))
-    stop(sprintf("File \"%s.bk\" already exists in directory \"%s\"",
-                 backingfile, backingpath))
+  if (dir.exists(backingpath)) {
+    if (file.exists(file.path(backingpath, paste0(backingfile, ".bk"))))
+      stop(sprintf("File \"%s.bk\" already exists in directory \"%s\"",
+                   backingfile, backingpath))
+  } else {
+    if (dir.create(backingpath))
+      message(sprintf("Creating directory \"%s\" which didn't exist",
+                      backingpath))
+  }
 }
 
 ################################################################################
