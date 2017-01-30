@@ -2,7 +2,7 @@
 
 context("MODIF-SAVE")
 
-test <- snp_readExample("test-modif-save")
+test <- snp_attachExample("test-modif-save")
 
 ################################################################################
 

@@ -1,0 +1,51 @@
+
+@----------------------------------------------------------@
+|        PLINK!       |     v1.07      |   10/Aug/2009     |
+|----------------------------------------------------------|
+|  (C) 2009 Shaun Purcell, GNU General Public License, v2  |
+|----------------------------------------------------------|
+|  For documentation, citation & bug-report instructions:  |
+|        http://pngu.mgh.harvard.edu/purcell/plink/        |
+@----------------------------------------------------------@
+
+Skipping web check... [ --noweb ] 
+Writing this text to log file [ plink.log ]
+Analysis started: Sat Dec 10 21:56:34 2016
+
+Options in effect:
+	--bfile /home/privef/Bureau/bigsnpr/inst/extdata/example
+	--indep-pairwise 50 1 0.05
+	--noweb
+
+Reading map (extended format) from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.bim ] 
+4542 markers to be included from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.bim ]
+Reading pedigree information from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.fam ] 
+517 individuals read from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.fam ] 
+0 individuals with nonmissing phenotypes
+Assuming a disease phenotype (1=unaff, 2=aff, 0=miss)
+Missing phenotype value is also -9
+0 cases, 0 controls and 517 missing
+0 males, 0 females, and 517 of unspecified sex
+Warning, found 517 individuals with ambiguous sex codes
+These individuals will be set to missing ( or use --allow-no-sex )
+Writing list of these individuals to [ plink.nosex ]
+Reading genotype bitfile from [ /home/privef/Bureau/bigsnpr/inst/extdata/example.bed ] 
+Detected that binary PED file is v1.00 SNP-major mode
+Before frequency and genotyping pruning, there are 4542 SNPs
+517 founders and 0 non-founders found
+Total genotyping rate in remaining individuals is 1
+0 SNPs failed missingness test ( GENO > 1 )
+0 SNPs failed frequency test ( MAF < 0 )
+After frequency and genotyping pruning, there are 4542 SNPs
+After filtering, 0 cases, 0 controls and 517 missing
+After filtering, 0 males, 0 females, and 517 of unspecified sex
+Performing LD-based pruning...
+Writing pruned-in SNPs to [ plink.prune.in ]
+Writing pruned-out SNPs to [ plink.prune.out ]
+Scanning from chromosome 1 to 1
+
+Scan region on chromosome 1 from [ SNP0 ] to [ SNP4541 ]
+For chromosome 1, 159 SNPs pruned out, 4383 remaining
+
+Analysis finished: Sat Dec 10 21:57:37 2016
+

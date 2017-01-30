@@ -2,31 +2,24 @@
 % Please edit documentation in R/binom-scaling.R
 \name{snp_scaleBinom}
 \alias{snp_scaleBinom}
-\title{Binomial(2, p) scaling}
+\title{Binomial(n, p) scaling}
 \usage{
-snp_scaleBinom(X, ind.train = seq(nrow(X)), ind.col = seq(ncol(X)))
+snp_scaleBinom(n = 2)
 }
 \arguments{
-\item{X}{A \link[bigmemory:big.matrix-class]{big.matrix}.
-You shouldn't have missing values in your data.}
-
-\item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all rows are used.}
-
-\item{ind.col}{An optional vector of the column indices that are used.
-If not specified, all columns are used.}
+\item{n}{Number of trials, parameter of the binomial distribution.
+Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 }
 \value{
-A named list of two vectors \strong{\code{mean}} and \strong{\code{sd}}
-which are as long as the length of \strong{\code{ind.col}}.
+A new \strong{function} that returns a data.frame of two vectors
+"mean" and "sd" which are of the length of \strong{\code{ind.col}}.
 }
 \description{
-Binomial(2, p) scaling
+Binomial(n, p) scaling where \code{n} is fixed and \code{p} is estimated.
 }
 \details{
 You will probably not use this function as is
-but as the \strong{\code{fun.scaling}} parameter of other functions
-of package \strong{\code{bigstatsr}}.
+but as the \code{fun.scaling} parameter of other functions of package \code{bigstatsr}.
 }
 \examples{
 set.seed(1)
@@ -35,7 +28,7 @@ a <- matrix(0, 43, 17)
 p <- 0.2
 a[] <- rbinom(length(a), 2, p)
 X <- as.big.matrix(a, type = "char", shared = FALSE)
-X.svd <- bigstatsr::big_SVD(X, fun.scaling = snp_scaleBinom)
+X.svd <- bigstatsr::big_SVD(X, fun.scaling = snp_scaleBinom())
 str(X.svd)
 plot(X.svd$means)
 abline(h = 2 * p, col = "red")

@@ -290,16 +290,9 @@ snps &lt;- scan(prune.infile, what = &quot;character&quot;)</code></pre>
 <!-- rnb-output-begin eyJkYXRhIjoiUmVhZCA0MzgzIGl0ZW1zXG4ifQ== -->
 <pre><code>Read 4383 items</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc25wcy5pbmQgPC0gbWF0Y2goc25wcywgdGVzdCRtYXAkbWFya2VyLklEKVxucHJpbnQodGltZSlcbmBgYCJ9 -->
-<pre class="r"><code>snps.ind &lt;- match(snps, test$map$marker.ID)
-print(time)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc25wcy5pbmQgPC0gbWF0Y2goc25wcywgdGVzdCRtYXAkbWFya2VyLklEKVxuYGBgIn0= -->
+<pre class="r"><code>snps.ind &lt;- match(snps, test$map$marker.ID)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiZnVuY3Rpb24gKHgsIC4uLikgXG5Vc2VNZXRob2QoXCJ0aW1lXCIpXG48Ynl0ZWNvZGU6IDB4NDU5YzAxMD5cbjxlbnZpcm9ubWVudDogbmFtZXNwYWNlOnN0YXRzPlxuIn0= -->
-<pre><code>function (x, ...) 
-UseMethod(&quot;time&quot;)
-&lt;bytecode: 0x459c010&gt;
-&lt;environment: namespace:stats&gt;</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -309,9 +302,9 @@ UseMethod(&quot;time&quot;)
   snps.ind2 &lt;- snp_pruning(test, size = size, thr.corr = r2.thr)
 ))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoidXRpbGlzYXRldXIgICAgIHN5c3TDqG1lICAgICAgw6ljb3Vsw6kgXG4gICAgICAwLjE5OCAgICAgICAwLjAwMCAgICAgICAwLjE5OCBcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoidXRpbGlzYXRldXIgICAgIHN5c3TDqG1lICAgICAgw6ljb3Vsw6kgXG4gICAgICAwLjIxNiAgICAgICAwLjAwOCAgICAgICAwLjIyMyBcbiJ9 -->
 <pre><code>utilisateur     système      écoulé 
-      0.198       0.000       0.198 </code></pre>
+      0.216       0.008       0.223 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->

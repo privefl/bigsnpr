@@ -2,13 +2,27 @@
 % Please edit documentation in R/binom-scaling.R
 \name{snp_MAF}
 \alias{snp_MAF}
-\title{Title}
+\title{MAF}
 \usage{
-snp_MAF(X, ind.train = seq(nrow(X)), ind.col = seq(ncol(X)))
+snp_MAF(X, ind.train = seq(nrow(X)), ind.col = seq(ncol(X)), n = 2)
 }
 \arguments{
-\item{ind.col}{}
+\item{X}{The slot "genotypes" of a "bigSNP",
+a \link[bigmemory:big.matrix-class]{big.matrix}.
+You shouldn't have missing values in your data.}
+
+\item{ind.train}{An optional vector of the row (individuals) indices that
+are used, for the training part. If not specified, all rows are used.}
+
+\item{ind.col}{An optional vector of the column (SNP) indices that are used.
+If not specified, all columns are used.}
+
+\item{n}{Number of trials, parameter of the binomial distribution.
+Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
+}
+\value{
+A vector of MAFs.
 }
 \description{
-Title
+Minor Allele Frequency.
 }
