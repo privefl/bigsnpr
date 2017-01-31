@@ -9,7 +9,7 @@
 snp_aucSample(pred, target, nsim = 1e+07, seed = NA, digits = 3)
 
 snp_aucSampleConf(pred, target, nboot = 10000, nsim = 10000, seed = NA,
-  digits = 3)
+  digits = 4)
 }
 \arguments{
 \item{pred}{Vector of predictions.}

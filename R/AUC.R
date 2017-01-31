@@ -70,7 +70,7 @@ snp_aucSample <- function(pred, target, nsim = 1e7, seed = NA, digits = 3) {
 #' @rdname auc
 #' @export
 snp_aucSampleConf <- function(pred, target, nboot = 1e4, nsim = 1e4,
-                              seed = NA, digits = 3) {
+                              seed = NA, digits = 4) {
   stopifnot(length(pred) == length(target))
 
   y <- transform_levels(target)

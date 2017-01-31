@@ -7,20 +7,6 @@
 
 using namespace Rcpp;
 
-// prs1
-NumericVector prs1(SEXP pBigMat, const NumericVector& betas, const IntegerVector& indTest, const IntegerVector& indCol);
-RcppExport SEXP bigsnpr_prs1(SEXP pBigMatSEXP, SEXP betasSEXP, SEXP indTestSEXP, SEXP indColSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type betas(betasSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indTest(indTestSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indCol(indColSEXP);
-    rcpp_result_gen = Rcpp::wrap(prs1(pBigMat, betas, indTest, indCol));
-    return rcpp_result_gen;
-END_RCPP
-}
 // mycount2
 ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
 RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
