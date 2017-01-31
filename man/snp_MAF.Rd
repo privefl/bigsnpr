@@ -21,7 +21,7 @@ If not specified, all columns are used.}
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 }
 \value{
-A vector of MAFs.
+A vector of MAFs, correspond to \code{ind.col}.
 }
 \description{
 Minor Allele Frequency.
