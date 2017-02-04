@@ -34,21 +34,6 @@ NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
 
 ################################################################################
 
-checkExists <- function(backingfile, backingpath) {
-  # check directory and future file
-  if (dir.exists(backingpath)) {
-    if (file.exists(file.path(backingpath, paste0(backingfile, ".bk"))))
-      stop(sprintf("File \"%s.bk\" already exists in directory \"%s\"",
-                   backingfile, backingpath))
-  } else {
-    if (dir.create(backingpath))
-      message(sprintf("Creating directory \"%s\" which didn't exist",
-                      backingpath))
-  }
-}
-
-################################################################################
-
 check_x <- function(x) {
   if (class(x) != "bigSNP") stop("x must be a bigSNP.")
   if (class(x$genotypes) != "big.matrix")

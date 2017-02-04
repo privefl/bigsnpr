@@ -35,7 +35,21 @@ snp_readBed <- function(bedfile,
                         backingfile,
                         backingpath = "backingfiles") {
   backingpath <- path.expand(backingpath)
-  checkExists(backingfile, backingpath)
+  rootPath <- file.path(backingpath, backingfile)
+
+  # check if file and path exist
+  if (dir.exists(backingpath)) {
+    if (file.exists(bkfile <- paste0(rootPath, ".bk"))) {
+      message(sprintf("File \"%s.bk\" already exists in directory \"%s\"",
+                      backingfile, backingpath))
+      message("Aborting and returning its path..")
+      return(bkfile)
+    }
+  } else {
+    if (dir.create(backingpath))
+      message(sprintf("Creating directory \"%s\" which didn't exist",
+                      backingpath))
+  }
 
   # check extension of file
   ext <- tools::file_ext(bedfile)
@@ -105,7 +119,6 @@ snp_readBed <- function(bedfile,
                    backingpath = normalizePath(backingpath))
   class(snp_list) <- "bigSNP"
 
-  rootPath <- file.path(backingpath, backingfile)
   saveRDS(snp_list, paste0(rootPath, ".rds"))
 
   paste0(rootPath, ".bk")
