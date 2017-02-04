@@ -15,7 +15,7 @@ snp_impute(x, perc.train = 0.7, nrounds = 20, max_depth = 3,
 (the rest is used to assess the error of imputation by SNP).}
 
 \item{nrounds}{The number of iterations (trees) in
-\link[xgboost:xgboost]{xgboost}? Default is \code{20}.}
+\link[xgboost:xgboost]{xgboost}. Default is \code{20}.}
 
 \item{max_depth}{maximum depth of a tree. Default is \code{3}.}
 
@@ -44,7 +44,8 @@ Imputation via local XGBoost models.
 This implementation aims at imputing with good accuracy while being fast.
 For instance, \code{nrounds} and \code{max_depth} are voluntarily chosen low.
 One could use for example \code{nrounds = 50} and \code{max_depth = 5} to improve
-accuracy a bit, at the expense of computation time.<br>
+accuracy a bit, at the expense of computation time.
+\cr
 Moreover, \code{breaks} and \code{sizes} are used to dynamically choose the number
 of predictors to use more complex models when there are more missing values.
 To use only complex models, one could use \code{breaks = 0} and \code{sizes = 100},
