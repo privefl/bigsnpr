@@ -44,6 +44,8 @@ snp_impute <- function(x, perc.train = 0.7, nrounds = 20, max_depth = 3,
   n.train <- round(n * perc.train)
   params <- list(max_depth = max_depth)
 
+  estimError <- (perc.train < 1)
+
   # get descriptors
   X.desc <- describe(X)
 
@@ -75,11 +77,12 @@ snp_impute <- function(x, perc.train = 0.7, nrounds = 20, max_depth = 3,
 
     m.part <- ncol(X.part)
     nbNA <- integer(m.part)
-    error <- numeric(m.part)
+    error <- rep(NA_real_, m.part)
     # many different `ind.train` and `ind.val`
     n.rep <- 2 * max(sizes)
     ind.train.rep <- replicate(n.rep, sort(sample(n, n.train)))
-    ind.val.rep <- apply(ind.train.rep, 2, function(ind) setdiff(seq(n), ind))
+    if (estimError) ind.val.rep <-
+      apply(ind.train.rep, 2, function(ind) setdiff(seq(n), ind))
 
     # useful functions
     interval <- function(i, size) {
@@ -99,7 +102,7 @@ snp_impute <- function(x, perc.train = 0.7, nrounds = 20, max_depth = 3,
       if (l > 0) {
         j <- i %% n.rep + 1
         ind <- setdiff(ind.train.rep[, j], indNA)
-        ind.val <- ind.val.rep[, j]
+        if (estimError) ind.val <- ind.val.rep[, j]
 
         s <- sizes[max(which(l > breaks))]
         X.data <- X.part[, interval(i, s), drop = FALSE] * 1
@@ -111,8 +114,10 @@ snp_impute <- function(x, perc.train = 0.7, nrounds = 20, max_depth = 3,
 
         pred <- predict(bst, X.data[indNA, , drop = FALSE])
         X2.part[indNA, i] <- round2(pred)
-        pred2 <- predict(bst, X.data[ind.val, , drop = FALSE])
-        error[i] <- mean(round2(pred2) != X.label[ind.val], na.rm = TRUE)
+        if (estimError) {
+          pred2 <- predict(bst, X.data[ind.val, , drop = FALSE])
+          error[i] <- mean(round2(pred2) != X.label[ind.val], na.rm = TRUE)
+        }
       }
     }
 
