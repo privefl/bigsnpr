@@ -56,6 +56,8 @@ snp_impute <- function(x, perc.train = 0.7, nrounds = 20, max_depth = 3,
                  descriptorfile = paste0(newfile, ".desc"))
   X2.desc <- describe(X2)
 
+  on.exit(unlink("xgboost.model"), add = TRUE)
+
   range.chr <- LimsChr(x)
 
   # function that imputes one chromosome
