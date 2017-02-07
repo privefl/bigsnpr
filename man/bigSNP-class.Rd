@@ -3,22 +3,25 @@
 \name{bigSNP-class}
 \alias{bigSNP-class}
 \alias{bigSNP}
-\title{A class for analysis of massive SNP arrays.}
+\title{S3 class bigSNP}
 \description{
-A named list with at least 5 slots:\describe{
-\item{genotypes}{A filebacked \code{big.matrix}
-of type \code{char} representing genotypes.\cr
-Each element is either 0, 1, 2 or \code{NA}.
+A class for representing infos on massive SNP arrays.
+}
+\details{
+A named list with at least 5 slots: \describe{
+\item{genotypes}{A filebacked \link[=big.matrix-class]{big.matrix}
+of type \code{char} (one byte signed integer), representing genotypes
+(read from a ".bed" file). Each element is either \code{0}, \code{1}, \code{2} or \code{NA}.
 Rows are individuals and columns are SNPs.}
-\item{fam}{A \code{data.frame} giving some information on the SNPs.}
-\item{map}{A \code{data.frame} giving some information on the individuals.}
-\item{backingfile}{The root name for the backing file(s) for the cache of
-the object.}
-\item{backingpath}{The path to the directory
-containing the file backing cache.}
+\item{fam}{A \code{data.frame} containing some information on the SNPs
+(read from a ".fam" file).}
+\item{map}{A \code{data.frame} giving some information on the individuals
+(read from a ".bim" file).}
+\item{backingfile}{The root name for the backing files of the object.}
+\item{backingpath}{The path to the directory containing the backing files.}
 }
 }
 \seealso{
-\code{\link[bigmemory]{big.matrix-class}} \code{\link{readplink}}
+\link{snp_readBed}
 }
 \keyword{class}
