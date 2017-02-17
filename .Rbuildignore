@@ -11,6 +11,7 @@
 ^tmp-save$
 ^tmp-protocols$
 ^tmp-files$
+^tmp-results$
 ^vignettes$
 ^docs$
 ^data-raw$

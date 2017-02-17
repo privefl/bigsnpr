@@ -20,6 +20,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// doubleBM
+void doubleBM(XPtr<BigMatrix> xpMat, XPtr<BigMatrix> xpMat2);
+RcppExport SEXP bigsnpr_doubleBM(SEXP xpMatSEXP, SEXP xpMat2SEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
+    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat2(xpMat2SEXP);
+    doubleBM(xpMat, xpMat2);
+    return R_NilValue;
+END_RCPP
+}
 // clumping
 LogicalVector clumping(XPtr<BigMatrix> xpMat, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
 RcppExport SEXP bigsnpr_clumping(SEXP xpMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {

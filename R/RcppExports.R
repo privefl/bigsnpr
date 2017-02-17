@@ -5,6 +5,10 @@ mycount2 <- function(pBigMat, indCase, indControl) {
     .Call('bigsnpr_mycount2', PACKAGE = 'bigsnpr', pBigMat, indCase, indControl)
 }
 
+doubleBM <- function(xpMat, xpMat2) {
+    invisible(.Call('bigsnpr_doubleBM', PACKAGE = 'bigsnpr', xpMat, xpMat2))
+}
+
 clumping <- function(xpMat, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
     .Call('bigsnpr_clumping', PACKAGE = 'bigsnpr', xpMat, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
 }
