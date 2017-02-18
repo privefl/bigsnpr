@@ -12,7 +12,7 @@ using namespace Rcpp;
 //
 
 // [[Rcpp::export]]
-NumericVector timesTwo(IntegerVector x) {
+NumericVector timesTwo(NumericVector x) {
   return ceil(x / 4);
 }
 

@@ -46,7 +46,7 @@ void writebina(const char * filename,
 
   int n = macc.nrow();
   int m = macc.ncol();
-  int length = ceil(n / 4);
+  int length = ceil((double)n / 4); // DO NOT USE INTEGERS WITH CEIL
 
   char buffer[max(3, length)];
   ofstream myFile(filename, ios::out | ios::binary);
