@@ -11,6 +11,8 @@ NULL
 
 ################################################################################
 
+#' Copy (subset) of a "bigSNP"
+#'
 #' @description `sub.bigSNP`: a function
 #' to get a subset of an object of class `bigSNP`.
 #' @param ind.row Indices of the rows (individuals) to keep.
@@ -39,9 +41,15 @@ sub.bigSNP <- function(x, ind.row = seq(nrow(x$genotypes)),
                    backingpath = x$backingpath,
                    descriptorfile = paste0(newfile, ".desc"))
 
+    # http://stackoverflow.com/q/19565621/6103040
+    newfam <- x$fam[ind.row, ]
+    rownames(newfam) <- seq_len(nrow(newfam))
+    newmap <- x$map[ind.col, ]
+    rownames(newmap) <- seq_len(nrow(newmap))
+
     snp_list <- list(genotypes = X2,
-                     fam = x$fam[ind.row, ],
-                     map = x$map[ind.col, ],
+                     fam = newfam,
+                     map = newmap,
                      backingfile = newfile,
                      backingpath = x$backingpath)
     class(snp_list) <- "bigSNP"
