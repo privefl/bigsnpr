@@ -68,11 +68,12 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
   int m = macc.ncol();
   double xySum, num, r2;
 
-  int j0, j, i;
+  int j0, j, i, j_max;
 
-  for (j0 = 1; j0 < size; j0++) {
+  for (j0 = 0; j0 < m; j0++) {
     if (keep[j0]) { // if already excluded, goto next
-      for (j = 0; j < j0; j++) {
+      j_max = min(j0 + size, m);
+      for (j = j0 + 1; j < j_max; j++) {
         if (keep[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
@@ -93,44 +94,21 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
     }
   }
 
-  for (j0 = size; j0 < m; j0++) {
-    if (keep[j0]) { // if already excluded, goto next
-      for (j = j0 - size + 1; j < j0; j++) {
-        if (keep[j]) { // if already excluded, goto next
-          xySum = 0;
-          for (i = 0; i < n; i++) {
-            xySum += macc(i, j) * macc(i, j0);
-          }
-          num = xySum - sumX[j] * sumX[j0] / nd;
-          r2 = num * num / (denoX[j] * denoX[j0]);
-          if (r2 > thr) { // prune one of them
-            if (mafX[j] < mafX[j0]) { // prune the one with smaller maf
-              keep[j] = false;
-            } else {
-              keep[j0] = false;
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return(keep);
+  return keep;
 }
 
 // Pruning within a distance in kb
 // [[Rcpp::export]]
 LogicalVector& pruning2(XPtr<BigMatrix> xpMat,
-                       const IntegerVector& rowInd,
-                       const IntegerVector& colInd,
-                       LogicalVector& keep,
-                       const IntegerVector& pos,
-                       const NumericVector& mafX,
-                       const NumericVector& sumX,
-                       const NumericVector& denoX,
-                       int size,
-                       double thr) {
+                        const IntegerVector& rowInd,
+                        const IntegerVector& colInd,
+                        LogicalVector& keep,
+                        const IntegerVector& pos,
+                        const NumericVector& mafX,
+                        const NumericVector& sumX,
+                        const NumericVector& denoX,
+                        int size,
+                        double thr) {
   // Assert that keep[j] == TRUE
   SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
 
