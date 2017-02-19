@@ -15,7 +15,7 @@ Imports: Rcpp, data.table, bigstatsr, xgboost,
          foreach, parallel, doParallel
 Depends: R (>= 3.2.3), bigmemory
 Remotes: privefl/bigmemory, privefl/bigstatsr
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 Suggests: testthat, covr, gaston
 URL: https://privefl.github.io/bigsnpr
