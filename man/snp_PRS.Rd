@@ -33,9 +33,9 @@ you should probably use \code{abs(S)} instead.}
 \item for clumping: \strong{Radius} of the window's size for the LD evaluations.
 Default is \code{1000} (I use this for a chip of 500K SNPs).
 \item for pruning: \strong{Diameter} of the window's size for the LD evaluations.
-Default is \code{50} (as in PLINK).
+Default is \code{50} (as in PLINK 1.07).
 }}
-  \item{thr.corr}{Threshold on the correlation between two SNPs.
+  \item{thr.r2}{Threshold over the squared correlation between two SNPs.
 Default is \code{0.5}.}
   \item{ind.train}{An optional vector of the row indices that are used,
 for the training part. If not specified, all rows are used.}

@@ -69,6 +69,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pruning2
+LogicalVector& pruning2(XPtr<BigMatrix> xpMat, const IntegerVector& rowInd, const IntegerVector& colInd, LogicalVector& keep, const IntegerVector& pos, const NumericVector& mafX, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
+RcppExport SEXP bigsnpr_pruning2(SEXP xpMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP keepSEXP, SEXP posSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< LogicalVector& >::type keep(keepSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type pos(posSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type mafX(mafXSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
+    rcpp_result_gen = Rcpp::wrap(pruning2(xpMat, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rawToBigPart
 void rawToBigPart(XPtr<BigMatrix> xpMat, const RawVector& source, const IntegerMatrix& tab, int size, int colOffset, int n, int bsz);
 RcppExport SEXP bigsnpr_rawToBigPart(SEXP xpMatSEXP, SEXP sourceSEXP, SEXP tabSEXP, SEXP sizeSEXP, SEXP colOffsetSEXP, SEXP nSEXP, SEXP bszSEXP) {

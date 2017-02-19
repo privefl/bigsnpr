@@ -49,6 +49,7 @@ LogicalVector clumping(XPtr<BigMatrix> xpMat,
 
 /******************************************************************************/
 
+// Pruning within a distance in number of SNPs
 // [[Rcpp::export]]
 LogicalVector& pruning(XPtr<BigMatrix> xpMat,
                        const IntegerVector& rowInd,
@@ -116,6 +117,56 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
   }
 
   return(keep);
+}
+
+// Pruning within a distance in kb
+// [[Rcpp::export]]
+LogicalVector& pruning2(XPtr<BigMatrix> xpMat,
+                       const IntegerVector& rowInd,
+                       const IntegerVector& colInd,
+                       LogicalVector& keep,
+                       const IntegerVector& pos,
+                       const NumericVector& mafX,
+                       const NumericVector& sumX,
+                       const NumericVector& denoX,
+                       int size,
+                       double thr) {
+  // Assert that keep[j] == TRUE
+  SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
+
+  int n = macc.nrow();
+  double nd = (double)n;
+  int m = macc.ncol();
+  double xySum, num, r2;
+  int pos_max;
+
+  int j0, j, i;
+
+  for (j0 = 0; j0 < m; j0++) {
+    if (keep[j0]) { // if already excluded, goto next
+      pos_max = pos[j0] + size;
+      for (j = j0 + 1; pos[j] <= pos_max; j++) { // pos[m] == 0 -> break
+        if (keep[j]) { // if already excluded, goto next
+          xySum = 0;
+          for (i = 0; i < n; i++) {
+            xySum += macc(i, j) * macc(i, j0);
+          }
+          num = xySum - sumX[j] * sumX[j0] / nd;
+          r2 = num * num / (denoX[j] * denoX[j0]);
+          if (r2 > thr) { // prune one of them
+            if (mafX[j0] < mafX[j]) { // prune the one with smaller maf
+              keep[j0] = false;
+              break;
+            } else {
+              keep[j] = false;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return keep;
 }
 
 /******************************************************************************/

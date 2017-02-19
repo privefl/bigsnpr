@@ -7,11 +7,11 @@
 \alias{snp_indLRLDR}
 \title{LD pruning and clumping}
 \usage{
-snp_clumping(x, S, ind.train = seq(nrow(X)), size = 1000, thr.corr = 0.5,
+snp_clumping(x, S, ind.train = seq(nrow(X)), size = 1000, thr.r2 = 0.5,
   exclude = NULL, ncores = 1)
 
-snp_pruning(x, ind.train = seq(nrow(X)), size = 50, thr.corr = 0.5,
-  exclude = NULL, ncores = 1)
+snp_pruning(x, ind.train = seq(nrow(X)), size = 50, is.size.in.kb = FALSE,
+  thr.r2 = 0.5, exclude = NULL, ncores = 1)
 
 snp_indLRLDR(x, LD.regions = LD.wiki34)
 }
@@ -32,10 +32,10 @@ for the training part. If not specified, all rows are used.}
 \item for clumping: \strong{Radius} of the window's size for the LD evaluations.
 Default is \code{1000} (I use this for a chip of 500K SNPs).
 \item for pruning: \strong{Diameter} of the window's size for the LD evaluations.
-Default is \code{50} (as in PLINK).
+Default is \code{50} (as in PLINK 1.07).
 }}
 
-\item{thr.corr}{Threshold on the correlation between two SNPs.
+\item{thr.r2}{Threshold over the squared correlation between two SNPs.
 Default is \code{0.5}.}
 
 \item{exclude}{Vector of indices of SNPs to exclude anyway. For example,
@@ -58,8 +58,8 @@ Default use the table of 34 long-range LD regions that you can find
 \description{
 For a \code{bigSNP}:
 \itemize{
-\item \code{snp_pruning}: LD pruning. Similar to "\code{--indep-pairwise size 1 thr.corr}"
-in \href{http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune}{PLINK}
+\item \code{snp_pruning}: LD pruning. Similar to "\code{--indep-pairwise size 1 thr.r2}" in
+\href{http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune}{PLINK 1.07}
 (\code{step} is fixed to 1).
 \item \code{snp_clumping}: LD clumping.
 \item \code{snp_indLRLDR}: Get SNP indices of long-range LD regions.

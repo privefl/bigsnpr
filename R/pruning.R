@@ -3,9 +3,9 @@
 #' LD pruning and clumping
 #'
 #' For a `bigSNP`:
-#' - `snp_pruning`: LD pruning. Similar to "`--indep-pairwise size 1 thr.corr`"
-#' in [PLINK](http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune)
-#' (`step` is fixed to 1).
+#' - `snp_pruning`: LD pruning. Similar to "`--indep-pairwise size 1 thr.r2`" in
+#'   [PLINK 1.07](http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune)
+#'   (`step` is fixed to 1).
 #' - `snp_clumping`: LD clumping.
 #' - `snp_indLRLDR`: Get SNP indices of long-range LD regions.
 #'
@@ -22,9 +22,9 @@
 #' - for clumping: __Radius__ of the window's size for the LD evaluations.
 #' Default is `1000` (I use this for a chip of 500K SNPs).
 #' - for pruning: __Diameter__ of the window's size for the LD evaluations.
-#' Default is `50` (as in PLINK).
+#' Default is `50` (as in PLINK 1.07).
 #'
-#' @param thr.corr Threshold on the correlation between two SNPs.
+#' @param thr.r2 Threshold over the squared correlation between two SNPs.
 #' Default is `0.5`.
 #'
 #' @param exclude Vector of indices of SNPs to exclude anyway. For example,
@@ -56,7 +56,7 @@ NULL
 snp_clumping <- function(x, S,
                          ind.train = seq(nrow(X)),
                          size = 1000,
-                         thr.corr = 0.5,
+                         thr.r2 = 0.5,
                          exclude = NULL,
                          ncores = 1) {
   check_x(x)
@@ -99,7 +99,7 @@ snp_clumping <- function(x, S,
                      sumX = stats$sum,
                      denoX = denoX,
                      size = size,
-                     thr = thr.corr)
+                     thr = thr.r2)
 
     ind.chr[keep]
   }
@@ -115,7 +115,8 @@ snp_clumping <- function(x, S,
 snp_pruning <- function(x,
                         ind.train = seq(nrow(X)),
                         size = 50,
-                        thr.corr = 0.5,
+                        is.size.in.kb = FALSE,
+                        thr.r2 = 0.5,
                         exclude = NULL,
                         ncores = 1) {
   check_x(x)
@@ -126,12 +127,14 @@ snp_pruning <- function(x,
 
   # get ranges of chromosomes
   range.chr <- LimsChr(x)
+  pos <- x$map$physical.pos
 
   if (is.seq <- (ncores == 1)) {
     registerDoSEQ()
   } else {
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl), add = TRUE)
   }
   res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
     lims <- range.chr[ic, ]
@@ -148,23 +151,40 @@ snp_pruning <- function(x,
     p <- stats$sum / (2 * n)
     maf <- pmin(p, 1 - p)
     denoX <- (n - 1) * stats$var
+    nulls <- which(denoX == 0)
+    if (l <- length(nulls)) {
+      message(sprintf("Excluding %d monoallelic markers...", l))
+      keep[nulls] <- FALSE
+    }
+
 
     # main algo
-    keep <- pruning(X@address,
-                    rowInd = ind.train,
-                    colInd = ind.chr,
-                    keep = keep,
-                    mafX = maf,
-                    sumX = stats$sum,
-                    denoX = denoX,
-                    size = min(size, m.chr),
-                    thr = thr.corr)
+    if (is.size.in.kb) {
+      keep <- pruning2(X@address,
+                       rowInd = ind.train,
+                       colInd = ind.chr,
+                       keep = keep,
+                       pos = c(pos[ind.chr], .Machine$integer.max),
+                       mafX = maf,
+                       sumX = stats$sum,
+                       denoX = denoX,
+                       size = size * 1000, # in kb
+                       thr = thr.r2)
+    } else {
+      keep <- pruning(X@address,
+                      rowInd = ind.train,
+                      colInd = ind.chr,
+                      keep = keep,
+                      mafX = maf,
+                      sumX = stats$sum,
+                      denoX = denoX,
+                      size = min(size, m.chr),
+                      thr = thr.r2)
+    }
+
 
     ind.chr[keep]
   }
-  if (!is.seq) parallel::stopCluster(cl)
-
-  res
 }
 
 ################################################################################

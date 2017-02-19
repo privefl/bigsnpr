@@ -17,6 +17,10 @@ pruning <- function(xpMat, rowInd, colInd, keep, mafX, sumX, denoX, size, thr) {
     .Call('bigsnpr_pruning', PACKAGE = 'bigsnpr', xpMat, rowInd, colInd, keep, mafX, sumX, denoX, size, thr)
 }
 
+pruning2 <- function(xpMat, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr) {
+    .Call('bigsnpr_pruning2', PACKAGE = 'bigsnpr', xpMat, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
+}
+
 rawToBigPart <- function(xpMat, source, tab, size, colOffset, n, bsz) {
     invisible(.Call('bigsnpr_rawToBigPart', PACKAGE = 'bigsnpr', xpMat, source, tab, size, colOffset, n, bsz))
 }
