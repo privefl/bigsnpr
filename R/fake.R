@@ -1,14 +1,28 @@
 ################################################################################
 
-#' Title
+#' Fake a "bigSNP"
 #'
-#' @param n
-#' @param m
+#' @param n Number of individuals.
+#' @param m Number of SNPs.
 #'
-#' @return
+#' @return A new temporary `bigSNP` object representing `n` individuals and
+#' `m` SNPs. The genotype `big.matrix` is initialized with missing values.
 #' @export
+#' @keywords internal
 #'
 #' @examples
+#' N <- 5
+#' M <- 12
+#' test <- snp_fake(N, M)
+#' str(test)
+#'
+#' # The genotype `big.matrix` is initialized with missing values
+#' X <- test$genotypes
+#' all(is.na(X[,]))
+#'
+#' # Modify the genotype `big.matrix`
+#' X[] <- sample(c(0:2, NA), size = length(X), replace = TRUE)
+#' print(X[,])
 snp_fake <- function(n, m) {
   # backingfiles
   tmpfile <- tempfile()

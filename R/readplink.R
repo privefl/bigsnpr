@@ -162,7 +162,7 @@ snp_attach <- function(backingfile, readonly = TRUE) {
 #'
 #' @return The input `bedfile` path.
 #'
-#' @example
+#' @example examples/example-writeplink.R
 #' @export
 snp_writeBed <- function(x, bedfile) {
   check_x(x)
