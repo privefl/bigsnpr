@@ -4,7 +4,7 @@
  
 # bigsnpr
 
-R Package for the Predictive Analysis of Massive SNP Arrays
+bignspr is an R Package for the analysis of massive SNP arrays.
 
 ## This package is under heavy dev
 
