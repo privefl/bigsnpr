@@ -43,5 +43,18 @@ curve(5/x, col = "blue", add = TRUE)
 curve(10/x, col = "red", add = TRUE)
 
 
-# beagle time
+# beagle time -> took 5h20 min
 snp_writeBed(popres.chr1, "../../plink_linux_x86_64/popres_chr1_NA.bed")
+
+# convert vcf->bed
+# ./plink --vcf test.vcf.gz --out popres_impute
+popres.chr1.noNA.beagle <- snp_attach(snp_readBed(
+  "../../plink_linux_x86_64/popres_impute.bed", backingfile = "popres_impute_beagle"
+))
+
+popres.chr1.NA <- snp_attach("backingfiles/popres_sub2.bk")
+popres.chr1.noNA <- snp_attach("backingfiles/popres_sub1.bk")
+X2 <- popres.chr1.NA$genotypes
+indNA <- which(is.na(X2[,]))
+mean(popres.chr1.noNA$genotypes[indNA] !=
+       popres.chr1.noNA.beagle$genotypes[indNA]) # error: 2.91%
