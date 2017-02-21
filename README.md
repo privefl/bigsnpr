@@ -1,5 +1,3 @@
-<div style="text-align:center"><img src ="https://github.com/privefl/bigsnpr/raw/master/bigsnpr2.png"/></div>
-
 # bigsnpr
 
 [![Travis-CI Build Status](https://travis-ci.org/privefl/bigsnpr.svg?branch=master)](https://travis-ci.org/privefl/bigsnpr)
