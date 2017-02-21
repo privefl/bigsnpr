@@ -163,7 +163,7 @@ snps.ind &lt;-<span class="st"> </span><span class="kw">match</span>(snps, test$
   snps.ind2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pruning-clumping.html">snp_pruning</a></span>(test, <span class="dt">size =</span> size, <span class="dt">thr.r2 =</span> r2.thr)
 ))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.200   0.006   0.207</code></pre>
+##   0.217   0.028   0.245</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">all.equal</span>(snps.ind, snps.ind2))</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>So, I get the same results while being way faster.</p>
