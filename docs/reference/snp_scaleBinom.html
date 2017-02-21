@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Binomial(2, p) scaling — snp_scaleBinom • bigsnpr</title>
+<title>Binomial(n, p) scaling — snp_scaleBinom • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,38 +84,31 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Binomial(2, p) scaling</h1>
+    <h1>Binomial(n, p) scaling</h1>
     </div>
 
     
-    <p>Binomial(2, p) scaling</p>
+    <p>Binomial(n, p) scaling where <code>n</code> is fixed and <code>p</code> is estimated.</p>
     
 
-    <pre><span class='fu'>snp_scaleBinom</span>(<span class='no'>X</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>ncol</span>(<span class='no'>X</span>)))</pre>
+    <pre><span class='fu'>snp_scaleBinom</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>X</dt>
-      <dd>A <a href='http://www.rdocumentation.org/packages/bigmemory/topics/big.matrix-class'>big.matrix</a>.
-You shouldn&#39;t have missing values in your data.</dd>
-      <dt>ind.train</dt>
-      <dd>An optional vector of the row indices that are used,
-for the training part. If not specified, all rows are used.</dd>
-      <dt>ind.col</dt>
-      <dd>An optional vector of the column indices that are used.
-If not specified, all columns are used.</dd>
+      <dt>n</dt>
+      <dd>Number of trials, parameter of the binomial distribution.
+Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A named list of two vectors <strong><code>mean</code></strong> and <strong><code>sd</code></strong>
-which are as long as the length of <strong><code>ind.col</code></strong>.</p>
+    <p>A new <strong>function</strong> that returns a data.frame of two vectors
+&quot;mean&quot; and &quot;sd&quot; which are of the length of <strong><code>ind.col</code></strong>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>You will probably not use this function as is
-but as the <strong><code>fun.scaling</code></strong> parameter of other functions
-of package <strong><code>bigstatsr</code></strong>.</p>
+but as the <code>fun.scaling</code> parameter of other functions of package <code>bigstatsr</code>.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -133,7 +126,7 @@ PLoS Genet 2(12): e190.
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>0.2</span>
 <span class='no'>a</span>[] <span class='kw'>&lt;-</span> <span class='fu'>rbinom</span>(<span class='fu'>length</span>(<span class='no'>a</span>), <span class='fl'>2</span>, <span class='no'>p</span>)
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>as.big.matrix</span>(<span class='no'>a</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"char"</span>, <span class='kw'>shared</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Assignment will down cast from double to char</span>
-#&gt; <span class='warning'>Hint: To remove this warning type:  options(bigmemory.typecast.warning=FALSE)</span></div><div class='input'><span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='kw'>bigstatsr</span><span class='kw'>::</span><span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='no'>snp_scaleBinom</span>)</div><div class='output co'>#&gt; (1)</div><div class='input'><span class='fu'>str</span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
+#&gt; <span class='warning'>Hint: To remove this warning type:  options(bigmemory.typecast.warning=FALSE)</span></div><div class='input'><span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='kw'>bigstatsr</span><span class='kw'>::</span><span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'>snp_scaleBinom</span>())</div><div class='output co'>#&gt; (1)</div><div class='input'><span class='fu'>str</span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
 #&gt;  $ d    : num [1:17] 10.01 8.95 8.88 8.22 7.42 ...
 #&gt;  $ u    : num [1:43, 1:17] 0.0642 -0.141 -0.2824 -0.2299 0.1668 ...
 #&gt;  $ v    : num [1:17, 1:17] -0.0426 -0.0746 0.2551 -0.1335 -0.0438 ...

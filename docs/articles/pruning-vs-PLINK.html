@@ -72,7 +72,7 @@
     
 <div class="contents">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(bigsnpr)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readplink.html">snp_readExample</a></span>()
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attachExample.html">snp_attachExample</a></span>()
 <span class="kw">str</span>(test)</code></pre></div>
 <pre><code>## List of 5
 ##  $ genotypes  :Formal class 'big.matrix' [package "bigmemory"] with 1 slot
@@ -92,7 +92,7 @@
 ##   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
 ##   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
 ##  $ backingfile: chr "test_doc"
-##  $ backingpath: chr "/home/privef/Bureau/thesis/bigsnpr/docs/articles/backingfiles"
+##  $ backingpath: chr "/home/privef/Bureau/bigsnpr/docs/articles/backingfiles"
 ##  - attr(*, "class")= chr "bigSNP"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bedfile &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, <span class="dt">package =</span> <span class="st">"bigsnpr"</span>)
 path &lt;-<span class="st"> </span>tools::<span class="kw">file_path_sans_ext</span>(bedfile)
@@ -160,10 +160,10 @@ r2.thr &lt;-<span class="st"> </span><span class="fl">0.05</span></code></pre></
 snps &lt;-<span class="st"> </span><span class="kw">scan</span>(prune.infile, <span class="dt">what =</span> <span class="st">"character"</span>)
 snps.ind &lt;-<span class="st"> </span><span class="kw">match</span>(snps, test$map$marker.ID)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">system.time</span>(
-  snps.ind2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pruning-clumping.html">snp_pruning</a></span>(test, <span class="dt">size =</span> size, <span class="dt">thr.corr =</span> r2.thr)
+  snps.ind2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pruning-clumping.html">snp_pruning</a></span>(test, <span class="dt">size =</span> size, <span class="dt">thr.r2 =</span> r2.thr)
 ))</code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.158   0.025   0.179</code></pre>
+##   0.200   0.006   0.207</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">all.equal</span>(snps.ind, snps.ind2))</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>So, I get the same results while being way faster.</p>

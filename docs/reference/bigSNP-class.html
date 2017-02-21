@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A class for analysis of massive SNP arrays. — bigSNP-class • bigsnpr</title>
+<title>S3 class bigSNP — bigSNP-class • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,28 +84,32 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A class for analysis of massive SNP arrays.</h1>
+    <h1>S3 class bigSNP</h1>
     </div>
 
     
-    <p>A named list with at least 5 slots:<dl class='dl-horizontal'>
-<dt>genotypes</dt><dd>A filebacked <code>big.matrix</code>
-of type <code>char</code> representing genotypes.
-Each element is either 0, 1, 2 or <code>NA</code>.
-Rows are individuals and columns are SNPs.</dd>
-<dt>fam</dt><dd>A <code>data.frame</code> giving some information on the SNPs.</dd>
-<dt>map</dt><dd>A <code>data.frame</code> giving some information on the individuals.</dd>
-<dt>backingfile</dt><dd>The root name for the backing file(s) for the cache of
-the object.</dd>
-<dt>backingpath</dt><dd>The path to the directory
-containing the file backing cache.</dd>
-</dl></p>
+    <p>A class for representing infos on massive SNP arrays.</p>
     
 
         
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>A named list with at least 5 slots: <dl class='dl-horizontal'>
+<dt>genotypes</dt><dd>A filebacked big.matrix
+of type <code>char</code> (one byte signed integer), representing genotypes
+(read from a &quot;.bed&quot; file). Each element is either <code>0</code>, <code>1</code>, <code>2</code> or <code>NA</code>.
+Rows are individuals and columns are SNPs.</dd>
+<dt>fam</dt><dd>A <code>data.frame</code> containing some information on the SNPs
+(read from a &quot;.fam&quot; file).</dd>
+<dt>map</dt><dd>A <code>data.frame</code> giving some information on the individuals
+(read from a &quot;.bim&quot; file).</dd>
+<dt>backingfile</dt><dd>The root name for the backing files of the object.</dd>
+<dt>backingpath</dt><dd>The path to the directory containing the backing files.</dd>
+</dl></p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/bigmemory/topics/big.matrix-class'>big.matrix-class</a></code> <code><a href='readplink.html'>readplink</a></code></p>
+    <p><a href='snp_readBed.html'>snp_readBed</a></p>
     
 
   </div>
@@ -113,6 +117,8 @@ containing the file backing cache.</dd>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
+      <li><a href="#details">Details</a></li>
+
       <li><a href="#see-also">See also</a></li>
           </ul>
 

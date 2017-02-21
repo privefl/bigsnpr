@@ -93,18 +93,13 @@ to get a subset of an object of class <code>bigSNP</code>.</p>
 
     <p><code>QC</code>: Quality control (filters)
 for a <code>bigSNP</code> resulting in a <code>bigSNP</code> of lower dimension.</p>
-
-    <p><code>Impute</code>: Imputation function
-for a <code>bigSNP</code>.</p>
     
 
     <pre><span class='fu'>sub.bigSNP</span>(<span class='no'>x</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>x</span>$<span class='no'>genotypes</span>)),
   <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>ncol</span>(<span class='no'>x</span>$<span class='no'>genotypes</span>)), <span class='kw'>backed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shared</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>QC</span>(<span class='no'>x</span>, <span class='kw'>row.cr.min</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>col.cr.min</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>hwe.pval</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
-  <span class='kw'>maf.min</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rm.sex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='fu'>Impute</span>(<span class='no'>x</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>maf.min</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rm.sex</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -135,10 +130,6 @@ from Hardy–Weinberg equilibrium (HWE) from controls only. Default is <code>1e-
 Usually, <code>0.01</code> is used. Default only removes SNPs that have a zero MAF.</dd>
       <dt>rm.sex</dt>
       <dd>Keep only SNPs on the first 22 chrosmosomes? Default is <code>FALSE</code>.</dd>
-      <dt>ncores</dt>
-      <dd>Number of cores used. Default doesn&#39;t use parallelism.</dd>
-      <dt>verbose</dt>
-      <dd>Print progress? Default is <code>FALSE</code>.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

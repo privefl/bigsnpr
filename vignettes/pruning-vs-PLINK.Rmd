@@ -8,7 +8,7 @@ require(bigsnpr)
 ```
 
 ```{r}
-test <- snp_readExample()
+test <- snp_attachExample()
 str(test)
 ```
 
@@ -39,7 +39,7 @@ snps.ind <- match(snps, test$map$marker.ID)
 
 ```{r}
 print(system.time(
-  snps.ind2 <- snp_pruning(test, size = size, thr.corr = r2.thr)
+  snps.ind2 <- snp_pruning(test, size = size, thr.r2 = r2.thr)
 ))
 ```
 

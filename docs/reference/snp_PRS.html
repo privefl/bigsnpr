@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>K-fold cross-validation. — crossval.int • bigsnpr</title>
+<title>PRS — snp_PRS • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,35 +84,62 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>K-fold cross-validation.</h1>
+    <h1>PRS</h1>
     </div>
 
     
-    <p>Internal K-fold cross-validation of <code>fun.model</code> on <code>x</code>
-in order to tune hyper-parameters.</p>
+    <p>Polygenic Risk Scores with possible clumping and thresholding.</p>
     
 
-    <pre><span class='fu'>crossval.int</span>(<span class='no'>x</span>, <span class='no'>fun.model</span>, <span class='no'>ind.train</span>, <span class='no'>K</span>)</pre>
+    <pre><span class='fu'>snp_PRS</span>(<span class='no'>x</span>, <span class='no'>betas</span>, <span class='no'>ind.test</span>, <span class='kw'>lpS</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>x</dt>
       <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
-      <dt>fun.model</dt>
-      <dd>Function that is used to train and
-predict a particular model. Its first 3 parameters
-should be <code>x</code>, <code>ind.train</code> and <code>ind.test</code> and it should
-have a parameter <code>fun.model</code> with <code>NULL</code> as default value.</dd>
-      <dt>ind.train</dt>
-      <dd>Indices used as training set by the model.</dd>
-      <dt>K</dt>
-      <dd>Number of turns in the cross-validation.</dd>
+      <dt>betas</dt>
+      <dd>Numeric vector of weights associated with each SNP. You may
+want to see big_univRegLin or
+big_univRegLog.</dd>
+      <dt>ind.test</dt>
+      <dd>The individuals on whom to project the scores.</dd>
+      <dt>lpS</dt>
+      <dd>Numeric vector of <code>-log10(p.value)</code> associated with <code>betas</code>.
+Default doesn&#39;t use thresholding.</dd>
+      <dt>thr.list</dt>
+      <dd>Threshold vector on <code>lpS</code> at which SNPs are excluded if
+they are not significant enough. Default doesn&#39;t use thresholding.</dd>
+      <dt>...</dt>
+      <dd>Arguments passed on to <code>snp_clumping</code>
+<dl class='dl-horizontal'>
+  <dt>S</dt><dd>A vector of column statistics which express the importance
+of each SNP (the more important is the SNP, the greater should be
+the corresponding statistic).
+For example, if <code>S</code> follows the standard normal distribution,
+you should probably use <code>abs(S)</code> instead.</dd>
+  <dt>size</dt><dd>This parameter should be adjusted with respect to the number of SNPs.
+<ul>
+<li> for clumping: <strong>Radius</strong> of the window&#39;s size for the LD evaluations.
+Default is <code>1000</code> (I use this for a chip of 500K SNPs).
+</li>
+<li> for pruning: <strong>Diameter</strong> of the window&#39;s size for the LD evaluations.
+Default is <code>50</code> (as in PLINK 1.07).
+</li>
+</ul>
+</dd>
+  <dt>thr.r2</dt><dd>Threshold over the squared correlation between two SNPs.
+Default is <code>0.5</code>.</dd>
+  <dt>ind.train</dt><dd>An optional vector of the row indices that are used,
+for the training part. If not specified, all rows are used.</dd>
+  <dt>ncores</dt><dd>Number of cores used. Default doesn&#39;t use parallelism.</dd>
+</dl>
+</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The position of the parameter which has given
-the best scores (in average) of the model.</p>
+    <p>A matrix of scores, where rows correspond to <code>ind.test</code> and
+columns correspond to <code>thr.list</code>.</p>
     
 
   </div>
