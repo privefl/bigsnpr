@@ -1,5 +1,5 @@
 destfile <- tempfile()
-download.file("https://github.com/privefl/bigsnpr/raw/master/reprod.rds",
+download.file("https://github.com/privefl/bigsnpr/raw/master/tmp-tests/reprod.rds",
               destfile = destfile)
 DATA <- readRDS(destfile)
 str(DATA)
