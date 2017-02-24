@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Title — snp_MAF • bigsnpr</title>
+<title>MAF — snp_MAF • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,20 +84,35 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Title</h1>
+    <h1>MAF</h1>
     </div>
 
     
-    <p>Title</p>
+    <p>Minor Allele Frequency.</p>
     
 
-    <pre><span class='fu'>snp_MAF</span>(<span class='no'>X</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>ncol</span>(<span class='no'>X</span>)))</pre>
+    <pre><span class='fu'>snp_MAF</span>(<span class='no'>X</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>ncol</span>(<span class='no'>X</span>)), <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
+      <dt>X</dt>
+      <dd>The slot &quot;genotypes&quot; of a &quot;bigSNP&quot;,
+a <a href='http://www.rdocumentation.org/packages/bigmemory/topics/big.matrix-class'>big.matrix</a>.
+You shouldn&#39;t have missing values in your data.</dd>
+      <dt>ind.train</dt>
+      <dd>An optional vector of the row (individuals) indices that
+are used, for the training part. If not specified, all rows are used.</dd>
       <dt>ind.col</dt>
-      <dd></dd>
+      <dd>An optional vector of the column (SNP) indices that are used.
+If not specified, all columns are used.</dd>
+      <dt>n</dt>
+      <dd>Number of trials, parameter of the binomial distribution.
+Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
     </dl>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A vector of MAFs, correspond to <code>ind.col</code>.</p>
     
 
   </div>
@@ -105,7 +120,9 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
   </div>
 </div>

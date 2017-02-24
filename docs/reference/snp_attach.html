@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read PLINK files into a &quot;bigSNP&quot; — snp_readBed • bigsnpr</title>
+<title>Attach a &quot;bigSNP&quot; from backing files — snp_attach • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,50 +84,27 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read PLINK files into a &quot;bigSNP&quot;</h1>
+    <h1>Attach a &quot;bigSNP&quot; from backing files</h1>
     </div>
 
     
-    <p>Function to read bed/bim/fam files into a <a href='bigSNP-class.html'>bigSNP</a>.</p>
+    <p>Load a <a href='bigSNP-class.html'>bigSNP</a> from backing files into R.</p>
     
 
-    <pre><span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>block.size</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='no'>backingfile</span>,
-  <span class='kw'>backingpath</span> <span class='kw'>=</span> <span class='st'>"backingfiles"</span>)</pre>
+    <pre><span class='fu'>snp_attach</span>(<span class='no'>backingfile</span>, <span class='kw'>readonly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>bedfile</dt>
-      <dd>Path to file with extension &quot;.bed&quot; to read.
-You need the corresponding &quot;.bim&quot; and &quot;.fam&quot; in the same directory.</dd>
       <dt>backingfile</dt>
-      <dd>The root name for the backing file(s) for the cache of
-the <a href='bigSNP-class.html'>bigSNP</a> object.</dd>
-      <dt>backingpath</dt>
-      <dd>The path to the directory containing the backing files.
-Default is <code>&quot;backingfiles&quot;</code>.</dd>
+      <dd>The path of one of the three (&quot;.bk&quot;, &quot;.desc&quot; or &quot;.rds&quot;)
+backing files for the cache of the &quot;bigSNP&quot; object.</dd>
+      <dt>readonly</dt>
+      <dd>Is the <code>big.matrix</code> read only? Default is <code>TRUE</code>.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The path to one of the backing files which are created
-by this function: <code>&lt;backingfile&gt;</code>.bk, <code>&lt;backingfile&gt;</code>.desc and
-<code>&lt;backingfile&gt;</code>.rds in directory <code>&lt;backingpath&gt;</code>.
-<strong>You shouldn&#39;t read from PLINK files more than once.</strong> Instead, use
-<a href='snp_attach.html'>snp_attach</a> to load the &quot;bigSNP&quot; object in any R session from backing files.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>For more information on these formats, please visit
-<a href = 'PLINK webpage'>http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed</a>.
-For other formats, please use PLINK to convert them in bedfiles,
-which require minimal space to store and are faster to read.</p>
-    
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>The implementation was originally inspired from the code of
-<a href = 'package argyle'>https://github.com/andrewparkermorgan/argyle</a>.
-I did many optimizations. Moreover, online reading
-into a <code>big.matrix</code> makes it memory-efficient.</p>
+    <p>The &quot;bigSNP&quot; object.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -136,10 +113,10 @@ into a <code>big.matrix</code> makes it memory-efficient.</p>
 <span class='co'># Reading the bedfile and storing the data in directory "backingfiles"</span>
 <span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='st'>"backingfiles/test_doc.bk"</span>
 <span class='kw'>if</span> (!<span class='fu'>file.exists</span>(<span class='no'>PATH</span>))
-  <span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='st'>"test_doc"</span>)
+  <span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='st'>"test_doc"</span>)
 
 <span class='co'># Loading the data from backing files</span>
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>PATH</span>)
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_attach</span>(<span class='no'>PATH</span>)
 
 <span class='fu'>str</span>(<span class='no'>test</span>)</div><div class='output co'>#&gt; List of 5
 #&gt;  $ genotypes  :Formal class &#39;big.matrix&#39; [package &quot;bigmemory&quot;] with 1 slot
@@ -176,10 +153,6 @@ into a <code>big.matrix</code> makes it memory-efficient.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#note">Note</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

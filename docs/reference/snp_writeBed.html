@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read|write PLINK files into|from a &quot;bigSNP&quot;. — snp_writeBed • bigsnpr</title>
+<title>Write PLINK files from a &quot;bigSNP&quot; — snp_writeBed • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,93 +84,46 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read|write PLINK files into|from a &quot;bigSNP&quot;.</h1>
+    <h1>Write PLINK files from a &quot;bigSNP&quot;</h1>
     </div>
 
     
-    <p>Functions to read|write bed/bim/fam files into|from a <a href='bigSNP-class.html'>bigSNP</a>.
- For more information on these formats, please visit
-<a href = 'PLINK webpage'>http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed</a>.
-For other formats, please use PLINK to convert them in bedfiles,
-which require minimal space to store and are faster to read.</p>
+    <p>Function to write bed/bim/fam files from a <a href='bigSNP-class.html'>bigSNP</a>.</p>
     
 
     <pre><span class='fu'>snp_writeBed</span>(<span class='no'>x</span>, <span class='no'>bedfile</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
+      <dt>x</dt>
+      <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
       <dt>bedfile</dt>
-      <dd>Path to file with extension &quot;.bed&quot; to read|create.
-When reading, you need the corresponding &quot;.bim&quot; and &quot;.fam&quot;
-in the same directory.</dd>
-      <dt>backingfile</dt>
-      <dd>The root name for the backing file(s) for the cache of
-the <a href='bigSNP-class.html'>bigSNP</a> object.</dd>
-      <dt>backingpath</dt>
-      <dd>The path to the directory containing the file backing cache.
-Default is <code>&quot;backingfiles&quot;</code>.</dd>
-      <dt>readonly</dt>
-      <dd>Is the <code>big.matrix</code> read only? Default is <code>TRUE</code>.</dd>
+      <dd>Path to file with extension &quot;.bed&quot; to create.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <a href='bigSNP-class.html'>bigSNP</a>. Reading PLINK files creates
-<code>&lt;backingfile&gt;</code>.bk, <code>&lt;backingfile&gt;</code>.desc and
-<code>&lt;backingfile&gt;</code>.rds in directory <code>&lt;backingpath&gt;</code>.
-<strong>You shouldn&#39;t read from PLINK files more than once.</strong>
-Instead, use <code>AttachBigSNP</code>
-to load this object in another session from backing files.</p>
-    
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>The implementation was originally inspired from the code of
-<a href = 'package argyle'>https://github.com/andrewparkermorgan/argyle</a>.
-I did many optimizations. Especially, online reading
-into a <code>big.matrix</code> makes it memory-efficient.</p>
+    <p>The input <code>bedfile</code> path.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='fu'>print</span>(<span class='no'>bedfile</span>)</div><div class='output co'>#&gt; [1] &quot;/home/privef/Bureau/bigsnpr/inst/extdata/example.bed&quot;</div><div class='input'>
-<span class='co'># Reading the bedfile and storing the data in directory "backingfiles"</span>
-<span class='kw'>if</span> (!<span class='fu'>file.exists</span>(<span class='st'>"backingfiles/test_doc.bk"</span>))
-  <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='st'>"test_doc"</span>)
+    <pre class="examples"><div class='input'><span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>17</span>
+<span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='fl'>911</span>
 
-<span class='co'># Removing the R object</span>
-<span class='fu'>rm</span>(<span class='no'>test</span>)
+<span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span>(<span class='no'>N</span>, <span class='no'>M</span>)
+<span class='no'>fake</span>$<span class='no'>genotypes</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>c</span>(<span class='fl'>0</span>:<span class='fl'>2</span>, <span class='fl'>NA</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>N</span> * <span class='no'>M</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Assignment will down cast from integer to char
+#&gt; Hint: To remove this warning type:  options(bigmemory.typecast.warning=FALSE)</div><div class='output co'>#&gt; <span class='warning'>Warning: </span></div><div class='input'>
+<span class='co'># write the object as a bed/bim/fam object</span>
+<span class='no'>tmpfile</span> <span class='kw'>&lt;-</span> <span class='fu'>tempfile</span>()
+<span class='no'>bed</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_writeBed</span>(<span class='no'>fake</span>, <span class='fu'>paste0</span>(<span class='no'>tmpfile</span>, <span class='st'>".bed"</span>))
+<span class='co'># read this new file for the first time</span>
+<span class='no'>fake2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bed</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'>basename</span>(<span class='no'>tmpfile</span>),
+                                <span class='kw'>backingpath</span> <span class='kw'>=</span> <span class='fu'>dirname</span>(<span class='no'>tmpfile</span>)))
 
-<span class='co'># Loading it from backing files</span>
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_attach</span>(<span class='st'>"backingfiles/test_doc.bk"</span>)
-
-<span class='fu'>str</span>(<span class='no'>test</span>)</div><div class='output co'>#&gt; List of 5
-#&gt;  $ genotypes  :Formal class &#39;big.matrix&#39; [package &quot;bigmemory&quot;] with 1 slot
-#&gt;   .. ..@ address:&lt;externalptr&gt; 
-#&gt;  $ fam        :&#39;data.frame&#39;:	517 obs. of  6 variables:
-#&gt;   ..$ family.ID  : chr [1:517] &quot;POP1&quot; &quot;POP1&quot; &quot;POP1&quot; &quot;POP1&quot; ...
-#&gt;   ..$ sample.ID  : chr [1:517] &quot;IND0&quot; &quot;IND1&quot; &quot;IND2&quot; &quot;IND3&quot; ...
-#&gt;   ..$ paternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..$ maternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..$ sex        : int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..$ affection  : int [1:517] -9 -9 -9 -9 -9 -9 -9 -9 -9 -9 ...
-#&gt;  $ map        :&#39;data.frame&#39;:	4542 obs. of  6 variables:
-#&gt;   ..$ chromosome  : int [1:4542] 1 1 1 1 1 1 1 1 1 1 ...
-#&gt;   ..$ marker.ID   : chr [1:4542] &quot;SNP0&quot; &quot;SNP1&quot; &quot;SNP2&quot; &quot;SNP3&quot; ...
-#&gt;   ..$ genetic.dist: int [1:4542] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..$ physical.pos: int [1:4542] 0 1000 2000 3000 4000 5000 6000 7000 8000 9000 ...
-#&gt;   ..$ allele1     : chr [1:4542] &quot;A&quot; &quot;T&quot; &quot;T&quot; &quot;T&quot; ...
-#&gt;   ..$ allele2     : chr [1:4542] &quot;T&quot; &quot;A&quot; &quot;A&quot; &quot;A&quot; ...
-#&gt;  $ backingfile: chr &quot;test_doc&quot;
-#&gt;  $ backingpath: chr &quot;/home/privef/Bureau/bigsnpr/docs/reference/backingfiles&quot;
-#&gt;  - attr(*, &quot;class&quot;)= chr &quot;bigSNP&quot;</div><div class='input'><span class='fu'>print</span>(<span class='fu'>dim</span>(<span class='no'>test</span>$<span class='no'>genotypes</span>))</div><div class='output co'>#&gt; [1]  517 4542</div><div class='input'><span class='fu'>print</span>(<span class='no'>test</span>$<span class='no'>genotypes</span>[<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='fl'>1</span>:<span class='fl'>8</span>])</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
-#&gt; [1,]    2    2    0    2    1    1    2    0
-#&gt; [2,]    1    2    1    2    2    1    2    0
-#&gt; [3,]    2    1    1    2    0    1    2    0
-#&gt; [4,]    2    2    0    2    0    1    2    0
-#&gt; [5,]    1    2    2    2    0    0    1    2
-#&gt; [6,]    2    1    2    2    0    1    2    2
-#&gt; [7,]    2    1    1    2    0    0    1    1
-#&gt; [8,]    1    2    1    1    1    1    2    1</div></pre>
+<span class='co'># same content</span>
+<span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[,], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[,]))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='co'># two different files</span>
+<span class='fu'>print</span>(<span class='no'>fake</span>$<span class='no'>backingfile</span> <span class='kw'>!=</span> <span class='no'>fake2</span>$<span class='no'>backingfile</span>)</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -178,8 +131,6 @@ into a <code>big.matrix</code> makes it memory-efficient.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#note">Note</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
