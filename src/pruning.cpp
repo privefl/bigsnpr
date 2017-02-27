@@ -18,7 +18,6 @@ LogicalVector clumping(XPtr<BigMatrix> xpMat,
 
   int n = macc.nrow();
   int m = macc.ncol();
-  double nd = (double)n;
 
   double xySum, num, r2;
   int i, j, j0, k;
@@ -28,19 +27,19 @@ LogicalVector clumping(XPtr<BigMatrix> xpMat,
   for (k = 0; k < m; k++) {
     j0 = ordInd[k] - 1;
     if (remain[j0]) { // if already excluded, goto next
-      for (j = max(0, j0 - size); j < min(m, j0 + size); j++) {
+      remain[j0] = false;
+      keep[j0] = true;
+      for (j = max(0, j0 - size); j < min(m, j0 + size + 1); j++) {
         if (remain[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
             xySum += macc(i, j) * macc(i, j0);
           }
-          num = xySum - sumX[j] * sumX[j0] / nd;
+          num = xySum - sumX[j] * sumX[j0] / n;
           r2 = num * num / (denoX[j] * denoX[j0]);
           if (r2 > thr) remain[j] = false; // prune
         }
       }
-      keep[j0] = true;
-      remain[j0] = false;
     }
   }
 
@@ -64,7 +63,6 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
   SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
 
   int n = macc.nrow();
-  double nd = (double)n;
   int m = macc.ncol();
   double xySum, num, r2;
 
@@ -72,14 +70,14 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
 
   for (j0 = 0; j0 < m; j0++) {
     if (keep[j0]) { // if already excluded, goto next
-      j_max = min(j0 + size, m);
+      j_max = min(j0 + size + 1, m);
       for (j = j0 + 1; j < j_max; j++) {
         if (keep[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
             xySum += macc(i, j) * macc(i, j0);
           }
-          num = xySum - sumX[j] * sumX[j0] / nd;
+          num = xySum - sumX[j] * sumX[j0] / n;
           r2 = num * num / (denoX[j] * denoX[j0]);
           if (r2 > thr) { // prune one of them
             if (mafX[j0] < mafX[j]) { // prune the one with smaller maf
@@ -113,7 +111,6 @@ LogicalVector& pruning2(XPtr<BigMatrix> xpMat,
   SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
 
   int n = macc.nrow();
-  double nd = (double)n;
   int m = macc.ncol();
   double xySum, num, r2;
   int pos_max;
@@ -129,7 +126,7 @@ LogicalVector& pruning2(XPtr<BigMatrix> xpMat,
           for (i = 0; i < n; i++) {
             xySum += macc(i, j) * macc(i, j0);
           }
-          num = xySum - sumX[j] * sumX[j0] / nd;
+          num = xySum - sumX[j] * sumX[j0] / n;
           r2 = num * num / (denoX[j] * denoX[j0]);
           if (r2 > thr) { // prune one of them
             if (mafX[j0] < mafX[j]) { // prune the one with smaller maf

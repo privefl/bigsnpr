@@ -42,4 +42,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Florian Privé \email{florian.prive.21@gmail.com}
 
+Other contributors:
+\itemize{
+  \item Michael Blum \email{michael.blum@univ-grenoble-alpes.fr} [thesis advisor]
+  \item Hugues Aschard \email{hugues.aschard@pasteur.fr} [thesis advisor]
+}
+
 }
