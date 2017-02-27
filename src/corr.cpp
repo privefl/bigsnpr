@@ -20,8 +20,9 @@ SEXP corMat(XPtr<BigMatrix> xpMat,
 
   int i, j, j0, N;
   int sumNA;
-  double x, xSum, xxSum, deno_x;
-  double y, ySum, yySum, deno_y;
+  char x, y;
+  double xSum, xxSum, deno_x;
+  double ySum, yySum, deno_y;
   double xySum, num, r;
 
   // pre-computation
@@ -55,6 +56,7 @@ SEXP corMat(XPtr<BigMatrix> xpMat,
         y = macc(i, j0);
 
         if (isna(y)) {
+          // printf("Missing value at pos (%d, %d)\n", i+1, j0+1); // DEBUG
           sumNA++;
           if (isna(x)) { // both missing
             // nothing to do
@@ -73,6 +75,7 @@ SEXP corMat(XPtr<BigMatrix> xpMat,
         }
       }
       N = n - sumNA;
+      // printf("N = %d\n", N); // DEBUG
       num = xySum - xSum * ySum / N;
       deno_x = xxSum - xSum * xSum / N;
       deno_y = yySum - ySum * ySum / N;
