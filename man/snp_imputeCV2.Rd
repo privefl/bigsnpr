@@ -4,12 +4,11 @@
 \alias{snp_imputeCV2}
 \title{Title}
 \usage{
-snp_imputeCV2(x, nrounds = 20, max_depth = 3, breaks = c(0,
-  trunc(n/c(1000, 200, 100))), sizes = c(10, 20, 30, 50), Kfolds = c(2, 3,
-  5, 8), ncores = 1, verbose = FALSE)
+snp_imputeCV2(x, nrounds = 20, max_depth = 3, size = 1000, alpha = 0.1,
+  K = 5, ncores = 1, verbose = FALSE, baseline = FALSE)
 }
 \arguments{
-\item{verbose}{}
+\item{max_depth}{}
 }
 \description{
 Title

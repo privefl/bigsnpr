@@ -139,21 +139,16 @@ snp_imputeCV <- function(x, nrounds = 20, max_depth = 3,
 #' @param x
 #' @param nrounds
 #' @param max_depth
-#' @param breaks
-#' @param sizes
-#' @param Kfolds
-#' @param ncores
-#' @param verbose
 #'
 #' @return
 #' @export
+#' @import Matrix
 #'
 #' @examples
 snp_imputeCV2 <- function(x, nrounds = 20, max_depth = 3,
-                         breaks = c(0, trunc(n / c(1000, 200, 100))),
-                         sizes = c(10, 20, 30, 50),
-                         Kfolds = c(2, 3, 5, 8),
-                         ncores = 1, verbose = FALSE) {
+                         size = 1000, alpha = 0.1, K = 5,
+                         ncores = 1, verbose = FALSE,
+                         baseline = FALSE) {
   check_x(x)
   X <- x$genotypes
   n <- nrow(X)
@@ -181,15 +176,19 @@ snp_imputeCV2 <- function(x, nrounds = 20, max_depth = 3,
   }
   res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'rbind') %dopar% {
     lims <- range.chr[ic, ]
+    ind.part <- seq2(lims)
 
     if (verbose)
       printf("Imputing chromosome %d with \"XGBoost\"...\n", lims[3])
 
+    X <- attach.BM(X.desc)
+    q.alpha <- stats::qchisq(alpha, df = 1, lower.tail = FALSE)
+    corr <- symmpart(corMat(X@address, rowInd = 1:n, colInd = ind.part,
+                            size = size, thr = q.alpha / 1:n))
 
-    X.part <- sub.big.matrix(X.desc, firstCol = lims[1], lastCol = lims[2])
     X2.part <- sub.big.matrix(X2.desc, firstCol = lims[1], lastCol = lims[2])
 
-    m.part <- ncol(X.part)
+    m.part <- length(ind.part)
     nbNA <- integer(m.part)
     error <- rep(NA_real_, m.part)
 
@@ -203,20 +202,20 @@ snp_imputeCV2 <- function(x, nrounds = 20, max_depth = 3,
     opt.save <- options(bigmemory.typecast.warning = FALSE)
     on.exit(options(opt.save), add = TRUE)
 
-    # first imputation by rounded mean
-    baseline <- round2(big_apply(X2.part, a.FUN = function(x, ind) {
-      colMeans(x[, ind], na.rm = TRUE)
-    }, a.combine = 'c'))
-    for (i in 1:m.part) X2.part[which(is.na(X2.part[, i])), i] <- baseline[i]
+    if (baseline) {
+      # first imputation by rounded mean
+      baseline <- round2(big_apply(X2.part, a.FUN = function(x, ind) {
+        colMeans(x[, ind], na.rm = TRUE)
+      }, a.combine = 'c'))
+      for (i in 1:m.part) X2.part[which(is.na(X2.part[, i])), i] <- baseline[i]
+    }
 
     # imputation
     for (i in 1:m.part) {
-      X.label <- X.part[, i] * 1
+      X.label <- X[, ind.part[i]] * 1
       nbNA[i] <- l.NA <- length(indNA <- which(is.na(X.label)))
       if (l.NA > 0) {
-        w <- max(which(l.NA > breaks))
-        ind.col <- interval(i, sizes[w])
-        K <- Kfolds[w]
+        ind.col <- which(corr[, i] != 0)
 
         X.data.noNA <- X2.part[-indNA, ind.col, drop = FALSE] * 1
         X.label.noNA <- X.label[-indNA]

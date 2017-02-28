@@ -7,6 +7,21 @@
 
 using namespace Rcpp;
 
+// corMat
+SEXP corMat(XPtr<BigMatrix> xpMat, const IntegerVector& rowInd, const IntegerVector& colInd, int size, const NumericVector& thr);
+RcppExport SEXP bigsnpr_corMat(SEXP xpMatSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type thr(thrSEXP);
+    rcpp_result_gen = Rcpp::wrap(corMat(xpMat, rowInd, colInd, size, thr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mycount2
 ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
 RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
