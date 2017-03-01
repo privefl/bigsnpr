@@ -5,9 +5,10 @@ X2 <- popres.chr1$genotypes
 n <- nrow(X2)
 m <- ncol(X2)
 
+## add PCA structure?
 
 print(system.time(
-  test <- snp_imputeCV2(popres.chr1)
+  test <- snp_imputeCV2(popres.chr1, baseline = TRUE)
 ))
 # 2h12 with default parameters -> 4.03%
 
@@ -45,3 +46,5 @@ plot(nbNA_roll, infos$error)
 abline(lm(infos$error ~ nbNA_roll), col = "red")
 ind <- which(infos$error > 0.3)
 
+popresBeagle <- snp_attach("backingfiles/popres_impute_beagle.bk")
+mean(popresBeagle$genotypes[indNA] != popres.chr1.noNA$genotypes[indNA]) # error: 2.9%
