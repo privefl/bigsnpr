@@ -2,18 +2,15 @@
 
 language: r
 r:
-  - oldrel
   - release
   - devel
 sudo: false
 cache: packages
 
-#bioc_required: true
-
 env:
  global:
    - CRAN: http://cran.rstudio.com
-   -  _R_CHECK_FORCE_SUGGESTS_: false
+   - _R_CHECK_FORCE_SUGGESTS_: false
 
 notifications:
   email:
