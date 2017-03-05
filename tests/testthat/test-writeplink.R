@@ -12,6 +12,17 @@ test_that("Error: already exists", {
   expect_error(BedToBig(bedfile, 50, "test_doc"))
 })
 
+################################################################################
+
+test_that("Write signed but read unsigned", {
+  tmpfile <- tempfile()
+  x <- as.raw(0:255)
+  testWrite(x, tmpfile)
+  con <- file(tmpfile, open = "rb")
+  test <- readBin(con, "raw", 256)
+  close(con)
+  expect_equal(test, x)
+})
 
 ################################################################################
 
@@ -23,7 +34,6 @@ test_that("Error: already exists", {
   expect_error(snp_writeBed(fake, bed),
                sprintf("File %s already exists", bed), fixed = TRUE)
 })
-
 
 ################################################################################
 

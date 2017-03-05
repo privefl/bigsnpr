@@ -11,7 +11,7 @@ SEXP corMat(XPtr<BigMatrix> xpMat,
             const IntegerVector& colInd,
             int size,
             const NumericVector& thr) {
-  SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
+  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
 
   int n = macc.nrow();
   int m = macc.ncol();

@@ -22,12 +22,12 @@ Depends:
     bigmemory,
     bigstatsr
 Imports:
+    assertthat,
     data.table,
     doParallel,
     foreach, 
     parallel, 
     Rcpp, 
-    RSpectra, 
     stats,
     xgboost
 LinkingTo:
@@ -36,9 +36,12 @@ LinkingTo:
     bigstatsr,
     Rcpp,
     RcppArmadillo
+Suggests: 
+    covr,
+    gaston,
+    testthat
 Remotes: privefl/bigmemory, privefl/bigstatsr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Suggests: testthat, covr, gaston
 URL: https://privefl.github.io/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues

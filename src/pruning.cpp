@@ -14,7 +14,7 @@ LogicalVector clumping(XPtr<BigMatrix> xpMat,
                        const NumericVector& denoX,
                        int size,
                        double thr) {
-  SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
+  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
 
   int n = macc.nrow();
   int m = macc.ncol();
@@ -60,7 +60,7 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
                        int size,
                        double thr) {
   // Assert that keep[j] == TRUE
-  SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
+  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
 
   int n = macc.nrow();
   int m = macc.ncol();
@@ -108,7 +108,7 @@ LogicalVector& pruning2(XPtr<BigMatrix> xpMat,
                         int size,
                         double thr) {
   // Assert that keep[j] == TRUE
-  SubMatrixAccessor<char> macc(*xpMat, rowInd-1, colInd-1);
+  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
 
   int n = macc.nrow();
   int m = macc.ncol();

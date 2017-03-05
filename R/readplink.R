@@ -33,7 +33,8 @@
 snp_readBed <- function(bedfile,
                         block.size = 1000,
                         backingfile,
-                        backingpath = "backingfiles") {
+                        backingpath = "backingfiles",
+                        cpp = FALSE) {
   backingpath <- path.expand(backingpath)
   rootPath <- file.path(backingpath, backingfile)
 
@@ -78,77 +79,56 @@ snp_readBed <- function(bedfile,
   # prepare big.matrix
   n <- nrow(fam)
   m <- nrow(bim)
-  bigGeno <- big.matrix(n, m, type = "char",
+  bigGeno <- big.matrix(n, m, type = "raw",
                         backingfile = paste0(backingfile, ".bk"),
                         backingpath = backingpath,
                         descriptorfile = paste0(backingfile, ".desc"))
 
 
-  ## open bed file and check its magic number
-  bed <- file(bedfile, open = "rb")
-  magic <- readBin(bed, "raw", 3)
-  if (!all(magic == c("6c", "1b", "01")))
-    stop("Wrong magic number for bed file; should be -- 0x6c 0x1b 0x01 --.")
+  if (cpp) {
+    readbina(bedfile, bigGeno@address, getCode())
+  } else {
+    ## open bed file and check its magic number
+    bed <- file(bedfile, open = "rb")
+    magic <- readBin(bed, "raw", 3)
+    if (!all(magic == c("6c", "1b", "01")))
+      stop("Wrong magic number for bed file; should be -- 0x6c 0x1b 0x01 --.")
 
-  # match each possible code
-  geno <- getCode()
+    ## block size in bytes: (number of individuals)/4, to nearest byte
+    bsz <- ceiling(n/4)
 
-  ## block size in bytes: (number of individuals)/4, to nearest byte
-  bsz <- ceiling(n/4)
+    # now actually read genotypes block by block
+    intervals <- CutBySize(m, block.size)
+    nb.blocks <- nrow(intervals)
 
-
-  # now actually read genotypes block by block
-  intervals <- CutBySize(m, block.size)
-  nb.blocks <- nrow(intervals)
-
-  colOffset <- 0
-  for (k in 1:nb.blocks) {
-    size <- intervals[k, "size"]
-    rawToBigPart(bigGeno@address,
-                 source = readBin(bed, "raw", bsz * size),
-                 tab = geno,
-                 size = size, colOffset = colOffset,
-                 n = n, bsz = bsz)
-    colOffset <- colOffset + size
+    colOffset <- 0
+    for (k in 1:nb.blocks) {
+      size <- intervals[k, "size"]
+      rawToBigPart(bigGeno@address,
+                   source = readBin(bed, "raw", bsz * size),
+                   tab = getCode(),
+                   size = size, colOffset = colOffset,
+                   n = n, bsz = bsz)
+      colOffset <- colOffset + size
+    }
+    close(bed)
   }
-  close(bed)
 
+  code <- rep(NA_real_, 256)
+  code[1:3] <- c(0, 1, 2)
+  bigGeno.code <- as.BM.code(bigGeno, code)
 
-  snp_list <- list(genotypes = bigGeno, fam = fam, map = bim,
-                   backingfile = backingfile,
-                   backingpath = normalizePath(backingpath))
-  class(snp_list) <- "bigSNP"
+  rds <- paste0(rootPath, ".rds")
 
-  saveRDS(snp_list, paste0(rootPath, ".rds"))
+  snp_list <- structure(list(genotypes = describe(bigGeno.code),
+                             fam = fam,
+                             map = bim,
+                             savedIn = paste0(rootPath, ".rds")),
+                        class = "bigSNP")
 
-  paste0(rootPath, ".bk")
-}
+  saveRDS(snp_list, rds)
 
-################################################################################
-
-#' Attach a "bigSNP" from backing files
-#'
-#' Load a [bigSNP][bigSNP-class] from backing files into R.
-#'
-#' @param backingfile The path of one of the three (".bk", ".desc" or ".rds")
-#' backing files for the cache of the "bigSNP" object.
-#' @param readonly Is the \code{big.matrix} read only? Default is \code{TRUE}.
-#'
-#' @return The "bigSNP" object.
-#' @example examples/example.readplink.R
-#'
-#' @export
-snp_attach <- function(backingfile, readonly = TRUE) {
-  root <- tools::file_path_sans_ext(backingfile)
-  snp.list <- readRDS(paste0(root, ".rds"))
-
-  snp.list$genotypes <- attach.big.matrix(paste0(root, ".desc"),
-                                          readonly = readonly)
-
-  snp.list$backingfile <- basename(root)
-  snp.list$backingpath <- normalizePath(dirname(root))
-
-  snp.list
+  rds
 }
 
 ################################################################################
@@ -186,7 +166,7 @@ snp_writeBed <- function(x, bedfile) {
               sep = "\t", row.names = FALSE, col.names = FALSE)
 
   ## write bed file
-  X <- x$genotypes
+  X <- attach.BM(x$genotypes)
   writebina(bedfile, X@address, getInverseCode())
 
   bedfile
@@ -201,7 +181,7 @@ snp_writeBed <- function(x, bedfile) {
 #' @return The example "bigSNP".
 #'
 #' @export
-snp_attachExample <- function(backingfile = "test_doc",
+snp_attachExtdata <- function(backingfile = "test_doc",
                               backingpath = "backingfiles") {
 
   PATH <- file.path(backingpath, paste0(backingfile, ".bk"))
@@ -211,7 +191,7 @@ snp_attachExample <- function(backingfile = "test_doc",
                         backingpath = backingpath)
   }
 
-  snp_attach(PATH)
+  readRDS(sub("\\.bk$", ".rds", PATH))
 }
 
 ################################################################################

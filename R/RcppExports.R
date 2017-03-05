@@ -29,7 +29,15 @@ rawToBigPart <- function(xpMat, source, tab, size, colOffset, n, bsz) {
     invisible(.Call('bigsnpr_rawToBigPart', PACKAGE = 'bigsnpr', xpMat, source, tab, size, colOffset, n, bsz))
 }
 
+readbina <- function(filename, xpMat, tab) {
+    invisible(.Call('bigsnpr_readbina', PACKAGE = 'bigsnpr', filename, xpMat, tab))
+}
+
 writebina <- function(filename, xpMat, tab) {
     invisible(.Call('bigsnpr_writebina', PACKAGE = 'bigsnpr', filename, xpMat, tab))
+}
+
+testWrite <- function(v, filename) {
+    invisible(.Call('bigsnpr_testWrite', PACKAGE = 'bigsnpr', v, filename))
 }
 

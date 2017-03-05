@@ -1,24 +1,28 @@
 ################################################################################
 
 # functions for encoding/decoding bed files
-getCode <- function(NA_CHAR = -128L) {
+getCode <- function(NA.VAL = 3L) {
   all.raws <- as.raw(0:255)
   geno.raw <- as.logical(rawToBits(all.raws))
   s <- c(TRUE, FALSE)
   geno1 <- geno.raw[s]
   geno2 <- geno.raw[!s]
   geno <- geno1 + geno2
-  geno[geno1 & !geno2] <- NA_CHAR
+  geno[geno1 & !geno2] <- NA.VAL
   dim(geno) <- c(4, 256)
+  storage.mode(geno) <- "raw"
   geno
 }
+# t(mapply(rep, times = 4^(3:0), each = 4^(0:3),
+#          MoreArgs = list(x = as.raw(c(0, 3, 1, 2)))))
 
 getInverseCode <- function() {
-  geno <- getCode(3) + 1
+  geno <- getCode()
+  storage.mode(geno) <- "integer"
   r <- raw(256)
   dim(r) <- rep(4, 4)
   for (i in 1:256) {
-    ind <- geno[, i]
+    ind <- geno[, i] + 1
     r[ind[1], ind[2], ind[3], ind[4]] <- as.raw(i - 1)
   }
   r

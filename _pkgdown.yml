@@ -1,10 +1,9 @@
 templates:
   params:
-    bootswatch: cosmo
+    bootswatch: readable
 
 navbar:
   title: "bigsnpr"
-  type: inverse
   left:
     - text: "Home"
       href: index.html
@@ -18,3 +17,8 @@ navbar:
       href: https://privefl.github.io/about.html
     - icon: fa-github
       href: https://github.com/privefl/bigsnpr
+
+reference:
+  - title: "Package"
+    contents:
+      - bigsnpr-package

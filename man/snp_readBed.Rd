@@ -5,7 +5,7 @@
 \title{Read PLINK files into a "bigSNP"}
 \usage{
 snp_readBed(bedfile, block.size = 1000, backingfile,
-  backingpath = "backingfiles")
+  backingpath = "backingfiles", cpp = FALSE)
 }
 \arguments{
 \item{bedfile}{Path to file with extension ".bed" to read.
