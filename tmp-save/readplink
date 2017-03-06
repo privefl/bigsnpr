@@ -1,0 +1,49 @@
+// [[Rcpp::export]]
+void rawToBigPart(XPtr<BigMatrix> xpMat,
+                  const RawVector& source,
+                  const RawMatrix& tab,
+                  int size, int colOffset,
+                  int n, int bsz) {
+  MatrixAccessor<unsigned char> macc(*xpMat);
+
+  int i, j, j_off, k, l, c;
+  unsigned char t;
+
+  c = 0;
+  for (j = 0; j < size; j++) {
+    j_off = j + colOffset;
+    i = 0;
+    for (k = 0; k < bsz; k++) {
+      t = source[c++];
+      for (l = 0; l < 4 && i < n; l++) {
+        macc[j_off][i++] = tab(l, t);
+      }
+    }
+  }
+}
+
+
+## open bed file and check its magic number
+bed <- file(bedfile, open = "rb")
+magic <- readBin(bed, "raw", 3)
+if (!all(magic == c("6c", "1b", "01")))
+  stop("Wrong magic number for bed file; should be -- 0x6c 0x1b 0x01 --.")
+
+## block size in bytes: (number of individuals)/4, to nearest byte
+bsz <- ceiling(n/4)
+
+# now actually read genotypes block by block
+intervals <- CutBySize(m, block.size)
+nb.blocks <- nrow(intervals)
+
+colOffset <- 0
+for (k in 1:nb.blocks) {
+  size <- intervals[k, "size"]
+  rawToBigPart(bigGeno@address,
+               source = readBin(bed, "raw", bsz * size),
+               tab = getCode(),
+               size = size, colOffset = colOffset,
+               n = n, bsz = bsz)
+  colOffset <- colOffset + size
+}
+close(bed)

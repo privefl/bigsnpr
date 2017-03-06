@@ -7,31 +7,7 @@
 /******************************************************************************/
 
 // [[Rcpp::export]]
-void rawToBigPart(XPtr<BigMatrix> xpMat,
-                  const RawVector& source,
-                  const RawMatrix& tab,
-                  int size, int colOffset,
-                  int n, int bsz) {
-  MatrixAccessor<unsigned char> macc(*xpMat);
-
-  int i, j, j_off, k, l, c;
-  unsigned char t;
-
-  c = 0;
-  for (j = 0; j < size; j++) {
-    j_off = j + colOffset;
-    i = 0;
-    for (k = 0; k < bsz; k++) {
-      t = source[c++];
-      for (l = 0; l < 4 && i < n; l++) {
-        macc[j_off][i++] = tab(l, t);
-      }
-    }
-  }
-}
-
-// [[Rcpp::export]]
-void readbina(const char * filename,
+bool readbina(const char * filename,
               XPtr<BigMatrix> xpMat,
               const RawMatrix& tab) {
   MatrixAccessor<unsigned char> macc(*xpMat);
@@ -39,7 +15,7 @@ void readbina(const char * filename,
   int m = macc.ncol();
 
   int length = n / 4;
-  bool extra = (n > 4 * length);
+  bool extra = (n > (4 * length));
   int lengthExtra = length + extra;
 
   int i, j, k;
@@ -72,7 +48,11 @@ void readbina(const char * filename,
     }
   }
 
+  char c;
+  bool is_eof = !(myFile.get(c));
   myFile.close();
+
+  return is_eof;
 }
 
 /******************************************************************************/
@@ -109,7 +89,7 @@ void writebina(const char * filename,
       coef *= 4;
     }
     buffer[k] = tab[ind];
-    myFile.write(buffer, length); // faster to use (char*)?
+    myFile.write(buffer, length); // faster to use (char*)? Nop
   }
 
   myFile.close();

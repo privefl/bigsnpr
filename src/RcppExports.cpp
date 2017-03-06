@@ -104,32 +104,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rawToBigPart
-void rawToBigPart(XPtr<BigMatrix> xpMat, const RawVector& source, const RawMatrix& tab, int size, int colOffset, int n, int bsz);
-RcppExport SEXP bigsnpr_rawToBigPart(SEXP xpMatSEXP, SEXP sourceSEXP, SEXP tabSEXP, SEXP sizeSEXP, SEXP colOffsetSEXP, SEXP nSEXP, SEXP bszSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
-    Rcpp::traits::input_parameter< const RawVector& >::type source(sourceSEXP);
-    Rcpp::traits::input_parameter< const RawMatrix& >::type tab(tabSEXP);
-    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type colOffset(colOffsetSEXP);
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type bsz(bszSEXP);
-    rawToBigPart(xpMat, source, tab, size, colOffset, n, bsz);
-    return R_NilValue;
-END_RCPP
-}
 // readbina
-void readbina(const char * filename, XPtr<BigMatrix> xpMat, const RawMatrix& tab);
+bool readbina(const char * filename, XPtr<BigMatrix> xpMat, const RawMatrix& tab);
 RcppExport SEXP bigsnpr_readbina(SEXP filenameSEXP, SEXP xpMatSEXP, SEXP tabSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char * >::type filename(filenameSEXP);
     Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
     Rcpp::traits::input_parameter< const RawMatrix& >::type tab(tabSEXP);
-    readbina(filename, xpMat, tab);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(readbina(filename, xpMat, tab));
+    return rcpp_result_gen;
 END_RCPP
 }
 // writebina

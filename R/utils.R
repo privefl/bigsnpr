@@ -38,28 +38,30 @@ NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
 
 ################################################################################
 
-check_x <- function(x) {
-  if (class(x) != "bigSNP") stop("x must be a bigSNP.")
-  if (class(x$genotypes) != "big.matrix")
-    stop("x$genotypes must be a big.matrix.")
+printf <- function(...) cat(sprintf(...))
+
+message2 <- function(...) message(sprintf(...))
+
+stop2 <- function(...) stop(sprintf(...), call. = FALSE)
+
+################################################################################
+
+write.table2 <- function(x, file) {
+  utils::write.table(x = x, file = file, quote = FALSE, sep = "\t",
+                     row.names = FALSE, col.names = FALSE)
 }
 
 ################################################################################
 
-# dir.create2 <- function(path) {
-#   if (!dir.exists(path)) {
-#     printf("Creating directory \"%s\"..\n", path)
-#     dir.create(path)
-#   }
-# }
-#
-# unlink2 <- function(path) {
-#   if (file.exists(path)) unlink(path)
-# }
-
-################################################################################
-
-printf <- function(...) cat(sprintf(...))
+dir.create2 <- function(dir.path) {
+  if (!dir.exists(dir.path)) {
+    if (dir.create(dir.path)) {
+      message2("Creating directory \"%s\" which didn't exist", dir.path)
+    } else {
+      stop2("Problem creating directory \"%s\". Recursive path?", dir.path)
+    }
+  }
+}
 
 ################################################################################
 

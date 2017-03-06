@@ -8,6 +8,7 @@
 #' \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
 #' For other formats, please use PLINK to convert them in bedfiles,
 #' which require minimal space to store and are faster to read.
+#' For example, to convert from a VCF file, use the `--vcf` option.
 #'
 #' @param bedfile Path to file with extension ".bed" to read.
 #' You need the corresponding ".bim" and ".fam" in the same directory.
@@ -16,59 +17,32 @@
 #' @param backingpath The path to the directory containing the backing files.
 #' Default is `"backingfiles"`.
 #'
-#' @return The path to one of the backing files which are created
-#' by this function: \code{<backingfile>}.bk, \code{<backingfile>}.desc and
-#' \code{<backingfile>}.rds in directory \code{<backingpath>}.\cr
+#' @return The path to the RDS file that stores the `bigSNP` object.
+#' Note that this function creates two other files which store the
+#' `big.matrix` and its descriptor.\cr
 #' __You shouldn't read from PLINK files more than once.__ Instead, use
 #' [snp_attach] to load the "bigSNP" object in any R session from backing files.
 #'
-#' @note
-#' The implementation was originally inspired from the code of
-#' \href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
-#' I did many optimizations. Moreover, online reading
-#' into a \code{big.matrix} makes it memory-efficient.
-#'
 #' @example examples/example.readplink.R
 #' @export
-snp_readBed <- function(bedfile,
-                        block.size = 1000,
-                        backingfile,
-                        backingpath = "backingfiles",
-                        cpp = FALSE) {
-  backingpath <- path.expand(backingpath)
-  rootPath <- file.path(backingpath, backingfile)
+snp_readBed <- function(bedfile, backingfile,
+                        backingpath = "backingfiles") {
 
-  # check if file and path exist
-  if (dir.exists(backingpath)) {
-    if (file.exists(bkfile <- paste0(rootPath, ".bk"))) {
-      message(sprintf("File \"%s.bk\" already exists in directory \"%s\"",
-                      backingfile, backingpath))
-      message("Aborting and returning its path..")
-      return(bkfile)
-    }
-  } else {
-    if (dir.create(backingpath))
-      message(sprintf("Creating directory \"%s\" which didn't exist",
-                      backingpath))
-  }
+  # create backingpath if doesn't exist
+  backingpath <- path.expand(backingpath)
+  dir.create2(backingpath)
+
+  # check if backingfile already exists
+  rootPath <- file.path(backingpath, backingfile)
+  assert_noexist(paste0(rootPath, ".bk"))
 
   # check extension of file
-  ext <- tools::file_ext(bedfile)
-  if (ext != "bed") {
-    stop(sprintf("Extension .%s unsupported, requires .bed instead", ext))
-  } else {
-    bimfile <- sub("\\.bed$", ".bim", bedfile)
-    famfile <- sub("\\.bed$", ".fam", bedfile)
-  }
-
+  assert_ext(bedfile, "bed")
+  # get other files
+  bimfile <- sub("\\.bed$", ".bim", bedfile)
+  famfile <- sub("\\.bed$", ".fam", bedfile)
   # check if all three files exist
-  if (!file.exists(bedfile)) {
-    stop(sprintf("File \"%s\" doesn't exist", bedfile))
-  } else if (!file.exists(bimfile)) {
-    stop(sprintf("File \"%s\" doesn't exist", bimfile))
-  } else if (!file.exists(famfile)) {
-    stop(sprintf("File \"%s\" doesn't exist", famfile))
-  }
+  sapply(c(bedfile, bimfile, famfile), assert_exist)
 
   # read map and family files
   fam <- data.table::fread(famfile, data.table = FALSE)
@@ -83,52 +57,59 @@ snp_readBed <- function(bedfile,
                         backingfile = paste0(backingfile, ".bk"),
                         backingpath = backingpath,
                         descriptorfile = paste0(backingfile, ".desc"))
+  # removing unnecessary ".desc" file
+  unlink(paste0(rootPath, ".desc"))
 
+  # fill the `big.matrix` from bedfile
+  reach.eof <- readbina(bedfile, bigGeno@address, getCode())
+  if (!reach.eof) warning("EOF of bedfile has not been reached.")
 
-  if (cpp) {
-    readbina(bedfile, bigGeno@address, getCode())
-  } else {
-    ## open bed file and check its magic number
-    bed <- file(bedfile, open = "rb")
-    magic <- readBin(bed, "raw", 3)
-    if (!all(magic == c("6c", "1b", "01")))
-      stop("Wrong magic number for bed file; should be -- 0x6c 0x1b 0x01 --.")
+  # convert to a `BM.code`
+  bigGeno.code <- as.BM.geno(bigGeno)
 
-    ## block size in bytes: (number of individuals)/4, to nearest byte
-    bsz <- ceiling(n/4)
-
-    # now actually read genotypes block by block
-    intervals <- CutBySize(m, block.size)
-    nb.blocks <- nrow(intervals)
-
-    colOffset <- 0
-    for (k in 1:nb.blocks) {
-      size <- intervals[k, "size"]
-      rawToBigPart(bigGeno@address,
-                   source = readBin(bed, "raw", bsz * size),
-                   tab = getCode(),
-                   size = size, colOffset = colOffset,
-                   n = n, bsz = bsz)
-      colOffset <- colOffset + size
-    }
-    close(bed)
-  }
-
-  code <- rep(NA_real_, 256)
-  code[1:3] <- c(0, 1, 2)
-  bigGeno.code <- as.BM.code(bigGeno, code)
-
+  # create the `bigSNP`
   rds <- paste0(rootPath, ".rds")
-
   snp_list <- structure(list(genotypes = describe(bigGeno.code),
                              fam = fam,
                              map = bim,
-                             savedIn = paste0(rootPath, ".rds")),
+                             savedIn = rds),
                         class = "bigSNP")
 
+  # save it and return the path of the saved object
   saveRDS(snp_list, rds)
-
   rds
+}
+
+################################################################################
+
+#' Attach a "bigSNP" from backing files
+#'
+#' Load a [bigSNP][bigSNP-class] from backing files into R.
+#'
+#' This is often just a call to [readRDS]. But it also checks if you have moved
+#' the two (".bk" and ".rds") backing files to another directory.
+#'
+#' @param rdsfile The path of the ".rds" which stores the `bigSNP` object.
+#'
+#' @return The `bigSNP` object.
+#' @example examples/example.readplink.R
+#'
+#' @export
+snp_attach <- function(rdsfile) {
+
+  rdsfile <- path.expand(rdsfile)
+  snp.list <- readRDS(rdsfile)
+
+  if (rdsfile != snp.list$savedIn) {
+    # check if backing file exists
+    bkfile <- sub("\\.rds$", ".bk", rdsfile)
+    assert_exist(bkfile)
+    # change relative paths
+    snp.list$genotypes@description$dirname <- dirname(bkfile)
+    snp.list$savedIn <- rdsfile
+  }
+
+  snp.list
 }
 
 ################################################################################
@@ -145,25 +126,21 @@ snp_readBed <- function(bedfile,
 #' @example examples/example-writeplink.R
 #' @export
 snp_writeBed <- function(x, bedfile) {
-  check_x(x)
 
   # check extension of file
-  ext <- tools::file_ext(bedfile)
-  if (ext != "bed") {
-    stop(sprintf("Extension .%s unsupported, requires .bed instead", ext))
-  } else {
-    bimfile <- sub("\\.bed$", ".bim", bedfile)
-    famfile <- sub("\\.bed$", ".fam", bedfile)
-  }
+  assert_ext(bedfile, "bed")
+  # get other files
+  bimfile <- sub("\\.bed$", ".bim", bedfile)
+  famfile <- sub("\\.bed$", ".fam", bedfile)
+  # check if files already exist
+  sapply(c(bedfile, bimfile, famfile), assert_noexist)
 
-  if (file.exists(bedfile))
-    stop(sprintf("File %s already exists", bedfile))
+  # create directory if doesn't exist
+  dir.create2(dirname(bedfile))
 
   # write map and family files
-  write.table(x$fam[NAMES.FAM], file = famfile, quote = FALSE,
-              sep = "\t", row.names = FALSE, col.names = FALSE)
-  write.table(x$map[NAMES.MAP], file = bimfile, quote = FALSE,
-              sep = "\t", row.names = FALSE, col.names = FALSE)
+  write.table2(x$fam[NAMES.FAM], file = famfile)
+  write.table2(x$map[NAMES.MAP], file = bimfile)
 
   ## write bed file
   X <- attach.BM(x$genotypes)
@@ -174,7 +151,7 @@ snp_writeBed <- function(x, bedfile) {
 
 ################################################################################
 
-#' Attach an "bigSNP" for examples and tests
+#' Attach a "bigSNP" for examples and tests
 #'
 #' @inheritParams snp_readBed
 #'
@@ -184,14 +161,15 @@ snp_writeBed <- function(x, bedfile) {
 snp_attachExtdata <- function(backingfile = "test_doc",
                               backingpath = "backingfiles") {
 
-  PATH <- file.path(backingpath, paste0(backingfile, ".bk"))
-  if (!file.exists(PATH)) {
+  rdsfile <- file.path(backingpath, paste0(backingfile, ".rds"))
+  # if not already read, read it
+  if (!file.exists(rdsfile)) {
     bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-    PATH <- snp_readBed(bedfile, backingfile = backingfile,
-                        backingpath = backingpath)
+    rdsfile <- snp_readBed(bedfile, backingfile = backingfile,
+                           backingpath = backingpath)
   }
 
-  readRDS(sub("\\.bk$", ".rds", PATH))
+  snp_attach(rdsfile)
 }
 
 ################################################################################

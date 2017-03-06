@@ -4,8 +4,7 @@
 \alias{snp_readBed}
 \title{Read PLINK files into a "bigSNP"}
 \usage{
-snp_readBed(bedfile, block.size = 1000, backingfile,
-  backingpath = "backingfiles", cpp = FALSE)
+snp_readBed(bedfile, backingfile, backingpath = "backingfiles")
 }
 \arguments{
 \item{bedfile}{Path to file with extension ".bed" to read.
@@ -18,9 +17,9 @@ the \link[=bigSNP-class]{bigSNP} object.}
 Default is \code{"backingfiles"}.}
 }
 \value{
-The path to one of the backing files which are created
-by this function: \code{<backingfile>}.bk, \code{<backingfile>}.desc and
-\code{<backingfile>}.rds in directory \code{<backingpath>}.\cr
+The path to the RDS file that stores the \code{bigSNP} object.
+Note that this function creates two other files which store the
+\code{big.matrix} and its descriptor.\cr
 \strong{You shouldn't read from PLINK files more than once.} Instead, use
 \link{snp_attach} to load the "bigSNP" object in any R session from backing files.
 }
@@ -32,12 +31,7 @@ For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
 For other formats, please use PLINK to convert them in bedfiles,
 which require minimal space to store and are faster to read.
-}
-\note{
-The implementation was originally inspired from the code of
-\href{https://github.com/andrewparkermorgan/argyle}{package argyle}.
-I did many optimizations. Moreover, online reading
-into a \code{big.matrix} makes it memory-efficient.
+For example, to convert from a VCF file, use the \code{--vcf} option.
 }
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")

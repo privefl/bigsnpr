@@ -22,7 +22,6 @@ Depends:
     bigmemory,
     bigstatsr
 Imports:
-    assertthat,
     data.table,
     doParallel,
     foreach, 

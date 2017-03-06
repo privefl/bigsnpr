@@ -2,7 +2,7 @@
 % Please edit documentation in R/readplink.R
 \name{snp_attachExtdata}
 \alias{snp_attachExtdata}
-\title{Attach an "bigSNP" for examples and tests}
+\title{Attach a "bigSNP" for examples and tests}
 \usage{
 snp_attachExtdata(backingfile = "test_doc", backingpath = "backingfiles")
 }
@@ -17,5 +17,5 @@ Default is \code{"backingfiles"}.}
 The example "bigSNP".
 }
 \description{
-Attach an "bigSNP" for examples and tests
+Attach a "bigSNP" for examples and tests
 }
