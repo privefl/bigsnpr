@@ -4,7 +4,7 @@
 \alias{snp_MAX3}
 \title{MAX3 statistic}
 \usage{
-snp_MAX3(x, ind.train = seq(nrow(X)), val = c(0, 0.5, 1))
+snp_MAX3(x, ind.train = rows_along(X.), val = c(0, 0.5, 1))
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
@@ -19,10 +19,10 @@ And only \code{0.5} corresponds to the Armatige trend test.
 Finally, \code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.}
 }
 \value{
-A named list of \strong{\code{S}} and \strong{\code{pS}} for every column,
-which are MAX3 statistics and associated p-values. \strong{P-values are in
-fact the minimum of the 3 p-values of each test separately.} One can use
-genomic control to rescale these p-values.
+A data.frame of \code{S} and \code{pS} for every column, which are MAX3
+statistics and associated p-values. \strong{P-values are in fact the minimum of
+the p-values of each test separately (so they are biased downward).}
+One can use genomic control to rescale these p-values.
 }
 \description{
 Counts the number of 0, 1, 2 by SNP and phenotype (cases/controls)

@@ -22,19 +22,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// mycount2
-ListOf<SEXP> mycount2(SEXP pBigMat, const IntegerVector& indCase, const IntegerVector& indControl);
-RcppExport SEXP bigsnpr_mycount2(SEXP pBigMatSEXP, SEXP indCaseSEXP, SEXP indControlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indCase(indCaseSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type indControl(indControlSEXP);
-    rcpp_result_gen = Rcpp::wrap(mycount2(pBigMat, indCase, indControl));
-    return rcpp_result_gen;
-END_RCPP
-}
 // doubleBM
 void doubleBM(XPtr<BigMatrix> xpMat, XPtr<BigMatrix> xpMat2);
 RcppExport SEXP bigsnpr_doubleBM(SEXP xpMatSEXP, SEXP xpMat2SEXP) {

@@ -1,14 +1,14 @@
 ################################################################################
 
-ZCATT <- function(counts, val) {
-  rj <- counts$cols.cases
-  sj <- counts$cols.controls
+ZCATT <- function(counts.cases, counts.controls, val) {
+  rj <- counts.cases
+  sj <- counts.controls
   r <- colSums(rj)
   s <- colSums(sj)
   n <- r + s
   phi <- r / n
-  p <- sweep(counts$cols.cases, 2, n, '/')
-  q <- sweep(counts$cols.controls, 2, n, '/')
+  p <- sweep(counts.cases, 2, n, '/')
+  q <- sweep(counts.controls, 2, n, '/')
 
   num <- sweep(rj, 2, 1 - phi, '*') - sweep(sj, 2, phi, '*')
   pj <- sweep(rj + sj, 2, n, '/')
@@ -61,20 +61,19 @@ ZCATT <- function(counts, val) {
 #' # Get MAX3 statistics
 #' print(snp_MAX3(fake))
 #'
-#' @return A named list of __`S`__ and __`pS`__ for every column,
-#' which are MAX3 statistics and associated p-values. __P-values are in
-#' fact the minimum of the 3 p-values of each test separately.__ One can use
-#' genomic control to rescale these p-values.
+#' @return A data.frame of `S` and `pS` for every column, which are MAX3
+#' statistics and associated p-values. __P-values are in fact the minimum of
+#' the p-values of each test separately (so they are biased downward).__
+#' One can use genomic control to rescale these p-values.
 #'
 #' @references Zheng, G., Yang, Y., Zhu, X., & Elston, R. (2012).
 #' Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 #' \url{http://dx.doi.org/10.1007/978-1-4614-2245-7_6}.
 #'
 #' @export
-snp_MAX3 <- function(x, ind.train = seq(nrow(X)), val = c(0, 0.5, 1)) {
-  check_x(x)
+snp_MAX3 <- function(x, ind.train = rows_along(X.), val = c(0, 0.5, 1)) {
 
-  X <- x$genotypes
+  X. <- x$genotypes
   y <- transform_levels(x$fam$affection)
 
   cases <- (y == 1)
@@ -82,13 +81,16 @@ snp_MAX3 <- function(x, ind.train = seq(nrow(X)), val = c(0, 0.5, 1)) {
   ind.cases <- intersect(ind.train, which(cases))
   ind.controls <- intersect(ind.train, which(!cases))
 
-  counts <- mycount2(X@address, ind.cases, ind.controls)
+  onlyO12 <- as.character(0:2) # don't consider missing values
+  counts.cases <- big_counts(X., ind.row = ind.cases)[onlyO12, ]
+  counts.controls <- big_counts(X., ind.row = ind.controls)[onlyO12, ]
 
-  stats <- ZCATT(counts, val)
+  stats <- ZCATT(counts.cases, counts.controls, val)
   stats <- replace(stats, is.na(stats), 0)
+
   S <- apply(stats^2, 1, max)
 
-  list(S = S, pS = pchisq(S, df = 1, lower.tail = FALSE))
+  data.frame(S = S, pS = pchisq(S, df = 1, lower.tail = FALSE))
 }
 
 ################################################################################

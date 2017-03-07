@@ -1,4 +1,19 @@
 ################################################################################
+# Same as in bigstatsr
+
+printf <- bigstatsr:::printf
+
+message2 <- bigstatsr:::message2
+
+stop2 <- bigstatsr:::stop2
+
+transform_levels <- bigstatsr:::transform_levels
+
+CutBySize <- bigstatsr:::CutBySize
+
+seq2 <- bigstatsr:::seq2
+
+################################################################################
 
 # functions for encoding/decoding bed files
 getCode <- function(NA.VAL = 3L) {
@@ -38,14 +53,6 @@ NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
 
 ################################################################################
 
-printf <- function(...) cat(sprintf(...))
-
-message2 <- function(...) message(sprintf(...))
-
-stop2 <- function(...) stop(sprintf(...), call. = FALSE)
-
-################################################################################
-
 write.table2 <- function(x, file) {
   utils::write.table(x = x, file = file, quote = FALSE, sep = "\t",
                      row.names = FALSE, col.names = FALSE)
@@ -61,24 +68,6 @@ dir.create2 <- function(dir.path) {
       stop2("Problem creating directory \"%s\". Recursive path?", dir.path)
     }
   }
-}
-
-################################################################################
-
-CutBySize <- function(m, block.size, nb = ceiling(m / block.size)) {
-  int <- m / nb
-
-  upper <- round(1:nb * int)
-  lower <- c(1, upper[-nb] + 1)
-  size <- c(upper[1], diff(upper))
-
-  cbind(lower, upper, size)
-}
-
-################################################################################
-
-seq2 <- function(lims) {
-  seq(lims[1], lims[2])
 }
 
 ################################################################################
@@ -102,17 +91,6 @@ checkFile <- function(x, type) {
   }
 
   newfile
-}
-
-################################################################################
-
-transform_levels <- function(y, new.levels = 0:1) {
-  y2 <- factor(y, ordered = TRUE)
-  lvl <- levels(y2)
-  if (length(lvl) != 2)
-    stop("You must have exactly two levels in y.")
-  levels(y2) <- new.levels
-  as.numeric(as.character(y2))
 }
 
 ################################################################################

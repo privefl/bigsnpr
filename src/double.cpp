@@ -1,9 +1,6 @@
-// [[Rcpp::depends(BH, bigmemory)]]
-#include <Rcpp.h>
-#include <bigmemory/MatrixAccessor.hpp>
+/******************************************************************************/
 
-using namespace Rcpp;
-
+#include "bigsnpr.h"
 
 /******************************************************************************/
 
