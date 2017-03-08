@@ -83,14 +83,16 @@ LimsChr <- function(infos) {
 ################################################################################
 
 checkFile <- function(x, type) {
+  root <- sub("\\.rds$", "", x)
   number <- 1
-  while (file.exists(file.path(
-    x$backingpath,
-    paste0(newfile <- paste0(x$backingfile, "_", type, number), ".bk")))) {
+
+  repeat {
+    files <- sprintf("%s_%s%d.%s", root, type, number, c("bk", ".desc", "rds"))
+    if (all(!file.exists(files))) break
     number <- number + 1
   }
 
-  newfile
+  files
 }
 
 ################################################################################

@@ -40,7 +40,7 @@ ZCATT <- function(counts.cases, counts.controls, val) {
 #' Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
 #' Default is `c(0, 0.5, 1)` and corresponds to the _MAX3_ statistic.
 #' Only `c(0, 1)` corresponds to _MAX2_.
-#' And only `0.5` corresponds to the Armatige trend test.
+#' And only `0.5` corresponds to the Armitage trend test.
 #' Finally, `seq(0, 1, length.out = L)` corresponds to _MAXL_.
 #'
 #' @examples

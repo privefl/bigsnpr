@@ -15,7 +15,7 @@ for the training part. If not specified, all rows are used.}
 \item{val}{Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
 Default is \code{c(0, 0.5, 1)} and corresponds to the \emph{MAX3} statistic.
 Only \code{c(0, 1)} corresponds to \emph{MAX2}.
-And only \code{0.5} corresponds to the Armatige trend test.
+And only \code{0.5} corresponds to the Armitage trend test.
 Finally, \code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.}
 }
 \value{

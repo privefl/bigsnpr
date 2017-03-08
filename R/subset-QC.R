@@ -11,67 +11,56 @@ NULL
 
 ################################################################################
 
-#' Copy (subset) of a "bigSNP"
+#' Subset
 #'
-#' @description `sub.bigSNP`: a function
-#' to get a subset of an object of class `bigSNP`.
+#' A method to get a subset (copy) of a `bigSNP`.
+#' This new `bigSNP` will also be backed by files (in the same directory).
+#'
+#' @inheritParams bigsnpr-package
 #' @param ind.row Indices of the rows (individuals) to keep.
 #' Negative indices can be used to exclude row indices.
 #' Default: keep them all.
 #' @param ind.col Indices of the columns (SNPs) to keep.
 #' Negative indices can be used to exclude column indices.
 #' Default: keep them all.
-#' @param backed Should the new `bigSNP` be filebacked? Default is `TRUE`.
-#' @param shared Should the new genotype matrix be shared? Default is `TRUE`.
+#'
 #' @export
-#' @name sub.bigSNP
-#' @rdname impute-qc-sub
-sub.bigSNP <- function(x, ind.row = seq(nrow(x$genotypes)),
-                       ind.col = seq(ncol(x$genotypes)),
-                       backed = TRUE, shared = TRUE) {
-  check_x(x)
+#' @return A new `bigSNP`.
+#' @seealso [bigSNP][bigSNP-class]
+#' @example examples/example.sub.bigSNP.R
+subset.bigSNP <- function(x,
+                          ind.row = rows_along(X),
+                          ind.col = cols_along(X),
+                          ...) {
 
-  if (backed) {
-    newfile <- checkFile(x, "sub")
-    X2 <- deepcopy(x$genotypes,
-                   rows = ind.row,
-                   cols = ind.col,
-                   # type = "char",
-                   backingfile = paste0(newfile, ".bk"),
-                   backingpath = x$backingpath,
-                   descriptorfile = paste0(newfile, ".desc"))
+  X <- attach.BM(x$genotypes)
 
-    # http://stackoverflow.com/q/19565621/6103040
-    newfam <- x$fam[ind.row, ]
-    rownames(newfam) <- seq_len(nrow(newfam))
-    newmap <- x$map[ind.col, ]
-    rownames(newmap) <- seq_len(nrow(newmap))
+  newfiles <- checkFile(x$savedIn, "sub")
+  X2 <- deepcopy(X,
+                 rows = ind.row,
+                 cols = ind.col,
+                 backingfile = basename(newfiles[1]),
+                 backingpath = dirname(newfiles[1]),
+                 descriptorfile = basename(newfiles[2]))
+  # removing unnecessary ".desc" file
+  unlink(newfiles[2])
 
-    snp_list <- list(genotypes = X2,
-                     fam = newfam,
-                     map = newmap,
-                     backingfile = newfile,
-                     backingpath = x$backingpath)
-    class(snp_list) <- "bigSNP"
+  # http://stackoverflow.com/q/19565621/6103040
+  newfam <- x$fam[ind.row, ]
+  rownames(newfam) <- rows_along(newfam)
+  newmap <- x$map[ind.col, ]
+  rownames(newmap) <- rows_along(newmap)
 
-    saveRDS(snp_list, file.path(x$backingpath, paste0(newfile, ".rds")))
+  snp_list <- structure(
+    list(genotypes = describe(as.BM.code(X2, code = X@code)),
+         fam = newfam,
+         map = newmap,
+         savedIn = newfiles[3]),
+    class = "bigSNP")
 
-  } else {
-    X2 <- deepcopy(x$genotypes,
-                   rows = ind.row,
-                   cols = ind.col,
-                   # type = "char",
-                   shared = shared)
+  saveRDS(snp_list, newfiles[3])
 
-    snp_list <- list(genotypes = X2,
-                     fam = x$fam[ind.row, ],
-                     map = x$map[ind.col, ],
-                     backingfile = NULL,
-                     backingpath = NULL)
-    class(snp_list) <- "bigSNP"
-  }
-
-  return(snp_list)
+  snp_list
 }
 
 ################################################################################
