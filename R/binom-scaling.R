@@ -4,18 +4,18 @@
 #'
 #' Binomial(n, p) scaling where `n` is fixed and `p` is estimated.
 #'
-#' @param n Number of trials, parameter of the binomial distribution.
-#' Default is `2`, which corresponds to diploidy, such as for the human genome.
+#' @inheritParams bigsnpr-package
 #'
 #' @return A new __function__ that returns a data.frame of two vectors
-#' "mean" and "sd" which are of the length of __`ind.col`__.
+#' "mean" and "sd" which are of the length of `ind.col`.
 #'
-#' @details You will probably not use this function as is
-#' but as the `fun.scaling` parameter of other functions of package `bigstatsr`.
+#' @details You will probably not use this function as is but as the
+#' `fun.scaling` parameter of other functions of package `bigstatsr`.
+#'
 #' @export
 #'
 #' @references This scaling is widely used for SNP arrays.
-#' Patterson N, Price AL, Reich D (2006)
+#' Patterson N, Price AL, Reich D (2006).
 #' Population Structure and Eigenanalysis.
 #' PLoS Genet 2(12): e190.
 #' \url{http://dx.doi.org/10.1371/journal.pgen.0020190}.
@@ -33,12 +33,19 @@
 #' abline(h = 2 * p, col = "red")
 #' plot(X.svd$sds)
 #' abline(h = sqrt(2 * p * (1 - p)), col = "red")
-snp_scaleBinom <- function(n = 2) {
-  function(X, ind.train = seq(nrow(X)), ind.col = seq(ncol(X))) {
-    means <- bigstatsr::big_colstats(X, ind.train, ind.col)$sum /
-      length(ind.train)
-    p <- means / 2
-    sds <- sqrt(2 * p * (1 - p))
+snp_scaleBinom <- function(nploidy = 2) {
+
+  function(X.,
+           ind.row = rows_along(X.),
+           ind.col = cols_along(X.)) {
+
+    means <- bigstatsr::big_colstats(X., ind.row = ind.row,
+                                     ind.col = ind.col)$sum /
+      length(ind.row)
+
+    p <- means / nploidy
+    sds <- sqrt(nploidy * p * (1 - p))
+
     data.frame(mean = means, sd = sds)
   }
 }
@@ -49,25 +56,20 @@ snp_scaleBinom <- function(n = 2) {
 #'
 #' Minor Allele Frequency.
 #'
-#' @param X The slot "genotypes" of a "bigSNP",
-#' a [big.matrix][bigmemory::big.matrix-class].
-#' You shouldn't have missing values in your data.
+#' @inheritParams bigsnpr-package
 #'
-#'
-#' @param ind.train An optional vector of the row (individuals) indices that
-#' are used, for the training part. If not specified, all rows are used.
-#'
-#' @param ind.col An optional vector of the column (SNP) indices that are used.
-#' If not specified, all columns are used.
-#'
-#' @inheritParams snp_scaleBinom
-#'
-#' @return A vector of MAFs, correspond to `ind.col`.
+#' @return A vector of MAFs, corresponding to `ind.col`.
 #' @export
 #'
-snp_MAF <- function(X, ind.train = seq(nrow(X)),
-                    ind.col = seq(ncol(X)), n = 2) {
-  p <- bigstatsr::big_colstats(X, ind.train, ind.col)$sum /
-    (n * length(ind.train))
+snp_MAF <- function(G,
+                    ind.row = rows_along(G),
+                    ind.col = cols_along(G),
+                    nploidy = 2) {
+
+  p <- bigstatsr::big_colstats(G, ind.row = ind.row, ind.col = ind.col)$sum /
+    (nploidy * length(ind.row))
+
   pmin(p, 1 - p)
 }
+
+################################################################################

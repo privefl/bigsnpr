@@ -1,6 +1,6 @@
 require(bigsnpr)
 
-# snp_readBed("../thesis-celiac/Dubois2010_data/FinnuncorrNLITUK1UK3hap300.bed",
+# snp_readBed("../Dubois2010_data/FinnuncorrNLITUK1UK3hap300.bed",
 #             backingfile = "celiac300")
 
 celiac <- snp_attach("backingfiles/celiac300.rds")
@@ -17,6 +17,7 @@ celiacSub <- subset(celiac, ind.col = which(nbNA.chr1 < 5))
 countsSub <- big_counts(celiacSub$genotypes)
 firstImpute <- apply(countsSub, 2, which.max) - 1
 meanSub <- (countsSub[2, ] + 2 * countsSub[3, ]) / colSums(countsSub[-4, ])
+ALL.RAWS <- as.raw(0:255)
 firstImpute <- ALL.RAWS[round(meanSub * 100) + 8]
 
 Xsub <- attach.BM(celiacSub$genotypes)
@@ -25,7 +26,7 @@ for (i in 1:ncol(Xsub)) {
   Xsub[indNA, i] <- firstImpute[i]
 }
 Xsub@code <- c(0:2, NA, 0:2, seq(0, 2, by = 0.01), rep(NA, 48))
-Xsub[, 9]
+plot(Xsub[, 1])
 
 svd <- big_randomSVD(Xsub, fun.scaling = big_scale(), k = 10)
 plot(svd$u)

@@ -25,8 +25,8 @@ they are not significant enough. Default doesn't use thresholding.}
 \describe{
   \item{S}{A vector of column statistics which express the importance
 of each SNP (the more important is the SNP, the greater should be
-the corresponding statistic).
-For example, if \code{S} follows the standard normal distribution,
+the corresponding statistic). For example, if \code{S} follows the standard normal
+distribution, and significant means significantly different from 0,
 you should probably use \code{abs(S)} instead.}
   \item{size}{This parameter should be adjusted with respect to the number of SNPs.
 \itemize{

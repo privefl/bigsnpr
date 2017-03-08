@@ -13,8 +13,8 @@
 #'
 #' @param S A vector of column statistics which express the importance
 #' of each SNP (the more important is the SNP, the greater should be
-#' the corresponding statistic).
-#' For example, if `S` follows the standard normal distribution,
+#' the corresponding statistic). For example, if `S` follows the standard normal
+#' distribution, and significant means significantly different from 0,
 #' you should probably use `abs(S)` instead.
 #'
 #' @param size
@@ -34,7 +34,7 @@
 #' @references Price AL, Weale ME, Patterson N, et al.
 #' Long-Range LD Can Confound Genome Scans in Admixed Populations.
 #' Am J Hum Genet. 2008;83(1):132-135.
-#' [DOI](http://dx.doi.org/10.1016/j.ajhg.2008.06.005)
+#' \url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}
 #'
 #' @return
 #' - `snp_pruning` & `snp_pruning`: SNP indices which are __kept__.
@@ -51,61 +51,55 @@ NULL
 
 #################################################################################
 
+clumpingChr <- function(G, S, ind.chr, ind.train, size, thr.r2, exclude) {
+
+  # init
+  ord.chr <- order(S[ind.chr], decreasing = TRUE)
+  remain <- rep(TRUE, length(ind.chr))
+  remain[match(exclude, ind.chr)] <- FALSE
+
+  # cache some computations
+  G2 <- attach.BM(G)
+  stats <- bigstatsr::big_colstats(G2, ind.row = ind.train, ind.col = ind.chr)
+  n <- length(ind.train)
+  denoX <- (n - 1) * stats$var
+
+  # main algo
+  keep <- clumping(G2,
+                   rowInd = ind.train,
+                   colInd = ind.chr,
+                   ordInd = ord.chr,
+                   remain = remain,
+                   sumX = stats$sum,
+                   denoX = denoX,
+                   size = size,
+                   thr = thr.r2)
+
+  ind.chr[keep]
+}
+
+#################################################################################
+
 #' @export
 #' @rdname pruning-clumping
-snp_clumping <- function(x, S,
-                         ind.train = seq(nrow(X)),
+snp_clumping <- function(G,
+                         ind.row = rows_along(G),
+                         S = NULL,
                          size = 1000,
                          thr.r2 = 0.5,
                          exclude = NULL,
                          ncores = 1) {
-  check_x(x)
 
-  # get descriptors
-  X <- x$genotypes
-  X.desc <- describe(X)
-
-  # get ranges of chromosomes
-  range.chr <- LimsChr(x)
-
-  if (is.seq <- (ncores == 1)) {
-    registerDoSEQ()
-  } else {
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-  }
-  res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
-    lims <- range.chr[ic, ]
-
-    X <- attach.big.matrix(X.desc)
-
-    # init
-    ind.chr <- seq2(lims)
-    ord.chr <- order(S[ind.chr], decreasing = TRUE)
-    remain <- rep(TRUE, length(ind.chr))
-    remain[match(exclude, ind.chr)] <- FALSE
-
-    # cache some computations
-    stats <- bigstatsr::big_colstats(X, ind.train, ind.chr)
-    n <- length(ind.train)
-    denoX <- (n - 1) * stats$var
-
-    # main algo
-    keep <- clumping(X@address,
-                     rowInd = ind.train,
-                     colInd = ind.chr,
-                     ordInd = ord.chr,
-                     remain = remain,
-                     sumX = stats$sum,
-                     denoX = denoX,
-                     size = size,
-                     thr = thr.r2)
-
-    ind.chr[keep]
-  }
-  if (!is.seq) parallel::stopCluster(cl)
-
-  res
+  if (is.null(S)) S <- snp_MAF(G, ind.row = ind.row)
+  as.list(environment())
+  # snp_split(x,
+  #           FUN = clumpingChr,
+  #           combine = 'c',
+  #           ncores = ncores,
+  #           ind.train = ind.train,
+  #           size = size,
+  #           thr.r2 = thr.r2,
+  #           exclude = exclude)
 }
 
 ################################################################################

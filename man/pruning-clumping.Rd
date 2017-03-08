@@ -7,8 +7,8 @@
 \alias{snp_indLRLDR}
 \title{LD pruning and clumping}
 \usage{
-snp_clumping(x, S, ind.train = seq(nrow(X)), size = 1000, thr.r2 = 0.5,
-  exclude = NULL, ncores = 1)
+snp_clumping(x, S, ind.train = rows_along(x$genotypes), size = 1000,
+  thr.r2 = 0.5, exclude = NULL, ncores = 1)
 
 snp_pruning(x, ind.train = seq(nrow(X)), size = 50, is.size.in.kb = FALSE,
   thr.r2 = 0.5, exclude = NULL, ncores = 1)
@@ -20,8 +20,8 @@ snp_indLRLDR(x, LD.regions = LD.wiki34)
 
 \item{S}{A vector of column statistics which express the importance
 of each SNP (the more important is the SNP, the greater should be
-the corresponding statistic).
-For example, if \code{S} follows the standard normal distribution,
+the corresponding statistic). For example, if \code{S} follows the standard normal
+distribution, and significant means significantly different from 0,
 you should probably use \code{abs(S)} instead.}
 
 \item{ind.train}{An optional vector of the row indices that are used,
@@ -101,5 +101,5 @@ print(length(ind.keep4))
 Price AL, Weale ME, Patterson N, et al.
 Long-Range LD Can Confound Genome Scans in Admixed Populations.
 Am J Hum Genet. 2008;83(1):132-135.
-\href{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}{DOI}
+\url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}
 }
