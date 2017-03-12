@@ -64,8 +64,7 @@ snp_readBed <- function(bedfile, backingfile,
   reach.eof <- readbina(bedfile, bigGeno@address, getCode())
   if (!reach.eof) warning("EOF of bedfile has not been reached.")
 
-  # convert to a `BM.code`
-  bigGeno.code <- as.BM.geno(bigGeno)
+  bigGeno.code <- as.BM.code(bigGeno, code = c(0, 1, 2, rep(NA, 253)))
 
   # create the `bigSNP`
   rds <- paste0(rootPath, ".rds")

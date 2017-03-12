@@ -4,24 +4,24 @@
 \alias{snp_MAF}
 \title{MAF}
 \usage{
-snp_MAF(X, ind.train = seq(nrow(X)), ind.col = seq(ncol(X)), n = 2)
+snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G), nploidy = 2)
 }
 \arguments{
-\item{X}{The slot "genotypes" of a "bigSNP",
-a \link[bigmemory:big.matrix-class]{big.matrix}.
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
+Typically the slot \code{genotypes} of a \code{bigSNP}.
 You shouldn't have missing values in your data.}
 
-\item{ind.train}{An optional vector of the row (individuals) indices that
-are used, for the training part. If not specified, all rows are used.}
+\item{ind.row}{An optional vector of the row (individuals) indices that
+are used. If not specified, all rows are used.}
 
 \item{ind.col}{An optional vector of the column (SNP) indices that are used.
 If not specified, all columns are used.}
 
-\item{n}{Number of trials, parameter of the binomial distribution.
+\item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 }
 \value{
-A vector of MAFs, correspond to \code{ind.col}.
+A vector of MAFs, corresponding to \code{ind.col}.
 }
 \description{
 Minor Allele Frequency.

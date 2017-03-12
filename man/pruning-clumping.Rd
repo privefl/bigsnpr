@@ -7,7 +7,7 @@
 \alias{snp_indLRLDR}
 \title{LD pruning and clumping}
 \usage{
-snp_clumping(x, S, ind.train = rows_along(x$genotypes), size = 1000,
+snp_clumping(G, ind.row = rows_along(G), S = NULL, size = 1000,
   thr.r2 = 0.5, exclude = NULL, ncores = 1)
 
 snp_pruning(x, ind.train = seq(nrow(X)), size = 50, is.size.in.kb = FALSE,
@@ -16,16 +16,18 @@ snp_pruning(x, ind.train = seq(nrow(X)), size = 50, is.size.in.kb = FALSE,
 snp_indLRLDR(x, LD.regions = LD.wiki34)
 }
 \arguments{
-\item{x}{A \link[=bigSNP-class]{bigSNP}.}
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
+Typically the slot \code{genotypes} of a \code{bigSNP}.
+You shouldn't have missing values in your data.}
+
+\item{ind.row}{An optional vector of the row (individuals) indices that
+are used. If not specified, all rows are used.}
 
 \item{S}{A vector of column statistics which express the importance
 of each SNP (the more important is the SNP, the greater should be
 the corresponding statistic). For example, if \code{S} follows the standard normal
 distribution, and significant means significantly different from 0,
 you should probably use \code{abs(S)} instead.}
-
-\item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all rows are used.}
 
 \item{size}{This parameter should be adjusted with respect to the number of SNPs.
 \itemize{
@@ -43,6 +45,8 @@ can be used to exclude long-range LD regions (see Price2008). Another use
 can be for thresholding with respect to p-values associated with \code{S}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.}
+
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{LD.regions}{A \code{data.frame} with columns "Chr", "Start" and "Stop".
 Default use the table of 34 long-range LD regions that you can find

@@ -1,3 +1,9 @@
+// [[Rcpp::depends(BH, bigmemory)]]
+#include <Rcpp.h>
+#include <bigmemory/MatrixAccessor.hpp>
+
+using namespace Rcpp;
+
 /******************************************************************************/
 
 // [[Rcpp::export]]
@@ -14,6 +20,21 @@ void symCenter(SEXP pBigMat, const NumericVector& means, double mean) {
   }
 
   return;
+}
+
+// [[Rcpp::export]]
+NumericMatrix& toCorr(NumericMatrix& mat,
+                      const NumericVector& sqrt_diags) {
+
+  int n = mat.nrow();
+
+  for (int j = 0; j < n; j++) {
+    for (int i = 0; i < n; i++) {
+      mat(i, j) /= sqrt_diags[i] * sqrt_diags[j];
+    }
+  }
+
+  return mat;
 }
 
 /******************************************************************************/

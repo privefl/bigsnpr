@@ -4,22 +4,22 @@
 \alias{snp_scaleBinom}
 \title{Binomial(n, p) scaling}
 \usage{
-snp_scaleBinom(n = 2)
+snp_scaleBinom(nploidy = 2)
 }
 \arguments{
-\item{n}{Number of trials, parameter of the binomial distribution.
+\item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 }
 \value{
 A new \strong{function} that returns a data.frame of two vectors
-"mean" and "sd" which are of the length of \strong{\code{ind.col}}.
+"mean" and "sd" which are of the length of \code{ind.col}.
 }
 \description{
 Binomial(n, p) scaling where \code{n} is fixed and \code{p} is estimated.
 }
 \details{
-You will probably not use this function as is
-but as the \code{fun.scaling} parameter of other functions of package \code{bigstatsr}.
+You will probably not use this function as is but as the
+\code{fun.scaling} parameter of other functions of package \code{bigstatsr}.
 }
 \examples{
 set.seed(1)
@@ -37,7 +37,7 @@ abline(h = sqrt(2 * p * (1 - p)), col = "red")
 }
 \references{
 This scaling is widely used for SNP arrays.
-Patterson N, Price AL, Reich D (2006)
+Patterson N, Price AL, Reich D (2006).
 Population Structure and Eigenanalysis.
 PLoS Genet 2(12): e190.
 \url{http://dx.doi.org/10.1371/journal.pgen.0020190}.

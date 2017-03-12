@@ -4,9 +4,12 @@
 \alias{snp_split}
 \title{Split-parApply-Combine}
 \usage{
-snp_split(x, FUN, combine, ncores = 1, ...)
+snp_split(X.desc, infos.chr, FUN, combine, ncores = 1, ...)
 }
 \arguments{
+\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
+Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+
 \item{FUN}{The function to be applied. It must take a
 \link[=BM.code-class]{BM.code} as first argument and \code{ind.chr}, an another argument
 to provide subsetting over SNPs.
@@ -18,6 +21,8 @@ non-empty character string naming the function. Specifying 'c' is useful
 for concatenating the results into a vector, for example. The values 'cbind'
 and 'rbind' can combine vectors into a matrix. The values '+' and '*' can be
 used to process numeric data. By default, the results are returned in a list.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.}
 
 \item{...}{Extra arguments to be passed to \code{FUN}.}
 }
