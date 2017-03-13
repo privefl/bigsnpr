@@ -10,9 +10,22 @@ snp_double(x)
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 }
 \value{
-The new genotype matrix, as a \code{big.matrix}.
+The new "doubled" genotype matrix, as a \code{BM.code.descriptor},
+which values are 0s and 1s.
 }
 \description{
 Recode each column of a genotype matrix to be two columns, one encoding a
-recessive status and the other a dominant status.
+recessive status and the other a dominant status. Values will be rounded
+so that you have only 0s, 1s and 2s in your data.
+}
+\examples{
+test <- snp_attachExtdata()
+X <- attach.BM(test$genotypes)
+X[1:8, 1:5]
+
+test2 <- snp_double(test)
+attach.BM(test2)[1:8, 1:10]
+
+rm(X)
+
 }

@@ -4,17 +4,10 @@
 \alias{snp_attachExtdata}
 \title{Attach a "bigSNP" for examples and tests}
 \usage{
-snp_attachExtdata(backingfile = "test_doc", backingpath = "backingfiles")
-}
-\arguments{
-\item{backingfile}{The root name for the backing file(s) for the cache of
-the \link[=bigSNP-class]{bigSNP} object.}
-
-\item{backingpath}{The path to the directory containing the backing files.
-Default is \code{"backingfiles"}.}
+snp_attachExtdata()
 }
 \value{
-The example "bigSNP".
+The example "bigSNP", filebacked in the "/tmp/" directory.
 }
 \description{
 Attach a "bigSNP" for examples and tests

@@ -5,19 +5,21 @@
 /******************************************************************************/
 
 // [[Rcpp::export]]
-void doubleBM(XPtr<BigMatrix> xpMat, XPtr<BigMatrix> xpMat2) {
-  MatrixAccessor<char> macc(*xpMat);
-  MatrixAccessor<char> macc2(*xpMat2);
+void doubleBM(const S4& BM, XPtr<BigMatrix> xpMat2) {
 
-  int n = macc.nrow();
-  int m = macc.ncol();
+  XPtr<BigMatrix> xpMat = BM.slot("address");
+  int n = xpMat->nrow();
+  int m = xpMat->ncol();
+  RawSubMatAcc macc(*xpMat, seq_len(n)-1, seq_len(m)-1, BM.slot("code"));
+
+  MatrixAccessor<unsigned char> macc2(*xpMat2);
 
   int i, j, j2;
-  char tmp;
+  double tmp;
 
   for (j = j2 = 0; j < m; j++, j2 += 2) {
     for (i = 0; i < n; i++) {
-      tmp = macc[j][i];
+      tmp = macc(i, j);
       if (tmp == 0) {
         macc2[j2][i] = macc2[j2+1][i] = 0;
       } else if (tmp == 1) {

@@ -5,20 +5,24 @@ corMat <- function(xpMat, rowInd, colInd, size, thr) {
     .Call('bigsnpr_corMat', PACKAGE = 'bigsnpr', xpMat, rowInd, colInd, size, thr)
 }
 
-doubleBM <- function(xpMat, xpMat2) {
-    invisible(.Call('bigsnpr_doubleBM', PACKAGE = 'bigsnpr', xpMat, xpMat2))
+doubleBM <- function(BM, xpMat2) {
+    invisible(.Call('bigsnpr_doubleBM', PACKAGE = 'bigsnpr', BM, xpMat2))
 }
 
-clumping <- function(xpMat, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
-    .Call('bigsnpr_clumping', PACKAGE = 'bigsnpr', xpMat, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
+clumping <- function(BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
+    .Call('bigsnpr_clumping', PACKAGE = 'bigsnpr', BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
 }
 
-pruning <- function(xpMat, rowInd, colInd, keep, mafX, sumX, denoX, size, thr) {
-    .Call('bigsnpr_pruning', PACKAGE = 'bigsnpr', xpMat, rowInd, colInd, keep, mafX, sumX, denoX, size, thr)
+clumping2 <- function(BM, rowInd, colInd, ordInd, remain, pos, sumX, denoX, size, thr) {
+    .Call('bigsnpr_clumping2', PACKAGE = 'bigsnpr', BM, rowInd, colInd, ordInd, remain, pos, sumX, denoX, size, thr)
 }
 
-pruning2 <- function(xpMat, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr) {
-    .Call('bigsnpr_pruning2', PACKAGE = 'bigsnpr', xpMat, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
+pruning <- function(BM, rowInd, colInd, keep, mafX, sumX, denoX, size, thr) {
+    .Call('bigsnpr_pruning', PACKAGE = 'bigsnpr', BM, rowInd, colInd, keep, mafX, sumX, denoX, size, thr)
+}
+
+pruning2 <- function(BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr) {
+    .Call('bigsnpr_pruning2', PACKAGE = 'bigsnpr', BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
 }
 
 readbina <- function(filename, xpMat, tab) {

@@ -7,10 +7,10 @@
 \alias{snp_indLRLDR}
 \title{LD pruning and clumping}
 \usage{
-snp_clumping(G, ind.row = rows_along(G), S = NULL, size = 1000,
+snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL, size = 1000,
   thr.r2 = 0.5, exclude = NULL, ncores = 1)
 
-snp_pruning(x, ind.train = seq(nrow(X)), size = 50, is.size.in.kb = FALSE,
+snp_pruning(x, ind.row = seq(nrow(X)), size = 50, is.size.in.kb = FALSE,
   thr.r2 = 0.5, exclude = NULL, ncores = 1)
 
 snp_indLRLDR(x, LD.regions = LD.wiki34)

@@ -1,5 +1,16 @@
 ################################################################################
 
+# code genotype calls or missing values
+CODE_012 <- c(0, 1, 2, rep(NA, 253))
+
+# used in `snp_double`
+CODE_01  <- c(0, 1, rep(NA, 254))
+
+# code genotype calls, missing values, imputed calls and imputed allele dosages
+CODE_DOSAGE <- c(0, 1, 2, NA, 0, 1, 2, seq(0, 2, by = 0.01), rep(NA, 48))
+
+################################################################################
+
 #' S3 class bigSNP
 #'
 #' A class for representing infos on massive SNP arrays.

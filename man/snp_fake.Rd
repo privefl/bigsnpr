@@ -25,11 +25,14 @@ test <- snp_fake(N, M)
 str(test)
 
 # The genotype `big.matrix` is initialized with missing values
-X <- test$genotypes
-all(is.na(X[,]))
+X <- attach.BM(test$genotypes)
+X[,]
 
 # Modify the genotype `big.matrix`
-X[] <- sample(c(0:2, NA), size = length(X), replace = TRUE)
-print(X[,])
+X[] <- sample(RAWS[1:4], size = length(X), replace = TRUE)
+X[,]
+
+rm(X)
+
 }
 \keyword{internal}

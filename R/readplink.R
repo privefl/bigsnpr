@@ -64,7 +64,7 @@ snp_readBed <- function(bedfile, backingfile,
   reach.eof <- readbina(bedfile, bigGeno@address, getCode())
   if (!reach.eof) warning("EOF of bedfile has not been reached.")
 
-  bigGeno.code <- as.BM.code(bigGeno, code = c(0, 1, 2, rep(NA, 253)))
+  bigGeno.code <- as.BM.code(bigGeno, code = CODE_012)
 
   # create the `bigSNP`
   rds <- paste0(rootPath, ".rds")
@@ -152,21 +152,16 @@ snp_writeBed <- function(x, bedfile) {
 
 #' Attach a "bigSNP" for examples and tests
 #'
-#' @inheritParams snp_readBed
-#'
-#' @return The example "bigSNP".
+#' @return The example "bigSNP", filebacked in the "/tmp/" directory.
 #'
 #' @export
-snp_attachExtdata <- function(backingfile = "test_doc",
-                              backingpath = "backingfiles") {
+snp_attachExtdata <- function() {
 
-  rdsfile <- file.path(backingpath, paste0(backingfile, ".rds"))
-  # if not already read, read it
-  if (!file.exists(rdsfile)) {
-    bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-    rdsfile <- snp_readBed(bedfile, backingfile = backingfile,
-                           backingpath = backingpath)
-  }
+  tmpfile <- tempfile()
+  bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+  rdsfile <- snp_readBed(bedfile,
+                         backingfile = basename(tmpfile),
+                         backingpath = dirname(tmpfile))
 
   snp_attach(rdsfile)
 }

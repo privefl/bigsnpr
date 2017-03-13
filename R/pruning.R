@@ -51,7 +51,7 @@ NULL
 
 #################################################################################
 
-clumpingChr <- function(G, S, ind.chr, ind.train, size, thr.r2, exclude) {
+clumpingChr <- function(G, S, ind.chr, ind.row, size, thr.r2, exclude) {
 
   # init
   ord.chr <- order(S[ind.chr], decreasing = TRUE)
@@ -60,13 +60,13 @@ clumpingChr <- function(G, S, ind.chr, ind.train, size, thr.r2, exclude) {
 
   # cache some computations
   G2 <- attach.BM(G)
-  stats <- bigstatsr::big_colstats(G2, ind.row = ind.train, ind.col = ind.chr)
-  n <- length(ind.train)
+  stats <- bigstatsr::big_colstats(G2, ind.row = ind.row, ind.col = ind.chr)
+  n <- length(ind.row)
   denoX <- (n - 1) * stats$var
 
   # main algo
   keep <- clumping(G2,
-                   rowInd = ind.train,
+                   rowInd = ind.row,
                    colInd = ind.chr,
                    ordInd = ord.chr,
                    remain = remain,
@@ -82,7 +82,7 @@ clumpingChr <- function(G, S, ind.chr, ind.train, size, thr.r2, exclude) {
 
 #' @export
 #' @rdname pruning-clumping
-snp_clumping <- function(G,
+snp_clumping <- function(G, infos.chr,
                          ind.row = rows_along(G),
                          S = NULL,
                          size = 1000,
@@ -91,15 +91,9 @@ snp_clumping <- function(G,
                          ncores = 1) {
 
   if (is.null(S)) S <- snp_MAF(G, ind.row = ind.row)
-  as.list(environment())
-  # snp_split(x,
-  #           FUN = clumpingChr,
-  #           combine = 'c',
-  #           ncores = ncores,
-  #           ind.train = ind.train,
-  #           size = size,
-  #           thr.r2 = thr.r2,
-  #           exclude = exclude)
+  args <- as.list(environment())
+
+  do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
 }
 
 ################################################################################
@@ -107,7 +101,7 @@ snp_clumping <- function(G,
 #' @export
 #' @rdname pruning-clumping
 snp_pruning <- function(x,
-                        ind.train = seq(nrow(X)),
+                        ind.row = seq(nrow(X)),
                         size = 50,
                         is.size.in.kb = FALSE,
                         thr.r2 = 0.5,
@@ -137,11 +131,11 @@ snp_pruning <- function(x,
 
     # cache some computations
     ind.chr <- seq2(lims)
-    stats <- bigstatsr::big_colstats(X, ind.train, ind.chr)
+    stats <- bigstatsr::big_colstats(X, ind.row, ind.chr)
     m.chr <- length(ind.chr)
     keep <- rep(TRUE, m.chr)
     keep[match(exclude, ind.chr)] <- FALSE
-    n <- length(ind.train)
+    n <- length(ind.row)
     p <- stats$sum / (2 * n)
     maf <- pmin(p, 1 - p)
     denoX <- (n - 1) * stats$var
@@ -155,7 +149,7 @@ snp_pruning <- function(x,
     # main algo
     if (is.size.in.kb) {
       keep <- pruning2(X@address,
-                       rowInd = ind.train,
+                       rowInd = ind.row,
                        colInd = ind.chr,
                        keep = keep,
                        pos = c(pos[ind.chr], .Machine$integer.max),
@@ -166,7 +160,7 @@ snp_pruning <- function(x,
                        thr = thr.r2)
     } else {
       keep <- pruning(X@address,
-                      rowInd = ind.train,
+                      rowInd = ind.row,
                       colInd = ind.chr,
                       keep = keep,
                       mafX = maf,

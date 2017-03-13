@@ -28,7 +28,7 @@
 #' @import foreach
 #'
 #' @example
-snp_split <- function(X.desc, infos.chr, FUN, combine, ncores = 1, ...) {
+snp_split <- function(infos.chr, FUN, combine, ncores = 1, ...) {
 
   ind.chrs <- split(seq_along(infos.chr), infos.chr)
 
@@ -43,7 +43,7 @@ snp_split <- function(X.desc, infos.chr, FUN, combine, ncores = 1, ...) {
     ind.chr <- ind.chrs[[ic]]
     attr(ind.chr, "chr") <- as.numeric(names(ind.chrs)[ic])
 
-    FUN(X.desc, ind.chr = ind.chr, ...)
+    FUN(ind.chr = ind.chr, ...)
   }
 }
 

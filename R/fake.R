@@ -7,7 +7,7 @@
 #'
 #' @return A new temporary `bigSNP` object representing `n` individuals and
 #' `m` SNPs. The genotype `big.matrix` is initialized with missing values.
-#' @export
+#'
 #' @keywords internal
 #'
 #' @examples
@@ -17,23 +17,29 @@
 #' str(test)
 #'
 #' # The genotype `big.matrix` is initialized with missing values
-#' X <- test$genotypes
-#' all(is.na(X[,]))
+#' X <- attach.BM(test$genotypes)
+#' X[,]
 #'
 #' # Modify the genotype `big.matrix`
-#' X[] <- sample(c(0:2, NA), size = length(X), replace = TRUE)
-#' print(X[,])
+#' X[] <- sample(RAWS[1:4], size = length(X), replace = TRUE)
+#' X[,]
+#'
+#' rm(X)
+#'
+#' @export
 snp_fake <- function(n, m) {
+
   # backingfiles
   tmpfile <- tempfile()
   backingfile <- basename(tmpfile)
   backingpath <- dirname(tmpfile)
 
   # constructing a fake genotype big.matrix
-  X <- big.matrix(n, m, type = "char", init = NA,
+  bigGeno <- big.matrix(n, m, type = "raw", init = RAWS[4],
                   backingfile = paste0(backingfile, ".bk"),
                   backingpath = backingpath,
                   descriptorfile = paste0(backingfile, ".desc"))
+  bigGeno.code <- as.BM.code(bigGeno, code = CODE_012)
 
   # fam
   fam <- data.frame(0L, paste0("ind_", 1:n), 0L, 0L, 0L, -9L,
@@ -47,12 +53,15 @@ snp_fake <- function(n, m) {
                     stringsAsFactors = FALSE)
   names(map) <- NAMES.MAP
 
-  structure(list(genotypes = X,
-                 fam = fam,
-                 map = map,
-                 backingfile = backingfile,
-                 backingpath = backingpath),
-            class = "bigSNP")
+  # create the `bigSNP`, save it and return it
+  rds <- paste0(tmpfile, ".rds")
+  snp_list <- structure(list(genotypes = describe(bigGeno.code),
+                             fam = fam,
+                             map = map,
+                             savedIn = rds),
+                        class = "bigSNP")
+  saveRDS(snp_list, rds)
+  snp_list
 }
 
 ################################################################################

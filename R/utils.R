@@ -17,8 +17,7 @@ seq2 <- bigstatsr:::seq2
 
 # functions for encoding/decoding bed files
 getCode <- function(NA.VAL = 3L) {
-  all.raws <- as.raw(0:255)
-  geno.raw <- as.logical(rawToBits(all.raws))
+  geno.raw <- as.logical(rawToBits(RAWS))
   s <- c(TRUE, FALSE)
   geno1 <- geno.raw[s]
   geno2 <- geno.raw[!s]
@@ -85,17 +84,19 @@ LimsChr <- function(infos) {
 
 ################################################################################
 
-checkFile <- function(rdsfile, type) {
-  root <- sub("\\.rds$", "", rdsfile)
-  number <- 1
+getNewFiles <- function(rdsfile, type) {
 
+  root <- sub("\\.rds$", "", rdsfile)
+  EXTS <- c("bk", "desc", "rds")
+
+  number <- 1
   repeat {
-    files <- sprintf("%s_%s%d.%s", root, type, number, c("bk", ".desc", "rds"))
+    files <- sprintf("%s_%s%d.%s", root, type, number, EXTS)
     if (all(!file.exists(files))) break
     number <- number + 1
   }
 
-  files
+  as.list(structure(files, names = EXTS))
 }
 
 ################################################################################

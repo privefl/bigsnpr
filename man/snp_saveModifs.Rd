@@ -2,7 +2,7 @@
 % Please edit documentation in R/saveModifs.R
 \name{snp_saveModifs}
 \alias{snp_saveModifs}
-\title{Save modifications for a "bigSNP"}
+\title{Save modifications}
 \usage{
 snp_saveModifs(x)
 }
@@ -16,28 +16,30 @@ The (saved) \code{bigSNP}.
 Save a \code{bigSNP} after having made some modifications to it.
 As \code{bigSNP} is an S3 class, you can add any slot you want
 to an object of this class, then use \code{snp_saveModifs} to
-save these modifications in the corresponding .rds backing file.
+save these modifications in the corresponding ".rds" backing file.
 }
 \examples{
 set.seed(1)
 
 #reading example
-test <- snp_readExample()
+test <- snp_attachExtdata()
 
-# I can add whatever I want to a S3 class
+# I can add whatever I want to an S3 class
 test$map$`p-values` <- runif(nrow(test$map))
 str(test$map)
 
 # reading again
-test <- snp_readExample()
-str(test$map) # new slot wasn't saved
+test2 <- snp_attach(rdsfile = test$savedIn)
+str(test2$map) # new slot wasn't saved
 
 # save it
-test$map$`p-values` <- runif(nrow(test$map))
-test <- snp_saveModifs(test)
+test2$map$`p-values` <- runif(nrow(test2$map))
+test2 <- snp_saveModifs(test2)
 
 # reading again
-test <- snp_readExample()
-str(test$map) # it is saved now
+test3 <- snp_attach(rdsfile = test2$savedIn)
+str(test3$map) # it is saved now
 
+# the complicated code of this function
+snp_saveModifs
 }

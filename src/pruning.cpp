@@ -4,8 +4,9 @@
 
 /******************************************************************************/
 
+// Clumping within a distance in number of SNPs
 // [[Rcpp::export]]
-LogicalVector clumping(XPtr<BigMatrix> xpMat,
+LogicalVector clumping(const S4& BM,
                        const IntegerVector& rowInd,
                        const IntegerVector& colInd,
                        const IntegerVector& ordInd,
@@ -14,13 +15,15 @@ LogicalVector clumping(XPtr<BigMatrix> xpMat,
                        const NumericVector& denoX,
                        int size,
                        double thr) {
-  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
+
+  XPtr<BigMatrix> xpMat = BM.slot("address");
+  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
 
   int n = macc.nrow();
   int m = macc.ncol();
 
   double xySum, num, r2;
-  int i, j, j0, k;
+  int i, j, j0, k, j_min, j_max;
 
   LogicalVector keep(m); // init with all false
 
@@ -29,7 +32,9 @@ LogicalVector clumping(XPtr<BigMatrix> xpMat,
     if (remain[j0]) { // if already excluded, goto next
       remain[j0] = false;
       keep[j0] = true;
-      for (j = max(0, j0 - size); j < min(m, j0 + size + 1); j++) {
+      j_min = max(0, j0 - size);
+      j_max = min(m, j0 + size);
+      for (j = j_min; j <= j_max; j++) {
         if (remain[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
@@ -46,11 +51,60 @@ LogicalVector clumping(XPtr<BigMatrix> xpMat,
   return keep;
 }
 
+// Clumping within a distance in kb
+// [[Rcpp::export]]
+LogicalVector clumping2(const S4& BM,
+                        const IntegerVector& rowInd,
+                        const IntegerVector& colInd,
+                        const IntegerVector& ordInd,
+                        LogicalVector& remain,
+                        const IntegerVector& pos,
+                        const NumericVector& sumX,
+                        const NumericVector& denoX,
+                        int size,
+                        double thr) {
+
+  XPtr<BigMatrix> xpMat = BM.slot("address");
+  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
+
+  int n = macc.nrow();
+  int m = macc.ncol();
+
+  double xySum, num, r2;
+  int i, j, j0, k, pos_min, pos_max;
+
+  LogicalVector keep(m); // init with all false
+
+  for (k = 0; k < m; k++) {
+    j0 = ordInd[k] - 1;
+    if (remain[j0]) {
+      remain[j0] = false;
+      keep[j0] = true;
+      pos_min = pos[j0] - size;
+      pos_max = pos[j0] + size;
+      for (j = 0; pos[j] <= pos_max; j++) { // pos[m] == 0 -> break
+        if (remain[j] && (pos[j] >= pos_min)) {
+          xySum = 0;
+          for (i = 0; i < n; i++) {
+            xySum += macc(i, j) * macc(i, j0);
+          }
+          num = xySum - sumX[j] * sumX[j0] / n;
+          r2 = num * num / (denoX[j] * denoX[j0]);
+          if (r2 > thr) remain[j] = false; // prune
+        }
+      }
+    }
+  }
+
+  return keep;
+}
+
+
 /******************************************************************************/
 
 // Pruning within a distance in number of SNPs
 // [[Rcpp::export]]
-LogicalVector& pruning(XPtr<BigMatrix> xpMat,
+LogicalVector& pruning(const S4& BM,
                        const IntegerVector& rowInd,
                        const IntegerVector& colInd,
                        LogicalVector& keep,
@@ -59,19 +113,20 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
                        const NumericVector& denoX,
                        int size,
                        double thr) {
-  // Assert that keep[j] == TRUE
-  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
+
+  XPtr<BigMatrix> xpMat = BM.slot("address");
+  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
 
   int n = macc.nrow();
   int m = macc.ncol();
-  double xySum, num, r2;
 
+  double xySum, num, r2;
   int j0, j, i, j_max;
 
   for (j0 = 0; j0 < m; j0++) {
     if (keep[j0]) { // if already excluded, goto next
-      j_max = min(j0 + size + 1, m);
-      for (j = j0 + 1; j < j_max; j++) {
+      j_max = min(j0 + size, m);
+      for (j = j0 + 1; j <= j_max; j++) {
         if (keep[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
@@ -97,7 +152,7 @@ LogicalVector& pruning(XPtr<BigMatrix> xpMat,
 
 // Pruning within a distance in kb
 // [[Rcpp::export]]
-LogicalVector& pruning2(XPtr<BigMatrix> xpMat,
+LogicalVector& pruning2(const S4& BM,
                         const IntegerVector& rowInd,
                         const IntegerVector& colInd,
                         LogicalVector& keep,
@@ -107,29 +162,29 @@ LogicalVector& pruning2(XPtr<BigMatrix> xpMat,
                         const NumericVector& denoX,
                         int size,
                         double thr) {
-  // Assert that keep[j] == TRUE
-  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
+
+  XPtr<BigMatrix> xpMat = BM.slot("address");
+  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
 
   int n = macc.nrow();
   int m = macc.ncol();
-  double xySum, num, r2;
-  int pos_max;
 
-  int j0, j, i;
+  double xySum, num, r2;
+  int j0, j, i, pos_max;
 
   for (j0 = 0; j0 < m; j0++) {
-    if (keep[j0]) { // if already excluded, goto next
+    if (keep[j0]) {
       pos_max = pos[j0] + size;
       for (j = j0 + 1; pos[j] <= pos_max; j++) { // pos[m] == 0 -> break
-        if (keep[j]) { // if already excluded, goto next
+        if (keep[j]) {
           xySum = 0;
           for (i = 0; i < n; i++) {
             xySum += macc(i, j) * macc(i, j0);
           }
           num = xySum - sumX[j] * sumX[j0] / n;
           r2 = num * num / (denoX[j] * denoX[j0]);
-          if (r2 > thr) { // prune one of them
-            if (mafX[j0] < mafX[j]) { // prune the one with smaller maf
+          if (r2 > thr) {
+            if (mafX[j0] < mafX[j]) {
               keep[j0] = false;
               break;
             } else {

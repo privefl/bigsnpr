@@ -4,7 +4,7 @@
 \alias{snp_getPops}
 \title{Get population infos}
 \usage{
-snp_getPops(x, pop.files, col.sample.ID, col.family.ID, ...)
+snp_getPops(x, pop.files, col.sample.ID, col.family.ID, save = FALSE, ...)
 }
 \arguments{
 \item{pop.files}{Character vector of file names where to
@@ -15,25 +15,31 @@ sample IDs to match with those of the study.}
 
 \item{col.family.ID}{Index of the column containt the populations.}
 
+\item{save}{Save modifications in the ".rds" file? Default is \code{FALSE}.}
+
 \item{...}{Any additional parameter to pass to \link[data.table:fread]{fread}.}
 }
 \value{
-The modified \code{bigSNP} (modifications are saved in .rds).
+The modified \code{bigSNP}. If \code{save}, modifications are saved
+in the ".rds" file.
 }
 \description{
 Get populations of individuals by matching from an external file and
 \strong{overwrite} the slot \strong{\code{family.ID}} of the slot \code{fam}.
 }
 \examples{
-test <- snp_readExample()
+test <- snp_attachExtdata()
 
 # Just after reading
 print(rle(test$fam$family.ID))
 
 # Get populations clusters from external files
 files <- system.file("extdata", paste0("cluster", 1:3), package = "bigsnpr")
-print(data.table::fread(files[1]))
-test <- snp_getPops(test, pop.files = files, col.sample.ID = 2,
+data.table::fread(files[1])
+test <- snp_getPops(test, pop.files = files,
+                    col.sample.ID = 2,
                     col.family.ID = 3)
-print(rle(test$fam$family.ID))
+
+rle(test$fam$family.ID)
+
 }

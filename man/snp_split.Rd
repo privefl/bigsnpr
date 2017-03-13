@@ -4,7 +4,7 @@
 \alias{snp_split}
 \title{Split-parApply-Combine}
 \usage{
-snp_split(X.desc, infos.chr, FUN, combine, ncores = 1, ...)
+snp_split(infos.chr, FUN, combine, ncores = 1, ...)
 }
 \arguments{
 \item{infos.chr}{Vector of integers specifying the chromosome of each SNP.

@@ -1,16 +1,5 @@
 ################################################################################
 
-#' @title Imputation, quality control and subset for a "bigSNP".
-#' @name impute-qc-sub
-#' @inheritParams bigsnpr-package
-#' @return A new `bigSNP`.
-#' @seealso [bigSNP][bigSNP-class]
-#' @example examples/example.sub.bigSNP.R
-NULL
-
-
-################################################################################
-
 #' Subset
 #'
 #' A method to get a subset (copy) of a `bigSNP`.
@@ -18,11 +7,12 @@ NULL
 #'
 #' @inheritParams bigsnpr-package
 #' @param ind.row Indices of the rows (individuals) to keep.
-#' Negative indices can be used to exclude row indices.
+#' Negative indices __can__ be used to exclude row indices.
 #' Default: keep them all.
 #' @param ind.col Indices of the columns (SNPs) to keep.
-#' Negative indices can be used to exclude column indices.
+#' Negative indices __can__ be used to exclude column indices.
 #' Default: keep them all.
+#' @param ... Not used.
 #'
 #' @export
 #' @return A new `bigSNP`.
@@ -35,107 +25,131 @@ subset.bigSNP <- function(x,
 
   X <- attach.BM(x$genotypes)
 
-  newfiles <- checkFile(x$savedIn, "sub")
+  newfiles <- getNewFiles(x$savedIn, "sub")
+
   X2 <- deepcopy(X,
                  rows = ind.row,
                  cols = ind.col,
-                 backingfile = basename(newfiles[1]),
-                 backingpath = dirname(newfiles[1]),
-                 descriptorfile = basename(newfiles[2]))
+                 backingfile = basename(newfiles$bk),
+                 backingpath = dirname(newfiles$bk),
+                 descriptorfile = basename(newfiles$desc))
   # removing unnecessary ".desc" file
-  unlink(newfiles[2])
+  unlink(newfiles$desc)
 
   # http://stackoverflow.com/q/19565621/6103040
-  newfam <- x$fam[ind.row, ]
+  newfam <- x$fam[ind.row, , drop = FALSE]
   rownames(newfam) <- rows_along(newfam)
-  newmap <- x$map[ind.col, ]
+  newmap <- x$map[ind.col, , drop = FALSE]
   rownames(newmap) <- rows_along(newmap)
 
   snp_list <- structure(
     list(genotypes = describe(as.BM.code(X2, code = X@code)),
          fam = newfam,
          map = newmap,
-         savedIn = newfiles[3]),
+         savedIn = newfiles$rds),
     class = "bigSNP")
 
-  saveRDS(snp_list, newfiles[3])
+  saveRDS(snp_list, newfiles$rds)
 
   snp_list
 }
 
 ################################################################################
 
-#' @name QC
-#' @description `QC`: Quality control (filters)
-#' for a `bigSNP` resulting in a `bigSNP` of lower dimension.
-#' @param hwe.pval Level threshold (allowed type-I error) to test deviations
-#' from Hardy–Weinberg equilibrium (HWE) from controls only. Default is `1e-6`.
-#' @param rm.sex Keep only SNPs on the first 22 chrosmosomes? Default is `FALSE`.
-#' @param row.cr.min Minimun individuals' call rate that is allowed.
-#' Default is 95\%.
-#' @param col.cr.min Minimum SNPs' call rate that is allowed. Default is 95\%.
-#' @param maf.min Minimum Minor Allele Frequency that is allowed.
-#' Usually, `0.01` is used. Default only removes SNPs that have a zero MAF.
-#' @rdname impute-qc-sub
-#' @export
-QC <- function(x, row.cr.min = 0.95,
-               col.cr.min = 0.95,
-               hwe.pval = 1e-6,
-               maf.min = NULL,
-               rm.sex = FALSE) {
-  check_x(x)
-
-  counts <- snp_counts(x)
-
-  ### HWE
-  hwe.qc <- function(observed) {
-    n <- colSums(observed)
-    q <- (observed[1, ] + observed[2,] / 2) / n
-    p <- 1 - q
-    expected <- n * rbind(q^2, 2*p*q, p^2)
-
-    #X2 <- colSums((abs(observed - expected) - 0.5)^2 / expected)
-    X2 <- colSums((observed - expected)^2 / expected)
-    pX2 <- stats::pchisq(X2, 1, lower.tail = FALSE)
-
-    return(which(pX2 < hwe.pval))
-  }
-  ind.hwe.qc <- hwe.qc(counts$cols.controls) # only controls
-
-  ### MAF
-  # controls + cases
-  observed <- counts$cols.controls + counts$cols.cases
-  n <- colSums(observed)
-  q <- (observed[1, ] + observed[2,] / 2) / n
-  maf <- pmin(q, 1 - q)
-  ind.maf.qc <- which(maf < maf.min | maf == 0)
-
-  ### NA COL
-  n.all <- nrow(x$genotypes)
-  call.rate.col <- n / n.all
-  ind.cr.col.qc <- which(call.rate.col < col.cr.min)
-
-  ### NOT AUTOSOMAL
-  if (rm.sex) {
-    ind.sex <- which(x$map$chromosome > 22)
-  } else {
-    ind.sex <- integer(0)
-  }
-
-  ### NA ROW
-  m.all <- ncol(x$genotypes)
-  call.rate.row <- 1 - counts$rows / m.all
-  ind.cr.row.qc <- which(call.rate.row < row.cr.min)
-
-  ### Regroup everything
-  ind.qc.col <- c(ind.hwe.qc, ind.maf.qc, ind.cr.col.qc, ind.sex)
-  ind.qc.row <- c(ind.cr.row.qc)
-
-  return(sub.bigSNP(x,
-                    ind.row = `if`(length(ind.qc.row) > 0,
-                                   -ind.qc.row, seq(n.all)),
-                    ind.col = `if`(length(ind.qc.col) > 0,
-                                   -ind.qc.col, seq(m.all))))
-}
+# #' @name QC
+# #' @description `QC`: Quality control (filters)
+# #' for a `bigSNP` resulting in a `bigSNP` of lower dimension.
+# #' @param hwe.pval Level threshold (allowed type-I error) to test deviations
+# #' from Hardy–Weinberg equilibrium (HWE) from controls only. Default is `1e-6`.
+# #' @param rm.sex Keep only SNPs on the first 22 chrosmosomes? Default is `FALSE`.
+# #' @param row.cr.min Minimun individuals' call rate that is allowed.
+# #' Default is 95\%.
+# #' @param col.cr.min Minimum SNPs' call rate that is allowed. Default is 95\%.
+# #' @param maf.min Minimum Minor Allele Frequency that is allowed.
+# #' Usually, `0.01` is used. Default only removes SNPs that have a zero MAF.
+# #' @rdname impute-qc-sub
+# #' @export
+# QC <- function(x, row.cr.min = 0.95,
+#                col.cr.min = 0.95,
+#                hwe.pval = 1e-6,
+#                maf.min = NULL,
+#                rm.sex = FALSE) {
+#   check_x(x)
+#
+#   counts <- snp_counts(x)
+#
+#   ### HWE
+#   hwe.qc <- function(observed) {
+#     n <- colSums(observed)
+#     q <- (observed[1, ] + observed[2,] / 2) / n
+#     p <- 1 - q
+#     expected <- n * rbind(q^2, 2*p*q, p^2)
+#
+#     #X2 <- colSums((abs(observed - expected) - 0.5)^2 / expected)
+#     X2 <- colSums((observed - expected)^2 / expected)
+#     pX2 <- stats::pchisq(X2, 1, lower.tail = FALSE)
+#
+#     return(which(pX2 < hwe.pval))
+#   }
+#   ind.hwe.qc <- hwe.qc(counts$cols.controls) # only controls
+#
+#   ### MAF
+#   # controls + cases
+#   observed <- counts$cols.controls + counts$cols.cases
+#   n <- colSums(observed)
+#   q <- (observed[1, ] + observed[2,] / 2) / n
+#   maf <- pmin(q, 1 - q)
+#   ind.maf.qc <- which(maf < maf.min | maf == 0)
+#
+#   ### NA COL
+#   n.all <- nrow(x$genotypes)
+#   call.rate.col <- n / n.all
+#   ind.cr.col.qc <- which(call.rate.col < col.cr.min)
+#
+#   ### NOT AUTOSOMAL
+#   if (rm.sex) {
+#     ind.sex <- which(x$map$chromosome > 22)
+#   } else {
+#     ind.sex <- integer(0)
+#   }
+#
+#   ### NA ROW
+#   m.all <- ncol(x$genotypes)
+#   call.rate.row <- 1 - counts$rows / m.all
+#   ind.cr.row.qc <- which(call.rate.row < row.cr.min)
+#
+#   ### Regroup everything
+#   ind.qc.col <- c(ind.hwe.qc, ind.maf.qc, ind.cr.col.qc, ind.sex)
+#   ind.qc.row <- c(ind.cr.row.qc)
+#
+#   return(sub.bigSNP(x,
+#                     ind.row = `if`(length(ind.qc.row) > 0,
+#                                    -ind.qc.row, seq(n.all)),
+#                     ind.col = `if`(length(ind.qc.col) > 0,
+#                                    -ind.qc.col, seq(m.all))))
+# }
 
 ################################################################################
+
+# fisher2 <- function(nbNA.ca, nbNA, N.ca, N, relErr = 1 + 1e-7) {
+#   # precomputation
+#   dhyper.precomputed <- vector("list", max(nbNA))
+#   for (m in sort(unique(nbNA))) {
+#     n <- N - m
+#     lo <- max(0L, N.ca - n)
+#     hi <- min(N.ca, m)
+#     d <- dhyper(lo:hi, m, n, N.ca)
+#     dhyper.precomputed[[m]] <- d / sum(d)
+#   }
+#
+#   # compute p-values
+#   len <- length(nbNA)
+#   PVAL <- numeric(len)
+#   ind <- nbNA.ca - pmax(0L, N.ca - N + nbNA) + 1
+#   for (i in seq_len(len)) {
+#     d <- dhyper.precomputed[[nbNA[i]]]
+#     PVAL[i] <- sum(d[d <= (d[ind[i]] * relErr)])
+#   }
+#
+#   PVAL
+# }

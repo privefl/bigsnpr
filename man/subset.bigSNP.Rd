@@ -11,12 +11,14 @@
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{ind.row}{Indices of the rows (individuals) to keep.
-Negative indices can be used to exclude row indices.
+Negative indices \strong{can} be used to exclude row indices.
 Default: keep them all.}
 
 \item{ind.col}{Indices of the columns (SNPs) to keep.
-Negative indices can be used to exclude column indices.
+Negative indices \strong{can} be used to exclude column indices.
 Default: keep them all.}
+
+\item{...}{Not used.}
 }
 \value{
 A new \code{bigSNP}.

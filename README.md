@@ -9,3 +9,6 @@ bignspr is an R Package for the analysis of massive SNP arrays.
 ## This package is under heavy dev
 
 
+## Upcoming features
+
+- An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only). Any other ideas?
