@@ -1,0 +1,114 @@
+require(bigsnpr)
+
+# path2popres <- "../POPRES_data/popresSub.bed"
+# pathNA <- snp_readBed(path2popres, backingfile = "popresNA")
+#
+# popresNA <- snp_attach(pathNA)
+#
+# X <- attach.BM(popresNA$genotypes)
+# n <- nrow(X)
+# m <- ncol(X)
+#
+# popres_chr1 <- subset(popresNA, ind.col = which(popresNA$map$chromosome == 1))
+
+popres <- snp_attach("backingfiles/popresNA_sub1.rds")
+X <- attach.BM(popres$genotypes)
+n <- nrow(X)
+m <- ncol(X)
+
+print(table(
+  nbNA <- VGAM::rbetabinom.ab(m, size = n, shape1 = 0.6, shape2 = 100)
+))
+
+for (j in 1:m) {
+  indNA <- sample(n, size = nbNA[j])
+  X[indNA, j] <- as.raw(X[indNA, j] + 4)
+}
+X[, 1]
+#
+X2 <- X
+X2@code <- bigsnpr:::CODE_DOSAGE
+print(store.NA <- readRDS("storeNA_popres.rds")) #X2[which(is.na(X[,]))]
+
+#### IMPUTATION TEST ####
+
+require(xgboost)
+
+m.part <- 1000
+nbNA <- integer(m.part)
+error <- rep(NA_real_, m.part)
+indNA.part <- which(is.na(X[, 1:m.part]))
+
+# useful functions
+interval <- function(i, size = 50) {
+  ind <- i + -size:size
+  ind[ind >= 1 & ind <= m.part & ind != i]
+}
+round2 <- function(pred) as.raw(round(100 * pmin(pmax(pred, 0), 2)) + 7)
+round3 <- function(pred) (pred > 0.5) + (pred > 1.5)
+round4 <- function(pred) round2(0:2 %*% matrix(pred, 3))
+round5 <- function(pred) apply(matrix(pred, 3), 2, which.max) - 1
+
+X2.svd <- big_SVD(X2, snp_scaleBinom(), k = 6)
+arr.indNA <- which(is.na(X[, 1:1000]), arr.ind = TRUE)
+for (i in 1:nrow(arr.indNA))
+  X[arr.indNA[i, 1], arr.indNA[i, 2]] <- as.raw(3)
+
+# imputation
+for (i in 1:m.part) {
+  if (!(i %% 10)) print(i)
+  X.label <- X[, i]
+  nbNA[i] <- l <- length(indNA <- which(is.na(X.label)))
+  if (l > 0) {
+    indNoNA <- setdiff(1:n, indNA)
+    ind.train <- sort(sample(indNoNA, 0.8 * length(indNoNA)))
+    ind.val <- setdiff(indNoNA, ind.train)
+
+    X.data <- X2[, interval(i), drop = FALSE]
+
+    bst <- xgboost(data = X.data[ind.train, , drop = FALSE],
+                   label = X.label[ind.train],
+                   objective = "multi:softprob",
+                   num_class = 3,
+                   base_score = mean(X.label[ind.train]),
+                   nrounds = 30,
+                   params = list(max_depth = 3, gamma = 1,
+                                 colsample_bytree = 0.8,
+                                 colsample_bylevel = 0.5),
+                   nthread = 1,
+                   verbose = 0,
+                   save_period = NULL)
+
+    pred <- predict(bst, X.data[indNA, , drop = FALSE])
+    X2[indNA, i] <- round4(pred)
+    pred2 <- predict(bst, X.data[ind.val, , drop = FALSE])
+    error[i] <- mean(round5(pred2) != X.label[ind.val])
+  }
+}
+
+#### ####
+### first iteration:
+# estimated:
+
+# true:
+# max_depth = 4, nrounds = 30, size = 50 -> 6.8 -> 6.74 -> 6.9 -> 6.8 -> 6.8
+# with first component of SVD: 7%
+# with gamma = 1 -> 6.66
+# max_depth = 2 ->
+# max_depth = 6, nrounds = 100, size = 50 ->
+# max_depth = 4, nrounds = 30, size = 200 ->
+mean(round(X2[indNA.part]) != store.NA[seq_along(indNA.part)])
+
+plot(nbNA, error)
+curve(10 / x, col = 2, lwd = 2, add = TRUE, from = 0)
+curve(5 / x, col = 3, lwd = 2, add = TRUE, from = 0)
+curve(2 / x, col = 4, lwd = 2, add = TRUE, from = 0)
+
+popres.sub <- subset(popres, ind.col = 1:1000)
+snp_writeBed(popres.sub, "../../Téléchargements/plink_linux_x86_64/plink.bed")
+
+# snp_readBed("../../Téléchargements/plink_linux_x86_64/popres_imputeBeagle.bed",
+#             backingfile = "popresBeagle")
+popres_beagle <- snp_attach("backingfiles/popresBeagle.rds")
+X3 <- attach.BM(popres_beagle$genotypes)
+mean(X3[indNA.part] != store.NA[seq_along(indNA.part)]) # 6.85
