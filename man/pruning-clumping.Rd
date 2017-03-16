@@ -8,12 +8,14 @@
 \title{LD pruning and clumping}
 \usage{
 snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL, size = 1000,
-  thr.r2 = 0.5, exclude = NULL, ncores = 1)
+  is.size.in.kb = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
+  ncores = 1)
 
-snp_pruning(x, ind.row = seq(nrow(X)), size = 50, is.size.in.kb = FALSE,
-  thr.r2 = 0.5, exclude = NULL, ncores = 1)
+snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 50,
+  is.size.in.kb = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
+  nploidy = getOption("bigsnpr.nploidy"), ncores = 1)
 
-snp_indLRLDR(x, LD.regions = LD.wiki34)
+snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
@@ -27,7 +29,8 @@ are used. If not specified, all rows are used.}
 of each SNP (the more important is the SNP, the greater should be
 the corresponding statistic). For example, if \code{S} follows the standard normal
 distribution, and significant means significantly different from 0,
-you should probably use \code{abs(S)} instead.}
+you should probably use \code{abs(S)} instead. If nothing is specified, the MAF
+is computed and used.}
 
 \item{size}{This parameter should be adjusted with respect to the number of SNPs.
 \itemize{
@@ -46,7 +49,8 @@ can be for thresholding with respect to p-values associated with \code{S}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.}
 
-\item{x}{A \link[=bigSNP-class]{bigSNP}.}
+\item{nploidy}{Number of trials, parameter of the binomial distribution.
+Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 
 \item{LD.regions}{A \code{data.frame} with columns "Chr", "Start" and "Stop".
 Default use the table of 34 long-range LD regions that you can find
@@ -85,14 +89,14 @@ print(m <- ncol(X))
 ind.keep <- snp_pruning(test, thr.corr = 0.1)
 print(length(ind.keep) / m)
 
-p <- bigstatsr::big_colstats(X)$sum / (2 * n)
+p <- big_colstats(X)$sum / (2 * n)
 maf <- pmin(p, 1 - p)
 ind.keep2 <- snp_clumping(test, S = maf, thr.corr = 0.1)
 
 # clumping for PRS
 test$fam$affection <- sample(1:2, size = n, replace = TRUE)
 zcatt <- snp_MAX3(test, val = 0.5)
-R2 <- bigstatsr::big_univRegLin(X, test$fam$affection)["R2", ]
+R2 <- big_univRegLin(X, test$fam$affection)["R2", ]
 plot(zcatt$S, n * R2) # same thing
 ind.keep3 <- snp_clumping(test, S = zcatt$S, thr.corr = 0.1)
 print(length(ind.keep3))

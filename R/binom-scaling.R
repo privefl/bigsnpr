@@ -27,20 +27,19 @@
 #' p <- 0.2
 #' a[] <- rbinom(length(a), 2, p)
 #' X <- as.big.matrix(a, type = "char", shared = FALSE)
-#' X.svd <- bigstatsr::big_SVD(X, fun.scaling = snp_scaleBinom())
+#' X.svd <- big_SVD(X, fun.scaling = snp_scaleBinom())
 #' str(X.svd)
 #' plot(X.svd$means)
 #' abline(h = 2 * p, col = "red")
 #' plot(X.svd$sds)
 #' abline(h = sqrt(2 * p * (1 - p)), col = "red")
-snp_scaleBinom <- function(nploidy = 2) {
+snp_scaleBinom <- function(nploidy = getOption("bigsnpr.nploidy")) {
 
   function(X.,
            ind.row = rows_along(X.),
            ind.col = cols_along(X.)) {
 
-    means <- bigstatsr::big_colstats(X., ind.row = ind.row,
-                                     ind.col = ind.col)$sum /
+    means <- big_colstats(X., ind.row = ind.row, ind.col = ind.col)$sum /
       length(ind.row)
 
     p <- means / nploidy
@@ -64,9 +63,9 @@ snp_scaleBinom <- function(nploidy = 2) {
 snp_MAF <- function(G,
                     ind.row = rows_along(G),
                     ind.col = cols_along(G),
-                    nploidy = 2) {
+                    nploidy = getOption("bigsnpr.nploidy")) {
 
-  p <- bigstatsr::big_colstats(G, ind.row = ind.row, ind.col = ind.col)$sum /
+  p <- big_colstats(G, ind.row = ind.row, ind.col = ind.col)$sum /
     (nploidy * length(ind.row))
 
   pmin(p, 1 - p)

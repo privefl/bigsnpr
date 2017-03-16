@@ -16,18 +16,19 @@ X <- attach.BM(popres$genotypes)
 n <- nrow(X)
 m <- ncol(X)
 
-print(table(
-  nbNA <- VGAM::rbetabinom.ab(m, size = n, shape1 = 0.6, shape2 = 100)
-))
-
-for (j in 1:m) {
-  indNA <- sample(n, size = nbNA[j])
-  X[indNA, j] <- as.raw(X[indNA, j] + 4)
-}
+# print(table(
+#   nbNA <- VGAM::rbetabinom.ab(m, size = n, shape1 = 0.6, shape2 = 100)
+# ))
+#
+# for (j in 1:m) {
+#   indNA <- sample(n, size = nbNA[j])
+#   X[indNA, j] <- as.raw(X[indNA, j] + 4)
+# }
 X[, 1]
 #
 X2 <- X
 X2@code <- bigsnpr:::CODE_DOSAGE
+X2[, 1]
 print(store.NA <- readRDS("storeNA_popres.rds")) #X2[which(is.na(X[,]))]
 
 #### IMPUTATION TEST ####
@@ -37,10 +38,11 @@ require(xgboost)
 m.part <- 1000
 nbNA <- integer(m.part)
 error <- rep(NA_real_, m.part)
+error.save <- rep(2, m.part)
 indNA.part <- which(is.na(X[, 1:m.part]))
 
 # useful functions
-interval <- function(i, size = 50) {
+interval <- function(i, size = 1000) {
   ind <- i + -size:size
   ind[ind >= 1 & ind <= m.part & ind != i]
 }
@@ -49,10 +51,10 @@ round3 <- function(pred) (pred > 0.5) + (pred > 1.5)
 round4 <- function(pred) round2(0:2 %*% matrix(pred, 3))
 round5 <- function(pred) apply(matrix(pred, 3), 2, which.max) - 1
 
-X2.svd <- big_SVD(X2, snp_scaleBinom(), k = 6)
-arr.indNA <- which(is.na(X[, 1:1000]), arr.ind = TRUE)
-for (i in 1:nrow(arr.indNA))
-  X[arr.indNA[i, 1], arr.indNA[i, 2]] <- as.raw(3)
+# X2.svd <- big_SVD(X2, snp_scaleBinom(), k = 6)
+# arr.indNA <- which(is.na(X[, 1:1000]), arr.ind = TRUE)
+# for (i in 1:nrow(arr.indNA))
+#   X[arr.indNA[i, 1], arr.indNA[i, 2]] <- as.raw(3)
 
 # imputation
 for (i in 1:m.part) {
@@ -71,20 +73,30 @@ for (i in 1:m.part) {
                    objective = "multi:softprob",
                    num_class = 3,
                    base_score = mean(X.label[ind.train]),
-                   nrounds = 30,
-                   params = list(max_depth = 3, gamma = 1,
-                                 colsample_bytree = 0.8,
-                                 colsample_bylevel = 0.5),
+                   nrounds = round(runif(1, 20, 30)),
+                   params = list(max_depth = sample(3:4, 1), gamma = 1,
+                                 colsample_bytree = runif(1, 0.7, 1),
+                                 colsample_bylevel = runif(1, 0.6, 1)),
                    nthread = 1,
                    verbose = 0,
                    save_period = NULL)
 
-    pred <- predict(bst, X.data[indNA, , drop = FALSE])
-    X2[indNA, i] <- round4(pred)
+    # error of validation
     pred2 <- predict(bst, X.data[ind.val, , drop = FALSE])
-    error[i] <- mean(round5(pred2) != X.label[ind.val])
+    tmp <- mean(round5(pred2) != X.label[ind.val])
+    if (tmp < (0.95 * error.save[i])) {
+      error[i] <- tmp
+      # impute with new (better) prediction
+      pred <- predict(bst, X.data[indNA, , drop = FALSE])
+      X2[indNA, i] <- round4(pred)
+    }
   }
 }
+plot(error.save, error)
+print(mean(error/ error.save, na.rm = TRUE))
+error.save <- error
+
+mean(round(X2[indNA.part]) != store.NA[seq_along(indNA.part)])
 
 #### ####
 ### first iteration:

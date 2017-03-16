@@ -4,7 +4,7 @@
 \alias{snp_scaleBinom}
 \title{Binomial(n, p) scaling}
 \usage{
-snp_scaleBinom(nploidy = 2)
+snp_scaleBinom(nploidy = getOption("bigsnpr.nploidy"))
 }
 \arguments{
 \item{nploidy}{Number of trials, parameter of the binomial distribution.
@@ -28,7 +28,7 @@ a <- matrix(0, 43, 17)
 p <- 0.2
 a[] <- rbinom(length(a), 2, p)
 X <- as.big.matrix(a, type = "char", shared = FALSE)
-X.svd <- bigstatsr::big_SVD(X, fun.scaling = snp_scaleBinom())
+X.svd <- big_SVD(X, fun.scaling = snp_scaleBinom())
 str(X.svd)
 plot(X.svd$means)
 abline(h = 2 * p, col = "red")

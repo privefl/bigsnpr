@@ -33,8 +33,8 @@ LogicalVector clumping(const S4& BM,
       remain[j0] = false;
       keep[j0] = true;
       j_min = max(0, j0 - size);
-      j_max = min(m, j0 + size);
-      for (j = j_min; j <= j_max; j++) {
+      j_max = min(m, j0 + size + 1);
+      for (j = j_min; j < j_max; j++) {
         if (remain[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
@@ -82,7 +82,7 @@ LogicalVector clumping2(const S4& BM,
       keep[j0] = true;
       pos_min = pos[j0] - size;
       pos_max = pos[j0] + size;
-      for (j = 0; pos[j] <= pos_max; j++) { // pos[m] == 0 -> break
+      for (j = 0; pos[j] <= pos_max; j++) { // pos[m] == MAX -> break
         if (remain[j] && (pos[j] >= pos_min)) {
           xySum = 0;
           for (i = 0; i < n; i++) {
@@ -125,8 +125,8 @@ LogicalVector& pruning(const S4& BM,
 
   for (j0 = 0; j0 < m; j0++) {
     if (keep[j0]) { // if already excluded, goto next
-      j_max = min(j0 + size, m);
-      for (j = j0 + 1; j <= j_max; j++) {
+      j_max = min(j0 + size + 1, m);
+      for (j = j0 + 1; j < j_max; j++) {
         if (keep[j]) { // if already excluded, goto next
           xySum = 0;
           for (i = 0; i < n; i++) {
@@ -175,7 +175,7 @@ LogicalVector& pruning2(const S4& BM,
   for (j0 = 0; j0 < m; j0++) {
     if (keep[j0]) {
       pos_max = pos[j0] + size;
-      for (j = j0 + 1; pos[j] <= pos_max; j++) { // pos[m] == 0 -> break
+      for (j = j0 + 1; pos[j] <= pos_max; j++) { // pos[m] == MAX -> break
         if (keep[j]) {
           xySum = 0;
           for (i = 0; i < n; i++) {

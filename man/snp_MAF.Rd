@@ -4,7 +4,8 @@
 \alias{snp_MAF}
 \title{MAF}
 \usage{
-snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G), nploidy = 2)
+snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
+  nploidy = getOption("bigsnpr.nploidy"))
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.

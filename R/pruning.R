@@ -15,7 +15,8 @@
 #' of each SNP (the more important is the SNP, the greater should be
 #' the corresponding statistic). For example, if `S` follows the standard normal
 #' distribution, and significant means significantly different from 0,
-#' you should probably use `abs(S)` instead.
+#' you should probably use `abs(S)` instead. If nothing is specified, the MAF
+#' is computed and used.
 #'
 #' @param size
 #' This parameter should be adjusted with respect to the number of SNPs.
@@ -51,7 +52,8 @@ NULL
 
 #################################################################################
 
-clumpingChr <- function(G, S, ind.chr, ind.row, size, thr.r2, exclude) {
+clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.kb, infos.pos,
+                        thr.r2, exclude) {
 
   # init
   ord.chr <- order(S[ind.chr], decreasing = TRUE)
@@ -60,25 +62,41 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, thr.r2, exclude) {
 
   # cache some computations
   G2 <- attach.BM(G)
-  stats <- bigstatsr::big_colstats(G2, ind.row = ind.row, ind.col = ind.chr)
+  stats <- big_colstats(G2, ind.row = ind.row, ind.col = ind.chr)
   n <- length(ind.row)
   denoX <- (n - 1) * stats$var
+  nulls <- which(denoX == 0)
+  if (l <- length(nulls)) {
+    message2("Excluding %d monoallelic markers...", l)
+    remain[nulls] <- FALSE
+  }
 
   # main algo
-  keep <- clumping(G2,
-                   rowInd = ind.row,
-                   colInd = ind.chr,
-                   ordInd = ord.chr,
-                   remain = remain,
-                   sumX = stats$sum,
-                   denoX = denoX,
-                   size = size,
-                   thr = thr.r2)
+  if (is.size.in.kb) {
+    keep <- clumping2(G2,
+                      rowInd = ind.row,
+                      colInd = ind.chr,
+                      ordInd = ord.chr,
+                      remain = remain,
+                      pos = c(infos.pos[ind.chr], .Machine$integer.max),
+                      sumX = stats$sum,
+                      denoX = denoX,
+                      size = size * 1000,
+                      thr = thr.r2)
+  } else {
+    keep <- clumping(G2,
+                     rowInd = ind.row,
+                     colInd = ind.chr,
+                     ordInd = ord.chr,
+                     remain = remain,
+                     sumX = stats$sum,
+                     denoX = denoX,
+                     size = size,
+                     thr = thr.r2)
+  }
 
   ind.chr[keep]
 }
-
-#################################################################################
 
 #' @export
 #' @rdname pruning-clumping
@@ -86,6 +104,8 @@ snp_clumping <- function(G, infos.chr,
                          ind.row = rows_along(G),
                          S = NULL,
                          size = 1000,
+                         is.size.in.kb = FALSE,
+                         infos.pos = NULL,
                          thr.r2 = 0.5,
                          exclude = NULL,
                          ncores = 1) {
@@ -98,81 +118,67 @@ snp_clumping <- function(G, infos.chr,
 
 ################################################################################
 
+pruningChr <- function(G, ind.chr, ind.row, nploidy,
+                       size, is.size.in.kb, infos.pos, thr.r2, exclude) {
+
+  # cache some computations
+  G2 <- attach.BM(G)
+  stats <- big_colstats(G2, ind.row, ind.chr)
+  m.chr <- length(ind.chr)
+  keep <- rep(TRUE, m.chr)
+  keep[match(exclude, ind.chr)] <- FALSE
+  n <- length(ind.row)
+  p <- stats$sum / (nploidy * n)
+  maf <- pmin(p, 1 - p)
+  denoX <- (n - 1) * stats$var
+  nulls <- which(denoX == 0)
+  if (l <- length(nulls)) {
+    message2("Excluding %d monoallelic markers...", l)
+    keep[nulls] <- FALSE
+  }
+
+  # main algo
+  if (is.size.in.kb) {
+    keep <- pruning2(G2,
+                     rowInd = ind.row,
+                     colInd = ind.chr,
+                     keep = keep,
+                     pos = c(infos.pos[ind.chr], .Machine$integer.max),
+                     mafX = maf,
+                     sumX = stats$sum,
+                     denoX = denoX,
+                     size = size * 1000, # in kb
+                     thr = thr.r2)
+  } else {
+    keep <- pruning(G2,
+                    rowInd = ind.row,
+                    colInd = ind.chr,
+                    keep = keep,
+                    mafX = maf,
+                    sumX = stats$sum,
+                    denoX = denoX,
+                    size = size,
+                    thr = thr.r2)
+  }
+
+  ind.chr[keep]
+}
+
 #' @export
 #' @rdname pruning-clumping
-snp_pruning <- function(x,
-                        ind.row = seq(nrow(X)),
+snp_pruning <- function(G, infos.chr,
+                        ind.row = rows_along(G),
                         size = 50,
                         is.size.in.kb = FALSE,
+                        infos.pos = NULL,
                         thr.r2 = 0.5,
                         exclude = NULL,
+                        nploidy = getOption("bigsnpr.nploidy"),
                         ncores = 1) {
-  check_x(x)
 
-  # get descriptors
-  X <- x$genotypes
-  X.desc <- describe(X)
+  args <- as.list(environment())
 
-  # get ranges of chromosomes
-  range.chr <- LimsChr(x)
-  pos <- x$map$physical.pos
-
-  if (is.seq <- (ncores == 1)) {
-    registerDoSEQ()
-  } else {
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-  }
-  res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'c') %dopar% {
-    lims <- range.chr[ic, ]
-
-    X <- attach.big.matrix(X.desc)
-
-    # cache some computations
-    ind.chr <- seq2(lims)
-    stats <- bigstatsr::big_colstats(X, ind.row, ind.chr)
-    m.chr <- length(ind.chr)
-    keep <- rep(TRUE, m.chr)
-    keep[match(exclude, ind.chr)] <- FALSE
-    n <- length(ind.row)
-    p <- stats$sum / (2 * n)
-    maf <- pmin(p, 1 - p)
-    denoX <- (n - 1) * stats$var
-    nulls <- which(denoX == 0)
-    if (l <- length(nulls)) {
-      message(sprintf("Excluding %d monoallelic markers...", l))
-      keep[nulls] <- FALSE
-    }
-
-
-    # main algo
-    if (is.size.in.kb) {
-      keep <- pruning2(X@address,
-                       rowInd = ind.row,
-                       colInd = ind.chr,
-                       keep = keep,
-                       pos = c(pos[ind.chr], .Machine$integer.max),
-                       mafX = maf,
-                       sumX = stats$sum,
-                       denoX = denoX,
-                       size = size * 1000, # in kb
-                       thr = thr.r2)
-    } else {
-      keep <- pruning(X@address,
-                      rowInd = ind.row,
-                      colInd = ind.chr,
-                      keep = keep,
-                      mafX = maf,
-                      sumX = stats$sum,
-                      denoX = denoX,
-                      size = min(size, m.chr),
-                      thr = thr.r2)
-    }
-
-
-    ind.chr[keep]
-  }
+  do.call(what = snp_split, args = c(args, FUN = pruningChr, combine = 'c'))
 }
 
 ################################################################################
@@ -184,14 +190,12 @@ snp_pruning <- function(x,
 #' @import foreach
 #' @export
 #' @rdname pruning-clumping
-snp_indLRLDR <- function(x, LD.regions = LD.wiki34) {
-  chrs <- x$map$chromosome
-  pos <- x$map$physical.pos
+snp_indLRLDR <- function(infos.chr, infos.pos, LD.regions = LD.wiki34) {
 
   foreach(i = 1:nrow(LD.regions), .combine = 'c') %do% {
-    which((chrs == LD.regions[i, "Chr"]) &
-            (pos >= LD.regions[i, "Start"]) &
-            (pos <= LD.regions[i, "Stop"]))
+    which((infos.chr == LD.regions[i, "Chr"]) &
+            (infos.pos >= LD.regions[i, "Start"]) &
+            (infos.pos <= LD.regions[i, "Stop"]))
   }
 }
 

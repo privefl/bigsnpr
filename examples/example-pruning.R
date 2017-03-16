@@ -9,14 +9,14 @@ print(m <- ncol(X))
 ind.keep <- snp_pruning(test, thr.corr = 0.1)
 print(length(ind.keep) / m)
 
-p <- bigstatsr::big_colstats(X)$sum / (2 * n)
+p <- big_colstats(X)$sum / (2 * n)
 maf <- pmin(p, 1 - p)
 ind.keep2 <- snp_clumping(test, S = maf, thr.corr = 0.1)
 
 # clumping for PRS
 test$fam$affection <- sample(1:2, size = n, replace = TRUE)
 zcatt <- snp_MAX3(test, val = 0.5)
-R2 <- bigstatsr::big_univRegLin(X, test$fam$affection)["R2", ]
+R2 <- big_univRegLin(X, test$fam$affection)["R2", ]
 plot(zcatt$S, n * R2) # same thing
 ind.keep3 <- snp_clumping(test, S = zcatt$S, thr.corr = 0.1)
 print(length(ind.keep3))

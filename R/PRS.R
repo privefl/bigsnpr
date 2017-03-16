@@ -4,11 +4,11 @@
 #   if (method == "auto") {
 #     l <- length(unique(y.train))
 #     if (l < 2) stop("'y.train' needs at least two different values.")
-#     `if`(l > 2, bigstatsr::big_univRegLin, bigstatsr::big_univRegLog)
+#     `if`(l > 2, big_univRegLin, big_univRegLog)
 #   } else if (method == "lin") {
-#     bigstatsr::big_univRegLin
+#     big_univRegLin
 #   } else if (method == "log") {
-#     bigstatsr::big_univRegLog
+#     big_univRegLog
 #   } else {
 #     stop("Invalid 'method' argument.")
 #   }
@@ -57,7 +57,7 @@
 #   if (is.null(lpS)) {
 #     message("'lpS' was not specified. Thresholding disabled.")
 #     scores.all <- as.matrix(
-#       bigstatsr::big_prodVec(X, betas[ind.keep], ind.test, ind.keep)
+#       big_prodVec(X, betas[ind.keep], ind.test, ind.keep)
 #     )
 #   } else {
 #     n.thr <- length(thr.list)
@@ -66,7 +66,7 @@
 #
 #       ind.col <- intersect(ind.keep, which(lpS > thr.list[j]))
 #       if (length(ind.col)) {
-#         bigstatsr::big_prodVec(X, betas[ind.col], ind.test, ind.col)
+#         big_prodVec(X, betas[ind.col], ind.test, ind.col)
 #       } else {
 #         0
 #       }
