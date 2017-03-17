@@ -7,7 +7,8 @@
 #'   [PLINK 1.07](http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune)
 #'   (`step` is fixed to 1).
 #' - `snp_clumping`: LD clumping.
-#' - `snp_indLRLDR`: Get SNP indices of long-range LD regions.
+#' - `snp_indLRLDR`: Get SNP indices of long-range LD regions for the
+#'   human genome.
 #'
 #' @inheritParams bigsnpr-package
 #'
@@ -15,7 +16,7 @@
 #' of each SNP (the more important is the SNP, the greater should be
 #' the corresponding statistic). For example, if `S` follows the standard normal
 #' distribution, and significant means significantly different from 0,
-#' you should probably use `abs(S)` instead. If nothing is specified, the MAF
+#' you should probably use `abs(S)` instead. If not specified, the MAF
 #' is computed and used.
 #'
 #' @param size

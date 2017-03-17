@@ -8,17 +8,17 @@
 A class for representing infos on massive SNP arrays.
 }
 \details{
-A named list with at least 5 slots: \describe{
-\item{genotypes}{A filebacked \link[=big.matrix-class]{big.matrix}
-of type \code{char} (one byte signed integer), representing genotypes
-(read from a ".bed" file). Each element is either \code{0}, \code{1}, \code{2} or \code{NA}.
-Rows are individuals and columns are SNPs.}
+A named list with at least 4 slots: \describe{
+\item{genotypes}{A \link[=BM.code.descriptor-class]{BM.code.descriptor} which
+describes a special \code{big.matrix} encoded with type \code{raw} (one byte
+unsigned integer), representing genotype calls and possibly imputed
+allele dosages. Rows are individuals and columns are SNPs.}
 \item{fam}{A \code{data.frame} containing some information on the SNPs
 (read from a ".fam" file).}
 \item{map}{A \code{data.frame} giving some information on the individuals
 (read from a ".bim" file).}
-\item{backingfile}{The root name for the backing files of the object.}
-\item{backingpath}{The path to the directory containing the backing files.}
+\item{savedIn}{The ".rds" file path where this object is stored. The
+backingfile of the \code{big.matrix} should be in the same directory.}
 }
 }
 \seealso{
