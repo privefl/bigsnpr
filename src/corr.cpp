@@ -6,12 +6,14 @@
 /******************************************************************************/
 
 // [[Rcpp::export]]
-SEXP corMat(XPtr<BigMatrix> xpMat,
+SEXP corMat(const S4& BM,
             const IntegerVector& rowInd,
             const IntegerVector& colInd,
             int size,
             const NumericVector& thr) {
-  SubMatAcc<char> macc(*xpMat, rowInd-1, colInd-1);
+
+  XPtr<BigMatrix> xpMat = BM.slot("address");
+  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
 
   int n = macc.nrow();
   int m = macc.ncol();
@@ -20,7 +22,7 @@ SEXP corMat(XPtr<BigMatrix> xpMat,
 
   int i, j, j0, N;
   int sumNA;
-  char x, y;
+  double x, y;
   double xSum, xxSum, deno_x;
   double ySum, yySum, deno_y;
   double xySum, num, r;

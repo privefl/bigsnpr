@@ -65,21 +65,11 @@ write.table2 <- function(x, file) {
 dir.create2 <- function(dir.path) {
   if (!dir.exists(dir.path)) {
     if (dir.create(dir.path)) {
-      message2("Creating directory \"%s\" which didn't exist", dir.path)
+      message2("Creating directory \"%s\" which didn't exist..", dir.path)
     } else {
       stop2("Problem creating directory \"%s\". Recursive path?", dir.path)
     }
   }
-}
-
-################################################################################
-
-LimsChr <- function(infos) {
-  map.rle <- rle(infos$map$chromosome)
-  upper <- cumsum(map.rle$length)
-  lower <- c(1, upper[-length(upper)] + 1)
-
-  cbind(lower, upper, "chr" = map.rle$values)
 }
 
 ################################################################################
