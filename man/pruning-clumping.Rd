@@ -29,7 +29,7 @@ are used. If not specified, all rows are used.}
 of each SNP (the more important is the SNP, the greater should be
 the corresponding statistic). For example, if \code{S} follows the standard normal
 distribution, and significant means significantly different from 0,
-you should probably use \code{abs(S)} instead. If nothing is specified, the MAF
+you should probably use \code{abs(S)} instead. If not specified, the MAF
 is computed and used.}
 
 \item{size}{This parameter should be adjusted with respect to the number of SNPs.
@@ -70,7 +70,8 @@ For a \code{bigSNP}:
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune}{PLINK 1.07}
 (\code{step} is fixed to 1).
 \item \code{snp_clumping}: LD clumping.
-\item \code{snp_indLRLDR}: Get SNP indices of long-range LD regions.
+\item \code{snp_indLRLDR}: Get SNP indices of long-range LD regions for the
+human genome.
 }
 }
 \details{

@@ -26,6 +26,7 @@ Imports:
     doParallel,
     foreach, 
     parallel, 
+    qqman,
     Rcpp, 
     stats,
     xgboost

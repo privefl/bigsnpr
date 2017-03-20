@@ -2,8 +2,11 @@
 
 S3method(subset,bigSNP)
 export(linRegPcadapt)
+export(manhattan2)
+export(qq2)
 export(snp_MAF)
 export(snp_MAX3)
+export(snp_PRS)
 export(snp_attach)
 export(snp_attachExtdata)
 export(snp_clumping)
