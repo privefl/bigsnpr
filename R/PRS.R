@@ -43,7 +43,7 @@ snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
   if (is.null(lpS)) {
     message("'lpS' was not specified. Thresholding disabled.")
     scores.all <- as.matrix(
-      big_prodVec(X, betas[ind.keep], ind.test, ind.keep)
+      big_prodVec(G, betas[ind.keep], ind.test, ind.keep)
     )
   } else {
     n.thr <- length(thr.list)
@@ -52,7 +52,7 @@ snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
 
       ind.col <- intersect(ind.keep, which(lpS > thr.list[j]))
       if (length(ind.col)) {
-        big_prodVec(X, betas[ind.col], ind.test, ind.col)
+        big_prodVec(G, betas[ind.col], ind.test, ind.col)
       } else {
         0
       }
