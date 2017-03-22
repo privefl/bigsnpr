@@ -29,7 +29,7 @@ X <- attach.BM(test$genotypes)
 X[,]
 
 # Modify the genotype `big.matrix`
-X[] <- sample(RAWS[1:4], size = length(X), replace = TRUE)
+X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
 X[,]
 
 rm(X)

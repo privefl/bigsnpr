@@ -21,7 +21,7 @@
 #' X[,]
 #'
 #' # Modify the genotype `big.matrix`
-#' X[] <- sample(RAWS[1:4], size = length(X), replace = TRUE)
+#' X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
 #' X[,]
 #'
 #' rm(X)
@@ -35,7 +35,7 @@ snp_fake <- function(n, m) {
   backingpath <- dirname(tmpfile)
 
   # constructing a fake genotype big.matrix
-  bigGeno <- big.matrix(n, m, type = "raw", init = RAWS[4],
+  bigGeno <- big.matrix(n, m, type = "raw", init = as.raw(3),
                   backingfile = paste0(backingfile, ".bk"),
                   backingpath = backingpath,
                   descriptorfile = paste0(backingfile, ".desc"))

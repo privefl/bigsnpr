@@ -17,7 +17,7 @@ seq2 <- bigstatsr:::seq2
 
 # functions for encoding/decoding bed files
 getCode <- function(NA.VAL = 3L) {
-  geno.raw <- as.logical(rawToBits(RAWS))
+  geno.raw <- as.logical(rawToBits(as.raw(0:255)))
   s <- c(TRUE, FALSE)
   geno1 <- geno.raw[s]
   geno2 <- geno.raw[!s]
