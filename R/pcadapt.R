@@ -15,17 +15,17 @@ snp_pcadapt <- function(G, U.row, ind.row = rows_along(G)) {
             predict = fun.pred)
 }
 
-tmp <- snp_pcadapt(G, G.svd$u)
-snp_qq(tmp)
-snp_qq(snp_gc(tmp))
-snp_manhattan(snp_gc(tmp), popres$map)
-
-plot(G.svd$d, type = "b")
-
-tmp <- snp_pcadapt(G, G.svd$u[, 1:5])
-snp_qq(tmp)
-snp_qq(snp_gc(tmp))
-snp_manhattan(snp_gc(tmp), popres$map)
+# tmp <- snp_pcadapt(G, G.svd$u)
+# snp_qq(tmp)
+# snp_qq(snp_gc(tmp))
+# snp_manhattan(snp_gc(tmp), popres$map)
+#
+# plot(G.svd$d, type = "b")
+#
+# tmp <- snp_pcadapt(G, G.svd$u[, 1:5])
+# snp_qq(tmp)
+# snp_qq(snp_gc(tmp))
+# snp_manhattan(snp_gc(tmp), popres$map)
 
 
 

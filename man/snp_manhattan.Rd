@@ -17,16 +17,18 @@ Typically, the output of \link{big_univLinReg} or \link{big_univLogReg}.}
   \item{col}{A character vector indicating which colors to alternate.}
   \item{chrlabs}{A character vector equal to the number of chromosomes
 specifying the chromosome labels (e.g., \code{c(1:22, "X", "Y", "MT")}).}
-  \item{suggestiveline}{Where to draw a "suggestive" line. Default
+  \item{suggestiveline}{Where to draw a "suggestive" line. Default 
 -log10(1e-5). Set to FALSE to disable.}
-  \item{genomewideline}{Where to draw a "genome-wide sigificant" line. Default
+  \item{genomewideline}{Where to draw a "genome-wide sigificant" line. Default 
 -log10(5e-8). Set to FALSE to disable.}
-  \item{highlight}{A character vector of SNPs in your dataset to highlight.
+  \item{highlight}{A character vector of SNPs in your dataset to highlight. 
 These SNPs should all be in your dataset.}
-  \item{logp}{If TRUE, the -log10 of the p-value is plotted. It isn't very
+  \item{logp}{If TRUE, the -log10 of the p-value is plotted. It isn't very 
 useful to plot raw p-values, but plotting the raw value could be useful for
-other genome-wide plots, for example, peak heights, bayes factors, test
+other genome-wide plots, for example, peak heights, bayes factors, test 
 statistics, other "scores," etc.}
+  \item{annotatePval}{If set, SNPs below this p-value will be annotated on the plot.}
+  \item{annotateTop}{If TRUE, only annotates the top hit on each chromosome that is below the annotatePval threshold.}
 }}
 }
 \value{

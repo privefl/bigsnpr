@@ -1,5 +1,9 @@
 ################################################################################
 
+MY_THEME <- bigstatsr:::MY_THEME
+
+################################################################################
+
 #' Manhattan plot
 #'
 #' Creates a manhattan plot based on the package **qqman**.
@@ -25,7 +29,8 @@ snp_manhattan <- function(gwas, map, ...) {
   qqman::manhattan(data.frame(CHR = map[[1]],
                               SNP = map[[2]],
                               BP  = map[[4]],
-                              P   = predict(gwas)))
+                              P   = predict(gwas)),
+                   ...)
 }
 
 ################################################################################
