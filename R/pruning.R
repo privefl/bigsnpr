@@ -53,7 +53,7 @@ NULL
 
 #################################################################################
 
-clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.kb, infos.pos,
+clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
                         thr.r2, exclude) {
 
   # init
@@ -73,7 +73,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.kb, infos.pos,
   }
 
   # main algo
-  if (is.size.in.kb) {
+  if (is.size.in.bp) {
     keep <- clumping2(G2,
                       rowInd = ind.row,
                       colInd = ind.chr,
@@ -105,7 +105,7 @@ snp_clumping <- function(G, infos.chr,
                          ind.row = rows_along(G),
                          S = NULL,
                          size = 1000,
-                         is.size.in.kb = FALSE,
+                         is.size.in.bp = FALSE,
                          infos.pos = NULL,
                          thr.r2 = 0.5,
                          exclude = NULL,
@@ -120,7 +120,7 @@ snp_clumping <- function(G, infos.chr,
 ################################################################################
 
 pruningChr <- function(G, ind.chr, ind.row, nploidy,
-                       size, is.size.in.kb, infos.pos, thr.r2, exclude) {
+                       size, is.size.in.bp, infos.pos, thr.r2, exclude) {
 
   # cache some computations
   G2 <- attach.BM(G)
@@ -139,7 +139,7 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
   }
 
   # main algo
-  if (is.size.in.kb) {
+  if (is.size.in.bp) {
     keep <- pruning2(G2,
                      rowInd = ind.row,
                      colInd = ind.chr,
@@ -148,7 +148,7 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
                      mafX = maf,
                      sumX = stats$sum,
                      denoX = denoX,
-                     size = size * 1000, # in kb
+                     size = size * 1000, # in bp
                      thr = thr.r2)
   } else {
     keep <- pruning(G2,
@@ -170,7 +170,7 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
 snp_pruning <- function(G, infos.chr,
                         ind.row = rows_along(G),
                         size = 50,
-                        is.size.in.kb = FALSE,
+                        is.size.in.bp = FALSE,
                         infos.pos = NULL,
                         thr.r2 = 0.5,
                         exclude = NULL,

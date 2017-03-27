@@ -17,6 +17,7 @@ MY_THEME <- bigstatsr:::MY_THEME
 #' @param colors Colors that used for each chromosome (they are recycled).
 #' Default is an alternance of black and grey.
 #' @param dist.sep.chrs "Physical" distance that separates two chromosomes.
+#' Default is 10 Mbp.
 #' @param ind.highlight Indices of SNPs you want to highlight (of interest).
 #' Default doesn't highlight any SNPs.
 #' @param col.highlight Color used for highlighting SNPs. Default uses red.
@@ -24,6 +25,9 @@ MY_THEME <- bigstatsr:::MY_THEME
 #' a lighter object (and plot). Default doesn't cut anything.
 #' If used, the resulting object will have an attribute called `subset`
 #' giving the indices of the kept points.
+#' @param labels Labels of the x axis. Default uses the number of the
+#' chromosome there are in `infos.chr`(`sort(unique(infos.chr))`). This may be
+#' useful to restrict the number of labels so that they are not overlapping.
 #' @param coeff Relative size of text. Default is `1`.
 #'
 #' @return A `ggplot2` object. You can plot it using the `print` method.
@@ -39,6 +43,7 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
                           dist.sep.chrs = 1e7,
                           ind.highlight = integer(0),
                           col.highlight = "red",
+                          labels = all.chr,
                           npoints = NULL,
                           coeff = 1) {
 
@@ -71,7 +76,7 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
   p <- MY_THEME(ggplot(data.frame(pos = all.pos, lp = -lpval)[ind, ],
                        aes(pos, lp)), coeff = coeff) +
     geom_point(color = all.colors[ind]) +
-    scale_x_continuous(breaks = label.pos, labels = all.chr,
+    scale_x_continuous(breaks = label.pos, labels = labels,
                        limits = range(all.pos)) +
     labs(title = "Manhattan Plot", x = "Chromosome",
          y = expression(-log[10](italic("p-value"))),

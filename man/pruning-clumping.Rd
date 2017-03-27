@@ -8,11 +8,11 @@
 \title{LD pruning and clumping}
 \usage{
 snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL, size = 1000,
-  is.size.in.kb = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
+  is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
   ncores = 1)
 
 snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 50,
-  is.size.in.kb = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
+  is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
   nploidy = getOption("bigsnpr.nploidy"), ncores = 1)
 
 snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)

@@ -51,7 +51,7 @@ LogicalVector clumping(const S4& BM,
   return keep;
 }
 
-// Clumping within a distance in kb
+// Clumping within a distance in bp
 // [[Rcpp::export]]
 LogicalVector clumping2(const S4& BM,
                         const IntegerVector& rowInd,
@@ -150,7 +150,7 @@ LogicalVector& pruning(const S4& BM,
   return keep;
 }
 
-// Pruning within a distance in kb
+// Pruning within a distance in bp
 // [[Rcpp::export]]
 LogicalVector& pruning2(const S4& BM,
                         const IntegerVector& rowInd,

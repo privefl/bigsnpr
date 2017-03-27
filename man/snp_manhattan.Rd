@@ -6,7 +6,7 @@
 \usage{
 snp_manhattan(gwas, infos.chr, infos.pos, colors = c("black", "grey60"),
   dist.sep.chrs = 1e+07, ind.highlight = integer(0),
-  col.highlight = "red", npoints = NULL, coeff = 1)
+  col.highlight = "red", labels = all.chr, npoints = NULL, coeff = 1)
 }
 \arguments{
 \item{gwas}{A \code{mhtest} object with the p-values associated with each SNP.
@@ -15,12 +15,17 @@ Typically, the output of \link{big_univLinReg}, \link{big_univLogReg} or \link{s
 \item{colors}{Colors that used for each chromosome (they are recycled).
 Default is an alternance of black and grey.}
 
-\item{dist.sep.chrs}{"Physical" distance that separates two chromosomes.}
+\item{dist.sep.chrs}{"Physical" distance that separates two chromosomes.
+Default is 10 Mbp.}
 
 \item{ind.highlight}{Indices of SNPs you want to highlight (of interest).
 Default doesn't highlight any SNPs.}
 
 \item{col.highlight}{Color used for highlighting SNPs. Default uses red.}
+
+\item{labels}{Labels of the x axis. Default uses the number of the
+chromosome there are in \code{infos.chr}(\code{sort(unique(infos.chr))}). This may be
+useful to restrict the number of labels so that they are not overlapping.}
 
 \item{npoints}{Number of points to keep (ranked by p-value) in order to get
 a lighter object (and plot). Default doesn't cut anything.
