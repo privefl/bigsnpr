@@ -1,13 +1,30 @@
 require(SNPRelate)
 
-root <- "../../Téléchargements/plink_linux_x86_64/celiac300_chr1"
-test <- SNPRelate::snpgdsBED2GDS(bed.fn = paste0(root, ".bed"),
-                                 fam.fn = paste0(root, ".fam"),
-                                 bim.fn = paste0(root, ".bim"),
-                                 out.gdsfn = paste0(root, ".gds"))
+# root <- "../../Téléchargements/plink_linux_x86_64/celiac300_chr1"
+# root <- "../../plink_linux_x86_64/celiac300_sub"
+# test <- SNPRelate::snpgdsBED2GDS(bed.fn = paste0(root, ".bed"),
+#                                  fam.fn = paste0(root, ".fam"),
+#                                  bim.fn = paste0(root, ".bim"),
+#                                  out.gdsfn = paste0(root, ".gds"))
 
 
-genofile <- snpgdsOpen(test)
+genofile <- snpgdsOpen("../../plink_linux_x86_64/celiac300_sub.gds")
+
+print(system.time(
+  relate <- snpgdsIBDMoM(genofile, num.thread = 6)
+)) # 7.5 min (6 cores) -> 12 min with PLINK (11 cores)
+
+genome <- data.table::fread("../../plink_linux_x86_64/plink.genome")
+require(dplyr)
+ind <- as.matrix(transmute(genome, IID1 = match(IID1, relate$sample.id),
+                           IID2 = match(IID2, relate$sample.id)))
+
+all.equal(relate$k0[ind], genome$Z0) # Mean relative difference: 3.424118e-05
+all.equal(relate$k1[ind], genome$Z1) # Mean relative difference: 0.0001229569
+
+kinship <- (1 - relate$k0[ind] - relate$k1[ind] / 2) / 2
+all.equal(2 * kinship, genome$PI_HAT) # Mean relative difference: 0.0002069291
+all.equal(rowSums(genome[, paste0("Z", 0:2)]), rep(1, 237)) # Mean relative difference: 8.444332e-05
 
 print(system.time(
   GRM <- SNPRelate::snpgdsGRM(genofile)
