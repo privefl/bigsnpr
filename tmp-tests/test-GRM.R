@@ -8,7 +8,7 @@ require(SNPRelate)
 #                                  out.gdsfn = paste0(root, ".gds"))
 
 
-genofile <- snpgdsOpen("../../plink_linux_x86_64/celiac300_sub.gds")
+genofile <- snpgdsOpen(paste0(root, ".gds"))
 
 print(system.time(
   relate <- snpgdsIBDMoM(genofile, num.thread = 6)
@@ -50,4 +50,4 @@ print(system.time(
 print(system.time(
   ibs <- SNPRelate::snpgdsIBSNum(genofile)
 )) # 2.5 min
-ibs$ibs[1:5, 1:5]
+ibs$ibs0[1:5, 1:5]
