@@ -16,7 +16,7 @@ snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL, pi.hat = 0.08,
 appending \code{"_norel"} to \code{prefix.in} (\code{bedfile.in} without extension).}
 
 \item{pi.hat}{PI_HAT value threshold for individuals (the second)
-to be excluded.}
+to be excluded. Default is \code{0.08}.}
 
 \item{ncores}{Number of cores to be used. Default is \code{1}. An usually good
 value for this parameter is \code{ncores = parallel::detectCores() - 1}.}

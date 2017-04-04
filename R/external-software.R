@@ -82,7 +82,7 @@ snp_plinkQC <- function(plink.path, prefix.in,
 #' @param bedfile.out Path to the output bedfile. Default is created by
 #' appending `"_norel"` to `prefix.in` (`bedfile.in` without extension).
 #' @param pi.hat PI_HAT value threshold for individuals (the second)
-#' to be excluded.
+#' to be excluded. Default is `0.08`.
 #' @param ncores Number of cores to be used. Default is `1`. An usually good
 #' value for this parameter is `ncores = parallel::detectCores() - 1`.
 #' @param pruning.args A vector of 2 pruning parameters, respectively
@@ -114,15 +114,15 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
                            pruning.args = c(100, 0.2),
                            extra.options = "") {
 
-  # temporary output file
+  # temporary file
   tmpfile <- tempfile()
-  genomefile <- paste0(tmpfile, ".genome")
-  on.exit(unlink(genomefile), add = TRUE)
 
   # check extension of file
   assert_ext(bedfile.in, "bed")
   # get file without extension
   prefix.in <- sub("\\.bed$", "", bedfile.in)
+  # get genome file
+  genomefile <- paste0(prefix.in, ".genome")
 
   # get possibly new file
   if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel", ".bed")
@@ -152,7 +152,7 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
       opt.pruning,
       "--genome",
       "--min", pi.hat,
-      "--out", tmpfile,
+      "--out", prefix.in,
       "--threads", ncores,
       extra.options
     )
@@ -202,6 +202,11 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
 #' @param extra.options Other options to be passed to Beagle as a string. More
 #' options can be found at Beagle's website.
 #'
+#' @references B L Browning and S R Browning (2016).
+#' Genotype imputation with millions of reference samples.
+#' Am J Hum Genet 98:116-126.
+#' \url{dx.doi.org/doi:10.1016/j.ajhg.2015.11.020}
+#'
 #' @return The path of the new bedfile.
 #' @export
 snp_beagleImpute <- function(beagle.path, plink.path, bedfile.in,
@@ -226,7 +231,8 @@ snp_beagleImpute <- function(beagle.path, plink.path, bedfile.in,
       plink.path,
       "--bfile", prefix.in,
       "--recode vcf bgz", # .vcf.gz extension
-      "--out", tmpfile1
+      "--out", tmpfile1,
+      "--threads", ncores
     )
   )
   vcf1 <- paste0(tmpfile1, ".vcf.gz")

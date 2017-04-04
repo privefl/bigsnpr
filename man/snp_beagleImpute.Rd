@@ -39,3 +39,9 @@ Downloads and more informations can be found at the following websites
 \item \href{https://faculty.washington.edu/browning/beagle/beagle.html}{Beagle}.
 }
 }
+\references{
+B L Browning and S R Browning (2016).
+Genotype imputation with millions of reference samples.
+Am J Hum Genet 98:116-126.
+\url{dx.doi.org/doi:10.1016/j.ajhg.2015.11.020}
+}

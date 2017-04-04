@@ -15,9 +15,11 @@
 #' @param ... Not used.
 #'
 #' @export
-#' @return A new `bigSNP`.
+#' @return The path to the RDS file that stores the `bigSNP` object.
+#' Note that this function creates two other files which store the
+#' `big.matrix` and its descriptor.
 #' @seealso [bigSNP][bigSNP-class]
-#' @example examples/example.sub.bigSNP.R
+#' @example
 subset.bigSNP <- function(x,
                           ind.row = rows_along(X),
                           ind.col = cols_along(X),
@@ -51,7 +53,7 @@ subset.bigSNP <- function(x,
 
   saveRDS(snp_list, newfiles$rds)
 
-  snp_list
+  newfiles$rds
 }
 
 ################################################################################
