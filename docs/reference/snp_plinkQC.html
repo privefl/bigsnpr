@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAF — snp_MAF â€¢ bigsnpr</title>
+<title>Quality Control — snp_plinkQC â€¢ bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,38 +84,65 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>MAF</h1>
+    <h1>Quality Control</h1>
     </div>
 
     
-    <p>Minor Allele Frequency.</p>
+    <p>Quality Control (QC) using <strong>PLINK 1.9</strong>.</p>
     
 
-    <pre><span class='fu'>snp_MAF</span>(<span class='no'>G</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"bigsnpr.nploidy"</span>))</pre>
+    <pre><span class='fu'>snp_plinkQC</span>(<span class='no'>plink.path</span>, <span class='no'>prefix.in</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"--bfile"</span>, <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>maf</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>geno</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>mind</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>hwe</span> <span class='kw'>=</span> <span class='fl'>1e-50</span>,
+  <span class='kw'>autosome.only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>G</dt>
-      <dd>A BM.code.descriptor.
-Typically the slot <code>genotypes</code> of a <code>bigSNP</code>.
-You shouldn&#39;t have missing values in your data.</dd>
-      <dt>ind.row</dt>
-      <dd>An optional vector of the row (individuals) indices that
-are used. If not specified, all rows are used.</dd>
-      <dt>ind.col</dt>
-      <dd>An optional vector of the column (SNP) indices that are used.
-If not specified, all columns are used.</dd>
-      <dt>nploidy</dt>
-      <dd>Number of trials, parameter of the binomial distribution.
-Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
+      <dt>plink.path</dt>
+      <dd>Path to the executable of PLINK 1.9.</dd>
+      <dt>prefix.in</dt>
+      <dd>Prefix (path without extension) of the dataset to be QCed.</dd>
+      <dt>file.type</dt>
+      <dd>Type of the dataset to be QCed. Default is <code>&quot;--bfile&quot;</code> and
+corresponds to bed/bim/fam files. You can also use <code>&quot;--file&quot;</code> for ped/map files
+or <code>&quot;--vcf&quot;</code> for a VCF file. More information can be found at
+<a href = 'https://www.cog-genomics.org/plink/1.9/input'>https://www.cog-genomics.org/plink/1.9/input</a>.</dd>
+      <dt>prefix.out</dt>
+      <dd>Prefix (path without extension) of the bed/bim/fam dataset
+to be created. Default is created by appending <code>&quot;_QC&quot;</code> to <code>prefix.in</code>.</dd>
+      <dt>maf</dt>
+      <dd>Minimum Minor Allele Frequency (MAF) for a SNP to be kept.</dd>
+      <dt>geno</dt>
+      <dd>Maximum proportion of missing values for a SNP to be kept.</dd>
+      <dt>mind</dt>
+      <dd>Maximum proportion of missing values for a sample to be kept.</dd>
+      <dt>hwe</dt>
+      <dd>Filters out all variants which have Hardy-Weinberg equilibrium
+exact test p-value below the provided threshold.</dd>
+      <dt>autosome.only</dt>
+      <dd>Whether to exclude all unplaced and non-autosomal
+variants?</dd>
+      <dt>extra.options</dt>
+      <dd>Other options to be passed to PLINK as a string. More
+options can be found at <a href = 'https://www.cog-genomics.org/plink2/filter'>https://www.cog-genomics.org/plink2/filter</a>.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of MAFs, corresponding to <code>ind.col</code>.</p>
+    <p>The path of the newly created bedfile.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'>## Not run: ------------------------------------</span>
+<span class='co'># # On MY computer, I can do:</span>
+<span class='co'># plink &lt;- "../plink_linux_x86_64/plink"</span>
+<span class='co'># prefix &lt;- "../POPRES_data/POPRES_allchr"</span>
+<span class='co'># test &lt;- snp_plinkQC(plink.path = plink,</span>
+<span class='co'>#                     prefix.in = prefix,</span>
+<span class='co'>#                     file.type = "--file", # inputs are ped/map files</span>
+<span class='co'>#                     maf = 0.05,</span>
+<span class='co'>#                     hwe = 1e-10,</span>
+<span class='co'>#                     autosome.only = TRUE)</span>
+<span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -123,7 +150,9 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAF — snp_MAF â€¢ bigsnpr</title>
+<title>Manhattan plot — snp_manhattan â€¢ bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,36 +84,57 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>MAF</h1>
+    <h1>Manhattan plot</h1>
     </div>
 
     
-    <p>Minor Allele Frequency.</p>
+    <p>Creates a manhattan plot.</p>
     
 
-    <pre><span class='fu'>snp_MAF</span>(<span class='no'>G</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"bigsnpr.nploidy"</span>))</pre>
+    <pre><span class='fu'>snp_manhattan</span>(<span class='no'>gwas</span>, <span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"black"</span>, <span class='st'>"grey60"</span>),
+  <span class='kw'>dist.sep.chrs</span> <span class='kw'>=</span> <span class='fl'>1e+07</span>, <span class='kw'>ind.highlight</span> <span class='kw'>=</span> <span class='fu'>integer</span>(<span class='fl'>0</span>),
+  <span class='kw'>col.highlight</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='no'>all.chr</span>, <span class='kw'>npoints</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>G</dt>
-      <dd>A BM.code.descriptor.
-Typically the slot <code>genotypes</code> of a <code>bigSNP</code>.
-You shouldn&#39;t have missing values in your data.</dd>
-      <dt>ind.row</dt>
-      <dd>An optional vector of the row (individuals) indices that
-are used. If not specified, all rows are used.</dd>
-      <dt>ind.col</dt>
-      <dd>An optional vector of the column (SNP) indices that are used.
-If not specified, all columns are used.</dd>
-      <dt>nploidy</dt>
-      <dd>Number of trials, parameter of the binomial distribution.
-Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
+      <dt>gwas</dt>
+      <dd>A <code>mhtest</code> object with the p-values associated with each SNP.
+Typically, the output of big_univLinReg, big_univLogReg or <a href='snp_pcadapt.html'>snp_pcadapt</a>.</dd>
+      <dt>colors</dt>
+      <dd>Colors that used for each chromosome (they are recycled).
+Default is an alternance of black and grey.</dd>
+      <dt>dist.sep.chrs</dt>
+      <dd>&quot;Physical&quot; distance that separates two chromosomes.
+Default is 10 Mbp.</dd>
+      <dt>ind.highlight</dt>
+      <dd>Indices of SNPs you want to highlight (of interest).
+Default doesn&#39;t highlight any SNPs.</dd>
+      <dt>col.highlight</dt>
+      <dd>Color used for highlighting SNPs. Default uses red.</dd>
+      <dt>labels</dt>
+      <dd>Labels of the x axis. Default uses the number of the
+chromosome there are in <code>infos.chr</code>(<code>sort(unique(infos.chr))</code>). This may be
+useful to restrict the number of labels so that they are not overlapping.</dd>
+      <dt>npoints</dt>
+      <dd>Number of points to keep (ranked by p-value) in order to get
+a lighter object (and plot). Default doesn&#39;t cut anything.
+If used, the resulting object will have an attribute called <code>subset</code>
+giving the indices of the kept points.</dd>
+      <dt>coeff</dt>
+      <dd>Relative size of text. Default is <code>1</code>.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of MAFs, corresponding to <code>ind.col</code>.</p>
+    <p>A <code>ggplot2</code> object. You can plot it using the <code>print</code> method.
+You can modify it as you wish by adding layers. You might want to read
+<a href = 'this chapter'>http://r4ds.had.co.nz/data-visualisation.html</a>
+to get more familiar with the package <strong>ggplot2</strong>.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If you don&#39;t have infos of chromosome and position, you should simply
+use <code>plot</code> instead.</p>
     
 
   </div>
@@ -123,6 +144,8 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

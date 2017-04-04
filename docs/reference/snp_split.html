@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAF — snp_MAF â€¢ bigsnpr</title>
+<title>Split-parApply-Combine — snp_split â€¢ bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,36 +84,47 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>MAF</h1>
+    <h1>Split-parApply-Combine</h1>
     </div>
 
     
-    <p>Minor Allele Frequency.</p>
+    <p>A Split-Apply-Combine strategy to parallelize the evaluation of a function
+on each SNP, independently.</p>
     
 
-    <pre><span class='fu'>snp_MAF</span>(<span class='no'>G</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"bigsnpr.nploidy"</span>))</pre>
+    <pre><span class='fu'>snp_split</span>(<span class='no'>infos.chr</span>, <span class='no'>FUN</span>, <span class='no'>combine</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>G</dt>
-      <dd>A BM.code.descriptor.
-Typically the slot <code>genotypes</code> of a <code>bigSNP</code>.
-You shouldn&#39;t have missing values in your data.</dd>
-      <dt>ind.row</dt>
-      <dd>An optional vector of the row (individuals) indices that
-are used. If not specified, all rows are used.</dd>
-      <dt>ind.col</dt>
-      <dd>An optional vector of the column (SNP) indices that are used.
-If not specified, all columns are used.</dd>
-      <dt>nploidy</dt>
-      <dd>Number of trials, parameter of the binomial distribution.
-Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
+      <dt>infos.chr</dt>
+      <dd>Vector of integers specifying the chromosome of each SNP.
+Typically the slot <code>chromosome</code> of the slot <code>map</code> of a <code>bigSNP</code>.</dd>
+      <dt>FUN</dt>
+      <dd>The function to be applied. It must take a
+BM.code as first argument and <code>ind.chr</code>, an another argument
+to provide subsetting over SNPs.
+You can access the number of the chromosome by using <code>attr(ind.chr, &quot;chr&quot;)</code>.</dd>
+      <dt>combine</dt>
+      <dd>function that is used by foreach to process the tasks
+results as they generated. This can be specified as either a function or a
+non-empty character string naming the function. Specifying &#39;c&#39; is useful
+for concatenating the results into a vector, for example. The values &#39;cbind&#39;
+and &#39;rbind&#39; can combine vectors into a matrix. The values &#39;+&#39; and &#39;*&#39; can be
+used to process numeric data. By default, the results are returned in a list.</dd>
+      <dt>ncores</dt>
+      <dd>Number of cores used. Default doesn&#39;t use parallelism.</dd>
+      <dt>...</dt>
+      <dd>Extra arguments to be passed to <code>FUN</code>.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of MAFs, corresponding to <code>ind.col</code>.</p>
+    <p>The result of foreach.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function splits indices for each chromosome, then apply a given function
+to each part (chromosome) and finally combine the results.</p>
     
 
   </div>
@@ -123,6 +134,8 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

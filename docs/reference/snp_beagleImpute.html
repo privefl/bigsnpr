@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAF — snp_MAF â€¢ bigsnpr</title>
+<title>Imputation — snp_beagleImpute â€¢ bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -84,36 +84,58 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>MAF</h1>
+    <h1>Imputation</h1>
     </div>
 
     
-    <p>Minor Allele Frequency.</p>
+    <p>Imputation using <strong>Beagle</strong> version 4.</p>
     
 
-    <pre><span class='fu'>snp_MAF</span>(<span class='no'>G</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"bigsnpr.nploidy"</span>))</pre>
+    <pre><span class='fu'>snp_beagleImpute</span>(<span class='no'>beagle.path</span>, <span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>memory.max</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>G</dt>
-      <dd>A BM.code.descriptor.
-Typically the slot <code>genotypes</code> of a <code>bigSNP</code>.
-You shouldn&#39;t have missing values in your data.</dd>
-      <dt>ind.row</dt>
-      <dd>An optional vector of the row (individuals) indices that
-are used. If not specified, all rows are used.</dd>
-      <dt>ind.col</dt>
-      <dd>An optional vector of the column (SNP) indices that are used.
-If not specified, all columns are used.</dd>
-      <dt>nploidy</dt>
-      <dd>Number of trials, parameter of the binomial distribution.
-Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
+      <dt>beagle.path</dt>
+      <dd>Path to the executable of Beagle v4+.</dd>
+      <dt>plink.path</dt>
+      <dd>Path to the executable of PLINK 1.9.</dd>
+      <dt>bedfile.in</dt>
+      <dd>Path to the input bedfile.</dd>
+      <dt>bedfile.out</dt>
+      <dd>Path to the output bedfile. Default is created by
+appending <code>&quot;_impute&quot;</code> to <code>prefix.in</code> (<code>bedfile.in</code> without extension).</dd>
+      <dt>memory.max</dt>
+      <dd>Max memory (in Gb) to be used. It is internally rounded
+to be an integer. Default is <code>3</code>.</dd>
+      <dt>ncores</dt>
+      <dd>Number of cores to be used. Default is <code>1</code>. An usually good
+value for this parameter is <code>ncores = parallel::detectCores() - 1</code>.</dd>
+      <dt>extra.options</dt>
+      <dd>Other options to be passed to Beagle as a string. More
+options can be found at Beagle&#39;s website.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of MAFs, corresponding to <code>ind.col</code>.</p>
+    <p>The path of the new bedfile.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Downloads and more informations can be found at the following websites
+<ul>
+<li> <a href = 'PLINK'>https://www.cog-genomics.org/plink2</a>,
+</li>
+<li> <a href = 'Beagle'>https://faculty.washington.edu/browning/beagle/beagle.html</a>.
+</li>
+</ul></p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>B L Browning and S R Browning (2016).
+Genotype imputation with millions of reference samples.
+Am J Hum Genet 98:116-126.
+<a href = 'dx.doi.org/doi:10.1016/j.ajhg.2015.11.020'>dx.doi.org/doi:10.1016/j.ajhg.2015.11.020</a></p>
     
 
   </div>
@@ -123,6 +145,10 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>

@@ -76,7 +76,7 @@
 <div id="input-format" class="section level2">
 <h2 class="hasAnchor">
 <a href="#input-format" class="anchor"> </a>Input format</h2>
-<p>For now, this package only read <em>bed</em>/<em>bim</em>/<em>fam</em> files (PLINK preferred format) using <code>snp_readBed</code>. Quality control and conversion can be done using PLINK, which can be called directly from R using <code>snp_plinkQC</code> and <code>snp_plinkIBDQC</code>.</p>
+<p>For now, this package only read <em>bed</em>/<em>bim</em>/<em>fam</em> files (PLINK preferred format) using <code>snp_readBed</code>. Before reading into this package’s special format, quality control and conversion can be done using PLINK, which can be called directly from R using <code>snp_plinkQC</code> and <code>snp_plinkIBDQC</code>.</p>
 </div>
 </div>
 <div id="todo-describe-bigsnp" class="section level1">
@@ -90,6 +90,7 @@
 <li>Fast imputation algorithm which doesn’t require reference panels.</li>
 <li>Imputation probabilities and multiple imputation.</li>
 <li>An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only, others?).</li>
+<li>proper integration of haploid species.</li>
 </ul>
 </div>
 </div>

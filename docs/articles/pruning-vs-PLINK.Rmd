@@ -1,0 +1,50 @@
+---
+title: "Comparison with PLINK pruning"
+output: html_notebook
+---
+
+```{r}
+require(bigsnpr)
+```
+
+```{r}
+test <- snp_attachExample()
+str(test)
+```
+
+```{r}
+bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+path <- tools::file_path_sans_ext(bedfile)
+size <- 50
+step <- 1
+r2.thr <- 0.05
+```
+
+If using 
+```
+system(sprintf(
+  "../../plink-1.07-x86_64/plink --bfile %s --indep-pairwise %s %s %s --noweb",
+  path, size, step, r2.thr
+))
+```
+
+```{r}
+logfile <- system.file("extdata", "plink.log", package = "bigsnpr") 
+writeLines(readLines(logfile))
+prune.infile <- system.file("extdata", "plink.prune.in", package = "bigsnpr")
+snps <- scan(prune.infile, what = "character")
+snps.ind <- match(snps, test$map$marker.ID)
+```
+
+
+```{r}
+print(system.time(
+  snps.ind2 <- snp_pruning(test, size = size, thr.r2 = r2.thr)
+))
+```
+
+```{r}
+print(all.equal(snps.ind, snps.ind2))
+```
+
+So, I get the same results while being way faster.

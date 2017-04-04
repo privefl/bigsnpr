@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>bigsnpr: Predictive Analysis of Massive SNP Arrays — bigsnpr-package • bigsnpr</title>
+<title>bigsnpr: Predictive Analysis of Massive SNP Arrays � bigsnpr-package • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -95,8 +95,9 @@ for predictive analysis based on SNP arrays.</p>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>X</dt>
-      <dd>A <a href='http://www.rdocumentation.org/packages/bigmemory/topics/big.matrix-class'>big.matrix</a>.
+      <dt>G</dt>
+      <dd>A BM.code.descriptor.
+Typically the slot <code>genotypes</code> of a <code>bigSNP</code>.
 You shouldn&#39;t have missing values in your data.</dd>
       <dt>x</dt>
       <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
@@ -106,11 +107,14 @@ i.e. <code>x$fam$affection</code> is a vector with exactly two values
 (and the value coding for cases is larger than the value coding
 for controls). So, in particular, no missing value is allowed.
 Default is <code>TRUE</code>.</dd>
-      <dt>ind.train</dt>
-      <dd>An optional vector of the row indices that are used,
-for the training part. If not specified, all rows are used.</dd>
+      <dt>nploidy</dt>
+      <dd>Number of trials, parameter of the binomial distribution.
+Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
+      <dt>ind.row</dt>
+      <dd>An optional vector of the row (individuals) indices that
+are used. If not specified, all rows are used.</dd>
       <dt>ind.col</dt>
-      <dd>An optional vector of the column indices that are used.
+      <dd>An optional vector of the column (SNP) indices that are used.
 If not specified, all columns are used.</dd>
       <dt>block.size</dt>
       <dd>Maximum number of loci read at once (for all individuals).</dd>
@@ -140,7 +144,16 @@ If not specified, all columns are used.</dd>
 
     <h2>Author</h2>
     
-<strong>Maintainer</strong>: Florian Privé <a href='mailto:florian.prive.21@gmail.com'>florian.prive.21@gmail.com</a>
+<strong>Maintainer</strong>: Florian Priv� <a href='mailto:florian.prive.21@gmail.com'>florian.prive.21@gmail.com</a>
+
+Other contributors:
+<ul>
+<li> Michael Blum <a href='mailto:michael.blum@univ-grenoble-alpes.fr'>michael.blum@univ-grenoble-alpes.fr</a> [thesis advisor]
+  </li>
+<li> Hugues Aschard <a href='mailto:hugues.aschard@pasteur.fr'>hugues.aschard@pasteur.fr</a> [thesis advisor]
+</li>
+</ul>
+
 
 
   </div>

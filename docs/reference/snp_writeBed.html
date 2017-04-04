@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write PLINK files from a &quot;bigSNP&quot; — snp_writeBed • bigsnpr</title>
+<title>Write PLINK files from a &quot;bigSNP&quot; � snp_writeBed • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -111,8 +111,7 @@
 <span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='fl'>911</span>
 
 <span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span>(<span class='no'>N</span>, <span class='no'>M</span>)
-<span class='no'>fake</span>$<span class='no'>genotypes</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>c</span>(<span class='fl'>0</span>:<span class='fl'>2</span>, <span class='fl'>NA</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>N</span> * <span class='no'>M</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Assignment will down cast from integer to char
-#&gt; Hint: To remove this warning type:  options(bigmemory.typecast.warning=FALSE)</div><div class='output co'>#&gt; <span class='warning'>Warning: </span></div><div class='input'>
+<span class='no'>fake</span>$<span class='no'>genotypes</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>c</span>(<span class='fl'>0</span>:<span class='fl'>2</span>, <span class='fl'>NA</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>N</span> * <span class='no'>M</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in fake$genotypes[] &lt;- sample(c(0:2, NA), size = N * M, replace = TRUE): object of type &#39;S4&#39; is not subsettable</span></div><div class='input'>
 <span class='co'># write the object as a bed/bim/fam object</span>
 <span class='no'>tmpfile</span> <span class='kw'>&lt;-</span> <span class='fu'>tempfile</span>()
 <span class='no'>bed</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_writeBed</span>(<span class='no'>fake</span>, <span class='fu'>paste0</span>(<span class='no'>tmpfile</span>, <span class='st'>".bed"</span>))
@@ -121,9 +120,9 @@
                                 <span class='kw'>backingpath</span> <span class='kw'>=</span> <span class='fu'>dirname</span>(<span class='no'>tmpfile</span>)))
 
 <span class='co'># same content</span>
-<span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[,], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[,]))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[,], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[,]))</div><div class='output co'>#&gt; <span class='error'>Error in fake$genotypes[, ]: object of type &#39;S4&#39; is not subsettable</span></div><div class='input'><span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>print</span>(<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># two different files</span>
-<span class='fu'>print</span>(<span class='no'>fake</span>$<span class='no'>backingfile</span> <span class='kw'>!=</span> <span class='no'>fake2</span>$<span class='no'>backingfile</span>)</div><div class='output co'>#&gt; [1] TRUE</div></pre>
+<span class='fu'>print</span>(<span class='no'>fake</span>$<span class='no'>backingfile</span> <span class='kw'>!=</span> <span class='no'>fake2</span>$<span class='no'>backingfile</span>)</div><div class='output co'>#&gt; logical(0)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

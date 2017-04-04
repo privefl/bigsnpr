@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LD pruning and clumping — pruning-clumping • bigsnpr</title>
+<title>LD pruning and clumping � pruning-clumping • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -96,32 +96,38 @@
 </li>
 <li> <code>snp_clumping</code>: LD clumping.
 </li>
-<li> <code>snp_indLRLDR</code>: Get SNP indices of long-range LD regions.
+<li> <code>snp_indLRLDR</code>: Get SNP indices of long-range LD regions for the
+human genome.
 </li>
 </ul></p>
     
 
-    <pre><span class='fu'>snp_clumping</span>(<span class='no'>x</span>, <span class='no'>S</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+    <pre><span class='fu'>snp_clumping</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
-<span class='fu'>snp_pruning</span>(<span class='no'>x</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fu'>nrow</span>(<span class='no'>X</span>)), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>is.size.in.kb</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'>snp_pruning</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"bigsnpr.nploidy"</span>), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
-<span class='fu'>snp_indLRLDR</span>(<span class='no'>x</span>, <span class='kw'>LD.regions</span> <span class='kw'>=</span> <span class='no'>LD.wiki34</span>)</pre>
+<span class='fu'>snp_indLRLDR</span>(<span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='kw'>LD.regions</span> <span class='kw'>=</span> <span class='no'>LD.wiki34</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>x</dt>
-      <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
+      <dt>G</dt>
+      <dd>A BM.code.descriptor.
+Typically the slot <code>genotypes</code> of a <code>bigSNP</code>.
+You shouldn&#39;t have missing values in your data.</dd>
+      <dt>ind.row</dt>
+      <dd>An optional vector of the row (individuals) indices that
+are used. If not specified, all rows are used.</dd>
       <dt>S</dt>
       <dd>A vector of column statistics which express the importance
 of each SNP (the more important is the SNP, the greater should be
-the corresponding statistic).
-For example, if <code>S</code> follows the standard normal distribution,
-you should probably use <code>abs(S)</code> instead.</dd>
-      <dt>ind.train</dt>
-      <dd>An optional vector of the row indices that are used,
-for the training part. If not specified, all rows are used.</dd>
+the corresponding statistic). For example, if <code>S</code> follows the standard normal
+distribution, and significant means significantly different from 0,
+you should probably use <code>abs(S)</code> instead. If not specified, the MAF
+is computed and used.</dd>
       <dt>size</dt>
       <dd>This parameter should be adjusted with respect to the number of SNPs.
 <ul>
@@ -142,6 +148,9 @@ can be used to exclude long-range LD regions (see Price2008). Another use
 can be for thresholding with respect to p-values associated with <code>S</code>.</dd>
       <dt>ncores</dt>
       <dd>Number of cores used. Default doesn&#39;t use parallelism.</dd>
+      <dt>nploidy</dt>
+      <dd>Number of trials, parameter of the binomial distribution.
+Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
       <dt>LD.regions</dt>
       <dd>A <code>data.frame</code> with columns &quot;Chr&quot;, &quot;Start&quot; and &quot;Stop&quot;.
 Default use the table of 34 long-range LD regions that you can find
@@ -168,20 +177,20 @@ Default use the table of 34 long-range LD regions that you can find
     <p>Price AL, Weale ME, Patterson N, et al.
 Long-Range LD Can Confound Genome Scans in Admixed Populations.
 Am J Hum Genet. 2008;83(1):132-135.
-<a href = 'DOI'>http://dx.doi.org/10.1016/j.ajhg.2008.06.005</a></p>
+<a href = 'http://dx.doi.org/10.1016/j.ajhg.2008.06.005'>http://dx.doi.org/10.1016/j.ajhg.2008.06.005</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>1</span>)
 
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readExample</span>() <span class='co'># need another example</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): impossible de trouver la fonction &quot;snp_readExample&quot;</span></div><div class='input'><span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): objet &#39;test&#39; introuvable</span></div><div class='input'><span class='fu'>print</span>(<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fu'>nrow</span>(<span class='no'>X</span>))</div><div class='output co'>#&gt; <span class='error'>Error in nrow(X): objet &#39;X&#39; introuvable</span></div><div class='input'><span class='fu'>print</span>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>ncol</span>(<span class='no'>X</span>))</div><div class='output co'>#&gt; <span class='error'>Error in ncol(X): objet &#39;X&#39; introuvable</span></div><div class='input'>
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readExample</span>() <span class='co'># need another example</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): could not find function &quot;snp_readExample&quot;</span></div><div class='input'><span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object &#39;test&#39; not found</span></div><div class='input'><span class='fu'>print</span>(<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fu'>nrow</span>(<span class='no'>X</span>))</div><div class='output co'>#&gt; <span class='error'>Error in nrow(X): object &#39;X&#39; not found</span></div><div class='input'><span class='fu'>print</span>(<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'>ncol</span>(<span class='no'>X</span>))</div><div class='output co'>#&gt; <span class='error'>Error in ncol(X): object &#39;X&#39; not found</span></div><div class='input'>
 <span class='co'># pruning / clumping with MAF</span>
-<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pruning</span>(<span class='no'>test</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in snp_pruning(test, thr.corr = 0.1): argument inutilisé (thr.corr = 0.1)</span></div><div class='input'><span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep</span>) / <span class='no'>m</span>)</div><div class='output co'>#&gt; <span class='error'>Error in print(length(ind.keep)/m): objet &#39;ind.keep&#39; introuvable</span></div><div class='input'>
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='kw'>bigstatsr</span><span class='kw'>::</span><span class='fu'>big_colstats</span>(<span class='no'>X</span>)$<span class='no'>sum</span> / (<span class='fl'>2</span> * <span class='no'>n</span>)</div><div class='output co'>#&gt; <span class='error'>Error in check_X(X): objet &#39;X&#39; introuvable</span></div><div class='input'><span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'>pmin</span>(<span class='no'>p</span>, <span class='fl'>1</span> - <span class='no'>p</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pmin(p, 1 - p): objet &#39;p&#39; introuvable</span></div><div class='input'><span class='no'>ind.keep2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in snp_clumping(test, S = maf, thr.corr = 0.1): argument inutilisé (thr.corr = 0.1)</span></div><div class='input'>
+<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pruning</span>(<span class='no'>test</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in snp_pruning(test, thr.corr = 0.1): unused argument (thr.corr = 0.1)</span></div><div class='input'><span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep</span>) / <span class='no'>m</span>)</div><div class='output co'>#&gt; <span class='error'>Error in print(length(ind.keep)/m): object &#39;ind.keep&#39; not found</span></div><div class='input'>
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>big_colstats</span>(<span class='no'>X</span>)$<span class='no'>sum</span> / (<span class='fl'>2</span> * <span class='no'>n</span>)</div><div class='output co'>#&gt; <span class='error'>Error in attach.BM(X.): object &#39;X&#39; not found</span></div><div class='input'><span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'>pmin</span>(<span class='no'>p</span>, <span class='fl'>1</span> - <span class='no'>p</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pmin(p, 1 - p): object &#39;p&#39; not found</span></div><div class='input'><span class='no'>ind.keep2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in snp_clumping(test, S = maf, thr.corr = 0.1): unused argument (thr.corr = 0.1)</span></div><div class='input'>
 <span class='co'># clumping for PRS</span>
-<span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span> <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in sample.int(length(x), size, replace, prob): objet &#39;n&#39; introuvable</span></div><div class='input'><span class='no'>zcatt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_MAX3.html'>snp_MAX3</a></span>(<span class='no'>test</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='error'>Error in check_x(x): objet &#39;test&#39; introuvable</span></div><div class='input'><span class='no'>R2</span> <span class='kw'>&lt;-</span> <span class='kw'>bigstatsr</span><span class='kw'>::</span><span class='fu'>big_univRegLin</span>(<span class='no'>X</span>, <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span>)[<span class='st'>"R2"</span>, ]</div><div class='output co'>#&gt; <span class='error'>Error: &#39;big_univRegLin&#39; is not an exported object from &#39;namespace:bigstatsr&#39;</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='no'>n</span> * <span class='no'>R2</span>) <span class='co'># same thing</span></div><div class='output co'>#&gt; <span class='error'>Error in plot(zcatt$S, n * R2): objet &#39;zcatt&#39; introuvable</span></div><div class='input'><span class='no'>ind.keep3</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in snp_clumping(test, S = zcatt$S, thr.corr = 0.1): argument inutilisé (thr.corr = 0.1)</span></div><div class='input'><span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep3</span>))</div><div class='output co'>#&gt; <span class='error'>Error in print(length(ind.keep3)): objet &#39;ind.keep3&#39; introuvable</span></div><div class='input'><span class='co'># thresholding though the exclude parameter</span>
+<span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span> <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='no'>n</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in sample.int(length(x), size, replace, prob): object &#39;n&#39; not found</span></div><div class='input'><span class='no'>zcatt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_MAX3.html'>snp_MAX3</a></span>(<span class='no'>test</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='error'>Error in snp_MAX3(test, val = 0.5): object &#39;test&#39; not found</span></div><div class='input'><span class='no'>R2</span> <span class='kw'>&lt;-</span> <span class='fu'>big_univRegLin</span>(<span class='no'>X</span>, <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span>)[<span class='st'>"R2"</span>, ]</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): could not find function &quot;big_univRegLin&quot;</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='no'>n</span> * <span class='no'>R2</span>) <span class='co'># same thing</span></div><div class='output co'>#&gt; <span class='error'>Error in plot(zcatt$S, n * R2): object &#39;zcatt&#39; not found</span></div><div class='input'><span class='no'>ind.keep3</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in snp_clumping(test, S = zcatt$S, thr.corr = 0.1): unused argument (thr.corr = 0.1)</span></div><div class='input'><span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep3</span>))</div><div class='output co'>#&gt; <span class='error'>Error in print(length(ind.keep3)): object &#39;ind.keep3&#39; not found</span></div><div class='input'><span class='co'># thresholding though the exclude parameter</span>
 <span class='no'>ind.keep4</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>test</span>, <span class='kw'>S</span> <span class='kw'>=</span> <span class='no'>zcatt</span>$<span class='no'>S</span>, <span class='kw'>thr.corr</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-                          <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='fu'>which</span>(-<span class='fu'>log10</span>(<span class='no'>zcatt</span>$<span class='no'>pS</span>) <span class='kw'>&gt;</span> <span class='fl'>1</span>))</div><div class='output co'>#&gt; <span class='error'>Error in snp_clumping(test, S = zcatt$S, thr.corr = 0.1, exclude = which(-log10(zcatt$pS) &gt;     1)): argument inutilisé (thr.corr = 0.1)</span></div><div class='input'><span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep4</span>))</div><div class='output co'>#&gt; <span class='error'>Error in print(length(ind.keep4)): objet &#39;ind.keep4&#39; introuvable</span></div></pre>
+                          <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='fu'>which</span>(-<span class='fu'>log10</span>(<span class='no'>zcatt</span>$<span class='no'>pS</span>) <span class='kw'>&gt;</span> <span class='fl'>1</span>))</div><div class='output co'>#&gt; <span class='error'>Error in snp_clumping(test, S = zcatt$S, thr.corr = 0.1, exclude = which(-log10(zcatt$pS) &gt;     1)): unused argument (thr.corr = 0.1)</span></div><div class='input'><span class='fu'>print</span>(<span class='fu'>length</span>(<span class='no'>ind.keep4</span>))</div><div class='output co'>#&gt; <span class='error'>Error in print(length(ind.keep4)): object &#39;ind.keep4&#39; not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
