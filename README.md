@@ -8,7 +8,15 @@ bignspr is an R Package for the analysis of massive SNP arrays.
 
 ## This package is under heavy dev
 
+## Input format
 
-## Upcoming features
+For now, this package only read *bed*/*bim*/*fam* files (PLINK preferred format) using `snp_readBed`. Quality control and conversion can be done using PLINK, which can be called directly from R using `snp_plinkQC` and `snp_plinkIBDQC`.
 
-- An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only). Any other ideas?
+#TODO: describe bigSNP
+
+## Possible upcoming features
+
+- Support for other input formats. Note that there is room for coding allele dosages (rounded to two decimal places). See `bigsnpr:::CODE_DOSAGE`.
+- Fast imputation algorithm which doesn't require reference panels.
+- Imputation probabilities and multiple imputation.
+- An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only, others?). 
