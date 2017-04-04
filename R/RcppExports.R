@@ -9,27 +9,6 @@ doubleBM <- function(BM, xpMat2) {
     invisible(.Call('bigsnpr_doubleBM', PACKAGE = 'bigsnpr', BM, xpMat2))
 }
 
-#' T-scores used in pcadapt
-#'
-#' Compute matrix of t-scores (SNPs x scores) used in pcadapt.
-#'
-#' @param xpMat Slot `address` of a `big.matrix` object.
-#' @param U Matrix of left singular vectors (from partial SVD).
-#' @param rowInd Vector of row indices of the `big.matrix` that are used.
-#'
-#' @return A matrix of t-scores where rows correspond to each SNP and
-#' columns correspond to each left singular vector.
-#'
-#' @references Keurcien Luu and Michael Blum (2017).
-#' pcadapt: Fast Principal Component Analysis for Outlier Detection.
-#' R package version 3.0.4. https://CRAN.R-project.org/package=pcadapt.
-#'
-#' @export
-#' @keywords internal
-linRegPcadapt <- function(BM, U, rowInd) {
-    .Call('bigsnpr_linRegPcadapt', PACKAGE = 'bigsnpr', BM, U, rowInd)
-}
-
 clumping <- function(BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
     .Call('bigsnpr_clumping', PACKAGE = 'bigsnpr', BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
 }

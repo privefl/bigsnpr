@@ -20,7 +20,7 @@ snp_pcadapt <- function(G, U.row, ind.row = rows_along(G)) {
   K <- ncol(U.row)
   stopifnot(all.equal(crossprod(U.row), diag(K)))
 
-  zscores <- linRegPcadapt(attach.BM(G), U = U.row, rowInd = ind.row)
+  zscores <- bigstatsr::linRegPcadapt(attach.BM(G), U = U.row, rowInd = ind.row)
 
   fun.pred <- eval(parse(text = sprintf(
     "function(xtr) {

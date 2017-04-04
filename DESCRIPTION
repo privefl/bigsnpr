@@ -33,8 +33,7 @@ LinkingTo:
     BH,
     bigmemory, 
     bigstatsr,
-    Rcpp,
-    RcppArmadillo
+    Rcpp
 Suggests: 
     covr,
     gaston,

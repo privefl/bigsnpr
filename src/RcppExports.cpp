@@ -33,19 +33,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// linRegPcadapt
-NumericMatrix linRegPcadapt(const S4& BM, arma::mat& U, const IntegerVector& rowInd);
-RcppExport SEXP bigsnpr_linRegPcadapt(SEXP BMSEXP, SEXP USEXP, SEXP rowIndSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type U(USEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
-    rcpp_result_gen = Rcpp::wrap(linRegPcadapt(BM, U, rowInd));
-    return rcpp_result_gen;
-END_RCPP
-}
 // clumping
 LogicalVector clumping(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
 RcppExport SEXP bigsnpr_clumping(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
