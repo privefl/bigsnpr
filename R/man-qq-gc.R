@@ -37,7 +37,7 @@ MY_THEME <- bigstatsr:::MY_THEME
 #' @export
 #' @import ggplot2 foreach
 #'
-#' @examples
+#' @example examples/example-man-qq-gc.R
 snp_manhattan <- function(gwas, infos.chr, infos.pos,
                           colors = c("black", "grey60"),
                           dist.sep.chrs = 1e7,
@@ -93,7 +93,8 @@ getLambdaGC <- function(gwas, tol = 1e-8) {
 
   xtr <- attr(gwas, "transfo")(gwas[["score"]])
   PREDICT <-  attr(gwas, "predict")
-  f.opt <- function(x) (10^PREDICT(x) - 0.5)
+  MEDIAN <- log10(0.5)
+  f.opt <- function(x) (PREDICT(x) - MEDIAN)
 
   median(xtr) / stats::uniroot(f.opt, interval = range(xtr),
                                check.conv = TRUE, tol = tol)$root
@@ -105,23 +106,13 @@ getLambdaGC <- function(gwas, tol = 1e-8) {
 #'
 #' Creates a quantile-quantile plot from p-values from a GWAS study.
 #'
-#' @param gwas A `mhtest` object with the p-values associated with each SNP.
-#' Typically, the output of [big_univLinReg], [big_univLogReg] or [snp_pcadapt].
 #' @param lambdaGC Add the Genomic Control coefficient as subtitle to the plot?
-#' @param coeff Relative size of text. Default is `1`.
 #'
-#' @inherit snp_manhattan return
+#' @inherit snp_manhattan return params
 #' @export
 #' @import ggplot2
 #'
-#' @examples
-#' test <- snp_attachExtdata()
-#' svd <- big_SVD(test$genotypes, snp_scaleBinom(), k = 10)
-#' tmp <- snp_pcadapt(test$genotypes, svd$u[, 1:3])
-#' print(p <- snp_qq(tmp))
-#'
-#' print(p2 <- p + ggplot2::aes(text = asPlotlyText(test$map)))
-#' \donttest{plotly::ggplotly(p2, tooltip = "text")}
+#' @example examples/example-man-qq-gc.R
 snp_qq <- function(gwas, lambdaGC = TRUE, coeff = 1) {
 
   p <- graphics::plot(gwas, type = "Q-Q", coeff = coeff)
@@ -139,16 +130,15 @@ snp_qq <- function(gwas, lambdaGC = TRUE, coeff = 1) {
 
 #' Genomic Control
 #'
-#' @param gwas
-#'
-#' @return
 #' @export
+#'
+#' @inherit snp_manhattan return params
 #'
 #' @references Devlin, B., & Roeder, K. (1999).
 #' Genomic control for association studies.
 #' Biometrics, 55(4), 997-1004.
 #'
-#' @examples
+#' @example examples/example-man-qq-gc.R
 snp_gc <- function(gwas) {
 
   stopifnot(inherits(gwas, "mhtest"))

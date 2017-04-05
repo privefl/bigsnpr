@@ -10,7 +10,7 @@ snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
 Typically the slot \code{genotypes} of a \code{bigSNP}.
-You shouldn't have missing values in your data.}
+You shouldn't have missing values in your data or SNPs with 0 MAF.}
 
 \item{ind.row}{An optional vector of the row (individuals) indices that
 are used. If not specified, all rows are used.}

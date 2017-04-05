@@ -6,7 +6,7 @@
 #'
 #' @param G A [BM.code.descriptor][BM.code.descriptor-class].
 #' Typically the slot `genotypes` of a `bigSNP`.
-#' You shouldn't have missing values in your data.
+#' You shouldn't have missing values in your data or SNPs with 0 MAF.
 #'
 #' @param x A [bigSNP][bigSNP-class].
 #'

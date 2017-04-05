@@ -24,11 +24,22 @@ to get more familiar with the package \strong{ggplot2}.
 Creates a quantile-quantile plot from p-values from a GWAS study.
 }
 \examples{
-test <- snp_attachExtdata()
-svd <- big_SVD(test$genotypes, snp_scaleBinom(), k = 10)
-tmp <- snp_pcadapt(test$genotypes, svd$u[, 1:3])
-print(p <- snp_qq(tmp))
+set.seed(9)
 
-print(p2 <- p + ggplot2::aes(text = asPlotlyText(test$map)))
-\donttest{plotly::ggplotly(p2, tooltip = "text")}
+test <- snp_attachExtdata()
+G <- test$genotypes
+y <- rnorm(nrow(G))
+
+gwas <- big_univLinReg(G, y)
+snp_qq(gwas)
+gwas_gc <- snp_gc(gwas) # change attr(gwas_gc, "transfo")
+
+snp_qq(gwas_gc)
+# The next plot should be prettier with a real dataset
+snp_manhattan(gwas_gc,
+              infos.chr = test$map$chromosome,
+              infos.pos = test$map$physical.pos)
+
+p <- snp_qq(gwas_gc) + ggplot2::aes(text = asPlotlyText(test$map))
+\dontrun{plotly::ggplotly(p, tooltip = "text")}
 }

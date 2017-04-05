@@ -8,7 +8,7 @@
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
 Typically the slot \code{genotypes} of a \code{bigSNP}.
-You shouldn't have missing values in your data.}
+You shouldn't have missing values in your data or SNPs with 0 MAF.}
 
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 

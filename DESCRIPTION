@@ -27,6 +27,7 @@ Imports:
     foreach, 
     parallel, 
     Rcpp, 
+    robustbase,
     stats,
     xgboost
 LinkingTo:
@@ -38,7 +39,6 @@ LinkingTo:
 Suggests: 
     covr,
     gaston,
-    robustbase,
     testthat
 Remotes: privefl/bigmemory, privefl/bigstatsr
 RoxygenNote: 6.0.1

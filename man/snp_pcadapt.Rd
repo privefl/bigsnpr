@@ -2,13 +2,44 @@
 % Please edit documentation in R/pcadapt.R
 \name{snp_pcadapt}
 \alias{snp_pcadapt}
-\title{Title}
+\title{Outlier detection}
 \usage{
 snp_pcadapt(G, U.row, ind.row = rows_along(G))
 }
 \arguments{
-\item{ind.row}{}
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
+Typically the slot \code{genotypes} of a \code{bigSNP}.
+You shouldn't have missing values in your data or SNPs with 0 MAF.}
+
+\item{U.row}{Left singular vectors (not scores, $U^T \cdot U = I$)
+corresponding to \code{ind.row}.}
+
+\item{ind.row}{An optional vector of the row (individuals) indices that
+are used. If not specified, all rows are used.}
+}
+\value{
+An object of classes \code{mhtest} and \code{data.frame} returning one
+score by SNP. See \code{methods(class = "mhtest")}.
 }
 \description{
-Title
+Method to detect genetic markers involved in biological adaptation.
+This provides a statistical tool for outlier detection based on
+Principal Component Analysis. This corresponds to the statistic based
+on mahalanobis distance, as implemented in package \strong{pcadapt}.
+}
+\examples{
+test <- snp_attachExtdata()
+G <- test$genotypes
+obj.svd <- big_SVD(G, fun.scaling = snp_scaleBinom(), k = 10)
+plot(obj.svd) # there seems to be 3 "significant" components
+pcadapt <- snp_pcadapt(G, obj.svd$u[, 1:3])
+snp_qq(snp_gc(pcadapt))
+}
+\references{
+Keurcien Luu and Michael Blum (2017).
+pcadapt: Fast Principal Component Analysis for Outlier Detection.
+R package version 3.0.4. https://CRAN.R-project.org/package=pcadapt.
+}
+\seealso{
+\link{snp_manhattan}, \link{snp_qq} and \link{snp_gc}.
 }
