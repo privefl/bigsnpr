@@ -2,13 +2,14 @@
 
 #' Quality Control
 #'
-#' Quality Control (QC) using **PLINK 1.9**.
+#' Quality Control (QC) using
+#' [**PLINK 1.9**](https://www.cog-genomics.org/plink2).
 #'
 #' @param plink.path Path to the executable of PLINK 1.9.
 #' @param prefix.in Prefix (path without extension) of the dataset to be QCed.
 #' @param file.type Type of the dataset to be QCed. Default is `"--bfile"` and
-#' corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map files
-#' or `"--vcf"` for a VCF file. More information can be found at
+#' corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map
+#' files or `"--vcf"` for a VCF file. More information can be found at
 #' \url{https://www.cog-genomics.org/plink/1.9/input}.
 #' @param prefix.out Prefix (path without extension) of the bed/bim/fam dataset
 #' to be created. Default is created by appending `"_QC"` to `prefix.in`.
@@ -25,6 +26,21 @@
 #' @return The path of the newly created bedfile.
 #' @export
 #'
+#' @references
+#' Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
+#' Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
+#' *PLINK: a tool set for whole-genome association and population-based linkage
+#' analyses.* American Journal of Human Genetics 81 (3). Elsevier: 559–75.
+#' \url{http://dx.doi.org/10.1086/519795}.
+#'
+#' Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
+#' Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
+#' *Second-generation PLINK: rising to the challenge of larger and richer
+#' datasets.* GigaScience 4 (1): 7.
+#' \url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
+#'
+#' @seealso [snp_plinkIBDQC]
+#'
 #' @examples
 #' \dontrun{
 #' # On MY computer, I can do:
@@ -34,6 +50,8 @@
 #'                     prefix.in = prefix,
 #'                     file.type = "--file", # inputs are ped/map files
 #'                     maf = 0.05,
+#'                     geno = 0.05,
+#'                     mind = 0.05,
 #'                     hwe = 1e-10,
 #'                     autosome.only = TRUE)}
 snp_plinkQC <- function(plink.path, prefix.in,
@@ -74,7 +92,8 @@ snp_plinkQC <- function(plink.path, prefix.in,
 
 #' Identity-by-descent
 #'
-#' Quality Control based on Identity-by-descent (IBD) computed by **PLINK 1.9**
+#' Quality Control based on Identity-by-descent (IBD) computed by
+#' [**PLINK 1.9**](https://www.cog-genomics.org/plink2)
 #' using its method-of-moments.
 #'
 #' @param plink.path Path to the executable of PLINK 1.9.
@@ -91,15 +110,14 @@ snp_plinkQC <- function(plink.path, prefix.in,
 #' @param extra.options Other options to be passed to PLINK as a string. More
 #' options can be found at \url{https://www.cog-genomics.org/plink/1.9/ibd}.
 #'
-#' @return The path of the new bedfile. If no sample is filter, no new bed/bim/fam
-#' files are created and then the path of the input bedfile is returned.
+#' @return The path of the new bedfile.
+#' If no sample is filter, no new bed/bim/fam files are created and
+#' then the path of the input bedfile is returned.
 #' @export
 #'
-#' @references
-#' Purcell, S., Neale, B., Todd-Brown, K., Thomas, L., Ferreira, M. A.,
-#' Bender, D., ... & Sham, P. C. (2007).
-#' PLINK: a tool set for whole-genome association and population-based linkage
-#' analyses. The American Journal of Human Genetics, 81(3), 559-575.
+#' @inherit snp_plinkQC references
+#'
+#' @seealso [snp_plinkQC]
 #'
 #' @examples
 #' \dontrun{

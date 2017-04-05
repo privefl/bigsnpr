@@ -29,11 +29,13 @@ the window size (in variant count) and the pairwise $r^2$ threshold
 options can be found at \url{https://www.cog-genomics.org/plink/1.9/ibd}.}
 }
 \value{
-The path of the new bedfile. If no sample is filter, no new bed/bim/fam
-files are created and then the path of the input bedfile is returned.
+The path of the new bedfile.
+If no sample is filter, no new bed/bim/fam files are created and
+then the path of the input bedfile is returned.
 }
 \description{
-Quality Control based on Identity-by-descent (IBD) computed by \strong{PLINK 1.9}
+Quality Control based on Identity-by-descent (IBD) computed by
+\href{https://www.cog-genomics.org/plink2}{PLINK 1.9}
 using its method-of-moments.
 }
 \examples{
@@ -44,8 +46,18 @@ bedfile <- "../POPRES_data/POPRES_allchr_QC.bed"
 test <- snp_plinkIBDQC(plink, bedfile, ncores = 4)}
 }
 \references{
-Purcell, S., Neale, B., Todd-Brown, K., Thomas, L., Ferreira, M. A.,
-Bender, D., ... & Sham, P. C. (2007).
-PLINK: a tool set for whole-genome association and population-based linkage
-analyses. The American Journal of Human Genetics, 81(3), 559-575.
+Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
+Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
+\emph{PLINK: a tool set for whole-genome association and population-based linkage
+analyses.} American Journal of Human Genetics 81 (3). Elsevier: 559–75.
+\url{http://dx.doi.org/10.1086/519795}.
+
+Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
+Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
+\emph{Second-generation PLINK: rising to the challenge of larger and richer
+datasets.} GigaScience 4 (1): 7.
+\url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
+}
+\seealso{
+\link{snp_plinkQC}
 }

@@ -14,8 +14,8 @@ snp_plinkQC(plink.path, prefix.in, file.type = "--bfile", prefix.out = NULL,
 \item{prefix.in}{Prefix (path without extension) of the dataset to be QCed.}
 
 \item{file.type}{Type of the dataset to be QCed. Default is \code{"--bfile"} and
-corresponds to bed/bim/fam files. You can also use \code{"--file"} for ped/map files
-or \code{"--vcf"} for a VCF file. More information can be found at
+corresponds to bed/bim/fam files. You can also use \code{"--file"} for ped/map
+files or \code{"--vcf"} for a VCF file. More information can be found at
 \url{https://www.cog-genomics.org/plink/1.9/input}.}
 
 \item{prefix.out}{Prefix (path without extension) of the bed/bim/fam dataset
@@ -40,7 +40,8 @@ options can be found at \url{https://www.cog-genomics.org/plink2/filter}.}
 The path of the newly created bedfile.
 }
 \description{
-Quality Control (QC) using \strong{PLINK 1.9}.
+Quality Control (QC) using
+\href{https://www.cog-genomics.org/plink2}{PLINK 1.9}.
 }
 \examples{
 \dontrun{
@@ -51,6 +52,24 @@ test <- snp_plinkQC(plink.path = plink,
                     prefix.in = prefix,
                     file.type = "--file", # inputs are ped/map files
                     maf = 0.05,
+                    geno = 0.05,
+                    mind = 0.05,
                     hwe = 1e-10,
                     autosome.only = TRUE)}
+}
+\references{
+Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
+Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
+\emph{PLINK: a tool set for whole-genome association and population-based linkage
+analyses.} American Journal of Human Genetics 81 (3). Elsevier: 559–75.
+\url{http://dx.doi.org/10.1086/519795}.
+
+Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
+Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
+\emph{Second-generation PLINK: rising to the challenge of larger and richer
+datasets.} GigaScience 4 (1): 7.
+\url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
+}
+\seealso{
+\link{snp_plinkIBDQC}
 }
