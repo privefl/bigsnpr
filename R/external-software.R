@@ -76,6 +76,7 @@ snp_plinkQC <- function(plink.path, prefix.in,
       file.type, prefix.in,
       "--maf", maf,
       "--mind", mind,
+      "--geno", geno,
       "--hwe", hwe,
       `if`(autosome.only, "--autosome", ""),
       "--make-bed",
@@ -99,20 +100,25 @@ snp_plinkQC <- function(plink.path, prefix.in,
 #' @param plink.path Path to the executable of PLINK 1.9.
 #' @param bedfile.in Path to the input bedfile.
 #' @param bedfile.out Path to the output bedfile. Default is created by
-#' appending `"_norel"` to `prefix.in` (`bedfile.in` without extension).
+#'   appending `"_norel"` to `prefix.in` (`bedfile.in` without extension).
 #' @param pi.hat PI_HAT value threshold for individuals (the second)
-#' to be excluded. Default is `0.08`.
+#'   to be excluded. Default is `0.08`.
 #' @param ncores Number of cores to be used. Default is `1`. An usually good
-#' value for this parameter is `ncores = parallel::detectCores() - 1`.
+#'   value for this parameter is `ncores = parallel::detectCores() - 1`.
 #' @param pruning.args A vector of 2 pruning parameters, respectively
-#' the window size (in variant count) and the pairwise $r^2$ threshold
-#' (the step size is fixed to 1). Default is `c(100, 0.2)`.
-#' @param extra.options Other options to be passed to PLINK as a string. More
-#' options can be found at \url{https://www.cog-genomics.org/plink/1.9/ibd}.
+#'   the window size (in variant count) and the pairwise $r^2$ threshold
+#'   (the step size is fixed to 1). Default is `c(100, 0.2)`.
+#' @param extra.options Other options to be passed to PLINK as a string
+#'   (for the IBD part). More options can be found at
+#'   \url{https://www.cog-genomics.org/plink/1.9/ibd}.
+#' @param do.blind.QC Whether to do QC with `pi.hat` without visual inspection.
+#'   Default is `TRUE`. If `FALSE`, return the `data.frame` of the corresponding
+#'   ".genome" file without doing QC. One could use
+#'   `ggplot2::qplot(Z1, Z2, data = mydf, col = RT)` for visual inspection.
 #'
 #' @return The path of the new bedfile.
-#' If no sample is filter, no new bed/bim/fam files are created and
-#' then the path of the input bedfile is returned.
+#'   If no sample is filter, no new bed/bim/fam files are created and
+#'   then the path of the input bedfile is returned.
 #' @export
 #'
 #' @inherit snp_plinkQC references
@@ -130,6 +136,7 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
                            pi.hat = 0.08,
                            ncores = 1,
                            pruning.args = c(100, 0.2),
+                           do.blind.QC = TRUE,
                            extra.options = "") {
 
   # temporary file
@@ -144,7 +151,7 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
 
   # get possibly new file
   if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel", ".bed")
-  assert_noexist(bedfile.out)
+  if (do.blind.QC) assert_noexist(bedfile.out)
   prefix.out <- sub("\\.bed$", "", bedfile.out)
 
   # prune if desired
@@ -179,6 +186,9 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
   # get genomefile as a data.frame
   tmp <- data.table::fread(genomefile, data.table = FALSE)
   if (nrow(tmp)) { # if there are samples to filter
+
+    if (!do.blind.QC) return(tmp)
+
     write.table2(tmp[, c("FID2", "IID2")], tmpfile)
     # Make new bed with extraction
     system(
@@ -190,11 +200,15 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
         "--remove", tmpfile
       )
     )
+
     bedfile.out
+
   } else {
+
     message2("No pair of samples has PI_HAT > %s.", pi.hat)
     message("Returning input bedfile..")
     bedfile.in
+
   }
 }
 

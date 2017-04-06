@@ -5,7 +5,8 @@
 \title{Identity-by-descent}
 \usage{
 snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL, pi.hat = 0.08,
-  ncores = 1, pruning.args = c(100, 0.2), extra.options = "")
+  ncores = 1, pruning.args = c(100, 0.2), do.blind.QC = TRUE,
+  extra.options = "")
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -25,8 +26,14 @@ value for this parameter is \code{ncores = parallel::detectCores() - 1}.}
 the window size (in variant count) and the pairwise $r^2$ threshold
 (the step size is fixed to 1). Default is \code{c(100, 0.2)}.}
 
-\item{extra.options}{Other options to be passed to PLINK as a string. More
-options can be found at \url{https://www.cog-genomics.org/plink/1.9/ibd}.}
+\item{do.blind.QC}{Whether to do QC with \code{pi.hat} without visual inspection.
+Default is \code{TRUE}. If \code{FALSE}, return the \code{data.frame} of the corresponding
+".genome" file without doing QC. One could use
+\code{ggplot2::qplot(Z1, Z2, data = mydf, col = RT)} for visual inspection.}
+
+\item{extra.options}{Other options to be passed to PLINK as a string
+(for the IBD part). More options can be found at
+\url{https://www.cog-genomics.org/plink/1.9/ibd}.}
 }
 \value{
 The path of the new bedfile.
