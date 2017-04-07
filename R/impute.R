@@ -1,274 +1,92 @@
-# ################################################################################
-#
-# #' Title
-# #'
-# #' @param x
-# #' @param nrounds
-# #' @param max_depth
-# #' @param breaks
-# #' @param sizes
-# #' @param Kfolds
-# #' @param ncores
-# #' @param verbose
-# #'
-# #' @return
-# #' @export
-# #' @import xgboost
-# #'
-# #' @examples
-# snp_imputeCV <- function(x, nrounds = 20, max_depth = 3,
-#                          breaks = c(0, trunc(n / c(1000, 200, 100))),
-#                          sizes = c(10, 20, 30, 50),
-#                          Kfolds = c(2, 3, 5, 8),
-#                          ncores = 1, verbose = FALSE) {
-#   check_x(x)
-#   X <- x$genotypes
-#   n <- nrow(X)
-#   params <- list(max_depth = max_depth)
-#
-#   # get descriptors
-#   X.desc <- describe(X)
-#
-#   newfile <- checkFile(x, "impute")
-#   X2 <- deepcopy(X, type = "char",
-#                  backingfile = paste0(newfile, ".bk"),
-#                  backingpath = x$backingpath,
-#                  descriptorfile = paste0(newfile, ".desc"))
-#   X2.desc <- describe(X2)
-#
-#   range.chr <- LimsChr(x)
-#
-#   # function that imputes one chromosome
-#   if (is.seq <- (ncores == 1)) {
-#     registerDoSEQ()
-#   } else {
-#     cl <- parallel::makeCluster(ncores, outfile = `if`(verbose, "", NULL))
-#     doParallel::registerDoParallel(cl)
-#     on.exit(parallel::stopCluster(cl), add = TRUE)
-#   }
-#   res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'rbind') %dopar% {
-#     lims <- range.chr[ic, ]
-#
-#     if (verbose)
-#       printf("Imputing chromosome %d with \"XGBoost\"...\n", lims[3])
-#
-#     X.part <- sub.big.matrix(X.desc, firstCol = lims[1], lastCol = lims[2])
-#     X2.part <- sub.big.matrix(X2.desc, firstCol = lims[1], lastCol = lims[2])
-#
-#     m.part <- ncol(X.part)
-#     nbNA <- integer(m.part)
-#     error <- rep(NA_real_, m.part)
-#
-#     # useful functions
-#     interval <- function(i, size) {
-#       ind <- i + -size:size
-#       ind[ind >= 1 & ind <= m.part & ind != i]
-#     }
-#     round2 <- function(pred) (pred > 0.5) + (pred > 1.5)
-#
-#     opt.save <- options(bigmemory.typecast.warning = FALSE)
-#     on.exit(options(opt.save), add = TRUE)
-#
-#     # imputation
-#     for (i in 1:m.part) {
-#       X.label <- X.part[, i] * 1
-#       nbNA[i] <- l.NA <- length(indNA <- which(is.na(X.label)))
-#       if (l.NA > 0) {
-#         w <- max(which(l.NA > breaks))
-#         ind.col <- interval(i, sizes[w])
-#         K <- Kfolds[w]
-#
-#         X.data.noNA <- X.part[-indNA, ind.col, drop = FALSE] * 1
-#         X.label.noNA <- X.label[-indNA]
-#         X.data.NA <- X.part[indNA, ind.col, drop = FALSE] * 1
-#
-#         l.noNA <- nrow(X.data.noNA)
-#         indCV <- sample(rep_len(1:K, l.noNA))
-#         preds.NA <- matrix(NA_real_, l.NA, K)
-#         err <- 0
-#
-#         for (k in 1:K) {
-#           ind.val <- which(indCV == k)
-#
-#           bst <- xgboost(data = X.data.noNA[-ind.val, , drop = FALSE],
-#                          label = X.label.noNA[-ind.val],
-#                          nrounds = nrounds,
-#                          params = params,
-#                          nthread = 1,
-#                          verbose = 0,
-#                          save_period = NULL)
-#
-#           # validation error
-#           pred.val <- predict(bst, X.data.noNA[ind.val, , drop = FALSE])
-#           err <- err + sum(round2(pred.val) != X.label.noNA[ind.val])
-#           # one vector of predicted values for imputation
-#           preds.NA[, k] <- predict(bst, X.data.NA)
-#         }
-#
-#         # impute by conbining predictions of each fold
-#         X2.part[indNA, i] <- round2(apply(preds.NA, 1, median))
-#         # validation error
-#         error[i] <- err / l.noNA
-#       }
-#     }
-#
-#     if (verbose)
-#       printf("Done imputing chromosome %d.\n", lims[3])
-#
-#     data.frame(nbNA, error)
-#   }
-#
-#   # create new imputed bigSNP
-#   snp_list <- list(genotypes = X2,
-#                    fam = x$fam,
-#                    map = x$map,
-#                    imputation = res,
-#                    backingfile = newfile,
-#                    backingpath = x$backingpath)
-#   class(snp_list) <- "bigSNP"
-#   # save it
-#   saveRDS(snp_list, file.path(x$backingpath, paste0(newfile, ".rds")))
-#   # return it
-#   snp_list
-# }
-#
-# ################################################################################
-#
-# #' Title
-# #'
-# #' @param x
-# #' @param nrounds
-# #' @param max_depth
-# #'
-# #' @return
-# #' @export
-# #' @import Matrix
-# #'
-# #' @examples
-# snp_imputeCV2 <- function(x, nrounds = 20, max_depth = 3,
-#                          size = 1000, alpha = 0.1, K = 5,
-#                          ncores = 1, verbose = FALSE,
-#                          baseline = FALSE) {
-#   check_x(x)
-#   X <- x$genotypes
-#   n <- nrow(X)
-#   params <- list(max_depth = max_depth)
-#
-#   # get descriptors
-#   X.desc <- describe(X)
-#
-#   newfile <- checkFile(x, "impute")
-#   X2 <- deepcopy(X, type = "char",
-#                  backingfile = paste0(newfile, ".bk"),
-#                  backingpath = x$backingpath,
-#                  descriptorfile = paste0(newfile, ".desc"))
-#   X2.desc <- describe(X2)
-#
-#   range.chr <- LimsChr(x)
-#
-#   # function that imputes one chromosome
-#   if (is.seq <- (ncores == 1)) {
-#     registerDoSEQ()
-#   } else {
-#     cl <- parallel::makeCluster(ncores, outfile = `if`(verbose, "", NULL))
-#     doParallel::registerDoParallel(cl)
-#     on.exit(parallel::stopCluster(cl), add = TRUE)
-#   }
-#   res <- foreach(ic = seq_len(nrow(range.chr)), .combine = 'rbind') %dopar% {
-#     lims <- range.chr[ic, ]
-#     ind.part <- seq2(lims)
-#
-#     if (verbose)
-#       printf("Imputing chromosome %d with \"XGBoost\"...\n", lims[3])
-#
-#     X <- attach.BM(X.desc)
-#     q.alpha <- stats::qchisq(alpha, df = 1, lower.tail = FALSE)
-#     corr <- symmpart(corMat(X@address, rowInd = 1:n, colInd = ind.part,
-#                             size = size, thr = q.alpha / 1:n))
-#
-#     X2.part <- sub.big.matrix(X2.desc, firstCol = lims[1], lastCol = lims[2])
-#
-#     m.part <- length(ind.part)
-#     nbNA <- integer(m.part)
-#     error <- rep(NA_real_, m.part)
-#
-#     # useful functions
-#     interval <- function(i, size) {
-#       ind <- i + -size:size
-#       ind[ind >= 1 & ind <= m.part & ind != i]
-#     }
-#     round2 <- function(pred) (pred > 0.5) + (pred > 1.5)
-#
-#     opt.save <- options(bigmemory.typecast.warning = FALSE)
-#     on.exit(options(opt.save), add = TRUE)
-#
-#     if (baseline) {
-#       # first imputation by rounded mean
-#       baseline <- round2(big_apply(X2.part, a.FUN = function(x, ind) {
-#         colMeans(x[, ind], na.rm = TRUE)
-#       }, a.combine = 'c'))
-#       for (i in 1:m.part) X2.part[which(is.na(X2.part[, i])), i] <- baseline[i]
-#     }
-#
-#     # imputation
-#     for (i in 1:m.part) {
-#       X.label <- X[, ind.part[i]] * 1
-#       nbNA[i] <- l.NA <- length(indNA <- which(is.na(X.label)))
-#       if (l.NA > 0) {
-#         ind.col <- which(corr[, i] != 0)
-#
-#         X.data.noNA <- X2.part[-indNA, ind.col, drop = FALSE] * 1
-#         X.label.noNA <- X.label[-indNA]
-#         X.data.NA <- X2.part[indNA, ind.col, drop = FALSE] * 1
-#
-#         l.noNA <- nrow(X.data.noNA)
-#         indCV <- sample(rep_len(1:K, l.noNA))
-#         preds.NA <- matrix(NA_real_, l.NA, K)
-#         err <- 0
-#
-#         for (k in 1:K) {
-#           ind.val <- which(indCV == k)
-#
-#           bst <- xgboost(data = X.data.noNA[-ind.val, , drop = FALSE],
-#                          label = X.label.noNA[-ind.val],
-#                          nrounds = nrounds,
-#                          params = params,
-#                          nthread = 1,
-#                          verbose = 0,
-#                          save_period = NULL)
-#
-#           # validation error
-#           pred.val <- predict(bst, X.data.noNA[ind.val, , drop = FALSE])
-#           err <- err + sum(round2(pred.val) != X.label.noNA[ind.val])
-#           # one vector of predicted values for imputation
-#           preds.NA[, k] <- predict(bst, X.data.NA)
-#         }
-#
-#         # impute by conbining predictions of each fold
-#         X2.part[indNA, i] <- round2(apply(preds.NA, 1, median))
-#         # validation error
-#         error[i] <- err / l.noNA
-#       }
-#     }
-#
-#     if (verbose)
-#       printf("Done imputing chromosome %d.\n", lims[3])
-#
-#     data.frame(nbNA, error)
-#   }
-#
-#   # create new imputed bigSNP
-#   snp_list <- list(genotypes = X2,
-#                    fam = x$fam,
-#                    map = x$map,
-#                    imputation = res,
-#                    backingfile = newfile,
-#                    backingpath = x$backingpath)
-#   class(snp_list) <- "bigSNP"
-#   # save it
-#   saveRDS(snp_list, file.path(x$backingpath, paste0(newfile, ".rds")))
-#   # return it
-#   snp_list
-# }
-#
-# ################################################################################
+################################################################################
+
+CODE_IMPUTE_LABEL <- c(0, 0.5, 1, rep(NA, 253))
+CODE_IMPUTE_PRED  <- c(0, 1, 2, NA, 0, 1, 2, rep(NA, 249))
+
+################################################################################
+
+imputeChr <- function(G, ind.chr, alpha, size, seed) {
+
+  # reproducibility
+  if (!is.na(seed)) set.seed(seed[attr(ind.chr, "chr")])
+
+  # init
+  X <- attach.BM(G)
+  n <- nrow(X)
+  m.chr <- length(ind.chr)
+  X2 <- X
+  X@code <- CODE_IMPUTE_LABEL
+  X2@code <- CODE_IMPUTE_PRED
+
+  # correlation between SNPs
+  q.alpha <- stats::qchisq(alpha, df = 1, lower.tail = FALSE)
+  corr <- symmpart(corMat(X, rowInd = 1:n, colInd = ind.chr,
+                          size = size, thr = q.alpha / 1:n))
+
+  # imputation
+  nbNA <- integer(m.chr)
+  error <- rep(NA_real_, m.chr)
+  for (i in 1:m.chr) {
+    X.label <- X[, ind.chr[i]]
+    nbNA[i] <- l <- length(indNA <- which(is.na(X.label)))
+    if (l > 0) {
+      indNoNA <- setdiff(1:n, indNA)
+      ind.train <- sort(sample(indNoNA, 0.8 * length(indNoNA)))
+      ind.val <- setdiff(indNoNA, ind.train)
+
+      ind.col <- ind.chr[which(corr[, i] != 0)]
+
+      bst <- xgboost(data = X2[ind.train, ind.col, drop = FALSE],
+                     label = X.label[ind.train],
+                     objective = "binary:logistic",
+                     base_score = mean(X.label[ind.train]) / 2,
+                     nrounds = 10,
+                     params = list(max_depth = 4),
+                     nthread = 1,
+                     verbose = 0,
+                     save_period = NULL)
+
+      # error of validation
+      pred2 <- predict(bst, X2[ind.val, ind.col, drop = FALSE])
+      error[i] <- mean(round(2 * pred2) != (2 * X.label[ind.val]))
+      # impute
+      pred <- predict(bst, X2[indNA, ind.col, drop = FALSE])
+      X2[indNA, ind.chr[i]] <- as.raw(round(2 * pred) + 4)
+    }
+  }
+
+  data.frame(nbNA, error)
+}
+
+################################################################################
+
+#' Fast imputation
+#'
+#' Fast imputation algorithm based on local XGBoost models.
+#'
+#' @inheritParams bigsnpr-package
+#' @param alpha Type-I allowed for testing correlations.
+#' @param size Number of neighbor SNP to be possibly included in the model
+#' imputing this particular SNP.
+#' @param seed An integer, for reproducibility.
+#'
+#' @return A `data.frame` with
+#' - the number of missing values by SNP,
+#' - the estimated percentage of imputaton error by SNP.
+#' @export
+#'
+#' @import Matrix xgboost
+#'
+snp_fastImpute <- function(G, infos.chr,
+                           alpha = 0.05,
+                           size = 100,
+                           seed = NA,
+                           ncores = 1) {
+
+  if (!is.na(seed)) seed <- seq_len(max(infos.chr)) + seed
+  args <- as.list(environment())
+
+  do.call(what = snp_split, args = c(args, FUN = imputeChr, combine = 'rbind'))
+}
+
+################################################################################
