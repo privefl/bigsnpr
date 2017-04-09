@@ -7,6 +7,35 @@
 
 using namespace Rcpp;
 
+// roll_mean
+NumericVector roll_mean(const NumericVector& x, const NumericVector& w);
+RcppExport SEXP bigsnpr_roll_mean(SEXP xSEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(roll_mean(x, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// local_clumping
+LogicalVector local_clumping(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, const NumericVector& sumX, const NumericVector& denoX, double thr);
+RcppExport SEXP bigsnpr_local_clumping(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ordInd(ordIndSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
+    Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
+    rcpp_result_gen = Rcpp::wrap(local_clumping(BM, rowInd, colInd, ordInd, sumX, denoX, thr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // corMat
 SEXP corMat(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, int size, const NumericVector& thr);
 RcppExport SEXP bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
