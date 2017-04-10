@@ -9,8 +9,6 @@
 #' to each part (chromosome) and finally combine the results.
 #'
 #' @inheritParams bigsnpr-package
-#' @param infos.chr Vector of integers specifying the chromosome of each SNP.
-#' Typically the slot `chromosome` of the slot `map` of a `bigSNP`.
 #' @param FUN The function to be applied. It must take a
 #' [BM.code][BM.code-class] as first argument and `ind.chr`, an another argument
 #' to provide subsetting over SNPs.
@@ -31,6 +29,8 @@
 snp_split <- function(infos.chr, FUN, combine, ncores = 1, ...) {
 
   ind.chrs <- split(seq_along(infos.chr), infos.chr)
+  ord.chrs <- order(sapply(ind.chrs, length), decreasing = TRUE)
+  inv.ord.chrs <- match(seq_along(ord.chrs), ord.chrs)
 
   if (ncores == 1) {
     registerDoSEQ()
@@ -39,11 +39,16 @@ snp_split <- function(infos.chr, FUN, combine, ncores = 1, ...) {
     doParallel::registerDoParallel(cl)
     on.exit(parallel::stopCluster(cl), add = TRUE)
   }
-  foreach(ic = seq_along(ind.chrs), .combine = combine) %dopar% {
+  # apply the function in decreasing order of chromosome lengths
+  res.noorder <- foreach(ic = ord.chrs) %dopar% {
     ind.chr <- ind.chrs[[ic]]
     attr(ind.chr, "chr") <- as.numeric(names(ind.chrs)[ic])
 
     FUN(ind.chr = ind.chr, ...)
+  }
+  # reorder the results and combine
+  foreach(ic = res.noorder[inv.ord.chrs], .combine = combine) %do% {
+    ic
   }
 }
 

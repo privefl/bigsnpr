@@ -5,6 +5,8 @@ printf <- bigstatsr:::printf
 
 message2 <- bigstatsr:::message2
 
+warning2 <- bigstatsr:::warning2
+
 stop2 <- bigstatsr:::stop2
 
 transform_levels <- bigstatsr:::transform_levels

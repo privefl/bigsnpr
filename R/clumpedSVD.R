@@ -45,26 +45,35 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 
 ################################################################################
 
-#' Title
+#' Truncated SVD with pruning
 #'
-#' @param G
-#' @param ind.row
-#' @param ind.col
-#' @param fun.scaling
-#' @param thr.r2.init
-#' @param thr.r2.step
-#' @param size
-#' @param k
-#' @param roll.size
-#' @param int.min.size
-#' @param ncores
+#' Fast truncated SVD which iteratively try to remove long-range LD regions
+#' which appear in loadings of SVD.
 #'
-#' @return
+#' @inheritParams bigsnpr-package
+#' @param fun.scaling A function that returns a named list of
+#' `mean` and `sd` for every column, to scale each of their elements
+#' such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
+#' Default is `snp_scaleBinom()`.
+#' @param thr.r2.init Threshold on squared correlation between SNPs.
+#' Default is `0.2`.
+#' @param thr.r2.step Coefficient of division of `thr.r2` at each step.
+#' Default is `2` which means that at iteration 2, `thr.r2 = 0.1`, at iteration
+#' 3, `thr.r2 = 0.05`, etc.
+#' @param size Radius of the window's size for the LD evaluations of the initial
+#' step of clumping. Default is `500`.
+#' @param k Number of singular vectors/values to compute.
+#' Default is `10`. **This algorithm should be used to compute only
+#' a few singular vectors/values.**
+#' @param roll.size Radius of rolling windows to smooth log-p-values.
+#' @param int.min.size Minimum size of intervals of contiguous significant
+#' indices.
+#'
+#' @inherit bigstatsr::big_randomSVD return
 #' @export
 #'
 #' @import foreach
 #'
-#' @examples
 snp_clumpedSVD <- function(G,
                            ind.row = rows_along(G),
                            ind.col = cols_along(G),

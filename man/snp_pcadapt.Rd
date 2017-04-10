@@ -14,8 +14,9 @@ You shouldn't have missing values in your data or SNPs with 0 MAF.}
 \item{U.row}{Left singular vectors (not scores, $U^T \cdot U = I$)
 corresponding to \code{ind.row}.}
 
-\item{ind.row}{An optional vector of the row (individuals) indices that
-are used. If not specified, all rows are used.}
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.
+\strong{Don't use negative indices.}}
 }
 \value{
 An object of classes \code{mhtest} and \code{data.frame} returning one

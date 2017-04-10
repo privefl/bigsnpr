@@ -12,22 +12,23 @@ You shouldn't have missing values in your data or SNPs with 0 MAF.}
 
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
-\item{has.pheno}{Does \strong{\code{x}} has well-specified phenotypes?
-i.e. \code{x$fam$affection} is a vector with exactly two values
-(and the value coding for cases is larger than the value coding
-for controls). So, in particular, no missing value is allowed.
-Default is \code{TRUE}.}
+\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
+Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+
+\item{infos.pos}{Vector of integers specifying the physical position
+on a chromosome (in base pairs) of each SNP.
+Typically the slot \code{physical.pos} of the slot \code{map} of a \code{bigSNP}.}
 
 \item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 
-\item{ind.row}{An optional vector of the row (individuals) indices that
-are used. If not specified, all rows are used.}
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.
+\strong{Don't use negative indices.}}
 
-\item{ind.col}{An optional vector of the column (SNP) indices that are used.
-If not specified, all columns are used.}
-
-\item{block.size}{Maximum number of loci read at once (for all individuals).}
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.
+\strong{Don't use negative indices.}}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.}
 }

@@ -65,7 +65,7 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 #' Fast imputation algorithm based on local XGBoost models.
 #'
 #' @inheritParams bigsnpr-package
-#' @param alpha Type-I allowed for testing correlations.
+#' @param alpha Type-I error for testing correlations.
 #' @param size Number of neighbor SNP to be possibly included in the model
 #' imputing this particular SNP.
 #' @param seed An integer, for reproducibility.
