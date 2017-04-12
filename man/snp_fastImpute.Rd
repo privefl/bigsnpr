@@ -27,8 +27,8 @@ imputing this particular SNP.}
 \value{
 A \code{data.frame} with
 \itemize{
-\item the number of missing values by SNP,
-\item the estimated percentage of imputaton error by SNP.
+\item the proportion of missing values by SNP,
+\item the estimated proportion of imputaton errors by SNP.
 }
 }
 \description{

@@ -91,6 +91,56 @@ snp_plinkQC <- function(plink.path, prefix.in,
 
 ################################################################################
 
+#' Remove samples
+#'
+#' Create new *bed*/*bim*/*fam* files by removing samples with PLINK.
+#'
+#' @param plink.path Path to the executable of PLINK 1.9.
+#' @param bedfile.in Path to the input bedfile.
+#' @param bedfile.out Path to the output bedfile.
+#' @inheritParams snp_getSampleInfos
+#'
+#' @return The path of the new bedfile.
+#' @export
+#'
+snp_plinkRmSamples <- function(plink.path,
+                               bedfile.in,
+                               bedfile.out,
+                               df.or.files,
+                               col.family.ID = 1,
+                               col.sample.ID = 2,
+                               ...) {
+
+  assert_noexist(bedfile.out)
+
+  if (is.data.frame(df.or.files)) {
+    data.infos <- df.or.files
+  } else if (is.character(df.or.files)) {
+    data.infos <- foreach(f = df.or.files, .combine = 'rbind') %do% {
+      data.table::fread(f, data.table = FALSE, ...)
+    }
+  } else {
+    stop2("'df.or.files' must be a data.frame or a vector of file paths.")
+  }
+
+  tmpfile <- tempfile()
+  write.table2(data.infos[, c(col.family.ID, col.sample.ID)], tmpfile)
+  # Make new bed with extraction
+  system(
+    paste(
+      plink.path,
+      "--bfile", sub("\\.bed$", "", bedfile.in),
+      "--make-bed",
+      "--out", sub("\\.bed$", "", bedfile.out),
+      "--remove", tmpfile
+    )
+  )
+
+  bedfile.out
+}
+
+################################################################################
+
 #' Identity-by-descent
 #'
 #' Quality Control based on Identity-by-descent (IBD) computed by
@@ -101,7 +151,7 @@ snp_plinkQC <- function(plink.path, prefix.in,
 #' @param bedfile.in Path to the input bedfile.
 #' @param bedfile.out Path to the output bedfile. Default is created by
 #'   appending `"_norel"` to `prefix.in` (`bedfile.in` without extension).
-#' @param pi.hat PI_HAT value threshold for individuals (the second)
+#' @param pi.hat PI_HAT value threshold for individuals (first by pairs)
 #'   to be excluded. Default is `0.08`.
 #' @param ncores Number of cores to be used. Default is `1`. An usually good
 #'   value for this parameter is `ncores = parallel::detectCores() - 1`.
@@ -150,7 +200,7 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
   genomefile <- paste0(prefix.in, ".genome")
 
   # get possibly new file
-  if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel", ".bed")
+  if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
   if (do.blind.QC) assert_noexist(bedfile.out)
   prefix.out <- sub("\\.bed$", "", bedfile.out)
 
@@ -187,21 +237,11 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
   tmp <- data.table::fread(genomefile, data.table = FALSE)
   if (nrow(tmp)) { # if there are samples to filter
 
-    if (!do.blind.QC) return(tmp)
-
-    write.table2(tmp[, c("FID2", "IID2")], tmpfile)
-    # Make new bed with extraction
-    system(
-      paste(
-        plink.path,
-        "--bfile", prefix.in,
-        "--make-bed",
-        "--out", prefix.out,
-        "--remove", tmpfile
-      )
-    )
-
-    bedfile.out
+    if (do.blind.QC) {
+      snp_plinkRmSamples(plink.path, bedfile.in, bedfile.out, tmp)
+    } else {
+      tmp
+    }
 
   } else {
 
@@ -249,7 +289,7 @@ snp_beagleImpute <- function(beagle.path, plink.path, bedfile.in,
 
   # get input and output right
   prefix.in <- sub("\\.bed$", "", bedfile.in)
-  if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_impute", ".bed")
+  if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_impute.bed")
   assert_noexist(bedfile.out)
   prefix.out <- sub("\\.bed$", "", bedfile.out)
 

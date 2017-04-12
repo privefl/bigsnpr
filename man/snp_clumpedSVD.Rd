@@ -4,14 +4,18 @@
 \alias{snp_clumpedSVD}
 \title{Truncated SVD with pruning}
 \usage{
-snp_clumpedSVD(G, ind.row = rows_along(G), ind.col = cols_along(G),
-  fun.scaling = snp_scaleBinom(), thr.r2.init = 0.2, thr.r2.step = 2,
-  size = 500, k = 10, roll.size = 50, int.min.size = 20, ncores = 1)
+snp_clumpedSVD(G, infos.chr, ind.row = rows_along(G),
+  ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
+  thr.r2.init = 0.2, thr.r2.step = 2, size = 500, k = 10,
+  roll.size = 50, int.min.size = 20, ncores = 1, verbose = TRUE)
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
 Typically the slot \code{genotypes} of a \code{bigSNP}.
 You shouldn't have missing values in your data or SNPs with 0 MAF.}
+
+\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
+Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.
@@ -65,4 +69,8 @@ Note that to obtain the Principal Components, you must use
 \description{
 Fast truncated SVD which iteratively try to remove long-range LD regions
 which appear in loadings of SVD.
+}
+\details{
+Improvements will come in the future, as for example, warm starts in order
+to make the SVD computations faster.
 }

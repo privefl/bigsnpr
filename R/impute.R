@@ -55,7 +55,7 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
     }
   }
 
-  data.frame(nbNA, error)
+  data.frame(pNA = nbNA / n, pError = error)
 }
 
 ################################################################################
@@ -71,8 +71,8 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 #' @param seed An integer, for reproducibility.
 #'
 #' @return A `data.frame` with
-#' - the number of missing values by SNP,
-#' - the estimated percentage of imputaton error by SNP.
+#' - the proportion of missing values by SNP,
+#' - the estimated proportion of imputaton errors by SNP.
 #' @export
 #'
 #' @import Matrix xgboost

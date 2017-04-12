@@ -16,7 +16,7 @@ snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL, pi.hat = 0.08,
 \item{bedfile.out}{Path to the output bedfile. Default is created by
 appending \code{"_norel"} to \code{prefix.in} (\code{bedfile.in} without extension).}
 
-\item{pi.hat}{PI_HAT value threshold for individuals (the second)
+\item{pi.hat}{PI_HAT value threshold for individuals (first by pairs)
 to be excluded. Default is \code{0.08}.}
 
 \item{ncores}{Number of cores to be used. Default is \code{1}. An usually good

@@ -4,20 +4,25 @@
 \alias{snp_getSampleInfos}
 \title{Get sample infos}
 \usage{
-snp_getSampleInfos(x, files, col.family.ID, col.sample.ID, col.infos,
-  pair.sep = "-_-", ...)
+snp_getSampleInfos(x, df.or.files, col.family.ID = 1, col.sample.ID = 2,
+  col.infos = -c(1, 2), pair.sep = "-_-", ...)
 }
 \arguments{
-\item{files}{Character vector of file names where to find at the information
-you want. You should have one column for family IDs and one for sample IDs.}
+\item{df.or.files}{Either
+\itemize{
+\item A \code{data.frame},
+\item A character vector of file names where to find at the information you want.
+You should have one column for family IDs and one for sample IDs.
+}}
 
 \item{col.family.ID}{Index of the column containing the
-family IDs to match with those of the study.}
+family IDs to match with those of the study. Default is the second one.}
 
 \item{col.sample.ID}{Index of the column containing the
-sample IDs to match with those of the study.}
+sample IDs to match with those of the study. Default is the first one.}
 
-\item{col.infos}{Indices of the column containing the information you want.}
+\item{col.infos}{Indices of the column containing the information you want.
+Default is all but the first and the second columns.}
 
 \item{pair.sep}{Separator used for concataining family and sample IDs
 in order to match easier. Default is \code{"-_-"}.}
@@ -26,8 +31,7 @@ in order to match easier. Default is \code{"-_-"}.}
 Particularly, option \code{header = FALSE} is sometimes needed.}
 }
 \value{
-The requested information. It will be a vector if you request only
-one column, and a \code{data.frame} otherwise.
+The requested information as a \code{data.frame}.
 }
 \description{
 Get information of individuals by matching from an external file.
@@ -35,17 +39,16 @@ Get information of individuals by matching from an external file.
 \examples{
 test <- snp_attachExtdata()
 # Just after reading
-print(rle(test$fam$family.ID))
+rle(test$fam$family.ID)
 # Get populations clusters from external files
 files <- system.file("extdata", paste0("cluster", 1:3), package = "bigsnpr")
 data.table::fread(files[1])
 # need header option
 data.table::fread(files[1], header = FALSE)
-infos <- snp_getSampleInfos(test, files = files,
-                            col.family.ID = 1,
-                            col.sample.ID = 2,
-                            col.infos = 3,
-                            header = FALSE)
-rle(infos)
+infos <- snp_getSampleInfos(test, files = files, header = FALSE)
+rle(infos[[1]])
 
+}
+\seealso{
+\link{list.files}
 }
