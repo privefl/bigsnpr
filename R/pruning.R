@@ -22,7 +22,7 @@
 #' @param size
 #' This parameter should be adjusted with respect to the number of SNPs.
 #' - for clumping: __Radius__ of the window's size for the LD evaluations.
-#' Default is `1000` (I use this for a chip of 500K SNPs).
+#' Default is `500` (I use this for a chip of 500K SNPs).
 #' - for pruning: __Diameter__ of the window's size for the LD evaluations.
 #' Default is `50` (as in PLINK 1.07).
 #'
@@ -82,7 +82,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
                       pos = c(infos.pos[ind.chr], .Machine$integer.max),
                       sumX = stats$sum,
                       denoX = denoX,
-                      size = size * 1000,
+                      size = size * 1000, # in bp
                       thr = thr.r2)
   } else {
     keep <- clumping(G2,
@@ -104,7 +104,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
 snp_clumping <- function(G, infos.chr,
                          ind.row = rows_along(G),
                          S = NULL,
-                         size = 1000,
+                         size = 500,
                          is.size.in.bp = FALSE,
                          infos.pos = NULL,
                          thr.r2 = 0.5,

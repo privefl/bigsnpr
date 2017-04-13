@@ -10,22 +10,23 @@
 #'
 #' @param x A [bigSNP][bigSNP-class].
 #'
-#' @param has.pheno Does __`x`__ has well-specified phenotypes?
-#' i.e. `x$fam$affection` is a vector with exactly two values
-#' (and the value coding for cases is larger than the value coding
-#' for controls). So, in particular, no missing value is allowed.
-#' Default is `TRUE`.
+#' @param infos.chr Vector of integers specifying the chromosome of each SNP.
+#' Typically the slot `chromosome` of the slot `map` of a `bigSNP`.
+#'
+#' @param infos.pos Vector of integers specifying the physical position
+#' on a chromosome (in base pairs) of each SNP.
+#' Typically the slot `physical.pos` of the slot `map` of a `bigSNP`.
 #'
 #' @param nploidy Number of trials, parameter of the binomial distribution.
 #' Default is `2`, which corresponds to diploidy, such as for the human genome.
 #'
-#' @param ind.row An optional vector of the row (individuals) indices that
+#' @param ind.row An optional vector of the row indices (individuals) that
 #' are used. If not specified, all rows are used.
+#' **Don't use negative indices.**
 #'
-#' @param ind.col An optional vector of the column (SNP) indices that are used.
+#' @param ind.col An optional vector of the column indices (SNPs) that are used.
 #' If not specified, all columns are used.
-#'
-#' @param block.size Maximum number of loci read at once (for all individuals).
+#' **Don't use negative indices.**
 #'
 #' @param ncores Number of cores used. Default doesn't use parallelism.
 "_PACKAGE"

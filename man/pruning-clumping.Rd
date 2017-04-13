@@ -7,7 +7,7 @@
 \alias{snp_indLRLDR}
 \title{LD pruning and clumping}
 \usage{
-snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL, size = 1000,
+snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL, size = 500,
   is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
   ncores = 1)
 
@@ -22,8 +22,12 @@ snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 Typically the slot \code{genotypes} of a \code{bigSNP}.
 You shouldn't have missing values in your data or SNPs with 0 MAF.}
 
-\item{ind.row}{An optional vector of the row (individuals) indices that
-are used. If not specified, all rows are used.}
+\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
+Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.
+\strong{Don't use negative indices.}}
 
 \item{S}{A vector of column statistics which express the importance
 of each SNP (the more important is the SNP, the greater should be
@@ -35,10 +39,14 @@ is computed and used.}
 \item{size}{This parameter should be adjusted with respect to the number of SNPs.
 \itemize{
 \item for clumping: \strong{Radius} of the window's size for the LD evaluations.
-Default is \code{1000} (I use this for a chip of 500K SNPs).
+Default is \code{500} (I use this for a chip of 500K SNPs).
 \item for pruning: \strong{Diameter} of the window's size for the LD evaluations.
 Default is \code{50} (as in PLINK 1.07).
 }}
+
+\item{infos.pos}{Vector of integers specifying the physical position
+on a chromosome (in base pairs) of each SNP.
+Typically the slot \code{physical.pos} of the slot \code{map} of a \code{bigSNP}.}
 
 \item{thr.r2}{Threshold over the squared correlation between two SNPs.
 Default is \code{0.5}.}

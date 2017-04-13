@@ -12,7 +12,10 @@ snp_fastImpute(G, infos.chr, alpha = 0.05, size = 100, seed = NA,
 Typically the slot \code{genotypes} of a \code{bigSNP}.
 You shouldn't have missing values in your data or SNPs with 0 MAF.}
 
-\item{alpha}{Type-I allowed for testing correlations.}
+\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
+Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+
+\item{alpha}{Type-I error for testing correlations.}
 
 \item{size}{Number of neighbor SNP to be possibly included in the model
 imputing this particular SNP.}
@@ -24,8 +27,8 @@ imputing this particular SNP.}
 \value{
 A \code{data.frame} with
 \itemize{
-\item the number of missing values by SNP,
-\item the estimated percentage of imputaton error by SNP.
+\item the proportion of missing values by SNP,
+\item the estimated proportion of imputaton errors by SNP.
 }
 }
 \description{

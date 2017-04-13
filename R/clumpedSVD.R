@@ -45,27 +45,40 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 
 ################################################################################
 
-#' Title
+#' Truncated SVD with pruning
 #'
-#' @param G
-#' @param ind.row
-#' @param ind.col
-#' @param fun.scaling
-#' @param thr.r2.init
-#' @param thr.r2.step
-#' @param size
-#' @param k
-#' @param roll.size
-#' @param int.min.size
-#' @param ncores
+#' Fast truncated SVD which iteratively try to remove long-range LD regions
+#' which appear in loadings of SVD.
 #'
-#' @return
+#' Improvements will come in the future, as for example, warm starts in order
+#' to make the SVD computations faster.
+#'
+#' @inheritParams bigsnpr-package
+#' @param fun.scaling A function that returns a named list of
+#' `mean` and `sd` for every column, to scale each of their elements
+#' such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
+#' Default is `snp_scaleBinom()`.
+#' @param thr.r2.init Threshold on squared correlation between SNPs.
+#' Default is `0.2`.
+#' @param thr.r2.step Coefficient of division of `thr.r2` at each step.
+#' Default is `2` which means that at iteration 2, `thr.r2 = 0.1`, at iteration
+#' 3, `thr.r2 = 0.05`, etc.
+#' @param size Radius of the window's size for the LD evaluations of the initial
+#' step of clumping. Default is `500`.
+#' @param k Number of singular vectors/values to compute.
+#' Default is `10`. **This algorithm should be used to compute only
+#' a few singular vectors/values.**
+#' @param roll.size Radius of rolling windows to smooth log-p-values.
+#' @param int.min.size Minimum size of intervals of contiguous significant
+#' indices.
+#'
+#' @inherit bigstatsr::big_randomSVD return
 #' @export
 #'
 #' @import foreach
 #'
-#' @examples
 snp_clumpedSVD <- function(G,
+                           infos.chr,
                            ind.row = rows_along(G),
                            ind.col = cols_along(G),
                            fun.scaling = snp_scaleBinom(),
@@ -75,17 +88,28 @@ snp_clumpedSVD <- function(G,
                            k = 10,
                            roll.size = 50,
                            int.min.size = 20,
-                           ncores = 1) {
+                           ncores = 1,
+                           verbose = TRUE) {
 
   # get BM
   G2 <- attach.BM(G)
 
+  # verbose?
+  printf2 <- function(...) if (verbose) printf(...)
+
   # first clumping
   THR <- thr.r2.init
-  ind.keep <- snp_clumping(G, popres$map$chromosome,
-                           thr.r2 = THR, size = size, ncores = ncores)
+  printf2("First phase of clumping at r2 > %s.. ", THR)
+  ind.keep <- snp_clumping(G, infos.chr,
+                           thr.r2 = THR,
+                           size = size,
+                           ncores = ncores)
+  printf2("keep %d SNPs.\n", length(ind.keep))
 
+  iter <- 1
   repeat {
+    printf2("\nIteration n°%d:\n", iter)
+    printf2("Computing SVD..\n")
     # SVD
     obj.svd <- big_randomSVD(G,
                              fun.scaling = fun.scaling,
@@ -107,14 +131,19 @@ snp_clumpedSVD <- function(G,
     ind <- sort(unique(which(lpval.roll > lim, arr.ind = TRUE)[, "row"]))
     ind.range <- getIntervals(ind, int.min.size)
 
-    if (nrow(ind.range)) {
+    if (N <- nrow(ind.range)) {
       # local clumping on previous intervals
       THR <- THR / thr.r2.step
+      printf2("Local clumping in %d regions at r2 > %s.. ", N, THR)
       ind.excl <- foreach(ic = rows_along(ind.range)) %do% {
         clumping.local(G2, ind.row, ind.keep[seq2(ind.range[ic, ])], THR)
       }
-      ind.keep <- setdiff(ind.keep, unlist(ind.excl))
+      ind.excl <- unlist(ind.excl)
+      ind.keep <- setdiff(ind.keep, ind.excl)
+      printf2("further excluded %d SNPs.\n", length(ind.excl))
+      iter <- iter + 1
     } else { # converged
+      printf2("\nConverged!\n")
       break
     }
   }

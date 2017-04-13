@@ -55,7 +55,7 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
     }
   }
 
-  data.frame(nbNA, error)
+  data.frame(pNA = nbNA / n, pError = error)
 }
 
 ################################################################################
@@ -65,14 +65,14 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 #' Fast imputation algorithm based on local XGBoost models.
 #'
 #' @inheritParams bigsnpr-package
-#' @param alpha Type-I allowed for testing correlations.
+#' @param alpha Type-I error for testing correlations.
 #' @param size Number of neighbor SNP to be possibly included in the model
 #' imputing this particular SNP.
 #' @param seed An integer, for reproducibility.
 #'
 #' @return A `data.frame` with
-#' - the number of missing values by SNP,
-#' - the estimated percentage of imputaton error by SNP.
+#' - the proportion of missing values by SNP,
+#' - the estimated proportion of imputaton errors by SNP.
 #' @export
 #'
 #' @import Matrix xgboost

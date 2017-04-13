@@ -2,15 +2,75 @@
 % Please edit documentation in R/clumpedSVD.R
 \name{snp_clumpedSVD}
 \alias{snp_clumpedSVD}
-\title{Title}
+\title{Truncated SVD with pruning}
 \usage{
-snp_clumpedSVD(G, ind.row = rows_along(G), ind.col = cols_along(G),
-  fun.scaling = snp_scaleBinom(), thr.r2.init = 0.2, thr.r2.step = 2,
-  size = 500, k = 10, roll.size = 50, int.min.size = 20, ncores = 1)
+snp_clumpedSVD(G, infos.chr, ind.row = rows_along(G),
+  ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
+  thr.r2.init = 0.2, thr.r2.step = 2, size = 500, k = 10,
+  roll.size = 50, int.min.size = 20, ncores = 1, verbose = TRUE)
 }
 \arguments{
-\item{ncores}{}
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
+Typically the slot \code{genotypes} of a \code{bigSNP}.
+You shouldn't have missing values in your data or SNPs with 0 MAF.}
+
+\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
+Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.
+\strong{Don't use negative indices.}}
+
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.
+\strong{Don't use negative indices.}}
+
+\item{fun.scaling}{A function that returns a named list of
+\code{mean} and \code{sd} for every column, to scale each of their elements
+such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
+Default is \code{snp_scaleBinom()}.}
+
+\item{thr.r2.init}{Threshold on squared correlation between SNPs.
+Default is \code{0.2}.}
+
+\item{thr.r2.step}{Coefficient of division of \code{thr.r2} at each step.
+Default is \code{2} which means that at iteration 2, \code{thr.r2 = 0.1}, at iteration
+3, \code{thr.r2 = 0.05}, etc.}
+
+\item{size}{Radius of the window's size for the LD evaluations of the initial
+step of clumping. Default is \code{500}.}
+
+\item{k}{Number of singular vectors/values to compute.
+Default is \code{10}. \strong{This algorithm should be used to compute only
+a few singular vectors/values.}}
+
+\item{roll.size}{Radius of rolling windows to smooth log-p-values.}
+
+\item{int.min.size}{Minimum size of intervals of contiguous significant
+indices.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.}
+}
+\value{
+A named list (an S3 class "big_SVD") of
+\itemize{
+\item \code{d}, the singular values,
+\item \code{u}, the left singular vectors,
+\item \code{v}, the right singular vectors,
+\item \code{niter}, the number of the iteration of the algorithm,
+\item \code{nops}, number of Matrix-Vector multiplications used,
+\item \code{means}, the centering vector,
+\item \code{sds}, the scaling vector.
+}
+
+Note that to obtain the Principal Components, you must use
+\link[=predict.big_SVD]{predict} on the result. See examples.
 }
 \description{
-Title
+Fast truncated SVD which iteratively try to remove long-range LD regions
+which appear in loadings of SVD.
+}
+\details{
+Improvements will come in the future, as for example, warm starts in order
+to make the SVD computations faster.
 }
