@@ -40,8 +40,8 @@ options can be found at \url{https://www.cog-genomics.org/plink2/filter}.}
 The path of the newly created bedfile.
 }
 \description{
-Quality Control (QC) using
-\href{https://www.cog-genomics.org/plink2}{PLINK 1.9}.
+Quality Control (QC) and possible conversion to \emph{bed}/\emph{bim}/\emph{fam} files
+using \href{https://www.cog-genomics.org/plink2}{PLINK 1.9}.
 }
 \examples{
 \dontrun{

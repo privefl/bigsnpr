@@ -2,8 +2,8 @@
 
 #' Quality Control
 #'
-#' Quality Control (QC) using
-#' [**PLINK 1.9**](https://www.cog-genomics.org/plink2).
+#' Quality Control (QC) and possible conversion to *bed*/*bim*/*fam* files
+#' using [**PLINK 1.9**](https://www.cog-genomics.org/plink2).
 #'
 #' @param plink.path Path to the executable of PLINK 1.9.
 #' @param prefix.in Prefix (path without extension) of the dataset to be QCed.
