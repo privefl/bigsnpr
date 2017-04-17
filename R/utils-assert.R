@@ -1,10 +1,7 @@
 ################################################################################
 
 # TYPEOF
-assert_type <- function(x, type)  {
-  if (typeof(x) != type)
-    stop2("'%s' is not of type '%s'.", deparse(substitute(x)), type)
-}
+assert_type <- bigstatsr:::assert_type
 
 ################################################################################
 
