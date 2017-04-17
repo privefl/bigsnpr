@@ -30,7 +30,7 @@ snp_readBed <- function(bedfile, backingfile,
 
   # create backingpath if doesn't exist
   backingpath <- path.expand(backingpath)
-  dir.create2(backingpath)
+  assert_dir(backingpath)
 
   # check if backingfile already exists
   rootPath <- file.path(backingpath, backingfile)
@@ -135,7 +135,7 @@ snp_writeBed <- function(x, bedfile) {
   sapply(c(bedfile, bimfile, famfile), assert_noexist)
 
   # create directory if doesn't exist
-  dir.create2(dirname(bedfile))
+  assert_dir(dirname(bedfile))
 
   # write map and family files
   write.table2(x$fam[NAMES.FAM], file = famfile)
