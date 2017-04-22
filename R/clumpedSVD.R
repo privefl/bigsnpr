@@ -77,6 +77,14 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 #'
 #' @import foreach
 #'
+#' @examples
+#' ex <- snp_attachExtdata()
+#'
+#' obj.svd <- snp_clumpedSVD(G = ex$genotypes,
+#'                           infos.chr = ex$map$chromosome)
+#'
+#' str(obj.svd)
+#'
 snp_clumpedSVD <- function(G,
                            infos.chr,
                            ind.row = rows_along(G),
@@ -148,7 +156,7 @@ snp_clumpedSVD <- function(G,
     }
   }
 
-  obj.svd
+  structure(obj.svd, subset = ind.keep)
 }
 
 ################################################################################

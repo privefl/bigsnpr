@@ -74,3 +74,12 @@ which appear in loadings of SVD.
 Improvements will come in the future, as for example, warm starts in order
 to make the SVD computations faster.
 }
+\examples{
+ex <- snp_attachExtdata()
+
+obj.svd <- snp_clumpedSVD(G = ex$genotypes,
+                          infos.chr = ex$map$chromosome)
+
+str(obj.svd)
+
+}
