@@ -29,16 +29,8 @@
 #' @export
 snp_fake <- function(n, m) {
 
-  # backingfiles
-  tmpfile <- tempfile()
-  backingfile <- basename(tmpfile)
-  backingpath <- dirname(tmpfile)
-
   # constructing a fake genotype big.matrix
-  bigGeno <- big.matrix(n, m, type = "raw", init = as.raw(3),
-                  backingfile = paste0(backingfile, ".bk"),
-                  backingpath = backingpath,
-                  descriptorfile = paste0(backingfile, ".desc"))
+  bigGeno <- tmpFBM(init = as.raw(3))(n, m, type = "raw")
   bigGeno.code <- as.BM.code(bigGeno, code = CODE_012)
 
   # fam
@@ -53,9 +45,11 @@ snp_fake <- function(n, m) {
                     stringsAsFactors = FALSE)
   names(map) <- NAMES.MAP
 
+  # rds
+  rds <- sub("\\.bk$", ".rds", bigstatsr:::BM.path(bigGeno))
+
   # create the `bigSNP`, save it and return it
-  rds <- paste0(tmpfile, ".rds")
-  snp_list <- structure(list(genotypes = describe(bigGeno.code),
+  snp_list <- structure(list(genotypes = bigGeno.code,
                              fam = fam,
                              map = map,
                              savedIn = rds),

@@ -9,11 +9,11 @@ snp_fastImpute(G, infos.chr, alpha = 0.05, size = 100, seed = NA,
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically the slot \code{genotypes} of a \code{bigSNP}.
-You shouldn't have missing values in your data or SNPs with 0 MAF.}
+Typically \code{<bigSNP>$genotypes}.\cr
+\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
-\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
-Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+\item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
+Typically \code{<bigSNP>$map$chromosome}.}
 
 \item{alpha}{Type-I error for testing correlations.}
 

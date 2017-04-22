@@ -1,6 +1,7 @@
 ################################################################################
 #### Useful functions ####
 
+# apply a gaussian smoothing
 rollMean <- function(x, size) {
 
   len <- 2 * size + 1
@@ -11,6 +12,7 @@ rollMean <- function(x, size) {
   roll_mean(x, weights)
 }
 
+# regroup consecutive integers in intervals
 getIntervals <- function(x, n = 2) {
 
   le <- rle(diff(x))
@@ -21,6 +23,7 @@ getIntervals <- function(x, n = 2) {
   cbind(x[c(1, pos)[ind]], x[pos[ind]])
 }
 
+# get indices to exclude in a small region of LD
 clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 
   # cache some computations
@@ -69,13 +72,14 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 #' Default is `10`. **This algorithm should be used to compute only
 #' a few singular vectors/values.**
 #' @param roll.size Radius of rolling windows to smooth log-p-values.
-#' @param int.min.size Minimum size of intervals of contiguous significant
+#' @param int.min.size Minimum size of intervals of consecutive significant
 #' indices.
 #'
 #' @inherit bigstatsr::big_randomSVD return
 #' @export
 #'
 #' @import foreach
+#' @importFrom magrittr %>%
 #'
 #' @examples
 #' ex <- snp_attachExtdata()
@@ -125,7 +129,7 @@ snp_clumpedSVD <- function(G,
                              ind.col = ind.keep,
                              k = k)
 
-    # -log p-values of begin an outlier (by PC)
+    # -log p-values of being an outlier (by PC)
     lpval <- -2 * apply(abs(obj.svd$v), 2, function(x) {
       stats::pnorm(x, sd = mad(x), lower.tail = FALSE, log.p = TRUE)
     })
@@ -133,20 +137,22 @@ snp_clumpedSVD <- function(G,
     # http://math.stackexchange.com/a/966337
     lim <- stats::quantile(lpval, 0.75) + 1.5 * stats::IQR(lpval)
 
-    # roll mean to get only consecutive outliers
-    lpval.roll <- apply(lpval, 2, rollMean, size = roll.size)
-    # get indices by intervals
-    ind <- sort(unique(which(lpval.roll > lim, arr.ind = TRUE)[, "row"]))
-    ind.range <- getIntervals(ind, int.min.size)
+    # roll mean to get only consecutive outliers and regroup them by intervals
+    ind.range <-
+      apply(lpval, 2, rollMean, size = roll.size) %>%
+      which(. > lim, arr.ind = TRUE)[, "row"] %>%
+      unique() %>%
+      sort() %>%
+      getIntervals(n = int.min.size)
+
 
     if (N <- nrow(ind.range)) {
       # local clumping on previous intervals
       THR <- THR / thr.r2.step
       printf2("Local clumping in %d regions at r2 > %s.. ", N, THR)
-      ind.excl <- foreach(ic = rows_along(ind.range)) %do% {
+      ind.excl <- foreach(ic = rows_along(ind.range), .combine = 'c') %do% {
         clumping.local(G2, ind.row, ind.keep[seq2(ind.range[ic, ])], THR)
       }
-      ind.excl <- unlist(ind.excl)
       ind.keep <- setdiff(ind.keep, ind.excl)
       printf2("further excluded %d SNPs.\n", length(ind.excl))
       iter <- iter + 1

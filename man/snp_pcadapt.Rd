@@ -8,14 +8,14 @@ snp_pcadapt(G, U.row, ind.row = rows_along(G))
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically the slot \code{genotypes} of a \code{bigSNP}.
-You shouldn't have missing values in your data or SNPs with 0 MAF.}
+Typically \code{<bigSNP>$genotypes}.\cr
+\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{U.row}{Left singular vectors (not scores, $U^T \cdot U = I$)
 corresponding to \code{ind.row}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.
+are used. If not specified, all rows are used.\cr
 \strong{Don't use negative indices.}}
 }
 \value{

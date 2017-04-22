@@ -8,50 +8,51 @@
 \title{LD pruning and clumping}
 \usage{
 snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL, size = 500,
-  is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
+  is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.2, exclude = NULL,
   ncores = 1)
 
-snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 50,
-  is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.5, exclude = NULL,
+snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 49,
+  is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.2, exclude = NULL,
   nploidy = getOption("bigsnpr.nploidy"), ncores = 1)
 
 snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically the slot \code{genotypes} of a \code{bigSNP}.
-You shouldn't have missing values in your data or SNPs with 0 MAF.}
+Typically \code{<bigSNP>$genotypes}.\cr
+\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
-\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
-Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+\item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
+Typically \code{<bigSNP>$map$chromosome}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.
+are used. If not specified, all rows are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{S}{A vector of column statistics which express the importance
 of each SNP (the more important is the SNP, the greater should be
-the corresponding statistic). For example, if \code{S} follows the standard normal
-distribution, and significant means significantly different from 0,
-you should probably use \code{abs(S)} instead. If not specified, the MAF
-is computed and used.}
+the corresponding statistic).\cr
+For example, if \code{S} follows the standard normal distribution, and "important"
+means significantly different from 0, you must use \code{abs(S)} instead.\cr
+If not specified, the MAF is computed and used.}
 
-\item{size}{This parameter should be adjusted with respect to the number of SNPs.
+\item{size}{For one SNP, number of SNPs at its left and its right to
+be tested for being correlated with this particular SNP.
+This parameter should be adjusted with respect to the number of SNPs.
+The default are
 \itemize{
-\item for clumping: \strong{Radius} of the window's size for the LD evaluations.
-Default is \code{500} (I use this for a chip of 500K SNPs).
-\item for pruning: \strong{Diameter} of the window's size for the LD evaluations.
-Default is \code{50} (as in PLINK 1.07).
+\item \code{49} for pruning (as in PLINK),
+\item \code{500} for clumping (I use this for a chip of 500K SNPs).
 }}
 
 \item{infos.pos}{Vector of integers specifying the physical position
-on a chromosome (in base pairs) of each SNP.
-Typically the slot \code{physical.pos} of the slot \code{map} of a \code{bigSNP}.}
+on a chromosome (in base pairs) of each SNP.\cr
+Typically \code{<bigSNP>$map$physical.pos}.}
 
 \item{thr.r2}{Threshold over the squared correlation between two SNPs.
-Default is \code{0.5}.}
+Default is \code{0.2}.}
 
-\item{exclude}{Vector of indices of SNPs to exclude anyway. For example,
+\item{exclude}{Vector of SNP indices to exclude anyway. For example,
 can be used to exclude long-range LD regions (see Price2008). Another use
 can be for thresholding with respect to p-values associated with \code{S}.}
 
@@ -74,8 +75,8 @@ Default use the table of 34 long-range LD regions that you can find
 \description{
 For a \code{bigSNP}:
 \itemize{
-\item \code{snp_pruning}: LD pruning. Similar to "\code{--indep-pairwise size 1 thr.r2}" in
-\href{http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune}{PLINK 1.07}
+\item \code{snp_pruning}: LD pruning. Similar to "\code{--indep-pairwise (size+1) 1 thr.r2}"
+in \href{https://www.cog-genomics.org/plink/1.9/ld}{PLINK}.
 (\code{step} is fixed to 1).
 \item \code{snp_clumping}: LD clumping.
 \item \code{snp_indLRLDR}: Get SNP indices of long-range LD regions for the

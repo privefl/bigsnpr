@@ -9,15 +9,15 @@ snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically the slot \code{genotypes} of a \code{bigSNP}.
-You shouldn't have missing values in your data or SNPs with 0 MAF.}
+Typically \code{<bigSNP>$genotypes}.\cr
+\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.
+are used. If not specified, all rows are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{ind.col}{An optional vector of the column indices (SNPs) that are used.
-If not specified, all columns are used.
+If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{nploidy}{Number of trials, parameter of the binomial distribution.

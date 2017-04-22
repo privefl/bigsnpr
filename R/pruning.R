@@ -3,8 +3,8 @@
 #' LD pruning and clumping
 #'
 #' For a `bigSNP`:
-#' - `snp_pruning`: LD pruning. Similar to "`--indep-pairwise size 1 thr.r2`" in
-#'   [PLINK 1.07](http://pngu.mgh.harvard.edu/~purcell/plink/summary.shtml#prune)
+#' - `snp_pruning`: LD pruning. Similar to "`--indep-pairwise (size+1) 1 thr.r2`"
+#'   in [PLINK](https://www.cog-genomics.org/plink/1.9/ld).
 #'   (`step` is fixed to 1).
 #' - `snp_clumping`: LD clumping.
 #' - `snp_indLRLDR`: Get SNP indices of long-range LD regions for the
@@ -14,22 +14,22 @@
 #'
 #' @param S A vector of column statistics which express the importance
 #' of each SNP (the more important is the SNP, the greater should be
-#' the corresponding statistic). For example, if `S` follows the standard normal
-#' distribution, and significant means significantly different from 0,
-#' you should probably use `abs(S)` instead. If not specified, the MAF
-#' is computed and used.
+#' the corresponding statistic).\cr
+#' For example, if `S` follows the standard normal distribution, and "important"
+#' means significantly different from 0, you must use `abs(S)` instead.\cr
+#' If not specified, the MAF is computed and used.
 #'
-#' @param size
+#' @param size For one SNP, number of SNPs at its left and its right to
+#' be tested for being correlated with this particular SNP.
 #' This parameter should be adjusted with respect to the number of SNPs.
-#' - for clumping: __Radius__ of the window's size for the LD evaluations.
-#' Default is `500` (I use this for a chip of 500K SNPs).
-#' - for pruning: __Diameter__ of the window's size for the LD evaluations.
-#' Default is `50` (as in PLINK 1.07).
+#' The default are
+#' - `49` for pruning (as in PLINK),
+#' - `500` for clumping (I use this for a chip of 500K SNPs).
 #'
 #' @param thr.r2 Threshold over the squared correlation between two SNPs.
-#' Default is `0.5`.
+#' Default is `0.2`.
 #'
-#' @param exclude Vector of indices of SNPs to exclude anyway. For example,
+#' @param exclude Vector of SNP indices to exclude anyway. For example,
 #' can be used to exclude long-range LD regions (see Price2008). Another use
 #' can be for thresholding with respect to p-values associated with `S`.
 #'
@@ -66,14 +66,15 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
   stats <- big_colstats(G2, ind.row = ind.row, ind.col = ind.chr)
   n <- length(ind.row)
   denoX <- (n - 1) * stats$var
-  nulls <- which(denoX == 0)
-  if (l <- length(nulls)) {
-    message2("Excluding %d monoallelic markers...", l)
-    remain[nulls] <- FALSE
-  }
+  # nulls <- which(denoX == 0)
+  # if (l <- length(nulls)) {
+  #   message2("Excluding %d monoallelic markers...", l)
+  #   remain[nulls] <- FALSE
+  # }
 
   # main algo
   if (is.size.in.bp) {
+    stopifnot(length(infos.pos))
     keep <- clumping2(G2,
                       rowInd = ind.row,
                       colInd = ind.chr,
@@ -107,7 +108,7 @@ snp_clumping <- function(G, infos.chr,
                          size = 500,
                          is.size.in.bp = FALSE,
                          infos.pos = NULL,
-                         thr.r2 = 0.5,
+                         thr.r2 = 0.2,
                          exclude = NULL,
                          ncores = 1) {
 
@@ -132,14 +133,15 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
   p <- stats$sum / (nploidy * n)
   maf <- pmin(p, 1 - p)
   denoX <- (n - 1) * stats$var
-  nulls <- which(denoX == 0)
-  if (l <- length(nulls)) {
-    message2("Excluding %d monoallelic markers...", l)
-    keep[nulls] <- FALSE
-  }
+  # nulls <- which(denoX == 0)
+  # if (l <- length(nulls)) {
+  #   message2("Excluding %d monoallelic markers...", l)
+  #   keep[nulls] <- FALSE
+  # }
 
   # main algo
   if (is.size.in.bp) {
+    stopifnot(length(infos.pos))
     keep <- pruning2(G2,
                      rowInd = ind.row,
                      colInd = ind.chr,
@@ -169,10 +171,10 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
 #' @rdname pruning-clumping
 snp_pruning <- function(G, infos.chr,
                         ind.row = rows_along(G),
-                        size = 50,
+                        size = 49,
                         is.size.in.bp = FALSE,
                         infos.pos = NULL,
-                        thr.r2 = 0.5,
+                        thr.r2 = 0.2,
                         exclude = NULL,
                         nploidy = getOption("bigsnpr.nploidy"),
                         ncores = 1) {

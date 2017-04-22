@@ -82,7 +82,8 @@ SEXP corMat(const S4& BM,
       deno_x = xxSum - xSum * xSum / N;
       deno_y = yySum - ySum * ySum / N;
       r = num / sqrt(deno_x * deno_y);
-      if (r*r > thr[N]) corr(j, j0) = r;
+      // printf("%f -- %d -- %f\n", r, N, thr[N-1]);
+      if (r*r > thr[N-1]) corr(j, j0) = r;
     }
   }
 

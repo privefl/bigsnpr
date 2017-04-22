@@ -3,7 +3,7 @@
 context("MAX3")
 
 opt.save <- options(bigmemory.typecast.warning = FALSE,
-                    bigmemory.default.shared = FALSE)
+                    bigmemory.default.shared = TRUE)
 
 # from p173 of Zheng2012 -> two errors on p1
 tab <- c( 25, 283, 864,  10, 218, 929, 0.0150, 0.2151,
@@ -33,7 +33,11 @@ N.cases <- max(colSums(tab[1:3, ]))
 N.casesNA <- N.cases - colSums(tab[1:3, ])
 N.controls <- max(colSums(tab[4:6, ]))
 N.controlsNA <- N.controls - colSums(tab[4:6, ])
-X <- big.matrix(N.cases + N.controls, 9, type = "char")
+
+fake <- snp_fake(N.cases + N.controls, 9)
+fake$fam$affection <- c(rep(2, N.cases), rep(1, N.controls))
+
+X <- attach.BM(fake$genotypes)
 for (j in 1:9) {
   cases <- c(rep(0, tab[1, j]),
              rep(1, tab[2, j]),
@@ -43,11 +47,9 @@ for (j in 1:9) {
                 rep(1, tab[5, j]),
                 rep(2, tab[6, j]),
                 rep(NA, N.controlsNA[j]))
-  X[, j] <- c(sample(cases), sample(controls))
+  vals <- c(sample(cases), sample(controls))
+  X[, j] <- as.raw(replace(vals, is.na(vals), 3))
 }
-fake <- list(genotypes = X)
-class(fake) <- "bigSNP"
-fake$fam$affection <- c(rep(2, N.cases), rep(1, N.controls))
 
 ################################################################################
 

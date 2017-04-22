@@ -12,12 +12,12 @@ snp_manhattan(gwas, infos.chr, infos.pos, colors = c("black", "grey60"),
 \item{gwas}{A \code{mhtest} object with the p-values associated with each SNP.
 Typically, the output of \link{big_univLinReg}, \link{big_univLogReg} or \link{snp_pcadapt}.}
 
-\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
-Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+\item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
+Typically \code{<bigSNP>$map$chromosome}.}
 
 \item{infos.pos}{Vector of integers specifying the physical position
-on a chromosome (in base pairs) of each SNP.
-Typically the slot \code{physical.pos} of the slot \code{map} of a \code{bigSNP}.}
+on a chromosome (in base pairs) of each SNP.\cr
+Typically \code{<bigSNP>$map$physical.pos}.}
 
 \item{colors}{Colors that used for each chromosome (they are recycled).
 Default is an alternance of black and grey.}

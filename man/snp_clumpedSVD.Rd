@@ -11,18 +11,18 @@ snp_clumpedSVD(G, infos.chr, ind.row = rows_along(G),
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically the slot \code{genotypes} of a \code{bigSNP}.
-You shouldn't have missing values in your data or SNPs with 0 MAF.}
+Typically \code{<bigSNP>$genotypes}.\cr
+\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
-\item{infos.chr}{Vector of integers specifying the chromosome of each SNP.
-Typically the slot \code{chromosome} of the slot \code{map} of a \code{bigSNP}.}
+\item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
+Typically \code{<bigSNP>$map$chromosome}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.
+are used. If not specified, all rows are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{ind.col}{An optional vector of the column indices (SNPs) that are used.
-If not specified, all columns are used.
+If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{fun.scaling}{A function that returns a named list of
@@ -46,7 +46,7 @@ a few singular vectors/values.}}
 
 \item{roll.size}{Radius of rolling windows to smooth log-p-values.}
 
-\item{int.min.size}{Minimum size of intervals of contiguous significant
+\item{int.min.size}{Minimum size of intervals of consecutive significant
 indices.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.}

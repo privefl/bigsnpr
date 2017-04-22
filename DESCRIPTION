@@ -25,6 +25,7 @@ Imports:
     data.table,
     doParallel,
     foreach, 
+    magrittr,
     Matrix,
     parallel, 
     Rcpp, 
