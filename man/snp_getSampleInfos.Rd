@@ -45,7 +45,7 @@ files <- system.file("extdata", paste0("cluster", 1:3), package = "bigsnpr")
 data.table::fread(files[1])
 # need header option
 data.table::fread(files[1], header = FALSE)
-infos <- snp_getSampleInfos(test, files = files, header = FALSE)
+infos <- snp_getSampleInfos(test, files, header = FALSE)
 rle(infos[[1]])
 
 }

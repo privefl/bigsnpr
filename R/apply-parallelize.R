@@ -25,7 +25,13 @@
 #' @export
 #' @import foreach
 #'
-#' @example
+#' @examples
+#' # parallelize over chromosomes made easy
+#' # examples of functions from this package
+#' snp_pruning
+#' snp_clumping
+#' snp_fastImpute
+#'
 snp_split <- function(infos.chr, FUN, combine, ncores = 1, ...) {
 
   ind.chrs <- split(seq_along(infos.chr), infos.chr)

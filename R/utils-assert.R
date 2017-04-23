@@ -8,12 +8,12 @@ assert_type <- bigstatsr:::assert_type
 # FILE EXISTS
 assert_exist <- function(file) {
   if (!file.exists(file))
-    stop2("File \"%s\" doesn't exist.", file)
+    stop2("File '%s' doesn't exist.", file)
 }
 
 assert_noexist <- function(file) {
   if (file.exists(file))
-    stop2("File \"%s\" already exists.", file)
+    stop2("File '%s' already exists.", file)
 }
 
 ################################################################################

@@ -19,7 +19,17 @@
 #' Note that this function creates two other files which store the
 #' `big.matrix` and its descriptor.
 #' @seealso [bigSNP][bigSNP-class]
-#' @example
+#' @examples
+#' str(test <- snp_attachExtdata())
+#'
+#' # keep only first 50 samples and SNPs
+#' rdsfile <- subset(test, ind.row = 1:50, ind.col = 1:50)
+#' str(snp_attach(rdsfile))
+#'
+#' # remove only first 50 samples and SNPs
+#' rdsfile2 <- subset(test, ind.row = -(1:50), ind.col = -(1:50))
+#' str(snp_attach(rdsfile2))
+#'
 subset.bigSNP <- function(x,
                           ind.row = rows_along(X),
                           ind.col = cols_along(X),
