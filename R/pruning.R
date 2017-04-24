@@ -33,6 +33,9 @@
 #' can be used to exclude long-range LD regions (see Price2008). Another use
 #' can be for thresholding with respect to p-values associated with `S`.
 #'
+#' @param is.size.in.bp Is the specified size is corresponding to
+#' kilo base-pairs. Default is `FALSE` (it is only SNP counts).
+#'
 #' @references Price AL, Weale ME, Patterson N, et al.
 #' Long-Range LD Can Confound Genome Scans in Admixed Populations.
 #' Am J Hum Genet. 2008;83(1):132-135.
@@ -195,10 +198,10 @@ snp_pruning <- function(G, infos.chr,
 #' @rdname pruning-clumping
 snp_indLRLDR <- function(infos.chr, infos.pos, LD.regions = LD.wiki34) {
 
-  foreach(i = 1:nrow(LD.regions), .combine = 'c') %do% {
-    which((infos.chr == LD.regions[i, "Chr"]) &
-            (infos.pos >= LD.regions[i, "Start"]) &
-            (infos.pos <= LD.regions[i, "Stop"]))
+  foreach(ic = 1:nrow(LD.regions), .combine = 'c') %do% {
+    which((infos.chr == LD.regions[ic, "Chr"]) &
+            (infos.pos >= LD.regions[ic, "Start"]) &
+            (infos.pos <= LD.regions[ic, "Stop"]))
   }
 }
 

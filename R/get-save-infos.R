@@ -26,6 +26,7 @@ snp_saveModifs <- function(x) {
 #'
 #' Get information of individuals by matching from an external file.
 #'
+#' @inheritParams bigsnpr-package
 #' @param df.or.files Either
 #' - A `data.frame`,
 #' - A character vector of file names where to find at the information you want.

@@ -29,6 +29,18 @@ Note that this function creates two other files which store the
 A method to get a subset (copy) of a \code{bigSNP}.
 This new \code{bigSNP} will also be backed by files (in the same directory).
 }
+\examples{
+str(test <- snp_attachExtdata())
+
+# keep only first 50 samples and SNPs
+rdsfile <- subset(test, ind.row = 1:50, ind.col = 1:50)
+str(snp_attach(rdsfile))
+
+# remove only first 50 samples and SNPs
+rdsfile2 <- subset(test, ind.row = -(1:50), ind.col = -(1:50))
+str(snp_attach(rdsfile2))
+
+}
 \seealso{
 \link[=bigSNP-class]{bigSNP}
 }

@@ -37,3 +37,11 @@ on each SNP, independently.
 This function splits indices for each chromosome, then apply a given function
 to each part (chromosome) and finally combine the results.
 }
+\examples{
+# parallelize over chromosomes made easy
+# examples of functions from this package
+snp_pruning
+snp_clumping
+snp_fastImpute
+
+}

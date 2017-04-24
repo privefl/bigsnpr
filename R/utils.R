@@ -15,6 +15,8 @@ CutBySize <- bigstatsr:::CutBySize
 
 seq2 <- bigstatsr:::seq2
 
+globalVariables(c("ic", "f")) # for foreach
+
 ################################################################################
 
 # functions for encoding/decoding bed files

@@ -41,3 +41,48 @@ test_that("Same correlations as PLINK", {
 })
 
 ################################################################################
+
+# Correlations with significance levels
+library(Hmisc)
+
+N <- 500
+M <- 100
+test <- snp_fake(N, M)
+X <- attach.BM(test$genotypes)
+X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
+
+# random parameters
+alpha <- runif(1, 0.01, 0.2)
+ind.row <- sample(N, N / 2)
+ind.col <- sample(M, M / 2)
+
+true <- rcorr(X[ind.row, ind.col])
+ind <- which(true$P < alpha)
+
+corr <- snp_cor(G = test$genotypes,
+                ind.row = ind.row,
+                ind.col = ind.col,
+                alpha = alpha)
+
+test_that("Same correlations as Hmisc", {
+  expect_equal(corr[ind], true$r[ind])
+  expect_equal(2*(length(corr@i) - nrow(corr)), length(ind))
+})
+
+# without diagonal
+corr2 <- snp_cor(G = test$genotypes,
+                 ind.row = ind.row,
+                 ind.col = ind.col,
+                 alpha = alpha,
+                 fill.diag = FALSE)
+
+test_that("Same correlations (no diagonal) as Hmisc", {
+  expect_equal(corr2[ind], true$r[ind])
+  expect_equal(2*length(corr2@i), length(ind))
+})
+
+################################################################################
+
+rm(X)
+
+################################################################################

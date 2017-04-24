@@ -48,9 +48,9 @@ snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
   } else {
     n.thr <- length(thr.list)
 
-    scores.all <- foreach(j = 1:n.thr, .combine = 'cbind') %do% {
+    scores.all <- foreach(ic = 1:n.thr, .combine = 'cbind') %do% {
 
-      ind.col <- intersect(ind.keep, which(lpS > thr.list[j]))
+      ind.col <- intersect(ind.keep, which(lpS > thr.list[ic]))
       if (length(ind.col)) {
         big_prodVec(G, betas[ind.col], ind.test, ind.col)
       } else {

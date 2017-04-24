@@ -19,9 +19,13 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
   X2@code <- CODE_IMPUTE_PRED
 
   # correlation between SNPs
-  q.alpha <- stats::qchisq(alpha, df = 1, lower.tail = FALSE)
-  corr <- symmpart(corMat(X, rowInd = 1:n, colInd = ind.chr,
-                          size = size, thr = q.alpha / 1:n))
+  corr <- snp_cor(
+    G = X,
+    ind.row = 1:n,
+    ind.col = ind.chr,
+    size = size,
+    alpha = alpha
+  )
 
   # imputation
   nbNA <- integer(m.chr)
@@ -47,10 +51,10 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
                      save_period = NULL)
 
       # error of validation
-      pred2 <- predict(bst, X2[ind.val, ind.col, drop = FALSE])
+      pred2 <- stats::predict(bst, X2[ind.val, ind.col, drop = FALSE])
       error[i] <- mean(round(2 * pred2) != (2 * X.label[ind.val]))
       # impute
-      pred <- predict(bst, X2[indNA, ind.col, drop = FALSE])
+      pred <- stats::predict(bst, X2[indNA, ind.col, drop = FALSE])
       X2[indNA, ind.chr[i]] <- as.raw(round(2 * pred) + 4)
     }
   }
@@ -66,7 +70,7 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 #'
 #' @inheritParams bigsnpr-package
 #' @param alpha Type-I error for testing correlations.
-#' @param size Number of neighbor SNP to be possibly included in the model
+#' @param size Number of neighbor SNPs to be possibly included in the model
 #' imputing this particular SNP.
 #' @param seed An integer, for reproducibility.
 #'

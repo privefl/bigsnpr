@@ -35,7 +35,9 @@ ZCATT <- function(counts.cases, counts.controls, val) {
 #' and then compute the MAX3 statistic.
 #'
 #' @inheritParams bigsnpr-package
-#'
+#' @param ind.train An optional vector of the row indices that are used,
+#' for the training part. If not specified, all rows are used.\cr
+#' __Don't use negative indices.__
 #' @param val
 #' Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
 #' Default is `c(0, 0.5, 1)` and corresponds to the _MAX3_ statistic.
@@ -90,7 +92,7 @@ snp_MAX3 <- function(x, ind.train = rows_along(X.), val = c(0, 0.5, 1)) {
 
   S <- apply(stats^2, 1, max)
 
-  data.frame(S = S, pS = pchisq(S, df = 1, lower.tail = FALSE))
+  data.frame(S = S, pS = stats::pchisq(S, df = 1, lower.tail = FALSE))
 }
 
 ################################################################################

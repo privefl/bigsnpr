@@ -40,7 +40,7 @@ snp_fake <- function(n, m) {
 
   # map
   map <- data.frame(1L, paste0("snp_", 1:m), 0L, 0L,
-                    ifelse(cond <- (runif(m) > 0.5), "A", "T"),
+                    ifelse(cond <- (stats::runif(m) > 0.5), "A", "T"),
                     ifelse(!cond, "A", "T"),
                     stringsAsFactors = FALSE)
   names(map) <- NAMES.MAP

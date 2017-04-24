@@ -45,6 +45,9 @@ The default are
 \item \code{500} for clumping (I use this for a chip of 500K SNPs).
 }}
 
+\item{is.size.in.bp}{Is the specified size is corresponding to
+kilo base-pairs. Default is \code{FALSE} (it is only SNP counts).}
+
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
 Typically \code{<bigSNP>$map$physical.pos}.}

@@ -25,6 +25,7 @@ Imports:
     data.table,
     doParallel,
     foreach, 
+    ggplot2,
     magrittr,
     Matrix,
     parallel, 
@@ -41,6 +42,7 @@ LinkingTo:
 Suggests: 
     covr,
     gaston,
+    Hmisc,
     testthat
 Remotes: privefl/bigmemory, privefl/bigstatsr
 RoxygenNote: 6.0.1

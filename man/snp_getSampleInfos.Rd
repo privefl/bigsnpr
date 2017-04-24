@@ -8,6 +8,8 @@ snp_getSampleInfos(x, df.or.files, col.family.ID = 1, col.sample.ID = 2,
   col.infos = -c(1, 2), pair.sep = "-_-", ...)
 }
 \arguments{
+\item{x}{A \link[=bigSNP-class]{bigSNP}.}
+
 \item{df.or.files}{Either
 \itemize{
 \item A \code{data.frame},

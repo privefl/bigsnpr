@@ -68,7 +68,7 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
   all.colors[ind.highlight] <- col.highlight
 
   # get plot
-  lpval <- predict(gwas)
+  lpval <- stats::predict(gwas)
   cond <- is.null(npoints)
   ind <- `if`(cond, seq_along(lpval), head(order(lpval), npoints))
   ymin <- -lpval[tail(ind, 1)]
@@ -96,8 +96,8 @@ getLambdaGC <- function(gwas, tol = 1e-8) {
   MEDIAN <- log10(0.5)
   f.opt <- function(x) (PREDICT(x) - MEDIAN)
 
-  median(xtr) / stats::uniroot(f.opt, interval = range(xtr),
-                               check.conv = TRUE, tol = tol)$root
+  stats::median(xtr) / stats::uniroot(f.opt, interval = range(xtr),
+                                      check.conv = TRUE, tol = tol)$root
 }
 
 ################################################################################

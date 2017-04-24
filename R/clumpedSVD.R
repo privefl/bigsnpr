@@ -6,8 +6,8 @@ rollMean <- function(x, size) {
 
   len <- 2 * size + 1
 
-  lims <- qnorm(range(ppoints(len)))
-  weights <- dnorm(seq(lims[1], lims[2], length.out = len))
+  lims <- stats::qnorm(range(stats::ppoints(len)))
+  weights <- stats::dnorm(seq(lims[1], lims[2], length.out = len))
 
   roll_mean(x, weights)
 }
@@ -74,6 +74,7 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 #' @param roll.size Radius of rolling windows to smooth log-p-values.
 #' @param int.min.size Minimum size of intervals of consecutive significant
 #' indices.
+#' @param verbose Output some information on the iterations? Default is `TRUE`.
 #'
 #' @inherit bigstatsr::big_randomSVD return
 #' @export
@@ -120,7 +121,7 @@ snp_clumpedSVD <- function(G,
 
   iter <- 1
   repeat {
-    printf2("\nIteration n°%d:\n", iter)
+    printf2("\nIteration %d:\n", iter)
     printf2("Computing SVD..\n")
     # SVD
     obj.svd <- big_randomSVD(G,
@@ -131,7 +132,7 @@ snp_clumpedSVD <- function(G,
 
     # -log p-values of being an outlier (by PC)
     lpval <- -2 * apply(abs(obj.svd$v), 2, function(x) {
-      stats::pnorm(x, sd = mad(x), lower.tail = FALSE, log.p = TRUE)
+      stats::pnorm(x, sd = stats::mad(x), lower.tail = FALSE, log.p = TRUE)
     })
     # threshold of being an outlier based on Tukey's rule
     # http://math.stackexchange.com/a/966337

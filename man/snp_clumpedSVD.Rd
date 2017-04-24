@@ -50,6 +50,8 @@ a few singular vectors/values.}}
 indices.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.}
+
+\item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 }
 \value{
 A named list (an S3 class "big_SVD") of

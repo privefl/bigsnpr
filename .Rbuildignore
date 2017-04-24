@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 .git
 ^backingfiles$
+^examples$
 ^README\.Rmd$
 ^README-.*\.png$
 ^\.travis\.yml$

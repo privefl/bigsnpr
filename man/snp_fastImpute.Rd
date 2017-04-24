@@ -17,7 +17,7 @@ Typically \code{<bigSNP>$map$chromosome}.}
 
 \item{alpha}{Type-I error for testing correlations.}
 
-\item{size}{Number of neighbor SNP to be possibly included in the model
+\item{size}{Number of neighbor SNPs to be possibly included in the model
 imputing this particular SNP.}
 
 \item{seed}{An integer, for reproducibility.}

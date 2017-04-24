@@ -9,6 +9,10 @@ snp_MAX3(x, ind.train = rows_along(X.), val = c(0, 0.5, 1))
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
+\item{ind.train}{An optional vector of the row indices that are used,
+for the training part. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
+
 \item{val}{Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
 Default is \code{c(0, 0.5, 1)} and corresponds to the \emph{MAX3} statistic.
 Only \code{c(0, 1)} corresponds to \emph{MAX2}.
