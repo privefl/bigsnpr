@@ -15,7 +15,7 @@ CutBySize <- bigstatsr:::CutBySize
 
 seq2 <- bigstatsr:::seq2
 
-globalVariables(c("ic", "f")) # for foreach
+utils::globalVariables(c("ic", "f", ".")) # for foreach and magrittr
 
 ################################################################################
 

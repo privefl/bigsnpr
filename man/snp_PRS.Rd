@@ -13,7 +13,7 @@ Typically \code{<bigSNP>$genotypes}.\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{betas}{Numeric vector of weights associated with each SNP.
-You may want to see \link{big_univRegLin} or \link{big_univRegLog}.}
+You may want to see \link{big_univLinReg} or \link{big_univLogReg}.}
 
 \item{ind.test}{The individuals on whom to project the scores.}
 

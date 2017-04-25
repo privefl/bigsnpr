@@ -1,28 +1,12 @@
 ################################################################################
 
-getMethodFun <- function(method, y.train) {
-  if (method == "auto") {
-    l <- length(unique(y.train))
-    if (l < 2) stop("'y.train' needs at least two different values.")
-    `if`(l > 2, big_univRegLin, big_univRegLog)
-  } else if (method == "lin") {
-    big_univRegLin
-  } else if (method == "log") {
-    big_univRegLog
-  } else {
-    stop("Invalid 'method' argument.")
-  }
-}
-
-################################################################################
-
 #' PRS
 #'
 #' Polygenic Risk Scores with possible clumping and thresholding.
 #'
 #' @inheritParams bigsnpr-package
 #' @param betas Numeric vector of weights associated with each SNP.
-#' You may want to see [big_univRegLin] or [big_univRegLog].
+#' You may want to see [big_univLinReg] or [big_univLogReg].
 #' @param ind.test The individuals on whom to project the scores.
 #' @param ind.keep Column (SNP) indices to use (if using clumping, the
 #' output of [snp_clumping]). Default doesn't clump.
@@ -65,75 +49,3 @@ snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
 }
 
 ################################################################################
-
-# #' Title
-# #'
-# #' @param x
-# #' @param ind.train
-# #' @param ind.test
-# #' @param covar.train
-# #' @param method
-# #' @param thr.list
-# #' @param clumping
-# #' @param ...
-# #'
-# #' @return
-# #' @export
-# #'
-# #' @examples
-# snp_cvPRS <- function(x, ind.train, ind.test, covar.train = NULL,
-#                       method = "auto",
-#                       thr.list = NULL,
-#                       ncores = 1,
-#                       K = 10,
-#                       clumping = TRUE, ...) {
-#   check_x(x)
-#   if (length(thr.list) < 2)
-#     stop("Please provide a longer list of threshold values.")
-#   y.train <- x$fam$affection[ind.train]
-#
-#   x2 <- x
-#   x2$genotypes <- describe(x$genotypes)
-#
-#   FUN <- getMethodFun(method, y.train)
-#
-#   n <- length(ind.train)
-#   ind <- sample(rep_len(1:K, n))
-#
-#   if (is.seq <- (ncores == 1)) {
-#     registerDoSEQ()
-#   } else {
-#     cl <- parallel::makeCluster(ncores)
-#     doParallel::registerDoParallel(cl)
-#     on.exit(parallel::stopCluster(cl))
-#   }
-#   res <- foreach(ic = 0:K) %dopar% {
-#     X <- x2$genotypes <- attach.big.matrix(x2$genotypes)
-#
-#     if (ic == 0) { # main training
-#       betas <- FUN(X, y.train, ind.train, covar.train)
-#       S <- `if`(clumping, abs(betas$estim / betas$std.err), NULL)
-#       snp_PRS(x2, betas$estim, ind.test,
-#               lpS = -log10(betas$p.value),
-#               thr.list = thr.list,
-#               ncores = 1,
-#               S = S,
-#               ...)
-#     } else {
-#       i.test <- which(ind == ic)
-#       i.train <- setdiff(1:n, i.test)
-#
-#       betas <- FUN(X, y.train[i.train], ind.train[i.train],
-#                    covar.train[i.train, ])
-#       S <- `if`(clumping, abs(betas$estim / betas$std.err), NULL)
-#       snp_PRS(x2, betas$estim, ind.train[i.test],
-#               lpS = -log10(betas$p.value),
-#               thr.list = thr.list,
-#               ncores = 1,
-#               S = S,
-#               ...)
-#     }
-#   }
-# }
-#
-# ################################################################################

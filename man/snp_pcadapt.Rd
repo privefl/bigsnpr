@@ -11,7 +11,7 @@ snp_pcadapt(G, U.row, ind.row = rows_along(G))
 Typically \code{<bigSNP>$genotypes}.\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
-\item{U.row}{Left singular vectors (not scores, $U^T \cdot U = I$)
+\item{U.row}{Left singular vectors (not scores, \eqn{U^T \cdot U = I})
 corresponding to \code{ind.row}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
