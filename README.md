@@ -29,7 +29,7 @@ devtools::install_github("privefl/bigsnpr")
 For now, this package only read *bed*/*bim*/*fam* files (PLINK preferred format) using `snp_readBed`. Before reading into this package's special format, quality control and conversion can be done using PLINK, which can be called directly from R using `snp_plinkQC` and `snp_plinkIBDQC`.
 
 I use a class called `bigSNP` for representing infos on massive SNP arrays. One `bigSNP` has at least 3 elements:
-- `genotypes`: A `BM.code.descriptor` (see [package **bigstatsr**](https://privefl.github.io/bigsnpr/reference/bigSNP-class.html)) which describes a special `big.matrix` encoded with type `raw` (one byte unsigned integer), representing genotype calls and possibly imputed allele dosages. Rows are samples and columns are SNPs.
+- `genotypes`: A `BM.code.descriptor` (see [package **bigstatsr**](https://privefl.github.io/bigstatsr/#input-format)) which describes a special `big.matrix` encoded with type `raw` (one byte unsigned integer), representing genotype calls and possibly imputed allele dosages. Rows are samples and columns are SNPs.
 - `fam`: A `data.frame` containing some information on the SNPs (read from the ".fam" file).
 - `map`: A `data.frame` giving some information on the individuals (read from a ".bim" file).
 
