@@ -20,18 +20,21 @@ This is often just a call to \link{readRDS}. But it also checks if you have move
 the two (".bk" and ".rds") backing files to another directory.
 }
 \examples{
-bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-print(bedfile)
+(bedfile <- system.file("extdata", "example.bed", package = "bigsnpr"))
 
 # Reading the bedfile and storing the data in directory "backingfiles"
-PATH <- "backingfiles/test_doc.bk"
-if (!file.exists(PATH))
-  PATH <- snp_readBed(bedfile, backingfile = "test_doc")
+rds <- snp_readBed(bedfile, backingfile = "test_doc")
 
 # Loading the data from backing files
-test <- snp_attach(PATH)
+test <- snp_attach(rds)
 
 str(test)
-print(dim(test$genotypes))
-print(test$genotypes[1:8, 1:8])
+dim(G <- test$genotypes)
+attach.BM(G)[1:8, 1:8]
+
+
+
+# cleaning
+bk <- sub("\\\\.rds$", ".bk", rds)
+file.remove(rds, bk)
 }

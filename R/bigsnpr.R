@@ -4,9 +4,12 @@
 #' @useDynLib bigsnpr
 #' @importFrom Rcpp sourceCpp
 #'
-#' @param G A [BM.code.descriptor][BM.code.descriptor-class].
-#' Typically `<bigSNP>$genotypes`.\cr
+#' @param G A [BM.code.descriptor][BM.code.descriptor-class]
+#' (typically `<bigSNP>$genotypes`).\cr
 #' **You shouldn't have missing values in your data or SNPs with 0 MAF.**
+#' @param Gna A [BM.code.descriptor][BM.code.descriptor-class]
+#' (typically `<bigSNP>$genotypes`).\cr
+#' You can have missing values in your data.
 #'
 #' @param x A [bigSNP][bigSNP-class].
 #'

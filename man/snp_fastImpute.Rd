@@ -8,8 +8,8 @@ snp_fastImpute(G, infos.chr, alpha = 0.05, size = 100, seed = NA,
   ncores = 1)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically \code{<bigSNP>$genotypes}.\cr
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr

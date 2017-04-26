@@ -80,7 +80,7 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 #' @export
 #'
 #' @import foreach
-#' @importFrom magrittr %>%
+#' @import magrittr
 #'
 #' @examples
 #' ex <- snp_attachExtdata()
@@ -141,7 +141,9 @@ snp_clumpedSVD <- function(G,
     # roll mean to get only consecutive outliers and regroup them by intervals
     ind.range <-
       apply(lpval, 2, rollMean, size = roll.size) %>%
-      which(. > lim, arr.ind = TRUE)[, "row"] %>%
+      is_greater_than(lim) %>%
+      which(arr.ind = TRUE) %>%
+      extract(, "row") %>%
       unique() %>%
       sort() %>%
       getIntervals(n = int.min.size)

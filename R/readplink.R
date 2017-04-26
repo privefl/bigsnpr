@@ -23,7 +23,7 @@
 #' __You shouldn't read from PLINK files more than once.__ Instead, use
 #' [snp_attach] to load the "bigSNP" object in any R session from backing files.
 #'
-#' @example examples/example.readplink.R
+#' @example examples/example-readplink.R
 #' @export
 snp_readBed <- function(bedfile, backingfile,
                         backingpath = "backingfiles") {
@@ -58,7 +58,7 @@ snp_readBed <- function(bedfile, backingfile,
                         backingpath = backingpath,
                         descriptorfile = paste0(backingfile, ".desc"))
   # removing unnecessary ".desc" file
-  unlink(paste0(rootPath, ".desc"))
+  file.remove(paste0(rootPath, ".desc"))
 
   # fill the `big.matrix` from bedfile
   reach.eof <- readbina(bedfile, bigGeno@address, getCode())
@@ -91,7 +91,7 @@ snp_readBed <- function(bedfile, backingfile,
 #' @param rdsfile The path of the ".rds" which stores the `bigSNP` object.
 #'
 #' @return The `bigSNP` object.
-#' @example examples/example.readplink.R
+#' @example examples/example-readplink.R
 #'
 #' @export
 snp_attach <- function(rdsfile) {

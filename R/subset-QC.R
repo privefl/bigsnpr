@@ -15,9 +15,10 @@
 #' @param ... Not used.
 #'
 #' @export
-#' @return The path to the RDS file that stores the `bigSNP` object.
-#' Note that this function creates two other files which store the
-#' `big.matrix` and its descriptor.
+#' @return The path to the RDS file that stores the `bigSNP` object.\cr
+#' Note that this function creates two files whose names have been
+#' automatically chosen by appending "_sub" and a number to the prefix of the
+#' input bigSNP backing files.
 #' @seealso [bigSNP][bigSNP-class]
 #' @examples
 #' str(test <- snp_attachExtdata())
@@ -46,7 +47,7 @@ subset.bigSNP <- function(x,
                  backingpath = dirname(newfiles$bk),
                  descriptorfile = basename(newfiles$desc))
   # removing unnecessary ".desc" file
-  unlink(newfiles$desc)
+  file.remove(newfiles$desc)
 
   # http://stackoverflow.com/q/19565621/6103040
   newfam <- x$fam[ind.row, , drop = FALSE]

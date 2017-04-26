@@ -77,7 +77,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
 
   # main algo
   if (is.size.in.bp) {
-    stopifnot(length(infos.pos))
+    stopifnot(length(infos.pos) != 0) # TODO: better test
     keep <- clumping2(G2,
                       rowInd = ind.row,
                       colInd = ind.chr,
@@ -144,7 +144,7 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
 
   # main algo
   if (is.size.in.bp) {
-    stopifnot(length(infos.pos))
+    stopifnot(length(infos.pos) != 0) # TODO: better test
     keep <- pruning2(G2,
                      rowInd = ind.row,
                      colInd = ind.chr,

@@ -10,8 +10,8 @@ snp_clumpedSVD(G, infos.chr, ind.row = rows_along(G),
   roll.size = 50, int.min.size = 20, ncores = 1, verbose = TRUE)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically \code{<bigSNP>$genotypes}.\cr
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr

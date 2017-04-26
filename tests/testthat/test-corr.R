@@ -13,11 +13,14 @@ ind.col <- seq_len(m)
 
 size <- round(runif(1, 1, 200))
 
+r <- sqrt(0.2)
+t <- r * sqrt((n-2)/(1-r^2))
+
 corr <- bigsnpr:::corMat(BM = attach.BM(G),
                          rowInd = ind.row,
                          colInd = ind.col,
                          size = size,
-                         thr = rep(0.2, n))
+                         thr = rep(t, n))
 corr2 <- corr^2
 
 ################################################################################
@@ -34,7 +37,7 @@ corr.true <- as(matrix(0, m, m), "dgCMatrix")
 corr.true[snps.ind[ind.size, ]] <- true$R2[ind.size]
 
 test_that("Same correlations as PLINK", {
-  expect_equal(corr2@i,   corr.true@i)
+  expect_equal(corr2@i,   corr.true@i)     # TODO: still a problem?
   expect_equal(corr2@p,   corr.true@p)
   expect_equal(corr2@Dim, corr.true@Dim)
   expect_equal(corr2@x,   corr.true@x, tolerance = 1e-6)
@@ -43,7 +46,7 @@ test_that("Same correlations as PLINK", {
 ################################################################################
 
 # Correlations with significance levels
-library(Hmisc)
+library(Hmisc, warn.conflicts = FALSE, quietly = TRUE)
 
 N <- 500
 M <- 100
@@ -55,6 +58,7 @@ X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
 alpha <- runif(1, 0.01, 0.2)
 ind.row <- sample(N, N / 2)
 ind.col <- sample(M, M / 2)
+m <- length(ind.col)
 
 true <- rcorr(X[ind.row, ind.col])
 ind <- which(true$P < alpha)
@@ -65,6 +69,7 @@ corr <- snp_cor(G = test$genotypes,
                 alpha = alpha)
 
 test_that("Same correlations as Hmisc", {
+  expect_equal(dim(corr), c(m, m))
   expect_equal(corr[ind], true$r[ind])
   expect_equal(2*(length(corr@i) - nrow(corr)), length(ind))
 })
@@ -77,6 +82,7 @@ corr2 <- snp_cor(G = test$genotypes,
                  fill.diag = FALSE)
 
 test_that("Same correlations (no diagonal) as Hmisc", {
+  expect_equal(dim(corr2), c(m, m))
   expect_equal(corr2[ind], true$r[ind])
   expect_equal(2*length(corr2@i), length(ind))
 })

@@ -6,9 +6,13 @@
 \alias{bigsnpr-package}
 \title{bigsnpr: Predictive Analysis of Massive SNP Arrays}
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically \code{<bigSNP>$genotypes}.\cr
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
+
+\item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
+You can have missing values in your data.}
 
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 

@@ -50,17 +50,18 @@ for (j in 1:9) {
   vals <- c(sample(cases), sample(controls))
   X[, j] <- as.raw(replace(vals, is.na(vals), 3))
 }
+rm(X)
 
 ################################################################################
 
-test <- snp_MAX3(fake)
+test <- snp_MAX3(Gna = fake$genotypes, y01.train = fake$fam$affection - 1)
 
 test_that("Same values for statistics", {
-  expect_equal(round(sqrt(test$S), 3), res)
+  expect_equal(round(sqrt(test$score), 3), res)
 })
 
 test_that("Same ranks", {
-  expect_equal(rank(test$S), rank(-test$pS))
+  expect_equal(rank(test$score), rank(-predict(test)))
 })
 
 ################################################################################

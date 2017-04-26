@@ -8,8 +8,8 @@ snp_cor(G, ind.row = rows_along(G), ind.col = cols_along(G), size = 500,
   alpha = 0.05, fill.diag = TRUE)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically \code{<bigSNP>$genotypes}.\cr
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
@@ -33,6 +33,9 @@ The correlation matrix. This is a sparse symmetric matrix.
 }
 \description{
 Get significant correlations between nearby SNPs.
+}
+\details{
+P-values are computed by a two-sided t-test.
 }
 \examples{
 test <- snp_attachExtdata()

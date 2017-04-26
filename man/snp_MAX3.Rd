@@ -4,48 +4,65 @@
 \alias{snp_MAX3}
 \title{MAX3 statistic}
 \usage{
-snp_MAX3(x, ind.train = rows_along(X.), val = c(0, 0.5, 1))
+snp_MAX3(Gna, y01.train, ind.train = rows_along(Gna), val = c(0, 0.5, 1))
 }
 \arguments{
-\item{x}{A \link[=bigSNP-class]{bigSNP}.}
+\item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
+You can have missing values in your data.}
+
+\item{y01.train}{Vector of responses, corresponding to \code{ind.train}.
+\strong{Must be only 0s and 1s.}}
 
 \item{ind.train}{An optional vector of the row indices that are used,
-for the training part. If not specified, all rows are used.\cr
+for the training part. If not specified, all rows are used.
 \strong{Don't use negative indices.}}
 
 \item{val}{Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
-Default is \code{c(0, 0.5, 1)} and corresponds to the \emph{MAX3} statistic.
-Only \code{c(0, 1)} corresponds to \emph{MAX2}.
-And only \code{0.5} corresponds to the Armitage trend test.
-Finally, \code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.}
+\itemize{
+\item Default is \code{c(0, 0.5, 1)} and corresponds to the \emph{MAX3} statistic.
+\item Only \code{c(0, 1)} corresponds to \emph{MAX2}.
+\item And only \code{0.5} corresponds to the Armitage trend test.
+\item Finally, \code{seq(0, 1, length.out = L)} corresponds to \emph{MAXL}.
+}}
 }
 \value{
-A data.frame of \code{S} and \code{pS} for every column, which are MAX3
-statistics and associated p-values. \strong{P-values are in fact the minimum of
-the p-values of each test separately (so they are biased downward).}
-One can use genomic control to rescale these p-values.
+An object of classes \code{mhtest} and \code{data.frame} returning one
+score by SNP. See \code{methods(class = "mhtest")}.
 }
 \description{
-Counts the number of 0, 1, 2 by SNP and phenotype (cases/controls)
-and then compute the MAX3 statistic.
+Compute the MAX3 statistic, which tests for three genetic models
+(additive, recessive and dominant).
+}
+\details{
+\strong{P-values associated with returned scores are in fact the minimum of the
+p-values of each test separately. Thus, they are biased downward.}
 }
 \examples{
 set.seed(1)
 
 # constructing a fake genotype big.matrix
-a <- big.matrix(10, 12, type = "char", shared = FALSE)
-a[] <- sample(c(0, 1, 2), 150, TRUE)
-print(a[,])
+N <- 50; M <- 1200
+fake <- snp_fake(N, M)
+X <- attach.BM(fake$genotypes)
+X[] <- sample(as.raw(0:3), length(X), TRUE)
+X[1:8, 1:10]
+rm(X)
 
-# constructing a fake incomplete bigSNP with 10 individuals and 15 SNPs
-# where the 5 first individuals are cases and the 5 last are controls.
-fake <- list()
-class(fake) <- "bigSNP"
-fake$genotypes <- a
-fake$fam$affection <- c(rep(1, 5), rep(-1, 5))
+# Specify case/control phenotypes
+fake$fam$affection <- rep(1:2, each = N / 2)
 
 # Get MAX3 statistics
-print(snp_MAX3(fake))
+y01 <- fake$fam$affection - 1
+str(test <- snp_MAX3(fake$genotypes, y01.train = y01))
+# p-values are not well calibrated
+snp_qq(test)
+# genomic control is not of much help
+snp_qq(snp_gc(test))
+
+# Armitage trend test (well calibrated because only one test)
+test2 <- snp_MAX3(fake$genotypes, y01.train = y01, val = 0.5)
+snp_qq(test2)
 
 }
 \references{

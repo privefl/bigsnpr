@@ -4,6 +4,8 @@
 #'
 #' Get significant correlations between nearby SNPs.
 #'
+#' P-values are computed by a two-sided t-test.
+#'
 #' @inheritParams bigsnpr-package
 #' @param alpha Type-I error for testing correlations.
 #' @param size For one SNP, number of SNPs at its left and its right to
@@ -33,15 +35,19 @@ snp_cor <- function(G,
 
   X <- attach.BM(G)
 
-  # get the significance threshold with type-I error `alpha`
-  q.alpha <- stats::qchisq(alpha, df = 1, lower.tail = FALSE)
+  # get significance thresholds with type-I error `alpha`
+  suppressWarnings(
+    q.alpha <- stats::qt(p = alpha / 2,
+                         df = seq_along(ind.row) - 2,
+                         lower.tail = FALSE)
+  )
 
   corr <- forceSymmetric(corMat(
     BM = X,
     rowInd = ind.row,
     colInd = ind.col,
     size = size,
-    thr = q.alpha / seq_along(ind.row)
+    thr = q.alpha
   ))
 
   if (fill.diag) diag(corr) <- 1

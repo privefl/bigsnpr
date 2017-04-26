@@ -21,11 +21,10 @@ SEXP corMat(const S4& BM,
   arma::sp_mat corr(m, m);
 
   int i, j, j0, N;
-  int sumNA;
   double x, y;
   double xSum, xxSum, deno_x;
   double ySum, yySum, deno_y;
-  double xySum, num, r;
+  double xySum, num, r, t;
 
   // pre-computation
   NumericVector sumX(m), sumXX(m);
@@ -47,8 +46,8 @@ SEXP corMat(const S4& BM,
   // main computation
   for (j0 = 0; j0 < m; j0++) {
     for (j = max(0, j0 - size); j < j0; j++) {
+      N = n;
       xySum = 0;
-      sumNA = 0;
       xSum = sumX[j];
       ySum = sumX[j0];
       xxSum = sumXX[j];
@@ -59,7 +58,7 @@ SEXP corMat(const S4& BM,
 
         if (isna(y)) {
           // printf("Missing value at pos (%d, %d)\n", i+1, j0+1); // DEBUG
-          sumNA++;
+          N--;
           if (isna(x)) { // both missing
             // nothing to do
           } else { // y is missing but not x
@@ -70,20 +69,20 @@ SEXP corMat(const S4& BM,
           if (isna(x)) { // x is missing but not y
             ySum -= y;
             yySum -= y*y;
-            sumNA++;
+            N--;
           } else { // both not missing
             xySum += x * y;
           }
         }
       }
-      N = n - sumNA;
       // printf("N = %d\n", N); // DEBUG
       num = xySum - xSum * ySum / N;
       deno_x = xxSum - xSum * xSum / N;
       deno_y = yySum - ySum * ySum / N;
       r = num / sqrt(deno_x * deno_y);
-      // printf("%f -- %d -- %f\n", r, N, thr[N-1]);
-      if (r*r > thr[N-1]) corr(j, j0) = r;
+      t = r * sqrt((N - 2) / (1 - r*r));
+      // printf("%f -- %d -- %f -- %f\n", r, N, t, thr[N-1]); // DEBUG
+      if (abs(t) > thr[N-1]) corr(j, j0) = r;
     }
   }
 

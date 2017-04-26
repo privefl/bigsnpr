@@ -18,8 +18,8 @@ snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 49,
 snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically \code{<bigSNP>$genotypes}.\cr
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
@@ -95,8 +95,8 @@ set.seed(1)
 
 test <- snp_attachExtdata()
 G <- test$genotypes
-n <- nrow(X)
-m <- ncol(X)
+n <- nrow(G)
+m <- ncol(G)
 
 # pruning / clumping with MAF
 ind.keep <- snp_pruning(G, infos.chr = test$map$chromosome, thr.r2 = 0.1)

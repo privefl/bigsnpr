@@ -21,9 +21,10 @@ Default: keep them all.}
 \item{...}{Not used.}
 }
 \value{
-The path to the RDS file that stores the \code{bigSNP} object.
-Note that this function creates two other files which store the
-\code{big.matrix} and its descriptor.
+The path to the RDS file that stores the \code{bigSNP} object.\cr
+Note that this function creates two files whose names have been
+automatically chosen by appending "_sub" and a number to the prefix of the
+input bigSNP backing files.
 }
 \description{
 A method to get a subset (copy) of a \code{bigSNP}.

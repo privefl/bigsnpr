@@ -8,8 +8,8 @@ snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
   nploidy = getOption("bigsnpr.nploidy"))
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically \code{<bigSNP>$genotypes}.\cr
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that

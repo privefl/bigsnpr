@@ -22,10 +22,9 @@ so that you have only 0s, 1s and 2s in your data.
 test <- snp_attachExtdata()
 X <- attach.BM(test$genotypes)
 X[1:8, 1:5]
+rm(X)
 
 test2 <- snp_double(test)
 attach.BM(test2)[1:8, 1:10]
-
-rm(X)
 
 }

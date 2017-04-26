@@ -31,68 +31,77 @@ ZCATT <- function(counts.cases, counts.controls, val) {
 
 #' MAX3 statistic
 #'
-#' Counts the number of 0, 1, 2 by SNP and phenotype (cases/controls)
-#' and then compute the MAX3 statistic.
+#' Compute the MAX3 statistic, which tests for three genetic models
+#' (additive, recessive and dominant).
+#'
+#' __P-values associated with returned scores are in fact the minimum of the
+#' p-values of each test separately. Thus, they are biased downward.__
 #'
 #' @inheritParams bigsnpr-package
-#' @param ind.train An optional vector of the row indices that are used,
-#' for the training part. If not specified, all rows are used.\cr
-#' __Don't use negative indices.__
+#' @inheritParams bigstatsr::`bigstatsr-package`
 #' @param val
 #' Computing \eqn{\smash{\displaystyle\max_{x \in val}}~Z_{CATT}^2(x)}.
-#' Default is `c(0, 0.5, 1)` and corresponds to the _MAX3_ statistic.
-#' Only `c(0, 1)` corresponds to _MAX2_.
-#' And only `0.5` corresponds to the Armitage trend test.
-#' Finally, `seq(0, 1, length.out = L)` corresponds to _MAXL_.
+#' - Default is `c(0, 0.5, 1)` and corresponds to the _MAX3_ statistic.
+#' - Only `c(0, 1)` corresponds to _MAX2_.
+#' - And only `0.5` corresponds to the Armitage trend test.
+#' - Finally, `seq(0, 1, length.out = L)` corresponds to _MAXL_.
 #'
 #' @examples
 #' set.seed(1)
 #'
 #' # constructing a fake genotype big.matrix
-#' a <- big.matrix(10, 12, type = "char", shared = FALSE)
-#' a[] <- sample(c(0, 1, 2), 150, TRUE)
-#' print(a[,])
+#' N <- 50; M <- 1200
+#' fake <- snp_fake(N, M)
+#' X <- attach.BM(fake$genotypes)
+#' X[] <- sample(as.raw(0:3), length(X), TRUE)
+#' X[1:8, 1:10]
+#' rm(X)
 #'
-#' # constructing a fake incomplete bigSNP with 10 individuals and 15 SNPs
-#' # where the 5 first individuals are cases and the 5 last are controls.
-#' fake <- list()
-#' class(fake) <- "bigSNP"
-#' fake$genotypes <- a
-#' fake$fam$affection <- c(rep(1, 5), rep(-1, 5))
+#' # Specify case/control phenotypes
+#' fake$fam$affection <- rep(1:2, each = N / 2)
 #'
 #' # Get MAX3 statistics
-#' print(snp_MAX3(fake))
+#' y01 <- fake$fam$affection - 1
+#' str(test <- snp_MAX3(fake$genotypes, y01.train = y01))
+#' # p-values are not well calibrated
+#' snp_qq(test)
+#' # genomic control is not of much help
+#' snp_qq(snp_gc(test))
 #'
-#' @return A data.frame of `S` and `pS` for every column, which are MAX3
-#' statistics and associated p-values. __P-values are in fact the minimum of
-#' the p-values of each test separately (so they are biased downward).__
-#' One can use genomic control to rescale these p-values.
+#' # Armitage trend test (well calibrated because only one test)
+#' test2 <- snp_MAX3(fake$genotypes, y01.train = y01, val = 0.5)
+#' snp_qq(test2)
+#'
+#' @inherit snp_pcadapt return
 #'
 #' @references Zheng, G., Yang, Y., Zhu, X., & Elston, R. (2012).
 #' Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 #' \url{http://dx.doi.org/10.1007/978-1-4614-2245-7_6}.
 #'
 #' @export
-snp_MAX3 <- function(x, ind.train = rows_along(X.), val = c(0, 0.5, 1)) {
+snp_MAX3 <- function(Gna, y01.train,
+                     ind.train = rows_along(Gna),
+                     val = c(0, 0.5, 1)) {
 
-  X. <- x$genotypes
-  y <- transform_levels(x$fam$affection)
-
-  cases <- (y == 1)
-
-  ind.cases <- intersect(ind.train, which(cases))
-  ind.controls <- intersect(ind.train, which(!cases))
+  is.case <- (y01.train == 1)
+  ind.cases <- ind.train[is.case]
+  ind.controls <- ind.train[!is.case]
 
   onlyO12 <- as.character(0:2) # don't consider missing values
-  counts.cases <- big_counts(X., ind.row = ind.cases)[onlyO12, ]
-  counts.controls <- big_counts(X., ind.row = ind.controls)[onlyO12, ]
+  counts.cases <- big_counts(Gna, ind.row = ind.cases)[onlyO12, ]
+  counts.controls <- big_counts(Gna, ind.row = ind.controls)[onlyO12, ]
 
   stats <- ZCATT(counts.cases, counts.controls, val)
   stats <- replace(stats, is.na(stats), 0)
 
-  S <- apply(stats^2, 1, max)
+  fun.pred <- function(xtr) {
+    stats::pchisq(xtr, df = 1, lower.tail = FALSE, log.p = TRUE) / log(10)
+  }
 
-  data.frame(S = S, pS = stats::pchisq(S, df = 1, lower.tail = FALSE))
+  structure(data.frame(score = apply(stats^2, 1, max)),
+            class = c("mhtest", "data.frame"),
+            transfo = identity,
+            predict = fun.pred)
 }
 
 ################################################################################

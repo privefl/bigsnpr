@@ -7,8 +7,8 @@
 snp_pcadapt(G, U.row, ind.row = rows_along(G))
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}.
-Typically \code{<bigSNP>$genotypes}.\cr
+\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+(typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
 \item{U.row}{Left singular vectors (not scores, \eqn{U^T \cdot U = I})

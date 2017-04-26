@@ -308,7 +308,7 @@ snp_beagleImpute <- function(beagle.path, plink.path, bedfile.in,
     )
   )
   vcf1 <- paste0(tmpfile1, ".vcf.gz")
-  on.exit(unlink(vcf1), add = TRUE)
+  on.exit(file.remove(vcf1), add = TRUE)
 
   # Impute vcf with Beagle version 4
   system(
@@ -322,7 +322,7 @@ snp_beagleImpute <- function(beagle.path, plink.path, bedfile.in,
     )
   )
   vcf2 <- paste0(tmpfile2, ".vcf.gz")
-  on.exit(unlink(vcf2), add = TRUE)
+  on.exit(file.remove(vcf2), add = TRUE)
 
   # Convert back vcf to bed/bim/fam
   system(

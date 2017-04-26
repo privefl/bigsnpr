@@ -2,19 +2,30 @@ N <- 17
 M <- 911
 
 fake <- snp_fake(N, M)
-fake$genotypes[] <- sample(c(0:2, NA), size = N * M, replace = TRUE)
+X <- attach.BM(fake$genotypes)
+X[] <- sample(as.raw(0:3), length(X), TRUE)
+rm(X)
 
 # write the object as a bed/bim/fam object
-tmpfile <- tempfile()
-bed <- snp_writeBed(fake, paste0(tmpfile, ".bed"))
+tmp <- tempfile(fileext = ".bed")
+bed <- snp_writeBed(fake, tmp)
 # read this new file for the first time
-fake2 <- snp_attach(snp_readBed(bed, backingfile = basename(tmpfile),
-                                backingpath = dirname(tmpfile)))
+rds <- snp_readBed(bed, backingfile = "test_write")
+# attach object in R session
+fake2 <- snp_attach(rds)
 
 # same content
-print(all.equal(fake$genotypes[,], fake2$genotypes[,]))
-print(all.equal(fake$fam, fake2$fam))
-print(all.equal(fake$map, fake2$map))
+all.equal(attach.BM(fake$genotypes)[,],
+          attach.BM(fake2$genotypes)[,])
+all.equal(fake$fam, fake2$fam)
+all.equal(fake$map, fake2$map)
 
 # two different files
-print(fake$backingfile != fake2$backingfile)
+fake$savedIn
+fake2$savedIn
+
+
+
+# cleaning
+bk <- sub("\\.rds$", ".bk", rds)
+file.remove(rds, bk)

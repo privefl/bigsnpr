@@ -15,11 +15,10 @@
 #' test <- snp_attachExtdata()
 #' X <- attach.BM(test$genotypes)
 #' X[1:8, 1:5]
+#' rm(X)
 #'
 #' test2 <- snp_double(test)
 #' attach.BM(test2)[1:8, 1:10]
-#'
-#' rm(X)
 #'
 #' @export
 snp_double <- function(x) {
