@@ -17,7 +17,7 @@ getD <- function(X) {
 #' on mahalanobis distance, as implemented in package **pcadapt**.
 #'
 #' @inheritParams bigsnpr-package
-#' @param U.row Left singular vectors (not scores, \eqn{U^T \cdot U = I})
+#' @param U.row Left singular vectors (not scores, \eqn{U^T U = I})
 #' corresponding to `ind.row`.
 #'
 #' @return An object of classes `mhtest` and `data.frame` returning one

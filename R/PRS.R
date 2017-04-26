@@ -19,16 +19,14 @@
 #' columns correspond to `thr.list`.
 #' @export
 #'
-#' @example
+#' @example examples/example-PRS.R
 snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
                     lpS = NULL, thr.list = 0) {
 
   # thresholding and projecting
-  if (is.null(lpS)) {
-    message("'lpS' was not specified. Thresholding disabled.")
-    scores.all <- as.matrix(
-      big_prodVec(G, betas[ind.keep], ind.test, ind.keep)
-    )
+  if (is.null(lpS) || isTRUE(all.equal(thr.list, 0))) {
+    message("'lpS' or 'thr.list' was not specified. Thresholding disabled.")
+    scores.all <- as.matrix(big_prodVec(G, betas[ind.keep], ind.test, ind.keep))
   } else {
     n.thr <- length(thr.list)
 
@@ -38,7 +36,7 @@ snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
       if (length(ind.col)) {
         big_prodVec(G, betas[ind.col], ind.test, ind.col)
       } else {
-        0
+        rep(0, ind.test)
       }
     }
     colnames(scores.all) <- thr.list

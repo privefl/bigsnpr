@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • bigsnpr</title>
+<title>Remove samples — snp_plinkRmSamples • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -36,7 +36,7 @@
   </head>
 
   <body>
-    <div class="container template-vignette-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -89,20 +89,73 @@
       
       </header>
 
-      <div class="page-header">
-  <h1>Vignette reference <small>version&nbsp;0.1.0.9000</small></h1>
-</div>
-
-<div class="row">
-  <div class="col-md-9">
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="pruning-vs-clumping.html">Why clumping should be preferred over pruning</a></li>
-      </ul>
+      <div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header">
+    <h1>Remove samples</h1>
     </div>
+
+    
+    <p>Create new <em>bed</em>/<em>bim</em>/<em>fam</em> files by removing samples with PLINK.</p>
+    
+
+    <pre class="usage"><span class='fu'>snp_plinkRmSamples</span>(<span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='no'>bedfile.out</span>, <span class='no'>df.or.files</span>,
+  <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>plink.path</th>
+      <td><p>Path to the executable of PLINK 1.9.</p></td>
+    </tr>
+    <tr>
+      <th>bedfile.in</th>
+      <td><p>Path to the input bedfile.</p></td>
+    </tr>
+    <tr>
+      <th>bedfile.out</th>
+      <td><p>Path to the output bedfile.</p></td>
+    </tr>
+    <tr>
+      <th>df.or.files</th>
+      <td><p>Either</p><ul>
+<li><p>A <code>data.frame</code>,</p></li>
+<li><p>A character vector of file names where to find at the information you want.
+You should have one column for family IDs and one for sample IDs.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>col.family.ID</th>
+      <td><p>Index of the column containing the
+family IDs to match with those of the study. Default is the second one.</p></td>
+    </tr>
+    <tr>
+      <th>col.sample.ID</th>
+      <td><p>Index of the column containing the
+sample IDs to match with those of the study. Default is the first one.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Any additional parameter to pass to <a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a>.
+Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The path of the new bedfile.</p>
+    
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
+
   </div>
 </div>
 

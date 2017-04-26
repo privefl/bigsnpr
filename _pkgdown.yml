@@ -5,12 +5,12 @@ templates:
 navbar:
   title: "bigsnpr"
   left:
-    - text: "Home"
-      href: index.html
     - text: "Manual"
       href: reference/index.html
     - text: "Vignettes"
-      href: articles/index.html
+      menu:
+      - text: "Why clumping should be preferred over pruning"
+        href: articles/pruning-vs-clumping.html
   right:
     - text: "About"
       icon: fa-user
@@ -19,6 +19,37 @@ navbar:
       href: https://github.com/privefl/bigsnpr
 
 reference:
-  - title: "Package"
+  - title: "I/O"
     contents:
-      - bigsnpr-package
+      - snp_readBed
+      - snp_attach
+      - snp_writeBed
+  - title: "External software"
+    contents:
+      - snp_plinkQC
+      - snp_plinkIBDQC
+      - snp_plinkRmSamples
+      - snp_beagleImpute
+  - title: "Pruning / correlation"
+    contents:
+      - snp_pruning
+      - snp_clumpedSVD
+      - snp_PRS
+      - snp_cor
+      - snp_fastImpute
+  - title: "Multiple testing - plots"
+    contents:
+      - snp_gc
+      - snp_qq
+      - snp_manhattan
+      - snp_pcadapt
+      - snp_MAX3
+  - title: "Utilities"
+    contents:
+      - snp_split
+      - snp_saveModifs
+      - snp_getSampleInfos
+      - snp_MAF
+      - snp_scaleBinom
+      - snp_double
+      - subset.bigSNP
