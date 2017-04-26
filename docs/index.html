@@ -94,11 +94,11 @@
 <p>I use a class called <code>bigSNP</code> for representing infos on massive SNP arrays. One <code>bigSNP</code> has at least 3 elements:</p>
 <ul>
 <li>
-<code>genotypes</code>: A <code>BM.code.descriptor</code> (see <a href="https://privefl.github.io/bigstatsr/#input-format">package <strong>bigstatsr</strong></a>) which describes a special <code>big.matrix</code> encoded with type <code>raw</code> (one byte unsigned integer), representing genotype calls and possibly imputed allele dosages. Rows are samples and columns are SNPs.</li>
+<code>genotypes</code>: A <code>BM.code.descriptor</code> which describes a special <code>big.matrix</code> (see <a href="https://privefl.github.io/bigstatsr/#input-format">package <strong>bigstatsr</strong></a>). Rows are samples and columns are SNPs. This corresponds to the “bed” file, but each element is encoded on 8 bits rather than only 2 bits for PLINK files, which allows for storing more information, without taking too much disk space.</li>
 <li>
 <code>fam</code>: A <code>data.frame</code> containing some information on the SNPs (read from the “.fam” file).</li>
 <li>
-<code>map</code>: A <code>data.frame</code> giving some information on the individuals (read from a “.bim” file).</li>
+<code>map</code>: A <code>data.frame</code> giving some information on the individuals (read from the “.bim” file).</li>
 </ul>
 </div>
 <div id="possible-upcoming-features" class="section level2">
