@@ -1,7 +1,7 @@
 ################################################################################
 
 #' @import bigmemory bigstatsr
-#' @useDynLib bigsnpr
+#' @useDynLib bigsnpr, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #'
 #' @param G A [BM.code.descriptor][BM.code.descriptor-class]
