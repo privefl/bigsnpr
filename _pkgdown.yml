@@ -11,6 +11,8 @@ navbar:
       menu:
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
+      - text: "Two example analyses"
+        href: articles/bcm-seminar-packages.html
   right:
     - text: "About"
       icon: fa-user

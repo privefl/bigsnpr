@@ -63,6 +63,9 @@
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
+    <li>
+      <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -178,7 +181,7 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 #&gt;  - attr(*, "transfo")=function (x)  
 #&gt;  - attr(*, "predict")=function (xtr)  
 #&gt;   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 97 15 99 3 15 3 97 99
-#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0xaf85c08&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
+#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0xf0344d0&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><img src='snp_MAX3-6.png' alt='' width='540' height='400' /><div class='input'><span class='co'># genomic control is not of much help</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><img src='snp_MAX3-8.png' alt='' width='540' height='400' /><div class='input'>
 <span class='co'># Armitage trend test (well calibrated because only one test)</span>

@@ -63,6 +63,9 @@
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
+    <li>
+      <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -147,7 +150,7 @@ input bigSNP backing files.</p>
 #&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   .. ..@ description:List of 13
 #&gt;   .. .. ..$ sharedType: chr "FileBacked"
-#&gt;   .. .. ..$ filename  : chr "file411368745d9d.bk"
+#&gt;   .. .. ..$ filename  : chr "file4113d603a87.bk"
 #&gt;   .. .. ..$ dirname   : chr "/tmp/RtmpzTf3NT/"
 #&gt;   .. .. ..$ totalRows : num 517
 #&gt;   .. .. ..$ totalCols : num 4542
@@ -173,7 +176,7 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:4542] 0 1000 2000 3000 4000 5000 6000 7000 8000 9000 ...
 #&gt;   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
 #&gt;   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
-#&gt;  $ savedIn  : chr "/tmp/RtmpzTf3NT/file411368745d9d.rds"
+#&gt;  $ savedIn  : chr "/tmp/RtmpzTf3NT/file4113d603a87.rds"
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 <span class='co'># keep only first 50 samples and SNPs</span>
 <span class='no'>rdsfile</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>)
@@ -182,7 +185,7 @@ input bigSNP backing files.</p>
 #&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   .. ..@ description:List of 13
 #&gt;   .. .. ..$ sharedType: chr "FileBacked"
-#&gt;   .. .. ..$ filename  : chr "file411368745d9d_sub1.bk"
+#&gt;   .. .. ..$ filename  : chr "file4113d603a87_sub1.bk"
 #&gt;   .. .. ..$ dirname   : chr "/tmp/RtmpzTf3NT/"
 #&gt;   .. .. ..$ totalRows : num 50
 #&gt;   .. .. ..$ totalCols : num 50
@@ -208,7 +211,7 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:50] 0 1000 2000 3000 4000 5000 6000 7000 8000 9000 ...
 #&gt;   ..$ allele1     : chr [1:50] "A" "T" "T" "T" ...
 #&gt;   ..$ allele2     : chr [1:50] "T" "A" "A" "A" ...
-#&gt;  $ savedIn  : chr "/tmp/RtmpzTf3NT/file411368745d9d_sub1.rds"
+#&gt;  $ savedIn  : chr "/tmp/RtmpzTf3NT/file4113d603a87_sub1.rds"
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 <span class='co'># remove only first 50 samples and SNPs</span>
 <span class='no'>rdsfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>))
@@ -217,7 +220,7 @@ input bigSNP backing files.</p>
 #&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   .. ..@ description:List of 13
 #&gt;   .. .. ..$ sharedType: chr "FileBacked"
-#&gt;   .. .. ..$ filename  : chr "file411368745d9d_sub2.bk"
+#&gt;   .. .. ..$ filename  : chr "file4113d603a87_sub2.bk"
 #&gt;   .. .. ..$ dirname   : chr "/tmp/RtmpzTf3NT/"
 #&gt;   .. .. ..$ totalRows : num 467
 #&gt;   .. .. ..$ totalCols : num 4492
@@ -243,7 +246,7 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:4492] 50000 51000 52000 53000 54000 55000 56000 57000 58000 59000 ...
 #&gt;   ..$ allele1     : chr [1:4492] "A" "A" "A" "T" ...
 #&gt;   ..$ allele2     : chr [1:4492] "T" "T" "T" "A" ...
-#&gt;  $ savedIn  : chr "/tmp/RtmpzTf3NT/file411368745d9d_sub2.rds"
+#&gt;  $ savedIn  : chr "/tmp/RtmpzTf3NT/file4113d603a87_sub2.rds"
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 </div></pre>
   </div>
