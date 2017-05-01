@@ -24,7 +24,8 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
     ind.row = 1:n,
     ind.col = ind.chr,
     size = size,
-    alpha = alpha
+    alpha = alpha,
+    fill.diag = FALSE
   )
 
   # imputation
@@ -66,7 +67,8 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 
 #' Fast imputation
 #'
-#' Fast imputation algorithm based on local XGBoost models.
+#' Fast imputation algorithm based on local XGBoost models. **This algorithm
+#' has not been extensively compared with other imputation methods yet.**
 #'
 #' @inheritParams bigsnpr-package
 #' @param alpha Type-I error for testing correlations.
@@ -82,8 +84,8 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 #' @import Matrix xgboost
 #'
 snp_fastImpute <- function(G, infos.chr,
-                           alpha = 0.05,
-                           size = 100,
+                           alpha = 0.02,
+                           size = 500,
                            seed = NA,
                            ncores = 1) {
 

@@ -16,7 +16,7 @@ Pruning and clumping are used to keep a subset of SNPs that are nearly uncorrela
 
 ## Simulation
 
-I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation > 0.2 with its direct neighbors and only with them. Moreover, the SNPs have an increasing MAF.
+I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation > 0.2 with their direct neighbors and only with them. Moreover, the SNPs have an increasing MAF.
 
 ```{r}
 
