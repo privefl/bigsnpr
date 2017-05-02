@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,14 +25,12 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
   </head>
 
   <body>
@@ -103,41 +101,30 @@
 on each SNP, independently.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_split</span>(<span class='no'>infos.chr</span>, <span class='no'>FUN</span>, <span class='no'>combine</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
+    <pre><span class='fu'>snp_split</span>(<span class='no'>infos.chr</span>, <span class='no'>FUN</span>, <span class='no'>combine</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>infos.chr</th>
-      <td><p>Vector of integers specifying each SNP's chromosome.
-Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></td>
-    </tr>
-    <tr>
-      <th>FUN</th>
-      <td><p>The function to be applied. It must take a
+    <dl class="dl-horizontal">
+      <dt>infos.chr</dt>
+      <dd>Vector of integers specifying each SNP&#39;s chromosome.
+Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</dd>
+      <dt>FUN</dt>
+      <dd>The function to be applied. It must take a
 BM.code as first argument and <code>ind.chr</code>, an another argument
 to provide subsetting over SNPs.
-You can access the number of the chromosome by using <code>attr(ind.chr, "chr")</code>.</p></td>
-    </tr>
-    <tr>
-      <th>combine</th>
-      <td><p>function that is used by foreach to process the tasks
+You can access the number of the chromosome by using <code>attr(ind.chr, &quot;chr&quot;)</code>.</dd>
+      <dt>combine</dt>
+      <dd>function that is used by foreach to process the tasks
 results as they generated. This can be specified as either a function or a
-non-empty character string naming the function. Specifying 'c' is useful
-for concatenating the results into a vector, for example. The values 'cbind'
-and 'rbind' can combine vectors into a matrix. The values '+' and '*' can be
-used to process numeric data. By default, the results are returned in a list.</p></td>
-    </tr>
-    <tr>
-      <th>ncores</th>
-      <td><p>Number of cores used. Default doesn't use parallelism.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Extra arguments to be passed to <code>FUN</code>.</p></td>
-    </tr>
-    </table>
+non-empty character string naming the function. Specifying &#39;c&#39; is useful
+for concatenating the results into a vector, for example. The values &#39;cbind&#39;
+and &#39;rbind&#39; can combine vectors into a matrix. The values &#39;+&#39; and &#39;*&#39; can be
+used to process numeric data. By default, the results are returned in a list.</dd>
+      <dt>ncores</dt>
+      <dd>Number of cores used. Default doesn&#39;t use parallelism.</dd>
+      <dt>...</dt>
+      <dd>Extra arguments to be passed to <code>FUN</code>.</dd>
+    </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -159,12 +146,12 @@ to each part (chromosome) and finally combine the results.</p>
 #&gt;                         infos.pos = NULL,
 #&gt;                         thr.r2 = 0.2,
 #&gt;                         exclude = NULL,
-#&gt;                         nploidy = getOption("bigsnpr.nploidy"),
+#&gt;                         nploidy = getOption(&quot;bigsnpr.nploidy&quot;),
 #&gt;                         ncores = 1) {
 #&gt; 
 #&gt;   args &lt;- as.list(environment())
 #&gt; 
-#&gt;   do.call(what = snp_split, args = c(args, FUN = pruningChr, combine = 'c'))
+#&gt;   do.call(what = snp_split, args = c(args, FUN = pruningChr, combine = &#39;c&#39;))
 #&gt; }
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_clumping</span></div><div class='output co'>#&gt; function(G, infos.chr,
 #&gt;                          ind.row = rows_along(G),
@@ -179,18 +166,18 @@ to each part (chromosome) and finally combine the results.</p>
 #&gt;   if (is.null(S)) S &lt;- snp_MAF(G, ind.row = ind.row)
 #&gt;   args &lt;- as.list(environment())
 #&gt; 
-#&gt;   do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
+#&gt;   do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = &#39;c&#39;))
 #&gt; }
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_fastImpute</span></div><div class='output co'>#&gt; function(G, infos.chr,
-#&gt;                            alpha = 0.05,
-#&gt;                            size = 100,
+#&gt;                            alpha = 0.02,
+#&gt;                            size = 500,
 #&gt;                            seed = NA,
 #&gt;                            ncores = 1) {
 #&gt; 
 #&gt;   if (!is.na(seed)) seed &lt;- seq_len(max(infos.chr)) + seed
 #&gt;   args &lt;- as.list(environment())
 #&gt; 
-#&gt;   do.call(what = snp_split, args = c(args, FUN = imputeChr, combine = 'rbind'))
+#&gt;   do.call(what = snp_split, args = c(args, FUN = imputeChr, combine = &#39;rbind&#39;))
 #&gt; }
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'>
 </div></pre>

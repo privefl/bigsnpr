@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,14 +25,12 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
   </head>
 
   <body>
@@ -102,50 +100,39 @@
     <p>Get information of individuals by matching from an external file.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_getSampleInfos</span>(<span class='no'>x</span>, <span class='no'>df.or.files</span>, <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+    <pre><span class='fu'>snp_getSampleInfos</span>(<span class='no'>x</span>, <span class='no'>df.or.files</span>, <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>col.infos</span> <span class='kw'>=</span> -<span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>pair.sep</span> <span class='kw'>=</span> <span class='st'>"-_-"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>A <a href='bigSNP-class.html'>bigSNP</a>.</p></td>
-    </tr>
-    <tr>
-      <th>df.or.files</th>
-      <td><p>Either</p><ul>
-<li><p>A <code>data.frame</code>,</p></li>
-<li><p>A character vector of file names where to find at the information you want.
-You should have one column for family IDs and one for sample IDs.</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>col.family.ID</th>
-      <td><p>Index of the column containing the
-family IDs to match with those of the study. Default is the second one.</p></td>
-    </tr>
-    <tr>
-      <th>col.sample.ID</th>
-      <td><p>Index of the column containing the
-sample IDs to match with those of the study. Default is the first one.</p></td>
-    </tr>
-    <tr>
-      <th>col.infos</th>
-      <td><p>Indices of the column containing the information you want.
-Default is all but the first and the second columns.</p></td>
-    </tr>
-    <tr>
-      <th>pair.sep</th>
-      <td><p>Separator used for concataining family and sample IDs
-in order to match easier. Default is <code>"-_-"</code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Any additional parameter to pass to <a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a>.
-Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
-    </tr>
-    </table>
+    <dl class="dl-horizontal">
+      <dt>x</dt>
+      <dd>A <a href='bigSNP-class.html'>bigSNP</a>.</dd>
+      <dt>df.or.files</dt>
+      <dd>Either
+<ul>
+<li> A <code>data.frame</code>,
+</li>
+<li> A character vector of file names where to find at the information you want.
+You should have one column for family IDs and one for sample IDs.
+</li>
+</ul>
+</dd>
+      <dt>col.family.ID</dt>
+      <dd>Index of the column containing the
+family IDs to match with those of the study. Default is the second one.</dd>
+      <dt>col.sample.ID</dt>
+      <dd>Index of the column containing the
+sample IDs to match with those of the study. Default is the first one.</dd>
+      <dt>col.infos</dt>
+      <dd>Indices of the column containing the information you want.
+Default is all but the first and the second columns.</dd>
+      <dt>pair.sep</dt>
+      <dd>Separator used for concataining family and sample IDs
+in order to match easier. Default is <code>&quot;-_-&quot;</code>.</dd>
+      <dt>...</dt>
+      <dd>Any additional parameter to pass to <a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a>.
+Particularly, option <code>header = FALSE</code> is sometimes needed.</dd>
+    </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -161,7 +148,7 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
 <span class='co'># Just after reading</span>
 <span class='fu'>rle</span>(<span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>family.ID</span>)</div><div class='output co'>#&gt; Run Length Encoding
 #&gt;   lengths: int [1:19] 34 28 15 35 31 25 30 35 35 20 ...
-#&gt;   values : chr [1:19] "POP1" "POP2" "POP3" "POP4" "POP5" "POP6" "POP7" ...</div><div class='input'><span class='co'># Get populations clusters from external files</span>
+#&gt;   values : chr [1:19] &quot;POP1&quot; &quot;POP2&quot; &quot;POP3&quot; &quot;POP4&quot; &quot;POP5&quot; &quot;POP6&quot; &quot;POP7&quot; ...</div><div class='input'><span class='co'># Get populations clusters from external files</span>
 <span class='no'>files</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='fu'>paste0</span>(<span class='st'>"cluster"</span>, <span class='fl'>1</span>:<span class='fl'>3</span>), <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
 <span class='kw'>data.table</span><span class='kw'>::</span><span class='fu'>fread</span>(<span class='no'>files</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt;      POP1   IND0 POP-1-5
 #&gt;   1: POP1   IND1 POP-1-5
@@ -189,7 +176,7 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
 #&gt; 143: POP5 IND142 POP-1-5</div><div class='input'><span class='no'>infos</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_getSampleInfos</span>(<span class='no'>test</span>, <span class='no'>files</span>, <span class='kw'>header</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='fu'>rle</span>(<span class='no'>infos</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; Run Length Encoding
 #&gt;   lengths: int [1:3] 143 167 207
-#&gt;   values : chr [1:3] "POP-1-5" "POP-6-11" "POP-12-19"</div><div class='input'>
+#&gt;   values : chr [1:3] &quot;POP-1-5&quot; &quot;POP-6-11&quot; &quot;POP-12-19&quot;</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
