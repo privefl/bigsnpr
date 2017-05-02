@@ -19,7 +19,7 @@ License: GPL-3 + file LICENSE
 LazyData: TRUE
 Depends:
     R (>= 3.2.3), 
-    bigmemory,
+    bigmemory (== 4.5.22.6670),
     bigstatsr
 Imports:
     data.table,
