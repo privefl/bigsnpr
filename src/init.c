@@ -18,7 +18,7 @@ extern SEXP bigsnpr_pruning2(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEX
 extern SEXP bigsnpr_readbina(SEXP, SEXP, SEXP);
 extern SEXP bigsnpr_roll_mean(SEXP, SEXP);
 extern SEXP bigsnpr_testWrite(SEXP, SEXP);
-extern SEXP bigsnpr_writebina(SEXP, SEXP, SEXP);
+extern SEXP bigsnpr_writebina(SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
   {"bigsnpr_clumping",       (DL_FUNC) &bigsnpr_clumping,        9},
@@ -31,7 +31,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"bigsnpr_readbina",       (DL_FUNC) &bigsnpr_readbina,        3},
   {"bigsnpr_roll_mean",      (DL_FUNC) &bigsnpr_roll_mean,       2},
   {"bigsnpr_testWrite",      (DL_FUNC) &bigsnpr_testWrite,       2},
-  {"bigsnpr_writebina",      (DL_FUNC) &bigsnpr_writebina,       3},
+  {"bigsnpr_writebina",      (DL_FUNC) &bigsnpr_writebina,       5},
   {NULL, NULL, 0}
 };
 

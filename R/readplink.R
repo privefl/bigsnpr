@@ -116,6 +116,7 @@ snp_attach <- function(rdsfile) {
 #' Write PLINK files from a "bigSNP"
 #'
 #' Function to write bed/bim/fam files from a [bigSNP][bigSNP-class].
+#' This will use the slot `code` **rounded** to write 0s, 1s, 2s or NAs.
 #'
 #' @inheritParams bigsnpr-package
 #' @param bedfile Path to file with extension ".bed" to create.
@@ -124,7 +125,11 @@ snp_attach <- function(rdsfile) {
 #'
 #' @example examples/example-writeplink.R
 #' @export
-snp_writeBed <- function(x, bedfile) {
+snp_writeBed <- function(x, bedfile,
+                         ind.row = rows_along(X),
+                         ind.col = cols_along(X)) {
+
+  X <- attach.BM(x$genotypes)
 
   # check extension of file
   assert_ext(bedfile, "bed")
@@ -138,12 +143,14 @@ snp_writeBed <- function(x, bedfile) {
   assert_dir(dirname(bedfile))
 
   # write map and family files
-  write.table2(x$fam[NAMES.FAM], file = famfile)
-  write.table2(x$map[NAMES.MAP], file = bimfile)
+  write.table2(x$fam[ind.row, NAMES.FAM], file = famfile)
+  write.table2(x$map[ind.col, NAMES.MAP], file = bimfile)
 
   ## write bed file
-  X <- attach.BM(x$genotypes)
-  writebina(bedfile, X@address, getInverseCode())
+  X@code <- replace(round(X@code), is.na(X@code), 3)
+  stopifnot(all(X@code %in% 0:3))
+
+  writebina(bedfile, X, getInverseCode(), ind.row, ind.col)
 
   bedfile
 }

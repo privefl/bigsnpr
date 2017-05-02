@@ -4,18 +4,27 @@
 \alias{snp_writeBed}
 \title{Write PLINK files from a "bigSNP"}
 \usage{
-snp_writeBed(x, bedfile)
+snp_writeBed(x, bedfile, ind.row = rows_along(X), ind.col = cols_along(X))
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{bedfile}{Path to file with extension ".bed" to create.}
+
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
+
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.\cr
+\strong{Don't use negative indices.}}
 }
 \value{
 The input \code{bedfile} path.
 }
 \description{
 Function to write bed/bim/fam files from a \link[=bigSNP-class]{bigSNP}.
+This will use the slot \code{code} \strong{rounded} to write 0s, 1s, 2s or NAs.
 }
 \examples{
 N <- 17

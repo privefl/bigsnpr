@@ -154,14 +154,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // writebina
-void writebina(const char * filename, XPtr<BigMatrix> xpMat, const RawVector& tab);
-RcppExport SEXP bigsnpr_writebina(SEXP filenameSEXP, SEXP xpMatSEXP, SEXP tabSEXP) {
+void writebina(const char * filename, const S4& BM, const RawVector& tab, const IntegerVector& rowInd, const IntegerVector& colInd);
+RcppExport SEXP bigsnpr_writebina(SEXP filenameSEXP, SEXP BMSEXP, SEXP tabSEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char * >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat(xpMatSEXP);
+    Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
     Rcpp::traits::input_parameter< const RawVector& >::type tab(tabSEXP);
-    writebina(filename, xpMat, tab);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    writebina(filename, BM, tab, rowInd, colInd);
     return R_NilValue;
 END_RCPP
 }

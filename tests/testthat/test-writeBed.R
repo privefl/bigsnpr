@@ -49,6 +49,45 @@ test_that("same content as written bigSNP", {
 
 ################################################################################
 
+# change the code
+fake$genotypes@code[4] <- 2
+# write the object as a bed/bim/fam object
+bed <- snp_writeBed(fake, bedfile = tempfile(fileext = ".bed"))
+tmpfile <- tempfile()
+fake3 <- snp_attach(snp_readBed(bed, backingfile = basename(tmpfile),
+                                backingpath = dirname(tmpfile)))
+
+test_that("same content as written bigSNP (no more NAs)", {
+  expect_equal(fake3$genotypes@code, CODE_012)
+  expect_equal(sum(is.na(attach.BM(fake3$genotypes)[,])), 0)
+  expect_equal(attach.BM(fake$genotypes)[,],
+               attach.BM(fake3$genotypes)[,])
+  expect_equal(fake$fam, fake3$fam)
+  expect_equal(fake$map, fake3$map)
+})
+
+################################################################################
+
+ind.row <- sample(N, 10)
+ind.col <- sample(M, 50)
+# write the object as a smaller bed/bim/fam object
+bed <- snp_writeBed(fake, bedfile = tempfile(fileext = ".bed"),
+                    ind.row = ind.row, ind.col = ind.col)
+tmpfile <- tempfile()
+fake4 <- snp_attach(snp_readBed(bed, backingfile = basename(tmpfile),
+                                backingpath = dirname(tmpfile)))
+
+test_that("same content as written bigSNP (with subsetting)", {
+  expect_equal(fake4$genotypes@code, CODE_012)
+  expect_equal(sum(is.na(attach.BM(fake3$genotypes)[,])), 0)
+  expect_equal(attach.BM(fake$genotypes)[ind.row, ind.col],
+               attach.BM(fake4$genotypes)[,])
+  expect_equivalent(fake$fam[ind.row, ], fake4$fam)
+  expect_equivalent(fake$map[ind.col, ], fake4$map)
+})
+
+################################################################################
+
 rm(X)
 
 ################################################################################

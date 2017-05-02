@@ -58,10 +58,13 @@ bool readbina(const char * filename,
 
 // [[Rcpp::export]]
 void writebina(const char * filename,
-               XPtr<BigMatrix> xpMat,
-               const RawVector& tab) {
-  MatrixAccessor<unsigned char> macc(*xpMat);
+               const S4& BM,
+               const RawVector& tab,
+               const IntegerVector& rowInd,
+               const IntegerVector& colInd) {
 
+  XPtr<BigMatrix> xpMat = BM.slot("address");
+  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
   int n = macc.nrow();
   int m = macc.ncol();
   int length = ceil((double)n / 4); // DO NOT USE INTEGERS WITH CEIL
@@ -78,13 +81,13 @@ void writebina(const char * filename,
   for (j = 0; j < m; j++) {
     k = 0;
     for (i = 0; i <= n-4; i += 4) {
-      ind = (macc[j][i] + 4 * macc[j][i+1]) +
-        (16 * macc[j][i+2] + 64 * macc[j][i+3]);
+      ind = (macc(i, j) + 4 * macc(i+1, j)) +
+        (16 * macc(i+2, j) + 64 * macc(i+3, j));
       buffer[k++] = tab[ind];
     }
     ind = 0; coef = 1;
     for (; i < n; i++) {
-      ind += coef * macc[j][i];
+      ind += coef * macc(i, j);
       coef *= 4;
     }
     buffer[k] = tab[ind];

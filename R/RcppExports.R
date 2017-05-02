@@ -37,8 +37,8 @@ readbina <- function(filename, xpMat, tab) {
     .Call('bigsnpr_readbina', PACKAGE = 'bigsnpr', filename, xpMat, tab)
 }
 
-writebina <- function(filename, xpMat, tab) {
-    invisible(.Call('bigsnpr_writebina', PACKAGE = 'bigsnpr', filename, xpMat, tab))
+writebina <- function(filename, BM, tab, rowInd, colInd) {
+    invisible(.Call('bigsnpr_writebina', PACKAGE = 'bigsnpr', filename, BM, tab, rowInd, colInd))
 }
 
 testWrite <- function(v, filename) {
