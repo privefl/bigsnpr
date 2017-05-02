@@ -4,7 +4,7 @@
 \alias{snp_fastImpute}
 \title{Fast imputation}
 \usage{
-snp_fastImpute(G, infos.chr, alpha = 0.05, size = 100, seed = NA,
+snp_fastImpute(G, infos.chr, alpha = 0.02, size = 500, seed = NA,
   ncores = 1)
 }
 \arguments{
@@ -32,5 +32,6 @@ A \code{data.frame} with
 }
 }
 \description{
-Fast imputation algorithm based on local XGBoost models.
+Fast imputation algorithm based on local XGBoost models. \strong{This algorithm
+has not been extensively compared with other imputation methods yet.}
 }
