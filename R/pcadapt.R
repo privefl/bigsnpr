@@ -36,6 +36,8 @@ getD <- function(X) {
 #' snp_qq(snp_gc(pcadapt))
 snp_pcadapt <- function(G, U.row, ind.row = rows_along(G)) {
 
+  check_args()
+
   K <- ncol(U.row)
   stopifnot(all.equal(crossprod(U.row), diag(K)))
 

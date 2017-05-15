@@ -4,13 +4,13 @@
 \alias{snp_fastImpute}
 \title{Fast imputation}
 \usage{
-snp_fastImpute(G, infos.chr, alpha = 0.02, size = 500, seed = NA,
+snp_fastImpute(Gna, infos.chr, alpha = 0.02, size = 500, seed = NA,
   ncores = 1)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
 (typically \code{<bigSNP>$genotypes}).\cr
-\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
+You can have missing values in your data.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
 Typically \code{<bigSNP>$map$chromosome}.}

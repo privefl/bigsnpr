@@ -5,13 +5,13 @@ CODE_IMPUTE_PRED  <- c(0, 1, 2, NA, 0, 1, 2, rep(NA, 249))
 
 ################################################################################
 
-imputeChr <- function(G, ind.chr, alpha, size, seed) {
+imputeChr <- function(Gna, ind.chr, alpha, size, seed) {
 
   # reproducibility
   if (!is.na(seed)) set.seed(seed[attr(ind.chr, "chr")])
 
   # init
-  X <- attach.BM(G)
+  X <- attach.BM(Gna)
   n <- nrow(X)
   m.chr <- length(ind.chr)
   X2 <- X
@@ -20,7 +20,7 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 
   # correlation between SNPs
   corr <- snp_cor(
-    G = X,
+    Gna = X,
     ind.row = 1:n,
     ind.col = ind.chr,
     size = size,
@@ -83,11 +83,13 @@ imputeChr <- function(G, ind.chr, alpha, size, seed) {
 #'
 #' @import Matrix xgboost
 #'
-snp_fastImpute <- function(G, infos.chr,
+snp_fastImpute <- function(Gna, infos.chr,
                            alpha = 0.02,
                            size = 500,
                            seed = NA,
                            ncores = 1) {
+
+  check_args()
 
   if (!is.na(seed)) seed <- seq_len(max(infos.chr)) + seed
   args <- as.list(environment())

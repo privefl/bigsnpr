@@ -43,12 +43,15 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
                           dist.sep.chrs = 1e7,
                           ind.highlight = integer(0),
                           col.highlight = "red",
-                          labels = all.chr,
+                          labels = NULL,
                           npoints = NULL,
                           coeff = 1) {
 
+  check_args()
+
   # get all chromosomes
-  n.chr <- length(all.chr <- sort(unique(infos.chr)))
+  all.chr <- sort(unique(infos.chr))
+  if (is.null(labels)) labels <- all.chr
 
   # get plotting positions of each SNP and chromosome
   previous.pos <- 0
@@ -89,7 +92,7 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
 
 getLambdaGC <- function(gwas, tol = 1e-8) {
 
-  stopifnot(inherits(gwas, "mhtest"))
+  check_args()
 
   xtr <- attr(gwas, "transfo")(gwas[["score"]])
   PREDICT <-  attr(gwas, "predict")
@@ -114,6 +117,8 @@ getLambdaGC <- function(gwas, tol = 1e-8) {
 #'
 #' @example examples/example-man-qq-gc.R
 snp_qq <- function(gwas, lambdaGC = TRUE, coeff = 1) {
+
+  check_args()
 
   p <- graphics::plot(gwas, type = "Q-Q", coeff = coeff)
 
@@ -141,7 +146,8 @@ snp_qq <- function(gwas, lambdaGC = TRUE, coeff = 1) {
 #' @example examples/example-man-qq-gc.R
 snp_gc <- function(gwas) {
 
-  stopifnot(inherits(gwas, "mhtest"))
+  check_args()
+
   force(lamGC <- getLambdaGC(gwas))
 
   # http://stackoverflow.com/a/42938212/6103040

@@ -4,13 +4,13 @@
 \alias{snp_cor}
 \title{Correlation}
 \usage{
-snp_cor(G, ind.row = rows_along(G), ind.col = cols_along(G), size = 500,
-  alpha = 0.05, fill.diag = TRUE)
+snp_cor(Gna, ind.row = rows_along(Gna), ind.col = cols_along(Gna),
+  size = 500, alpha = 0.05, fill.diag = TRUE)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
 (typically \code{<bigSNP>$genotypes}).\cr
-\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
+You can have missing values in your data.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr

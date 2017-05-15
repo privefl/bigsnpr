@@ -115,6 +115,8 @@ snp_clumping <- function(G, infos.chr,
                          exclude = NULL,
                          ncores = 1) {
 
+  check_args()
+
   if (is.null(S)) S <- snp_MAF(G, ind.row = ind.row)
   args <- as.list(environment())
 
@@ -182,6 +184,8 @@ snp_pruning <- function(G, infos.chr,
                         nploidy = getOption("bigsnpr.nploidy"),
                         ncores = 1) {
 
+  check_args()
+
   args <- as.list(environment())
 
   do.call(what = snp_split, args = c(args, FUN = pruningChr, combine = 'c'))
@@ -209,6 +213,8 @@ snp_pruning <- function(G, infos.chr,
 #' @export
 #' @rdname pruning-clumping
 snp_indLRLDR <- function(infos.chr, infos.pos, LD.regions = LD.wiki34) {
+
+  check_args()
 
   foreach(ic = 1:nrow(LD.regions), .combine = 'c') %do% {
     which((infos.chr == LD.regions[ic, "Chr"]) &
