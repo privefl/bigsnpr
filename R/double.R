@@ -23,6 +23,8 @@
 #' @export
 snp_double <- function(x) {
 
+  check_args()
+
   X <- attach.BM(x$genotypes)
   X@code <- round(CODE_DOSAGE)
 

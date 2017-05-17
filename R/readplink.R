@@ -131,6 +131,8 @@ snp_writeBed <- function(x, bedfile,
 
   X <- attach.BM(x$genotypes)
 
+  check_args()
+
   # check extension of file
   assert_ext(bedfile, "bed")
   # get other files

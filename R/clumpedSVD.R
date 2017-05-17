@@ -104,6 +104,8 @@ snp_clumpedSVD <- function(G,
                            ncores = 1,
                            verbose = TRUE) {
 
+  check_args()
+
   # get BM
   G2 <- attach.BM(G)
 

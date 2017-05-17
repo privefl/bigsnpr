@@ -6,7 +6,7 @@
 \usage{
 snp_manhattan(gwas, infos.chr, infos.pos, colors = c("black", "grey60"),
   dist.sep.chrs = 1e+07, ind.highlight = integer(0),
-  col.highlight = "red", labels = all.chr, npoints = NULL, coeff = 1)
+  col.highlight = "red", labels = NULL, npoints = NULL, coeff = 1)
 }
 \arguments{
 \item{gwas}{A \code{mhtest} object with the p-values associated with each SNP.

@@ -34,6 +34,9 @@
 #'
 snp_split <- function(infos.chr, FUN, combine, ncores = 1, ...) {
 
+  check_args()
+  assert_args(FUN, "ind.chr")
+
   ind.chrs <- split(seq_along(infos.chr), infos.chr)
   ord.chrs <- order(sapply(ind.chrs, length), decreasing = TRUE)
   inv.ord.chrs <- match(seq_along(ord.chrs), ord.chrs)

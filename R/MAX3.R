@@ -83,6 +83,8 @@ snp_MAX3 <- function(Gna, y01.train,
                      ind.train = rows_along(Gna),
                      val = c(0, 0.5, 1)) {
 
+  check_args()
+
   is.case <- (y01.train == 1)
   ind.cases <- ind.train[is.case]
   ind.controls <- ind.train[!is.case]

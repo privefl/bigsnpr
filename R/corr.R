@@ -26,14 +26,16 @@
 #' length(corr@x) / length(corr)
 #'
 #' @export
-snp_cor <- function(G,
-                    ind.row = rows_along(G),
-                    ind.col = cols_along(G),
+snp_cor <- function(Gna,
+                    ind.row = rows_along(Gna),
+                    ind.col = cols_along(Gna),
                     size = 500,
                     alpha = 0.05,
                     fill.diag = TRUE) {
 
-  X <- attach.BM(G)
+  check_args()
+
+  X <- attach.BM(Gna)
 
   # get significance thresholds with type-I error `alpha`
   suppressWarnings(

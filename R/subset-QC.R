@@ -38,6 +38,8 @@ subset.bigSNP <- function(x,
 
   X <- attach.BM(x$genotypes)
 
+  check_args(ind.row = "assert_int(ind.row)", ind.col = "assert_int(ind.col)")
+
   newfiles <- getNewFiles(x$savedIn, "sub")
 
   X2 <- deepcopy(X,

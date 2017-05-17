@@ -23,6 +23,8 @@
 snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
                     lpS = NULL, thr.list = 0) {
 
+  check_args()
+
   # thresholding and projecting
   if (is.null(lpS) || isTRUE(all.equal(thr.list, 0))) {
     message("'lpS' or 'thr.list' was not specified. Thresholding disabled.")
