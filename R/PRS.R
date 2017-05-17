@@ -36,7 +36,7 @@ snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
       if (length(ind.col)) {
         big_prodVec(G, betas[ind.col], ind.test, ind.col)
       } else {
-        rep(0, ind.test)
+        rep(0, length(ind.test))
       }
     }
     colnames(scores.all) <- thr.list
