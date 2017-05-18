@@ -17,6 +17,10 @@ doubleBM <- function(BM, xpMat2) {
     invisible(.Call('bigsnpr_doubleBM', PACKAGE = 'bigsnpr', BM, xpMat2))
 }
 
+tripleBM <- function(BM, xpMat2) {
+    invisible(.Call('bigsnpr_tripleBM', PACKAGE = 'bigsnpr', BM, xpMat2))
+}
+
 clumping <- function(BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
     .Call('bigsnpr_clumping', PACKAGE = 'bigsnpr', BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
 }

@@ -41,3 +41,23 @@ snp_double <- function(x) {
 }
 
 ################################################################################
+
+#' @export
+snp_triple <- function(x) {
+
+  check_args()
+
+  X <- attach.BM(x$genotypes)
+  X@code <- round(CODE_DOSAGE)
+
+  newfiles <- getNewFiles(x$savedIn, "tripled")
+
+  X2 <- big.matrix(nrow(X), 3 * ncol(X), type = "raw",
+                   backingfile = basename(newfiles$bk),
+                   backingpath = dirname(newfiles$bk),
+                   descriptorfile = basename(newfiles$desc))
+
+  tripleBM(X, X2@address)
+
+  describe(as.BM.code(X2, code = CODE_012))
+}
