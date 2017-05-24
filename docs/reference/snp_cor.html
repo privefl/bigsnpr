@@ -62,6 +62,9 @@
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
     <li>
+      <a href="../articles/demo.html">Small demo</a>
+    </li>
+    <li>
       <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
     </li>
   </ul>
@@ -100,15 +103,15 @@
     <p>Get significant correlations between nearby SNPs.</p>
     
 
-    <pre><span class='fu'>snp_cor</span>(<span class='no'>G</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>fill.diag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre><span class='fu'>snp_cor</span>(<span class='no'>Gna</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>Gna</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>Gna</span>),
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>fill.diag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>G</dt>
+      <dt>Gna</dt>
       <dd>A BM.code.descriptor
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
-<strong>You shouldn&#39;t have missing values in your data or SNPs with 0 MAF.</strong></dd>
+You can have missing values in your data.</dd>
       <dt>ind.row</dt>
       <dd>An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.

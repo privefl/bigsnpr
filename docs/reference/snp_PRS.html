@@ -62,6 +62,9 @@
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
     <li>
+      <a href="../articles/demo.html">Small demo</a>
+    </li>
+    <li>
       <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
     </li>
   </ul>
@@ -182,7 +185,7 @@ columns correspond to <code>thr.list</code>.</p>
                          <span class='kw'>S</span> <span class='kw'>=</span> <span class='fu'>abs</span>(<span class='no'>gwas.train</span>$<span class='no'>score</span>))
 <span class='co'># -log10(p-values) and thresolding</span>
 <span class='fu'>summary</span>(<span class='no'>lpS</span> <span class='kw'>&lt;-</span> -<span class='fu'>predict</span>(<span class='no'>gwas.train</span>))</div><div class='output co'>#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-#&gt; 0.000019 0.129900 0.317300 0.456500 0.641400 3.584000 </div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>3.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+#&gt; 0.000142 0.128200 0.316500 0.452100 0.616700 4.077000 </div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>3.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 <span class='no'>nb.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='no'>thrs</span>, <span class='kw'>function</span>(<span class='no'>thr</span>) <span class='fu'>sum</span>(<span class='no'>lpS</span>[<span class='no'>ind.keep</span>] <span class='kw'>&gt;</span> <span class='no'>thr</span>))
 
 <span class='co'># PRS</span>
