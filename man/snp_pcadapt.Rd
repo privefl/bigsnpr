@@ -4,7 +4,7 @@
 \alias{snp_pcadapt}
 \title{Outlier detection}
 \usage{
-snp_pcadapt(G, U.row, ind.row = rows_along(G))
+snp_pcadapt(G, U.row, ind.row = rows_along(G), ind.col = cols_along(G))
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
@@ -16,6 +16,10 @@ corresponding to \code{ind.row}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
+
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 }
 \value{
