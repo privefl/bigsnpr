@@ -4,10 +4,10 @@
 \alias{snp_clumpedSVD}
 \title{Truncated SVD with pruning}
 \usage{
-snp_clumpedSVD(G, infos.chr, ind.row = rows_along(G),
-  ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
-  thr.r2.init = 0.2, thr.r2.step = 2, size = 500, k = 10,
-  roll.size = 50, int.min.size = 20, ncores = 1, verbose = TRUE)
+snp_clumpedSVD(G, infos.chr, infos.pos, ind.row = rows_along(G),
+  ind.col = cols_along(G), fun.scaling = snp_scaleBinom(), thr.r2 = 0.2,
+  size = 500, k = 10, roll.size = 50, int.min.size = 20, ncores = 1,
+  verbose = TRUE)
 }
 \arguments{
 \item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
@@ -16,6 +16,10 @@ snp_clumpedSVD(G, infos.chr, ind.row = rows_along(G),
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
 Typically \code{<bigSNP>$map$chromosome}.}
+
+\item{infos.pos}{Vector of integers specifying the physical position
+on a chromosome (in base pairs) of each SNP.\cr
+Typically \code{<bigSNP>$map$physical.pos}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr
@@ -30,12 +34,8 @@ If not specified, all columns are used.\cr
 such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
 Default is \code{snp_scaleBinom()}.}
 
-\item{thr.r2.init}{Threshold on squared correlation between SNPs.
+\item{thr.r2}{Threshold on squared correlation between SNPs.
 Default is \code{0.2}.}
-
-\item{thr.r2.step}{Coefficient of division of \code{thr.r2} at each step.
-Default is \code{2} which means that at iteration 2, \code{thr.r2 = 0.1}, at iteration
-3, \code{thr.r2 = 0.05}, etc.}
 
 \item{size}{Radius of the window's size for the LD evaluations of the initial
 step of clumping. Default is \code{500}.}
@@ -47,7 +47,7 @@ a few singular vectors/values.}}
 \item{roll.size}{Radius of rolling windows to smooth log-p-values.}
 
 \item{int.min.size}{Minimum size of intervals of consecutive significant
-indices.}
+indices to be reported as long-range LD region.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.}
 
