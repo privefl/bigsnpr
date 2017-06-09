@@ -23,29 +23,6 @@ getIntervals <- function(x, n = 2) {
   cbind(x[c(1, pos)[ind]], x[pos[ind]])
 }
 
-# get indices to exclude in a small region of LD
-clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
-
-  # cache some computations
-  stats <- big_colstats(G2, ind.row = ind.row, ind.col = ind.col)
-  n <- length(ind.row)
-  denoX <- (n - 1) * stats$var
-  nploidy <- getOption("bigsnpr.nploidy")
-  p <- stats$sum / (nploidy * n)
-  maf <- pmin(p, 1 - p)
-
-  # main algo
-  keep <- local_clumping(G2,
-                         rowInd = ind.row,
-                         colInd = ind.col,
-                         ordInd = order(maf, decreasing = TRUE),
-                         sumX = stats$sum,
-                         denoX = denoX,
-                         thr = thr.r2)
-
-  ind.col[!keep]
-}
-
 ################################################################################
 
 #' Truncated SVD with pruning
@@ -61,11 +38,8 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 #' `mean` and `sd` for every column, to scale each of their elements
 #' such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
 #' Default is `snp_scaleBinom()`.
-#' @param thr.r2.init Threshold on squared correlation between SNPs.
+#' @param thr.r2 Threshold on squared correlation between SNPs.
 #' Default is `0.2`.
-#' @param thr.r2.step Coefficient of division of `thr.r2` at each step.
-#' Default is `2` which means that at iteration 2, `thr.r2 = 0.1`, at iteration
-#' 3, `thr.r2 = 0.05`, etc.
 #' @param size Radius of the window's size for the LD evaluations of the initial
 #' step of clumping. Default is `500`.
 #' @param k Number of singular vectors/values to compute.
@@ -73,7 +47,7 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 #' a few singular vectors/values.**
 #' @param roll.size Radius of rolling windows to smooth log-p-values.
 #' @param int.min.size Minimum size of intervals of consecutive significant
-#' indices.
+#' indices to be reported as long-range LD region.
 #' @param verbose Output some information on the iterations? Default is `TRUE`.
 #'
 #' @inherit bigstatsr::big_randomSVD return
@@ -92,11 +66,11 @@ clumping.local <- function(G2, ind.row, ind.col, thr.r2) {
 #'
 snp_clumpedSVD <- function(G,
                            infos.chr,
+                           infos.pos,
                            ind.row = rows_along(G),
                            ind.col = cols_along(G),
                            fun.scaling = snp_scaleBinom(),
-                           thr.r2.init = 0.2,
-                           thr.r2.step = 2,
+                           thr.r2 = 0.2,
                            size = 500,
                            k = 10,
                            roll.size = 50,
@@ -113,7 +87,7 @@ snp_clumpedSVD <- function(G,
   printf2 <- function(...) if (verbose) printf(...)
 
   # first clumping
-  THR <- thr.r2.init
+  THR <- thr.r2
   printf2("First phase of clumping at r2 > %s.. ", THR)
   ind.keep <- snp_clumping(G, infos.chr,
                            thr.r2 = THR,
@@ -122,6 +96,7 @@ snp_clumpedSVD <- function(G,
   printf2("keep %d SNPs.\n", length(ind.keep))
 
   iter <- 1
+  LRLDR <- LD.wiki34[0, 1:3]
   repeat {
     printf2("\nIteration %d:\n", iter)
     printf2("Computing SVD..\n")
@@ -133,33 +108,22 @@ snp_clumpedSVD <- function(G,
                              k = k)
 
     # -log p-values of being an outlier (by PC)
-    lpval <- -2 * apply(abs(obj.svd$v), 2, function(x) {
-      stats::pnorm(x, sd = stats::mad(x), lower.tail = FALSE, log.p = TRUE)
-    })
+    lpval <- -predict(snp_pcadapt(G, obj.svd$u, ind.col = ind.keep))
     # threshold of being an outlier based on Tukey's rule
     # http://math.stackexchange.com/a/966337
     lim <- stats::quantile(lpval, 0.75) + 1.5 * stats::IQR(lpval)
 
-    # roll mean to get only consecutive outliers and regroup them by intervals
-    ind.range <-
-      apply(lpval, 2, rollMean, size = roll.size) %>%
-      is_greater_than(lim) %>%
-      which(arr.ind = TRUE) %>%
-      extract(, "row") %>%
-      unique() %>%
-      sort() %>%
-      getIntervals(n = int.min.size)
+    # roll mean to get only consecutive outliers and
+    ind.excl <- which(rollMean(lpval, size = roll.size) > lim)
+    # regroup them by intervals to return long-range LD regions
+    ind.range <- getIntervals(ind.excl, n = int.min.size)
+    LRLDR <- rbind(LRLDR,
+                   cbind(infos.chr[ind.keep[ind.range[, 1]]],
+                         matrix(infos.pos[ind.keep[ind.range]], ncol = 2)))
 
-
-    if (N <- nrow(ind.range)) {
-      # local clumping on previous intervals
-      THR <- THR / thr.r2.step
-      printf2("Local clumping in %d regions at r2 > %s.. ", N, THR)
-      ind.excl <- foreach(ic = rows_along(ind.range), .combine = 'c') %do% {
-        clumping.local(G2, ind.row, ind.keep[seq2(ind.range[ic, ])], THR)
-      }
-      ind.keep <- setdiff(ind.keep, ind.excl)
-      printf2("further excluded %d SNPs.\n", length(ind.excl))
+    if (length(ind.excl) > 0) {
+      printf2("%d long-range LD regions were detected..\n", nrow(ind.range))
+      ind.keep <- ind.keep[-ind.excl]
       iter <- iter + 1
     } else { # converged
       printf2("\nConverged!\n")
@@ -167,7 +131,7 @@ snp_clumpedSVD <- function(G,
     }
   }
 
-  structure(obj.svd, subset = ind.keep)
+  structure(obj.svd, subset = ind.keep, lrldr = LRLDR)
 }
 
 ################################################################################
