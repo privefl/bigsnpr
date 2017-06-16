@@ -88,7 +88,7 @@ snp_clumpedSVD <- function(G,
 
   # first clumping
   THR <- thr.r2
-  printf2("First phase of clumping at r2 > %s.. ", THR)
+  printf2("Phase of clumping at r2 > %s.. ", THR)
   ind.keep <- snp_clumping(G, infos.chr,
                            thr.r2 = THR,
                            size = size,

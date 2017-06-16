@@ -172,3 +172,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"bigsnpr_corMat", (DL_FUNC) &bigsnpr_corMat, 5},
+    {"bigsnpr_doubleBM", (DL_FUNC) &bigsnpr_doubleBM, 2},
+    {"bigsnpr_tripleBM", (DL_FUNC) &bigsnpr_tripleBM, 2},
+    {"bigsnpr_clumping", (DL_FUNC) &bigsnpr_clumping, 9},
+    {"bigsnpr_clumping2", (DL_FUNC) &bigsnpr_clumping2, 10},
+    {"bigsnpr_pruning", (DL_FUNC) &bigsnpr_pruning, 9},
+    {"bigsnpr_pruning2", (DL_FUNC) &bigsnpr_pruning2, 10},
+    {"bigsnpr_readbina", (DL_FUNC) &bigsnpr_readbina, 3},
+    {"bigsnpr_writebina", (DL_FUNC) &bigsnpr_writebina, 5},
+    {"bigsnpr_testWrite", (DL_FUNC) &bigsnpr_testWrite, 2},
+    {"bigsnpr_roll_mean", (DL_FUNC) &bigsnpr_roll_mean, 2},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_bigsnpr(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
