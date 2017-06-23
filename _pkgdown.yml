@@ -13,8 +13,6 @@ navbar:
         href: articles/pruning-vs-clumping.html
       - text: "Small demo"
         href: articles/demo.html
-      - text: "Two example analyses"
-        href: articles/bcm-seminar-packages.html
   right:
     - text: "About"
       icon: fa-user
@@ -37,7 +35,7 @@ reference:
   - title: "Pruning / correlation"
     contents:
       - snp_pruning
-      - snp_clumpedSVD
+      - snp_autoSVD
       - snp_PRS
       - snp_cor
       - snp_fastImpute

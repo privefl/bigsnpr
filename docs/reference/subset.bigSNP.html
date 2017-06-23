@@ -64,9 +64,6 @@
     <li>
       <a href="../articles/demo.html">Small demo</a>
     </li>
-    <li>
-      <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -142,8 +139,8 @@ input bigSNP backing files.</p>
 #&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   .. ..@ description:List of 13
 #&gt;   .. .. ..$ sharedType: chr &quot;FileBacked&quot;
-#&gt;   .. .. ..$ filename  : chr &quot;file359663b5bc2c.bk&quot;
-#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/Rtmp6LnXGs/&quot;
+#&gt;   .. .. ..$ filename  : chr &quot;file1171350d7d2e.bk&quot;
+#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/RtmpQaJJOw/&quot;
 #&gt;   .. .. ..$ totalRows : num 517
 #&gt;   .. .. ..$ totalCols : num 4542
 #&gt;   .. .. ..$ rowOffset : num 0
@@ -168,7 +165,7 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:4542] 112 1098 2089 3107 4091 5091 6107 7103 8090 9074 ...
 #&gt;   ..$ allele1     : chr [1:4542] &quot;A&quot; &quot;T&quot; &quot;T&quot; &quot;T&quot; ...
 #&gt;   ..$ allele2     : chr [1:4542] &quot;T&quot; &quot;A&quot; &quot;A&quot; &quot;A&quot; ...
-#&gt;  $ savedIn  : chr &quot;/tmp/Rtmp6LnXGs/file359663b5bc2c.rds&quot;
+#&gt;  $ savedIn  : chr &quot;/tmp/RtmpQaJJOw/file1171350d7d2e.rds&quot;
 #&gt;  - attr(*, &quot;class&quot;)= chr &quot;bigSNP&quot;</div><div class='input'>
 <span class='co'># keep only first 50 samples and SNPs</span>
 <span class='no'>rdsfile</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>)
@@ -177,8 +174,8 @@ input bigSNP backing files.</p>
 #&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   .. ..@ description:List of 13
 #&gt;   .. .. ..$ sharedType: chr &quot;FileBacked&quot;
-#&gt;   .. .. ..$ filename  : chr &quot;file359663b5bc2c_sub1.bk&quot;
-#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/Rtmp6LnXGs/&quot;
+#&gt;   .. .. ..$ filename  : chr &quot;file1171350d7d2e_sub1.bk&quot;
+#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/RtmpQaJJOw/&quot;
 #&gt;   .. .. ..$ totalRows : num 50
 #&gt;   .. .. ..$ totalCols : num 50
 #&gt;   .. .. ..$ rowOffset : num 0
@@ -203,7 +200,7 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:50] 112 1098 2089 3107 4091 5091 6107 7103 8090 9074 ...
 #&gt;   ..$ allele1     : chr [1:50] &quot;A&quot; &quot;T&quot; &quot;T&quot; &quot;T&quot; ...
 #&gt;   ..$ allele2     : chr [1:50] &quot;T&quot; &quot;A&quot; &quot;A&quot; &quot;A&quot; ...
-#&gt;  $ savedIn  : chr &quot;/tmp/Rtmp6LnXGs/file359663b5bc2c_sub1.rds&quot;
+#&gt;  $ savedIn  : chr &quot;/tmp/RtmpQaJJOw/file1171350d7d2e_sub1.rds&quot;
 #&gt;  - attr(*, &quot;class&quot;)= chr &quot;bigSNP&quot;</div><div class='input'>
 <span class='co'># remove only first 50 samples and SNPs</span>
 <span class='no'>rdsfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>))
@@ -212,8 +209,8 @@ input bigSNP backing files.</p>
 #&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   .. ..@ description:List of 13
 #&gt;   .. .. ..$ sharedType: chr &quot;FileBacked&quot;
-#&gt;   .. .. ..$ filename  : chr &quot;file359663b5bc2c_sub2.bk&quot;
-#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/Rtmp6LnXGs/&quot;
+#&gt;   .. .. ..$ filename  : chr &quot;file1171350d7d2e_sub2.bk&quot;
+#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/RtmpQaJJOw/&quot;
 #&gt;   .. .. ..$ totalRows : num 467
 #&gt;   .. .. ..$ totalCols : num 4492
 #&gt;   .. .. ..$ rowOffset : num 0
@@ -238,7 +235,7 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:4492] 50100 51109 52101 53106 54101 55097 56103 57110 58101 59088 ...
 #&gt;   ..$ allele1     : chr [1:4492] &quot;A&quot; &quot;A&quot; &quot;A&quot; &quot;T&quot; ...
 #&gt;   ..$ allele2     : chr [1:4492] &quot;T&quot; &quot;T&quot; &quot;T&quot; &quot;A&quot; ...
-#&gt;  $ savedIn  : chr &quot;/tmp/Rtmp6LnXGs/file359663b5bc2c_sub2.rds&quot;
+#&gt;  $ savedIn  : chr &quot;/tmp/RtmpQaJJOw/file1171350d7d2e_sub2.rds&quot;
 #&gt;  - attr(*, &quot;class&quot;)= chr &quot;bigSNP&quot;</div><div class='input'>
 </div></pre>
   </div>

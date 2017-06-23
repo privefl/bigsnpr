@@ -64,9 +64,6 @@
     <li>
       <a href="../articles/demo.html">Small demo</a>
     </li>
-    <li>
-      <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -128,8 +125,8 @@
 #&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   .. ..@ description:List of 13
 #&gt;   .. .. ..$ sharedType: chr &quot;FileBacked&quot;
-#&gt;   .. .. ..$ filename  : chr &quot;file35961eb536a3.bk&quot;
-#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/Rtmp6LnXGs/&quot;
+#&gt;   .. .. ..$ filename  : chr &quot;file11715cb27e95.bk&quot;
+#&gt;   .. .. ..$ dirname   : chr &quot;/tmp/RtmpQaJJOw/&quot;
 #&gt;   .. .. ..$ totalRows : num 5
 #&gt;   .. .. ..$ totalCols : num 12
 #&gt;   .. .. ..$ rowOffset : num 0
@@ -152,9 +149,9 @@
 #&gt;   ..$ marker.ID   : chr [1:12] &quot;snp_1&quot; &quot;snp_2&quot; &quot;snp_3&quot; &quot;snp_4&quot; ...
 #&gt;   ..$ genetic.dist: int [1:12] 0 0 0 0 0 0 0 0 0 0 ...
 #&gt;   ..$ physical.pos: int [1:12] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..$ allele1     : chr [1:12] &quot;T&quot; &quot;T&quot; &quot;T&quot; &quot;T&quot; ...
-#&gt;   ..$ allele2     : chr [1:12] &quot;A&quot; &quot;A&quot; &quot;A&quot; &quot;A&quot; ...
-#&gt;  $ savedIn  : chr &quot;/tmp/Rtmp6LnXGs//file35961eb536a3.rds&quot;
+#&gt;   ..$ allele1     : chr [1:12] &quot;T&quot; &quot;A&quot; &quot;A&quot; &quot;T&quot; ...
+#&gt;   ..$ allele2     : chr [1:12] &quot;A&quot; &quot;T&quot; &quot;T&quot; &quot;A&quot; ...
+#&gt;  $ savedIn  : chr &quot;/tmp/RtmpQaJJOw//file11715cb27e95.rds&quot;
 #&gt;  - attr(*, &quot;class&quot;)= chr &quot;bigSNP&quot;</div><div class='input'>
 <span class='co'># The genotype `big.matrix` is initialized with missing values</span>
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>attach.BM</span>(<span class='no'>test</span>$<span class='no'>genotypes</span>)
@@ -167,11 +164,11 @@
 <span class='co'># Modify the genotype `big.matrix`</span>
 <span class='no'>X</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>length</span>(<span class='no'>X</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>X</span>[,]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-#&gt; [1,]    0    0    1    2    1    0    0    0    0     0     0     1
-#&gt; [2,]   NA    1    0   NA    0   NA    0    1   NA    NA     1     1
-#&gt; [3,]    2    0    1    1    0    1    0    1    0     2    NA    NA
-#&gt; [4,]    0    1   NA    0    0    2   NA    1    1     1     2    NA
-#&gt; [5,]    0    0    0    0    0    2    2   NA    0     1     2    NA</div><div class='input'>
+#&gt; [1,]    2    0    1    0    2    2    1   NA    0     1     0     0
+#&gt; [2,]   NA    1    0    1    2   NA    0    1    1     1    NA     1
+#&gt; [3,]   NA    2    1    2    1    0    1    2    1    NA     2     0
+#&gt; [4,]    1   NA   NA    1    1    1   NA    1   NA     2     0     1
+#&gt; [5,]    1    2    1    2    1    0   NA    0    2     0     0     0</div><div class='input'>
 <span class='fu'>rm</span>(<span class='no'>X</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

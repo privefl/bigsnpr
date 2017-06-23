@@ -64,9 +64,6 @@
     <li>
       <a href="../articles/demo.html">Small demo</a>
     </li>
-    <li>
-      <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -165,12 +162,7 @@ columns correspond to <code>thr.list</code>.</p>
 #&gt; [445] 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 1 1 0 1 1 0 0 1 0
 #&gt; [482] 0 1 1 1 0 1 0 0 0 0 1 1 0 0 0 0 0 0 1 0 0 1 0 0 0 0 1 0 1 1 0 1 0 0 0 0</div><div class='input'>
 <span class='co'># PCA -&gt; covariables</span>
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_clumpedSVD.html'>snp_clumpedSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>)</div><div class='output co'>#&gt; First phase of clumping at r2 &gt; 0.2.. keep 4270 SNPs.
-#&gt; 
-#&gt; Iteration 1:
-#&gt; Computing SVD..
-#&gt; 
-#&gt; Converged!</div><div class='input'>
+<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_autoSVD.html'>snp_autoSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>)</div><div class='output co'>#&gt; <span class='error'>Error in assert_int(infos.pos): l&#39;argument &quot;infos.pos&quot; est manquant, avec aucune valeur par défaut</span></div><div class='input'>
 <span class='co'># train and test set</span>
 <span class='no'>ind.train</span> <span class='kw'>&lt;-</span> <span class='fu'>sort</span>(<span class='fu'>sample</span>(<span class='no'>n</span>, <span class='fl'>400</span>))
 <span class='no'>ind.test</span> <span class='kw'>&lt;-</span> <span class='fu'>setdiff</span>(<span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='no'>ind.train</span>) <span class='co'># 117</span>
@@ -178,30 +170,24 @@ columns correspond to <code>thr.list</code>.</p>
 <span class='co'># GWAS</span>
 <span class='no'>gwas.train</span> <span class='kw'>&lt;-</span> <span class='fu'>big_univLogReg</span>(<span class='no'>G</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>[<span class='no'>ind.train</span>],
                              <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='no'>ind.train</span>,
-                             <span class='kw'>covar.train</span> <span class='kw'>=</span> <span class='no'>obj.svd</span>$<span class='no'>u</span>[<span class='no'>ind.train</span>, ])
-<span class='co'># clumping</span>
+                             <span class='kw'>covar.train</span> <span class='kw'>=</span> <span class='no'>obj.svd</span>$<span class='no'>u</span>[<span class='no'>ind.train</span>, ])</div><div class='output co'>#&gt; <span class='error'>Error in as.list.environment(parent.frame()): objet &#39;obj.svd&#39; introuvable</span></div><div class='input'><span class='co'># clumping</span>
 <span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pruning-clumping.html'>snp_clumping</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>,
                          <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='no'>ind.train</span>,
-                         <span class='kw'>S</span> <span class='kw'>=</span> <span class='fu'>abs</span>(<span class='no'>gwas.train</span>$<span class='no'>score</span>))
-<span class='co'># -log10(p-values) and thresolding</span>
-<span class='fu'>summary</span>(<span class='no'>lpS</span> <span class='kw'>&lt;-</span> -<span class='fu'>predict</span>(<span class='no'>gwas.train</span>))</div><div class='output co'>#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-#&gt; 0.000142 0.128200 0.316500 0.452100 0.616700 4.077000 </div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>3.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
-<span class='no'>nb.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='no'>thrs</span>, <span class='kw'>function</span>(<span class='no'>thr</span>) <span class='fu'>sum</span>(<span class='no'>lpS</span>[<span class='no'>ind.keep</span>] <span class='kw'>&gt;</span> <span class='no'>thr</span>))
-
+                         <span class='kw'>S</span> <span class='kw'>=</span> <span class='fu'>abs</span>(<span class='no'>gwas.train</span>$<span class='no'>score</span>))</div><div class='output co'>#&gt; <span class='error'>Error in as.list.environment(parent.frame()): objet &#39;gwas.train&#39; introuvable</span></div><div class='input'><span class='co'># -log10(p-values) and thresolding</span>
+<span class='fu'>summary</span>(<span class='no'>lpS</span> <span class='kw'>&lt;-</span> -<span class='fu'>predict</span>(<span class='no'>gwas.train</span>))</div><div class='output co'>#&gt; <span class='error'>Error in predict(gwas.train): objet &#39;gwas.train&#39; introuvable</span></div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>3.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+<span class='no'>nb.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='no'>thrs</span>, <span class='kw'>function</span>(<span class='no'>thr</span>) <span class='fu'>sum</span>(<span class='no'>lpS</span>[<span class='no'>ind.keep</span>] <span class='kw'>&gt;</span> <span class='no'>thr</span>))</div><div class='output co'>#&gt; <span class='error'>Error in FUN(X[[i]], ...): objet &#39;lpS&#39; introuvable</span></div><div class='input'>
 <span class='co'># PRS</span>
 <span class='no'>prs</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_PRS</span>(<span class='no'>G</span>, <span class='kw'>betas</span> <span class='kw'>=</span> <span class='no'>gwas.train</span>$<span class='no'>estim</span>,
                <span class='kw'>ind.test</span> <span class='kw'>=</span> <span class='no'>ind.test</span>,
                <span class='kw'>ind.keep</span> <span class='kw'>=</span> <span class='no'>ind.keep</span>,
                <span class='kw'>lpS</span> <span class='kw'>=</span> <span class='no'>lpS</span>,
-               <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='no'>thrs</span>)
-
+               <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='no'>thrs</span>)</div><div class='output co'>#&gt; <span class='error'>Error in as.list.environment(parent.frame()): objet &#39;gwas.train&#39; introuvable</span></div><div class='input'>
 <span class='co'># AUC as a function of the number of predictors</span>
-<span class='no'>aucs</span> <span class='kw'>&lt;-</span> <span class='fu'>apply</span>(<span class='no'>prs</span>, <span class='fl'>2</span>, <span class='no'>AUC</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='no'>y01</span>[<span class='no'>ind.test</span>])
-<span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='no'>aucs</span> <span class='kw'>&lt;-</span> <span class='fu'>apply</span>(<span class='no'>prs</span>, <span class='fl'>2</span>, <span class='no'>AUC</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='no'>y01</span>[<span class='no'>ind.test</span>])</div><div class='output co'>#&gt; <span class='error'>Error in apply(prs, 2, AUC, target = y01[ind.test]): objet &#39;prs&#39; introuvable</span></div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)
 <span class='kw'>bigstatsr</span><span class='kw'>:::</span><span class='fu'>MY_THEME</span>(<span class='fu'>qplot</span>(<span class='no'>nb.pred</span>, <span class='no'>aucs</span>)) +
   <span class='fu'>geom_line</span>() +
   <span class='fu'>scale_x_log10</span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='no'>nb.pred</span>) +
-  <span class='fu'>labs</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>)</div><img src='snp_PRS-10.png' alt='' width='540' height='400' /></pre>
+  <span class='fu'>labs</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in check_breaks_labels(breaks, labels): objet &#39;nb.pred&#39; introuvable</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -13,31 +13,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Get a clean directory to work in
-
-```{r}
-# Create a new directory and go in it
-setwd(tempdir()); dir.create("try_bigsnpr"); setwd("try_bigsnpr");
-(g <- getwd())
-```
+## Get genotype file
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE, width = 65)
 knitr::opts_knit$set(global.par = TRUE)
 knitr::opts_chunk$set(echo = TRUE, fig.align='center', dev='png', dpi = 95)
-knitr::opts_knit$set(root.dir = g)
 ```
 
 ```{r}
 # Get the example bedfile from package bigsnpr
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-# Copy bed/bim/fam files to the new directory
-sapply(c(".bed", ".bim", ".fam"), function(ext) {
-  file <- sub(pattern = "\\.bed$", replacement = ext, x = bedfile)
-  file.copy(from = file, to = basename(file))
-})
-# Check that files have been copied to new directory
-list.files(path = ".")
 ```
 
 ## Read from the PLINK files
@@ -46,12 +32,12 @@ list.files(path = ".")
 # Load packages bigsnpr, bigstatsr and bigmemory
 library(bigsnpr)
 # Read from bed/bim/fam, it will create new files 
-# in relative directory "backingfiles/" by default
-snp_readBed(bedfile = "example.bed", backingfile = "example")
-# Check that the files have been created
-list.files(path = "backingfiles/")
+# in relative directory "backingfiles/" by default.
+# Let's put them in an temporary directory for this demo.
+tmpfile <- tempfile()
+snp_readBed(bedfile, backingfile = basename(tmpfile), backingpath = dirname(tmpfile))
 # Attach the "bigSNP" object in R session
-obj.bigSNP <- snp_attach("backingfiles/example.rds")
+obj.bigSNP <- snp_attach(paste0(tmpfile, ".rds"))
 # See what it looks like
 str(obj.bigSNP, max.level = 2, strict.width = "cut")
 # Get aliases for useful slots

@@ -53,7 +53,7 @@ y.e <- rnorm(n, sd = sqrt(1 - v))
 (y01 <- as.numeric((y.g + y.e) > qnorm(1 - K)))
 
 # PCA -> covariables
-obj.svd <- snp_clumpedSVD(G, infos.chr = test$map$chromosome)
+obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome)
 
 # train and test set
 ind.train <- sort(sample(n, 400))

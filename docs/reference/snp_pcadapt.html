@@ -64,9 +64,6 @@
     <li>
       <a href="../articles/demo.html">Small demo</a>
     </li>
-    <li>
-      <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -106,7 +103,7 @@ Principal Component Analysis. This corresponds to the statistic based
 on mahalanobis distance, as implemented in package <strong>pcadapt</strong>.</p>
     
 
-    <pre><span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>U.row</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>))</pre>
+    <pre><span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>U.row</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -120,6 +117,10 @@ corresponding to <code>ind.row</code>.</dd>
       <dt>ind.row</dt>
       <dd>An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.
+<strong>Don&#39;t use negative indices.</strong></dd>
+      <dt>ind.col</dt>
+      <dd>An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.
 <strong>Don&#39;t use negative indices.</strong></dd>
     </dl>
     

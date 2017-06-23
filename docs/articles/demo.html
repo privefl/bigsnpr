@@ -42,7 +42,7 @@
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
     <li>
-      <a href="../articles/bcm-seminar-packages.html">Two example analyses</a>
+      <a href="../articles/demo.html">Small demo</a>
     </li>
   </ul>
 </li>
@@ -82,44 +82,25 @@
     
     
 <div class="contents">
-<div id="get-a-clean-directory-to-work-in" class="section level2">
+<div id="get-genotype-file" class="section level2">
 <h2 class="hasAnchor">
-<html><body><a href="#get-a-clean-directory-to-work-in" class="anchor"> </a></body></html>Get a clean directory to work in</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create a new directory and go in it</span>
-<span class="kw">setwd</span>(<span class="kw">tempdir</span>()); <span class="kw">dir.create</span>(<span class="st">"try_bigsnpr"</span>); <span class="kw">setwd</span>(<span class="st">"try_bigsnpr"</span>);
-(g &lt;-<span class="st"> </span><span class="kw">getwd</span>())</code></pre></div>
-<pre><code>## [1] "/tmp/Rtmp6LnXGs/try_bigsnpr"</code></pre>
+<html><body><a href="#get-genotype-file" class="anchor"> </a></body></html>Get genotype file</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the example bedfile from package bigsnpr</span>
-bedfile &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, <span class="dt">package =</span> <span class="st">"bigsnpr"</span>)
-<span class="co"># Copy bed/bim/fam files to the new directory</span>
-<span class="kw">sapply</span>(<span class="kw">c</span>(<span class="st">".bed"</span>, <span class="st">".bim"</span>, <span class="st">".fam"</span>), function(ext) {
-  file &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="dt">pattern =</span> <span class="st">"</span><span class="ch">\\</span><span class="st">.bed$"</span>, <span class="dt">replacement =</span> ext, <span class="dt">x =</span> bedfile)
-  <span class="kw">file.copy</span>(<span class="dt">from =</span> file, <span class="dt">to =</span> <span class="kw">basename</span>(file))
-})</code></pre></div>
-<pre><code>## .bed .bim .fam 
-## TRUE TRUE TRUE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Check that files have been copied to new directory</span>
-<span class="kw">list.files</span>(<span class="dt">path =</span> <span class="st">"."</span>)</code></pre></div>
-<pre><code>## [1] "example.bed" "example.bim" "example.fam"</code></pre>
+bedfile &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, <span class="dt">package =</span> <span class="st">"bigsnpr"</span>)</code></pre></div>
 </div>
 <div id="read-from-the-plink-files" class="section level2">
 <h2 class="hasAnchor">
 <html><body><a href="#read-from-the-plink-files" class="anchor"> </a></body></html>Read from the PLINK files</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load packages bigsnpr, bigstatsr and bigmemory</span>
-<span class="kw">library</span>(bigsnpr)</code></pre></div>
-<pre><code>## Loading required package: bigmemory</code></pre>
-<pre><code>## Loading required package: bigmemory.sri</code></pre>
-<pre><code>## Loading required package: bigstatsr</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Read from bed/bim/fam, it will create new files </span>
-<span class="co"># in relative directory "backingfiles/" by default</span>
-<span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(<span class="dt">bedfile =</span> <span class="st">"example.bed"</span>, <span class="dt">backingfile =</span> <span class="st">"example"</span>)</code></pre></div>
-<pre><code>## Creating directory "backingfiles" which didn't exist..</code></pre>
-<pre><code>## [1] "backingfiles/example.rds"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Check that the files have been created</span>
-<span class="kw">list.files</span>(<span class="dt">path =</span> <span class="st">"backingfiles/"</span>)</code></pre></div>
-<pre><code>## [1] "example.bk"  "example.rds"</code></pre>
+<span class="kw">library</span>(bigsnpr)
+<span class="co"># Read from bed/bim/fam, it will create new files </span>
+<span class="co"># in relative directory "backingfiles/" by default.</span>
+<span class="co"># Let's put them in an temporary directory for this demo.</span>
+tmpfile &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
+<span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(bedfile, <span class="dt">backingfile =</span> <span class="kw">basename</span>(tmpfile), <span class="dt">backingpath =</span> <span class="kw">dirname</span>(tmpfile))</code></pre></div>
+<pre><code>## [1] "/tmp/RtmpQaJJOw/file11715dc32223.rds"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Attach the "bigSNP" object in R session</span>
-obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="st">"backingfiles/example.rds"</span>)
+obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="kw">paste0</span>(tmpfile, <span class="st">".rds"</span>))
 <span class="co"># See what it looks like</span>
 <span class="kw">str</span>(obj.bigSNP, <span class="dt">max.level =</span> <span class="dv">2</span>, <span class="dt">strict.width =</span> <span class="st">"cut"</span>)</code></pre></div>
 <pre><code>## List of 4
@@ -138,7 +119,7 @@ obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 ##   ..$ physical.pos: int [1:4542] 112 1098 2089 3107 4091 5091 6..
 ##   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
 ##   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
-##  $ savedIn  : chr "backingfiles/example.rds"
+##  $ savedIn  : chr "/tmp/RtmpQaJJOw/file11715dc32223.rds"
 ##  - attr(*, "class")= chr "bigSNP"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get aliases for useful slots</span>
 G   &lt;-<span class="st"> </span>obj.bigSNP$genotypes
@@ -173,17 +154,17 @@ obj.svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <
 <span class="co"># As `obj.svd` has a class and a method `plot`.</span>
 <span class="co"># Scree plot by default</span>
 <span class="kw">plot</span>(obj.svd)</code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-4-1.png" width="665" style="display: block; margin: auto;"></p>
+<p><img src="demo_files/figure-html/unnamed-chunk-3-1.png" width="665" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Score (PCs) plot</span>
 <span class="kw">plot</span>(obj.svd, <span class="dt">type =</span> <span class="st">"scores"</span>)</code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-4-2.png" width="665" style="display: block; margin: auto;"></p>
+<p><img src="demo_files/figure-html/unnamed-chunk-3-2.png" width="665" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># As plot returns an ggplot2 object, you can easily modify it.</span>
 <span class="co"># For example, you can add colors based on the population.</span>
 <span class="kw">library</span>(ggplot2)
 <span class="kw">plot</span>(obj.svd, <span class="dt">type =</span> <span class="st">"scores"</span>) +
 <span class="st">  </span><span class="kw">aes</span>(<span class="dt">color =</span> pop &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">"POP1"</span>, <span class="st">"POP2"</span>, <span class="st">"POP3"</span>), <span class="kw">c</span>(<span class="dv">143</span>, <span class="dv">167</span>, <span class="dv">207</span>))) +
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">color =</span> <span class="st">"Population"</span>)</code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-4-3.png" width="665" style="display: block; margin: auto;"></p>
+<p><img src="demo_files/figure-html/unnamed-chunk-3-3.png" width="665" style="display: block; margin: auto;"></p>
 </div>
 <div id="genome-wide-association-study" class="section level2">
 <h2 class="hasAnchor">
@@ -195,15 +176,15 @@ obj.gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G,
                            <span class="dt">ncores =</span> NCORES)
 <span class="co"># Q-Q plot of the object</span>
 <span class="kw"><a href="../reference/snp_qq.html">snp_qq</a></span>(obj.gwas)</code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-5-1.png" width="665" style="display: block; margin: auto;"></p>
+<p><img src="demo_files/figure-html/unnamed-chunk-4-1.png" width="665" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># You can easily apply genomic control to this object</span>
 obj.gwas.gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_gc.html">snp_gc</a></span>(obj.gwas)
 <span class="co"># Redo the Q-Q plot</span>
 <span class="kw"><a href="../reference/snp_qq.html">snp_qq</a></span>(obj.gwas.gc)</code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-5-2.png" width="665" style="display: block; margin: auto;"></p>
+<p><img src="demo_files/figure-html/unnamed-chunk-4-2.png" width="665" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Manhattan plot, not quite sexy because there are only 1 chromosome here</span>
 <span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(obj.gwas.gc, <span class="dt">infos.chr =</span> CHR, <span class="dt">infos.pos =</span> POS)</code></pre></div>
-<p><img src="demo_files/figure-html/unnamed-chunk-5-3.png" width="665" style="display: block; margin: auto;"></p>
+<p><img src="demo_files/figure-html/unnamed-chunk-4-3.png" width="665" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </div>
@@ -212,7 +193,7 @@ obj.gwas.gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference
         <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#get-a-clean-directory-to-work-in">Get a clean directory to work in</a></li>
+<li><a href="#get-genotype-file">Get genotype file</a></li>
       <li><a href="#read-from-the-plink-files">Read from the PLINK files</a></li>
       <li><a href="#principal-component-analysis">Principal Component Analysis</a></li>
       <li><a href="#genome-wide-association-study">Genome-Wide Association Study</a></li>
