@@ -9,7 +9,7 @@ using namespace Rcpp;
 
 // corMat
 SEXP corMat(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, int size, const NumericVector& thr);
-RcppExport SEXP bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+RcppExport SEXP _bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -24,7 +24,7 @@ END_RCPP
 }
 // doubleBM
 void doubleBM(const S4& BM, XPtr<BigMatrix> xpMat2);
-RcppExport SEXP bigsnpr_doubleBM(SEXP BMSEXP, SEXP xpMat2SEXP) {
+RcppExport SEXP _bigsnpr_doubleBM(SEXP BMSEXP, SEXP xpMat2SEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
@@ -35,7 +35,7 @@ END_RCPP
 }
 // tripleBM
 void tripleBM(const S4& BM, XPtr<BigMatrix> xpMat2);
-RcppExport SEXP bigsnpr_tripleBM(SEXP BMSEXP, SEXP xpMat2SEXP) {
+RcppExport SEXP _bigsnpr_tripleBM(SEXP BMSEXP, SEXP xpMat2SEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
@@ -46,7 +46,7 @@ END_RCPP
 }
 // clumping
 LogicalVector clumping(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP bigsnpr_clumping(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+RcppExport SEXP _bigsnpr_clumping(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -65,7 +65,7 @@ END_RCPP
 }
 // clumping2
 LogicalVector clumping2(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, LogicalVector& remain, const IntegerVector& pos, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP bigsnpr_clumping2(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP remainSEXP, SEXP posSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+RcppExport SEXP _bigsnpr_clumping2(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP remainSEXP, SEXP posSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -85,7 +85,7 @@ END_RCPP
 }
 // pruning
 LogicalVector& pruning(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, LogicalVector& keep, const NumericVector& mafX, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP bigsnpr_pruning(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP keepSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+RcppExport SEXP _bigsnpr_pruning(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP keepSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -104,7 +104,7 @@ END_RCPP
 }
 // pruning2
 LogicalVector& pruning2(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, LogicalVector& keep, const IntegerVector& pos, const NumericVector& mafX, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP bigsnpr_pruning2(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP keepSEXP, SEXP posSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+RcppExport SEXP _bigsnpr_pruning2(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP keepSEXP, SEXP posSEXP, SEXP mafXSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -124,7 +124,7 @@ END_RCPP
 }
 // readbina
 bool readbina(const char * filename, XPtr<BigMatrix> xpMat, const RawMatrix& tab);
-RcppExport SEXP bigsnpr_readbina(SEXP filenameSEXP, SEXP xpMatSEXP, SEXP tabSEXP) {
+RcppExport SEXP _bigsnpr_readbina(SEXP filenameSEXP, SEXP xpMatSEXP, SEXP tabSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -137,7 +137,7 @@ END_RCPP
 }
 // writebina
 void writebina(const char * filename, const S4& BM, const RawVector& tab, const IntegerVector& rowInd, const IntegerVector& colInd);
-RcppExport SEXP bigsnpr_writebina(SEXP filenameSEXP, SEXP BMSEXP, SEXP tabSEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
+RcppExport SEXP _bigsnpr_writebina(SEXP filenameSEXP, SEXP BMSEXP, SEXP tabSEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char * >::type filename(filenameSEXP);
@@ -151,7 +151,7 @@ END_RCPP
 }
 // testWrite
 void testWrite(const RawVector& v, const char * filename);
-RcppExport SEXP bigsnpr_testWrite(SEXP vSEXP, SEXP filenameSEXP) {
+RcppExport SEXP _bigsnpr_testWrite(SEXP vSEXP, SEXP filenameSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const RawVector& >::type v(vSEXP);
@@ -162,7 +162,7 @@ END_RCPP
 }
 // roll_mean
 NumericVector roll_mean(const NumericVector& x, const NumericVector& w);
-RcppExport SEXP bigsnpr_roll_mean(SEXP xSEXP, SEXP wSEXP) {
+RcppExport SEXP _bigsnpr_roll_mean(SEXP xSEXP, SEXP wSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -174,17 +174,17 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"bigsnpr_corMat", (DL_FUNC) &bigsnpr_corMat, 5},
-    {"bigsnpr_doubleBM", (DL_FUNC) &bigsnpr_doubleBM, 2},
-    {"bigsnpr_tripleBM", (DL_FUNC) &bigsnpr_tripleBM, 2},
-    {"bigsnpr_clumping", (DL_FUNC) &bigsnpr_clumping, 9},
-    {"bigsnpr_clumping2", (DL_FUNC) &bigsnpr_clumping2, 10},
-    {"bigsnpr_pruning", (DL_FUNC) &bigsnpr_pruning, 9},
-    {"bigsnpr_pruning2", (DL_FUNC) &bigsnpr_pruning2, 10},
-    {"bigsnpr_readbina", (DL_FUNC) &bigsnpr_readbina, 3},
-    {"bigsnpr_writebina", (DL_FUNC) &bigsnpr_writebina, 5},
-    {"bigsnpr_testWrite", (DL_FUNC) &bigsnpr_testWrite, 2},
-    {"bigsnpr_roll_mean", (DL_FUNC) &bigsnpr_roll_mean, 2},
+    {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 5},
+    {"_bigsnpr_doubleBM", (DL_FUNC) &_bigsnpr_doubleBM, 2},
+    {"_bigsnpr_tripleBM", (DL_FUNC) &_bigsnpr_tripleBM, 2},
+    {"_bigsnpr_clumping", (DL_FUNC) &_bigsnpr_clumping, 9},
+    {"_bigsnpr_clumping2", (DL_FUNC) &_bigsnpr_clumping2, 10},
+    {"_bigsnpr_pruning", (DL_FUNC) &_bigsnpr_pruning, 9},
+    {"_bigsnpr_pruning2", (DL_FUNC) &_bigsnpr_pruning2, 10},
+    {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
+    {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
+    {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},
+    {"_bigsnpr_roll_mean", (DL_FUNC) &_bigsnpr_roll_mean, 2},
     {NULL, NULL, 0}
 };
 

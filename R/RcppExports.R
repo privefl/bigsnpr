@@ -2,46 +2,46 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 corMat <- function(BM, rowInd, colInd, size, thr) {
-    .Call(bigsnpr_corMat, BM, rowInd, colInd, size, thr)
+    .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr)
 }
 
 doubleBM <- function(BM, xpMat2) {
-    invisible(.Call(bigsnpr_doubleBM, BM, xpMat2))
+    invisible(.Call(`_bigsnpr_doubleBM`, BM, xpMat2))
 }
 
 tripleBM <- function(BM, xpMat2) {
-    invisible(.Call(bigsnpr_tripleBM, BM, xpMat2))
+    invisible(.Call(`_bigsnpr_tripleBM`, BM, xpMat2))
 }
 
 clumping <- function(BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
-    .Call(bigsnpr_clumping, BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
+    .Call(`_bigsnpr_clumping`, BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
 }
 
 clumping2 <- function(BM, rowInd, colInd, ordInd, remain, pos, sumX, denoX, size, thr) {
-    .Call(bigsnpr_clumping2, BM, rowInd, colInd, ordInd, remain, pos, sumX, denoX, size, thr)
+    .Call(`_bigsnpr_clumping2`, BM, rowInd, colInd, ordInd, remain, pos, sumX, denoX, size, thr)
 }
 
 pruning <- function(BM, rowInd, colInd, keep, mafX, sumX, denoX, size, thr) {
-    .Call(bigsnpr_pruning, BM, rowInd, colInd, keep, mafX, sumX, denoX, size, thr)
+    .Call(`_bigsnpr_pruning`, BM, rowInd, colInd, keep, mafX, sumX, denoX, size, thr)
 }
 
 pruning2 <- function(BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr) {
-    .Call(bigsnpr_pruning2, BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
+    .Call(`_bigsnpr_pruning2`, BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
 }
 
 readbina <- function(filename, xpMat, tab) {
-    .Call(bigsnpr_readbina, filename, xpMat, tab)
+    .Call(`_bigsnpr_readbina`, filename, xpMat, tab)
 }
 
 writebina <- function(filename, BM, tab, rowInd, colInd) {
-    invisible(.Call(bigsnpr_writebina, filename, BM, tab, rowInd, colInd))
+    invisible(.Call(`_bigsnpr_writebina`, filename, BM, tab, rowInd, colInd))
 }
 
 testWrite <- function(v, filename) {
-    invisible(.Call(bigsnpr_testWrite, v, filename))
+    invisible(.Call(`_bigsnpr_testWrite`, v, filename))
 }
 
 roll_mean <- function(x, w) {
-    .Call(bigsnpr_roll_mean, x, w)
+    .Call(`_bigsnpr_roll_mean`, x, w)
 }
 
