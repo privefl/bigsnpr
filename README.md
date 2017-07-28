@@ -10,11 +10,6 @@
 [**LIST OF FEATURES**](https://privefl.github.io/bigsnpr/reference/index.html)
 
 
-## This package is in beta testing
-
-Any bug report is welcomed.
-
-
 ## Installation
 
 For now, you can install this package using
@@ -41,6 +36,12 @@ I use a class called `bigSNP` for representing infos on massive SNP arrays. One 
 - Imputation probabilities and multiple imputation.
 - An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only, others?). 
 - proper integration of haploid species.
+
+
+## Bug report
+
+Please open an issue if you find a bug.
+If you want help using **bigmemory** or **bigstatsr**, please post on Stack Overflow with the tag *r-bigmemory*. [How to make a great R reproducible example?](https://stackoverflow.com/q/5963269/6103040)
 
 
 ## Code of conduct
