@@ -5,14 +5,6 @@ corMat <- function(BM, rowInd, colInd, size, thr) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr)
 }
 
-doubleBM <- function(BM, xpMat2) {
-    invisible(.Call(`_bigsnpr_doubleBM`, BM, xpMat2))
-}
-
-tripleBM <- function(BM, xpMat2) {
-    invisible(.Call(`_bigsnpr_tripleBM`, BM, xpMat2))
-}
-
 linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
     .Call(`_bigsnpr_linRegPcadapt_cpp`, BM, U, rowInd, colInd)
 }

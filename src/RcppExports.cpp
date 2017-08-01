@@ -22,28 +22,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// doubleBM
-void doubleBM(const S4& BM, XPtr<BigMatrix> xpMat2);
-RcppExport SEXP _bigsnpr_doubleBM(SEXP BMSEXP, SEXP xpMat2SEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
-    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat2(xpMat2SEXP);
-    doubleBM(BM, xpMat2);
-    return R_NilValue;
-END_RCPP
-}
-// tripleBM
-void tripleBM(const S4& BM, XPtr<BigMatrix> xpMat2);
-RcppExport SEXP _bigsnpr_tripleBM(SEXP BMSEXP, SEXP xpMat2SEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
-    Rcpp::traits::input_parameter< XPtr<BigMatrix> >::type xpMat2(xpMat2SEXP);
-    tripleBM(BM, xpMat2);
-    return R_NilValue;
-END_RCPP
-}
 // linRegPcadapt_cpp
 NumericMatrix linRegPcadapt_cpp(const S4& BM, arma::mat& U, const IntegerVector& rowInd, const IntegerVector& colInd);
 RcppExport SEXP _bigsnpr_linRegPcadapt_cpp(SEXP BMSEXP, SEXP USEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
@@ -189,8 +167,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 5},
-    {"_bigsnpr_doubleBM", (DL_FUNC) &_bigsnpr_doubleBM, 2},
-    {"_bigsnpr_tripleBM", (DL_FUNC) &_bigsnpr_tripleBM, 2},
     {"_bigsnpr_linRegPcadapt_cpp", (DL_FUNC) &_bigsnpr_linRegPcadapt_cpp, 4},
     {"_bigsnpr_clumping", (DL_FUNC) &_bigsnpr_clumping, 9},
     {"_bigsnpr_clumping2", (DL_FUNC) &_bigsnpr_clumping2, 10},
