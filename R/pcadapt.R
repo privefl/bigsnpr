@@ -25,7 +25,11 @@ getD <- function(X) {
 #' @seealso [snp_manhattan], [snp_qq] and [snp_gc].
 #' @export
 #'
-#' @inherit bigstatsr::linRegPcadapt references
+#' @references
+#' Luu, K., Bazin, E., & Blum, M. G. (2017).
+#' pcadapt: an R package to perform genome scans for selection
+#' based on principal component analysis.
+#' Molecular ecology resources, 17(1), 67-77.
 #'
 #' @examples
 #' test <- snp_attachExtdata()
@@ -43,9 +47,9 @@ snp_pcadapt <- function(G, U.row,
   K <- ncol(U.row)
   stopifnot(all.equal(crossprod(U.row), diag(K)))
 
-  zscores <- linRegPcadapt(attach.BM(G), U = U.row,
-                           rowInd = ind.row,
-                           colInd = ind.col)
+  zscores <- linRegPcadapt_cpp(attach.BM(G), U = U.row,
+                               rowInd = ind.row,
+                               colInd = ind.col)
 
   fun.pred <- eval(parse(text = sprintf(
     "function(xtr) {

@@ -44,6 +44,20 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// linRegPcadapt_cpp
+NumericMatrix linRegPcadapt_cpp(const S4& BM, arma::mat& U, const IntegerVector& rowInd, const IntegerVector& colInd);
+RcppExport SEXP _bigsnpr_linRegPcadapt_cpp(SEXP BMSEXP, SEXP USEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const S4& >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type U(USEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    rcpp_result_gen = Rcpp::wrap(linRegPcadapt_cpp(BM, U, rowInd, colInd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // clumping
 LogicalVector clumping(const S4& BM, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, LogicalVector& remain, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
 RcppExport SEXP _bigsnpr_clumping(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP remainSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
@@ -177,6 +191,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 5},
     {"_bigsnpr_doubleBM", (DL_FUNC) &_bigsnpr_doubleBM, 2},
     {"_bigsnpr_tripleBM", (DL_FUNC) &_bigsnpr_tripleBM, 2},
+    {"_bigsnpr_linRegPcadapt_cpp", (DL_FUNC) &_bigsnpr_linRegPcadapt_cpp, 4},
     {"_bigsnpr_clumping", (DL_FUNC) &_bigsnpr_clumping, 9},
     {"_bigsnpr_clumping2", (DL_FUNC) &_bigsnpr_clumping2, 10},
     {"_bigsnpr_pruning", (DL_FUNC) &_bigsnpr_pruning, 9},

@@ -43,6 +43,7 @@ Suggests:
     covr,
     gaston,
     Hmisc,
+    pcadapt,
     testthat
 Remotes: privefl/bigmemory, privefl/bigstatsr
 RoxygenNote: 6.0.1

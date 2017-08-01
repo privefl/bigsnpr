@@ -13,6 +13,10 @@ tripleBM <- function(BM, xpMat2) {
     invisible(.Call(`_bigsnpr_tripleBM`, BM, xpMat2))
 }
 
+linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
+    .Call(`_bigsnpr_linRegPcadapt_cpp`, BM, U, rowInd, colInd)
+}
+
 clumping <- function(BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
     .Call(`_bigsnpr_clumping`, BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
 }

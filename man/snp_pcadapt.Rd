@@ -41,9 +41,10 @@ pcadapt <- snp_pcadapt(G, obj.svd$u[, 1:3])
 snp_qq(snp_gc(pcadapt))
 }
 \references{
-Keurcien Luu and Michael Blum (2017).
-pcadapt: Fast Principal Component Analysis for Outlier Detection.
-R package version 3.0.4. https://CRAN.R-project.org/package=pcadapt.
+Luu, K., Bazin, E., & Blum, M. G. (2017).
+pcadapt: an R package to perform genome scans for selection
+based on principal component analysis.
+Molecular ecology resources, 17(1), 67-77.
 }
 \seealso{
 \link{snp_manhattan}, \link{snp_qq} and \link{snp_gc}.
