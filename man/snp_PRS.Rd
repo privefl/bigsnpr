@@ -36,28 +36,14 @@ Polygenic Risk Scores with possible clumping and thresholding.
 \examples{
 test <- snp_attachExtdata()
 G <- test$genotypes
-n <- nrow(G)
-m <- ncol(G)
-
-# get some phenotypes (LTM)
-set.seed(5)
-X <- attach.BM(G)
-M <- 100 # number of causal variants
-K <- 0.3 # prevalence
-ind.causal <- sample(m, M)
-betas <- rnorm(M, sd = sqrt(0.8 / M))
-y.g <- drop(scale(X[, ind.causal]) \%*\% betas)
-rm(X)
-(v <- var(y.g))
-y.e <- rnorm(n, sd = sqrt(1 - v))
-(y01 <- as.numeric((y.g + y.e) > qnorm(1 - K)))
+y01 <- test$fam$affection - 1
 
 # PCA -> covariables
 obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome,
                        infos.pos = test$map$physical.position)
 
 # train and test set
-ind.train <- sort(sample(n, 400))
+ind.train <- sort(sample(nrow(G), 400))
 ind.test <- setdiff(rows_along(G), ind.train) # 117
 
 # GWAS
