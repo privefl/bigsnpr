@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -97,21 +99,17 @@
     </div>
 
     
-    <p>For a <code>bigSNP</code>:
-<ul>
-<li> <code>snp_pruning</code>: LD pruning. Similar to &quot;<code>--indep-pairwise (size+1) 1 thr.r2</code>&quot;
-in <a href = 'PLINK'>https://www.cog-genomics.org/plink/1.9/ld</a>.
-(<code>step</code> is fixed to 1).
-</li>
-<li> <code>snp_clumping</code>: LD clumping.
-</li>
-<li> <code>snp_indLRLDR</code>: Get SNP indices of long-range LD regions for the
-human genome.
-</li>
-</ul></p>
+    <p>For a <code>bigSNP</code>:</p><ul>
+<li><p><code>snp_pruning</code>: LD pruning. Similar to "<code>--indep-pairwise (size+1) 1 thr.r2</code>"
+in <a href = 'https://www.cog-genomics.org/plink/1.9/ld'>PLINK</a>.
+(<code>step</code> is fixed to 1).</p></li>
+<li><p><code>snp_clumping</code>: LD clumping.</p></li>
+<li><p><code>snp_indLRLDR</code>: Get SNP indices of long-range LD regions for the
+human genome.</p></li>
+</ul>
     
 
-    <pre><span class='fu'>snp_clumping</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>,
+    <pre class="usage"><span class='fu'>snp_clumping</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>,
   <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
@@ -122,76 +120,97 @@ human genome.
 <span class='fu'>snp_indLRLDR</span>(<span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='kw'>LD.regions</span> <span class='kw'>=</span> <span class='no'>LD.wiki34</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>G</dt>
-      <dd>A BM.code.descriptor
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>G</th>
+      <td><p>A BM.code.descriptor
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
-<strong>You shouldn&#39;t have missing values in your data or SNPs with 0 MAF.</strong></dd>
-      <dt>infos.chr</dt>
-      <dd>Vector of integers specifying each SNP&#39;s chromosome.
-Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</dd>
-      <dt>ind.row</dt>
-      <dd>An optional vector of the row indices (individuals) that
+<strong>You shouldn't have missing values in your data or SNPs with 0 MAF.</strong></p></td>
+    </tr>
+    <tr>
+      <th>infos.chr</th>
+      <td><p>Vector of integers specifying each SNP's chromosome.
+Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></td>
+    </tr>
+    <tr>
+      <th>ind.row</th>
+      <td><p>An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.
-<strong>Don&#39;t use negative indices.</strong></dd>
-      <dt>S</dt>
-      <dd>A vector of column statistics which express the importance
+<strong>Don't use negative indices.</strong></p></td>
+    </tr>
+    <tr>
+      <th>S</th>
+      <td><p>A vector of column statistics which express the importance
 of each SNP (the more important is the SNP, the greater should be
 the corresponding statistic).
-For example, if <code>S</code> follows the standard normal distribution, and &quot;important&quot;
+For example, if <code>S</code> follows the standard normal distribution, and "important"
 means significantly different from 0, you must use <code>abs(S)</code> instead.
-If not specified, the MAF is computed and used.</dd>
-      <dt>size</dt>
-      <dd>For one SNP, number of SNPs at its left and its right to
+If not specified, the MAF is computed and used.</p></td>
+    </tr>
+    <tr>
+      <th>size</th>
+      <td><p>For one SNP, number of SNPs at its left and its right to
 be tested for being correlated with this particular SNP.
 This parameter should be adjusted with respect to the number of SNPs.
-The default are
-<ul>
-<li> <code>49</code> for pruning (as in PLINK),
-</li>
-<li> <code>500</code> for clumping (I use this for a chip of 500K SNPs).
-</li>
-</ul>
-</dd>
-      <dt>is.size.in.bp</dt>
-      <dd>Is the specified size is corresponding to
-kilo base-pairs. Default is <code>FALSE</code> (it is only SNP counts).</dd>
-      <dt>infos.pos</dt>
-      <dd>Vector of integers specifying the physical position
+The default are</p><ul>
+<li><p><code>49</code> for pruning (as in PLINK),</p></li>
+<li><p><code>500</code> for clumping (I use this for a chip of 500K SNPs).</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>is.size.in.bp</th>
+      <td><p>Is the specified size is corresponding to
+kilo base-pairs. Default is <code>FALSE</code> (it is only SNP counts).</p></td>
+    </tr>
+    <tr>
+      <th>infos.pos</th>
+      <td><p>Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.
-Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</dd>
-      <dt>thr.r2</dt>
-      <dd>Threshold over the squared correlation between two SNPs.
-Default is <code>0.2</code>.</dd>
-      <dt>exclude</dt>
-      <dd>Vector of SNP indices to exclude anyway. For example,
+Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
+    </tr>
+    <tr>
+      <th>thr.r2</th>
+      <td><p>Threshold over the squared correlation between two SNPs.
+Default is <code>0.2</code>.</p></td>
+    </tr>
+    <tr>
+      <th>exclude</th>
+      <td><p>Vector of SNP indices to exclude anyway. For example,
 can be used to exclude long-range LD regions (see Price2008). Another use
-can be for thresholding with respect to p-values associated with <code>S</code>.</dd>
-      <dt>ncores</dt>
-      <dd>Number of cores used. Default doesn&#39;t use parallelism.</dd>
-      <dt>nploidy</dt>
-      <dd>Number of trials, parameter of the binomial distribution.
-Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</dd>
-      <dt>LD.regions</dt>
-      <dd>A <code>data.frame</code> with columns &quot;Chr&quot;, &quot;Start&quot; and &quot;Stop&quot;.
+can be for thresholding with respect to p-values associated with <code>S</code>.</p></td>
+    </tr>
+    <tr>
+      <th>ncores</th>
+      <td><p>Number of cores used. Default doesn't use parallelism.</p></td>
+    </tr>
+    <tr>
+      <th>nploidy</th>
+      <td><p>Number of trials, parameter of the binomial distribution.
+Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</p></td>
+    </tr>
+    <tr>
+      <th>LD.regions</th>
+      <td><p>A <code>data.frame</code> with columns "Chr", "Start" and "Stop".
 Default use the table of 34 long-range LD regions that you can find
-<a href = 'there'>https://goo.gl/0Ou7uI</a>.</dd>
-    </dl>
+<a href = 'https://goo.gl/0Ou7uI'>there</a>.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><ul>
-<li> <code>snp_pruning</code> &amp; <code>snp_pruning</code>: SNP indices which are <strong>kept</strong>.
-</li>
-<li> <code>snp_indLRLDR</code>: SNP indices to be used as (part of) the
-<strong><code>exclude</code></strong> parameter of <code>snp_pruning</code> or <code>snp_clumping</code>.
-</li>
-</ul></p>
+    
+<ul>
+<li><p><code>snp_pruning</code> &amp; <code>snp_pruning</code>: SNP indices which are <strong>kept</strong>.</p></li>
+<li><p><code>snp_indLRLDR</code>: SNP indices to be used as (part of) the
+<strong><code>exclude</code></strong> parameter of <code>snp_pruning</code> or <code>snp_clumping</code>.</p></li>
+</ul>
+
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>I recommend to use clumping rather than pruning. See
-<a href = 'this article'>https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html</a>.</p>
+<a href = 'https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html'>this article</a>.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

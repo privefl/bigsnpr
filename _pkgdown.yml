@@ -53,5 +53,4 @@ reference:
       - snp_getSampleInfos
       - snp_MAF
       - snp_scaleBinom
-      - snp_double
       - subset.bigSNP
