@@ -60,7 +60,8 @@ getIntervals <- function(x, n = 2) {
 #' ex <- snp_attachExtdata()
 #'
 #' obj.svd <- snp_autoSVD(G = ex$genotypes,
-#'                           infos.chr = ex$map$chromosome)
+#'                        infos.chr = ex$map$chromosome,
+#'                        infos.pos = ex$map$physical.position)
 #'
 #' str(obj.svd)
 #'
@@ -108,7 +109,7 @@ snp_autoSVD <- function(G,
                              k = k)
 
     # -log p-values of being an outlier (by PC)
-    lpval <- -predict(snp_pcadapt(G, obj.svd$u, ind.col = ind.keep))
+    lpval <- -stats::predict(snp_pcadapt(G, obj.svd$u, ind.col = ind.keep))
     # threshold of being an outlier based on Tukey's rule
     # http://math.stackexchange.com/a/966337
     lim <- stats::quantile(lpval, 0.75) + 1.5 * stats::IQR(lpval)

@@ -80,7 +80,8 @@ to make the SVD computations faster.
 ex <- snp_attachExtdata()
 
 obj.svd <- snp_autoSVD(G = ex$genotypes,
-                          infos.chr = ex$map$chromosome)
+                       infos.chr = ex$map$chromosome,
+                       infos.pos = ex$map$physical.position)
 
 str(obj.svd)
 

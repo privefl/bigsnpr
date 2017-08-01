@@ -2,6 +2,8 @@
 
 context("WRITE_BED")
 
+CODE_012 <- bigsnpr:::CODE_012
+
 N <- round(runif(1, 10, 100))
 M <- round(runif(1, 100, 1000))
 
