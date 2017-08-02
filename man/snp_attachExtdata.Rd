@@ -4,7 +4,12 @@
 \alias{snp_attachExtdata}
 \title{Attach a "bigSNP" for examples and tests}
 \usage{
-snp_attachExtdata()
+snp_attachExtdata(bedfile = system.file("extdata", "example.bed", package =
+  "bigsnpr"))
+}
+\arguments{
+\item{bedfile}{Path to file with extension ".bed" to read.
+You need the corresponding ".bim" and ".fam" in the same directory.}
 }
 \value{
 The example "bigSNP", filebacked in the "/tmp/" directory.
