@@ -43,3 +43,14 @@ expect_equal(predict(snp_gc(obj.gwas), log10 = FALSE), obj.pcadapt$pvalues,
              tolerance = 1e-2)
 
 ################################################################################
+
+expect_s3_class(snp_qq(obj.gwas, lambdaGC = FALSE), "ggplot")
+p <- snp_qq(snp_gc(obj.gwas))
+expect_equal(as.character(p$labels$subtitle), "lambda[GC] == 1")
+expect_s3_class(p, "ggplot")
+p2 <- snp_manhattan(obj.gwas, infos.chr = bigsnp$map$chromosome,
+                    infos.pos = bigsnp$map$physical.pos,
+                    npoints = 2000)
+expect_s3_class(p2, "ggplot")
+
+################################################################################
