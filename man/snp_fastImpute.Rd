@@ -4,8 +4,8 @@
 \alias{snp_fastImpute}
 \title{Fast imputation}
 \usage{
-snp_fastImpute(Gna, infos.chr, alpha = 0.02, size = 500, seed = NA,
-  ncores = 1)
+snp_fastImpute(Gna, infos.chr, alpha = 0.02, size = 500, p.train = 0.8,
+  seed = NA, ncores = 1)
 }
 \arguments{
 \item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
@@ -15,12 +15,16 @@ You can have missing values in your data.}
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
 Typically \code{<bigSNP>$map$chromosome}.}
 
-\item{alpha}{Type-I error for testing correlations.}
+\item{alpha}{Type-I error for testing correlations. Default is \code{0.02}.}
 
 \item{size}{Number of neighbor SNPs to be possibly included in the model
-imputing this particular SNP.}
+imputing this particular SNP. Default is \code{500}.}
 
-\item{seed}{An integer, for reproducibility.}
+\item{p.train}{Proportion of non missing genotypes that are used for training
+the imputation model while the rest is used to assess the accuracy of
+this imputation model. Default is \code{0.8}.}
+
+\item{seed}{An integer, for reproducibility. Default doesn't use seeds.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.}
 }

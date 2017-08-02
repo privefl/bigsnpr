@@ -5,7 +5,7 @@ CODE_IMPUTE_PRED  <- c(0, 1, 2, NA, 0, 1, 2, rep(NA, 249))
 
 ################################################################################
 
-imputeChr <- function(Gna, ind.chr, alpha, size, seed) {
+imputeChr <- function(Gna, ind.chr, alpha, size, p.train, seed) {
 
   # reproducibility
   if (!is.na(seed)) set.seed(seed[attr(ind.chr, "chr")])
@@ -36,7 +36,7 @@ imputeChr <- function(Gna, ind.chr, alpha, size, seed) {
     nbNA[i] <- l <- length(indNA <- which(is.na(X.label)))
     if (l > 0) {
       indNoNA <- setdiff(1:n, indNA)
-      ind.train <- sort(sample(indNoNA, 0.8 * length(indNoNA)))
+      ind.train <- sort(sample(indNoNA, p.train * length(indNoNA)))
       ind.val <- setdiff(indNoNA, ind.train)
 
       ind.col <- ind.chr[which(corr[, i] != 0)]
@@ -71,10 +71,13 @@ imputeChr <- function(Gna, ind.chr, alpha, size, seed) {
 #' has not been extensively compared with other imputation methods yet.**
 #'
 #' @inheritParams bigsnpr-package
-#' @param alpha Type-I error for testing correlations.
+#' @param alpha Type-I error for testing correlations. Default is `0.02`.
 #' @param size Number of neighbor SNPs to be possibly included in the model
-#' imputing this particular SNP.
-#' @param seed An integer, for reproducibility.
+#' imputing this particular SNP. Default is `500`.
+#' @param p.train Proportion of non missing genotypes that are used for training
+#' the imputation model while the rest is used to assess the accuracy of
+#' this imputation model. Default is `0.8`.
+#' @param seed An integer, for reproducibility. Default doesn't use seeds.
 #'
 #' @return A `data.frame` with
 #' - the proportion of missing values by SNP,
@@ -86,6 +89,7 @@ imputeChr <- function(Gna, ind.chr, alpha, size, seed) {
 snp_fastImpute <- function(Gna, infos.chr,
                            alpha = 0.02,
                            size = 500,
+                           p.train = 0.8,
                            seed = NA,
                            ncores = 1) {
 
