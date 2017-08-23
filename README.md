@@ -15,7 +15,7 @@
 For now, you can install this package using
 
 ```r
-# For the first version, depending on package bigmemory
+# For the first version (depending on package bigmemory)
 devtools::install_github("privefl/bigstatsr", ref = "v-bigmemory")
 devtools::install_github("privefl/bigsnpr", ref = "v-bigmemory")
 ```
