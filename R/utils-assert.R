@@ -42,46 +42,27 @@ check_args <- function(...) {
 ################################################################################
 
 # MISSING VALUES
-assert_noNA  <- bigstatsr:::assert_noNA
+assert_noNA        <- bigstatsr:::assert_noNA
 # TYPEOF
-assert_type  <- bigstatsr:::assert_type
+assert_type        <- bigstatsr:::assert_type
 # DIRECTORY
-assert_dir   <- bigstatsr:::assert_dir
+assert_dir         <- bigstatsr:::assert_dir
 # ARGS
-assert_args  <- bigstatsr:::assert_args
+assert_args        <- bigstatsr:::assert_args
 # NUMBER OF CORES
-assert_cores <- bigstatsr:::assert_cores
+assert_cores       <- bigstatsr:::assert_cores
 # INTEGERS
-assert_int   <- bigstatsr:::assert_int
+assert_int         <- bigstatsr:::assert_int
 # POSITIVE INDICES
-assert_pos   <- bigstatsr:::assert_pos
+assert_pos         <- bigstatsr:::assert_pos
 # 0s AND 1s
-assert_01    <- bigstatsr:::assert_01
+assert_01          <- bigstatsr:::assert_01
 # CLASS
-assert_class <- bigstatsr:::assert_class
-assert_classOrDesc <- bigstatsr:::assert_classOrDesc
-
-################################################################################
-
+assert_class       <- bigstatsr:::assert_class
 # FILE EXISTS
-assert_exist <- function(file) {
-  if (!file.exists(file))
-    stop2("File '%s' doesn't exist.", file)
-}
-
-assert_noexist <- function(file) {
-  if (file.exists(file))
-    stop2("File '%s' already exists.", file)
-}
-
-################################################################################
-
+assert_exist       <- bigstatsr:::assert_exist
+assert_noexist     <- bigstatsr:::assert_noexist
 # EXTENSION
-assert_ext <- function(file, ext) {
-  ext.file <- tools::file_ext(file)
-  if (ext.file != ext)
-    stop2("Extension '.%s' not supported, requires '.%s' instead.",
-          ext.file, ext)
-}
+assert_ext         <- bigstatsr:::assert_ext
 
 ################################################################################
