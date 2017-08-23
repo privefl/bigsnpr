@@ -35,7 +35,7 @@ time <- system.time(
   infos <- snp_fastImpute(GNA, infos.chr = bigsnp$map$chromosome,
                           p.train = 0.6)
 )
-expect_lt(time[3], 10)
+# expect_lt(time[3], 10)
 
 XNA@code <- bigsnpr:::CODE_IMPUTE_PRED
 library(dplyr)
