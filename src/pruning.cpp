@@ -1,12 +1,14 @@
 /******************************************************************************/
 
-#include "bigsnpr.h"
+#include <bigstatsr/BMCodeAcc.h>
+
+using namespace Rcpp;
 
 /******************************************************************************/
 
 // Clumping within a distance in number of SNPs
 // [[Rcpp::export]]
-LogicalVector clumping(const S4& BM,
+LogicalVector clumping(Environment BM,
                        const IntegerVector& rowInd,
                        const IntegerVector& colInd,
                        const IntegerVector& ordInd,
@@ -16,9 +18,8 @@ LogicalVector clumping(const S4& BM,
                        int size,
                        double thr) {
 
-  XPtr<BigMatrix> xpMat = BM.slot("address");
-  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
-
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
   int n = macc.nrow();
   int m = macc.ncol();
 
@@ -32,8 +33,8 @@ LogicalVector clumping(const S4& BM,
     if (remain[j0]) { // if already excluded, goto next
       remain[j0] = false;
       keep[j0] = true;
-      j_min = max(0, j0 - size);
-      j_max = min(m, j0 + size + 1);
+      j_min = std::max(0, j0 - size);
+      j_max = std::min(m, j0 + size + 1);
       for (j = j_min; j < j_max; j++) {
         if (remain[j]) { // if already excluded, goto next
           xySum = 0;
@@ -53,7 +54,7 @@ LogicalVector clumping(const S4& BM,
 
 // Clumping within a distance in bp
 // [[Rcpp::export]]
-LogicalVector clumping2(const S4& BM,
+LogicalVector clumping2(Environment BM,
                         const IntegerVector& rowInd,
                         const IntegerVector& colInd,
                         const IntegerVector& ordInd,
@@ -64,9 +65,8 @@ LogicalVector clumping2(const S4& BM,
                         int size,
                         double thr) {
 
-  XPtr<BigMatrix> xpMat = BM.slot("address");
-  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
-
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
   int n = macc.nrow();
   int m = macc.ncol();
 
@@ -104,7 +104,7 @@ LogicalVector clumping2(const S4& BM,
 
 // Pruning within a distance in number of SNPs
 // [[Rcpp::export]]
-LogicalVector& pruning(const S4& BM,
+LogicalVector& pruning(Environment BM,
                        const IntegerVector& rowInd,
                        const IntegerVector& colInd,
                        LogicalVector& keep,
@@ -114,9 +114,8 @@ LogicalVector& pruning(const S4& BM,
                        int size,
                        double thr) {
 
-  XPtr<BigMatrix> xpMat = BM.slot("address");
-  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
-
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
   int n = macc.nrow();
   int m = macc.ncol();
 
@@ -125,7 +124,7 @@ LogicalVector& pruning(const S4& BM,
 
   for (j0 = 0; j0 < m; j0++) {
     if (keep[j0]) { // if already excluded, goto next
-      j_max = min(j0 + size + 1, m);
+      j_max = std::min(j0 + size + 1, m);
       for (j = j0 + 1; j < j_max; j++) {
         if (keep[j]) { // if already excluded, goto next
           xySum = 0;
@@ -152,7 +151,7 @@ LogicalVector& pruning(const S4& BM,
 
 // Pruning within a distance in bp
 // [[Rcpp::export]]
-LogicalVector& pruning2(const S4& BM,
+LogicalVector& pruning2(Environment BM,
                         const IntegerVector& rowInd,
                         const IntegerVector& colInd,
                         LogicalVector& keep,
@@ -163,9 +162,8 @@ LogicalVector& pruning2(const S4& BM,
                         int size,
                         double thr) {
 
-  XPtr<BigMatrix> xpMat = BM.slot("address");
-  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
-
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
   int n = macc.nrow();
   int m = macc.ncol();
 

@@ -1,26 +1,32 @@
 /******************************************************************************/
 
-#include "bigsnpr.h"
-#include <fstream>      // std::ofstream
+#include <RcppArmadillo.h>
+#include <bigstatsr/BMCodeAcc.h>
+#include <fstream>
+
+using namespace Rcpp;
+using namespace std;
 
 /******************************************************************************/
 
 // [[Rcpp::export]]
 bool readbina(const char * filename,
-              XPtr<BigMatrix> xpMat,
-              const RawMatrix& tab) {
-  MatrixAccessor<unsigned char> macc(*xpMat);
-  int n = macc.nrow();
-  int m = macc.ncol();
+              Environment BM,
+              const arma::Mat<unsigned char>& tab) {
+
+  XPtr<FBM> xpBM = BM["address"];
+  unsigned char* ptr = static_cast<unsigned char*>(xpBM->matrix());
+  const unsigned char* code_ptr;
+  int n = xpBM->nrow();
+  int m = xpBM->ncol();
 
   int length = n / 4;
-  bool extra = (n > (4 * length));
-  int lengthExtra = length + extra;
+  int extra = n - 4 * length;
+  int lengthExtra = length + (extra > 0);
+  int j, k;
 
-  int i, j, k;
-  unsigned char l;
+  unsigned char buffer[std::max(3, lengthExtra)];
 
-  unsigned char buffer[max(3, lengthExtra)];
   ifstream myFile(filename, ios::in | ios::binary);
   // magic number
   myFile.read((char*)buffer, 3);
@@ -31,19 +37,13 @@ bool readbina(const char * filename,
     // read from bedfile
     myFile.read((char*)buffer, lengthExtra);
 
-    k = 0;
-    for (i = 0; i <= n-4; i += 4) {
-      l = buffer[k++];
-      macc[j][i]   = tab(0, l);
-      macc[j][i+1] = tab(1, l);
-      macc[j][i+2] = tab(2, l);
-      macc[j][i+3] = tab(3, l);
+    for (k = 0; k < length; k++) {
+      code_ptr = tab.colptr(buffer[k]);
+      ptr = std::copy(code_ptr, code_ptr + 4, ptr);
     }
     if (extra) {
-      l = buffer[k];
-      for (k = 0; i < n; i++, k++) {
-        macc[j][i] = tab(k, l);
-      }
+      code_ptr = tab.colptr(buffer[k]);
+      ptr = std::copy(code_ptr, code_ptr + extra, ptr);
     }
   }
 
@@ -58,13 +58,13 @@ bool readbina(const char * filename,
 
 // [[Rcpp::export]]
 void writebina(const char * filename,
-               const S4& BM,
+               Environment BM,
                const RawVector& tab,
                const IntegerVector& rowInd,
                const IntegerVector& colInd) {
 
-  XPtr<BigMatrix> xpMat = BM.slot("address");
-  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
   int n = macc.nrow();
   int m = macc.ncol();
   int length = ceil((double)n / 4); // DO NOT USE INTEGERS WITH CEIL

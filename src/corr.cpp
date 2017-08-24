@@ -1,19 +1,25 @@
 /******************************************************************************/
 
-#include "bigsnpr.h"
-#include <bigmemory/isna.hpp>
+#include <RcppArmadillo.h>
+#include <bigstatsr/BMCodeAcc.h>
+
+using namespace Rcpp;
 
 /******************************************************************************/
 
+inline bool isna(double x) {
+  return x == NA_REAL;
+}
+
 // [[Rcpp::export]]
-SEXP corMat(const S4& BM,
+SEXP corMat(Environment BM,
             const IntegerVector& rowInd,
             const IntegerVector& colInd,
             int size,
             const NumericVector& thr) {
 
-  XPtr<BigMatrix> xpMat = BM.slot("address");
-  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
 
   int n = macc.nrow();
   int m = macc.ncol();
@@ -45,7 +51,7 @@ SEXP corMat(const S4& BM,
 
   // main computation
   for (j0 = 0; j0 < m; j0++) {
-    for (j = max(0, j0 - size); j < j0; j++) {
+    for (j = std::max(0, j0 - size); j < j0; j++) {
       N = n;
       xySum = 0;
       xSum = sumX[j];

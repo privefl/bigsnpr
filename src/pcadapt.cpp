@@ -1,20 +1,20 @@
 /******************************************************************************/
 
 #include <RcppArmadillo.h>
-#include <bigstatsr/SubMatAcc.h>
+#include <bigstatsr/BMCodeAcc.h>
+
+using namespace Rcpp;
 
 /******************************************************************************/
 
 // [[Rcpp::export]]
-NumericMatrix linRegPcadapt_cpp(const S4& BM,
-                                arma::mat& U,
+NumericMatrix linRegPcadapt_cpp(Environment BM,
+                                const arma::mat& U,
                                 const IntegerVector& rowInd,
                                 const IntegerVector& colInd) {
 
-
-
-  XPtr<BigMatrix> xpMat = BM.slot("address");
-  RawSubMatAcc macc(*xpMat, rowInd-1, colInd-1, BM.slot("code"));
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
   int n = macc.nrow();
   int m = macc.ncol();
   int K = U.n_cols;
