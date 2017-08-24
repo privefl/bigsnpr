@@ -3,22 +3,20 @@
 \name{bigSNP-class}
 \alias{bigSNP-class}
 \alias{bigSNP}
-\title{S3 class bigSNP}
+\title{Class bigSNP}
 \description{
-A class for representing infos on massive SNP arrays.
+An S3 class for representing infos on massive SNP arrays.
 }
 \details{
 A named list with at least 4 slots: \describe{
-\item{genotypes}{A \link[=BM.code.descriptor-class]{BM.code.descriptor} which
-describes a special \code{big.matrix} encoded with type \code{raw} (one byte
+\item{genotypes}{A \link[=FBM.code256-class]{FBM.code256} which is
+a special Filebacked Big Matrix encoded with type \code{raw} (one byte
 unsigned integer), representing genotype calls and possibly imputed
 allele dosages. Rows are individuals and columns are SNPs.}
 \item{fam}{A \code{data.frame} containing some information on the SNPs
 (read from a ".fam" file).}
 \item{map}{A \code{data.frame} giving some information on the individuals
 (read from a ".bim" file).}
-\item{savedIn}{The ".rds" file path where this object is stored. The
-backingfile of the \code{big.matrix} should be in the same directory.}
 }
 }
 \seealso{

@@ -11,21 +11,19 @@ CODE_DOSAGE <- c(0, 1, 2, NA, 0, 1, 2, seq(0, 2, by = 0.01), rep(NA, 48))
 
 ################################################################################
 
-#' S3 class bigSNP
+#' Class bigSNP
 #'
-#' A class for representing infos on massive SNP arrays.
+#' An S3 class for representing infos on massive SNP arrays.
 #'
 #' A named list with at least 4 slots: \describe{
-#'   \item{genotypes}{A [BM.code.descriptor][BM.code.descriptor-class] which
-#'     describes a special `big.matrix` encoded with type `raw` (one byte
+#'   \item{genotypes}{A [FBM.code256][FBM.code256-class] which is
+#'     a special Filebacked Big Matrix encoded with type `raw` (one byte
 #'     unsigned integer), representing genotype calls and possibly imputed
 #'     allele dosages. Rows are individuals and columns are SNPs.}
 #'   \item{fam}{A `data.frame` containing some information on the SNPs
 #'     (read from a ".fam" file).}
 #'   \item{map}{A `data.frame` giving some information on the individuals
 #'     (read from a ".bim" file).}
-#'   \item{savedIn}{The ".rds" file path where this object is stored. The
-#'     backingfile of the `big.matrix` should be in the same directory.}
 #' }
 #'
 #' @name bigSNP-class

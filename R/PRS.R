@@ -20,6 +20,7 @@
 #' @export
 #'
 #' @example examples/example-PRS.R
+#'
 snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
                     lpS = NULL, thr.list = 0) {
 

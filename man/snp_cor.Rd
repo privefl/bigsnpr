@@ -8,7 +8,7 @@ snp_cor(Gna, ind.row = rows_along(Gna), ind.col = cols_along(Gna),
   size = 500, alpha = 0.05, fill.diag = TRUE)
 }
 \arguments{
-\item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 You can have missing values in your data.}
 
@@ -43,6 +43,7 @@ test <- snp_attachExtdata()
 corr <- snp_cor(test$genotypes)
 corr[1:10, 1:10]
 
+# Sparsity
 length(corr@x) / length(corr)
 
 }

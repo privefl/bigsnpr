@@ -65,20 +65,14 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
   remain[match(exclude, ind.chr)] <- FALSE
 
   # cache some computations
-  G2 <- attach.BM(G)
-  stats <- big_colstats(G2, ind.row = ind.row, ind.col = ind.chr)
+  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr)
   n <- length(ind.row)
   denoX <- (n - 1) * stats$var
-  # nulls <- which(denoX == 0)
-  # if (l <- length(nulls)) {
-  #   message2("Excluding %d monoallelic markers...", l)
-  #   remain[nulls] <- FALSE
-  # }
 
   # main algo
   if (is.size.in.bp) {
     stopifnot(length(infos.pos) != 0) # TODO: better test
-    keep <- clumping2(G2,
+    keep <- clumping2(G,
                       rowInd = ind.row,
                       colInd = ind.chr,
                       ordInd = ord.chr,
@@ -89,7 +83,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
                       size = size * 1000, # in bp
                       thr = thr.r2)
   } else {
-    keep <- clumping(G2,
+    keep <- clumping(G,
                      rowInd = ind.row,
                      colInd = ind.chr,
                      ordInd = ord.chr,
@@ -129,8 +123,7 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
                        size, is.size.in.bp, infos.pos, thr.r2, exclude) {
 
   # cache some computations
-  G2 <- attach.BM(G)
-  stats <- big_colstats(G2, ind.row, ind.chr)
+  stats <- big_colstats(G, ind.row, ind.chr)
   m.chr <- length(ind.chr)
   keep <- rep(TRUE, m.chr)
   keep[match(exclude, ind.chr)] <- FALSE
@@ -147,7 +140,7 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
   # main algo
   if (is.size.in.bp) {
     stopifnot(length(infos.pos) != 0) # TODO: better test
-    keep <- pruning2(G2,
+    keep <- pruning2(G,
                      rowInd = ind.row,
                      colInd = ind.chr,
                      keep = keep,
@@ -158,7 +151,7 @@ pruningChr <- function(G, ind.chr, ind.row, nploidy,
                      size = size * 1000, # in bp
                      thr = thr.r2)
   } else {
-    keep <- pruning(G2,
+    keep <- pruning(G,
                     rowInd = ind.row,
                     colInd = ind.chr,
                     keep = keep,

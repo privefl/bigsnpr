@@ -11,12 +11,10 @@ imputeChr <- function(Gna, ind.chr, alpha, size, p.train, seed) {
   if (!is.na(seed)) set.seed(seed[attr(ind.chr, "chr")])
 
   # init
-  X <- attach.BM(Gna)
+  X <- Gna$copy(code = CODE_IMPUTE_LABEL)
   n <- nrow(X)
   m.chr <- length(ind.chr)
-  X2 <- X
-  X@code <- CODE_IMPUTE_LABEL
-  X2@code <- CODE_IMPUTE_PRED
+  X2 <- Gna$copy(code = CODE_IMPUTE_PRED)
 
   # correlation between SNPs
   corr <- snp_cor(

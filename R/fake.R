@@ -5,19 +5,19 @@
 #' @param n Number of individuals.
 #' @param m Number of SNPs.
 #'
-#' @return A new temporary `bigSNP` object representing `n` individuals and
-#' `m` SNPs. The genotype `big.matrix` is initialized with missing values.
+#' @return A new temporary `bigSNP` object representing `n` individuals
+#'   and `m` SNPs. The genotype Filebacked Big Matrix is initialized
+#'   with missing values.
 #'
 #' @keywords internal
 #'
 #' @examples
 #' N <- 5
 #' M <- 12
-#' test <- snp_fake(N, M)
-#' str(test)
+#' (test <- snp_fake(N, M))
 #'
-#' # The genotype `big.matrix` is initialized with missing values
-#' X <- attach.BM(test$genotypes)
+#' # The genotype Filebackeg Big Matrix is initialized with missing values
+#' G <- test$genotypes
 #' X[,]
 #'
 #' # Modify the genotype `big.matrix`
@@ -30,8 +30,7 @@
 snp_fake <- function(n, m) {
 
   # constructing a fake genotype big.matrix
-  bigGeno <- tmpFBM(init = as.raw(3))(n, m, type = "raw")
-  bigGeno.code <- as.BM.code(bigGeno, code = CODE_012)
+  bigGeno <- FBM.code256(n, m, code = CODE_012, init = as.raw(3))
 
   # fam
   fam <- data.frame(0L, paste0("ind_", 1:n), 0L, 0L, 0L, -9L,
@@ -45,17 +44,11 @@ snp_fake <- function(n, m) {
                     stringsAsFactors = FALSE)
   names(map) <- NAMES.MAP
 
-  # rds
-  rds <- sub("\\.bk$", ".rds", bigstatsr:::BM.path(bigGeno))
-
-  # create the `bigSNP`, save it and return it
-  snp_list <- structure(list(genotypes = bigGeno.code,
-                             fam = fam,
-                             map = map,
-                             savedIn = rds),
-                        class = "bigSNP")
-  saveRDS(snp_list, rds)
-  snp_list
+  # Return the bigSNP object
+  structure(list(genotypes = bigGeno,
+                 fam = fam,
+                 map = map),
+            class = "bigSNP")
 }
 
 ################################################################################

@@ -52,10 +52,9 @@ ZCATT <- function(counts.cases, counts.controls, val) {
 #' # constructing a fake genotype big.matrix
 #' N <- 50; M <- 1200
 #' fake <- snp_fake(N, M)
-#' X <- attach.BM(fake$genotypes)
-#' X[] <- sample(as.raw(0:3), length(X), TRUE)
-#' X[1:8, 1:10]
-#' rm(X)
+#' G <- fake$genotypes
+#' G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
+#' G[1:8, 1:10]
 #'
 #' # Specify case/control phenotypes
 #' fake$fam$affection <- rep(1:2, each = N / 2)
@@ -89,9 +88,9 @@ snp_MAX3 <- function(Gna, y01.train,
   ind.cases <- ind.train[is.case]
   ind.controls <- ind.train[!is.case]
 
-  onlyO12 <- as.character(0:2) # don't consider missing values
-  counts.cases <- big_counts(Gna, ind.row = ind.cases)[onlyO12, ]
-  counts.controls <- big_counts(Gna, ind.row = ind.controls)[onlyO12, ]
+  only012 <- as.character(0:2) # don't consider missing values
+  counts.cases <- big_counts(Gna, ind.row = ind.cases)[only012, ]
+  counts.controls <- big_counts(Gna, ind.row = ind.controls)[only012, ]
 
   stats <- ZCATT(counts.cases, counts.controls, val)
   stats <- replace(stats, is.na(stats), 0)

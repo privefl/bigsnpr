@@ -4,22 +4,19 @@
 \alias{snp_readBed}
 \title{Read PLINK files into a "bigSNP"}
 \usage{
-snp_readBed(bedfile, backingfile, backingpath = "backingfiles")
+snp_readBed(bedfile, backingfile)
 }
 \arguments{
 \item{bedfile}{Path to file with extension ".bed" to read.
 You need the corresponding ".bim" and ".fam" in the same directory.}
 
-\item{backingfile}{The root name for the backing file(s) for the cache of
-the \link[=bigSNP-class]{bigSNP} object.}
-
-\item{backingpath}{The path to the directory containing the backing files.
-Default is \code{"backingfiles"}.}
+\item{backingfile}{The path (without extension) for the backing file(s)
+for the cache of the \link[=bigSNP-class]{bigSNP} object.}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.
-Note that this function creates two other files which store the
-\code{big.matrix} and its descriptor.\cr
+Note that this function creates one other file which stores the values of
+the Filebacked Big Matrix.\cr
 \strong{You shouldn't read from PLINK files more than once.} Instead, use
 \link{snp_attach} to load the "bigSNP" object in any R session from backing files.
 }
@@ -30,25 +27,19 @@ Function to read bed/bim/fam files into a \link[=bigSNP-class]{bigSNP}.
 For more information on these formats, please visit
 \href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
 For other formats, please use PLINK to convert them in bedfiles,
-which require minimal space to store and are faster to read.
-For example, to convert from a VCF file, use the \code{--vcf} option.
+which require minimal space to store and are faster to read. For example,
+to convert from a VCF file, use the \code{--vcf} option. See \link{snp_plinkQC}.
 }
 \examples{
 (bedfile <- system.file("extdata", "example.bed", package = "bigsnpr"))
 
-# Reading the bedfile and storing the data in directory "backingfiles"
-rds <- snp_readBed(bedfile, backingfile = "test_doc")
+# Reading the bedfile and storing the data in temporary directory
+rds <- snp_readBed(bedfile, backingfile = tempfile())
 
 # Loading the data from backing files
 test <- snp_attach(rds)
 
 str(test)
 dim(G <- test$genotypes)
-attach.BM(G)[1:8, 1:8]
-
-
-
-# cleaning
-bk <- sub("\\\\.rds$", ".bk", rds)
-file.remove(rds, bk)
+G[1:8, 1:8]
 }

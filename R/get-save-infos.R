@@ -4,18 +4,18 @@
 #'
 #' Save a \code{bigSNP} after having made some modifications to it.
 #' As \code{bigSNP} is an S3 class, you can add any slot you want
-#' to an object of this class, then use \code{snp_saveModifs} to
+#' to an object of this class, then use \code{snp_save} to
 #' save these modifications in the corresponding ".rds" backing file.
 #'
 #' @inheritParams bigsnpr-package
 #'
 #' @return The (saved) \code{bigSNP}.
 #'
-#' @example examples/example-saveModifs.R
+#' @example examples/example-save.R
 #'
 #' @export
-snp_saveModifs <- function(x) {
-  saveRDS(x, x$savedIn)
+snp_save <- function(x) {
+  saveRDS(x, sub("\\.bk$", ".rds", x$genotypes$backingfile))
 
   x
 }

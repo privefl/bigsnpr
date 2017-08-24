@@ -10,8 +10,8 @@
 #'
 #' @inheritParams bigsnpr-package
 #' @param FUN The function to be applied. It must take a
-#' [BM.code][BM.code-class] as first argument and `ind.chr`, an another argument
-#' to provide subsetting over SNPs.
+#' [FBM.code256][FBM.code256-class] as first argument and `ind.chr`,
+#' an another argument to provide subsetting over SNPs.
 #' You can access the number of the chromosome by using `attr(ind.chr, "chr")`.
 #' @param combine function that is used by [foreach] to process the tasks
 #' results as they generated. This can be specified as either a function or a

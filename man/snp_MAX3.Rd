@@ -7,7 +7,7 @@
 snp_MAX3(Gna, y01.train, ind.train = rows_along(Gna), val = c(0, 0.5, 1))
 }
 \arguments{
-\item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 You can have missing values in your data.}
 
@@ -44,10 +44,9 @@ set.seed(1)
 # constructing a fake genotype big.matrix
 N <- 50; M <- 1200
 fake <- snp_fake(N, M)
-X <- attach.BM(fake$genotypes)
-X[] <- sample(as.raw(0:3), length(X), TRUE)
-X[1:8, 1:10]
-rm(X)
+G <- fake$genotypes
+G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
+G[1:8, 1:10]
 
 # Specify case/control phenotypes
 fake$fam$affection <- rep(1:2, each = N / 2)

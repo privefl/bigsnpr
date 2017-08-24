@@ -18,7 +18,7 @@ snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 49,
 snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 

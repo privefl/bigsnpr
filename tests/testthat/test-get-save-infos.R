@@ -39,7 +39,7 @@ test_that("family.ID with 19 pops after re-attaching", {
 # change slot
 test$fam$family.ID <- infos
 # save modifs
-test <- snp_saveModifs(test)
+test <- snp_save(test)
 # re-attach
 test <- snp_attach(test$savedIn)
 

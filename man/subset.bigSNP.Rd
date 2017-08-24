@@ -4,7 +4,7 @@
 \alias{subset.bigSNP}
 \title{Subset}
 \usage{
-\method{subset}{bigSNP}(x, ind.row = rows_along(X), ind.col = cols_along(X),
+\method{subset}{bigSNP}(x, ind.row = rows_along(G), ind.col = cols_along(G),
   ...)
 }
 \arguments{

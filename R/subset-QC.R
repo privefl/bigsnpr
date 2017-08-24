@@ -32,24 +32,28 @@
 #' str(snp_attach(rdsfile2))
 #'
 subset.bigSNP <- function(x,
-                          ind.row = rows_along(X),
-                          ind.col = cols_along(X),
+                          ind.row = rows_along(G),
+                          ind.col = cols_along(G),
                           ...) {
 
-  X <- attach.BM(x$genotypes)
+  G <- x$genotypes
+  # Support for negative indices
+  ind.row <- rows_along(G)[ind.row]
+  ind.col <- cols_along(G)[ind.col]
 
-  check_args(ind.row = "assert_int(ind.row)", ind.col = "assert_int(ind.col)")
+  check_args()
 
-  newfiles <- getNewFiles(x$savedIn, "sub")
-
-  X2 <- deepcopy(X,
-                 rows = ind.row,
-                 cols = ind.col,
-                 backingfile = basename(newfiles$bk),
-                 backingpath = dirname(newfiles$bk),
-                 descriptorfile = basename(newfiles$desc))
-  # removing unnecessary ".desc" file
-  file.remove(newfiles$desc)
+  # Create new FBM and fill it
+  G2 <- FBM.code256(
+    nrow = length(ind.row),
+    ncol = length(ind.col),
+    code = G$code256,
+    init = NULL,
+    backingfile = getNewFile(x, "sub"),
+    create_bk = TRUE,
+    save = FALSE
+  )
+  replaceSNP(G2, G, rowInd = ind.row, colInd = ind.col)
 
   # http://stackoverflow.com/q/19565621/6103040
   newfam <- x$fam[ind.row, , drop = FALSE]
@@ -57,16 +61,16 @@ subset.bigSNP <- function(x,
   newmap <- x$map[ind.col, , drop = FALSE]
   rownames(newmap) <- rows_along(newmap)
 
-  snp_list <- structure(
-    list(genotypes = describe(as.BM.code(X2, code = X@code)),
-         fam = newfam,
-         map = newmap,
-         savedIn = newfiles$rds),
-    class = "bigSNP")
+  # Create the bigSNP object
+  snp.list <- structure(list(genotypes = G2,
+                             fam = newfam,
+                             map = newmap),
+                        class = "bigSNP")
 
-  saveRDS(snp_list, newfiles$rds)
-
-  newfiles$rds
+  # save it and return the path of the saved object
+  rds <- sub("\\.bk$", ".rds", G2$backingfile)
+  saveRDS(snp.list, rds)
+  rds
 }
 
 ################################################################################

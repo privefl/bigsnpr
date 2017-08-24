@@ -7,7 +7,7 @@
 snp_pcadapt(G, U.row, ind.row = rows_along(G), ind.col = cols_along(G))
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
@@ -39,6 +39,7 @@ obj.svd <- big_SVD(G, fun.scaling = snp_scaleBinom(), k = 10)
 plot(obj.svd) # there seems to be 3 "significant" components
 pcadapt <- snp_pcadapt(G, obj.svd$u[, 1:3])
 snp_qq(snp_gc(pcadapt))
+
 }
 \references{
 Luu, K., Bazin, E., & Blum, M. G. (2017).

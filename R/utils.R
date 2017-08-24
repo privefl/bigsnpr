@@ -1,19 +1,19 @@
 ################################################################################
 # Same as in bigstatsr
 
-printf <- bigstatsr:::printf
+printf           <- bigstatsr:::printf
 
-message2 <- bigstatsr:::message2
+message2         <- bigstatsr:::message2
 
-warning2 <- bigstatsr:::warning2
+warning2         <- bigstatsr:::warning2
 
-stop2 <- bigstatsr:::stop2
+stop2            <- bigstatsr:::stop2
 
 transform_levels <- bigstatsr:::transform_levels
 
-CutBySize <- bigstatsr:::CutBySize
+CutBySize        <- bigstatsr:::CutBySize
 
-seq2 <- bigstatsr:::seq2
+seq2             <- bigstatsr:::seq2
 
 ################################################################################
 
@@ -69,10 +69,10 @@ write.table2 <- function(x, file) {
 
 ################################################################################
 
-getNewFiles <- function(rdsfile, type) {
+getNewFile <- function(x, type) {
 
-  root <- sub("\\.rds$", "", rdsfile)
-  EXTS <- c("bk", "desc", "rds")
+  root <- sub("\\.bk$", "", x$genotypes$backingfile)
+  EXTS <- c("bk", "rds")
 
   number <- 1
   repeat {
@@ -81,7 +81,7 @@ getNewFiles <- function(rdsfile, type) {
     number <- number + 1
   }
 
-  as.list(structure(files, names = EXTS))
+  sprintf("%s_%s%d", root, type, number)
 }
 
 ################################################################################

@@ -9,8 +9,8 @@ check_args <- function(...) {
       list(...),  # possible to "overwrite" following defaults
       list(
         x           = "assert_class(x, 'bigSNP')",
-        G           = "assert_classOrDesc(G, 'BM.code'); assert_noNA(G)",
-        Gna         = "assert_classOrDesc(Gna, 'BM.code')",
+        G           = "assert_class(G, 'FBM.code256'); assert_noNA(G)",
+        Gna         = "assert_class(Gna, 'FBM.code256')",
         infos.chr   = "assert_int(infos.chr); assert_pos(infos.chr)",
         infos.pos   = "assert_int(infos.pos); assert_pos(infos.pos)",
         ncores      = "assert_cores(ncores)",
@@ -20,17 +20,7 @@ check_args <- function(...) {
         ind.keep    = "assert_int(ind.keep);  assert_pos(ind.keep)",
         fun.scaling = "assert_args(fun.scaling, c('ind.row', 'ind.col'))",
         gwas        = "assert_class(gwas, 'mhtest')",
-        y01.train   = "assert_01(y01.train)",
-
-
-        X.desc       = "assert_class(X.desc, 'big.matrix.descriptor')",
-        X.           = "assert_classOrDesc(X., 'big.matrix')",
-        X.code       = "assert_classOrDesc(X.code, 'BM.code')",
-        fun.createBM = "assert_args(fun.createBM, c('nrow', 'ncol', 'type'))",
-        covar.train  =
-          "if (!is.null(covar.train)) assert_class(covar.train, 'matrix')",
-        covar.row    =
-          "if (!is.null(covar.row)) assert_class(covar.row, 'matrix')"
+        y01.train   = "assert_01(y01.train)"
       )
     )
 

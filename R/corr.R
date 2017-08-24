@@ -23,6 +23,7 @@
 #' corr <- snp_cor(test$genotypes)
 #' corr[1:10, 1:10]
 #'
+#' # Sparsity
 #' length(corr@x) / length(corr)
 #'
 #' @export
@@ -35,9 +36,7 @@ snp_cor <- function(Gna,
 
   check_args()
 
-  X <- attach.BM(Gna)
-
-  # get significance thresholds with type-I error `alpha`
+  # Get significance thresholds with type-I error `alpha`
   suppressWarnings(
     q.alpha <- stats::qt(p = alpha / 2,
                          df = seq_along(ind.row) - 2,
@@ -45,7 +44,7 @@ snp_cor <- function(Gna,
   )
 
   corr <- forceSymmetric(corMat(
-    BM = X,
+    BM = Gna,
     rowInd = ind.row,
     colInd = ind.col,
     size = size,

@@ -8,7 +8,7 @@ snp_PRS(G, betas, ind.test, ind.keep = cols_along(G), lpS = NULL,
   thr.list = 0)
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 

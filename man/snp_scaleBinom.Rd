@@ -24,10 +24,10 @@ You will probably not use this function as is but as the
 \examples{
 set.seed(1)
 
-a <- matrix(0, 43, 17)
+a <- matrix(0, 93, 170)
 p <- 0.2
 a[] <- rbinom(length(a), 2, p)
-X <- as.big.matrix(a, type = "char", shared = FALSE)
+X <- add_code256(big_copy(a, type = "raw"), code = c(0, 1, 2, rep(NA, 253)))
 X.svd <- big_SVD(X, fun.scaling = snp_scaleBinom())
 str(X.svd)
 plot(X.svd$means)

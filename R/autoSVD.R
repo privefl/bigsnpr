@@ -81,13 +81,10 @@ snp_autoSVD <- function(G,
 
   check_args()
 
-  # get BM
-  G2 <- attach.BM(G)
-
-  # verbose?
+  # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
-  # first clumping
+  # First clumping
   THR <- thr.r2
   printf2("Phase of clumping at r2 > %s.. ", THR)
   ind.keep <- snp_clumping(G, infos.chr,
@@ -108,15 +105,15 @@ snp_autoSVD <- function(G,
                              ind.col = ind.keep,
                              k = k)
 
-    # -log p-values of being an outlier (by PC)
+    # The -log10 p-values of being an outlier (by PC)
     lpval <- -stats::predict(snp_pcadapt(G, obj.svd$u, ind.col = ind.keep))
-    # threshold of being an outlier based on Tukey's rule
+    # Threshold of being an outlier based on Tukey's rule
     # http://math.stackexchange.com/a/966337
     lim <- stats::quantile(lpval, 0.75) + 1.5 * stats::IQR(lpval)
 
-    # roll mean to get only consecutive outliers and
+    # Roll mean to get only consecutive outliers and
     ind.excl <- which(rollMean(lpval, size = roll.size) > lim)
-    # regroup them by intervals to return long-range LD regions
+    # Regroup them by intervals to return long-range LD regions
     ind.range <- getIntervals(ind.excl, n = int.min.size)
     if (nrow(ind.range) > 0) {
       LRLDR.add <- cbind(

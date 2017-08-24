@@ -8,7 +8,7 @@ snp_fastImpute(Gna, infos.chr, alpha = 0.02, size = 500, p.train = 0.8,
   seed = NA, ncores = 1)
 }
 \arguments{
-\item{Gna}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 You can have missing values in your data.}
 

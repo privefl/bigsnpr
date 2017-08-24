@@ -11,8 +11,8 @@ snp_split(infos.chr, FUN, combine, ncores = 1, ...)
 Typically \code{<bigSNP>$map$chromosome}.}
 
 \item{FUN}{The function to be applied. It must take a
-\link[=BM.code-class]{BM.code} as first argument and \code{ind.chr}, an another argument
-to provide subsetting over SNPs.
+\link[=FBM.code256-class]{FBM.code256} as first argument and \code{ind.chr},
+an another argument to provide subsetting over SNPs.
 You can access the number of the chromosome by using \code{attr(ind.chr, "chr")}.}
 
 \item{combine}{function that is used by \link{foreach} to process the tasks

@@ -12,8 +12,9 @@ snp_fake(n, m)
 \item{m}{Number of SNPs.}
 }
 \value{
-A new temporary \code{bigSNP} object representing \code{n} individuals and
-\code{m} SNPs. The genotype \code{big.matrix} is initialized with missing values.
+A new temporary \code{bigSNP} object representing \code{n} individuals
+and \code{m} SNPs. The genotype Filebacked Big Matrix is initialized
+with missing values.
 }
 \description{
 Fake a "bigSNP"
@@ -21,11 +22,10 @@ Fake a "bigSNP"
 \examples{
 N <- 5
 M <- 12
-test <- snp_fake(N, M)
-str(test)
+(test <- snp_fake(N, M))
 
-# The genotype `big.matrix` is initialized with missing values
-X <- attach.BM(test$genotypes)
+# The genotype Filebackeg Big Matrix is initialized with missing values
+G <- test$genotypes
 X[,]
 
 # Modify the genotype `big.matrix`

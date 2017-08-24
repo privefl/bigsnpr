@@ -8,7 +8,7 @@ snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
   nploidy = getOption("bigsnpr.nploidy"))
 }
 \arguments{
-\item{G}{A \link[=BM.code.descriptor-class]{BM.code.descriptor}
+\item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
@@ -28,4 +28,9 @@ A vector of MAFs, corresponding to \code{ind.col}.
 }
 \description{
 Minor Allele Frequency.
+}
+\examples{
+obj.bigsnp <- snp_attachExtdata()
+str(maf <- snp_MAF(obj.bigsnp$genotypes))
+
 }

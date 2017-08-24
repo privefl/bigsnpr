@@ -49,7 +49,7 @@ reference:
   - title: "Utilities"
     contents:
       - snp_split
-      - snp_saveModifs
+      - snp_save
       - snp_getSampleInfos
       - snp_MAF
       - snp_scaleBinom

@@ -19,7 +19,6 @@ License: GPL-3 + file LICENSE
 LazyData: TRUE
 Depends:
     R (>= 3.2.3), 
-    bigmemory,
     bigstatsr
 Imports:
     data.table,
@@ -35,7 +34,6 @@ Imports:
     xgboost
 LinkingTo:
     BH,
-    bigmemory, 
     bigstatsr,
     Rcpp,
     RcppArmadillo
@@ -46,7 +44,7 @@ Suggests:
     Hmisc,
     pcadapt,
     testthat
-Remotes: privefl/bigmemory, privefl/bigstatsr
+Remotes: privefl/bigstatsr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr

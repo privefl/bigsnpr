@@ -38,6 +38,7 @@ getD <- function(X) {
 #' plot(obj.svd) # there seems to be 3 "significant" components
 #' pcadapt <- snp_pcadapt(G, obj.svd$u[, 1:3])
 #' snp_qq(snp_gc(pcadapt))
+#'
 snp_pcadapt <- function(G, U.row,
                         ind.row = rows_along(G),
                         ind.col = cols_along(G)) {
@@ -47,7 +48,7 @@ snp_pcadapt <- function(G, U.row,
   K <- ncol(U.row)
   stopifnot(all.equal(crossprod(U.row), diag(K)))
 
-  zscores <- linRegPcadapt_cpp(attach.BM(G), U = U.row,
+  zscores <- linRegPcadapt_cpp(G, U = U.row,
                                rowInd = ind.row,
                                colInd = ind.col)
 
