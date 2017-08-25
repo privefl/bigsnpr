@@ -5,10 +5,7 @@ context("PLINK_QC")
 ################################################################################
 
 # Get PLINK executable
-download.file("https://www.cog-genomics.org/static/bin/plink170725/plink_linux_x86_64.zip",
-              destfile = (plink.zip <- tempfile()))
-PLINK <- unzip(plink.zip, files = "plink", exdir = tempdir())
-Sys.chmod(PLINK, mode = (file.info(PLINK)$mode | "111"))
+PLINK <- download_plink()
 
 ################################################################################
 
@@ -25,7 +22,7 @@ snp_plinkQC(plink.path = PLINK,
   snp_attachExtdata() %>%
   extract2("genotypes") %>%
   snp_MAF() %>%
-  magrittr::is_greater_than(0.2) %>%
+  is_greater_than(0.2) %>%
   all() %>%
   expect_true()
 
@@ -44,8 +41,7 @@ ind.pair <- df.pair %>%
 
 K <- snp_attachExtdata() %>%
   extract2("genotypes") %>%
-  attach.BM() %>%
-  as.matrix() %>%
+  extract(,) %>%
   t() %>%
   cor()
 

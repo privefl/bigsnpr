@@ -59,7 +59,8 @@ Default is \code{0.2}.}
 can be used to exclude long-range LD regions (see Price2008). Another use
 can be for thresholding with respect to p-values associated with \code{S}.}
 
-\item{ncores}{Number of cores used. Default doesn't use parallelism.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 
 \item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}

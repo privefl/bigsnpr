@@ -5,8 +5,9 @@ context("ATTACH")
 ################################################################################
 
 test <- snp_attachExtdata()
-rdsfile <- test$savedIn
-bkfile <- sub("\\.rds$", ".bk", rdsfile)
+expect_null(test$savedIn)
+bkfile <- test$genotypes$backingfile
+rdsfile <- sub("\\.bk$", ".rds", bkfile)
 
 ################################################################################
 
@@ -14,16 +15,16 @@ rdsfile.copy <- tempfile(fileext = ".rds")
 expect_true(file.copy(rdsfile, rdsfile.copy))
 
 test2 <- readRDS(rdsfile.copy)
-expect_equal(test2$savedIn, test$savedIn)
+expect_null(test2$savedIn)
 
 bkfile.copy <- sub("\\.rds$", ".bk", rdsfile.copy)
 expect_error(snp_attach(rdsfile.copy),
-             sprintf("File '%s' doesn't exist", bkfile.copy))
+             sprintf("File '%s' doesn't exist.", bkfile.copy), fixed = TRUE)
 
 expect_true(file.copy(bkfile, bkfile.copy))
 test3 <- snp_attach(rdsfile.copy)
-expect_equal(test3$savedIn, rdsfile.copy)
-expect_equal(test3$genotypes@description$dirname, dirname(rdsfile.copy))
-expect_s4_class(attach.BM(test3$genotypes), "BM.code")
+expect_null(test3$savedIn)
+expect_equal(test3$genotypes$backingfile, bkfile.copy)
+expect_s4_class(test3$genotypes, "FBM.code256")
 
 ################################################################################

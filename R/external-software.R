@@ -1,11 +1,111 @@
 ################################################################################
 
+# https://github.com/r-lib/rappdirs/blob/master/R/utils.r
+get_os <- function() {
+  if (.Platform$OS.type == "windows") {
+    "Windows"
+  } else if (Sys.info()[["sysname"]] == "Darwin") {
+    "Mac"
+  } else if (.Platform$OS.type == "unix") {
+    "Linux"
+  } else {
+    stop("Unknown OS")
+  }
+}
+
+#' Download PLINK 1.9
+#'
+#' Download PLINK 1.9 from \url{https://www.cog-genomics.org/plink2}.
+#'
+#' @param dir The directory where to put the PLINK executable.
+#'   Default is a temporary directory.
+#'
+#' @return The path of the downloaded PLINK executable.
+#'
+#' @export
+#'
+#' @examples
+#' download_plink()
+#' download_plink()  # don't download if already exists
+#' download_plink(".")
+#'
+download_plink <- function(dir = tempdir()) {
+
+  myOS <- get_os()
+  PLINK <- file.path(dir, `if`(myOS == "Windows", "plink.exe", "plink"))
+  if (file.exists(PLINK)) return(PLINK)
+
+  # https://regex101.com/r/jC8nB0/143
+  plink.names  <- gsubfn::strapply(
+    X = readLines("https://www.cog-genomics.org/plink2"),
+    pattern = "(/static/bin/.*/plink_.+?(?<!dev)\\.zip)",
+    simplify = "c",
+    perl = TRUE
+  )
+  plink.builds <- data.frame(
+    url = paste0("https://www.cog-genomics.org", plink.names),
+    OS = c(rep("Linux", 2), "Mac", rep("Windows", 2)),
+    arch = c("x86-64", "i686", "x86-64", "x86-64", "i686"),
+    stringsAsFactors = FALSE
+  )
+
+  myArch <- Sys.info()[["machine"]]
+  url <- subset(plink.builds, OS == myOS & arch == myArch)[["url"]]
+
+  utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
+  PLINK <- utils::unzip(plink.zip,
+                        files = basename(PLINK),
+                        exdir = dirname(PLINK))
+  Sys.chmod(PLINK, mode = (file.info(PLINK)$mode | "111"))
+
+  PLINK
+}
+
+################################################################################
+
+#' Download Beagle 4.1
+#'
+#' Download Beagle 4.1 from
+#' \url{https://faculty.washington.edu/browning/beagle/beagle.html}
+#'
+#' @param dir The directory where to put the Beagle Java Archive.
+#'   Default is a temporary directory.
+#'
+#' @return The path of the downloaded Beagle Java Archive.
+#' @export
+#'
+#' @examples
+#' download_beagle()
+#' download_beagle()  # don't download if already exists
+#' download_beagle(".")
+#'
+download_beagle <- function(dir = tempdir()) {
+
+  url <- "https://faculty.washington.edu/browning/beagle/"
+
+  # https://regex101.com/r/jC8nB0/141
+  jar  <- gsubfn::strapply(
+    X = readLines(paste0(url, "beagle.html")),
+    pattern = "(beagle.+?\\.jar)",
+    simplify = "c",
+    perl = TRUE
+  )[[1]]
+
+  dest <- file.path(dir, jar)
+
+  if (!file.exists(dest)) download.file(paste0(url, jar), destfile = dest)
+
+  dest
+}
+
+################################################################################
+
 #' Quality Control
 #'
 #' Quality Control (QC) and possible conversion to *bed*/*bim*/*fam* files
 #' using [**PLINK 1.9**](https://www.cog-genomics.org/plink2).
 #'
-#' @param plink.path Path to the executable of PLINK 1.9.
+#' @param plink.path Path to the executable of PLINK 1.9. Default downloads it.
 #' @param prefix.in Prefix (path without extension) of the dataset to be QCed.
 #' @param file.type Type of the dataset to be QCed. Default is `"--bfile"` and
 #' corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map
@@ -39,22 +139,23 @@
 #' datasets.* GigaScience 4 (1): 7.
 #' \url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
 #'
-#' @seealso [snp_plinkIBDQC]
+#' @seealso [download_plink] [snp_plinkIBDQC]
 #'
 #' @examples
-#' \dontrun{
-#' # On MY computer, I can do:
-#' plink <- "../plink_linux_x86_64/plink"
-#' prefix <- "../POPRES_data/POPRES_allchr"
-#' test <- snp_plinkQC(plink.path = plink,
-#'                     prefix.in = prefix,
-#'                     file.type = "--file", # inputs are ped/map files
+#' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+#' prefix  <- sub("\\.bed$", "", bedfile)
+#' test <- snp_plinkQC(prefix.in = prefix,
+#'                     prefix.out = tempfile(),
+#'                     file.type = "--bfile",  # the default (for ".bed")
 #'                     maf = 0.05,
 #'                     geno = 0.05,
 #'                     mind = 0.05,
 #'                     hwe = 1e-10,
-#'                     autosome.only = TRUE)}
-snp_plinkQC <- function(plink.path, prefix.in,
+#'                     autosome.only = TRUE)
+#' test
+#'
+snp_plinkQC <- function(prefix.in,
+                        plink.path = download_plink(),
                         file.type = "--bfile",
                         prefix.out = NULL,
                         maf = 0.01,
@@ -95,15 +196,17 @@ snp_plinkQC <- function(plink.path, prefix.in,
 #'
 #' Create new *bed*/*bim*/*fam* files by removing samples with PLINK.
 #'
-#' @param plink.path Path to the executable of PLINK 1.9.
+#' @inheritParams snp_plinkQC
 #' @param bedfile.in Path to the input bedfile.
 #' @param bedfile.out Path to the output bedfile.
 #' @inheritParams snp_getSampleInfos
 #'
+#' @seealso [download_plink]
+#'
 #' @return The path of the new bedfile.
 #' @export
 #'
-snp_plinkRmSamples <- function(plink.path,
+snp_plinkRmSamples <- function(plink.path = download_plink(),
                                bedfile.in,
                                bedfile.out,
                                df.or.files,
@@ -147,14 +250,12 @@ snp_plinkRmSamples <- function(plink.path,
 #' [**PLINK 1.9**](https://www.cog-genomics.org/plink2)
 #' using its method-of-moments.
 #'
-#' @param plink.path Path to the executable of PLINK 1.9.
-#' @param bedfile.in Path to the input bedfile.
+#' @inheritParams snp_plinkRmSamples
 #' @param bedfile.out Path to the output bedfile. Default is created by
 #'   appending `"_norel"` to `prefix.in` (`bedfile.in` without extension).
 #' @param pi.hat PI_HAT value threshold for individuals (first by pairs)
 #'   to be excluded. Default is `0.08`.
-#' @param ncores Number of cores to be used. Default is `1`. An usually good
-#'   value for this parameter is `ncores = parallel::detectCores() - 1`.
+#' @inheritParams bigsnpr-package
 #' @param pruning.args A vector of 2 pruning parameters, respectively
 #'   the window size (in variant count) and the pairwise $r^2$ threshold
 #'   (the step size is fixed to 1). Default is `c(100, 0.2)`.
@@ -173,16 +274,18 @@ snp_plinkRmSamples <- function(plink.path,
 #'
 #' @inherit snp_plinkQC references
 #'
-#' @seealso [snp_plinkQC]
+#' @seealso [download_plink] [snp_plinkQC]
 #'
 #' @examples
-#' \dontrun{
-#' # On MY computer, I can do:
-#' plink <- "../plink_linux_x86_64/plink"
-#' bedfile <- "../POPRES_data/POPRES_allchr_QC.bed"
-#' test <- snp_plinkIBDQC(plink, bedfile, ncores = 4)}
-snp_plinkIBDQC <- function(plink.path, bedfile.in,
+#' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+#' test <- snp_plinkIBDQC(bedfile,
+#'                        bedfile.out = tempfile(fileext = ".bed"),
+#'                        ncores = 2)
+#' test
+#'
+snp_plinkIBDQC <- function(bedfile.in,
                            bedfile.out = NULL,
+                           plink.path = download_plink(),
                            pi.hat = 0.08,
                            ncores = 1,
                            pruning.args = c(100, 0.2),
@@ -202,7 +305,6 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
   # get possibly new file
   if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
   if (do.blind.QC) assert_noexist(bedfile.out)
-  prefix.out <- sub("\\.bed$", "", bedfile.out)
 
   # prune if desired
   if (!is.null(pruning.args)) {
@@ -263,8 +365,8 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
 #' - [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html).
 #'
 #' @param beagle.path Path to the executable of Beagle v4+.
-#' @param plink.path Path to the executable of PLINK 1.9.
-#' @param bedfile.in Path to the input bedfile.
+#'   Default downloads it.
+#' @inheritParams snp_plinkRmSamples
 #' @param bedfile.out Path to the output bedfile. Default is created by
 #' appending `"_impute"` to `prefix.in` (`bedfile.in` without extension).
 #' @param memory.max Max memory (in Gb) to be used. It is internally rounded
@@ -279,10 +381,14 @@ snp_plinkIBDQC <- function(plink.path, bedfile.in,
 #' Am J Hum Genet 98:116-126.
 #' \url{dx.doi.org/doi:10.1016/j.ajhg.2015.11.020}
 #'
+#' @seealso [download_plink]
+#'
 #' @return The path of the new bedfile.
 #' @export
-snp_beagleImpute <- function(beagle.path, plink.path, bedfile.in,
+snp_beagleImpute <- function(bedfile.in,
                              bedfile.out = NULL,
+                             beagle.path = download_beagle(),
+                             plink.path = download_plink(),
                              memory.max = 3,
                              ncores = 1,
                              extra.options = "") {

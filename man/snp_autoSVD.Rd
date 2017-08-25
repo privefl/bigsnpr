@@ -49,7 +49,8 @@ a few singular vectors/values.}}
 \item{int.min.size}{Minimum size of intervals of consecutive significant
 indices to be reported as long-range LD region.}
 
-\item{ncores}{Number of cores used. Default doesn't use parallelism.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 }

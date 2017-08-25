@@ -4,11 +4,11 @@
 \alias{snp_plinkRmSamples}
 \title{Remove samples}
 \usage{
-snp_plinkRmSamples(plink.path, bedfile.in, bedfile.out, df.or.files,
-  col.family.ID = 1, col.sample.ID = 2, ...)
+snp_plinkRmSamples(plink.path = download_plink(), bedfile.in, bedfile.out,
+  df.or.files, col.family.ID = 1, col.sample.ID = 2, ...)
 }
 \arguments{
-\item{plink.path}{Path to the executable of PLINK 1.9.}
+\item{plink.path}{Path to the executable of PLINK 1.9. Default downloads it.}
 
 \item{bedfile.in}{Path to the input bedfile.}
 
@@ -35,4 +35,7 @@ The path of the new bedfile.
 }
 \description{
 Create new \emph{bed}/\emph{bim}/\emph{fam} files by removing samples with PLINK.
+}
+\seealso{
+\link{download_plink}
 }

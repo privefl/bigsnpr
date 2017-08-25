@@ -17,7 +17,7 @@ expect_length(snp_indLRLDR(chrs, pos2), ncol(G))
 ind.keep <- snp_pruning(G, chrs)
 
 ind.true <- scan(
-  file = system.file("extdata", "pruning_ct.prune.in", package = "bigsnpr"),
+  file = system.file("testdata", "pruning_ct.prune.in", package = "bigsnpr"),
   what = "",
   quiet = TRUE
 )
@@ -35,7 +35,7 @@ ind.keep <- snp_pruning(G, chrs,
                         thr.r2 = 0.1)
 
 ind.true <- scan(
-  file = system.file("extdata", "pruning_kb.prune.in", package = "bigsnpr"),
+  file = system.file("testdata", "pruning_kb.prune.in", package = "bigsnpr"),
   what = "",
   quiet = TRUE
 )

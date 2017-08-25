@@ -34,7 +34,8 @@ are used. If not specified, all rows are used.\cr
 If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
-\item{ncores}{Number of cores used. Default doesn't use parallelism.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \description{
 Easy-to-use, efficient, flexible and scalable tools

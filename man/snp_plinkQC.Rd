@@ -4,14 +4,14 @@
 \alias{snp_plinkQC}
 \title{Quality Control}
 \usage{
-snp_plinkQC(plink.path, prefix.in, file.type = "--bfile", prefix.out = NULL,
-  maf = 0.01, geno = 0.1, mind = 0.1, hwe = 1e-50,
+snp_plinkQC(prefix.in, plink.path = download_plink(), file.type = "--bfile",
+  prefix.out = NULL, maf = 0.01, geno = 0.1, mind = 0.1, hwe = 1e-50,
   autosome.only = FALSE, extra.options = "")
 }
 \arguments{
-\item{plink.path}{Path to the executable of PLINK 1.9.}
-
 \item{prefix.in}{Prefix (path without extension) of the dataset to be QCed.}
+
+\item{plink.path}{Path to the executable of PLINK 1.9. Default downloads it.}
 
 \item{file.type}{Type of the dataset to be QCed. Default is \code{"--bfile"} and
 corresponds to bed/bim/fam files. You can also use \code{"--file"} for ped/map
@@ -44,18 +44,18 @@ Quality Control (QC) and possible conversion to \emph{bed}/\emph{bim}/\emph{fam}
 using \href{https://www.cog-genomics.org/plink2}{PLINK 1.9}.
 }
 \examples{
-\dontrun{
-# On MY computer, I can do:
-plink <- "../plink_linux_x86_64/plink"
-prefix <- "../POPRES_data/POPRES_allchr"
-test <- snp_plinkQC(plink.path = plink,
-                    prefix.in = prefix,
-                    file.type = "--file", # inputs are ped/map files
+bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+prefix  <- sub("\\\\.bed$", "", bedfile)
+test <- snp_plinkQC(prefix.in = prefix,
+                    prefix.out = tempfile(),
+                    file.type = "--bfile",  # the default (for ".bed")
                     maf = 0.05,
                     geno = 0.05,
                     mind = 0.05,
                     hwe = 1e-10,
-                    autosome.only = TRUE)}
+                    autosome.only = TRUE)
+test
+
 }
 \references{
 Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
@@ -71,5 +71,5 @@ datasets.} GigaScience 4 (1): 7.
 \url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
 }
 \seealso{
-\link{snp_plinkIBDQC}
+\link{download_plink} \link{snp_plinkIBDQC}
 }

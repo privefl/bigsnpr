@@ -16,30 +16,26 @@ test_that("good dimensions", {
 
 test_that("good classes", {
   expect_s3_class(test, "bigSNP")
-  expect_s4_class(test$genotypes, "BM.code.descriptor")
+  expect_s4_class(test$genotypes, "FBM.code256")
   expect_s3_class(test$fam, "data.frame")
   expect_s3_class(test$map, "data.frame")
 })
 
 ################################################################################
 
-X <- attach.BM(test$genotypes)
+G <- test$genotypes
 
 test_that("only missing values", {
-  expect_true(all(is.na(X[,])))
+  expect_true(all(is.na(G[])))
 })
 
 # Modify the genotype `big.matrix`
-X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
+G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
 
-counts <- big_counts(X)
+counts <- big_counts(G)
 
 test_that("counts 0, 1, 2, NA", {
   expect_equal(dim(counts), c(4, m))
 })
-
-################################################################################
-
-rm(X)
 
 ################################################################################

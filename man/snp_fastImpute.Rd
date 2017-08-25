@@ -26,7 +26,8 @@ this imputation model. Default is \code{0.8}.}
 
 \item{seed}{An integer, for reproducibility. Default doesn't use seeds.}
 
-\item{ncores}{Number of cores used. Default doesn't use parallelism.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 A \code{data.frame} with

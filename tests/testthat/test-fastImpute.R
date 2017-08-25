@@ -4,36 +4,36 @@ context("FAST_IMPUTE")
 
 ################################################################################
 
+suppressMessages({
+  library(Matrix)
+  library(foreach)
+  library(magrittr)
+})
+
 bigsnp <- snp_attachExtdata()
 G <- bigsnp$genotypes
-expect_equal(G@code, bigsnpr:::CODE_012)
+expect_equal(G$code256, bigsnpr:::CODE_012)
 corr <- snp_cor(G)
-library(Matrix)
 ind <- which(apply(corr, 2, function(x) max(x[x < 1])) > 0.6)
 
-library(foreach)
 indNA <- foreach(j = ind, .combine = "rbind") %do% {
   cbind(sample(nrow(G), 100), j)
 }
 
 # Create a copy of our bigSNP example
-library(magrittr)
 tmpfile <- tempfile()
 bigsnp.copy <- snp_writeBed(bigsnp, bedfile = paste0(tmpfile, ".bed")) %>%
-  snp_readBed(backingfile = basename(tmpfile),
-              backingpath = dirname(tmpfile)) %>%
+  snp_readBed(backingfile = tmpfile) %>%
   snp_attach()
 # Fill some missing values
 GNA <- bigsnp.copy$genotypes
-XNA <- attach.BM(GNA)
-XNA[indNA] <- as.raw(3)
+GNA[indNA] <- as.raw(3)
 
 ################################################################################
 
 # Fast imputation
 time <- system.time(
-  infos <- snp_fastImpute(GNA, infos.chr = bigsnp$map$chromosome,
-                          p.train = 0.6)
+  infos <- snp_fastImpute(GNA, infos.chr = bigsnp$map$chromosome, p.train = 0.6)
 )
 # expect_lt(time[3], 10)
 

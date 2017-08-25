@@ -17,7 +17,7 @@ obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome,
 # GWAS
 gwas <- big_univLogReg(G, y01.train = y01, covar.train = obj.svd$u)
 pval <- predict(gwas, log10 = FALSE)
-pval2 <- readRDS(system.file("extdata", "pval.rds", package = "bigsnpr"))
+pval2 <- readRDS(system.file("testdata", "pval.rds", package = "bigsnpr"))
 expect_equal(pval, pval2, tolerance = 1e-4)
 
 # clumping
@@ -26,12 +26,13 @@ ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
                          size = 250, # as PLINK default
                          is.size.in.bp = TRUE,
                          infos.pos = test$map$physical.pos)
-ind.keep2 <- readRDS(system.file("extdata", "clumping.rds",
+ind.keep2 <- readRDS(system.file("testdata", "clumping.rds",
                                  package = "bigsnpr"))
 expect_gt(mean(ind.keep %in% ind.keep2), 0.98)
 
 # PRS
 thrs <- seq(0, 5, by = 0.5)
+debug(snp_PRS)
 prs <- snp_PRS(G, betas = gwas$estim,
                ind.test = rows_along(G),
                ind.keep = ind.keep,

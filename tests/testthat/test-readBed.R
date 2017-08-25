@@ -11,7 +11,7 @@ test2 <- gaston::read.bed.matrix(bedfile, verbose = FALSE)
 ################################################################################
 
 test_that("same genotype matrix as gaston", {
-  expect_equivalent(attach.BM(G)[,], as.matrix(test2))
+  expect_equivalent(G[], as.matrix(test2))
   expect_equivalent(test$fam, test2@ped[1:6])
   expect_equivalent(test$map, test2@snps[1:6])
 })
@@ -22,12 +22,12 @@ test_that("good class", {
 
 ################################################################################
 
-path <- sub("\\.bk$", "", bigstatsr:::BM.path(G))
+path <- sub("\\.bk$", "", G$backingfile)
 
 test_that("Error: already exists", {
-  expect_error(snp_readBed(bedfile,
-                           backingfile = basename(path),
-                           backingpath = dirname(path)))
+  expect_error(snp_readBed(bedfile, backingfile = path),
+               sprintf("File '%s' already exists.", paste0(path, ".bk")),
+               fixed = TRUE)
 })
 
 ################################################################################

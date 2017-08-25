@@ -7,13 +7,12 @@ context("PCADAPT") # Need to change tolerances
 bigsnp <- snp_attachExtdata()
 expect_s3_class(bigsnp, "bigSNP")
 G <- bigsnp$genotypes
-expect_s4_class(G, "big.matrix.descriptor")
-expect_s4_class(G, "BM.code.descriptor")
+expect_s4_class(G, "FBM.code256")
 
 ################################################################################
 
 tmpfile <- tempfile(fileext = ".pcadapt")
-write.table(t(attach.BM(G)[]), tmpfile, quote = FALSE, sep = " ",
+write.table(t(G[]), tmpfile, quote = FALSE, sep = " ",
             row.names = FALSE, col.names = FALSE)
 
 obj.pcadapt <- pcadapt::pcadapt(tmpfile, K = 10, min.maf = 0)
@@ -21,7 +20,7 @@ obj.pcadapt <- pcadapt::pcadapt(tmpfile, K = 10, min.maf = 0)
 ################################################################################
 
 obj.svd <- big_SVD(G, snp_scaleBinom())
-test <- bigsnpr:::linRegPcadapt_cpp(attach.BM(G), obj.svd$u,
+test <- bigsnpr:::linRegPcadapt_cpp(G, obj.svd$u,
                                     rows_along(G), cols_along(G))
 
 expect_equal(pmin(obj.svd$means, 2 - obj.svd$means) / 2, obj.pcadapt$maf,

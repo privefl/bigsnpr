@@ -16,7 +16,7 @@ size <- round(runif(1, 1, 200))
 r <- sqrt(0.2)
 t <- r * sqrt((n-2)/(1-r^2))
 
-corr <- bigsnpr:::corMat(BM = attach.BM(G),
+corr <- bigsnpr:::corMat(BM = G,
                          rowInd = ind.row,
                          colInd = ind.col,
                          size = size,
@@ -25,7 +25,7 @@ corr2 <- corr^2
 
 ################################################################################
 
-file.ld <- system.file("extdata", "example.ld", package = "bigsnpr")
+file.ld <- system.file("testdata", "example.ld", package = "bigsnpr")
 true <- data.table::fread(file.ld, data.table = FALSE)
 snps.ind <- sapply(true[, c("SNP_A", "SNP_B")], match,
                    table = paste0("SNP", ind.col - 1))
@@ -46,13 +46,12 @@ test_that("Same correlations as PLINK", {
 ################################################################################
 
 # Correlations with significance levels
-library(Hmisc, warn.conflicts = FALSE, quietly = TRUE)
+suppressMessages(library(Hmisc))
 
 N <- 500
 M <- 100
 test <- snp_fake(N, M)
-X <- attach.BM(test$genotypes)
-X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
+G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
 
 # random parameters
 alpha <- runif(1, 0.01, 0.2)
@@ -60,7 +59,7 @@ ind.row <- sample(N, N / 2)
 ind.col <- sample(M, M / 2)
 m <- length(ind.col)
 
-true <- rcorr(X[ind.row, ind.col])
+true <- Hmisc::rcorr(G[ind.row, ind.col])
 ind <- which(true$P < alpha)
 
 corr <- snp_cor(G = test$genotypes,
@@ -86,9 +85,5 @@ test_that("Same correlations (no diagonal) as Hmisc", {
   expect_equal(corr2[ind], true$r[ind])
   expect_equal(2*length(corr2@i), length(ind))
 })
-
-################################################################################
-
-rm(X)
 
 ################################################################################

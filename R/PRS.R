@@ -31,12 +31,10 @@ snp_PRS <- function(G, betas, ind.test, ind.keep = cols_along(G),
     message("'lpS' or 'thr.list' was not specified. Thresholding disabled.")
     scores.all <- as.matrix(big_prodVec(G, betas[ind.keep], ind.test, ind.keep))
   } else {
-    n.thr <- length(thr.list)
-
-    scores.all <- foreach(ic = 1:n.thr, .combine = 'cbind') %do% {
+    scores.all <- foreach(ic = seq_along(thr.list), .combine = 'cbind') %do% {
 
       ind.col <- intersect(ind.keep, which(lpS > thr.list[ic]))
-      if (length(ind.col)) {
+      if (length(ind.col) > 0) {
         big_prodVec(G, betas[ind.col], ind.test, ind.col)
       } else {
         rep(0, length(ind.test))

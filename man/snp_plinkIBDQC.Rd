@@ -4,23 +4,23 @@
 \alias{snp_plinkIBDQC}
 \title{Identity-by-descent}
 \usage{
-snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL, pi.hat = 0.08,
-  ncores = 1, pruning.args = c(100, 0.2), do.blind.QC = TRUE,
-  extra.options = "")
+snp_plinkIBDQC(bedfile.in, bedfile.out = NULL,
+  plink.path = download_plink(), pi.hat = 0.08, ncores = 1,
+  pruning.args = c(100, 0.2), do.blind.QC = TRUE, extra.options = "")
 }
 \arguments{
-\item{plink.path}{Path to the executable of PLINK 1.9.}
-
 \item{bedfile.in}{Path to the input bedfile.}
 
 \item{bedfile.out}{Path to the output bedfile. Default is created by
 appending \code{"_norel"} to \code{prefix.in} (\code{bedfile.in} without extension).}
 
+\item{plink.path}{Path to the executable of PLINK 1.9. Default downloads it.}
+
 \item{pi.hat}{PI_HAT value threshold for individuals (first by pairs)
 to be excluded. Default is \code{0.08}.}
 
-\item{ncores}{Number of cores to be used. Default is \code{1}. An usually good
-value for this parameter is \code{ncores = parallel::detectCores() - 1}.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 
 \item{pruning.args}{A vector of 2 pruning parameters, respectively
 the window size (in variant count) and the pairwise $r^2$ threshold
@@ -46,11 +46,12 @@ Quality Control based on Identity-by-descent (IBD) computed by
 using its method-of-moments.
 }
 \examples{
-\dontrun{
-# On MY computer, I can do:
-plink <- "../plink_linux_x86_64/plink"
-bedfile <- "../POPRES_data/POPRES_allchr_QC.bed"
-test <- snp_plinkIBDQC(plink, bedfile, ncores = 4)}
+bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+test <- snp_plinkIBDQC(bedfile,
+                       bedfile.out = tempfile(fileext = ".bed"),
+                       ncores = 2)
+test
+
 }
 \references{
 Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
@@ -66,5 +67,5 @@ datasets.} GigaScience 4 (1): 7.
 \url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
 }
 \seealso{
-\link{snp_plinkQC}
+\link{download_plink} \link{snp_plinkQC}
 }

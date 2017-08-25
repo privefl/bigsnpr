@@ -1,6 +1,6 @@
 ################################################################################
 
-#' @import bigmemory bigstatsr
+#' @import bigstatsr
 #' @useDynLib bigsnpr, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #'
@@ -32,6 +32,8 @@
 #' **Don't use negative indices.**
 #'
 #' @param ncores Number of cores used. Default doesn't use parallelism.
+#'   You may use [nb_cores].
+#'
 "_PACKAGE"
 
 ################################################################################
