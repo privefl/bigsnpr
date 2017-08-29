@@ -19,15 +19,15 @@ ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
                          ind.row = ind.train,
                          S = abs(gwas.train$score))
 # -log10(p-values) and thresolding
-summary(lpS <- -predict(gwas.train))
+summary(lpS.keep <- -predict(gwas.train)[ind.keep])
 thrs <- seq(0, 3.5, by = 0.5)
-nb.pred <- sapply(thrs, function(thr) sum(lpS[ind.keep] > thr))
+nb.pred <- sapply(thrs, function(thr) sum(lpS.keep > thr))
 
 # PRS
-prs <- snp_PRS(G, betas = gwas.train$estim,
+prs <- snp_PRS(G, betas.keep = gwas.train$estim[ind.keep],
                ind.test = ind.test,
                ind.keep = ind.keep,
-               lpS = lpS,
+               lpS.keep = lpS.keep,
                thr.list = thrs)
 
 # AUC as a function of the number of predictors

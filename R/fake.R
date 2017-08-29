@@ -12,21 +12,18 @@
 #' @keywords internal
 #'
 #' @examples
-#' N <- 5
-#' M <- 12
-#' (test <- snp_fake(N, M))
+#' (test <- snp_fake(5, 12))
 #'
 #' # The genotype Filebackeg Big Matrix is initialized with missing values
 #' G <- test$genotypes
-#' X[,]
+#' G[]
 #'
 #' # Modify the genotype `big.matrix`
-#' X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
-#' X[,]
-#'
-#' rm(X)
+#' G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
+#' G[]
 #'
 #' @export
+#'
 snp_fake <- function(n, m) {
 
   # constructing a fake genotype big.matrix

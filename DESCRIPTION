@@ -19,12 +19,13 @@ License: GPL-3 + file LICENSE
 LazyData: TRUE
 Depends:
     R (>= 3.2.3), 
-    bigstatsr
+    bigstatsr (>= 0.2.0)
 Imports:
     data.table,
     doParallel,
     foreach, 
     ggplot2,
+    gsubfn,
     magrittr,
     Matrix,
     parallel, 

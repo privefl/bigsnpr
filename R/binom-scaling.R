@@ -7,7 +7,7 @@
 #' @inheritParams bigsnpr-package
 #'
 #' @return A new __function__ that returns a data.frame of two vectors
-#' "mean" and "sd" which are of the length of `ind.col`.
+#' "center" and "scale" which are of the length of `ind.col`.
 #'
 #' @details You will probably not use this function as is but as the
 #' `fun.scaling` parameter of other functions of package `bigstatsr`.
@@ -29,9 +29,9 @@
 #' X <- add_code256(big_copy(a, type = "raw"), code = c(0, 1, 2, rep(NA, 253)))
 #' X.svd <- big_SVD(X, fun.scaling = snp_scaleBinom())
 #' str(X.svd)
-#' plot(X.svd$means)
+#' plot(X.svd$center)
 #' abline(h = 2 * p, col = "red")
-#' plot(X.svd$sds)
+#' plot(X.svd$scale)
 #' abline(h = sqrt(2 * p * (1 - p)), col = "red")
 snp_scaleBinom <- function(nploidy = getOption("bigsnpr.nploidy")) {
 
@@ -45,7 +45,7 @@ snp_scaleBinom <- function(nploidy = getOption("bigsnpr.nploidy")) {
     p <- means / nploidy
     sds <- sqrt(nploidy * p * (1 - p))
 
-    data.frame(mean = means, sd = sds)
+    data.frame(center = means, scale = sds)
   }
 }
 

@@ -23,7 +23,7 @@ obj.svd <- big_SVD(G, snp_scaleBinom())
 test <- bigsnpr:::linRegPcadapt_cpp(G, obj.svd$u,
                                     rows_along(G), cols_along(G))
 
-expect_equal(pmin(obj.svd$means, 2 - obj.svd$means) / 2, obj.pcadapt$maf,
+expect_equal(pmin(obj.svd$center, 2 - obj.svd$center) / 2, obj.pcadapt$maf,
              tolerance = 1e-6)
 expect_equal(abs(cor(obj.svd$v, obj.pcadapt$loadings)), diag(10),
              tolerance = 1e-1, check.attributes = FALSE)

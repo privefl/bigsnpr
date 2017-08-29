@@ -14,7 +14,7 @@ ind.col <- seq_len(m)
 size <- round(runif(1, 1, 200))
 
 r <- sqrt(0.2)
-t <- r * sqrt((n-2)/(1-r^2))
+t <- r * sqrt((length(ind.row)-2)/(1-r^2))
 
 corr <- bigsnpr:::corMat(BM = G,
                          rowInd = ind.row,
@@ -29,15 +29,16 @@ file.ld <- system.file("testdata", "example.ld", package = "bigsnpr")
 true <- data.table::fread(file.ld, data.table = FALSE)
 snps.ind <- sapply(true[, c("SNP_A", "SNP_B")], match,
                    table = paste0("SNP", ind.col - 1))
+stopifnot(all(snps.ind[, 1] < snps.ind[, 2]))
 
-ind.size <- which(abs(snps.ind[, 1] - snps.ind[, 2]) <= size)
+ind.size <- which((snps.ind[, 2] - snps.ind[, 1]) <= size)
 
 library(Matrix)
 corr.true <- as(matrix(0, m, m), "dgCMatrix")
-corr.true[snps.ind[ind.size, ]] <- true$R2[ind.size]
+corr.true[snps.ind[ind.size, , drop = FALSE]] <- true$R2[ind.size]
 
 test_that("Same correlations as PLINK", {
-  expect_equal(corr2@i,   corr.true@i)     # TODO: still a problem?
+  expect_equal(corr2@i,   corr.true@i)
   expect_equal(corr2@p,   corr.true@p)
   expect_equal(corr2@Dim, corr.true@Dim)
   expect_equal(corr2@x,   corr.true@x, tolerance = 1e-6)
@@ -51,6 +52,7 @@ suppressMessages(library(Hmisc))
 N <- 500
 M <- 100
 test <- snp_fake(N, M)
+G <- test$genotypes
 G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
 
 # random parameters
@@ -62,7 +64,7 @@ m <- length(ind.col)
 true <- Hmisc::rcorr(G[ind.row, ind.col])
 ind <- which(true$P < alpha)
 
-corr <- snp_cor(G = test$genotypes,
+corr <- snp_cor(G = G,
                 ind.row = ind.row,
                 ind.col = ind.col,
                 alpha = alpha)

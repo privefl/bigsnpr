@@ -12,7 +12,7 @@ Default is \code{2}, which corresponds to diploidy, such as for the human genome
 }
 \value{
 A new \strong{function} that returns a data.frame of two vectors
-"mean" and "sd" which are of the length of \code{ind.col}.
+"center" and "scale" which are of the length of \code{ind.col}.
 }
 \description{
 Binomial(n, p) scaling where \code{n} is fixed and \code{p} is estimated.
@@ -30,9 +30,9 @@ a[] <- rbinom(length(a), 2, p)
 X <- add_code256(big_copy(a, type = "raw"), code = c(0, 1, 2, rep(NA, 253)))
 X.svd <- big_SVD(X, fun.scaling = snp_scaleBinom())
 str(X.svd)
-plot(X.svd$means)
+plot(X.svd$center)
 abline(h = 2 * p, col = "red")
-plot(X.svd$sds)
+plot(X.svd$scale)
 abline(h = sqrt(2 * p * (1 - p)), col = "red")
 }
 \references{

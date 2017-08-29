@@ -7,9 +7,7 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-inline bool isna(double x) {
-  return x == NA_REAL;
-}
+// R_IsNA: https://stackoverflow.com/a/26262984/6103040
 
 // [[Rcpp::export]]
 SEXP corMat(Environment BM,
@@ -40,7 +38,7 @@ SEXP corMat(Environment BM,
     for (i = 0; i < n; i++) {
       x = macc(i, j);
 
-      if (!isna(x)) {
+      if (!R_IsNA(x)) {
         xSum += x;
         xxSum += x*x;
       }
@@ -62,17 +60,17 @@ SEXP corMat(Environment BM,
         x = macc(i, j);
         y = macc(i, j0);
 
-        if (isna(y)) {
+        if (R_IsNA(y)) {
           // printf("Missing value at pos (%d, %d)\n", i+1, j0+1); // DEBUG
           N--;
-          if (isna(x)) { // both missing
+          if (R_IsNA(x)) { // both missing
             // nothing to do
           } else { // y is missing but not x
             xSum -= x;
             xxSum -= x*x;
           }
         } else {
-          if (isna(x)) { // x is missing but not y
+          if (R_IsNA(x)) { // x is missing but not y
             ySum -= y;
             yySum -= y*y;
             N--;
@@ -87,8 +85,12 @@ SEXP corMat(Environment BM,
       deno_y = yySum - ySum * ySum / N;
       r = num / sqrt(deno_x * deno_y);
       t = r * sqrt((N - 2) / (1 - r*r));
-      // printf("%f -- %d -- %f -- %f\n", r, N, t, thr[N-1]); // DEBUG
-      if (abs(t) > thr[N-1]) corr(j, j0) = r;
+      // printf("%f -- %d -- %f -- %f\n", r, N, std::abs(t), thr[N-1]); // DEBUG
+      // printf(" = %d\n", N); // DEBUG
+      // if (r*r > 0.2) corr(j, j0) = r; // DEBUG
+
+      // abs() is converting to int...
+      if (std::abs(t) > thr[N-1]) corr(j, j0) = r;
     }
   }
 

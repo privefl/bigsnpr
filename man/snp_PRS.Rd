@@ -4,7 +4,7 @@
 \alias{snp_PRS}
 \title{PRS}
 \usage{
-snp_PRS(G, betas, ind.test, ind.keep = cols_along(G), lpS = NULL,
+snp_PRS(G, betas.keep, ind.test, ind.keep = cols_along(G), lpS.keep = NULL,
   thr.list = 0)
 }
 \arguments{
@@ -12,7 +12,8 @@ snp_PRS(G, betas, ind.test, ind.keep = cols_along(G), lpS = NULL,
 (typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
 
-\item{betas}{Numeric vector of weights associated with each SNP.
+\item{betas.keep}{Numeric vector of weights associated with each SNP
+corresponding to \code{ind.keep}.
 You may want to see \link{big_univLinReg} or \link{big_univLogReg}.}
 
 \item{ind.test}{The individuals on whom to project the scores.}
@@ -20,10 +21,10 @@ You may want to see \link{big_univLinReg} or \link{big_univLogReg}.}
 \item{ind.keep}{Column (SNP) indices to use (if using clumping, the
 output of \link{snp_clumping}). Default doesn't clump.}
 
-\item{lpS}{Numeric vector of \code{-log10(p.value)} associated with \code{betas}.
-Default doesn't use thresholding.}
+\item{lpS.keep}{Numeric vector of \code{-log10(p.value)} associated with
+\code{betas.keep}. Default doesn't use thresholding.}
 
-\item{thr.list}{Threshold vector on \code{lpS} at which SNPs are excluded if
+\item{thr.list}{Threshold vector on \code{lpS.keep} at which SNPs are excluded if
 they are not significant enough. Default doesn't use thresholding.}
 }
 \value{
@@ -55,15 +56,15 @@ ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
                          ind.row = ind.train,
                          S = abs(gwas.train$score))
 # -log10(p-values) and thresolding
-summary(lpS <- -predict(gwas.train))
+summary(lpS.keep <- -predict(gwas.train)[ind.keep])
 thrs <- seq(0, 3.5, by = 0.5)
-nb.pred <- sapply(thrs, function(thr) sum(lpS[ind.keep] > thr))
+nb.pred <- sapply(thrs, function(thr) sum(lpS.keep > thr))
 
 # PRS
-prs <- snp_PRS(G, betas = gwas.train$estim,
+prs <- snp_PRS(G, betas.keep = gwas.train$estim[ind.keep],
                ind.test = ind.test,
                ind.keep = ind.keep,
-               lpS = lpS,
+               lpS.keep = lpS.keep,
                thr.list = thrs)
 
 # AUC as a function of the number of predictors

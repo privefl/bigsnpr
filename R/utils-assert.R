@@ -54,5 +54,7 @@ assert_exist       <- bigstatsr:::assert_exist
 assert_noexist     <- bigstatsr:::assert_noexist
 # EXTENSION
 assert_ext         <- bigstatsr:::assert_ext
+# LENGTH
+assert_lengths     <- bigstatsr:::assert_lengths
 
 ################################################################################

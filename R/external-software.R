@@ -45,7 +45,7 @@ download_plink <- function(dir = tempdir()) {
   plink.builds <- data.frame(
     url = paste0("https://www.cog-genomics.org", plink.names),
     OS = c(rep("Linux", 2), "Mac", rep("Windows", 2)),
-    arch = c("x86-64", "i686", "x86-64", "x86-64", "i686"),
+    arch = c("x86_64", "i686", "x86_64", "x86_64", "i686"),
     stringsAsFactors = FALSE
   )
 
@@ -93,7 +93,8 @@ download_beagle <- function(dir = tempdir()) {
 
   dest <- file.path(dir, jar)
 
-  if (!file.exists(dest)) download.file(paste0(url, jar), destfile = dest)
+  if (!file.exists(dest))
+    utils::download.file(paste0(url, jar), destfile = dest)
 
   dest
 }

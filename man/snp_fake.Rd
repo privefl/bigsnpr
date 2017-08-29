@@ -26,13 +26,11 @@ M <- 12
 
 # The genotype Filebackeg Big Matrix is initialized with missing values
 G <- test$genotypes
-X[,]
+G[]
 
 # Modify the genotype `big.matrix`
-X[] <- sample(as.raw(0:3), size = length(X), replace = TRUE)
-X[,]
-
-rm(X)
+G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
+G[]
 
 }
 \keyword{internal}

@@ -32,14 +32,13 @@ expect_gt(mean(ind.keep %in% ind.keep2), 0.98)
 
 # PRS
 thrs <- seq(0, 5, by = 0.5)
-debug(snp_PRS)
-prs <- snp_PRS(G, betas = gwas$estim,
+prs <- snp_PRS(G, betas.keep = gwas$estim[ind.keep],
                ind.test = rows_along(G),
                ind.keep = ind.keep,
-               lpS = -predict(gwas),
+               lpS.keep = -predict(gwas)[ind.keep],
                thr.list = thrs)
 expect_equal(dim(prs), c(nrow(G), length(thrs)))
-prs2 <- readRDS(system.file("extdata", "scores-PRS.rds", package = "bigsnpr"))
+prs2 <- readRDS(system.file("testdata", "scores-PRS.rds", package = "bigsnpr"))
 scores.cor <- sapply(cols_along(prs), function(j) cor(prs[, j], prs2[, j]))
 expect_equal(scores.cor, rep(1, length(thrs)),
              tolerance = 1e-3)

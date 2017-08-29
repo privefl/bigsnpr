@@ -62,8 +62,8 @@ A named list (an S3 class "big_SVD") of
 \item \code{v}, the right singular vectors,
 \item \code{niter}, the number of the iteration of the algorithm,
 \item \code{nops}, number of Matrix-Vector multiplications used,
-\item \code{means}, the centering vector,
-\item \code{sds}, the scaling vector.
+\item \code{center}, the centering vector,
+\item \code{scale}, the scaling vector.
 }
 
 Note that to obtain the Principal Components, you must use

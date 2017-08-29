@@ -11,7 +11,7 @@ test2 <- gaston::read.bed.matrix(bedfile, verbose = FALSE)
 ################################################################################
 
 test_that("same genotype matrix as gaston", {
-  expect_equivalent(G[], as.matrix(test2))
+  expect_equivalent(G[], gaston::as.matrix(test2))
   expect_equivalent(test$fam, test2@ped[1:6])
   expect_equivalent(test$map, test2@snps[1:6])
 })

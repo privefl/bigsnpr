@@ -8,6 +8,7 @@ suppressMessages({
   library(Matrix)
   library(foreach)
   library(magrittr)
+  library(dplyr)
 })
 
 bigsnp <- snp_attachExtdata()
@@ -28,6 +29,8 @@ bigsnp.copy <- snp_writeBed(bigsnp, bedfile = paste0(tmpfile, ".bed")) %>%
 # Fill some missing values
 GNA <- bigsnp.copy$genotypes
 GNA[indNA] <- as.raw(3)
+counts <- big_counts(GNA)
+expect_equal(sum(counts[4, ]), nrow(indNA))
 
 ################################################################################
 
@@ -37,11 +40,14 @@ time <- system.time(
 )
 # expect_lt(time[3], 10)
 
-XNA@code <- bigsnpr:::CODE_IMPUTE_PRED
-library(dplyr)
+# Still NAs
+counts <- big_counts(GNA)
+expect_equal(sum(counts[4, ]), nrow(indNA))
+
+GNA$code256 <- bigsnpr:::CODE_IMPUTE_PRED
 infosNA <- data_frame(
   col = indNA[, 2],
-  error =  XNA[indNA] != attach.BM(G)[indNA]
+  error =  GNA[indNA] != G[indNA]
 ) %>%
   group_by(col) %>%
   summarise(nb_err = sum(error)) %>%
