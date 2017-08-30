@@ -2,6 +2,9 @@
 
 context("PARALLEL")
 
+# https://github.com/hadley/testthat/issues/567
+Sys.unsetenv("R_TESTS")
+
 ################################################################################
 
 test <- snp_attachExtdata()
