@@ -63,7 +63,7 @@ test_that("Check new values", {
 # new backing files
 test_that("backing files' names", {
   expect_equal(test3$genotypes$backingfile,
-               sub("\\.bk$", paste0("_sub", k + 1, ".bk"), file))
+               normalizePath(sub("\\.bk$", paste0("_sub", k + 1, ".bk"), file)))
 })
 
 ################################################################################
