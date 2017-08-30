@@ -18,8 +18,7 @@ test2 <- readRDS(rdsfile.copy)
 expect_null(test2$savedIn)
 
 bkfile.copy <- sub("\\.rds$", ".bk", rdsfile.copy)
-expect_error(snp_attach(rdsfile.copy),
-             sprintf("File '%s' doesn't exist.", bkfile.copy), fixed = TRUE)
+expect_error(snp_attach(rdsfile.copy))  # File doesn't exist
 
 expect_true(file.copy(bkfile, bkfile.copy))
 test3 <- snp_attach(rdsfile.copy)

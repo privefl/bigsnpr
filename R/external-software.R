@@ -50,6 +50,7 @@ download_plink <- function(dir = tempdir()) {
   )
 
   myArch <- Sys.info()[["machine"]]
+  if (myArch == "x86-64") myArch <- "x86_64"  # Windows
   url <- subset(plink.builds, OS == myOS & arch == myArch)[["url"]]
 
   utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
