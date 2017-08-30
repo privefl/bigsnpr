@@ -18,12 +18,17 @@ r_check_args: "--no-manual --timings"
 
 env:
  global:
+   - NOT_CRAN: true
    - _R_CHECK_FORCE_SUGGESTS_: false
 
 notifications:
   email:
     on_success: change
     on_failure: change
+
+before_install:
+#  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then brew install llvm; fi
+  - Rscript -e 'Sys.getenv("NOT_CRAN")'
 
 after_success:
   - Rscript -e 'covr::codecov()'

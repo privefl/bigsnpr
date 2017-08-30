@@ -23,6 +23,7 @@ test_that("Sequential and Parallel", {
   expect_equal(snp_clumping(G, CHR),
                snp_clumping(G, CHR, ncores = 2))
 
+  skip_on_cran()
   expect_equal(snp_autoSVD(G, CHR, POS),
                snp_autoSVD(G, CHR, POS, ncores = 2), tolerance = 1e-6)
 })

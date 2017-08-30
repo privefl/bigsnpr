@@ -27,8 +27,11 @@ on_failure:
 
 environment:
   global:
+    _R_CHECK_FORCE_SUGGESTS_: 0
     R_ARCH: x64
     USE_RTOOLS: true
+    NOT_CRAN: true
+    R_CHECK_ARGS: "--no-manual --timings"
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
