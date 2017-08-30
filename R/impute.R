@@ -8,7 +8,7 @@ CODE_IMPUTE_PRED  <- c(0, 1, 2, NA, 0, 1, 2, rep(NA, 249))
 imputeChr <- function(Gna, ind.chr, alpha, size, p.train, seed) {
 
   # reproducibility
-  if (!is.na(seed)) set.seed(seed[attr(ind.chr, "chr")])
+  if (!any(is.na(seed))) set.seed(seed[attr(ind.chr, "chr")])
 
   # init
   X <- Gna$copy(code = CODE_IMPUTE_LABEL)

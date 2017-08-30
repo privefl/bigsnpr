@@ -20,7 +20,7 @@ License: GPL-3 + file LICENSE
 LazyData: TRUE
 Depends:
     R (>= 3.2.3), 
-    bigstatsr (>= 0.2.0)
+    bigstatsr (>= 0.2.1)
 Imports:
     data.table,
     doParallel,
