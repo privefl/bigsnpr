@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -117,7 +118,7 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A new <strong>function</strong> that returns a data.frame of two vectors
-"mean" and "sd" which are of the length of <code>ind.col</code>.</p>
+"center" and "scale" which are of the length of <code>ind.col</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -130,23 +131,23 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
 Patterson N, Price AL, Reich D (2006).
 Population Structure and Eigenanalysis.
 PLoS Genet 2(12): e190.
-<a href = 'http://dx.doi.org/10.1371/journal.pgen.0020190'>http://dx.doi.org/10.1371/journal.pgen.0020190</a>.</p>
+<a href='http://dx.doi.org/10.1371/journal.pgen.0020190'>http://dx.doi.org/10.1371/journal.pgen.0020190</a>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>set.seed</span>(<span class='fl'>1</span>)
 
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fl'>0</span>, <span class='fl'>43</span>, <span class='fl'>17</span>)
+<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fl'>0</span>, <span class='fl'>93</span>, <span class='fl'>170</span>)
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>0.2</span>
 <span class='no'>a</span>[] <span class='kw'>&lt;-</span> <span class='fu'>rbinom</span>(<span class='fu'>length</span>(<span class='no'>a</span>), <span class='fl'>2</span>, <span class='no'>p</span>)
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>as.big.matrix</span>(<span class='no'>a</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"char"</span>, <span class='kw'>shared</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Assignment will down cast from double to char</span>
-#&gt; <span class='warning'>Hint: To remove this warning type:  options(bigmemory.typecast.warning=FALSE)</span></div><div class='input'><span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'>snp_scaleBinom</span>())</div><div class='output co'>#&gt; (1)</div><div class='input'><span class='fu'>str</span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
-#&gt;  $ d    : num [1:10] 10.01 8.95 8.88 8.22 7.42 ...
-#&gt;  $ u    : num [1:43, 1:10] 0.0642 -0.141 -0.2824 -0.2299 0.1668 ...
-#&gt;  $ v    : num [1:17, 1:10] -0.0426 -0.0746 0.2551 -0.1335 -0.0438 ...
-#&gt;  $ means: num [1:17] 0.465 0.395 0.419 0.302 0.465 ...
-#&gt;  $ sds  : num [1:17] 0.597 0.563 0.575 0.507 0.597 ...
-#&gt;  - attr(*, "class")= chr "big_SVD"</div><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>means</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span> * <span class='no'>p</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><img src='snp_scaleBinom-9.png' alt='' width='540' height='400' /><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>sds</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'>sqrt</span>(<span class='fl'>2</span> * <span class='no'>p</span> * (<span class='fl'>1</span> - <span class='no'>p</span>)), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><img src='snp_scaleBinom-12.png' alt='' width='540' height='400' /></pre>
+<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>add_code256</span>(<span class='fu'>big_copy</span>(<span class='no'>a</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"raw"</span>), <span class='kw'>code</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'>rep</span>(<span class='fl'>NA</span>, <span class='fl'>253</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Assignment will down cast from double to raw.</span>
+#&gt; <span class='warning'>Hint: To remove this warning, use options(bigstatsr.typecast.warning = FALSE).</span></div><div class='input'><span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'>snp_scaleBinom</span>())</div><div class='output co'>#&gt; (2)</div><div class='input'><span class='fu'>str</span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
+#&gt;  $ d     : num [1:10] 22.2 21.6 21.5 21.2 20.8 ...
+#&gt;  $ u     : num [1:93, 1:10] 0.0732 -0.0378 -0.0762 0.0364 0.0444 ...
+#&gt;  $ v     : num [1:170, 1:10] 0.1075 -0.0331 0.0592 -0.0504 0.1216 ...
+#&gt;  $ center: num [1:170] 0.419 0.387 0.301 0.43 0.419 ...
+#&gt;  $ scale : num [1:170] 0.576 0.559 0.506 0.581 0.576 ...
+#&gt;  - attr(*, "class")= chr "big_SVD"</div><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>center</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span> * <span class='no'>p</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>scale</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'>sqrt</span>(<span class='fl'>2</span> * <span class='no'>p</span> * (<span class='fl'>1</span> - <span class='no'>p</span>)), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

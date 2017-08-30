@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -163,7 +164,7 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
 #&gt;   lengths: int [1:19] 34 28 15 35 31 25 30 35 35 20 ...
 #&gt;   values : chr [1:19] "POP1" "POP2" "POP3" "POP4" "POP5" "POP6" "POP7" ...</div><div class='input'><span class='co'># Get populations clusters from external files</span>
 <span class='no'>files</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='fu'>paste0</span>(<span class='st'>"cluster"</span>, <span class='fl'>1</span>:<span class='fl'>3</span>), <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='kw'>data.table</span><span class='kw'>::</span><span class='fu'>fread</span>(<span class='no'>files</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt;      POP1   IND0 POP-1-5
+<span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a></span>(<span class='no'>files</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt;      POP1   IND0 POP-1-5
 #&gt;   1: POP1   IND1 POP-1-5
 #&gt;   2: POP1   IND2 POP-1-5
 #&gt;   3: POP1   IND3 POP-1-5
@@ -175,7 +176,7 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
 #&gt; 140: POP5 IND140 POP-1-5
 #&gt; 141: POP5 IND141 POP-1-5
 #&gt; 142: POP5 IND142 POP-1-5</div><div class='input'><span class='co'># need header option</span>
-<span class='kw'>data.table</span><span class='kw'>::</span><span class='fu'>fread</span>(<span class='no'>files</span>[<span class='fl'>1</span>], <span class='kw'>header</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;        V1     V2      V3
+<span class='kw pkg'>data.table</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/data.table/topics/fread'>fread</a></span>(<span class='no'>files</span>[<span class='fl'>1</span>], <span class='kw'>header</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;        V1     V2      V3
 #&gt;   1: POP1   IND0 POP-1-5
 #&gt;   2: POP1   IND1 POP-1-5
 #&gt;   3: POP1   IND2 POP-1-5

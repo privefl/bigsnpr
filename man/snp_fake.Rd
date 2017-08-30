@@ -20,9 +20,7 @@ with missing values.
 Fake a "bigSNP"
 }
 \examples{
-N <- 5
-M <- 12
-(test <- snp_fake(N, M))
+(test <- snp_fake(5, 12))
 
 # The genotype Filebackeg Big Matrix is initialized with missing values
 G <- test$genotypes

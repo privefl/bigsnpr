@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -126,7 +127,7 @@ Typically, the output of big_univLinReg, big_univLogReg or <a href='snp_pcadapt.
 
     <p>A <code>ggplot2</code> object. You can plot it using the <code>print</code> method.
 You can modify it as you wish by adding layers. You might want to read
-<a href = 'http://r4ds.had.co.nz/data-visualisation.html'>this chapter</a>
+<a href='http://r4ds.had.co.nz/data-visualisation.html'>this chapter</a>
 to get more familiar with the package <strong>ggplot2</strong>.</p>
     
 
@@ -138,14 +139,15 @@ to get more familiar with the package <strong>ggplot2</strong>.</p>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'>rnorm</span>(<span class='fu'>nrow</span>(<span class='no'>G</span>))
 
 <span class='no'>gwas</span> <span class='kw'>&lt;-</span> <span class='fu'>big_univLinReg</span>(<span class='no'>G</span>, <span class='no'>y</span>)
-<span class='fu'>snp_qq</span>(<span class='no'>gwas</span>)</div><img src='snp_qq-2.png' alt='' width='540' height='400' /><div class='input'><span class='no'>gwas_gc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>gwas</span>) <span class='co'># change attr(gwas_gc, "transfo")</span>
+<span class='fu'>snp_qq</span>(<span class='no'>gwas</span>)</div><div class='img'><img src='snp_qq-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>gwas_gc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>gwas</span>) <span class='co'># change attr(gwas_gc, "transfo")</span>
 
-<span class='fu'>snp_qq</span>(<span class='no'>gwas_gc</span>)</div><img src='snp_qq-4.png' alt='' width='540' height='400' /><div class='input'><span class='co'># The next plot should be prettier with a real dataset</span>
+<span class='fu'>snp_qq</span>(<span class='no'>gwas_gc</span>)</div><div class='img'><img src='snp_qq-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># The next plot should be prettier with a real dataset</span>
 <span class='fu'><a href='snp_manhattan.html'>snp_manhattan</a></span>(<span class='no'>gwas_gc</span>,
               <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>,
-              <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>physical.pos</span>)</div><img src='snp_qq-6.png' alt='' width='540' height='400' /><div class='input'>
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_qq</span>(<span class='no'>gwas_gc</span>) + <span class='kw'>ggplot2</span><span class='kw'>::</span><span class='fu'>aes</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'>asPlotlyText</span>(<span class='no'>test</span>$<span class='no'>map</span>))
-<span class='co'>## Not run: plotly::ggplotly(p, tooltip = "text")</span></div></pre>
+              <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>physical.pos</span>)</div><div class='img'><img src='snp_qq-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_qq</span>(<span class='no'>gwas_gc</span>) + <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'>asPlotlyText</span>(<span class='no'>test</span>$<span class='no'>map</span>))</div><span class='co'># NOT RUN {</span>
+<span class='kw pkg'>plotly</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/plotly/topics/ggplotly'>ggplotly</a></span>(<span class='no'>p</span>, <span class='kw'>tooltip</span> <span class='kw'>=</span> <span class='st'>"text"</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

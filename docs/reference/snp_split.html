@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -116,8 +117,8 @@ Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></td>
     <tr>
       <th>FUN</th>
       <td><p>The function to be applied. It must take a
-BM.code as first argument and <code>ind.chr</code>, an another argument
-to provide subsetting over SNPs.
+FBM.code256 as first argument and <code>ind.chr</code>,
+an another argument to provide subsetting over SNPs.
 You can access the number of the chromosome by using <code>attr(ind.chr, "chr")</code>.</p></td>
     </tr>
     <tr>
@@ -131,7 +132,8 @@ used to process numeric data. By default, the results are returned in a list.</p
     </tr>
     <tr>
       <th>ncores</th>
-      <td><p>Number of cores used. Default doesn't use parallelism.</p></td>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -188,6 +190,7 @@ to each part (chromosome) and finally combine the results.</p>
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_fastImpute</span></div><div class='output co'>#&gt; function(Gna, infos.chr,
 #&gt;                            alpha = 0.02,
 #&gt;                            size = 500,
+#&gt;                            p.train = 0.8,
 #&gt;                            seed = NA,
 #&gt;                            ncores = 1) {
 #&gt; 

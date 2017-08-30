@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -112,7 +113,7 @@ on mahalanobis distance, as implemented in package <strong>pcadapt</strong>.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>G</th>
-      <td><p>A BM.code.descriptor
+      <td><p>A FBM.code256
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
 <strong>You shouldn't have missing values in your data or SNPs with 0 MAF.</strong></p></td>
     </tr>
@@ -155,8 +156,9 @@ Molecular ecology resources, 17(1), 67-77.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
 <span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>G</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; (2)</div><div class='input'><span class='fu'>plot</span>(<span class='no'>obj.svd</span>) <span class='co'># there seems to be 3 "significant" components</span></div><img src='snp_pcadapt-4.png' alt='' width='540' height='400' /><div class='input'><span class='no'>pcadapt</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>obj.svd</span>$<span class='no'>u</span>[, <span class='fl'>1</span>:<span class='fl'>3</span>])
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>pcadapt</span>))</div><img src='snp_pcadapt-6.png' alt='' width='540' height='400' /></pre>
+<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>G</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; (2)</div><div class='input'><span class='fu'>plot</span>(<span class='no'>obj.svd</span>) <span class='co'># there seems to be 3 "significant" components</span></div><div class='img'><img src='snp_pcadapt-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='no'>pcadapt</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>obj.svd</span>$<span class='no'>u</span>[, <span class='fl'>1</span>:<span class='fl'>3</span>])
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>pcadapt</span>))</div><div class='img'><img src='snp_pcadapt-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

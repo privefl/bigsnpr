@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -110,7 +111,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Gna</th>
-      <td><p>A BM.code.descriptor
+      <td><p>A FBM.code256
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
 You can have missing values in your data.</p></td>
     </tr>
@@ -150,7 +151,7 @@ p-values of each test separately. Thus, they are biased downward.</strong></p>
 
     <p>Zheng, G., Yang, Y., Zhu, X., &amp; Elston, R. (2012).
 Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
-<a href = 'http://dx.doi.org/10.1007/978-1-4614-2245-7_6'>http://dx.doi.org/10.1007/978-1-4614-2245-7_6</a>.</p>
+<a href='http://dx.doi.org/10.1007/978-1-4614-2245-7_6'>http://dx.doi.org/10.1007/978-1-4614-2245-7_6</a>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -159,34 +160,33 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 <span class='co'># constructing a fake genotype big.matrix</span>
 <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>50</span>; <span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='fl'>1200</span>
 <span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span>(<span class='no'>N</span>, <span class='no'>M</span>)
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>attach.BM</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>)
-<span class='no'>X</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='fu'>length</span>(<span class='no'>X</span>), <span class='fl'>TRUE</span>)
-<span class='no'>X</span>[<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='fl'>1</span>:<span class='fl'>10</span>]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-#&gt; [1,]    1    2    0   NA    1    1    0    1    2     2
-#&gt; [2,]    0    2    2   NA    0    1   NA   NA   NA     2
-#&gt; [3,]    0    0    0   NA    0   NA    1   NA    0     0
-#&gt; [4,]    1   NA    0   NA    2    1   NA    0   NA    NA
-#&gt; [5,]   NA    2    0    0    1    2    2    0    1     0
-#&gt; [6,]    2   NA   NA    2   NA    2   NA   NA   NA     0
-#&gt; [7,]    1    0    1   NA    0    0   NA    1   NA    NA
-#&gt; [8,]    1    2   NA    2   NA    0    1   NA    1     2</div><div class='input'><span class='fu'>rm</span>(<span class='no'>X</span>)
-
+<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>genotypes</span>
+<span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>length</span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>G</span>[<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='fl'>1</span>:<span class='fl'>10</span>]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+#&gt; [1,]    1    0    2    0    0    2    0    0    0     2
+#&gt; [2,]    2    0    0    0    2    0   NA    0    0     0
+#&gt; [3,]   NA   NA    0    0   NA    0    0   NA    0     0
+#&gt; [4,]    2   NA   NA    1    1    2    2    0   NA     1
+#&gt; [5,]    2    1   NA    0    1   NA    0    2   NA    NA
+#&gt; [6,]   NA    0   NA    2   NA    0    1   NA    0     2
+#&gt; [7,]    2    1    0    2    1    2    2    1    1     0
+#&gt; [8,]   NA    2    2    0    0    0    2   NA    1     2</div><div class='input'>
 <span class='co'># Specify case/control phenotypes</span>
 <span class='no'>fake</span>$<span class='no'>fam</span>$<span class='no'>affection</span> <span class='kw'>&lt;-</span> <span class='fu'>rep</span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='no'>N</span> / <span class='fl'>2</span>)
 
 <span class='co'># Get MAX3 statistics</span>
 <span class='no'>y01</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
 <span class='fu'>str</span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>))</div><div class='output co'>#&gt; Classes ‘mhtest’ and 'data.frame':	1200 obs. of  1 variable:
-#&gt;  $ score: num  1.87 2.235 0.631 0.892 0.821 ...
+#&gt;  $ score: num  3.976 1.591 0.551 2.22 0.201 ...
 #&gt;  - attr(*, "transfo")=function (x)  
 #&gt;  - attr(*, "predict")=function (xtr)  
-#&gt;   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 99 15 101 3 15 3 99 101
-#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0xc8b8698&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><img src='snp_MAX3-6.png' alt='' width='540' height='400' /><div class='input'><span class='co'># genomic control is not of much help</span>
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><img src='snp_MAX3-8.png' alt='' width='540' height='400' /><div class='input'>
+#&gt;   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 98 15 100 3 15 3 98 100
+#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0x8d78b18&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><div class='img'><img src='snp_MAX3-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><div class='img'><img src='snp_MAX3-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># Armitage trend test (well calibrated because only one test)</span>
 <span class='no'>test2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test2</span>)</div><img src='snp_MAX3-10.png' alt='' width='540' height='400' /><div class='input'>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test2</span>)</div><div class='img'><img src='snp_MAX3-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

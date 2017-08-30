@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -103,15 +104,15 @@
 has not been extensively compared with other imputation methods yet.</strong></p>
     
 
-    <pre class="usage"><span class='fu'>snp_fastImpute</span>(<span class='no'>Gna</span>, <span class='no'>infos.chr</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.02</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_fastImpute</span>(<span class='no'>Gna</span>, <span class='no'>infos.chr</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.02</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>p.train</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Gna</th>
-      <td><p>A BM.code.descriptor
+      <td><p>A FBM.code256
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
 You can have missing values in your data.</p></td>
     </tr>
@@ -122,20 +123,27 @@ Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Type-I error for testing correlations.</p></td>
+      <td><p>Type-I error for testing correlations. Default is <code>0.02</code>.</p></td>
     </tr>
     <tr>
       <th>size</th>
       <td><p>Number of neighbor SNPs to be possibly included in the model
-imputing this particular SNP.</p></td>
+imputing this particular SNP. Default is <code>500</code>.</p></td>
+    </tr>
+    <tr>
+      <th>p.train</th>
+      <td><p>Proportion of non missing genotypes that are used for training
+the imputation model while the rest is used to assess the accuracy of
+this imputation model. Default is <code>0.8</code>.</p></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>An integer, for reproducibility.</p></td>
+      <td><p>An integer, for reproducibility. Default doesn't use seeds.</p></td>
     </tr>
     <tr>
       <th>ncores</th>
-      <td><p>Number of cores used. Default doesn't use parallelism.</p></td>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
     </tr>
     </table>
     

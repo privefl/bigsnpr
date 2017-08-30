@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -113,7 +114,7 @@ which appear in loadings of SVD.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>G</th>
-      <td><p>A BM.code.descriptor
+      <td><p>A FBM.code256
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
 <strong>You shouldn't have missing values in your data or SNPs with 0 MAF.</strong></p></td>
     </tr>
@@ -145,7 +146,7 @@ If not specified, all columns are used.
       <td><p>A function that returns a named list of
 <code>mean</code> and <code>sd</code> for every column, to scale each of their elements
 such as followed: $$\frac{X_{i,j} - mean_j}{sd_j}.$$
-Default is <code>snp_scaleBinom()</code>.</p></td>
+Default is <code><a href='snp_scaleBinom.html'>snp_scaleBinom()</a></code>.</p></td>
     </tr>
     <tr>
       <th>thr.r2</th>
@@ -174,7 +175,8 @@ indices to be reported as long-range LD region.</p></td>
     </tr>
     <tr>
       <th>ncores</th>
-      <td><p>Number of cores used. Default doesn't use parallelism.</p></td>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -190,8 +192,8 @@ indices to be reported as long-range LD region.</p></td>
 <li><p><code>v</code>, the right singular vectors,</p></li>
 <li><p><code>niter</code>, the number of the iteration of the algorithm,</p></li>
 <li><p><code>nops</code>, number of Matrix-Vector multiplications used,</p></li>
-<li><p><code>means</code>, the centering vector,</p></li>
-<li><p><code>sds</code>, the scaling vector.</p></li>
+<li><p><code>center</code>, the centering vector,</p></li>
+<li><p><code>scale</code>, the scaling vector.</p></li>
 </ul>
 
 <p>Note that to obtain the Principal Components, you must use
@@ -215,13 +217,13 @@ to make the SVD computations faster.</p>
 #&gt; 
 #&gt; Converged!</div><div class='input'>
 <span class='fu'>str</span>(<span class='no'>obj.svd</span>)</div><div class='output co'>#&gt; List of 7
-#&gt;  $ d    : num [1:10] 235.4 148 105.5 96.4 94.9 ...
-#&gt;  $ u    : num [1:517, 1:10] 0.0801 0.0798 0.0646 0.0781 0.0818 ...
-#&gt;  $ v    : num [1:4270, 1:10] 0.00174 -0.03142 0.01527 -0.0132 -0.0154 ...
-#&gt;  $ niter: int 10
-#&gt;  $ nops : int 170
-#&gt;  $ means: num [1:4270] 1.59 1.53 1.63 1.09 1.29 ...
-#&gt;  $ sds  : num [1:4270] 0.572 0.601 0.549 0.704 0.677 ...
+#&gt;  $ d     : num [1:10] 235.4 148 105.5 96.4 94.9 ...
+#&gt;  $ u     : num [1:517, 1:10] 0.0801 0.0798 0.0646 0.0781 0.0818 ...
+#&gt;  $ v     : num [1:4270, 1:10] 0.00174 -0.03142 0.01527 -0.0132 -0.0154 ...
+#&gt;  $ niter : int 10
+#&gt;  $ nops  : int 170
+#&gt;  $ center: num [1:4270] 1.59 1.53 1.63 1.09 1.29 ...
+#&gt;  $ scale : num [1:4270] 0.572 0.601 0.549 0.704 0.677 ...
 #&gt;  - attr(*, "class")= chr "big_SVD"
 #&gt;  - attr(*, "subset")= int [1:4270] 2 3 4 5 6 7 8 9 10 11 ...
 #&gt;  - attr(*, "lrldr")='data.frame':	0 obs. of  3 variables:

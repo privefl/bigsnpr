@@ -41,7 +41,7 @@ print(colMeans(X) / 2) # MAF of SNPs
 
 ## Pruning
 
-I then pseudo-convert the SNP matrix in my format `BigSNP` and use my re-implementation of PLINK pruning on this dataset (similar to `--indep-pairwise 10 1 0.2`)
+I then pseudo-convert the SNP matrix in my format `bigSNP` and use my re-implementation of PLINK pruning on this dataset (similar to `--indep-pairwise 10 1 0.2`)
 
 ## Results and conclusion
 
@@ -54,7 +54,7 @@ On the contrary, a clumping approach would consider the SNPs sorted
 (in a decreasing order) by a statistic (here the MAF). So the last SNP
 (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.
 
-So, pruning remove SNPs in a way that can leave regions of the genome with no representative SNP at all.
+So, pruning removes SNPs in a way that can leave regions of the genome with no representative SNP at all.
 
 <!-- ## Acknowledgements  -->
 

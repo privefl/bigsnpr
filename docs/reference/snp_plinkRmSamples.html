@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -102,15 +103,15 @@
     <p>Create new <em>bed</em>/<em>bim</em>/<em>fam</em> files by removing samples with PLINK.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_plinkRmSamples</span>(<span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='no'>bedfile.out</span>, <span class='no'>df.or.files</span>,
-  <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_plinkRmSamples</span>(<span class='kw'>plink.path</span> <span class='kw'>=</span> <span class='fu'><a href='download_plink.html'>download_plink</a></span>(), <span class='no'>bedfile.in</span>, <span class='no'>bedfile.out</span>,
+  <span class='no'>df.or.files</span>, <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>plink.path</th>
-      <td><p>Path to the executable of PLINK 1.9.</p></td>
+      <td><p>Path to the executable of PLINK 1.9. Default downloads it.</p></td>
     </tr>
     <tr>
       <th>bedfile.in</th>
@@ -149,6 +150,10 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
 
     <p>The path of the new bedfile.</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='download_plink.html'>download_plink</a></p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -157,6 +162,8 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
           </ul>
 
   </div>

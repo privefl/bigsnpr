@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -102,7 +103,7 @@
     <p>Function to read bed/bim/fam files into a <a href='bigSNP-class.html'>bigSNP</a>.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='no'>backingfile</span>, <span class='kw'>backingpath</span> <span class='kw'>=</span> <span class='st'>"backingfiles"</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='no'>backingfile</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -114,44 +115,72 @@ You need the corresponding ".bim" and ".fam" in the same directory.</p></td>
     </tr>
     <tr>
       <th>backingfile</th>
-      <td><p>The root name for the backing file(s) for the cache of
-the <a href='bigSNP-class.html'>bigSNP</a> object.</p></td>
-    </tr>
-    <tr>
-      <th>backingpath</th>
-      <td><p>The path to the directory containing the backing files.
-Default is <code>"backingfiles"</code>.</p></td>
+      <td><p>The path (without extension) for the backing file(s)
+for the cache of the <a href='bigSNP-class.html'>bigSNP</a> object.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The path to the RDS file that stores the <code>bigSNP</code> object.
-Note that this function creates two other files which store the
-<code>big.matrix</code> and its descriptor.
+Note that this function creates one other file which stores the values of
+the Filebacked Big Matrix.
 <strong>You shouldn't read from PLINK files more than once.</strong> Instead, use
 <a href='snp_attach.html'>snp_attach</a> to load the "bigSNP" object in any R session from backing files.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>For more information on these formats, please visit
-<a href = 'http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed'>PLINK webpage</a>.
+<a href='http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed'>PLINK webpage</a>.
 For other formats, please use PLINK to convert them in bedfiles,
-which require minimal space to store and are faster to read.
-For example, to convert from a VCF file, use the <code>--vcf</code> option.</p>
+which require minimal space to store and are faster to read. For example,
+to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_plinkQC.html'>snp_plinkQC</a>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/home/privef/Bureau/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
-<span class='co'># Reading the bedfile and storing the data in directory "backingfiles"</span>
-<span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='st'>"test_doc"</span>)</div><div class='output co'>#&gt; <span class='error'>Error: File 'backingfiles/test_doc.bk' already exists.</span></div><div class='input'>
+    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/home/privef/Bureau/thesis/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
+<span class='co'># Reading the bedfile and storing the data in temporary directory</span>
+<span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>())
+
 <span class='co'># Loading the data from backing files</span>
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rds</span>)</div><div class='output co'>#&gt; <span class='error'>Error in path.expand(rdsfile): objet 'rds' introuvable</span></div><div class='input'>
-<span class='fu'>str</span>(<span class='no'>test</span>)</div><div class='output co'>#&gt; <span class='error'>Error in str(test): objet 'test' introuvable</span></div><div class='input'><span class='fu'>dim</span>(<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): objet 'test' introuvable</span></div><div class='input'><span class='fu'>attach.BM</span>(<span class='no'>G</span>)[<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='fl'>1</span>:<span class='fl'>8</span>]</div><div class='output co'>#&gt; <span class='error'>Error in attach.BM(G): objet 'G' introuvable</span></div><div class='input'>
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rds</span>)
 
-
-<span class='co'># cleaning</span>
-<span class='no'>bk</span> <span class='kw'>&lt;-</span> <span class='fu'>sub</span>(<span class='st'>"\\.rds$"</span>, <span class='st'>".bk"</span>, <span class='no'>rds</span>)</div><div class='output co'>#&gt; <span class='error'>Error in sub("\\.rds$", ".bk", rds): objet 'rds' introuvable</span></div><div class='input'><span class='fu'>file.remove</span>(<span class='no'>rds</span>, <span class='no'>bk</span>)</div><div class='output co'>#&gt; <span class='error'>Error in file.remove(rds, bk): objet 'rds' introuvable</span></div></pre>
+<span class='fu'>str</span>(<span class='no'>test</span>)</div><div class='output co'>#&gt; List of 3
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 7 fields
+#&gt;   ..$ extptr     :&lt;externalptr&gt; 
+#&gt;   ..$ nrow       : int 517
+#&gt;   ..$ ncol       : int 4542
+#&gt;   ..$ type       : Named int 1
+#&gt;   .. ..- attr(*, "names")= chr "unsigned char"
+#&gt;   ..$ backingfile: chr "/tmp/RtmpUDxtKC/fileb14609aeb9.bk"
+#&gt;   ..$ address    :&lt;externalptr&gt; 
+#&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
+#&gt;   ..and 20 methods, of which 6 are  possibly relevant:
+#&gt;   ..  copy#envRefClass, initialize, initialize#FBM, save, show#envRefClass,
+#&gt;   ..  show#FBM
+#&gt;  $ fam      :'data.frame':	517 obs. of  6 variables:
+#&gt;   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...
+#&gt;   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...
+#&gt;   ..$ paternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
+#&gt;   ..$ maternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
+#&gt;   ..$ sex        : int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
+#&gt;   ..$ affection  : int [1:517] 1 1 2 1 1 1 1 1 1 1 ...
+#&gt;  $ map      :'data.frame':	4542 obs. of  6 variables:
+#&gt;   ..$ chromosome  : int [1:4542] 1 1 1 1 1 1 1 1 1 1 ...
+#&gt;   ..$ marker.ID   : chr [1:4542] "SNP0" "SNP1" "SNP2" "SNP3" ...
+#&gt;   ..$ genetic.dist: int [1:4542] 0 0 0 0 0 0 0 0 0 0 ...
+#&gt;   ..$ physical.pos: int [1:4542] 112 1098 2089 3107 4091 5091 6107 7103 8090 9074 ...
+#&gt;   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
+#&gt;   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
+#&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'><span class='fu'>dim</span>(<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>)</div><div class='output co'>#&gt; [1]  517 4542</div><div class='input'><span class='no'>G</span>[<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='fl'>1</span>:<span class='fl'>8</span>]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+#&gt; [1,]    2    2    0    2    1    1    2    0
+#&gt; [2,]    1    2    1    2    2    1    2    0
+#&gt; [3,]    2    1    1    2    0    1    2    0
+#&gt; [4,]    2    2    0    2    0    1    2    0
+#&gt; [5,]    1    2    2    2    0    0    1    2
+#&gt; [6,]    2    1    2    2    0    1    2    2
+#&gt; [7,]    2    1    1    2    0    0    1    1
+#&gt; [8,]    1    2    1    1    1    1    2    1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

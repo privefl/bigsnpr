@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>bigsnpr: Predictive Analysis of Massive SNP Arrays — bigsnpr-package • bigsnpr</title>
+<title>bigsnpr: Analysis of Massive SNP Arrays — bigsnpr-package • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -95,12 +96,12 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>bigsnpr: Predictive Analysis of Massive SNP Arrays</h1>
+    <h1>bigsnpr: Analysis of Massive SNP Arrays</h1>
     </div>
 
     
     <p>Easy-to-use, efficient, flexible and scalable tools
-for predictive analysis based on SNP arrays.</p>
+for the analysis of massive SNP arrays.</p>
     
 
     
@@ -109,13 +110,13 @@ for predictive analysis based on SNP arrays.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>G</th>
-      <td><p>A BM.code.descriptor
+      <td><p>A FBM.code256
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
 <strong>You shouldn't have missing values in your data or SNPs with 0 MAF.</strong></p></td>
     </tr>
     <tr>
       <th>Gna</th>
-      <td><p>A BM.code.descriptor
+      <td><p>A FBM.code256
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
 You can have missing values in your data.</p></td>
     </tr>
@@ -153,15 +154,16 @@ If not specified, all columns are used.
     </tr>
     <tr>
       <th>ncores</th>
-      <td><p>Number of cores used. Default doesn't use parallelism.</p></td>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p>Useful links:</p><ul>
-<li><p><a href = 'https://privefl.github.io/bigsnpr'>https://privefl.github.io/bigsnpr</a></p></li>
-<li><p>Report bugs at <a href = 'https://github.com/privefl/bigsnpr/issues'>https://github.com/privefl/bigsnpr/issues</a></p></li>
+<li><p><a href='https://privefl.github.io/bigsnpr'>https://privefl.github.io/bigsnpr</a></p></li>
+<li><p>Report bugs at <a href='https://github.com/privefl/bigsnpr/issues'>https://github.com/privefl/bigsnpr/issues</a></p></li>
 </ul>
     
 

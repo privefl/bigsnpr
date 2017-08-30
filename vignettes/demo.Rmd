@@ -2,15 +2,7 @@
 title: "Demonstration of packages bigsnpr and bigstatsr"
 author: "Florian Privé"
 date: "May 23, 2017"
-output:
-  prettydoc::html_pretty:
-    self_contained: true
-    theme: cayman
-    highlight: github
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+output: html_document
 ---
 
 ## Get genotype file
@@ -29,16 +21,15 @@ bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 ## Read from the PLINK files
 
 ```{r}
-# Load packages bigsnpr, bigstatsr and bigmemory
+# Load packages bigsnpr and bigstatsr
 library(bigsnpr)
-# Read from bed/bim/fam, it will create new files 
-# in relative directory "backingfiles/" by default.
+# Read from bed/bim/fam, it will create new files.
 # Let's put them in an temporary directory for this demo.
 tmpfile <- tempfile()
-snp_readBed(bedfile, backingfile = basename(tmpfile), backingpath = dirname(tmpfile))
+snp_readBed(bedfile, backingfile = tmpfile)
 # Attach the "bigSNP" object in R session
 obj.bigSNP <- snp_attach(paste0(tmpfile, ".rds"))
-# See what it looks like
+# See how it looks like
 str(obj.bigSNP, max.level = 2, strict.width = "cut")
 # Get aliases for useful slots
 G   <- obj.bigSNP$genotypes
@@ -52,7 +43,7 @@ big_counts(G, ind.col = 1:10)
 
 ```{r}
 # Half of the cores you have on your computer
-NCORES <- parallel::detectCores() / 2
+NCORES <- nb_cores()
 # Exclude Long-Range Linkage Disequilibrium Regions of the human genome
 # based on an online table. 
 ind.excl <- snp_indLRLDR(infos.chr = CHR, infos.pos = POS)

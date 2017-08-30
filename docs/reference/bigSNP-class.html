@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>S3 class bigSNP — bigSNP-class • bigsnpr</title>
+<title>Class bigSNP — bigSNP-class • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -95,27 +96,25 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>S3 class bigSNP</h1>
+    <h1>Class bigSNP</h1>
     </div>
 
     
-    <p>A class for representing infos on massive SNP arrays.</p>
+    <p>An S3 class for representing infos on massive SNP arrays.</p>
     
 
         
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>A named list with at least 4 slots:</p><dl class='dl-horizontal'>
-<dt>genotypes</dt><dd><p>A BM.code.descriptor which
-describes a special <code>big.matrix</code> encoded with type <code>raw</code> (one byte
+<dt>genotypes</dt><dd><p>A FBM.code256 which is
+a special Filebacked Big Matrix encoded with type <code>raw</code> (one byte
 unsigned integer), representing genotype calls and possibly imputed
 allele dosages. Rows are individuals and columns are SNPs.</p></dd>
 <dt>fam</dt><dd><p>A <code>data.frame</code> containing some information on the SNPs
 (read from a ".fam" file).</p></dd>
 <dt>map</dt><dd><p>A <code>data.frame</code> giving some information on the individuals
 (read from a ".bim" file).</p></dd>
-<dt>savedIn</dt><dd><p>The ".rds" file path where this object is stored. The
-backingfile of the <code>big.matrix</code> should be in the same directory.</p></dd>
 </dl>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

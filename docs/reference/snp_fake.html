@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -119,64 +120,57 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A new temporary <code>bigSNP</code> object representing <code>n</code> individuals and
-<code>m</code> SNPs. The genotype <code>big.matrix</code> is initialized with missing values.</p>
+    <p>A new temporary <code>bigSNP</code> object representing <code>n</code> individuals
+and <code>m</code> SNPs. The genotype Filebacked Big Matrix is initialized
+with missing values.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>5</span>
-<span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='fl'>12</span>
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_fake</span>(<span class='no'>N</span>, <span class='no'>M</span>)
-<span class='fu'>str</span>(<span class='no'>test</span>)</div><div class='output co'>#&gt; List of 4
-#&gt;  $ genotypes:Formal class 'BM.code.descriptor' [package "bigstatsr"] with 2 slots
-#&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   .. ..@ description:List of 13
-#&gt;   .. .. ..$ sharedType: chr "FileBacked"
-#&gt;   .. .. ..$ filename  : chr "file3a3a162fb0bc.bk"
-#&gt;   .. .. ..$ dirname   : chr "/tmp/RtmpbxbvnH/"
-#&gt;   .. .. ..$ totalRows : num 5
-#&gt;   .. .. ..$ totalCols : num 12
-#&gt;   .. .. ..$ rowOffset : num 0
-#&gt;   .. .. ..$ colOffset : num 0
-#&gt;   .. .. ..$ nrow      : num 5
-#&gt;   .. .. ..$ ncol      : num 12
-#&gt;   .. .. ..$ rowNames  : NULL
-#&gt;   .. .. ..$ colNames  : NULL
-#&gt;   .. .. ..$ type      : chr "raw"
-#&gt;   .. .. ..$ separated : logi FALSE
-#&gt;  $ fam      :'data.frame':	5 obs. of  6 variables:
-#&gt;   ..$ family.ID  : int [1:5] 0 0 0 0 0
-#&gt;   ..$ sample.ID  : chr [1:5] "ind_1" "ind_2" "ind_3" "ind_4" ...
-#&gt;   ..$ paternal.ID: int [1:5] 0 0 0 0 0
-#&gt;   ..$ maternal.ID: int [1:5] 0 0 0 0 0
-#&gt;   ..$ sex        : int [1:5] 0 0 0 0 0
-#&gt;   ..$ affection  : int [1:5] -9 -9 -9 -9 -9
-#&gt;  $ map      :'data.frame':	12 obs. of  6 variables:
-#&gt;   ..$ chromosome  : int [1:12] 1 1 1 1 1 1 1 1 1 1 ...
-#&gt;   ..$ marker.ID   : chr [1:12] "snp_1" "snp_2" "snp_3" "snp_4" ...
-#&gt;   ..$ genetic.dist: int [1:12] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..$ physical.pos: int [1:12] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..$ allele1     : chr [1:12] "A" "A" "A" "T" ...
-#&gt;   ..$ allele2     : chr [1:12] "T" "T" "T" "A" ...
-#&gt;  $ savedIn  : chr "/tmp/RtmpbxbvnH//file3a3a162fb0bc.rds"
-#&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
-<span class='co'># The genotype `big.matrix` is initialized with missing values</span>
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>attach.BM</span>(<span class='no'>test</span>$<span class='no'>genotypes</span>)
-<span class='no'>X</span>[,]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+    <pre class="examples"><div class='input'>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_fake</span>(<span class='fl'>5</span>, <span class='fl'>12</span>))</div><div class='output co'>#&gt; $genotypes
+#&gt; A Filebacked Big Matrix of type 'code 256' with 5 rows and 12 columns.
+#&gt; 
+#&gt; $fam
+#&gt;   family.ID sample.ID paternal.ID maternal.ID sex affection
+#&gt; 1         0     ind_1           0           0   0        -9
+#&gt; 2         0     ind_2           0           0   0        -9
+#&gt; 3         0     ind_3           0           0   0        -9
+#&gt; 4         0     ind_4           0           0   0        -9
+#&gt; 5         0     ind_5           0           0   0        -9
+#&gt; 
+#&gt; $map
+#&gt;    chromosome marker.ID genetic.dist physical.pos allele1 allele2
+#&gt; 1           1     snp_1            0            0       T       A
+#&gt; 2           1     snp_2            0            0       T       A
+#&gt; 3           1     snp_3            0            0       A       T
+#&gt; 4           1     snp_4            0            0       A       T
+#&gt; 5           1     snp_5            0            0       T       A
+#&gt; 6           1     snp_6            0            0       A       T
+#&gt; 7           1     snp_7            0            0       A       T
+#&gt; 8           1     snp_8            0            0       A       T
+#&gt; 9           1     snp_9            0            0       A       T
+#&gt; 10          1    snp_10            0            0       T       A
+#&gt; 11          1    snp_11            0            0       T       A
+#&gt; 12          1    snp_12            0            0       T       A
+#&gt; 
+#&gt; attr(,"class")
+#&gt; [1] "bigSNP"</div><div class='input'>
+<span class='co'># The genotype Filebackeg Big Matrix is initialized with missing values</span>
+<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
+<span class='no'>G</span>[]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
 #&gt; [1,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
 #&gt; [2,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
 #&gt; [3,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
 #&gt; [4,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA
 #&gt; [5,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</div><div class='input'>
 <span class='co'># Modify the genotype `big.matrix`</span>
-<span class='no'>X</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>length</span>(<span class='no'>X</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>X</span>[,]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-#&gt; [1,]    1    2    1    0    1    2    1   NA    2     0     1     1
-#&gt; [2,]   NA    1    1    1   NA    1   NA    2    0     1    NA     0
-#&gt; [3,]    1    2    1    0   NA    0    2    0    0     0     0     0
-#&gt; [4,]    0    2    2    1   NA    0    1    0    0     1     2     1
-#&gt; [5,]    1    2   NA    0    1    1    1   NA    1     0    NA     0</div><div class='input'>
-<span class='fu'>rm</span>(<span class='no'>X</span>)</div></pre>
+<span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>length</span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>G</span>[]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+#&gt; [1,]    2   NA    2    1    1    0   NA    1    1     2     1    NA
+#&gt; [2,]    1    1    0   NA    0    2    2    2    0     2     1     0
+#&gt; [3,]   NA   NA    1    1   NA    1    2    2    0     1     2    NA
+#&gt; [4,]    1   NA    1    1    2   NA   NA    1    0    NA     1     1
+#&gt; [5,]    2    0    0    2   NA    2    0   NA    1     1     1    NA</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

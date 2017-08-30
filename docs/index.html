@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Predictive Analysis of Massive SNP Arrays • bigsnpr</title>
+<title>Analysis of Massive SNP Arrays • bigsnpr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
@@ -39,10 +39,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="articles/demo.html">Small demo</a>
+      <a href="articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -78,12 +78,20 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#bigsnpr" class="anchor"></a>bigsnpr</h1></div>
 <p><strong>bignspr</strong> is an R Package for the analysis of massive SNP arrays. It enhances the features of <a href="https://privefl.github.io/bigstatsr">package <strong>bigstatsr</strong></a> for the purpose of analysing genotype data.</p>
+<p><a href="https://privefl.github.io/bigsnpr/articles/demo.html">Quick demo</a></p>
 <p><a href="https://privefl.github.io/bigsnpr/reference/index.html"><strong>LIST OF FEATURES</strong></a></p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>For now, you can install this package using</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"privefl/bigsnpr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># For the CRAN version</span>
+## Coming soon
+
+<span class="co"># For the current development version</span>
+devtools::<span class="kw">install_github</span>(<span class="st">"privefl/bigsnpr"</span>)
+
+<span class="co"># For the first version (depending on package bigmemory)</span>
+devtools::<span class="kw">install_github</span>(<span class="st">"privefl/bigstatsr"</span>, <span class="dt">ref =</span> <span class="st">"v-bigmemory"</span>)
+devtools::<span class="kw">install_github</span>(<span class="st">"privefl/bigsnpr"</span>,   <span class="dt">ref =</span> <span class="st">"v-bigmemory"</span>)</code></pre></div>
 </div>
 <div id="input-format" class="section level2">
 <h2 class="hasAnchor">
@@ -92,7 +100,7 @@
 <p>I use a class called <code>bigSNP</code> for representing infos on massive SNP arrays. One <code>bigSNP</code> has at least 3 elements:</p>
 <ul>
 <li>
-<code>genotypes</code>: A <code>BM.code.descriptor</code> which describes a special <code>big.matrix</code> (see <a href="https://privefl.github.io/bigstatsr/#input-format">package <strong>bigstatsr</strong></a>). Rows are samples and columns are SNPs. This corresponds to the “bed” file, but each element is encoded on 8 bits rather than only 2 bits for PLINK files, which allows for storing more information, without taking too much disk space.</li>
+<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are SNPs. This corresponds to the “bed” file, but each element is encoded on 8 bits rather than only 2 bits for PLINK binary files, which allows for storing more information, without taking too much disk space.</li>
 <li>
 <code>fam</code>: A <code>data.frame</code> containing some information on the SNPs (read from the “.fam” file).</li>
 <li>
@@ -104,16 +112,15 @@
 <a href="#possible-upcoming-features" class="anchor"></a>Possible upcoming features</h2>
 <ul>
 <li>Support for other input formats. Note that there is room for coding <strong>allele dosages</strong> (rounded to two decimal places). See <code>bigsnpr:::CODE_DOSAGE</code>.</li>
-<li>Fast imputation algorithm which doesn’t require reference panels.</li>
-<li>Imputation probabilities and multiple imputation.</li>
+<li>Imputation of probabilities and multiple imputation.</li>
 <li>An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only, others?).</li>
-<li>proper integration of haploid species.</li>
+<li>Proper integration of haploid species.</li>
 </ul>
 </div>
 <div id="bug-report" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-report" class="anchor"></a>Bug report</h2>
-<p>Please open an issue if you find a bug. If you want help using <strong>bigmemory</strong> or <strong>bigstatsr</strong>, please post on Stack Overflow with the tag <em>r-bigmemory</em>. <a href="https://stackoverflow.com/q/5963269/6103040">How to make a great R reproducible example?</a></p>
+<p>Please open an issue if you find a bug. If you want help using <strong>bigstatsr</strong>, please post on Stack Overflow with the tag <em>bigstatsr</em> (not yet created). <a href="https://stackoverflow.com/q/5963269/6103040">How to make a great R reproducible example?</a></p>
 </div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
@@ -133,7 +140,7 @@
 </li>
 </ul>
 <h2>License</h2>
-<p><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> + file <a href="LICENSE">LICENSE</a></p>
+<p><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> + file <a href="LICENSE.html">LICENSE</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">
 <li>Florian Privé <br><small class="roles"> Author, maintainer </small> </li>
@@ -142,6 +149,7 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/privefl/bigsnpr"><img src="https://travis-ci.org/privefl/bigsnpr.svg?branch=master" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://ci.appveyor.com/project/privefl/bigsnpr"><img src="https://ci.appveyor.com/api/projects/status/github/privefl/bigsnpr?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
 <li><a href="https://codecov.io/github/privefl/bigsnpr?branch=master"><img src="https://img.shields.io/codecov/c/github/privefl/bigsnpr/master.svg" alt="Coverage Status"></a></li>
 <li><a href="http://cran.r-project.org/package=bigsnpr"><img src="http://www.r-pkg.org/badges/version/bigsnpr" alt="CRAN_Status_Badge"></a></li>
 </ul>

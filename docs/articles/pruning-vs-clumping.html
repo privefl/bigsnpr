@@ -39,10 +39,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -142,14 +142,14 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 <div id="pruning" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pruning" class="anchor"></a>Pruning</h2>
-<p>I then pseudo-convert the SNP matrix in my format <code>BigSNP</code> and use my re-implementation of PLINK pruning on this dataset (similar to <code>--indep-pairwise 10 1 0.2</code>)</p>
+<p>I then pseudo-convert the SNP matrix in my format <code>bigSNP</code> and use my re-implementation of PLINK pruning on this dataset (similar to <code>--indep-pairwise 10 1 0.2</code>)</p>
 </div>
 <div id="results-and-conclusion" class="section level2">
 <h2 class="hasAnchor">
 <a href="#results-and-conclusion" class="anchor"></a>Results and conclusion</h2>
 <p>The first SNP is pruned because of its correlation with the second. The second SNP is pruned because of its correlation with the third and so on. In the end, only the last SNP (10th) is kept with the LD pruning procedure of PLINK, which corresponds to less than 18% of the total variance.</p>
 <p>On the contrary, a clumping approach would consider the SNPs sorted (in a decreasing order) by a statistic (here the MAF). So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.</p>
-<p>So, pruning remove SNPs in a way that can leave regions of the genome with no representative SNP at all.</p>
+<p>So, pruning removes SNPs in a way that can leave regions of the genome with no representative SNP at all.</p>
 <!-- ## Acknowledgements  -->
 <!-- I thank Michael G.B. Blum and Hugues Aschard, my two thesis supervisors, for thoughtful comments. -->
 </div>
@@ -158,7 +158,8 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
-      <h2>Contents</h2>
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#simulation">Simulation</a></li>
       <li><a href="#pruning">Pruning</a></li>

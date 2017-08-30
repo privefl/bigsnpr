@@ -4,7 +4,7 @@
 \name{bigsnpr-package}
 \alias{bigsnpr}
 \alias{bigsnpr-package}
-\title{bigsnpr: Predictive Analysis of Massive SNP Arrays}
+\title{bigsnpr: Analysis of Massive SNP Arrays}
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
@@ -39,7 +39,7 @@ You may use \link{nb_cores}.}
 }
 \description{
 Easy-to-use, efficient, flexible and scalable tools
-for predictive analysis based on SNP arrays.
+for the analysis of massive SNP arrays.
 }
 \seealso{
 Useful links:

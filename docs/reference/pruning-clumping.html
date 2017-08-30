@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -101,7 +102,7 @@
     
     <p>For a <code>bigSNP</code>:</p><ul>
 <li><p><code>snp_pruning</code>: LD pruning. Similar to "<code>--indep-pairwise (size+1) 1 thr.r2</code>"
-in <a href = 'https://www.cog-genomics.org/plink/1.9/ld'>PLINK</a>.
+in <a href='https://www.cog-genomics.org/plink/1.9/ld'>PLINK</a>.
 (<code>step</code> is fixed to 1).</p></li>
 <li><p><code>snp_clumping</code>: LD clumping.</p></li>
 <li><p><code>snp_indLRLDR</code>: Get SNP indices of long-range LD regions for the
@@ -124,7 +125,7 @@ human genome.</p></li>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>G</th>
-      <td><p>A BM.code.descriptor
+      <td><p>A FBM.code256
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).
 <strong>You shouldn't have missing values in your data or SNPs with 0 MAF.</strong></p></td>
     </tr>
@@ -182,7 +183,8 @@ can be for thresholding with respect to p-values associated with <code>S</code>.
     </tr>
     <tr>
       <th>ncores</th>
-      <td><p>Number of cores used. Default doesn't use parallelism.</p></td>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
     </tr>
     <tr>
       <th>nploidy</th>
@@ -193,7 +195,7 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
       <th>LD.regions</th>
       <td><p>A <code>data.frame</code> with columns "Chr", "Start" and "Stop".
 Default use the table of 34 long-range LD regions that you can find
-<a href = 'https://goo.gl/0Ou7uI'>there</a>.</p></td>
+<a href='https://goo.gl/0Ou7uI'>there</a>.</p></td>
     </tr>
     </table>
     
@@ -210,14 +212,14 @@ Default use the table of 34 long-range LD regions that you can find
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>I recommend to use clumping rather than pruning. See
-<a href = 'https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html'>this article</a>.</p>
+<a href='https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html'>this article</a>.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Price AL, Weale ME, Patterson N, et al.
 Long-Range LD Can Confound Genome Scans in Admixed Populations.
 Am J Hum Genet. 2008;83(1):132-135.
-<a href = 'http://dx.doi.org/10.1016/j.ajhg.2008.06.005'>http://dx.doi.org/10.1016/j.ajhg.2008.06.005</a></p>
+<a href='http://dx.doi.org/10.1016/j.ajhg.2008.06.005'>http://dx.doi.org/10.1016/j.ajhg.2008.06.005</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

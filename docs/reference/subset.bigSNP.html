@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -104,7 +105,7 @@ This new <code>bigSNP</code> will also be backed by files (in the same directory
     
 
     <pre class="usage"><span class='co'># S3 method for bigSNP</span>
-<span class='fu'>subset</span>(<span class='no'>x</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>X</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>X</span>),
+<span class='fu'>subset</span>(<span class='no'>x</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
   <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -145,23 +146,19 @@ input bigSNP backing files.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>str</span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>())</div><div class='output co'>#&gt; List of 4
-#&gt;  $ genotypes:Formal class 'BM.code.descriptor' [package "bigstatsr"] with 2 slots
-#&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   .. ..@ description:List of 13
-#&gt;   .. .. ..$ sharedType: chr "FileBacked"
-#&gt;   .. .. ..$ filename  : chr "file3a3a1a2f642d.bk"
-#&gt;   .. .. ..$ dirname   : chr "/tmp/RtmpbxbvnH/"
-#&gt;   .. .. ..$ totalRows : num 517
-#&gt;   .. .. ..$ totalCols : num 4542
-#&gt;   .. .. ..$ rowOffset : num 0
-#&gt;   .. .. ..$ colOffset : num 0
-#&gt;   .. .. ..$ nrow      : num 517
-#&gt;   .. .. ..$ ncol      : num 4542
-#&gt;   .. .. ..$ rowNames  : NULL
-#&gt;   .. .. ..$ colNames  : NULL
-#&gt;   .. .. ..$ type      : chr "raw"
-#&gt;   .. .. ..$ separated : logi FALSE
+    <pre class="examples"><div class='input'><span class='fu'>str</span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>())</div><div class='output co'>#&gt; List of 3
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 7 fields
+#&gt;   ..$ extptr     :&lt;externalptr&gt; 
+#&gt;   ..$ nrow       : int 517
+#&gt;   ..$ ncol       : int 4542
+#&gt;   ..$ type       : Named int 1
+#&gt;   .. ..- attr(*, "names")= chr "unsigned char"
+#&gt;   ..$ backingfile: chr "/tmp/RtmpUDxtKC/fileb1478ee7a69.bk"
+#&gt;   ..$ address    :&lt;externalptr&gt; 
+#&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
+#&gt;   ..and 20 methods, of which 6 are  possibly relevant:
+#&gt;   ..  copy#envRefClass, initialize, initialize#FBM, save, show#envRefClass,
+#&gt;   ..  show#FBM
 #&gt;  $ fam      :'data.frame':	517 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...
 #&gt;   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...
@@ -176,27 +173,22 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:4542] 112 1098 2089 3107 4091 5091 6107 7103 8090 9074 ...
 #&gt;   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
 #&gt;   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
-#&gt;  $ savedIn  : chr "/tmp/RtmpbxbvnH/file3a3a1a2f642d.rds"
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 <span class='co'># keep only first 50 samples and SNPs</span>
 <span class='no'>rdsfile</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>)
-<span class='fu'>str</span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile</span>))</div><div class='output co'>#&gt; List of 4
-#&gt;  $ genotypes:Formal class 'BM.code.descriptor' [package "bigstatsr"] with 2 slots
-#&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   .. ..@ description:List of 13
-#&gt;   .. .. ..$ sharedType: chr "FileBacked"
-#&gt;   .. .. ..$ filename  : chr "file3a3a1a2f642d_sub1.bk"
-#&gt;   .. .. ..$ dirname   : chr "/tmp/RtmpbxbvnH/"
-#&gt;   .. .. ..$ totalRows : num 50
-#&gt;   .. .. ..$ totalCols : num 50
-#&gt;   .. .. ..$ rowOffset : num 0
-#&gt;   .. .. ..$ colOffset : num 0
-#&gt;   .. .. ..$ nrow      : num 50
-#&gt;   .. .. ..$ ncol      : num 50
-#&gt;   .. .. ..$ rowNames  : NULL
-#&gt;   .. .. ..$ colNames  : NULL
-#&gt;   .. .. ..$ type      : chr "raw"
-#&gt;   .. .. ..$ separated : logi FALSE
+<span class='fu'>str</span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile</span>))</div><div class='output co'>#&gt; List of 3
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 7 fields
+#&gt;   ..$ extptr     :&lt;externalptr&gt; 
+#&gt;   ..$ nrow       : int 50
+#&gt;   ..$ ncol       : int 50
+#&gt;   ..$ type       : Named int 1
+#&gt;   .. ..- attr(*, "names")= chr "unsigned char"
+#&gt;   ..$ backingfile: chr "/tmp/RtmpUDxtKC/fileb1478ee7a69_sub1.bk"
+#&gt;   ..$ address    :&lt;externalptr&gt; 
+#&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
+#&gt;   ..and 20 methods, of which 6 are  possibly relevant:
+#&gt;   ..  copy#envRefClass, initialize, initialize#FBM, save, show#envRefClass,
+#&gt;   ..  show#FBM
 #&gt;  $ fam      :'data.frame':	50 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:50] "POP1" "POP1" "POP1" "POP1" ...
 #&gt;   ..$ sample.ID  : chr [1:50] "IND0" "IND1" "IND2" "IND3" ...
@@ -211,27 +203,22 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:50] 112 1098 2089 3107 4091 5091 6107 7103 8090 9074 ...
 #&gt;   ..$ allele1     : chr [1:50] "A" "T" "T" "T" ...
 #&gt;   ..$ allele2     : chr [1:50] "T" "A" "A" "A" ...
-#&gt;  $ savedIn  : chr "/tmp/RtmpbxbvnH/file3a3a1a2f642d_sub1.rds"
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 <span class='co'># remove only first 50 samples and SNPs</span>
 <span class='no'>rdsfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>))
-<span class='fu'>str</span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile2</span>))</div><div class='output co'>#&gt; List of 4
-#&gt;  $ genotypes:Formal class 'BM.code.descriptor' [package "bigstatsr"] with 2 slots
-#&gt;   .. ..@ code       : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   .. ..@ description:List of 13
-#&gt;   .. .. ..$ sharedType: chr "FileBacked"
-#&gt;   .. .. ..$ filename  : chr "file3a3a1a2f642d_sub2.bk"
-#&gt;   .. .. ..$ dirname   : chr "/tmp/RtmpbxbvnH/"
-#&gt;   .. .. ..$ totalRows : num 467
-#&gt;   .. .. ..$ totalCols : num 4492
-#&gt;   .. .. ..$ rowOffset : num 0
-#&gt;   .. .. ..$ colOffset : num 0
-#&gt;   .. .. ..$ nrow      : num 467
-#&gt;   .. .. ..$ ncol      : num 4492
-#&gt;   .. .. ..$ rowNames  : NULL
-#&gt;   .. .. ..$ colNames  : NULL
-#&gt;   .. .. ..$ type      : chr "raw"
-#&gt;   .. .. ..$ separated : logi FALSE
+<span class='fu'>str</span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile2</span>))</div><div class='output co'>#&gt; List of 3
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 7 fields
+#&gt;   ..$ extptr     :&lt;externalptr&gt; 
+#&gt;   ..$ nrow       : int 467
+#&gt;   ..$ ncol       : int 4492
+#&gt;   ..$ type       : Named int 1
+#&gt;   .. ..- attr(*, "names")= chr "unsigned char"
+#&gt;   ..$ backingfile: chr "/tmp/RtmpUDxtKC/fileb1478ee7a69_sub2.bk"
+#&gt;   ..$ address    :&lt;externalptr&gt; 
+#&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
+#&gt;   ..and 20 methods, of which 6 are  possibly relevant:
+#&gt;   ..  copy#envRefClass, initialize, initialize#FBM, save, show#envRefClass,
+#&gt;   ..  show#FBM
 #&gt;  $ fam      :'data.frame':	467 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:467] "POP2" "POP2" "POP2" "POP2" ...
 #&gt;   ..$ sample.ID  : chr [1:467] "IND50" "IND51" "IND52" "IND53" ...
@@ -246,7 +233,6 @@ input bigSNP backing files.</p>
 #&gt;   ..$ physical.pos: int [1:4492] 50100 51109 52101 53106 54101 55097 56103 57110 58101 59088 ...
 #&gt;   ..$ allele1     : chr [1:4492] "A" "A" "A" "T" ...
 #&gt;   ..$ allele2     : chr [1:4492] "T" "T" "T" "A" ...
-#&gt;  $ savedIn  : chr "/tmp/RtmpbxbvnH/file3a3a1a2f642d_sub2.rds"
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 </div></pre>
   </div>

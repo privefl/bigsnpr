@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -61,10 +62,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/demo.html">Small demo</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
   </ul>
 </li>
@@ -103,7 +104,7 @@
 This will use the slot <code>code</code> <strong>rounded</strong> to write 0s, 1s, 2s or NAs.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_writeBed</span>(<span class='no'>x</span>, <span class='no'>bedfile</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>X</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>X</span>))</pre>
+    <pre class="usage"><span class='fu'>snp_writeBed</span>(<span class='no'>x</span>, <span class='no'>bedfile</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -140,28 +141,22 @@ If not specified, all columns are used.
 <span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='fl'>911</span>
 
 <span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span>(<span class='no'>N</span>, <span class='no'>M</span>)
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>attach.BM</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>)
-<span class='no'>X</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='fu'>length</span>(<span class='no'>X</span>), <span class='fl'>TRUE</span>)
-<span class='fu'>rm</span>(<span class='no'>X</span>)
+<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>genotypes</span>
+<span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>length</span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='co'># write the object as a bed/bim/fam object</span>
+<span class='co'># Write the object as a bed/bim/fam object</span>
 <span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='fu'>tempfile</span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>)
 <span class='no'>bed</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_writeBed</span>(<span class='no'>fake</span>, <span class='no'>tmp</span>)
-<span class='co'># read this new file for the first time</span>
-<span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bed</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='st'>"test_write"</span>)
-<span class='co'># attach object in R session</span>
+
+<span class='co'># Read this new file for the first time</span>
+<span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bed</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>())
+<span class='co'># Attach object in R session</span>
 <span class='no'>fake2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rds</span>)
 
-<span class='co'># same content</span>
-<span class='fu'>all.equal</span>(<span class='fu'>attach.BM</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>)[,],
-          <span class='fu'>attach.BM</span>(<span class='no'>fake2</span>$<span class='no'>genotypes</span>)[,])</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='co'># two different files</span>
-<span class='no'>fake</span>$<span class='no'>savedIn</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpbxbvnH//file3a3a1e4083d3.rds"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>savedIn</span></div><div class='output co'>#&gt; [1] "backingfiles/test_write.rds"</div><div class='input'>
-
-
-<span class='co'># cleaning</span>
-<span class='no'>bk</span> <span class='kw'>&lt;-</span> <span class='fu'>sub</span>(<span class='st'>"\\.rds$"</span>, <span class='st'>".bk"</span>, <span class='no'>rds</span>)
-<span class='fu'>file.remove</span>(<span class='no'>rds</span>, <span class='no'>bk</span>)</div><div class='output co'>#&gt; [1] TRUE TRUE</div></pre>
+<span class='co'># Same content</span>
+<span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[])</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='co'># Two different backingfiles</span>
+<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpUDxtKC/fileb145ef82487.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpUDxtKC/fileb1464c17a49.bk"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
