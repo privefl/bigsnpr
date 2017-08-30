@@ -1,15 +1,24 @@
 # Sample .travis.yml for R projects
 
 language: r
-r:
-  - release
-  - devel
+
+matrix:
+  include:
+  - r: release
+    os: osx
+  - r: release
+    os: linux
+  - r: devel
+    os: linux
+
 sudo: false
 cache: packages
+warnings_are_errors: false
+r_check_args: "--no-manual --timings"
 
 env:
  global:
-   - CRAN: http://cran.rstudio.com
+   - NOT_CRAN: true
    - _R_CHECK_FORCE_SUGGESTS_: false
 
 notifications:
@@ -17,11 +26,9 @@ notifications:
     on_success: change
     on_failure: change
 
-# https://github.com/travis-ci/travis-ci/issues/6587
-# Set CXX1X for R-devel, as R-devel does not detect CXX1X support for gcc 4.6.3,
-# this was causing hunspell installation to fail
 before_install:
-- if [[ "$TRAVIS_R_VERSION_STRING" = 'devel' ]]; then mkdir ~/.R && echo 'CXX1X=g++ -std=c++0x -g -O2 -fPIC' > ~/.R/Makevars; fi
+#  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then brew install llvm; fi
+  - Rscript -e 'Sys.getenv("NOT_CRAN")'
 
 after_success:
   - Rscript -e 'covr::codecov()'

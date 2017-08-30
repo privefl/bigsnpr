@@ -9,10 +9,10 @@ navbar:
       href: reference/index.html
     - text: "Vignettes"
       menu:
+      - text: "Quick demo"
+        href: articles/demo.html
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
-      - text: "Small demo"
-        href: articles/demo.html
   right:
     - text: "About"
       icon: fa-user
