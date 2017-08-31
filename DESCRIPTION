@@ -16,7 +16,7 @@ Authors@R: c(
            role = "ths"))
 Description: Easy-to-use, efficient, flexible and scalable tools
     for the analysis of massive SNP arrays.
-License: GPL-3 + file LICENSE
+License: GPL-3
 LazyData: TRUE
 Depends:
     R (>= 3.2.3), 
