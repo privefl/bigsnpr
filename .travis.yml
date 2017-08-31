@@ -8,6 +8,7 @@ matrix:
     os: osx
   - r: release
     os: linux
+    after_success: Rscript -e 'covr::codecov()'
   - r: devel
     os: linux
 
@@ -27,8 +28,4 @@ notifications:
     on_failure: change
 
 before_install:
-#  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then brew install llvm; fi
   - Rscript -e 'Sys.getenv("NOT_CRAN")'
-
-after_success:
-  - Rscript -e 'covr::codecov()'
