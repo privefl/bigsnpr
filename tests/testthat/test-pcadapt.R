@@ -53,3 +53,23 @@ p2 <- snp_manhattan(obj.gwas, infos.chr = bigsnp$map$chromosome,
 expect_s3_class(p2, "ggplot")
 
 ################################################################################
+
+obj.pcadapt <- pcadapt::pcadapt(tmpfile, K = 1, min.maf = 0)
+obj.gwas <- snp_pcadapt(G, obj.svd$u[, 1])
+
+snp_qq(obj.gwas)
+snp_qq(snp_gc(obj.gwas))
+
+tmp <- obj.pcadapt$scores[, 1]; names(tmp) <- NULL
+expect_equal(tmp, obj.svd$u[, 1], tolerance = 1e-6)
+expect_equal(as.vector(obj.pcadapt$zscores), obj.gwas$score, tolerance = 1e-2)
+plot(obj.pcadapt$pvalues, predict(obj.gwas, log10 = FALSE))
+
+# expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
+#              tolerance = 1e-2)
+# expect_equal(snp_gc(obj.gwas)[[1]], as.numeric(obj.pcadapt$stat),
+#              tolerance = 1e-2)
+# expect_equal(predict(snp_gc(obj.gwas), log10 = FALSE), obj.pcadapt$pvalues,
+#              tolerance = 1e-2)
+
+################################################################################

@@ -43,24 +43,29 @@ snp_pcadapt <- function(G, U.row,
                         ind.row = rows_along(G),
                         ind.col = cols_along(G)) {
 
+  if (is.null(dim(U.row))) U.row <- as.matrix(U.row)  # vector
   check_args()
 
   K <- ncol(U.row)
   stopifnot(all.equal(crossprod(U.row), diag(K)))
 
-  zscores <- linRegPcadapt_cpp(G, U = U.row,
-                               rowInd = ind.row,
-                               colInd = ind.col)
+  if (K == 1) {
+    big_univLinReg(G, as.vector(U.row), ind.train = ind.row, ind.col = ind.col)
+  } else {
+    zscores <- linRegPcadapt_cpp(G, U = U.row,
+                                 rowInd = ind.row,
+                                 colInd = ind.col)
 
-  fun.pred <- eval(parse(text = sprintf(
-    "function(xtr) {
+    fun.pred <- eval(parse(text = sprintf(
+      "function(xtr) {
        stats::pchisq(xtr, df = %d, lower.tail = FALSE, log.p = TRUE) / log(10)
      }", K)))
 
-  structure(data.frame(score = getD(zscores)),
-            class = c("mhtest", "data.frame"),
-            transfo = identity,
-            predict = fun.pred)
+    structure(data.frame(score = getD(zscores)),
+              class = c("mhtest", "data.frame"),
+              transfo = identity,
+              predict = fun.pred)
+  }
 }
 
 ################################################################################
