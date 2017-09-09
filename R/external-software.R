@@ -371,7 +371,7 @@ snp_plinkIBDQC <- function(bedfile.in,
 #' @inheritParams snp_plinkRmSamples
 #' @param bedfile.out Path to the output bedfile. Default is created by
 #' appending `"_impute"` to `prefix.in` (`bedfile.in` without extension).
-#' @param memory.max Max memory (in Gb) to be used. It is internally rounded
+#' @param memory.max Max memory (in GB) to be used. It is internally rounded
 #' to be an integer. Default is `3`.
 #' @param ncores Number of cores to be used. Default is `1`. An usually good
 #' value for this parameter is `ncores = parallel::detectCores() - 1`.

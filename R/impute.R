@@ -79,7 +79,7 @@ imputeChr <- function(Gna, ind.chr, alpha, size, p.train, seed) {
 #'
 #' @return A `data.frame` with
 #' - the proportion of missing values by SNP,
-#' - the estimated proportion of imputaton errors by SNP.
+#' - the estimated proportion of imputation errors by SNP.
 #' @export
 #'
 #' @import Matrix xgboost

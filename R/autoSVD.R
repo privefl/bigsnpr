@@ -46,8 +46,9 @@ getIntervals <- function(x, n = 2) {
 #' Default is `10`. **This algorithm should be used to compute only
 #' a few singular vectors/values.**
 #' @param roll.size Radius of rolling windows to smooth log-p-values.
+#'   Default is `50.`
 #' @param int.min.size Minimum size of intervals of consecutive significant
-#' indices to be reported as long-range LD region.
+#' indices to be reported as long-range LD region. Default is `20`.
 #' @param verbose Output some information on the iterations? Default is `TRUE`.
 #'
 #' @inherit bigstatsr::big_randomSVD return
