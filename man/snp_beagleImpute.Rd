@@ -19,7 +19,7 @@ Default downloads it.}
 
 \item{plink.path}{Path to the executable of PLINK 1.9. Default downloads it.}
 
-\item{memory.max}{Max memory (in Gb) to be used. It is internally rounded
+\item{memory.max}{Max memory (in GB) to be used. It is internally rounded
 to be an integer. Default is \code{3}.}
 
 \item{ncores}{Number of cores to be used. Default is \code{1}. An usually good

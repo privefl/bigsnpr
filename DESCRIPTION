@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 0.2.0
-Date: 2017-08-30
+Version: 0.2.1
+Date: 2017-09-09
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -39,7 +39,8 @@ LinkingTo:
     bigstatsr,
     Rcpp,
     RcppArmadillo
-Suggests: 
+Suggests:
+    spelling, 
     covr,
     dplyr,
     gaston,

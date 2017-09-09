@@ -33,7 +33,7 @@ You may use \link{nb_cores}.}
 A \code{data.frame} with
 \itemize{
 \item the proportion of missing values by SNP,
-\item the estimated proportion of imputaton errors by SNP.
+\item the estimated proportion of imputation errors by SNP.
 }
 }
 \description{

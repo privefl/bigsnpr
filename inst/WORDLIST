@@ -1,3 +1,4 @@
+â
 al
 Armitage
 Aschard
@@ -5,6 +6,7 @@ Bazin
 bedfile
 bedfiles
 bigSNP
+bigstatsr
 bim
 bp
 cbind
@@ -13,6 +15,7 @@ diploidy
 doesn
 Eigenanalysis
 Elsevier
+fam
 filebacked
 Filebacked
 foreach
@@ -23,6 +26,7 @@ GigaScience
 GWAS
 IBD
 indices
+Indices
 LD
 Luu
 MAF
@@ -38,14 +42,16 @@ ped
 plinkQC
 PLoS
 Polygenic
-Privé
+PrivÃ
 PRS
 QCed
 rds
+RDS
 readRDS
 Roeder
 Shashaank
 shouldn
+snp
 Tellier
 tmp
 univLinReg

@@ -194,7 +194,7 @@ snp_pruning <- function(G, infos.chr,
 #' @format A data frame with 34 rows (regions) and 4 variables:
 #' - `Chr`: region's chromosome
 #' - `Start`: starting position of the region (in bp)
-#' - `Stop`: stoping position of the region (in bp)
+#' - `Stop`: stopping position of the region (in bp)
 #' - `ID`: some ID of the region.
 "LD.wiki34"
 

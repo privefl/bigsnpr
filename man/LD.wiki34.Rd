@@ -8,7 +8,7 @@
 \itemize{
 \item \code{Chr}: region's chromosome
 \item \code{Start}: starting position of the region (in bp)
-\item \code{Stop}: stoping position of the region (in bp)
+\item \code{Stop}: stopping position of the region (in bp)
 \item \code{ID}: some ID of the region.
 }}
 \usage{

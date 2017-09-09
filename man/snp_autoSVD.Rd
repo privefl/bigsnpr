@@ -44,10 +44,11 @@ step of clumping. Default is \code{500}.}
 Default is \code{10}. \strong{This algorithm should be used to compute only
 a few singular vectors/values.}}
 
-\item{roll.size}{Radius of rolling windows to smooth log-p-values.}
+\item{roll.size}{Radius of rolling windows to smooth log-p-values.
+Default is \code{50.}}
 
 \item{int.min.size}{Minimum size of intervals of consecutive significant
-indices to be reported as long-range LD region.}
+indices to be reported as long-range LD region. Default is \code{20}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

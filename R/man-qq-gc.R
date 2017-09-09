@@ -15,7 +15,7 @@ MY_THEME <- bigstatsr:::MY_THEME
 #' Typically, the output of [big_univLinReg], [big_univLogReg] or [snp_pcadapt].
 #' @inheritParams bigsnpr-package
 #' @param colors Colors that used for each chromosome (they are recycled).
-#' Default is an alternance of black and gray.
+#' Default is an alternation of black and gray.
 #' @param dist.sep.chrs "Physical" distance that separates two chromosomes.
 #' Default is 10 Mbp.
 #' @param ind.highlight Indices of SNPs you want to highlight (of interest).

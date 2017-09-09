@@ -26,7 +26,7 @@ sample IDs to match with those of the study. Default is the first one.}
 \item{col.infos}{Indices of the column containing the information you want.
 Default is all but the first and the second columns.}
 
-\item{pair.sep}{Separator used for concataining family and sample IDs
+\item{pair.sep}{Separator used for concatenation family and sample IDs
 in order to match easier. Default is \code{"-_-"}.}
 
 \item{...}{Any additional parameter to pass to \link[data.table:fread]{fread}.
