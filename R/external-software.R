@@ -172,6 +172,9 @@ snp_plinkQC <- function(prefix.in,
   bedfile.out <- paste0(prefix.out, ".bed")
   assert_noexist(bedfile.out)
 
+  # --vcf expects a complete filename
+  if (file.type == "--vcf") prefix.in <- paste0(prefix.in, ".vcf")
+
   # call PLINK 1.9
   system(
     paste(
