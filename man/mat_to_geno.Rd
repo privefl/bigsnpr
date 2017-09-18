@@ -16,8 +16,11 @@ A temporary FBM.code256.
 Convert a standard R matrix to a FBM.code256.
 }
 \examples{
-mat <- matrix(NA_real_, 8, 15)
+mat <- matrix(NA_real_, 8, 12)
 mat[] <- sample(c(0, 1, 2), size = length(mat), replace = TRUE)
 mat
 G <- mat_to_geno(mat)
+G
+G[]
+
 }
