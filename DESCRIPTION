@@ -27,7 +27,6 @@ Imports:
     foreach, 
     ggplot2,
     gsubfn,
-    magrittr,
     Matrix,
     parallel, 
     Rcpp, 
@@ -45,6 +44,7 @@ Suggests:
     dplyr,
     gaston,
     Hmisc,
+    magrittr,
     pcadapt,
     testthat
 Remotes: privefl/bigstatsr
