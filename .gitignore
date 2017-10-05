@@ -8,3 +8,5 @@ src/*.dll
 backingfiles
 README.html
 tmp-files
+/*_cache/
+/cache/

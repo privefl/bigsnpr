@@ -1,0 +1,41 @@
+---
+title: "How to capture Population Structure from PCA?"
+author: "Florian Privé"
+date: "October 5, 2017"
+output: html_document
+bibliography: ../../articles/library.bib
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.align = "center", dev = "png", cache = TRUE,
+                      fig.asp = 0.7, out.width = "70%")
+```
+
+In this vignette, I will show how to perform Principal Component Analysis (PCA) with packages **bigstatsr** and **bigsnpr** [@Prive2017] and why pruning and removing Long-range LD are two important steps of computing PCs for capturing Population Structure (as reported in [@Abdellaoui2013]).
+
+## Data
+
+I'll use data from a case/control cohort on celiac disease [@Dubois2010]. The data has already been QCed, genotyped SNPs have been imputed and binary PLINK files have been converted to the "bigSNP" format used in **bigsnpr** (see the [preprocessing steps](https://www.biorxiv.org/content/biorxiv/suppl/2017/09/19/190926.DC1/190926-1.html).
+
+```{r}
+library(bigsnpr)
+
+celiac <- snp_attach("backingfiles/celiacQC.rds")
+G <- celiac$genotypes
+CHR <- celiac$map$chromosome
+POS <- celiac$map$physical.pos
+NCORES <- nb_cores()
+
+# "Verification" there is no missing value
+big_counts(G, ind.col = 1:15) # OK
+
+# Get population from external files
+pop.files <- list.files(path = "data", pattern = "cluster_*", full.names = TRUE)
+pop <- snp_getSampleInfos(celiac, pop.files)[[1]]
+pop.names <- c("Netherlands", "Italy", "UK1", "UK2", "Finland")
+```
+
+
+
+## References
