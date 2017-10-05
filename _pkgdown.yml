@@ -11,6 +11,8 @@ navbar:
       menu:
       - text: "Quick demo"
         href: articles/demo.html
+      - text: "How to capture Population Structure from PCA?"
+        href: articles/how-to-PCA.html
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
   right:
