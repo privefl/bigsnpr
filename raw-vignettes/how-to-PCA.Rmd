@@ -68,7 +68,8 @@ theone1.1 <- which.max(abs(svd1$v[, 3]))
 theone1.2 <- which.max(abs(svd1$v[, 4]))
 plot(svd1, type = "scores", scores = 3:4) +
   aes(color = as.factor(paste(G[, theone1.1], G[, theone1.2]))) +
-  labs(color = "Genotypes")
+  labs(color = "Genotypes") +
+  guides(colour = guide_legend(override.aes = list(size = rel(4))))
 ```
 
 So basically, PC3 is capturing a variation of one SNP, as well as PC4. These two SNPs are located in long-range LD regions and corresponds to peaks in the next figure.
