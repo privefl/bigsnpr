@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAX3 statistic — snp_MAX3 • bigsnpr</title>
+<title>MAX3 statistic � snp_MAX3 • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,6 +63,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/demo.html">Quick demo</a>
+    </li>
+    <li>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
@@ -176,17 +179,17 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 
 <span class='co'># Get MAX3 statistics</span>
 <span class='no'>y01</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
-<span class='fu'>str</span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>))</div><div class='output co'>#&gt; Classes ‘mhtest’ and 'data.frame':	1200 obs. of  1 variable:
+<span class='fu'>str</span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>))</div><div class='output co'>#&gt; Classes <U+0091>mhtest<U+0092> and 'data.frame':	1200 obs. of  1 variable:
 #&gt;  $ score: num  3.976 1.591 0.551 2.22 0.201 ...
 #&gt;  - attr(*, "transfo")=function (x)  
 #&gt;  - attr(*, "predict")=function (xtr)  
 #&gt;   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 98 15 100 3 15 3 98 100
-#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0x8d78b18&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><div class='img'><img src='snp_MAX3-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><div class='img'><img src='snp_MAX3-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0x0000000030a7a6c8&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><div class='img'><img src='snp_MAX3-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><div class='img'><img src='snp_MAX3-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># Armitage trend test (well calibrated because only one test)</span>
 <span class='no'>test2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test2</span>)</div><div class='img'><img src='snp_MAX3-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test2</span>)</div><div class='img'><img src='snp_MAX3-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

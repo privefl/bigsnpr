@@ -11,7 +11,7 @@ navbar:
       menu:
       - text: "Quick demo"
         href: articles/demo.html
-      - text: "How to capture Population Structure from PCA?"
+      - text: "How to capture Population Structure from PCA"
         href: articles/how-to-PCA.html
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
@@ -26,17 +26,22 @@ reference:
   - title: "I/O"
     contents:
       - snp_readBed
-      - snp_attach
       - snp_writeBed
+      - snp_attach
+      - snp_attachExtdata
   - title: "External software"
     contents:
+      - download_plink
       - snp_plinkQC
       - snp_plinkIBDQC
       - snp_plinkRmSamples
+      - download_beagle
       - snp_beagleImpute
   - title: "Pruning / correlation"
     contents:
       - snp_pruning
+      - snp_clumping
+      - snp_indLRLDR
       - snp_autoSVD
       - snp_PRS
       - snp_cor

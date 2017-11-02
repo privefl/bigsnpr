@@ -1,0 +1,89 @@
+---
+title: "Demonstration of packages bigsnpr and bigstatsr"
+author: "Florian Privé"
+date: "May 23, 2017"
+output: html_document
+---
+
+## Get genotype file
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 65)
+knitr::opts_knit$set(global.par = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align='center', dev='png', dpi = 95)
+```
+
+```{r}
+# Get the example bedfile from package bigsnpr
+bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+```
+
+## Read from the PLINK files
+
+```{r}
+# Load packages bigsnpr and bigstatsr
+library(bigsnpr)
+# Read from bed/bim/fam, it will create new files.
+# Let's put them in an temporary directory for this demo.
+tmpfile <- tempfile()
+snp_readBed(bedfile, backingfile = tmpfile)
+# Attach the "bigSNP" object in R session
+obj.bigSNP <- snp_attach(paste0(tmpfile, ".rds"))
+# See how it looks like
+str(obj.bigSNP, max.level = 2, strict.width = "cut")
+# Get aliases for useful slots
+G   <- obj.bigSNP$genotypes
+CHR <- obj.bigSNP$map$chromosome
+POS <- obj.bigSNP$map$physical.pos
+# Check some counts for the 10 first SNPs
+big_counts(G, ind.col = 1:10)
+```
+
+## Principal Component Analysis
+
+```{r}
+# Half of the cores you have on your computer
+NCORES <- nb_cores()
+# Exclude Long-Range Linkage Disequilibrium Regions of the human genome
+# based on an online table. 
+ind.excl <- snp_indLRLDR(infos.chr = CHR, infos.pos = POS)
+# Use clumping (on the MAF) to keep SNPs weakly correlated with each other.
+# See https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html
+# to know why I prefer using clumping than standard pruning.
+ind.keep <- snp_clumping(G, infos.chr = CHR,
+                         exclude = ind.excl,
+                         ncores = NCORES)
+# Get the first 10 PCs, corresponding to pruned SNPs
+obj.svd <- big_randomSVD(G, fun.scaling = snp_scaleBinom(),
+                         ind.col = ind.keep,
+                         ncores = NCORES)
+# As `obj.svd` has a class and a method `plot`.
+# Scree plot by default
+plot(obj.svd)
+# Score (PCs) plot
+plot(obj.svd, type = "scores")
+# As plot returns an ggplot2 object, you can easily modify it.
+# For example, you can add colors based on the population.
+library(ggplot2)
+plot(obj.svd, type = "scores") +
+  aes(color = pop <- rep(c("POP1", "POP2", "POP3"), c(143, 167, 207))) +
+  labs(color = "Population")
+```
+
+## Genome-Wide Association Study
+
+```{r}
+# Fit a logistic model between the phenotype and each SNP separately
+# while adding PCs as covariates to each model
+obj.gwas <- big_univLogReg(G, y01.train = obj.bigSNP$fam$affection - 1,
+                           covar.train = obj.svd$u,
+                           ncores = NCORES)
+# Q-Q plot of the object
+snp_qq(obj.gwas)
+# You can easily apply genomic control to this object
+obj.gwas.gc <- snp_gc(obj.gwas)
+# Redo the Q-Q plot
+snp_qq(obj.gwas.gc)
+# Manhattan plot, not quite sexy because there are only 1 chromosome here
+snp_manhattan(obj.gwas.gc, infos.chr = CHR, infos.pos = POS)
+```

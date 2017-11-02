@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PRS — snp_PRS • bigsnpr</title>
+<title>PRS � snp_PRS • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,6 +63,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/demo.html">Quick demo</a>
+    </li>
+    <li>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
@@ -175,7 +178,7 @@ columns correspond to <code>thr.list</code>.</p>
                          <span class='kw'>S</span> <span class='kw'>=</span> <span class='fu'>abs</span>(<span class='no'>gwas.train</span>$<span class='no'>score</span>))
 <span class='co'># -log10(p-values) and thresolding</span>
 <span class='fu'>summary</span>(<span class='no'>lpS.keep</span> <span class='kw'>&lt;-</span> -<span class='fu'>predict</span>(<span class='no'>gwas.train</span>)[<span class='no'>ind.keep</span>])</div><div class='output co'>#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-#&gt; 0.000079 0.135300 0.315300 0.457700 0.632400 7.098000 </div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>3.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+#&gt; 0.000088 0.135325 0.315242 0.457694 0.632431 7.097915 </div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>3.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 <span class='no'>nb.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='no'>thrs</span>, <span class='kw'>function</span>(<span class='no'>thr</span>) <span class='fu'>sum</span>(<span class='no'>lpS.keep</span> <span class='kw'>&gt;</span> <span class='no'>thr</span>))
 
 <span class='co'># PRS</span>
@@ -191,7 +194,7 @@ columns correspond to <code>thr.list</code>.</p>
 <span class='kw pkg'>bigstatsr</span><span class='kw ns'>:::</span><span class='fu'>MY_THEME</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/qplot'>qplot</a></span>(<span class='no'>nb.pred</span>, <span class='no'>aucs</span>)) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>() +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='no'>nb.pred</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>)</div><div class='img'><img src='snp_PRS-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>)</div><div class='img'><img src='snp_PRS-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
