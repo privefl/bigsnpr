@@ -1,10 +1,11 @@
 test <- snp_attachExtdata()
-G <- test$genotypes
+G <- big_copy(test$genotypes, ind.col = 1:1000)
+CHR <- test$map$chromosome[1:1000]
+POS <- test$map$physical.position[1:1000]
 y01 <- test$fam$affection - 1
 
 # PCA -> covariables
-obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome,
-                       infos.pos = test$map$physical.position)
+obj.svd <- snp_autoSVD(G, infos.chr = CHR, infos.pos = POS)
 
 # train and test set
 ind.train <- sort(sample(nrow(G), 400))
@@ -15,12 +16,12 @@ gwas.train <- big_univLogReg(G, y01.train = y01[ind.train],
                              ind.train = ind.train,
                              covar.train = obj.svd$u[ind.train, ])
 # clumping
-ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
+ind.keep <- snp_clumping(G, infos.chr = CHR,
                          ind.row = ind.train,
                          S = abs(gwas.train$score))
 # -log10(p-values) and thresolding
 summary(lpS.keep <- -predict(gwas.train)[ind.keep])
-thrs <- seq(0, 3.5, by = 0.5)
+thrs <- seq(0, 4, by = 0.5)
 nb.pred <- sapply(thrs, function(thr) sum(lpS.keep > thr))
 
 # PRS
@@ -37,3 +38,4 @@ bigstatsr:::MY_THEME(qplot(nb.pred, aucs)) +
   geom_line() +
   scale_x_log10(breaks = nb.pred) +
   labs(x = "Number of predictors", y = "AUC")
+

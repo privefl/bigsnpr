@@ -25,7 +25,7 @@ bool readbina(const char * filename,
   int lengthExtra = length + (extra > 0);
   int j, k;
 
-  unsigned char buffer[std::max(3, lengthExtra)];
+  unsigned char *buffer = new unsigned char[std::max(3, lengthExtra)];
 
   ifstream myFile(filename, ios::in | ios::binary);
   // magic number
@@ -50,6 +50,7 @@ bool readbina(const char * filename,
   char c;
   bool is_eof = !(myFile.get(c));
   myFile.close();
+  delete[] buffer;
 
   return is_eof;
 }
@@ -69,7 +70,7 @@ void writebina(const char * filename,
   int m = macc.ncol();
   int length = ceil((double)n / 4); // DO NOT USE INTEGERS WITH CEIL
 
-  char buffer[max(3, length)];
+  char *buffer = new char[std::max(3, length)];
   ofstream myFile(filename, ios::out | ios::binary);
 
   // magic number
@@ -95,6 +96,7 @@ void writebina(const char * filename,
   }
 
   myFile.close();
+  delete[] buffer;
 }
 
 /******************************************************************************/

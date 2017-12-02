@@ -45,12 +45,11 @@ download_plink <- function(dir = tempdir()) {
   plink.builds <- data.frame(
     url = paste0("https://www.cog-genomics.org", plink.names),
     OS = c(rep("Linux", 2), "Mac", rep("Windows", 2)),
-    arch = c("x86_64", "i686", "x86_64", "x86_64", "i686"),
+    arch = c(64, 32, 64, 64, 32),
     stringsAsFactors = FALSE
   )
 
-  myArch <- Sys.info()[["machine"]]
-  if (myArch == "x86-64") myArch <- "x86_64"  # Windows
+  myArch <- `if`(grepl("64", Sys.info()[["machine"]], fixed = TRUE), 64, 32)
   url <- subset(plink.builds, OS == myOS & arch == myArch)[["url"]]
 
   utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))

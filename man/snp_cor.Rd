@@ -40,7 +40,7 @@ P-values are computed by a two-sided t-test.
 \examples{
 test <- snp_attachExtdata()
 
-corr <- snp_cor(test$genotypes)
+corr <- snp_cor(test$genotypes, ind.col = 1:1000)
 corr[1:10, 1:10]
 
 # Sparsity
