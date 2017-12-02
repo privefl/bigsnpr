@@ -22,7 +22,7 @@ snp_save <- function(x) {
 
 ################################################################################
 
-#' Get sample infos
+#' Get sample information
 #'
 #' Get information of individuals by matching from an external file.
 #'

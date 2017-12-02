@@ -13,7 +13,7 @@ CODE_DOSAGE <- c(0, 1, 2, NA, 0, 1, 2, seq(0, 2, by = 0.01), rep(NA, 48))
 
 #' Class bigSNP
 #'
-#' An S3 class for representing infos on massive SNP arrays.
+#' An S3 class for representing information on massive SNP arrays.
 #'
 #' A named list with at least 4 slots: \describe{
 #'   \item{genotypes}{A [FBM.code256][FBM.code256-class] which is

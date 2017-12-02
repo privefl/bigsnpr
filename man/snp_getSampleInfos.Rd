@@ -2,7 +2,7 @@
 % Please edit documentation in R/get-save-infos.R
 \name{snp_getSampleInfos}
 \alias{snp_getSampleInfos}
-\title{Get sample infos}
+\title{Get sample information}
 \usage{
 snp_getSampleInfos(x, df.or.files, col.family.ID = 1, col.sample.ID = 2,
   col.infos = -c(1, 2), pair.sep = "-_-", ...)
