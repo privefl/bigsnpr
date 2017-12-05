@@ -16,15 +16,9 @@
 ## Installation
 
 ```r
-# For the CRAN version
-## Coming soon
-
-# For the current development version
+# Not on CRAN for now because of download_plink()
+# For the current version
 devtools::install_github("privefl/bigsnpr")
-
-# For the first version (depending on package bigmemory)
-devtools::install_github("privefl/bigstatsr", ref = "v-bigmemory")
-devtools::install_github("privefl/bigsnpr",   ref = "v-bigmemory")
 ```
 
 

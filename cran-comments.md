@@ -1,3 +1,5 @@
+This is a resubmission. I removed examples that were writing on the home directory.
+
 ## Test environments
 
 * local Linux (CentOS 7), R 3.4.0 and 3.4.1
