@@ -7,7 +7,7 @@ get_os <- function() {
   } else if (Sys.info()[["sysname"]] == "Darwin") {
     "Mac"
   } else if (.Platform$OS.type == "unix") {
-    "Linux"
+    "Unix"
   } else {
     stop("Unknown OS")
   }
@@ -44,12 +44,12 @@ download_plink <- function(dir = tempdir()) {
   )
   plink.builds <- data.frame(
     url = paste0("https://www.cog-genomics.org", plink.names),
-    OS = c(rep("Linux", 2), "Mac", rep("Windows", 2)),
+    OS = c(rep("Unix", 2), "Mac", rep("Windows", 2)),
     arch = c(64, 32, 64, 64, 32),
     stringsAsFactors = FALSE
   )
 
-  myArch <- `if`(grepl("64", Sys.info()[["machine"]], fixed = TRUE), 64, 32)
+  myArch <- 8 * .Machine$sizeof.pointer
   url <- subset(plink.builds, OS == myOS & arch == myArch)[["url"]]
 
   utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
