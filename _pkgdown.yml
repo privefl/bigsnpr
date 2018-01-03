@@ -16,7 +16,7 @@ navbar:
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
       - text: "Dosage data: proof of concept"
-        href: artciles/dosage.html
+        href: articles/dosage.html
   right:
     - text: "About"
       icon: fa-user
