@@ -34,7 +34,7 @@ I use a class called `bigSNP` for representing infos on massive SNP arrays. One 
 
 ## Possible upcoming features
 
-- Support for other input formats. Note that there is room for coding **allele dosages** (rounded to two decimal places). See `bigsnpr:::CODE_DOSAGE`.
+- Support for other input formats. Note that there is room for coding **allele dosages** (rounded to two decimal places). See [this vignette](https://privefl.github.io/bigsnpr/articles/dosage.html).
 - Imputation of probabilities and multiple imputation.
 - An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only, others?). 
 - Proper integration of haploid species.
