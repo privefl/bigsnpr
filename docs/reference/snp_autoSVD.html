@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Truncated SVD with pruning — snp_autoSVD • bigsnpr</title>
+<title>Truncated SVD with pruning � snp_autoSVD • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,6 +63,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/demo.html">Quick demo</a>
+    </li>
+    <li>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
@@ -166,12 +169,13 @@ a few singular vectors/values.</strong></p></td>
     </tr>
     <tr>
       <th>roll.size</th>
-      <td><p>Radius of rolling windows to smooth log-p-values.</p></td>
+      <td><p>Radius of rolling windows to smooth log-p-values.
+Default is <code>50.</code></p></td>
     </tr>
     <tr>
       <th>int.min.size</th>
       <td><p>Minimum size of intervals of consecutive significant
-indices to be reported as long-range LD region.</p></td>
+indices to be reported as long-range LD region. Default is <code>20</code>.</p></td>
     </tr>
     <tr>
       <th>ncores</th>

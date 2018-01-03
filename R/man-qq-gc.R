@@ -8,7 +8,7 @@ MY_THEME <- bigstatsr:::MY_THEME
 #'
 #' Creates a manhattan plot.
 #'
-#' If you don't have infos of chromosome and position, you should simply
+#' If you don't have information of chromosome and position, you should simply
 #' use `plot` instead.
 #'
 #' @param gwas A `mhtest` object with the p-values associated with each SNP.

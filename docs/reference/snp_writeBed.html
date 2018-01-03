@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write PLINK files from a "bigSNP" — snp_writeBed • bigsnpr</title>
+<title>Write PLINK files from a "bigSNP" � snp_writeBed • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,6 +63,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/demo.html">Quick demo</a>
+    </li>
+    <li>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
@@ -156,7 +159,7 @@ If not specified, all columns are used.
 <span class='co'># Same content</span>
 <span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[])</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># Two different backingfiles</span>
-<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpUDxtKC/fileb145ef82487.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpUDxtKC/fileb1464c17a49.bk"</div></pre>
+<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "C:\\Users\\Florian\\AppData\\Local\\Temp\\Rtmp02cVEx\\file381875fe33df.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "C:\\Users\\Florian\\AppData\\Local\\Temp\\Rtmp02cVEx\\file381820cb5c9f.bk"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

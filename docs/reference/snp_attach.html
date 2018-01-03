@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Attach a "bigSNP" from backing files — snp_attach • bigsnpr</title>
+<title>Attach a "bigSNP" from backing files � snp_attach • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,6 +63,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/demo.html">Quick demo</a>
+    </li>
+    <li>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
@@ -125,7 +128,7 @@ the two (".bk" and ".rds") backing files to another directory.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/home/privef/Bureau/thesis/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
+    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "D:/Projets/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
 <span class='co'># Reading the bedfile and storing the data in temporary directory</span>
 <span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>())
 
@@ -139,12 +142,12 @@ the two (".bk" and ".rds") backing files to another directory.</p>
 #&gt;   ..$ ncol       : int 4542
 #&gt;   ..$ type       : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile: chr "/tmp/RtmpUDxtKC/fileb147ae2caa1.bk"
+#&gt;   ..$ backingfile: chr "C:\\Users\\Florian\\AppData\\Local\\Temp\\Rtmp02cVEx\\file38183cd63c5.bk"
 #&gt;   ..$ address    :&lt;externalptr&gt; 
 #&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   ..and 20 methods, of which 6 are  possibly relevant:
-#&gt;   ..  copy#envRefClass, initialize, initialize#FBM, save, show#envRefClass,
-#&gt;   ..  show#FBM
+#&gt;   ..and 21 methods, of which 7 are  possibly relevant:
+#&gt;   ..  as.FBM, copy#envRefClass, initialize, initialize#FBM, save,
+#&gt;   ..  show#envRefClass, show#FBM
 #&gt;  $ fam      :'data.frame':	517 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...
 #&gt;   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...

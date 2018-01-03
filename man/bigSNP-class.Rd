@@ -5,7 +5,7 @@
 \alias{bigSNP}
 \title{Class bigSNP}
 \description{
-An S3 class for representing infos on massive SNP arrays.
+An S3 class for representing information on massive SNP arrays.
 }
 \details{
 A named list with at least 4 slots: \describe{

@@ -51,7 +51,7 @@ to get more familiar with the package \strong{ggplot2}.
 Creates a manhattan plot.
 }
 \details{
-If you don't have infos of chromosome and position, you should simply
+If you don't have information of chromosome and position, you should simply
 use \code{plot} instead.
 }
 \examples{

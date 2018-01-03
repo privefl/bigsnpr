@@ -4,8 +4,8 @@ language: r
 
 matrix:
   include:
-#  - r: release
-#    os: osx
+  - r: release
+    os: osx
   - r: release
     os: linux
     after_success: Rscript -e 'covr::codecov()'

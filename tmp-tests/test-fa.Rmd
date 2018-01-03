@@ -1,0 +1,16 @@
+---
+title: "Untitled"
+author: "Florian Privé"
+date: "3 décembre 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+`r icon::fa("github") # equivalent to icon::fa_rocket()` blabla
+
+`r icon::fa("twitter")`

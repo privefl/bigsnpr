@@ -1,0 +1,205 @@
+---
+title: "How to capture population structure with PCA?"
+author: "Florian Privé"
+date: "October 5, 2017"
+output: html_document
+bibliography: refs.bib
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.align = "center", dev = "png", cache = TRUE,
+                      fig.asp = 0.7, out.width = "70%")
+```
+
+In this vignette, I show how to perform Principal Component Analysis (PCA) with packages **bigstatsr** and **bigsnpr** [@Prive2017]. I also show why pruning and removing long-range Linkage Disequilibrium (LD) are two important steps before computing PCs in order to capture population structure [@Abdellaoui2013].
+
+## Data
+
+I use data from a case/control cohort on celiac disease [@Dubois2010]. The data has already been QCed, genotyped SNPs have been imputed and binary PLINK files have been converted to the "bigSNP" format used in **bigsnpr** (see these [preprocessing steps](https://www.biorxiv.org/content/biorxiv/suppl/2017/09/19/190926.DC1/190926-1.html)).
+
+```{r, cache=FALSE}
+library(bigsnpr)
+library(ggplot2)
+
+celiac <- snp_attach("backingfiles/celiacQC.rds")
+G <- celiac$genotypes
+CHR <- celiac$map$chromosome
+POS <- celiac$map$physical.pos
+NCORES <- nb_cores()
+
+# "Verification" there is no missing value
+big_counts(G, ind.col = 1:12) # OK
+
+# Get population from external files
+pop.files <- list.files(path = "data", pattern = "cluster_*", full.names = TRUE)
+pop <- snp_getSampleInfos(celiac, pop.files)[[1]]
+pop.names <- c("Netherlands", "Italy", "UK1", "UK2", "Finland")
+```
+
+## Principal Component Analysis
+
+### On the whole genotype matrix
+
+```{r}
+svd1 <- big_randomSVD(G, snp_scaleBinom(), ncores = NCORES)
+```
+
+```{r}
+plot(svd1, type = "scores") +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+First two PCs capture population structure.
+
+```{r}
+plot(svd1, type = "scores", scores = 3:4) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+PC3 and PC4 don't capture population structure.
+
+```{r}
+# The SNP with max loading for PC3
+theone1.1 <- which.max(abs(svd1$v[, 3]))
+# The SNP with max loading for PC4
+theone1.2 <- which.max(abs(svd1$v[, 4]))
+plot(svd1, type = "scores", scores = 3:4) +
+  aes(color = as.factor(paste(G[, theone1.1], G[, theone1.2]))) +
+  labs(color = "Genotypes") +
+  guides(colour = guide_legend(override.aes = list(size = rel(4))))
+```
+
+So basically, PC3 is capturing a variation of one SNP, as well as PC4. These two SNPs are located in long-range LD regions and corresponds to peaks in the next figure.
+
+```{r}
+plot(svd1, type = "loadings", loadings = 1:4, coeff = 0.7)
+```
+
+
+### When pruning only
+
+In fact, I'm using clumping on the Minor Allele Frequencies (MAF) instead of pruning. You can see [this vignette](https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html) to know why.
+
+```{r}
+ind.keep2 <- snp_clumping(G, CHR, ncores = NCORES)
+svd2 <- big_randomSVD(G, snp_scaleBinom(), ncores = NCORES,
+                      ind.col = ind.keep2)
+```
+
+```{r}
+plot(svd2, type = "scores", scores = 3:4) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+```{r}
+theone2 <- ind.keep2[which.max(abs(svd2$v[, 4]))]
+plot(svd2, type = "scores", scores = 3:4) +
+  aes(color = as.factor(G[, theone2])) +
+  labs(color = "Genotype")
+```
+
+PC4 again captures variation at one SNP, which is possibly in a long-range LD region.
+
+### When removing long-range LD regions only
+
+As recommended by @Price2008a, it is possible to remove a list
+of predetermined long-range LD regions.
+
+```{r}
+ind.keep3 <- cols_along(G)[-snp_indLRLDR(CHR, POS)]
+svd3 <- big_randomSVD(G, snp_scaleBinom(), ncores = NCORES,
+                      ind.col = ind.keep3)
+```
+
+```{r}
+plot(svd3, type = "scores", scores = 3:4) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+This is quite better at capturing population structure. Yet..
+
+```{r, fig.asp=1.2}
+plot(svd3, type = "loadings", loadings = 1:10, coeff = 0.6)
+```
+
+So, first 4 PCs are mostly capturing population structure, but the next PCs are likely to capture only LD structure.
+
+```{r}
+plot(svd3, type = "scores", scores = 5:6) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+```{r}
+theone3 <- ind.keep3[which.max(abs(svd3$v[, 5]))]
+plot(svd3, type = "scores", scores = 5:6) +
+  aes(color = as.factor(G[, theone3])) +
+  labs(color = "Genotype")
+```
+
+### When pruning and removing long-range LD regions
+
+As recommend by @Abdellaoui2013, I prune AND remove long-range LD-regions.
+
+```{r}
+ind.keep4 <- snp_clumping(G, CHR, ncores = NCORES,
+                          exclude = snp_indLRLDR(CHR, POS))
+svd4 <- big_randomSVD(G, snp_scaleBinom(), ncores = NCORES,
+                      ind.col = ind.keep4)
+```
+
+```{r}
+plot(svd4, type = "scores", scores = 3:4) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+```{r}
+plot(svd4, type = "scores", scores = 5:6) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+Maybe, PC5 is now capturing some non-European ancestry, or something else.
+
+```{r, fig.asp=1.2}
+plot(svd4, type = "loadings", loadings = 1:10, coeff = 0.6)
+```
+
+The loadings are all approximately normally distributed (no huge peak), we're good.
+
+### An automatic procedure
+
+You can use either the previous method (for human data only) or try the following automatic procedure to prune and remove long-range LD regions [@Prive2017].
+
+```{r}
+svd0 <- snp_autoSVD(G, CHR, POS, ncores = NCORES)
+attr(svd0, "lrldr")
+```
+
+```{r}
+plot(svd0, type = "scores", scores = 3:4) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+```{r}
+plot(svd0, type = "scores", scores = 5:6) +
+  aes(color = pop.names[pop]) +
+  labs(color = "Population")
+```
+
+```{r, fig.asp=1.2}
+plot(svd0, type = "loadings", loadings = 1:10, coeff = 0.6)
+```
+
+## Conclusion
+
+Always use both pruning and removing of long-range LD regions when computing the PCs, as recommended by @Abdellaoui2013. To check that the results are capturing population structure, you should plot PCA scores. To check that PCs are not capturing LD, you should check PCA loadings.
+
+## References

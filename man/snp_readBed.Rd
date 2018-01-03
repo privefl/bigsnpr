@@ -25,7 +25,7 @@ Function to read bed/bim/fam files into a \link[=bigSNP-class]{bigSNP}.
 }
 \details{
 For more information on these formats, please visit
-\href{http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#bed}{PLINK webpage}.
+\href{https://www.cog-genomics.org/plink/1.9/formats#bed}{PLINK webpage}.
 For other formats, please use PLINK to convert them in bedfiles,
 which require minimal space to store and are faster to read. For example,
 to convert from a VCF file, use the \code{--vcf} option. See \link{snp_plinkQC}.

@@ -55,7 +55,6 @@ getIntervals <- function(x, n = 2) {
 #' @export
 #'
 #' @import foreach
-#' @import magrittr
 #'
 #' @examples
 #' ex <- snp_attachExtdata()

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Binomial(n, p) scaling — snp_scaleBinom • bigsnpr</title>
+<title>Binomial(n, p) scaling � snp_scaleBinom • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,6 +63,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/demo.html">Quick demo</a>
+    </li>
+    <li>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
@@ -143,11 +146,11 @@ PLoS Genet 2(12): e190.
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>add_code256</span>(<span class='fu'>big_copy</span>(<span class='no'>a</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"raw"</span>), <span class='kw'>code</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'>rep</span>(<span class='fl'>NA</span>, <span class='fl'>253</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Assignment will down cast from double to raw.</span>
 #&gt; <span class='warning'>Hint: To remove this warning, use options(bigstatsr.typecast.warning = FALSE).</span></div><div class='input'><span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'>snp_scaleBinom</span>())</div><div class='output co'>#&gt; (2)</div><div class='input'><span class='fu'>str</span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
 #&gt;  $ d     : num [1:10] 22.2 21.6 21.5 21.2 20.8 ...
-#&gt;  $ u     : num [1:93, 1:10] 0.0732 -0.0378 -0.0762 0.0364 0.0444 ...
-#&gt;  $ v     : num [1:170, 1:10] 0.1075 -0.0331 0.0592 -0.0504 0.1216 ...
+#&gt;  $ u     : num [1:93, 1:10] -0.0732 0.0378 0.0762 -0.0364 -0.0444 ...
+#&gt;  $ v     : num [1:170, 1:10] -0.1075 0.0331 -0.0592 0.0504 -0.1216 ...
 #&gt;  $ center: num [1:170] 0.419 0.387 0.301 0.43 0.419 ...
 #&gt;  $ scale : num [1:170] 0.576 0.559 0.506 0.581 0.576 ...
-#&gt;  - attr(*, "class")= chr "big_SVD"</div><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>center</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span> * <span class='no'>p</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>scale</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'>sqrt</span>(<span class='fl'>2</span> * <span class='no'>p</span> * (<span class='fl'>1</span> - <span class='no'>p</span>)), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
+#&gt;  - attr(*, "class")= chr "big_SVD"</div><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>center</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span> * <span class='no'>p</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>X.svd</span>$<span class='no'>scale</span>)</div><div class='input'><span class='fu'>abline</span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'>sqrt</span>(<span class='fl'>2</span> * <span class='no'>p</span> * (<span class='fl'>1</span> - <span class='no'>p</span>)), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -1,7 +1,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/privefl/bigsnpr.svg?branch=master)](https://travis-ci.org/privefl/bigsnpr)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/privefl/bigsnpr?branch=master&svg=true)](https://ci.appveyor.com/project/privefl/bigsnpr)
 [![Coverage Status](https://img.shields.io/codecov/c/github/privefl/bigsnpr/master.svg)](https://codecov.io/github/privefl/bigsnpr?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bigsnpr)](http://cran.r-project.org/package=bigsnpr)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bigsnpr)](https://CRAN.R-project.org/package=bigsnpr)
  
  
 # bigsnpr
@@ -16,15 +16,9 @@
 ## Installation
 
 ```r
-# For the CRAN version
-## Coming soon
-
-# For the current development version
+# Not on CRAN for now because of download_plink()
+# For the current version
 devtools::install_github("privefl/bigsnpr")
-
-# For the first version (depending on package bigmemory)
-devtools::install_github("privefl/bigstatsr", ref = "v-bigmemory")
-devtools::install_github("privefl/bigsnpr",   ref = "v-bigmemory")
 ```
 
 

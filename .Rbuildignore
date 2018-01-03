@@ -14,6 +14,7 @@
 ^tmp-files$
 ^tmp-results$
 ^vignettes$
+^raw-vignettes$
 ^docs$
 ^data-raw$
 ^xgboost.model$
