@@ -1,0 +1,98 @@
+---
+title: "Dosage data: proof of concept"
+author: "Florian Privé"
+date: "January 3, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 65)
+knitr::opts_knit$set(global.par = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align='center', dev='png', dpi = 95)
+```
+
+In this vignette, I show how to get dosage data from a [BGEN](http://www.well.ox.ac.uk/~gav/bgen_format/bgen_format_v1.2.html) file.
+This solution is just a proof of concept. I plan to better develop this when I get the access to the UK Biobank dataset.
+
+## The R package rbgen
+
+Gavin Band developed an R package to load data in BGEN format. Let us use it in this vignette. To install this package, follow the instructions [there](https://bitbucket.org/gavinband/bgen/wiki/rbgen). In summary:
+
+1. download http://bitbucket.org/gavinband/bgen/get/master.tar.gz
+2. run `./waf-1.8.13 configure` and then `./waf-1.8.13` in a shell
+3. verify that it is working by running `./build/test/test_bgen` and `./build/example/bgen_to_vcf example/example.8bits.bgen`
+4. run `sudo ./waf-1.8.13 install`
+5. run `R CMD INSTALL build/R/rbgen`
+
+## The FBM.code256 format
+
+As the name says, FBM are filebackeg big matrices which store elements on 8 bits and use a code of 256 values in order to map each possible byte with a corresponding access code. For example, I defined the following code:
+
+```{r}
+bigsnpr:::CODE_DOSAGE
+```
+
+The use the first 4 elements to code for a genotype call (`0`, `1`, `2` or missing), the 3 following ones to store an imputed genotype call (you may wonder what is the purpose of this but I can assure you that this can be cleverly used in some algorithms). 
+Then the 201 following values codes for dosages, rounded to two decimal places, which is similar to the 8-bit encoding of the BGEN format used for the UK Biobank.
+The 209-th to 256-th values are currently not used.
+
+A similar data structure called FBM.code65636 (2 bytes) may be implemented to store dosages with a precision of at least `0.00005`. Yet, we think such a precision is not useful and a precision of `0.01` is sufficient for dosage data.
+
+## Converting to a FBM.code256
+
+```{r}
+bgen2FBM <- function(bgen_list) {
+  
+  DIM <- dim(bgen_list$data)
+  
+  # constructing a temporary genotype big.matrix
+  bigGeno <- FBM.code256(DIM[2], DIM[1], code = bigsnpr:::CODE_DOSAGE)
+  
+  # compute dosages from probabilities
+  dim(bgen_list$data) <- c(prod(DIM[1:2]), DIM[3])
+  dosages <- bgen_list$data %*% 0:2
+  # transform them in raw codes
+  nonas <- !is.na(dosages)
+  dosages_raw <- matrix(as.raw(3), nrow = DIM[1], ncol = DIM[2])
+  dosages_raw[nonas] <- as.raw(round(100 * dosages[nonas]) + 7)
+  # put these dosages in the FBM
+  bigGeno[] <- t(dosages_raw)
+  
+  list(
+    genotypes = bigGeno,
+    variants = bgen_list$variants,
+    samples = bgen_list$samples
+  )
+}
+```
+
+Use the **rbgen** package to read BGEN data into R:
+
+```{r}
+ranges = data.frame(
+  chromosome = "01",
+  start = 1,
+  end = 2e9
+)
+bgen_file <- path.expand("~/Téléchargements/gavinband-bgen-798eca81c0fa/example/example.8bits.bgen")
+if (!file.exists(paste0(bgen_file, ".bgi")))
+  system(glue::glue("bgenix -g {bgen_file} -index"))
+bgen_list <- rbgen::bgen.load(bgen_file, ranges)
+```
+
+Let's see the dosages we get for some given probabilities:
+
+```{r}
+library(bigstatsr)
+test <- bgen2FBM(bgen_list)
+t(bgen_list$data[1:12, 1, ])
+test$genotypes[1, 1:12]
+```
+
+BGEN files store twice information as FBM files (probabilities vs dosages) but are compressed so that FBMs are just slightly smaller files.
+
+```{r}
+file.size(test$genotypes$backingfile)
+file.size(bgen_file)
+```
+

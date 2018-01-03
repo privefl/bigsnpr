@@ -1,7 +1,7 @@
 ---
 title: "Why clumping should be preferred over pruning"
 author: "Florian Privé"
-date: "November 24, 2016"
+date: "November 24, 2016 (updated on January 3, 2018)"
 output: html_document
 ---
 
@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-In this short document, I will show why clumping should be preferred over pruning for single-nucleotide polymorphism (SNP) arrays. 
+In this vignette, I show why clumping (on MAF) should be preferred over pruning for single-nucleotide polymorphism (SNP) arrays. 
 
 Pruning and clumping are used to keep a subset of SNPs that are nearly uncorrelated with each other. For instance, pruning is used before Principal Component Analysis to avoid capturing too much variance of linkage disequilibrium (LD) regions. Clumping is used to keep only one representative SNP per region of LD.
 <!-- , for example when reporting p-values of genome-wide association studies (GWAS). -->
@@ -19,7 +19,6 @@ Pruning and clumping are used to keep a subset of SNPs that are nearly uncorrela
 I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation > 0.2 with their direct neighbors and only with them. Moreover, the SNPs have an increasing MAF.
 
 ```{r}
-
 gen <- function(n, m) {
   I <- 1:m
   p <- I / (2 * m + 1)
@@ -39,22 +38,76 @@ print(round(cor(X)^2, 2)) # squared correlation between SNPs
 print(colMeans(X) / 2) # MAF of SNPs
 ```
 
+Let's convert this to our format `bigSNP` in order to write corresponding PLINK files.
+
+
+
+```{r}
+library(bigsnpr)
+plink <- download_plink()
+tmp <- tempfile()
+fake <- snp_fake(500, 10)
+fake$genotypes[] <- X
+snp_writeBed(fake, paste0(tmp, ".bed"))
+```
+
+
 ## Pruning
 
-I then pseudo-convert the SNP matrix in my format `bigSNP` and use my re-implementation of PLINK pruning on this dataset (similar to `--indep-pairwise 10 1 0.2`)
+Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of correlated SNPs, **keeping only the one with the higher MAF**. Let's use PLINK pruning on this simulated toy dataset.
 
-## Results and conclusion
+```{r}
+library(glue)
+system(glue("{plink} --bfile {tmp} --indep-pairwise 50 1 0.2 --out {tmp}"))
+```
+
+```{r}
+read.table(glue("{tmp}.prune.out"))
+read.table(glue("{tmp}.prune.in"))
+```
 
 The first SNP is pruned because of its correlation with the second. The
 second SNP is pruned because of its correlation with the third and so
 on. In the end, only the last SNP (10th) is kept with the LD pruning
 procedure of PLINK, which corresponds to less than 18% of the total variance.
 
-On the contrary, a clumping approach would consider the SNPs sorted
-(in a decreasing order) by a statistic (here the MAF). So the last SNP
-(10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.
+You can also do the pruning directly in R with `snp_pruning()`:
 
-So, pruning removes SNPs in a way that can leave regions of the genome with no representative SNP at all.
+```{r}
+snp_pruning(fake$genotypes, infos.chr = fake$map$chromosome)
+```
+
+
+## Clumping
+
+A clumping approach would consider the SNPs sorted (in a decreasing order) by a statistic. 
+This statistic is often a test statistic computed from a GWAS of a given phenotype. Yet, for example, for Principal Components Analysis (PCA), the thinning procedure should remain unsupervised (phenotype mustn't be used!). So, we propose to also use the MAF as a statistic of importance, so that SNPs are sorted by decreasing MAF.
+
+The benefit of the clumping procedure is that the index SNP is always the SNP that is kept (because it has the highest MAF). Let's use PLINK again:
+
+```{r}
+# Compute MAFs
+write.table(data.frame(SNP = fake$map$marker.ID,
+                       P = 1 - snp_MAF(fake$genotypes)),
+            file = paste0(tmp, ".frq"), row.names = FALSE, quote = FALSE)
+# Clumping
+system(glue("{plink} --bfile {tmp} --out {tmp}",
+              " --clump {tmp}.frq",
+              " --clump-p1 1 --clump-p2 1 --clump-r2 0.2"))
+read.table(glue("{tmp}.clumped"))
+```
+
+So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.
+
+You can also do the clumping (on MAF by default) directly in R with `snp_clumping()`:
+
+```{r}
+snp_clumping(fake$genotypes, infos.chr = fake$map$chromosome)
+```
+
+## Conclusion
+
+So, pruning removes SNPs in a way that may leave regions of the genome with no representative SNP at all.
 
 <!-- ## Acknowledgements  -->
 
