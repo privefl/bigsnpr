@@ -147,20 +147,20 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 <p>Let’s convert this to our format <code>bigSNP</code> in order to write corresponding PLINK files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(bigsnpr)</code></pre></div>
 <pre><code>## Le chargement a nécessité le package : bigstatsr</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/download_plink.html">download_plink</a></span>()
-tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
-fake &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_fake.html">snp_fake</a></span>(<span class="dv">500</span>, <span class="dv">10</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fake &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_fake.html">snp_fake</a></span>(<span class="kw">nrow</span>(X), <span class="kw">ncol</span>(X))
 fake<span class="op">$</span>genotypes[] &lt;-<span class="st"> </span>X</code></pre></div>
 <pre><code>## Warning: Assignment will down cast from double to unsigned char.
 ## Hint: To remove this warning, use options(bigstatsr.typecast.warning = FALSE).</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span>(fake, <span class="kw">paste0</span>(tmp, <span class="st">".bed"</span>))</code></pre></div>
-<pre><code>## [1] "/tmp/Rtmp7rV7Dk/file795e1688232b.bed"</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
+<span class="kw"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span>(fake, <span class="kw">paste0</span>(tmp, <span class="st">".bed"</span>))</code></pre></div>
+<pre><code>## [1] "/tmp/RtmpLWy3p7/file7b66299b6c1c.bed"</code></pre>
 </div>
 <div id="pruning" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pruning" class="anchor"></a>Pruning</h2>
 <p>Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of correlated SNPs, <strong>keeping only the one with the higher MAF</strong> (see <a href="https://github.com/chrchang/plink-ng/issues/27">this</a>). Let’s use PLINK pruning on this simulated toy dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(glue)
+plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/download_plink.html">download_plink</a></span>()
 <span class="kw">system</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --indep-pairwise 50 1 0.2 --out {tmp}"</span>))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read.table</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{tmp}.prune.out"</span>))</code></pre></div>
 <pre><code>##      V1

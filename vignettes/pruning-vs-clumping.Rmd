@@ -44,10 +44,9 @@ Let's convert this to our format `bigSNP` in order to write corresponding PLINK 
 
 ```{r}
 library(bigsnpr)
-plink <- download_plink()
-tmp <- tempfile()
-fake <- snp_fake(500, 10)
+fake <- snp_fake(nrow(X), ncol(X))
 fake$genotypes[] <- X
+tmp <- tempfile()
 snp_writeBed(fake, paste0(tmp, ".bed"))
 ```
 
@@ -58,6 +57,7 @@ Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of cor
 
 ```{r}
 library(glue)
+plink <- download_plink()
 system(glue("{plink} --bfile {tmp} --indep-pairwise 50 1 0.2 --out {tmp}"))
 ```
 
