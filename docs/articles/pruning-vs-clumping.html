@@ -154,12 +154,12 @@ fake<span class="op">$</span>genotypes[] &lt;-<span class="st"> </span>X</code><
 <pre><code>## Warning: Assignment will down cast from double to unsigned char.
 ## Hint: To remove this warning, use options(bigstatsr.typecast.warning = FALSE).</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span>(fake, <span class="kw">paste0</span>(tmp, <span class="st">".bed"</span>))</code></pre></div>
-<pre><code>## [1] "/tmp/RtmpC9zmQU/file744c4803683b.bed"</code></pre>
+<pre><code>## [1] "/tmp/Rtmp7rV7Dk/file795e1688232b.bed"</code></pre>
 </div>
 <div id="pruning" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pruning" class="anchor"></a>Pruning</h2>
-<p>Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of correlated SNPs, <strong>keeping only the one with the higher MAF</strong>. Let’s use PLINK pruning on this simulated toy dataset.</p>
+<p>Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of correlated SNPs, <strong>keeping only the one with the higher MAF</strong> (see <a href="https://github.com/chrchang/plink-ng/issues/27">this</a>). Let’s use PLINK pruning on this simulated toy dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(glue)
 <span class="kw">system</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --indep-pairwise 50 1 0.2 --out {tmp}"</span>))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read.table</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{tmp}.prune.out"</span>))</code></pre></div>
@@ -194,14 +194,13 @@ fake<span class="op">$</span>genotypes[] &lt;-<span class="st"> </span>X</code><
 <span class="kw">system</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --out {tmp}"</span>,
               <span class="st">" --clump {tmp}.frq"</span>,
               <span class="st">" --clump-p1 1 --clump-p2 1 --clump-r2 0.2"</span>))
-<span class="kw">read.table</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{tmp}.clumped"</span>))</code></pre></div>
-<pre><code>##    V1 V2     V3 V4    V5    V6   V7  V8  V9  V10   V11      V12
-## 1 CHR  F    SNP BP     P TOTAL NSIG S05 S01 S001 S0001      SP2
-## 2   1  1 snp_10  0  0.55     1    1   0   0    0     0 snp_9(1)
-## 3   1  1  snp_8  0 0.628     1    1   0   0    0     0 snp_7(1)
-## 4   1  1  snp_6  0 0.717     1    1   0   0    0     0 snp_5(1)
-## 5   1  1  snp_4  0 0.823     1    1   0   0    0     0 snp_3(1)
-## 6   1  1  snp_2  0 0.909     1    1   0   0    0     0 snp_1(1)</code></pre>
+<span class="kw">read.table</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{tmp}.clumped"</span>), <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>##   CHR F    SNP BP     P TOTAL NSIG S05 S01 S001 S0001      SP2
+## 1   1 1 snp_10  0 0.550     1    1   0   0    0     0 snp_9(1)
+## 2   1 1  snp_8  0 0.628     1    1   0   0    0     0 snp_7(1)
+## 3   1 1  snp_6  0 0.717     1    1   0   0    0     0 snp_5(1)
+## 4   1 1  snp_4  0 0.823     1    1   0   0    0     0 snp_3(1)
+## 5   1 1  snp_2  0 0.909     1    1   0   0    0     0 snp_1(1)</code></pre>
 <p>So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.</p>
 <p>You can also do the clumping (on MAF by default) directly in R with <code><a href="../reference/pruning-clumping.html">snp_clumping()</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pruning-clumping.html">snp_clumping</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
