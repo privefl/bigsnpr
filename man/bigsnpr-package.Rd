@@ -39,7 +39,8 @@ You may use \link{nb_cores}.}
 }
 \description{
 Easy-to-use, efficient, flexible and scalable tools
-for the analysis of massive SNP arrays. Preprint: <doi:10.1101/190926>.
+for the analysis of massive SNP arrays.
+Preprint: Privé et al. (2017) <doi:10.1101/190926>.
 }
 \seealso{
 Useful links:
