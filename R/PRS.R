@@ -90,28 +90,30 @@ snp_PRS <- function(G, betas.keep, ind.test,
   check_args()
   assert_lengths(betas.keep, ind.keep)
   assert_lengths(same.keep, ind.keep)
-  if (!is.null(lpS.keep)) assert_lengths(lpS.keep, ind.keep)
   stopifnot(sum(is.na(same.keep)) == 0)
   assert_type(same.keep, "logical")
 
   # thresholding and projecting
-  if (is.null(lpS.keep) || isTRUE(all.equal(thr.list, 0))) {
+  if (is.null(lpS.keep) || identical(thr.list, 0)) {
     message("'lpS.keep' or 'thr.list' was not specified. Thresholding disabled.")
     scores.all <- as.matrix(prodVecRev(G, betas.keep, same.keep,
                                        ind.test, ind.keep))
   } else {
     assert_lengths(lpS.keep, ind.keep)
 
-    scores.all <- foreach(ic = seq_along(thr.list), .combine = 'cbind') %do% {
-
-      pass.thr <- which(lpS.keep > thr.list[ic])
-      if (length(pass.thr) > 0) {
-        prodVecRev(G, betas.keep[pass.thr], same.keep[pass.thr],
-                   ind.test, ind.keep[pass.thr])
-      } else {
-        rep(0, length(ind.test))
-      }
+    scores.all <- matrix(NA_real_, length(ind.test), length(thr.list))
+    ind.rem <- seq_along(ind.keep)
+    last <- 0
+    for (i in order(thr.list, decreasing = TRUE)) {
+      pass.thr <- (lpS.keep[ind.rem] > thr.list[i])
+      ind <- ind.rem[pass.thr]
+      # build score on top of previous ones
+      scores.all[, i] <- last <- last +
+        prodVecRev(G, betas.keep[ind], same.keep[ind], ind.test, ind.keep[ind])
+      # remaining indices amongst ind.keep
+      ind.rem <- ind.rem[!pass.thr]
     }
+
     colnames(scores.all) <- thr.list
   }
   rownames(scores.all) <- ind.test
