@@ -22,7 +22,7 @@ LazyData: TRUE
 Language: en-US
 ByteCompile: TRUE
 Depends:
-    R (>= 3.3.2), 
+    R (>= 3.2.3), 
     bigstatsr (>= 0.2.3)
 Imports:
     data.table,
