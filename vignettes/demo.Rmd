@@ -75,7 +75,8 @@ plot(obj.svd, type = "scores") +
 ```{r}
 # Fit a logistic model between the phenotype and each SNP separately
 # while adding PCs as covariates to each model
-obj.gwas <- big_univLogReg(G, y01.train = obj.bigSNP$fam$affection - 1,
+y01 <- obj.bigSNP$fam$affection - 1
+obj.gwas <- big_univLogReg(G, y01.train = y01,
                            covar.train = obj.svd$u,
                            ncores = NCORES)
 # Q-Q plot of the object
@@ -87,3 +88,25 @@ snp_qq(obj.gwas.gc)
 # Manhattan plot, not quite sexy because there are only 1 chromosome here
 snp_manhattan(obj.gwas.gc, infos.chr = CHR, infos.pos = POS)
 ```
+
+## Joint PRS
+
+```{r}
+# Divide the indices in training/test sets
+ind.train <- sample(nrow(G), 400)
+ind.test <- setdiff(rows_along(G), ind.train)
+# Train the model
+cmsa.logit <- big_CMSA(FUN = big_spLogReg, feval = AUC,
+                       X = G, y.train = y01[ind.train], 
+                       ind.train = ind.train, 
+                       covar.train = obj.svd$u[ind.train, ],
+                       alpha = 0.5, dfmax = 20e3, 
+                       ncores = NCORES)
+mean(cmsa.logit != 0)  # sparse solution
+# Get predictions
+preds <- predict(cmsa.logit, X = G, ind.row = ind.test, 
+                 covar.row = obj.svd$u[ind.test, ])
+# Check AUC
+AUC(preds, y01[ind.test])
+```
+

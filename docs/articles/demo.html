@@ -104,7 +104,7 @@ bedfile &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span 
 <span class="co"># Let's put them in an temporary directory for this demo.</span>
 tmpfile &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(bedfile, <span class="dt">backingfile =</span> tmpfile)</code></pre></div>
-<pre><code>## [1] "/tmp/RtmpViANw5/file73c7532c692d.rds"</code></pre>
+<pre><code>## [1] "/tmp/Rtmp8IA4FH/file7a987e28fe2b.rds"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Attach the "bigSNP" object in R session</span>
 obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="kw">paste0</span>(tmpfile, <span class="st">".rds"</span>))
 <span class="co"># See how it looks like</span>
@@ -179,7 +179,8 @@ obj.svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <
 <a href="#genome-wide-association-study" class="anchor"></a>Genome-Wide Association Study</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit a logistic model between the phenotype and each SNP separately</span>
 <span class="co"># while adding PCs as covariates to each model</span>
-obj.gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, <span class="dt">y01.train =</span> obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection <span class="op">-</span><span class="st"> </span><span class="dv">1</span>,
+y01 &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection <span class="op">-</span><span class="st"> </span><span class="dv">1</span>
+obj.gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, <span class="dt">y01.train =</span> y01,
                            <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u,
                            <span class="dt">ncores =</span> NCORES)
 <span class="co"># Q-Q plot of the object</span>
@@ -194,6 +195,28 @@ obj.gwas.gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 <span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(obj.gwas.gc, <span class="dt">infos.chr =</span> CHR, <span class="dt">infos.pos =</span> POS)</code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-4-3.png" width="665" style="display: block; margin: auto;"></p>
 </div>
+<div id="joint-prs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#joint-prs" class="anchor"></a>Joint PRS</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Divide the indices in training/test sets</span>
+ind.train &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">nrow</span>(G), <span class="dv">400</span>)
+ind.test &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rows_along</span>(G), ind.train)
+<span class="co"># Train the model</span>
+cmsa.logit &lt;-<span class="st"> </span><span class="kw">big_CMSA</span>(<span class="dt">FUN =</span> big_spLogReg, <span class="dt">feval =</span> AUC,
+                       <span class="dt">X =</span> G, <span class="dt">y.train =</span> y01[ind.train], 
+                       <span class="dt">ind.train =</span> ind.train, 
+                       <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u[ind.train, ],
+                       <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">dfmax =</span> <span class="fl">20e3</span>, 
+                       <span class="dt">ncores =</span> NCORES)
+<span class="kw">mean</span>(cmsa.logit <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)  <span class="co"># sparse solution</span></code></pre></div>
+<pre><code>## [1] 0.0659051</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get predictions</span>
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(cmsa.logit, <span class="dt">X =</span> G, <span class="dt">ind.row =</span> ind.test, 
+                 <span class="dt">covar.row =</span> obj.svd<span class="op">$</span>u[ind.test, ])
+<span class="co"># Check AUC</span>
+<span class="kw">AUC</span>(preds, y01[ind.test])</code></pre></div>
+<pre><code>## [1] 0.8639647</code></pre>
+</div>
 </div>
   </div>
 
@@ -206,6 +229,7 @@ obj.gwas.gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference
       <li><a href="#read-from-the-plink-files">Read from the PLINK files</a></li>
       <li><a href="#principal-component-analysis">Principal Component Analysis</a></li>
       <li><a href="#genome-wide-association-study">Genome-Wide Association Study</a></li>
+      <li><a href="#joint-prs">Joint PRS</a></li>
       </ul>
 </div>
       </div>

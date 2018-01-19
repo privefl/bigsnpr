@@ -12,20 +12,12 @@ knitr::opts_chunk$set(echo = TRUE, fig.align='center', dev='png', dpi = 95)
 ```
 
 In this vignette, I show how to get dosage data from a [BGEN](http://www.well.ox.ac.uk/~gav/bgen_format/bgen_format_v1.2.html) file.
-This solution is just a proof of concept. I plan to better develop this when I get the access to the UK Biobank dataset.
-
-## The R package rbgen
-
-Gavin Band developed an R package to load data in BGEN format. Let us use it in this vignette. To install this package, follow the instructions [there](https://bitbucket.org/gavinband/bgen/wiki/rbgen). In summary:
-
-1. download http://bitbucket.org/gavinband/bgen/get/master.tar.gz
-2. run `./waf-1.8.13 configure` and then `./waf-1.8.13` in a shell
-3. verify that it is working by running `./build/test/test_bgen` and `./build/example/bgen_to_vcf example/example.8bits.bgen`
-4. run `sudo ./waf-1.8.13 install`
-5. run `R CMD INSTALL build/R/rbgen`
+I provide two different solutions, as a proof of concept. 
+Even if the second solution might be used for very large datasets, I plan to better develop the reading of BGEN files when I get the access to the full UK Biobank dataset. Indeed, it would be better to directly read probabilies from the BGEN files, without intermediaries.
 
 ## The FBM.code256 format
 
+This is the format used in package **bigsnpr**.
 As the name says, FBM are filebackeg big matrices which store elements on 8 bits and use a code of 256 values in order to map each possible byte with a corresponding access code. For example, I defined the following code:
 
 ```{r}
@@ -33,12 +25,21 @@ bigsnpr:::CODE_DOSAGE
 ```
 
 The use the first 4 elements to code for a genotype call (`0`, `1`, `2` or missing), the 3 following ones to store an imputed genotype call (you may wonder what is the purpose of this but I can assure you that this can be cleverly used in some algorithms). 
-Then the 201 following values codes for dosages, rounded to two decimal places, which is similar to the 8-bit encoding of the BGEN format used for the UK Biobank.
-The 209-th to 256-th values are currently not used.
+Then the 201 following values codes for dosages, rounded to two decimal places, which is similar to the 8-bit encoding of the BGEN format used for the UK Biobank. I will also use the 209-th value to code a missing dosage.
+The 210-th to 256-th values are currently not used.
 
 A similar data structure called FBM.code65636 (2 bytes) may be implemented to store dosages with a precision of at least `0.00005`. Yet, we think such a precision is not useful and a precision of `0.01` is sufficient for dosage data.
 
-## Converting to a FBM.code256
+## First solution: Using the R package rbgen
+
+Gavin Band developed an R package to load data in BGEN format. Let us use this R package in the first solution to read dosages from BGEN files in my format *bigSNP*. To install this R package, follow the instructions [there](https://bitbucket.org/gavinband/bgen/wiki/rbgen). In summary:
+
+1. download http://bitbucket.org/gavinband/bgen/get/master.tar.gz
+2. run `./waf-1.8.13 configure` and then `./waf-1.8.13` in a shell
+3. verify that it is working by running `./build/test/test_bgen` and `./build/example/bgen_to_vcf example/example.8bits.bgen`
+4. run `sudo ./waf-1.8.13 install`
+5. run `R CMD INSTALL build/R/rbgen`
+
 
 ```{r}
 bgen2FBM <- function(bgen_list) {
@@ -94,5 +95,87 @@ BGEN files store twice information as FBM files (probabilities vs dosages) but a
 ```{r}
 file.size(test$genotypes$backingfile)
 file.size(bgen_file)
+```
+
+## Second solution: using PLINK 2.0
+
+The [PGEN](https://www.cog-genomics.org/plink/2.0/formats#pgen) format is binary format of [PLINK 2.0](https://www.cog-genomics.org/plink/2.0/) and can store dosages. PLINK 2.0 can also convert from BGEN to PGEN files. Yet, it's not straightforward to read PGEN files either. Yet, PLINK has another function to write these dosages to a text file, which is easier to read from.
+
+First, let us get variant and individual information:
+
+```{r}
+plink2 <- path.expand("~/Téléchargements/gavinband-bgen-798eca81c0fa/plink2")
+tmp <- tempfile()
+# Write bim and fam files from the BGEN file
+system(glue::glue("{plink2} --bgen {bgen_file}",
+                  " --make-just-bim --make-just-fam",
+                  " --sort-vars",
+                  " --out {tmp}"))
+# Get the variants and individual information
+fam <- data.table::fread(paste0(tmp, ".fam"), data.table = FALSE)
+names(fam) <- bigsnpr:::NAMES.FAM
+n <- nrow(fam)
+bim <- data.table::fread(paste0(tmp, ".bim"), data.table = FALSE)
+names(bim) <- bigsnpr:::NAMES.MAP
+m <- nrow(bim)
+```
+
+Then, we write the text file of dosages:
+
+```{r}
+system(glue::glue("{plink2} --bgen {bgen_file}",
+                  " --export A",
+                  " --out {tmp}"))
+```
+
+Now, let us read these dosages into our FBM.code256 format:
+
+```{Rcpp}
+/**** Simple Rcpp function to convert dosages in a data.frame to our format ****/
+
+// [[Rcpp::depends(BH, bigstatsr)]]
+#include <bigstatsr/BMCodeAcc.h>
+
+// [[Rcpp::export]]
+void fill_FBM(Environment BM,
+              const IntegerVector& colInd,
+              const DataFrame& df) {
+  
+  Rcout << colInd << std::endl;
+  
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMAcc<unsigned char> macc(xpBM, seq_len(xpBM->nrow()) - 1, colInd - 1);
+  
+  double dosage;
+  
+  for (size_t j = 0; j < macc.ncol(); j++) {
+    NumericVector variant = df[j];
+    for (size_t i = 0; i < macc.nrow(); i++) {
+      dosage = variant[i];
+      macc(i, j) = R_IsNA(dosage) ? 208 : round(100 * dosage + 7);
+    }
+  }
+}
+```
+
+
+```{r}
+# Get variants IDs to read
+colnames <- names(data.table::fread(paste0(tmp, ".raw"), nrows = 0))
+all.equal(bim$marker.ID, as.character(test$variants$rsid))
+(cols <- match(paste0(bim$marker.ID, "_G"), colnames))
+# Construct a temporary genotype big.matrix
+bigGeno2 <- FBM.code256(n, m, code = bigsnpr:::CODE_DOSAGE)
+# Fill it by blocks
+big_apply(bigGeno2, a.FUN = function(G, ind) {
+  df <- data.table::fread(paste0(tmp, ".raw"), select = colnames[cols[ind]])
+  fill_FBM(G, colInd = ind, df = df)  # returns NULL
+}, a.combine = 'c', block.size = 20)
+# Construct the bigSNP object
+test2 <- structure(list(genotypes = bigGeno2, fam = fam, map = bim), class = "bigSNP")
+str(test2, max.level = 2)
+# Verification
+test2$genotypes[1, 1:12]
+all.equal(test2$genotypes[], test$genotypes[])
 ```
 

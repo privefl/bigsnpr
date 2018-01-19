@@ -44,20 +44,20 @@ Let's convert this to our format `bigSNP` in order to write corresponding PLINK 
 
 ```{r}
 library(bigsnpr)
-plink <- download_plink()
-tmp <- tempfile()
-fake <- snp_fake(500, 10)
+fake <- snp_fake(nrow(X), ncol(X))
 fake$genotypes[] <- X
+tmp <- tempfile()
 snp_writeBed(fake, paste0(tmp, ".bed"))
 ```
 
 
 ## Pruning
 
-Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of correlated SNPs, **keeping only the one with the higher MAF**. Let's use PLINK pruning on this simulated toy dataset.
+Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of correlated SNPs, **keeping only the one with the higher MAF** (see [this](https://github.com/chrchang/plink-ng/issues/27)). Let's use PLINK pruning on this simulated toy dataset.
 
 ```{r}
 library(glue)
+plink <- download_plink()
 system(glue("{plink} --bfile {tmp} --indep-pairwise 50 1 0.2 --out {tmp}"))
 ```
 
@@ -94,7 +94,7 @@ write.table(data.frame(SNP = fake$map$marker.ID,
 system(glue("{plink} --bfile {tmp} --out {tmp}",
               " --clump {tmp}.frq",
               " --clump-p1 1 --clump-p2 1 --clump-r2 0.2"))
-read.table(glue("{tmp}.clumped"))
+read.table(glue("{tmp}.clumped"), header = TRUE)
 ```
 
 So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.
