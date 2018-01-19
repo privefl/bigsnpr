@@ -13,7 +13,8 @@
 #' @param bedfile Path to file with extension ".bed" to read.
 #' You need the corresponding ".bim" and ".fam" in the same directory.
 #' @param backingfile The path (without extension) for the backing file(s)
-#' for the cache of the [bigSNP][bigSNP-class] object.
+#' for the cache of the [bigSNP][bigSNP-class] object. Default takes the bedfile
+#' without the ".bed" extension.
 #'
 #' @return The path to the RDS file that stores the `bigSNP` object.
 #' Note that this function creates one other file which stores the values of
@@ -23,7 +24,7 @@
 #'
 #' @example examples/example-readplink.R
 #' @export
-snp_readBed <- function(bedfile, backingfile) {
+snp_readBed <- function(bedfile, backingfile = sub("\\.bed$", "", bedfile)) {
 
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)

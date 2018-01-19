@@ -4,14 +4,15 @@
 \alias{snp_readBed}
 \title{Read PLINK files into a "bigSNP"}
 \usage{
-snp_readBed(bedfile, backingfile)
+snp_readBed(bedfile, backingfile = sub("\\\\.bed$", "", bedfile))
 }
 \arguments{
 \item{bedfile}{Path to file with extension ".bed" to read.
 You need the corresponding ".bim" and ".fam" in the same directory.}
 
 \item{backingfile}{The path (without extension) for the backing file(s)
-for the cache of the \link[=bigSNP-class]{bigSNP} object.}
+for the cache of the \link[=bigSNP-class]{bigSNP} object. Default takes the bedfile
+without the ".bed" extension.}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.
