@@ -1,14 +1,5 @@
 ################################################################################
 
-getD <- function(X) {
-  # robust::covRob(X, estim = "pairwiseGK")$dist
-  ogk <- robustbase::covOGK(X, sigmamu = robustbase::s_mad)
-  X2 <- sweep(X, 2, ogk$wcenter)
-  rowSums((X2 %*% solve(ogk$wcov)) * X2)
-}
-
-################################################################################
-
 #' Outlier detection
 #'
 #' Method to detect genetic markers involved in biological adaptation.
@@ -55,13 +46,14 @@ snp_pcadapt <- function(G, U.row,
     zscores <- linRegPcadapt_cpp(G, U = U.row,
                                  rowInd = ind.row,
                                  colInd = ind.col)
+    dist <- robust::covRob(zscores, estim = "pairwiseGK")$dist
 
     fun.pred <- eval(parse(text = sprintf(
       "function(xtr) {
        stats::pchisq(xtr, df = %d, lower.tail = FALSE, log.p = TRUE) / log(10)
      }", K)))
 
-    structure(data.frame(score = getD(zscores)),
+    structure(data.frame(score = dist),
               class = c("mhtest", "data.frame"),
               transfo = identity,
               predict = fun.pred)

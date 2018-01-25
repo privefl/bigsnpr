@@ -40,11 +40,11 @@ test_that("Same as pcadapt", {
 
   obj.gwas <- snp_pcadapt(G, obj.svd$u)
   expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
-               tolerance = 1e-2)
+               tolerance = 1e-6)
   expect_equal(snp_gc(obj.gwas)[[1]], as.numeric(obj.pcadapt$stat),
-               tolerance = 1e-2)
+               tolerance = 1e-6)
   expect_equal(predict(snp_gc(obj.gwas), log10 = FALSE), obj.pcadapt$pvalues,
-               tolerance = 1e-2)
+               tolerance = 1e-6)
 
   ################################################################################
 
@@ -80,3 +80,4 @@ test_that("Same as pcadapt", {
   ################################################################################
 
 })
+

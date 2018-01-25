@@ -1,14 +1,14 @@
 
 library(bigsnpr)
 
-bedfile <- "test.bed"
+bedfile <- "../Dubois2010_data/FinnuncorrNLITUK1UK3hap300.bed"
 
 system.time(
-  test1 <- snp_attach(snp_readBed(bedfile, "test1"))
+  test1 <- snp_attach(snp_readBed(bedfile, tempfile()))
 )
 
 system.time({
-  backingfile <- "test2"
+  backingfile <- tempfile()
 
   # Get other files
   bimfile <- sub("\\.bed$", ".bim", bedfile)
@@ -35,7 +35,7 @@ system.time({
   )
 
   # Fill the FBM from bedfile
-  # Rcpp::sourceCpp('tmp-tests/test-write-bed-mmap.cpp')
+  # Rcpp::sourceCpp('tmp-tests/test-read-bed-mmap.cpp')
   fillMat(pcadapt:::bedXPtr(bedfile, n, m), bigGeno)
 
   # Create the bigSNP object
