@@ -12,7 +12,11 @@ bigstatsr
 bim
 bp
 cbind
+center
+centering
 Chr
+Color
+Colors
 Devlin
 diploidy
 doesn
@@ -32,6 +36,7 @@ gc
 ggplot
 GigaScience
 GWAS
+gray
 Hugues
 IBD
 indices
@@ -49,6 +54,7 @@ MAXL
 Mbp
 nb
 Neale
+neighbor
 parallelize
 parApply
 pcadapt

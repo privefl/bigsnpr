@@ -14,6 +14,11 @@ There were no ERRORs or WARNINGs.
 
 Overall, there were 1 NOTE:
 
+* checking installed package size ... NOTE
+  installed size is  5.0Mb
+  sub-directories of 1Mb or more:
+    libs   3.4Mb
+
 * checking CRAN incoming feasibility ... NOTE
 Maintainer: 'Florian Privé <florian.prive.21@gmail.com>'
 
