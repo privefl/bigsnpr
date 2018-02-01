@@ -4,17 +4,17 @@
 \alias{snp_plinkIBDQC}
 \title{Identity-by-descent}
 \usage{
-snp_plinkIBDQC(bedfile.in, bedfile.out = NULL,
-  plink.path = download_plink(), pi.hat = 0.08, ncores = 1,
-  pruning.args = c(100, 0.2), do.blind.QC = TRUE, extra.options = "")
+snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL, pi.hat = 0.08,
+  ncores = 1, pruning.args = c(100, 0.2), do.blind.QC = TRUE,
+  extra.options = "")
 }
 \arguments{
+\item{plink.path}{Path to the executable of PLINK 1.9.}
+
 \item{bedfile.in}{Path to the input bedfile.}
 
 \item{bedfile.out}{Path to the output bedfile. Default is created by
 appending \code{"_norel"} to \code{prefix.in} (\code{bedfile.in} without extension).}
-
-\item{plink.path}{Path to the executable of PLINK 1.9. Default downloads it.}
 
 \item{pi.hat}{PI_HAT value threshold for individuals (first by pairs)
 to be excluded. Default is \code{0.08}.}
@@ -47,9 +47,9 @@ using its method-of-moments.
 }
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-test <- snp_plinkIBDQC(bedfile,
-                       bedfile.out = tempfile(fileext = ".bed"),
-                       ncores = 2)
+plink <- download_plink()
+test <- snp_plinkIBDQC(plink, bedfile,
+                       bedfile.out = tempfile(fileext = ".bed"))
 test
 
 }

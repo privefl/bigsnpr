@@ -114,6 +114,8 @@ snp_clumping <- function(G, infos.chr,
   if (is.null(S)) S <- snp_MAF(G, ind.row = ind.row)
   args <- as.list(environment())
 
+  assert_lengths(infos.chr, S)
+
   do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
 }
 

@@ -16,9 +16,3 @@ The path of the downloaded PLINK executable.
 \description{
 Download PLINK 1.9 from \url{https://www.cog-genomics.org/plink2}.
 }
-\examples{
-download_plink()
-download_plink()  # don't download if already exists
-download_plink(".")
-
-}

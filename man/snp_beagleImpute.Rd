@@ -4,20 +4,18 @@
 \alias{snp_beagleImpute}
 \title{Imputation}
 \usage{
-snp_beagleImpute(bedfile.in, bedfile.out = NULL,
-  beagle.path = download_beagle(), plink.path = download_plink(),
+snp_beagleImpute(beagle.path, plink.path, bedfile.in, bedfile.out = NULL,
   memory.max = 3, ncores = 1, extra.options = "")
 }
 \arguments{
+\item{beagle.path}{Path to the executable of Beagle v4+.}
+
+\item{plink.path}{Path to the executable of PLINK 1.9.}
+
 \item{bedfile.in}{Path to the input bedfile.}
 
 \item{bedfile.out}{Path to the output bedfile. Default is created by
 appending \code{"_impute"} to \code{prefix.in} (\code{bedfile.in} without extension).}
-
-\item{beagle.path}{Path to the executable of Beagle v4+.
-Default downloads it.}
-
-\item{plink.path}{Path to the executable of PLINK 1.9. Default downloads it.}
 
 \item{memory.max}{Max memory (in GB) to be used. It is internally rounded
 to be an integer. Default is \code{3}.}
@@ -35,7 +33,7 @@ The path of the new bedfile.
 Imputation using \strong{Beagle} version 4.
 }
 \details{
-Downloads and more informations can be found at the following websites
+Downloads and more information can be found at the following websites
 \itemize{
 \item \href{https://www.cog-genomics.org/plink2}{PLINK},
 \item \href{https://faculty.washington.edu/browning/beagle/beagle.html}{Beagle}.

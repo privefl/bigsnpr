@@ -64,7 +64,7 @@ prodVecRev <- function(G, betas.col, same.col, ind.row, ind.col) {
 #' @param betas.keep Numeric vector of weights associated with each SNP
 #'   corresponding to `ind.keep`.
 #'   You may want to see [big_univLinReg] or [big_univLogReg].
-#' @param ind.test The individuals on whom to project the scores.
+#' @param ind.test The individuals on whom to project the scores. Default uses all.
 #' @param ind.keep Column (SNP) indices to use (if using clumping, the
 #'   output of [snp_clumping]). Default doesn't clump.
 #' @param same.keep A logical vector associated with `betas.keep` whether the
@@ -81,7 +81,8 @@ prodVecRev <- function(G, betas.col, same.col, ind.row, ind.col) {
 #'
 #' @example examples/example-PRS.R
 #'
-snp_PRS <- function(G, betas.keep, ind.test,
+snp_PRS <- function(G, betas.keep,
+                    ind.test = rows_along(G),
                     ind.keep = cols_along(G),
                     same.keep = rep(TRUE, length(ind.keep)),
                     lpS.keep = NULL,

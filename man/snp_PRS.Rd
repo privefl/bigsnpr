@@ -4,7 +4,7 @@
 \alias{snp_PRS}
 \title{PRS}
 \usage{
-snp_PRS(G, betas.keep, ind.test, ind.keep = cols_along(G),
+snp_PRS(G, betas.keep, ind.test = rows_along(G), ind.keep = cols_along(G),
   same.keep = rep(TRUE, length(ind.keep)), lpS.keep = NULL, thr.list = 0)
 }
 \arguments{
@@ -16,7 +16,7 @@ snp_PRS(G, betas.keep, ind.test, ind.keep = cols_along(G),
 corresponding to \code{ind.keep}.
 You may want to see \link{big_univLinReg} or \link{big_univLogReg}.}
 
-\item{ind.test}{The individuals on whom to project the scores.}
+\item{ind.test}{The individuals on whom to project the scores. Default uses all.}
 
 \item{ind.keep}{Column (SNP) indices to use (if using clumping, the
 output of \link{snp_clumping}). Default doesn't clump.}

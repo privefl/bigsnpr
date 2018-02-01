@@ -17,9 +17,3 @@ The path of the downloaded Beagle Java Archive.
 Download Beagle 4.1 from
 \url{https://faculty.washington.edu/browning/beagle/beagle.html}
 }
-\examples{
-download_beagle()
-download_beagle()  # don't download if already exists
-download_beagle(".")
-
-}

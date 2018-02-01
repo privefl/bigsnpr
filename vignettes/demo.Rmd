@@ -96,17 +96,16 @@ snp_manhattan(obj.gwas.gc, infos.chr = CHR, infos.pos = POS)
 ind.train <- sample(nrow(G), 400)
 ind.test <- setdiff(rows_along(G), ind.train)
 # Train the model
-cmsa.logit <- big_CMSA(FUN = big_spLogReg, feval = AUC,
-                       X = G, y.train = y01[ind.train], 
-                       ind.train = ind.train, 
-                       covar.train = obj.svd$u[ind.train, ],
-                       alpha = 0.5, dfmax = 20e3, 
-                       ncores = NCORES)
-mean(cmsa.logit != 0)  # sparse solution
+cmsa.logit <- big_spLogReg(X = G, y01.train = y01[ind.train], 
+                           ind.train = ind.train, 
+                           covar.train = obj.svd$u[ind.train, ],
+                           ncores = NCORES)
 # Get predictions
 preds <- predict(cmsa.logit, X = G, ind.row = ind.test, 
                  covar.row = obj.svd$u[ind.test, ])
+dim(preds)
+preds.merge <- rowMeans(preds) 
 # Check AUC
-AUC(preds, y01[ind.test])
+AUC(preds.merge, y01[ind.test])
 ```
 

@@ -4,14 +4,14 @@
 \alias{snp_plinkQC}
 \title{Quality Control}
 \usage{
-snp_plinkQC(prefix.in, plink.path = download_plink(), file.type = "--bfile",
-  prefix.out = NULL, maf = 0.01, geno = 0.1, mind = 0.1, hwe = 1e-50,
-  autosome.only = FALSE, extra.options = "")
+snp_plinkQC(plink.path, prefix.in, file.type = "--bfile",
+  prefix.out = paste0(prefix.in, "_QC"), maf = 0.01, geno = 0.1,
+  mind = 0.1, hwe = 1e-50, autosome.only = FALSE, extra.options = "")
 }
 \arguments{
-\item{prefix.in}{Prefix (path without extension) of the dataset to be QCed.}
+\item{plink.path}{Path to the executable of PLINK 1.9.}
 
-\item{plink.path}{Path to the executable of PLINK 1.9. Default downloads it.}
+\item{prefix.in}{Prefix (path without extension) of the dataset to be QCed.}
 
 \item{file.type}{Type of the dataset to be QCed. Default is \code{"--bfile"} and
 corresponds to bed/bim/fam files. You can also use \code{"--file"} for ped/map
@@ -21,17 +21,20 @@ files or \code{"--vcf"} for a VCF file. More information can be found at
 \item{prefix.out}{Prefix (path without extension) of the bed/bim/fam dataset
 to be created. Default is created by appending \code{"_QC"} to \code{prefix.in}.}
 
-\item{maf}{Minimum Minor Allele Frequency (MAF) for a SNP to be kept.}
+\item{maf}{Minimum Minor Allele Frequency (MAF) for a SNP to be kept.
+Default is \code{0.01}.}
 
-\item{geno}{Maximum proportion of missing values for a SNP to be kept.}
+\item{geno}{Maximum proportion of missing values for a SNP to be kept.
+Default is \code{0.1}.}
 
-\item{mind}{Maximum proportion of missing values for a sample to be kept.}
+\item{mind}{Maximum proportion of missing values for a sample to be kept.
+Default is \code{0.1}.}
 
 \item{hwe}{Filters out all variants which have Hardy-Weinberg equilibrium
-exact test p-value below the provided threshold.}
+exact test p-value below the provided threshold. Default is \code{1e-50}.}
 
 \item{autosome.only}{Whether to exclude all unplaced and non-autosomal
-variants?}
+variants? Default is \code{FALSE}.}
 
 \item{extra.options}{Other options to be passed to PLINK as a string. More
 options can be found at \url{https://www.cog-genomics.org/plink2/filter}.}
@@ -46,7 +49,9 @@ using \href{https://www.cog-genomics.org/plink2}{PLINK 1.9}.
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 prefix  <- sub("\\\\.bed$", "", bedfile)
-test <- snp_plinkQC(prefix.in = prefix,
+plink <- download_plink()
+test <- snp_plinkQC(plink.path = plink,
+                    prefix.in = prefix,
                     prefix.out = tempfile(),
                     file.type = "--bfile",  # the default (for ".bed")
                     maf = 0.05,

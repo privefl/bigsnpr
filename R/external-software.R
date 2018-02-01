@@ -24,11 +24,6 @@ get_os <- function() {
 #'
 #' @export
 #'
-#' @examples
-#' download_plink()
-#' download_plink()  # don't download if already exists
-#' download_plink(".")
-#'
 download_plink <- function(dir = tempdir()) {
 
   myOS <- get_os()
@@ -72,12 +67,8 @@ download_plink <- function(dir = tempdir()) {
 #'   Default is a temporary directory.
 #'
 #' @return The path of the downloaded Beagle Java Archive.
-#' @export
 #'
-#' @examples
-#' download_beagle()
-#' download_beagle()  # don't download if already exists
-#' download_beagle(".")
+#' @export
 #'
 download_beagle <- function(dir = tempdir()) {
 
@@ -93,8 +84,10 @@ download_beagle <- function(dir = tempdir()) {
 
   dest <- file.path(dir, jar)
 
-  if (!file.exists(dest))
+  if (!file.exists(dest)) {
     utils::download.file(paste0(url, jar), destfile = dest)
+    Sys.chmod(dest, mode = (file.info(dest)$mode | "111"))
+  }
 
   dest
 }
@@ -106,25 +99,29 @@ download_beagle <- function(dir = tempdir()) {
 #' Quality Control (QC) and possible conversion to *bed*/*bim*/*fam* files
 #' using [**PLINK 1.9**](https://www.cog-genomics.org/plink2).
 #'
-#' @param plink.path Path to the executable of PLINK 1.9. Default downloads it.
+#' @param plink.path Path to the executable of PLINK 1.9.
 #' @param prefix.in Prefix (path without extension) of the dataset to be QCed.
 #' @param file.type Type of the dataset to be QCed. Default is `"--bfile"` and
-#' corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map
-#' files or `"--vcf"` for a VCF file. More information can be found at
-#' \url{https://www.cog-genomics.org/plink/1.9/input}.
+#'   corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map
+#'   files or `"--vcf"` for a VCF file. More information can be found at
+#'   \url{https://www.cog-genomics.org/plink/1.9/input}.
 #' @param prefix.out Prefix (path without extension) of the bed/bim/fam dataset
-#' to be created. Default is created by appending `"_QC"` to `prefix.in`.
+#'   to be created. Default is created by appending `"_QC"` to `prefix.in`.
 #' @param maf Minimum Minor Allele Frequency (MAF) for a SNP to be kept.
+#'   Default is `0.01`.
 #' @param geno Maximum proportion of missing values for a SNP to be kept.
+#'   Default is `0.1`.
 #' @param mind Maximum proportion of missing values for a sample to be kept.
+#'   Default is `0.1`.
 #' @param hwe Filters out all variants which have Hardy-Weinberg equilibrium
-#' exact test p-value below the provided threshold.
+#'   exact test p-value below the provided threshold. Default is `1e-50`.
 #' @param autosome.only Whether to exclude all unplaced and non-autosomal
-#' variants?
+#'   variants? Default is `FALSE`.
 #' @param extra.options Other options to be passed to PLINK as a string. More
-#' options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
+#'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
 #'
 #' @return The path of the newly created bedfile.
+#'
 #' @export
 #'
 #' @references
@@ -145,7 +142,9 @@ download_beagle <- function(dir = tempdir()) {
 #' @examples
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #' prefix  <- sub("\\.bed$", "", bedfile)
-#' test <- snp_plinkQC(prefix.in = prefix,
+#' plink <- download_plink()
+#' test <- snp_plinkQC(plink.path = plink,
+#'                     prefix.in = prefix,
 #'                     prefix.out = tempfile(),
 #'                     file.type = "--bfile",  # the default (for ".bed")
 #'                     maf = 0.05,
@@ -155,10 +154,10 @@ download_beagle <- function(dir = tempdir()) {
 #'                     autosome.only = TRUE)
 #' test
 #'
-snp_plinkQC <- function(prefix.in,
-                        plink.path = download_plink(),
+snp_plinkQC <- function(plink.path,
+                        prefix.in,
                         file.type = "--bfile",
-                        prefix.out = NULL,
+                        prefix.out = paste0(prefix.in, "_QC"),
                         maf = 0.01,
                         geno = 0.1,
                         mind = 0.1,
@@ -167,7 +166,6 @@ snp_plinkQC <- function(prefix.in,
                         extra.options = "") {
 
   # new bedfile, check if already exists
-  if (is.null(prefix.out)) prefix.out <- paste0(prefix.in, "_QC")
   bedfile.out <- paste0(prefix.out, ".bed")
   assert_noexist(bedfile.out)
 
@@ -210,7 +208,7 @@ snp_plinkQC <- function(prefix.in,
 #' @return The path of the new bedfile.
 #' @export
 #'
-snp_plinkRmSamples <- function(plink.path = download_plink(),
+snp_plinkRmSamples <- function(plink.path,
                                bedfile.in,
                                bedfile.out,
                                df.or.files,
@@ -282,14 +280,14 @@ snp_plinkRmSamples <- function(plink.path = download_plink(),
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-#' test <- snp_plinkIBDQC(bedfile,
-#'                        bedfile.out = tempfile(fileext = ".bed"),
-#'                        ncores = 2)
+#' plink <- download_plink()
+#' test <- snp_plinkIBDQC(plink, bedfile,
+#'                        bedfile.out = tempfile(fileext = ".bed"))
 #' test
 #'
-snp_plinkIBDQC <- function(bedfile.in,
+snp_plinkIBDQC <- function(plink.path,
+                           bedfile.in,
                            bedfile.out = NULL,
-                           plink.path = download_plink(),
                            pi.hat = 0.08,
                            ncores = 1,
                            pruning.args = c(100, 0.2),
@@ -364,21 +362,20 @@ snp_plinkIBDQC <- function(bedfile.in,
 #'
 #' Imputation using **Beagle** version 4.
 #'
-#' Downloads and more informations can be found at the following websites
+#' Downloads and more information can be found at the following websites
 #' - [PLINK](https://www.cog-genomics.org/plink2),
 #' - [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html).
 #'
 #' @param beagle.path Path to the executable of Beagle v4+.
-#'   Default downloads it.
 #' @inheritParams snp_plinkRmSamples
 #' @param bedfile.out Path to the output bedfile. Default is created by
-#' appending `"_impute"` to `prefix.in` (`bedfile.in` without extension).
+#'   appending `"_impute"` to `prefix.in` (`bedfile.in` without extension).
 #' @param memory.max Max memory (in GB) to be used. It is internally rounded
-#' to be an integer. Default is `3`.
+#'   to be an integer. Default is `3`.
 #' @param ncores Number of cores to be used. Default is `1`. An usually good
-#' value for this parameter is `ncores = parallel::detectCores() - 1`.
+#'   value for this parameter is `ncores = parallel::detectCores() - 1`.
 #' @param extra.options Other options to be passed to Beagle as a string. More
-#' options can be found at Beagle's website.
+#'   options can be found at Beagle's website.
 #'
 #' @references B L Browning and S R Browning (2016).
 #' Genotype imputation with millions of reference samples.
@@ -389,10 +386,10 @@ snp_plinkIBDQC <- function(bedfile.in,
 #'
 #' @return The path of the new bedfile.
 #' @export
-snp_beagleImpute <- function(bedfile.in,
+snp_beagleImpute <- function(beagle.path,
+                             plink.path,
+                             bedfile.in,
                              bedfile.out = NULL,
-                             beagle.path = download_beagle(),
-                             plink.path = download_plink(),
                              memory.max = 3,
                              ncores = 1,
                              extra.options = "") {
