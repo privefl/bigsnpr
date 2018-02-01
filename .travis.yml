@@ -9,8 +9,8 @@ matrix:
   - r: release
     os: linux
     after_success: Rscript -e 'covr::codecov()'
-  - r: devel
-    os: linux
+#  - r: devel
+#    os: linux
 
 sudo: false
 cache: packages

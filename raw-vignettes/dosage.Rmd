@@ -75,7 +75,7 @@ ranges = data.frame(
   start = 1,
   end = 2e9
 )
-bgen_file <- path.expand("~/Téléchargements/gavinband-bgen-798eca81c0fa/example/example.8bits.bgen")
+bgen_file <- path.expand("~/Téléchargements/gavinband-bgen-456f4fcbc75c/example/example.8bits.bgen")
 if (!file.exists(paste0(bgen_file, ".bgi")))
   system(glue::glue("bgenix -g {bgen_file} -index"))
 bgen_list <- rbgen::bgen.load(bgen_file, ranges)
@@ -104,7 +104,7 @@ The [PGEN](https://www.cog-genomics.org/plink/2.0/formats#pgen) format is binary
 First, let us get variant and individual information:
 
 ```{r}
-plink2 <- path.expand("~/Téléchargements/gavinband-bgen-798eca81c0fa/plink2")
+plink2 <- path.expand("~/Téléchargements/gavinband-bgen-456f4fcbc75c/plink2")
 tmp <- tempfile()
 # Write bim and fam files from the BGEN file
 system(glue::glue("{plink2} --bgen {bgen_file}",
