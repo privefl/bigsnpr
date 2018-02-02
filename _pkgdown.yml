@@ -57,6 +57,7 @@ reference:
       - snp_MAX3
   - title: "Utilities"
     contents:
+      - same_ref
       - snp_split
       - snp_save
       - snp_getSampleInfos
