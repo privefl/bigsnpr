@@ -44,9 +44,3 @@ I use a class called `bigSNP` for representing infos on massive SNP arrays. One 
 
 Please open an issue if you find a bug.
 If you want help using **bigstatsr**, please post on Stack Overflow with the tag *bigstatsr* (not yet created). [How to make a great R reproducible example?](https://stackoverflow.com/q/5963269/6103040)
-
-
-## Code of conduct
-
-Please note that this project is released with a [Contributor Code of Conduct](https://github.com/privefl/bigsnpr/blob/master/code_of_conduct.md). 
-By participating in this project you agree to abide by its terms.
