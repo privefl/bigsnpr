@@ -88,6 +88,8 @@ snp_autoSVD <- function(G,
   THR <- thr.r2
   printf2("Phase of clumping at r2 > %s.. ", THR)
   ind.keep <- snp_clumping(G, infos.chr,
+                           ind.row = ind.row,
+                           exclude = setdiff(cols_along(G), ind.col),
                            thr.r2 = THR,
                            size = size,
                            ncores = ncores)
@@ -101,9 +103,10 @@ snp_autoSVD <- function(G,
     # SVD
     obj.svd <- big_randomSVD(G,
                              fun.scaling = fun.scaling,
-                             ncores = ncores,
+                             ind.row = ind.row,
                              ind.col = ind.keep,
-                             k = k)
+                             k = k,
+                             ncores = ncores)
 
     # The -log10 p-values of being an outlier (by PC)
     lpval <- -stats::predict(snp_pcadapt(G, obj.svd$u, ind.col = ind.keep))
