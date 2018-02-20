@@ -267,7 +267,7 @@ snp_plinkRmSamples <- function(plink.path,
 #' @param do.blind.QC Whether to do QC with `pi.hat` without visual inspection.
 #'   Default is `TRUE`. If `FALSE`, return the `data.frame` of the corresponding
 #'   ".genome" file without doing QC. One could use
-#'   `ggplot2::qplot(Z1, Z2, data = mydf, col = RT)` for visual inspection.
+#'   `ggplot2::qplot(Z0, Z1, data = mydf, col = RT)` for visual inspection.
 #'
 #' @return The path of the new bedfile.
 #'   If no sample is filter, no new bed/bim/fam files are created and
@@ -282,8 +282,20 @@ snp_plinkRmSamples <- function(plink.path,
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #' plink <- download_plink()
 #' test <- snp_plinkIBDQC(plink, bedfile,
-#'                        bedfile.out = tempfile(fileext = ".bed"))
+#'                        bedfile.out = tempfile(fileext = ".bed"),
+#'                        ncores = 2)
 #' test
+#' test2 <- snp_plinkIBDQC(plink, bedfile,
+#'                         do.blind.QC = FALSE,
+#'                         ncores = 2)
+#' str(test2)
+#' library(ggplot2)
+#' qplot(Z0, Z1, data = test2, col = RT)
+#' qplot(y = PI_HAT, data = test2) +
+#'   geom_hline(yintercept = 0.2, color = "blue", linetype = 2)
+#' snp_plinkRmSamples(plink, bedfile,
+#'                    bedfile.out = tempfile(fileext = ".bed"),
+#'                    df.or.files = subset(test2, PI_HAT > 0.2))
 #'
 snp_plinkIBDQC <- function(plink.path,
                            bedfile.in,
@@ -301,8 +313,6 @@ snp_plinkIBDQC <- function(plink.path,
   assert_ext(bedfile.in, "bed")
   # get file without extension
   prefix.in <- sub("\\.bed$", "", bedfile.in)
-  # get genome file
-  genomefile <- paste0(prefix.in, ".genome")
 
   # get possibly new file
   if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
@@ -331,14 +341,14 @@ snp_plinkIBDQC <- function(plink.path,
       opt.pruning,
       "--genome",
       "--min", pi.hat,
-      "--out", prefix.in,
+      "--out", tmpfile,
       "--threads", ncores,
       extra.options
     )
   )
 
   # get genomefile as a data.frame
-  tmp <- data.table::fread(genomefile, data.table = FALSE)
+  tmp <- data.table::fread(paste0(tmpfile, ".genome"), data.table = FALSE)
   if (nrow(tmp)) { # if there are samples to filter
 
     if (do.blind.QC) {

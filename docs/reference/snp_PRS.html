@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PRS � snp_PRS • bigsnpr</title>
+<title>PRS — snp_PRS • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -65,10 +65,13 @@
       <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -106,8 +109,8 @@
     <p>Polygenic Risk Scores with possible clumping and thresholding.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_PRS</span>(<span class='no'>G</span>, <span class='no'>betas.keep</span>, <span class='no'>ind.test</span>, <span class='kw'>ind.keep</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>), <span class='kw'>lpS.keep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_PRS</span>(<span class='no'>G</span>, <span class='no'>betas.keep</span>, <span class='kw'>ind.test</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.keep</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
+  <span class='kw'>same.keep</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>TRUE</span>, <span class='fu'>length</span>(<span class='no'>ind.keep</span>)), <span class='kw'>lpS.keep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -126,12 +129,18 @@ You may want to see big_univLinReg or big_univLogReg.</p></td>
     </tr>
     <tr>
       <th>ind.test</th>
-      <td><p>The individuals on whom to project the scores.</p></td>
+      <td><p>The individuals on whom to project the scores. Default uses all.</p></td>
     </tr>
     <tr>
       <th>ind.keep</th>
       <td><p>Column (SNP) indices to use (if using clumping, the
 output of <a href='pruning-clumping.html'>snp_clumping</a>). Default doesn't clump.</p></td>
+    </tr>
+    <tr>
+      <th>same.keep</th>
+      <td><p>A logical vector associated with <code>betas.keep</code> whether the
+reference allele is the same for G. Default is all <code>TRUE</code> (for example when
+you train the betas on the same dataset). Otherwise, use <a href='same_ref.html'>same_ref</a>.</p></td>
     </tr>
     <tr>
       <th>lpS.keep</th>
@@ -153,12 +162,13 @@ columns correspond to <code>thr.list</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
-<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
+<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='fu'>big_copy</span>(<span class='no'>test</span>$<span class='no'>genotypes</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>1000</span>)
+<span class='no'>CHR</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>[<span class='fl'>1</span>:<span class='fl'>1000</span>]
+<span class='no'>POS</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>physical.position</span>[<span class='fl'>1</span>:<span class='fl'>1000</span>]
 <span class='no'>y01</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
 
 <span class='co'># PCA -&gt; covariables</span>
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_autoSVD.html'>snp_autoSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>,
-                       <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>physical.position</span>)</div><div class='output co'>#&gt; Phase of clumping at r2 &gt; 0.2.. keep 4270 SNPs.
+<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_autoSVD.html'>snp_autoSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>POS</span>)</div><div class='output co'>#&gt; Phase of clumping at r2 &gt; 0.2.. keep 952 SNPs.
 #&gt; 
 #&gt; Iteration 1:
 #&gt; Computing SVD..
@@ -173,12 +183,12 @@ columns correspond to <code>thr.list</code>.</p>
                              <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='no'>ind.train</span>,
                              <span class='kw'>covar.train</span> <span class='kw'>=</span> <span class='no'>obj.svd</span>$<span class='no'>u</span>[<span class='no'>ind.train</span>, ])
 <span class='co'># clumping</span>
-<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pruning-clumping.html'>snp_clumping</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>,
+<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pruning-clumping.html'>snp_clumping</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>,
                          <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='no'>ind.train</span>,
                          <span class='kw'>S</span> <span class='kw'>=</span> <span class='fu'>abs</span>(<span class='no'>gwas.train</span>$<span class='no'>score</span>))
 <span class='co'># -log10(p-values) and thresolding</span>
 <span class='fu'>summary</span>(<span class='no'>lpS.keep</span> <span class='kw'>&lt;-</span> -<span class='fu'>predict</span>(<span class='no'>gwas.train</span>)[<span class='no'>ind.keep</span>])</div><div class='output co'>#&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-#&gt; 0.000088 0.135325 0.315242 0.457694 0.632431 7.097915 </div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>3.5</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+#&gt; 0.000565 0.132700 0.322159 0.482021 0.668394 7.511245 </div><div class='input'><span class='no'>thrs</span> <span class='kw'>&lt;-</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>4</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 <span class='no'>nb.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='no'>thrs</span>, <span class='kw'>function</span>(<span class='no'>thr</span>) <span class='fu'>sum</span>(<span class='no'>lpS.keep</span> <span class='kw'>&gt;</span> <span class='no'>thr</span>))
 
 <span class='co'># PRS</span>
@@ -194,7 +204,8 @@ columns correspond to <code>thr.list</code>.</p>
 <span class='kw pkg'>bigstatsr</span><span class='kw ns'>:::</span><span class='fu'>MY_THEME</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/qplot'>qplot</a></span>(<span class='no'>nb.pred</span>, <span class='no'>aucs</span>)) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>() +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='no'>nb.pred</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>)</div><div class='img'><img src='snp_PRS-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>)</div><div class='img'><img src='snp_PRS-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

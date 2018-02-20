@@ -19,7 +19,7 @@ Typically \code{<bigSNP>$map$chromosome}.}
 on a chromosome (in base pairs) of each SNP.\cr
 Typically \code{<bigSNP>$map$physical.pos}.}
 
-\item{colors}{Colors that used for each chromosome (they are recycled).
+\item{colors}{Colors used for each chromosome (they are recycled).
 Default is an alternation of black and gray.}
 
 \item{dist.sep.chrs}{"Physical" distance that separates two chromosomes.

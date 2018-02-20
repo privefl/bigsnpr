@@ -8,7 +8,7 @@ matrix:
     os: osx
   - r: release
     os: linux
-    after_success: Rscript -e 'covr::codecov()'
+    after_success: travis_wait Rscript -e 'covr::codecov()'
 #  - r: devel
 #    os: linux
 

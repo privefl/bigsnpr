@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Split-parApply-Combine — snp_split • bigsnpr</title>
+<title>Determine reference divergence — same_ref • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -102,115 +102,48 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Split-parApply-Combine</h1>
+    <h1>Determine reference divergence</h1>
     </div>
 
     
-    <p>A Split-Apply-Combine strategy to parallelize the evaluation of a function
-on each SNP, independently.</p>
+    <p>Determine reference divergence while accounting for strand flips.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_split</span>(<span class='no'>infos.chr</span>, <span class='no'>FUN</span>, <span class='no'>combine</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>same_ref</span>(<span class='no'>ref1</span>, <span class='no'>alt1</span>, <span class='no'>ref2</span>, <span class='no'>alt2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>infos.chr</th>
-      <td><p>Vector of integers specifying each SNP's chromosome.
-Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></td>
+      <th>ref1</th>
+      <td><p>The reference alleles of the first dataset.</p></td>
     </tr>
     <tr>
-      <th>FUN</th>
-      <td><p>The function to be applied. It must take a
-FBM.code256 as first argument and <code>ind.chr</code>,
-an another argument to provide subsetting over SNPs.
-You can access the number of the chromosome by using <code>attr(ind.chr, "chr")</code>.</p></td>
+      <th>alt1</th>
+      <td><p>The alternative alleles of the first dataset.</p></td>
     </tr>
     <tr>
-      <th>combine</th>
-      <td><p>function that is used by foreach to process the tasks
-results as they generated. This can be specified as either a function or a
-non-empty character string naming the function. Specifying 'c' is useful
-for concatenating the results into a vector, for example. The values 'cbind'
-and 'rbind' can combine vectors into a matrix. The values '+' and '*' can be
-used to process numeric data. By default, the results are returned in a list.</p></td>
+      <th>ref2</th>
+      <td><p>The reference alleles of the second dataset.</p></td>
     </tr>
     <tr>
-      <th>ncores</th>
-      <td><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Extra arguments to be passed to <code>FUN</code>.</p></td>
+      <th>alt2</th>
+      <td><p>The alternative alleles of the second dataset.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The result of foreach.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>This function splits indices for each chromosome, then apply a given function
-to each part (chromosome) and finally combine the results.</p>
+    <p>A logical vector whether the references alleles are the same.
+Missing values can result from missing values in the inputs or from
+ambiguous strands.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># parallelize over chromosomes made easy</span>
-<span class='co'># examples of functions from this package</span>
-<span class='no'>snp_pruning</span></div><div class='output co'>#&gt; function(G, infos.chr,
-#&gt;                         ind.row = rows_along(G),
-#&gt;                         size = 49,
-#&gt;                         is.size.in.bp = FALSE,
-#&gt;                         infos.pos = NULL,
-#&gt;                         thr.r2 = 0.2,
-#&gt;                         exclude = NULL,
-#&gt;                         nploidy = getOption("bigsnpr.nploidy"),
-#&gt;                         ncores = 1) {
-#&gt; 
-#&gt;   check_args()
-#&gt; 
-#&gt;   args &lt;- as.list(environment())
-#&gt; 
-#&gt;   do.call(what = snp_split, args = c(args, FUN = pruningChr, combine = 'c'))
-#&gt; }
-#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_clumping</span></div><div class='output co'>#&gt; function(G, infos.chr,
-#&gt;                          ind.row = rows_along(G),
-#&gt;                          S = NULL,
-#&gt;                          size = 500,
-#&gt;                          is.size.in.bp = FALSE,
-#&gt;                          infos.pos = NULL,
-#&gt;                          thr.r2 = 0.2,
-#&gt;                          exclude = NULL,
-#&gt;                          ncores = 1) {
-#&gt; 
-#&gt;   check_args()
-#&gt; 
-#&gt;   if (is.null(S)) S &lt;- snp_MAF(G, ind.row = ind.row)
-#&gt;   args &lt;- as.list(environment())
-#&gt; 
-#&gt;   assert_lengths(infos.chr, S)
-#&gt; 
-#&gt;   do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
-#&gt; }
-#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_fastImpute</span></div><div class='output co'>#&gt; function(Gna, infos.chr,
-#&gt;                            alpha = 0.02,
-#&gt;                            size = 500,
-#&gt;                            p.train = 0.8,
-#&gt;                            seed = NA,
-#&gt;                            ncores = 1) {
-#&gt; 
-#&gt;   check_args()
-#&gt; 
-#&gt;   if (!is.na(seed)) seed &lt;- seq_len(max(infos.chr)) + seed
-#&gt;   args &lt;- as.list(environment())
-#&gt; 
-#&gt;   do.call(what = snp_split, args = c(args, FUN = imputeChr, combine = 'rbind'))
-#&gt; }
-#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>same_ref</span>(<span class='kw'>ref1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"A"</span>, <span class='st'>"C"</span>, <span class='st'>"T"</span>, <span class='st'>"G"</span>, <span class='fl'>NA</span>),
+         <span class='kw'>alt1</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"C"</span>, <span class='st'>"T"</span>, <span class='st'>"C"</span>, <span class='st'>"A"</span>, <span class='st'>"A"</span>),
+         <span class='kw'>ref2</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"A"</span>, <span class='st'>"C"</span>, <span class='st'>"A"</span>, <span class='st'>"A"</span>, <span class='st'>"C"</span>),
+         <span class='kw'>alt2</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"C"</span>, <span class='st'>"G"</span>, <span class='st'>"G"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>))</div><div class='output co'>#&gt; [1]  TRUE    NA  TRUE FALSE    NA</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -218,8 +151,6 @@ to each part (chromosome) and finally combine the results.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

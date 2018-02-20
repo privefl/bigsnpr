@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Download PLINK 1.9 � download_plink • bigsnpr</title>
+<title>Download PLINK 1.9 — download_plink • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -65,10 +65,13 @@
       <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -123,9 +126,6 @@ Default is a temporary directory.</p></td>
     <p>The path of the downloaded PLINK executable.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>download_plink</span>()</div><div class='output co'>#&gt; [1] "C:\\Users\\Florian\\AppData\\Local\\Temp\\Rtmp02cVEx/plink.exe"</div><div class='input'><span class='fu'>download_plink</span>()  <span class='co'># don't download if already exists</span></div><div class='output co'>#&gt; [1] "C:\\Users\\Florian\\AppData\\Local\\Temp\\Rtmp02cVEx/plink.exe"</div><div class='input'><span class='fu'>download_plink</span>(<span class='st'>"."</span>)</div><div class='output co'>#&gt; [1] "./plink.exe"</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -133,9 +133,7 @@ Default is a temporary directory.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

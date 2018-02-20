@@ -14,7 +14,7 @@ MY_THEME <- bigstatsr:::MY_THEME
 #' @param gwas A `mhtest` object with the p-values associated with each SNP.
 #' Typically, the output of [big_univLinReg], [big_univLogReg] or [snp_pcadapt].
 #' @inheritParams bigsnpr-package
-#' @param colors Colors that used for each chromosome (they are recycled).
+#' @param colors Colors used for each chromosome (they are recycled).
 #' Default is an alternation of black and gray.
 #' @param dist.sep.chrs "Physical" distance that separates two chromosomes.
 #' Default is 10 Mbp.

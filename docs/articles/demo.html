@@ -104,7 +104,7 @@ bedfile &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span 
 <span class="co"># Let's put them in an temporary directory for this demo.</span>
 tmpfile &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(bedfile, <span class="dt">backingfile =</span> tmpfile)</code></pre></div>
-<pre><code>## [1] "/tmp/Rtmp8IA4FH/file7a987e28fe2b.rds"</code></pre>
+<pre><code>## [1] "/tmp/RtmpXJK4hQ/file1a1a4cc5378d.rds"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Attach the "bigSNP" object in R session</span>
 obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="kw">paste0</span>(tmpfile, <span class="st">".rds"</span>))
 <span class="co"># See how it looks like</span>
@@ -202,20 +202,19 @@ obj.gwas.gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 ind.train &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">nrow</span>(G), <span class="dv">400</span>)
 ind.test &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">rows_along</span>(G), ind.train)
 <span class="co"># Train the model</span>
-cmsa.logit &lt;-<span class="st"> </span><span class="kw">big_CMSA</span>(<span class="dt">FUN =</span> big_spLogReg, <span class="dt">feval =</span> AUC,
-                       <span class="dt">X =</span> G, <span class="dt">y.train =</span> y01[ind.train], 
-                       <span class="dt">ind.train =</span> ind.train, 
-                       <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u[ind.train, ],
-                       <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">dfmax =</span> <span class="fl">20e3</span>, 
-                       <span class="dt">ncores =</span> NCORES)
-<span class="kw">mean</span>(cmsa.logit <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)  <span class="co"># sparse solution</span></code></pre></div>
-<pre><code>## [1] 0.0659051</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get predictions</span>
+cmsa.logit &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(<span class="dt">X =</span> G, <span class="dt">y01.train =</span> y01[ind.train], 
+                           <span class="dt">ind.train =</span> ind.train, 
+                           <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u[ind.train, ],
+                           <span class="dt">ncores =</span> NCORES)
+<span class="co"># Get predictions</span>
 preds &lt;-<span class="st"> </span><span class="kw">predict</span>(cmsa.logit, <span class="dt">X =</span> G, <span class="dt">ind.row =</span> ind.test, 
                  <span class="dt">covar.row =</span> obj.svd<span class="op">$</span>u[ind.test, ])
+<span class="kw">dim</span>(preds)</code></pre></div>
+<pre><code>## [1] 117  10</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds.merge &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(preds) 
 <span class="co"># Check AUC</span>
-<span class="kw">AUC</span>(preds, y01[ind.test])</code></pre></div>
-<pre><code>## [1] 0.8639647</code></pre>
+<span class="kw">AUC</span>(preds.merge, y01[ind.test])</code></pre></div>
+<pre><code>## [1] 0.8077703</code></pre>
 </div>
 </div>
   </div>

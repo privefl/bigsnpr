@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Remove samples � snp_plinkRmSamples • bigsnpr</title>
+<title>Remove samples — snp_plinkRmSamples • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -65,10 +65,13 @@
       <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -106,15 +109,15 @@
     <p>Create new <em>bed</em>/<em>bim</em>/<em>fam</em> files by removing samples with PLINK.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_plinkRmSamples</span>(<span class='kw'>plink.path</span> <span class='kw'>=</span> <span class='fu'><a href='download_plink.html'>download_plink</a></span>(), <span class='no'>bedfile.in</span>, <span class='no'>bedfile.out</span>,
-  <span class='no'>df.or.files</span>, <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_plinkRmSamples</span>(<span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='no'>bedfile.out</span>, <span class='no'>df.or.files</span>,
+  <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>plink.path</th>
-      <td><p>Path to the executable of PLINK 1.9. Default downloads it.</p></td>
+      <td><p>Path to the executable of PLINK 1.9.</p></td>
     </tr>
     <tr>
       <th>bedfile.in</th>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Imputation � snp_beagleImpute • bigsnpr</title>
+<title>Imputation — snp_beagleImpute • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -65,10 +65,13 @@
       <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -106,13 +109,20 @@
     <p>Imputation using <strong>Beagle</strong> version 4.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_beagleImpute</span>(<span class='no'>bedfile.in</span>, <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>beagle.path</span> <span class='kw'>=</span> <span class='fu'><a href='download_beagle.html'>download_beagle</a></span>(), <span class='kw'>plink.path</span> <span class='kw'>=</span> <span class='fu'><a href='download_plink.html'>download_plink</a></span>(),
+    <pre class="usage"><span class='fu'>snp_beagleImpute</span>(<span class='no'>beagle.path</span>, <span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>memory.max</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>beagle.path</th>
+      <td><p>Path to the executable of Beagle v4+.</p></td>
+    </tr>
+    <tr>
+      <th>plink.path</th>
+      <td><p>Path to the executable of PLINK 1.9.</p></td>
+    </tr>
     <tr>
       <th>bedfile.in</th>
       <td><p>Path to the input bedfile.</p></td>
@@ -121,15 +131,6 @@
       <th>bedfile.out</th>
       <td><p>Path to the output bedfile. Default is created by
 appending <code>"_impute"</code> to <code>prefix.in</code> (<code>bedfile.in</code> without extension).</p></td>
-    </tr>
-    <tr>
-      <th>beagle.path</th>
-      <td><p>Path to the executable of Beagle v4+.
-Default downloads it.</p></td>
-    </tr>
-    <tr>
-      <th>plink.path</th>
-      <td><p>Path to the executable of PLINK 1.9. Default downloads it.</p></td>
     </tr>
     <tr>
       <th>memory.max</th>
@@ -154,7 +155,7 @@ options can be found at Beagle's website.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Downloads and more informations can be found at the following websites</p><ul>
+    <p>Downloads and more information can be found at the following websites</p><ul>
 <li><p><a href='https://www.cog-genomics.org/plink2'>PLINK</a>,</p></li>
 <li><p><a href='https://faculty.washington.edu/browning/beagle/beagle.html'>Beagle</a>.</p></li>
 </ul>

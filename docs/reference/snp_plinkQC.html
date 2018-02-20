@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Quality Control � snp_plinkQC • bigsnpr</title>
+<title>Quality Control — snp_plinkQC • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -65,10 +65,13 @@
       <a href="../articles/demo.html">Quick demo</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure from PCA</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -107,20 +110,20 @@
 using <a href='https://www.cog-genomics.org/plink2'>PLINK 1.9</a>.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_plinkQC</span>(<span class='no'>prefix.in</span>, <span class='kw'>plink.path</span> <span class='kw'>=</span> <span class='fu'><a href='download_plink.html'>download_plink</a></span>(), <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"--bfile"</span>,
-  <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>maf</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>geno</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>mind</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>hwe</span> <span class='kw'>=</span> <span class='fl'>1e-50</span>,
-  <span class='kw'>autosome.only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_plinkQC</span>(<span class='no'>plink.path</span>, <span class='no'>prefix.in</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"--bfile"</span>,
+  <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='fu'>paste0</span>(<span class='no'>prefix.in</span>, <span class='st'>"_QC"</span>), <span class='kw'>maf</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>geno</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>mind</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>hwe</span> <span class='kw'>=</span> <span class='fl'>1e-50</span>, <span class='kw'>autosome.only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>prefix.in</th>
-      <td><p>Prefix (path without extension) of the dataset to be QCed.</p></td>
+      <th>plink.path</th>
+      <td><p>Path to the executable of PLINK 1.9.</p></td>
     </tr>
     <tr>
-      <th>plink.path</th>
-      <td><p>Path to the executable of PLINK 1.9. Default downloads it.</p></td>
+      <th>prefix.in</th>
+      <td><p>Prefix (path without extension) of the dataset to be QCed.</p></td>
     </tr>
     <tr>
       <th>file.type</th>
@@ -136,25 +139,28 @@ to be created. Default is created by appending <code>"_QC"</code> to <code>prefi
     </tr>
     <tr>
       <th>maf</th>
-      <td><p>Minimum Minor Allele Frequency (MAF) for a SNP to be kept.</p></td>
+      <td><p>Minimum Minor Allele Frequency (MAF) for a SNP to be kept.
+Default is <code>0.01</code>.</p></td>
     </tr>
     <tr>
       <th>geno</th>
-      <td><p>Maximum proportion of missing values for a SNP to be kept.</p></td>
+      <td><p>Maximum proportion of missing values for a SNP to be kept.
+Default is <code>0.1</code>.</p></td>
     </tr>
     <tr>
       <th>mind</th>
-      <td><p>Maximum proportion of missing values for a sample to be kept.</p></td>
+      <td><p>Maximum proportion of missing values for a sample to be kept.
+Default is <code>0.1</code>.</p></td>
     </tr>
     <tr>
       <th>hwe</th>
       <td><p>Filters out all variants which have Hardy-Weinberg equilibrium
-exact test p-value below the provided threshold.</p></td>
+exact test p-value below the provided threshold. Default is <code>1e-50</code>.</p></td>
     </tr>
     <tr>
       <th>autosome.only</th>
       <td><p>Whether to exclude all unplaced and non-autosomal
-variants?</p></td>
+variants? Default is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>extra.options</th>
@@ -172,7 +178,7 @@ options can be found at <a href='https://www.cog-genomics.org/plink2/filter'>htt
     <p>Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
 Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
 <em>PLINK: a tool set for whole-genome association and population-based linkage
-analyses.</em> American Journal of Human Genetics 81 (3). Elsevier: 559�75.
+analyses.</em> American Journal of Human Genetics 81 (3). Elsevier: 559–75.
 <a href='http://dx.doi.org/10.1086/519795'>http://dx.doi.org/10.1086/519795</a>.</p>
 <p>Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
@@ -188,7 +194,9 @@ datasets.</em> GigaScience 4 (1): 7.
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
 <span class='no'>prefix</span>  <span class='kw'>&lt;-</span> <span class='fu'>sub</span>(<span class='st'>"\\.bed$"</span>, <span class='st'>""</span>, <span class='no'>bedfile</span>)
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkQC</span>(<span class='kw'>prefix.in</span> <span class='kw'>=</span> <span class='no'>prefix</span>,
+<span class='no'>plink</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='download_plink.html'>download_plink</a></span>()
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkQC</span>(<span class='kw'>plink.path</span> <span class='kw'>=</span> <span class='no'>plink</span>,
+                    <span class='kw'>prefix.in</span> <span class='kw'>=</span> <span class='no'>prefix</span>,
                     <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>(),
                     <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"--bfile"</span>,  <span class='co'># the default (for ".bed")</span>
                     <span class='kw'>maf</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
@@ -196,7 +204,7 @@ datasets.</em> GigaScience 4 (1): 7.
                     <span class='kw'>mind</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
                     <span class='kw'>hwe</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
                     <span class='kw'>autosome.only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>test</span></div><div class='output co'>#&gt; [1] "C:\\Users\\Florian\\AppData\\Local\\Temp\\Rtmp02cVEx\\file381862077407.bed"</div><div class='input'>
+<span class='no'>test</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpZfFeyj/file18222f7d807e.bed"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

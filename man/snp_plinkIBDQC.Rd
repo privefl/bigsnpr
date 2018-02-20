@@ -29,7 +29,7 @@ the window size (in variant count) and the pairwise $r^2$ threshold
 \item{do.blind.QC}{Whether to do QC with \code{pi.hat} without visual inspection.
 Default is \code{TRUE}. If \code{FALSE}, return the \code{data.frame} of the corresponding
 ".genome" file without doing QC. One could use
-\code{ggplot2::qplot(Z1, Z2, data = mydf, col = RT)} for visual inspection.}
+\code{ggplot2::qplot(Z0, Z1, data = mydf, col = RT)} for visual inspection.}
 
 \item{extra.options}{Other options to be passed to PLINK as a string
 (for the IBD part). More options can be found at
@@ -49,8 +49,20 @@ using its method-of-moments.
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 plink <- download_plink()
 test <- snp_plinkIBDQC(plink, bedfile,
-                       bedfile.out = tempfile(fileext = ".bed"))
+                       bedfile.out = tempfile(fileext = ".bed"),
+                       ncores = 2)
 test
+test2 <- snp_plinkIBDQC(plink, bedfile,
+                        do.blind.QC = FALSE,
+                        ncores = 2)
+str(test2)
+library(ggplot2)
+qplot(Z0, Z1, data = test2, col = RT)
+qplot(y = PI_HAT, data = test2) +
+  geom_hline(yintercept = 0.2, color = "blue", linetype = 2)
+snp_plinkRmSamples(plink, bedfile,
+                   bedfile.out = tempfile(fileext = ".bed"),
+                   df.or.files = subset(test2, PI_HAT > 0.2))
 
 }
 \references{
