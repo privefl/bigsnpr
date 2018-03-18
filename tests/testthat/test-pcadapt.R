@@ -20,7 +20,8 @@ test_that("Same as pcadapt", {
   write.table(t(G[]), tmpfile, quote = FALSE, sep = " ",
               row.names = FALSE, col.names = FALSE)
 
-  obj.pcadapt <- pcadapt::pcadapt(tmpfile, K = 10, min.maf = 0)
+  bed <- pcadapt::read.pcadapt(tmpfile, type = "pcadapt")
+  obj.pcadapt <- pcadapt::pcadapt(bed, K = 10, min.maf = 0)
 
   ################################################################################
 
@@ -28,23 +29,22 @@ test_that("Same as pcadapt", {
   test <- bigsnpr:::linRegPcadapt_cpp(G, obj.svd$u,
                                       rows_along(G), cols_along(G))
 
-  expect_equal(pmin(obj.svd$center, 2 - obj.svd$center) / 2, obj.pcadapt$maf,
-               tolerance = 1e-6)
-  expect_equal(abs(cor(obj.svd$v, obj.pcadapt$loadings)), diag(10),
-               tolerance = 1e-1, check.attributes = FALSE)
+  expect_equal(obj.svd$center / 2, obj.pcadapt$af, tolerance = 1e-8)
   expect_equal(abs(cov(obj.svd$u, obj.pcadapt$scores)), diag(10) / (nrow(G) - 1))
+  expect_equal(abs(cor(obj.svd$v, obj.pcadapt$loadings)), diag(10),
+               tolerance = 1e-2, check.attributes = FALSE)
   expect_equal(abs(cor(test, obj.pcadapt$zscores)), diag(10),
-               tolerance = 1e-1, check.attributes = FALSE)
+               tolerance = 1e-2, check.attributes = FALSE)
 
   ################################################################################
 
   obj.gwas <- snp_pcadapt(G, obj.svd$u)
   expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
-               tolerance = 1e-6)
+               tolerance = 1e-2)
   expect_equal(snp_gc(obj.gwas)[[1]], as.numeric(obj.pcadapt$stat),
-               tolerance = 1e-6)
+               tolerance = 1e-2)
   expect_equal(predict(snp_gc(obj.gwas), log10 = FALSE), obj.pcadapt$pvalues,
-               tolerance = 1e-6)
+               tolerance = 1e-2)
 
   ################################################################################
 
@@ -59,16 +59,18 @@ test_that("Same as pcadapt", {
 
   ################################################################################
 
-  obj.pcadapt <- pcadapt::pcadapt(tmpfile, K = 1, min.maf = 0)
-  obj.gwas <- snp_pcadapt(G, obj.svd$u[, 1])
+  # K = 1
+  obj.pcadapt <- pcadapt::pcadapt(bed, K = 1, min.maf = 0)
+  obj.gwas    <- snp_pcadapt(G, obj.svd$u[, 1])
+  obj.gwas.gc <- snp_gc(obj.gwas)
 
   snp_qq(obj.gwas)
-  snp_qq(snp_gc(obj.gwas))
+  snp_qq(obj.gwas.gc)
 
   tmp <- obj.pcadapt$scores[, 1]; names(tmp) <- NULL
   expect_equal(tmp, obj.svd$u[, 1], tolerance = 1e-6)
-  expect_equal(as.vector(obj.pcadapt$zscores), obj.gwas$score, tolerance = 1e-2)
-  plot(obj.pcadapt$pvalues, predict(obj.gwas, log10 = FALSE))
+  expect_equal(as.vector(obj.pcadapt$zscores), obj.gwas$score, tolerance = 1e-3)
+  # plot(obj.pcadapt$pvalues, predict(obj.gwas.gc, log10 = FALSE))
 
   # expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
   #              tolerance = 1e-2)
