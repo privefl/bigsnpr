@@ -7,7 +7,11 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-// R_IsNA: https://stackoverflow.com/a/26262984/6103040
+// R_IsNA:  https://stackoverflow.com/a/26262984/6103040
+// Using 3: https://stackoverflow.com/q/46892399/6103040
+inline bool isna(double x) {
+  return(x == 3);
+}
 
 // [[Rcpp::export]]
 SEXP corMat(Environment BM,
@@ -17,7 +21,9 @@ SEXP corMat(Environment BM,
             const NumericVector& thr) {
 
   XPtr<FBM> xpBM = BM["address"];
-  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
+  NumericVector code = clone(as<NumericVector>(BM["code256"]));
+  code[is_na(code)] = 3;
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, code);
 
   int n = macc.nrow();
   int m = macc.ncol();
@@ -38,7 +44,7 @@ SEXP corMat(Environment BM,
     for (i = 0; i < n; i++) {
       x = macc(i, j);
 
-      if (!R_IsNA(x)) {
+      if (!isna(x)) {
         xSum += x;
         xxSum += x*x;
       }
@@ -60,17 +66,17 @@ SEXP corMat(Environment BM,
         x = macc(i, j);
         y = macc(i, j0);
 
-        if (R_IsNA(y)) {
+        if (isna(y)) {
           // printf("Missing value at pos (%d, %d)\n", i+1, j0+1); // DEBUG
           N--;
-          if (R_IsNA(x)) { // both missing
+          if (isna(x)) { // both missing
             // nothing to do
           } else { // y is missing but not x
             xSum -= x;
             xxSum -= x*x;
           }
         } else {
-          if (R_IsNA(x)) { // x is missing but not y
+          if (isna(x)) { // x is missing but not y
             ySum -= y;
             yySum -= y*y;
             N--;
