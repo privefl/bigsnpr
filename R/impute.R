@@ -30,7 +30,8 @@ imputeChr <- function(Gna, ind.chr, alpha, size, p.train, n.cor, seed) {
   nbNA <- integer(m.chr)
   error <- rep(NA_real_, m.chr)
   for (i in 1:m.chr) {
-    X.label <- X[, ind.chr[i]]
+    snp <- ind.chr[i]
+    X.label <- X[, snp]
     nbNA[i] <- l <- length(indNA <- which(is.na(X.label)))
     if (l > 0) {
       indNoNA <- setdiff(1:n, indNA)
@@ -38,7 +39,8 @@ imputeChr <- function(Gna, ind.chr, alpha, size, p.train, n.cor, seed) {
       ind.val <- setdiff(indNoNA, ind.train)
 
       ind.col <- ind.chr[which(corr[, i] != 0)]
-      if (length(ind.col) < 5L) ind.col <- ind.chr[-i]
+      if (length(ind.col) < 5L)
+        ind.col <- intersect(setdiff(-size:size + snp, snp), ind.chr)
 
       bst <- xgboost(data = X2[ind.train, ind.col, drop = FALSE],
                      label = X.label[ind.train],
@@ -55,7 +57,7 @@ imputeChr <- function(Gna, ind.chr, alpha, size, p.train, n.cor, seed) {
       error[i] <- mean(round(2 * pred2) != (2 * X.label[ind.val]))
       # impute
       pred <- stats::predict(bst, X2[indNA, ind.col, drop = FALSE])
-      X2[indNA, ind.chr[i]] <- as.raw(round(2 * pred) + 4)
+      X2[indNA, snp] <- as.raw(round(2 * pred) + 4)
     }
   }
 
