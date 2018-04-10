@@ -19,7 +19,7 @@ imputeChr <- function(Gna, ind.chr, alpha, size, p.train, n.cor, seed) {
   # correlation between SNPs
   corr <- snp_cor(
     Gna = X,
-    ind.row = sort(sample(n.cor)),
+    ind.row = sort(sample(n, size = n.cor)),
     ind.col = ind.chr,
     size = size,
     alpha = alpha,
@@ -38,6 +38,7 @@ imputeChr <- function(Gna, ind.chr, alpha, size, p.train, n.cor, seed) {
       ind.val <- setdiff(indNoNA, ind.train)
 
       ind.col <- ind.chr[which(corr[, i] != 0)]
+      if (length(ind.col) < 5L) ind.col <- ind.chr[-i]
 
       bst <- xgboost(data = X2[ind.train, ind.col, drop = FALSE],
                      label = X.label[ind.train],
