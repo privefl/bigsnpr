@@ -4,8 +4,8 @@
 \alias{snp_fastImpute}
 \title{Fast imputation}
 \usage{
-snp_fastImpute(Gna, infos.chr, alpha = 0.02, size = 500, p.train = 0.8,
-  seed = NA, ncores = 1)
+snp_fastImpute(Gna, infos.chr, alpha = 1e-04, size = 200, p.train = 0.8,
+  n.cor = nrow(Gna), seed = NA, ncores = 1)
 }
 \arguments{
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
@@ -15,14 +15,17 @@ You can have missing values in your data.}
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
 Typically \code{<bigSNP>$map$chromosome}.}
 
-\item{alpha}{Type-I error for testing correlations. Default is \code{0.02}.}
+\item{alpha}{Type-I error for testing correlations. Default is \code{1e-4}.}
 
 \item{size}{Number of neighbor SNPs to be possibly included in the model
-imputing this particular SNP. Default is \code{500}.}
+imputing this particular SNP. Default is \code{200}.}
 
 \item{p.train}{Proportion of non missing genotypes that are used for training
 the imputation model while the rest is used to assess the accuracy of
 this imputation model. Default is \code{0.8}.}
+
+\item{n.cor}{Number of rows that are used to estimate correlations.
+Default uses them all.}
 
 \item{seed}{An integer, for reproducibility. Default doesn't use seeds.}
 
