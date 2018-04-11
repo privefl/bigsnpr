@@ -57,3 +57,15 @@ pval <- anova(lm(nb_err ~ nb_err_est - 1, data = infosNA))$`Pr(>F)`[[1]]
 expect_lt(pval, 2e-16)
 
 ################################################################################
+
+fake <- snp_fake(100, 200)
+G <- fake$genotypes
+G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
+CHR <- fake$map$chromosome
+# 'infos.chr' needs to have the same length as the number of SNPs
+expect_error(snp_fastImpute(G, 1), "Incompatibility between dimensions.",
+             fixed = TRUE)
+# you can't impute randomness, right?
+expect_gt(mean(snp_fastImpute(G, CHR)$pError), 0.5)
+
+################################################################################

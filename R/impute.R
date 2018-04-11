@@ -97,7 +97,7 @@ snp_fastImpute <- function(Gna, infos.chr,
                            seed = NA,
                            ncores = 1) {
 
-  check_args()
+  check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
 
   if (!is.na(seed)) seed <- seq_len(max(infos.chr)) + seed
   args <- as.list(environment())
