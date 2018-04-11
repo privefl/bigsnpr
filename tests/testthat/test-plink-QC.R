@@ -19,7 +19,8 @@ snp_plinkQC(plink.path = PLINK,
             prefix.out = tempfile(),
             maf = 0.2,
             extra.options = "--allow-no-sex") %>%
-  snp_attachExtdata() %>%
+  snp_readBed() %>%
+  snp_attach() %>%
   extract2("genotypes") %>%
   snp_MAF() %>%
   is_greater_than(0.2) %>%
@@ -52,7 +53,8 @@ indiv.keep <-
                      bedfile.in = bedfile,
                      bedfile.out = tempfile(fileext = ".bed"),
                      df.or.files = df.pair) %>%
-  snp_attachExtdata() %>%
+  snp_readBed() %>%
+  snp_attach() %>%
   extract2("fam") %>%
   extract2("sample.ID")
 

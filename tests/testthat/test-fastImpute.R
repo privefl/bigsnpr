@@ -47,11 +47,11 @@ expect_equal(sum(counts[4, ]), nrow(indNA))
 GNA$code256 <- bigsnpr:::CODE_IMPUTE_PRED
 infosNA <- data_frame(
   col = indNA[, 2],
-  error =  GNA[indNA] != G[indNA]
+  error = (GNA[indNA] != G[indNA])
 ) %>%
   group_by(col) %>%
   summarise(nb_err = sum(error)) %>%
-  mutate(nb_err_est = (infos$pError * infos$pNA * nrow(G))[col])
+  mutate(nb_err_est = (infos[1, ] * infos[2, ] * nrow(G))[col])
 
 pval <- anova(lm(nb_err ~ nb_err_est - 1, data = infosNA))$`Pr(>F)`[[1]]
 expect_lt(pval, 2e-16)
@@ -66,6 +66,21 @@ CHR <- fake$map$chromosome
 expect_error(snp_fastImpute(G, 1), "Incompatibility between dimensions.",
              fixed = TRUE)
 # you can't impute randomness, right?
-expect_gt(mean(snp_fastImpute(G, CHR)$pError), 0.5)
+expect_gt(mean(snp_fastImpute(G, CHR)[2, ]), 0.5)
+
+################################################################################
+
+fake <- snp_fake(100, 200)
+G <- fake$genotypes
+G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
+CHR <- sort(sample(1:3, ncol(G), TRUE))
+G2 <- bigsnpr:::FBM_infos(G)
+ind <- 1:11 + 150
+G2[1, ind] <- seq(0, 1, 0.1)
+G2 <- snp_fastImpute(G, CHR)
+G3 <- G$copy(bigsnpr:::CODE_IMPUTE_PRED)
+nbNA <- colSums(is.na(G3[]))
+expect_true(all(nbNA[ind] > 0))
+expect_true(all(nbNA[-ind] == 0))
 
 ################################################################################

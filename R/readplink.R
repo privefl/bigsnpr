@@ -100,14 +100,16 @@ snp_attach <- function(rdsfile) {
 
 #' Attach a "bigSNP" for examples and tests
 #'
-#' @inheritParams snp_readBed
+#' @param bedfile Name of one example bed file. Either
+#'   - `"example.bed"` (the default),
+#'   - `"example-missing.bed"`.
 #'
 #' @return The example "bigSNP", filebacked in the "/tmp/" directory.
 #'
 #' @export
-snp_attachExtdata <- function(bedfile = system.file("extdata", "example.bed",
-                                                    package = "bigsnpr")) {
+snp_attachExtdata <- function(bedfile = "example.bed") {
 
+  bedfile <- system.file("extdata", bedfile, package = "bigsnpr")
   snp_attach(
     snp_readBed(bedfile, backingfile = tempfile())
   )

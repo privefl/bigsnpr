@@ -36,8 +36,8 @@ test_that("Sequential and Parallel + seeds", {
   G2 <- big_copy(G); G2[elemNA] <- as.raw(3)  # NA
   G3 <- big_copy(G); G3[elemNA] <- as.raw(3)  # NA
 
-  expect_equal(snp_fastImpute(G2, CHR, seed = 2),
-               snp_fastImpute(G3, CHR, seed = 2, ncores = 2))
+  expect_equal(snp_fastImpute(G2, CHR, seed = 2)[],
+               snp_fastImpute(G3, CHR, seed = 2, ncores = 2)[])
 
   expect_equal(G2[], G3[])
 })

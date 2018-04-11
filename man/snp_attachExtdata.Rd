@@ -4,12 +4,14 @@
 \alias{snp_attachExtdata}
 \title{Attach a "bigSNP" for examples and tests}
 \usage{
-snp_attachExtdata(bedfile = system.file("extdata", "example.bed", package =
-  "bigsnpr"))
+snp_attachExtdata(bedfile = "example.bed")
 }
 \arguments{
-\item{bedfile}{Path to file with extension ".bed" to read.
-You need the corresponding ".bim" and ".fam" in the same directory.}
+\item{bedfile}{Name of one example bed file. Either
+\itemize{
+\item \code{"example.bed"} (the default),
+\item \code{"example-missing.bed"}.
+}}
 }
 \value{
 The example "bigSNP", filebacked in the "/tmp/" directory.
