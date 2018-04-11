@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Fake a "bigSNP" — snp_fake" />
+
+<meta property="og:description" content="Fake a "bigSNP"" />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +38,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +55,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">bigsnpr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">bigsnpr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -92,6 +104,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -99,10 +112,12 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fake a "bigSNP"</h1>
+    
+    <div class="hidden name"><code>snp_fake.Rd</code></div>
     </div>
 
     
@@ -111,7 +126,7 @@
 
     <pre class="usage"><span class='fu'>snp_fake</span>(<span class='no'>n</span>, <span class='no'>m</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -145,18 +160,18 @@ with missing values.</p>
 #&gt; 
 #&gt; $map
 #&gt;    chromosome marker.ID genetic.dist physical.pos allele1 allele2
-#&gt; 1           1     snp_1            0            0       T       A
+#&gt; 1           1     snp_1            0            0       A       T
 #&gt; 2           1     snp_2            0            0       T       A
 #&gt; 3           1     snp_3            0            0       A       T
-#&gt; 4           1     snp_4            0            0       A       T
+#&gt; 4           1     snp_4            0            0       T       A
 #&gt; 5           1     snp_5            0            0       T       A
-#&gt; 6           1     snp_6            0            0       A       T
+#&gt; 6           1     snp_6            0            0       T       A
 #&gt; 7           1     snp_7            0            0       A       T
 #&gt; 8           1     snp_8            0            0       A       T
 #&gt; 9           1     snp_9            0            0       A       T
-#&gt; 10          1    snp_10            0            0       T       A
+#&gt; 10          1    snp_10            0            0       A       T
 #&gt; 11          1    snp_11            0            0       T       A
-#&gt; 12          1    snp_12            0            0       T       A
+#&gt; 12          1    snp_12            0            0       A       T
 #&gt; 
 #&gt; attr(,"class")
 #&gt; [1] "bigSNP"</div><div class='input'>
@@ -171,11 +186,11 @@ with missing values.</p>
 <span class='co'># Modify the genotype `big.matrix`</span>
 <span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>length</span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>G</span>[]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-#&gt; [1,]    2   NA    2    1    1    0   NA    1    1     2     1    NA
-#&gt; [2,]    1    1    0   NA    0    2    2    2    0     2     1     0
-#&gt; [3,]   NA   NA    1    1   NA    1    2    2    0     1     2    NA
-#&gt; [4,]    1   NA    1    1    2   NA   NA    1    0    NA     1     1
-#&gt; [5,]    2    0    0    2   NA    2    0   NA    1     1     1    NA</div><div class='input'>
+#&gt; [1,]    1    2    2    1    0   NA    2   NA   NA     2     0     1
+#&gt; [2,]   NA   NA   NA    1    0   NA   NA    2   NA    NA     1     1
+#&gt; [3,]    1    1    0    1    2    0    0    0    1     1    NA    NA
+#&gt; [4,]    0    2    1    0    2    2   NA    0    1     0     2     1
+#&gt; [5,]    2    1   NA    1    2    2    0    2    1     0     2     2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -197,11 +212,14 @@ with missing values.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

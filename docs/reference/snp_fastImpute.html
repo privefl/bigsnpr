@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Fast imputation — snp_fastImpute" />
+
+<meta property="og:description" content="Fast imputation algorithm based on local XGBoost models." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +38,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +55,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">bigsnpr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">bigsnpr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -92,6 +104,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -99,48 +112,54 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fast imputation</h1>
+    
+    <div class="hidden name"><code>snp_fastImpute.Rd</code></div>
     </div>
 
     
-    <p>Fast imputation algorithm based on local XGBoost models. <strong>This algorithm
-has not been extensively compared with other imputation methods yet.</strong></p>
+    <p>Fast imputation algorithm based on local XGBoost models.</p>
     
 
-    <pre class="usage"><span class='fu'>snp_fastImpute</span>(<span class='no'>Gna</span>, <span class='no'>infos.chr</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.02</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>p.train</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
-  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_fastImpute</span>(<span class='no'>Gna</span>, <span class='no'>infos.chr</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>200</span>, <span class='kw'>p.train</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>n.cor</span> <span class='kw'>=</span> <span class='fu'>nrow</span>(<span class='no'>Gna</span>), <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Gna</th>
       <td><p>A FBM.code256
-(typically <code>&lt;bigSNP&gt;$genotypes</code>).
+(typically <code>&lt;bigSNP&gt;$genotypes</code>).<br />
 You can have missing values in your data.</p></td>
     </tr>
     <tr>
       <th>infos.chr</th>
-      <td><p>Vector of integers specifying each SNP's chromosome.
+      <td><p>Vector of integers specifying each SNP's chromosome.<br />
 Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Type-I error for testing correlations. Default is <code>0.02</code>.</p></td>
+      <td><p>Type-I error for testing correlations. Default is <code>1e-4</code>.</p></td>
     </tr>
     <tr>
       <th>size</th>
       <td><p>Number of neighbor SNPs to be possibly included in the model
-imputing this particular SNP. Default is <code>500</code>.</p></td>
+imputing this particular SNP. Default is <code>200</code>.</p></td>
     </tr>
     <tr>
       <th>p.train</th>
       <td><p>Proportion of non missing genotypes that are used for training
 the imputation model while the rest is used to assess the accuracy of
 this imputation model. Default is <code>0.8</code>.</p></td>
+    </tr>
+    <tr>
+      <th>n.cor</th>
+      <td><p>Number of rows that are used to estimate correlations.
+Default uses them all.</p></td>
     </tr>
     <tr>
       <th>seed</th>
@@ -155,13 +174,40 @@ You may use nb_cores.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>data.frame</code> with</p><ul>
-<li><p>the proportion of missing values by SNP,</p></li>
-<li><p>the estimated proportion of imputation errors by SNP.</p></li>
+    <p>An FBM with</p><ul>
+<li><p>the proportion of missing values by SNP (first row),</p></li>
+<li><p>the estimated proportion of imputation errors by SNP (second row).</p></li>
 </ul>
 
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>(<span class='st'>"example-missing.bed"</span>)
+<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>genotypes</span>
+<span class='no'>CHR</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>
+<span class='no'>G2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_fastImpute</span>(<span class='no'>G</span>, <span class='no'>CHR</span>)
+<span class='no'>G2</span>[, <span class='fl'>1</span>:<span class='fl'>5</span>]</div><div class='output co'>#&gt;      [,1] [,2]  [,3]       [,4] [,5]
+#&gt; [1,]    0 0.02 0.005 0.03500000 0.01
+#&gt; [2,]   NA 0.00 0.025 0.02564103 0.00</div><div class='input'>
+<span class='co'># Plot for post-checking</span>
+<span class='co'>## Here there is no SNP with more than 1% error (estimated)</span>
+<span class='no'>pvals</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>0.01</span>, <span class='fl'>0.005</span>, <span class='fl'>0.002</span>, <span class='fl'>0.001</span>); <span class='no'>colvals</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span>:<span class='fl'>5</span>
+<span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>pNA</span> <span class='kw'>=</span> <span class='no'>G2</span>[<span class='fl'>1</span>, ], <span class='kw'>pError</span> <span class='kw'>=</span> <span class='no'>G2</span>[<span class='fl'>2</span>, ])
+
+<span class='co'># base R</span>
+<span class='fu'>plot</span>(<span class='fu'>subset</span>(<span class='no'>df</span>, <span class='no'>pNA</span> <span class='kw'>&gt;</span> <span class='fl'>0.001</span>), <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>20</span>)</div><div class='input'><span class='no'>idc</span> <span class='kw'>&lt;-</span> <span class='fu'>lapply</span>(<span class='fu'>seq_along</span>(<span class='no'>pvals</span>), <span class='kw'>function</span>(<span class='no'>i</span>) {
+  <span class='fu'>curve</span>(<span class='no'>pvals</span>[<span class='no'>i</span>] / <span class='no'>x</span>, <span class='kw'>from</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+        <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>colvals</span>[<span class='no'>i</span>], <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+})</div><div class='input'><span class='fu'>legend</span>(<span class='st'>"topright"</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='no'>pvals</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"p(NA &amp; Error)"</span>,
+       <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>colvals</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='snp_fastImpute-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># ggplot2</span>
+<span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='fu'>Reduce</span>(<span class='kw'>function</span>(<span class='no'>p</span>, <span class='no'>i</span>) {
+  <span class='no'>p</span> + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/stat_function'>stat_function</a></span>(<span class='kw'>fun</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>pvals</span>[<span class='no'>i</span>] / <span class='no'>x</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>colvals</span>[<span class='no'>i</span>])
+}, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>seq_along</span>(<span class='no'>pvals</span>), <span class='kw'>init</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>df</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='no'>pNA</span>, <span class='no'>pError</span>))) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>() +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/coord_cartesian'>coord_cartesian</a></span>(<span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>range</span>(<span class='no'>df</span>$<span class='no'>pError</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_bw</a></span>(<span class='fl'>15</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 140 rows containing missing values (geom_point).</span></div><div class='img'><img src='snp_fastImpute-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -169,7 +215,9 @@ You may use nb_cores.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
@@ -180,11 +228,14 @@ You may use nb_cores.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Attach a "bigSNP" from backing files — snp_attach" />
+
+<meta property="og:description" content="Load a bigSNP from backing files into R." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +38,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +55,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">bigsnpr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">bigsnpr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -92,6 +104,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -99,10 +112,12 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Attach a "bigSNP" from backing files</h1>
+    
+    <div class="hidden name"><code>snp_attach.Rd</code></div>
     </div>
 
     
@@ -111,7 +126,7 @@
 
     <pre class="usage"><span class='fu'>snp_attach</span>(<span class='no'>rdsfile</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -131,7 +146,7 @@ the two (".bk" and ".rds") backing files to another directory.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/home/privef/Bureau/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
+    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/home/privef/Bureau/thesis/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
 <span class='co'># Reading the bedfile and storing the data in temporary directory</span>
 <span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>())
 
@@ -145,7 +160,7 @@ the two (".bk" and ".rds") backing files to another directory.</p>
 #&gt;   ..$ ncol       : int 4542
 #&gt;   ..$ type       : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile: chr "/tmp/RtmpZfFeyj/file18222446fe7.bk"
+#&gt;   ..$ backingfile: chr "/tmp/Rtmp5GaOe4/file4c6658e09ee.bk"
 #&gt;   ..$ address    :&lt;externalptr&gt; 
 #&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   ..and 21 methods, of which 7 are  possibly relevant:
@@ -196,11 +211,14 @@ the two (".bk" and ".rds") backing files to another directory.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

@@ -18,13 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Write PLINK files from a "bigSNP" — snp_writeBed" />
+
+<meta property="og:description" content="Function to write bed/bim/fam files from a bigSNP.
+This will use the slot code rounded to write 0s, 1s, 2s or NAs." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +39,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">bigsnpr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">bigsnpr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -92,6 +105,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -99,10 +113,12 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Write PLINK files from a "bigSNP"</h1>
+    
+    <div class="hidden name"><code>snp_writeBed.Rd</code></div>
     </div>
 
     
@@ -112,7 +128,7 @@ This will use the slot <code>code</code> <strong>rounded</strong> to write 0s, 1
 
     <pre class="usage"><span class='fu'>snp_writeBed</span>(<span class='no'>x</span>, <span class='no'>bedfile</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>))</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -126,13 +142,13 @@ This will use the slot <code>code</code> <strong>rounded</strong> to write 0s, 1
     <tr>
       <th>ind.row</th>
       <td><p>An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.
+are used. If not specified, all rows are used.<br />
 <strong>Don't use negative indices.</strong></p></td>
     </tr>
     <tr>
       <th>ind.col</th>
       <td><p>An optional vector of the column indices (SNPs) that are used.
-If not specified, all columns are used.
+If not specified, all columns are used.<br />
 <strong>Don't use negative indices.</strong></p></td>
     </tr>
     </table>
@@ -162,7 +178,7 @@ If not specified, all columns are used.
 <span class='co'># Same content</span>
 <span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[])</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>all.equal</span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># Two different backingfiles</span>
-<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpZfFeyj/file182267353a88.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpZfFeyj/file18221079f7.bk"</div></pre>
+<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmp5GaOe4/file4c64993a24b.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmp5GaOe4/file4c6ca2d41b.bk"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -183,11 +199,14 @@ If not specified, all columns are used.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

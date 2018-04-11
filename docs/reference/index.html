@@ -18,13 +18,16 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Function reference" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +35,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +52,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">bigsnpr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">bigsnpr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -92,6 +101,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -99,228 +109,223 @@
       
       </header>
 
-      <div class="row">
-  <div class="col-md-9">
+<div class="row">
+  <div class="contents col-md-9">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.2.5</small>
-      </h1>
+      <h1>Reference</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    <table class="ref-index">
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <colgroup>
+      <col class="alias" />
+      <col class="title" />
+    </colgroup>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-i-o" class="hasAnchor"><a href="#section-i-o" class="anchor"></a>I/O</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_readBed.html">snp_readBed</a></code> </p>
-          </td>
-          <td><p>Read PLINK files into a "bigSNP"</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_writeBed.html">snp_writeBed</a></code> </p>
-          </td>
-          <td><p>Write PLINK files from a "bigSNP"</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_attach.html">snp_attach</a></code> </p>
-          </td>
-          <td><p>Attach a "bigSNP" from backing files</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_attachExtdata.html">snp_attachExtdata</a></code> </p>
-          </td>
-          <td><p>Attach a "bigSNP" for examples and tests</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-external-software" class="hasAnchor"><a href="#section-external-software" class="anchor"></a>External software</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="download_plink.html">download_plink</a></code> </p>
-          </td>
-          <td><p>Download PLINK 1.9</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_plinkQC.html">snp_plinkQC</a></code> </p>
-          </td>
-          <td><p>Quality Control</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_plinkIBDQC.html">snp_plinkIBDQC</a></code> </p>
-          </td>
-          <td><p>Identity-by-descent</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_plinkRmSamples.html">snp_plinkRmSamples</a></code> </p>
-          </td>
-          <td><p>Remove samples</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="download_beagle.html">download_beagle</a></code> </p>
-          </td>
-          <td><p>Download Beagle 4.1</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_beagleImpute.html">snp_beagleImpute</a></code> </p>
-          </td>
-          <td><p>Imputation</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-pruning-correlation" class="hasAnchor"><a href="#section-pruning-correlation" class="anchor"></a>Pruning / correlation</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="pruning-clumping.html">snp_clumping</a></code> <code><a href="pruning-clumping.html">snp_pruning</a></code> <code><a href="pruning-clumping.html">snp_indLRLDR</a></code> </p>
-          </td>
-          <td><p>LD pruning and clumping</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_autoSVD.html">snp_autoSVD</a></code> </p>
-          </td>
-          <td><p>Truncated SVD with pruning</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_PRS.html">snp_PRS</a></code> </p>
-          </td>
-          <td><p>PRS</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_cor.html">snp_cor</a></code> </p>
-          </td>
-          <td><p>Correlation</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_fastImpute.html">snp_fastImpute</a></code> </p>
-          </td>
-          <td><p>Fast imputation</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-multiple-testing-plots" class="hasAnchor"><a href="#section-multiple-testing-plots" class="anchor"></a>Multiple testing - plots</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_gc.html">snp_gc</a></code> </p>
-          </td>
-          <td><p>Genomic Control</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_qq.html">snp_qq</a></code> </p>
-          </td>
-          <td><p>Q-Q plot</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_manhattan.html">snp_manhattan</a></code> </p>
-          </td>
-          <td><p>Manhattan plot</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_pcadapt.html">snp_pcadapt</a></code> </p>
-          </td>
-          <td><p>Outlier detection</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_MAX3.html">snp_MAX3</a></code> </p>
-          </td>
-          <td><p>MAX3 statistic</p></td>
-        </tr>
-      </tbody><tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-utilities" class="hasAnchor"><a href="#section-utilities" class="anchor"></a>Utilities</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="same_ref.html">same_ref</a></code> </p>
-          </td>
-          <td><p>Determine reference divergence</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_split.html">snp_split</a></code> </p>
-          </td>
-          <td><p>Split-parApply-Combine</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_save.html">snp_save</a></code> </p>
-          </td>
-          <td><p>Save modifications</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_getSampleInfos.html">snp_getSampleInfos</a></code> </p>
-          </td>
-          <td><p>Get sample information</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_MAF.html">snp_MAF</a></code> </p>
-          </td>
-          <td><p>MAF</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="snp_scaleBinom.html">snp_scaleBinom</a></code> </p>
-          </td>
-          <td><p>Binomial(n, p) scaling</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="subset.bigSNP.html">subset</a></code> </p>
-          </td>
-          <td><p>Subset</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-i-o" class="hasAnchor"><a href="#section-i-o" class="anchor"></a>I/O</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_readBed.html">snp_readBed()</a></code> </p>
+        </td>
+        <td><p>Read PLINK files into a "bigSNP"</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_writeBed.html">snp_writeBed()</a></code> </p>
+        </td>
+        <td><p>Write PLINK files from a "bigSNP"</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_attach.html">snp_attach()</a></code> </p>
+        </td>
+        <td><p>Attach a "bigSNP" from backing files</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_attachExtdata.html">snp_attachExtdata()</a></code> </p>
+        </td>
+        <td><p>Attach a "bigSNP" for examples and tests</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-external-software" class="hasAnchor"><a href="#section-external-software" class="anchor"></a>External software</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="download_plink.html">download_plink()</a></code> </p>
+        </td>
+        <td><p>Download PLINK 1.9</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_plinkQC.html">snp_plinkQC()</a></code> </p>
+        </td>
+        <td><p>Quality Control</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_plinkIBDQC.html">snp_plinkIBDQC()</a></code> </p>
+        </td>
+        <td><p>Identity-by-descent</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_plinkRmSamples.html">snp_plinkRmSamples()</a></code> </p>
+        </td>
+        <td><p>Remove samples</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="download_beagle.html">download_beagle()</a></code> </p>
+        </td>
+        <td><p>Download Beagle 4.1</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_beagleImpute.html">snp_beagleImpute()</a></code> </p>
+        </td>
+        <td><p>Imputation</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-pruning-correlation" class="hasAnchor"><a href="#section-pruning-correlation" class="anchor"></a>Pruning / correlation</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="pruning-clumping.html">snp_clumping()</a></code> <code><a href="pruning-clumping.html">snp_pruning()</a></code> <code><a href="pruning-clumping.html">snp_indLRLDR()</a></code> </p>
+        </td>
+        <td><p>LD pruning and clumping</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_autoSVD.html">snp_autoSVD()</a></code> </p>
+        </td>
+        <td><p>Truncated SVD with pruning</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_PRS.html">snp_PRS()</a></code> </p>
+        </td>
+        <td><p>PRS</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_cor.html">snp_cor()</a></code> </p>
+        </td>
+        <td><p>Correlation</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_fastImpute.html">snp_fastImpute()</a></code> </p>
+        </td>
+        <td><p>Fast imputation</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-multiple-testing-plots" class="hasAnchor"><a href="#section-multiple-testing-plots" class="anchor"></a>Multiple testing - plots</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_gc.html">snp_gc()</a></code> </p>
+        </td>
+        <td><p>Genomic Control</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_qq.html">snp_qq()</a></code> </p>
+        </td>
+        <td><p>Q-Q plot</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_manhattan.html">snp_manhattan()</a></code> </p>
+        </td>
+        <td><p>Manhattan plot</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_pcadapt.html">snp_pcadapt()</a></code> </p>
+        </td>
+        <td><p>Outlier detection</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_MAX3.html">snp_MAX3()</a></code> </p>
+        </td>
+        <td><p>MAX3 statistic</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-utilities" class="hasAnchor"><a href="#section-utilities" class="anchor"></a>Utilities</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="same_ref.html">same_ref()</a></code> </p>
+        </td>
+        <td><p>Determine reference divergence</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_split.html">snp_split()</a></code> </p>
+        </td>
+        <td><p>Split-parApply-Combine</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_save.html">snp_save()</a></code> </p>
+        </td>
+        <td><p>Save modifications</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_getSampleInfos.html">snp_getSampleInfos()</a></code> </p>
+        </td>
+        <td><p>Get sample information</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_MAF.html">snp_MAF()</a></code> </p>
+        </td>
+        <td><p>MAF</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="snp_scaleBinom.html">snp_scaleBinom()</a></code> </p>
+        </td>
+        <td><p>Binomial(n, p) scaling</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="subset.bigSNP.html">subset(<i>&lt;bigSNP&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Subset</p></td>
+      </tr>
+    </tbody>
+    </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -341,11 +346,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
