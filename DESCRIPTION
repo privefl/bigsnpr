@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 0.2.7
-Date: 2018-04-10
+Version: 0.3.0
+Date: 2018-04-11
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -15,8 +15,7 @@ Authors@R: c(
            email = "hugues.aschard@pasteur.fr",
            role = "ths"))
 Description: Easy-to-use, efficient, flexible and scalable tools
-    for the analysis of massive SNP arrays.
-    Preprint: Privé et al. (2017) <doi:10.1101/190926>.
+    for the analysis of massive SNP arrays. <10.1093/bioinformatics/bty185>
 License: GPL-3
 LazyData: TRUE
 Language: en-US
