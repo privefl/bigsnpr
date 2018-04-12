@@ -18,7 +18,7 @@
 snp_gene <- function(rsid, ncores = 1) {
 
   if (requireNamespace("rsnps", quietly = TRUE)) {
-    big_apply(FBM(0, 0), a.FUN = function(X, ind, ID) {
+    big_apply(FBM(1, 1), a.FUN = function(X, ind, ID) {
       rsnps::ncbi_snp_summary(ID[ind])$gene2
     }, a.combine = 'c', ind = seq_along(rsid),
     block.size = 300, ncores = ncores, ID = rsid)
