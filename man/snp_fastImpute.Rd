@@ -49,6 +49,14 @@ CHR <- fake$map$chromosome
 G2 <- snp_fastImpute(G, CHR)
 G2[, 1:5]
 
+# Still missing values
+big_counts(G, ind.col = 1:10)
+# You need to change the code of G
+# To make this permanent, you need to save (modify) the file on disk
+fake$genotypes$code256 <- bigsnpr:::CODE_IMPUTE_PRED
+fake <- snp_save(fake)
+big_counts(fake$genotypes)[4, ]
+
 # Plot for post-checking
 ## Here there is no SNP with more than 1\% error (estimated)
 pvals <- c(0.01, 0.005, 0.002, 0.001); colvals <- 2:5

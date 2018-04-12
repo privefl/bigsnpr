@@ -1,10 +1,14 @@
+## bigsnpr 0.3.1
+
+- Add function `snp_gene` to get genes corresponding to 'rs' SNP IDs thanks to package {rsnps} from rOpenSci.
+
 ## bigsnpr 0.3.0
 
 - **Package {bigsnpr} is published in [Bioinformatics](http://dx.doi.org/10.1093/bioinformatics/bty185)**.
 
 ## bigsnpr 0.2.7
 
-- faster defaults + possibility to estimate correlations based on a subset of individuals for `snp_fastImpute`. Also store infos in an FBM (instead of a data frame) so that imputation can be done by parts.
+- Faster defaults + possibility to estimate correlations based on a subset of individuals for `snp_fastImpute`. Also store infos in an FBM (instead of a data frame) so that imputation can be done by parts.
 
 ## bigsnpr 0.2.5
 
