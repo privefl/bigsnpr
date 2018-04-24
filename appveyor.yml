@@ -17,9 +17,6 @@ cache:
 
 build_script:
   - travis-tool.sh install_deps
-  - travis-tool.sh install_github bcm-uga/pcadapt
-  - travis-tool.sh install_github privefl/bigstatsr
-  - travis-tool.sh install_github ropensci/rsnps
 
 test_script:
   - travis-tool.sh run_tests

@@ -11,7 +11,7 @@ genes <- c("LOC105378948:105378948,RNF223:401934", rep("C1orf159:54991", 5),
 
 test_that("Getting genes works", {
   expect_equal(snp_gene(rsid), genes)
-  expect_equal(snp_gene(rsid, ncores = 2), genes)
+  # expect_equal(snp_gene(rsid, ncores = 2), genes)
 })
 
 ################################################################################
