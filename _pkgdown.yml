@@ -58,7 +58,6 @@ reference:
   - title: "Utilities"
     contents:
       - same_ref
-      - snp_gene
       - snp_split
       - snp_save
       - snp_getSampleInfos

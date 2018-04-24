@@ -1,6 +1,6 @@
 ## bigsnpr 0.3.1
 
-- Add function `snp_gene` to get genes corresponding to 'rs' SNP IDs thanks to package {rsnps} from rOpenSci.
+- Provide function `snp_gene` (as a gist) to get genes corresponding to 'rs' SNP IDs thanks to package {rsnps} from rOpenSci. See README.
 
 ## bigsnpr 0.3.0
 

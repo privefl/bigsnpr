@@ -32,6 +32,14 @@ I use a class called `bigSNP` for representing infos on massive SNP arrays. One 
 - `fam`: A `data.frame` containing some information on the SNPs (read from the ".fam" file).
 - `map`: A `data.frame` giving some information on the individuals (read from the ".bim" file).
 
+## Get genes associated with SNPs
+
+```r
+devtools::source_gist("42b41d771bbeae63245b8304ef283c70", filename = "get-genes.R")
+rsid <- c("rs3934834", "rs3737728", "rs6687776", "rs9651273", "rs4970405",
+          "rs12726255", "rs2298217", "rs4970362", "rs9660710", "rs4970420")
+snp_gene(rsid)
+```
 
 ## Possible upcoming features
 

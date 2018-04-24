@@ -49,9 +49,8 @@ Suggests:
     Hmisc,
     magrittr,
     pcadapt (>= 4.0.1),
-    rsnps (>= 0.2.6.9414),
     testthat
-Remotes: privefl/bigstatsr, bcm-uga/pcadapt, ropensci/rsnps
+Remotes: privefl/bigstatsr, bcm-uga/pcadapt
 RoxygenNote: 6.0.1.9000
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
