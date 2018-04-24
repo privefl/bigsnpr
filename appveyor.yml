@@ -33,6 +33,12 @@ environment:
     NOT_CRAN: true
     R_CHECK_ARGS: "--no-manual --timings"
 
+  matrix:
+  - R_VERSION: devel
+    PKGTYPE: source
+
+  - R_VERSION: release
+
 artifacts:
   - path: '*.Rcheck\**\*.log'
     name: Logs
