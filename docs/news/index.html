@@ -135,7 +135,7 @@
 <h2 class="hasAnchor">
 <a href="#bigsnpr-0-2-7" class="anchor"></a>bigsnpr 0.2.7</h2>
 <ul>
-<li>Faster defaults + possibility to estimate correlations based on a subset of individuals for <code>snp_fastImpute</code>. Also store infos in an FBM (instead of a data frame) so that imputation can be done by parts.</li>
+<li>Faster defaults + possibility to estimate correlations based on a subset of individuals for <code>snp_fastImpute</code>. Also store infos in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the <em>Bioinformatics</em> paper were <code>alpha = 0.02</code> and <code>size = 500</code> (instead of <code>1e-4</code> and <code>200</code> now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).</li>
 </ul>
 </div>
     <div id="bigsnpr-0-2-5" class="section level2">
