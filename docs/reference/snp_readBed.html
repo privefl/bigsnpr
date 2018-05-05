@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Read PLINK files into a "bigSNP" — snp_readBed" />
 
 <meta property="og:description" content="Function to read bed/bim/fam files into a bigSNP." />
@@ -38,8 +41,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -57,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -120,9 +121,11 @@
     <div class="hidden name"><code>snp_readBed.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Function to read bed/bim/fam files into a <a href='bigSNP-class.html'>bigSNP</a>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'>sub</span>(<span class='st'>"\\.bed$"</span>, <span class='st'>""</span>, <span class='no'>bedfile</span>))</pre>
     
@@ -160,7 +163,7 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/home/privef/Bureau/thesis/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
+    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/home/privef/Bureau/bigsnpr/inst/extdata/example.bed"</div><div class='input'>
 <span class='co'># Reading the bedfile and storing the data in temporary directory</span>
 <span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>())
 
@@ -174,7 +177,7 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_
 #&gt;   ..$ ncol       : int 4542
 #&gt;   ..$ type       : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile: chr "/tmp/Rtmp5GaOe4/file4c63736115d.bk"
+#&gt;   ..$ backingfile: chr "/tmp/Rtmp6nJeat/filee6941f595fc.bk"
 #&gt;   ..$ address    :&lt;externalptr&gt; 
 #&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
 #&gt;   ..and 21 methods, of which 7 are  possibly relevant:

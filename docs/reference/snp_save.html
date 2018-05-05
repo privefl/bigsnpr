@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Save modifications — snp_save" />
 
 <meta property="og:description" content="Save a bigSNP after having made some modifications to it.
@@ -43,8 +46,6 @@ save these modifications in the corresponding ".rds" backing file." />
 <![endif]-->
 
 
-
-
   </head>
 
   <body>
@@ -60,7 +61,7 @@ save these modifications in the corresponding ".rds" backing file." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -123,12 +124,14 @@ save these modifications in the corresponding ".rds" backing file." />
     <div class="hidden name"><code>snp_save.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Save a <code>bigSNP</code> after having made some modifications to it.
 As <code>bigSNP</code> is an S3 class, you can add any slot you want
 to an object of this class, then use <code>snp_save</code> to
 save these modifications in the corresponding ".rds" backing file.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>snp_save</span>(<span class='no'>x</span>)</pre>
     
@@ -187,7 +190,7 @@ save these modifications in the corresponding ".rds" backing file.</p>
 #&gt;  $ p-values    : num  0.266 0.372 0.573 0.908 0.202 ...</div><div class='input'>
 <span class='co'># The complicated code of this function</span>
 <span class='no'>snp_save</span></div><div class='output co'>#&gt; function(x) {
-#&gt;   saveRDS(x, sub("\\\\.bk$", ".rds", x$genotypes$backingfile))
+#&gt;   saveRDS(x, sub("\\.bk$", ".rds", x$genotypes$backingfile))
 #&gt; 
 #&gt;   x
 #&gt; }

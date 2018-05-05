@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Identity-by-descent — snp_plinkIBDQC" />
 
 <meta property="og:description" content="Quality Control based on Identity-by-descent (IBD) computed by
@@ -42,8 +45,6 @@ using its method-of-moments." />
 <![endif]-->
 
 
-
-
   </head>
 
   <body>
@@ -59,7 +60,7 @@ using its method-of-moments." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -122,11 +123,13 @@ using its method-of-moments." />
     <div class="hidden name"><code>snp_plinkIBDQC.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Quality Control based on Identity-by-descent (IBD) computed by
 <a href='https://www.cog-genomics.org/plink2'>PLINK 1.9</a>
 using its method-of-moments.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>snp_plinkIBDQC</span>(<span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pi.hat</span> <span class='kw'>=</span> <span class='fl'>0.08</span>,
   <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>pruning.args</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>100</span>, <span class='fl'>0.2</span>), <span class='kw'>do.blind.QC</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -209,7 +212,7 @@ datasets.</em> GigaScience 4 (1): 7.
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkIBDQC</span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>,
                        <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>),
                        <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>test</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmp5GaOe4/file4c636922120.bed"</div><div class='input'><span class='no'>test2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkIBDQC</span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>,
+<span class='no'>test</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmp6nJeat/filee691a0f8cf8.bed"</div><div class='input'><span class='no'>test2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkIBDQC</span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>,
                         <span class='kw'>do.blind.QC</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
                         <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='fu'>str</span>(<span class='no'>test2</span>)</div><div class='output co'>#&gt; 'data.frame':	1648 obs. of  14 variables:
@@ -230,7 +233,7 @@ datasets.</em> GigaScience 4 (1): 7.
 <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/qplot'>qplot</a></span>(<span class='no'>Z0</span>, <span class='no'>Z1</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>test2</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>RT</span>)</div><div class='img'><img src='snp_plinkIBDQC-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/qplot'>qplot</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>PI_HAT</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>test2</span>) +
   <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_abline'>geom_hline</a></span>(<span class='kw'>yintercept</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='snp_plinkIBDQC-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='snp_plinkRmSamples.html'>snp_plinkRmSamples</a></span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>,
                    <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='fu'>tempfile</span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>),
-                   <span class='kw'>df.or.files</span> <span class='kw'>=</span> <span class='fu'>subset</span>(<span class='no'>test2</span>, <span class='no'>PI_HAT</span> <span class='kw'>&gt;</span> <span class='fl'>0.2</span>))</div><div class='output co'>#&gt; [1] "/tmp/Rtmp5GaOe4/file4c65a4f542a.bed"</div><div class='input'>
+                   <span class='kw'>df.or.files</span> <span class='kw'>=</span> <span class='fu'>subset</span>(<span class='no'>test2</span>, <span class='no'>PI_HAT</span> <span class='kw'>&gt;</span> <span class='fl'>0.2</span>))</div><div class='output co'>#&gt; [1] "/tmp/Rtmp6nJeat/filee69140a99a6.bed"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

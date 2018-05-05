@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="LD pruning and clumping — pruning-clumping" />
 
 <meta property="og:description" content="For a bigSNP:
@@ -47,8 +50,6 @@ human genome.
 <![endif]-->
 
 
-
-
   </head>
 
   <body>
@@ -64,7 +65,7 @@ human genome.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -127,6 +128,7 @@ human genome.
     <div class="hidden name"><code>pruning-clumping.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>For a <code>bigSNP</code>:</p><ul>
 <li><p><code>snp_pruning</code>: LD pruning. Similar to "<code>--indep-pairwise (size+1) 1 thr.r2</code>"
@@ -137,6 +139,7 @@ in <a href='https://www.cog-genomics.org/plink/1.9/ld'>PLINK</a>.
 human genome.</p></li>
 </ul>
     
+    </div>
 
     <pre class="usage"><span class='fu'>snp_clumping</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>,
   <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,

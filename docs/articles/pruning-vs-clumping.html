@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -104,16 +104,16 @@
 <h2 class="hasAnchor">
 <a href="#simulation" class="anchor"></a>Simulation</h2>
 <p>I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation &gt; 0.2 with their direct neighbors and only with them. Moreover, the SNPs have an increasing MAF.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen &lt;-<span class="st"> </span>function(n, m) {
-  I &lt;-<span class="st"> </span><span class="dv">1</span>:m
-  p &lt;-<span class="st"> </span>I /<span class="st"> </span>(<span class="dv">2</span> *<span class="st"> </span>m +<span class="st"> </span><span class="dv">1</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen &lt;-<span class="st"> </span><span class="cf">function</span>(n, m) {
+  I &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>m
+  p &lt;-<span class="st"> </span>I <span class="op">/</span><span class="st"> </span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>m <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)
 
-  mat &lt;-<span class="st"> </span><span class="kw">outer</span>(I, I, <span class="dt">FUN =</span> function(i, j) {
-    <span class="dv">1</span> /<span class="st"> </span>(<span class="kw">abs</span>(i -<span class="st"> </span>j) +<span class="st"> </span><span class="dv">1</span>)
+  mat &lt;-<span class="st"> </span><span class="kw">outer</span>(I, I, <span class="dt">FUN =</span> <span class="cf">function</span>(i, j) {
+    <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="kw">abs</span>(i <span class="op">-</span><span class="st"> </span>j) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)
   })
 
-  bindata::<span class="kw">rmvbin</span>(n, p, <span class="dt">bincorr =</span> mat) +<span class="st"> </span>
-<span class="st">    </span>bindata::<span class="kw">rmvbin</span>(n, p, <span class="dt">bincorr =</span> mat)
+  bindata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/bindata/topics/rmvbin">rmvbin</a></span>(n, p, <span class="dt">bincorr =</span> mat) <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span>bindata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/bindata/topics/rmvbin">rmvbin</a></span>(n, p, <span class="dt">bincorr =</span> mat)
 }
 
 <span class="kw">set.seed</span>(<span class="dv">1</span>)
@@ -140,7 +140,7 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 ## [18,]    1    1    2    1    1    2    2    2    2     2
 ## [19,]    0    1    0    0    0    1    2    1    1     0
 ## [20,]    0    0    0    0    0    0    1    1    0     0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">round</span>(<span class="kw">cor</span>(X)^<span class="dv">2</span>, <span class="dv">2</span>)) <span class="co"># squared correlation between SNPs</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">round</span>(<span class="kw">cor</span>(X)<span class="op">^</span><span class="dv">2</span>, <span class="dv">2</span>)) <span class="co"># squared correlation between SNPs</span></code></pre></div>
 <pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 ##  [1,] 1.00 0.23 0.13 0.08 0.05 0.03 0.02 0.01 0.01  0.00
 ##  [2,] 0.23 1.00 0.21 0.09 0.05 0.05 0.01 0.01 0.01  0.01
@@ -152,18 +152,18 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 ##  [8,] 0.01 0.01 0.06 0.07 0.10 0.17 0.23 1.00 0.28  0.14
 ##  [9,] 0.01 0.01 0.02 0.03 0.07 0.08 0.13 0.28 1.00  0.31
 ## [10,] 0.00 0.01 0.01 0.04 0.04 0.06 0.07 0.14 0.31  1.00</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">colMeans</span>(X) /<span class="st"> </span><span class="dv">2</span>) <span class="co"># MAF of SNPs</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">colMeans</span>(X) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="co"># MAF of SNPs</span></code></pre></div>
 <pre><code>##  [1] 0.043 0.091 0.154 0.177 0.234 0.283 0.338 0.372 0.436 0.450</code></pre>
 <p>Let’s convert this to our format <code>bigSNP</code> in order to write corresponding PLINK files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(bigsnpr)</code></pre></div>
 <pre><code>## Le chargement a nécessité le package : bigstatsr</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fake &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_fake.html">snp_fake</a></span>(<span class="kw">nrow</span>(X), <span class="kw">ncol</span>(X))
-fake$genotypes[] &lt;-<span class="st"> </span>X</code></pre></div>
+fake<span class="op">$</span>genotypes[] &lt;-<span class="st"> </span>X</code></pre></div>
 <pre><code>## Warning: Assignment will down cast from double to unsigned char.
 ## Hint: To remove this warning, use options(bigstatsr.typecast.warning = FALSE).</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="kw"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span>(fake, <span class="kw">paste0</span>(tmp, <span class="st">".bed"</span>))</code></pre></div>
-<pre><code>## [1] "/tmp/RtmpEJ23BP/file12c41de6d95e.bed"</code></pre>
+<pre><code>## [1] "/tmp/RtmpDF7joc/file167a1dff2379.bed"</code></pre>
 </div>
 <div id="pruning" class="section level2">
 <h2 class="hasAnchor">
@@ -188,7 +188,7 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 ## 1 snp_10</code></pre>
 <p>The first SNP is pruned because of its correlation with the second. The second SNP is pruned because of its correlation with the third and so on. In the end, only the last SNP (10th) is kept with the LD pruning procedure of PLINK, which corresponds to less than 18% of the total variance.</p>
 <p>You can also do the pruning directly in R with <code><a href="../reference/pruning-clumping.html">snp_pruning()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pruning-clumping.html">snp_pruning</a></span>(fake$genotypes, <span class="dt">infos.chr =</span> fake$map$chromosome)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pruning-clumping.html">snp_pruning</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
 <pre><code>## [1] 10</code></pre>
 </div>
 <div id="clumping" class="section level2">
@@ -197,8 +197,8 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 <p>A clumping approach would consider the SNPs sorted (in a decreasing order) by a statistic. This statistic is often a test statistic computed from a GWAS of a given phenotype. Yet, for example, for Principal Components Analysis (PCA), the thinning procedure should remain unsupervised (phenotype mustn’t be used!). So, we propose to also use the MAF as a statistic of importance, so that SNPs are sorted by decreasing MAF.</p>
 <p>The benefit of the clumping procedure is that the index SNP is always the SNP that is kept (because it has the highest MAF). Let’s use PLINK again:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute MAFs</span>
-<span class="kw">write.table</span>(<span class="kw">data.frame</span>(<span class="dt">SNP =</span> fake$map$marker.ID,
-                       <span class="dt">P =</span> <span class="dv">1</span> -<span class="st"> </span><span class="kw"><a href="../reference/snp_MAF.html">snp_MAF</a></span>(fake$genotypes)),
+<span class="kw">write.table</span>(<span class="kw">data.frame</span>(<span class="dt">SNP =</span> fake<span class="op">$</span>map<span class="op">$</span>marker.ID,
+                       <span class="dt">P =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw"><a href="../reference/snp_MAF.html">snp_MAF</a></span>(fake<span class="op">$</span>genotypes)),
             <span class="dt">file =</span> <span class="kw">paste0</span>(tmp, <span class="st">".frq"</span>), <span class="dt">row.names =</span> <span class="ot">FALSE</span>, <span class="dt">quote =</span> <span class="ot">FALSE</span>)
 <span class="co"># Clumping</span>
 <span class="kw">system</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --out {tmp}"</span>,
@@ -213,7 +213,7 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 ## 5   1 1  snp_2  0 0.909     1    1   0   0    0     0 snp_1(1)</code></pre>
 <p>So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.</p>
 <p>You can also do the clumping (on MAF by default) directly in R with <code><a href="../reference/pruning-clumping.html">snp_clumping()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pruning-clumping.html">snp_clumping</a></span>(fake$genotypes, <span class="dt">infos.chr =</span> fake$map$chromosome)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pruning-clumping.html">snp_clumping</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
 <pre><code>## [1]  2  4  6  8 10</code></pre>
 </div>
 <div id="conclusion" class="section level2">

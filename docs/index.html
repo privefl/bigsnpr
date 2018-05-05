@@ -99,7 +99,7 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Not on CRAN for now because of download_plink()</span>
 <span class="co"># For the current version</span>
-devtools::<span class="kw">install_github</span>(<span class="st">"privefl/bigsnpr"</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"privefl/bigsnpr"</span>)</code></pre></div>
 </div>
 <div id="input-format" class="section level2">
 <h2 class="hasAnchor">
@@ -118,10 +118,10 @@ devtools::<span class="kw">install_github</span>(<span class="st">"privefl/bigsn
 <div id="get-genes-associated-with-snps" class="section level2">
 <h2 class="hasAnchor">
 <a href="#get-genes-associated-with-snps" class="anchor"></a>Get genes associated with SNPs</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">source_gist</span>(<span class="st">"42b41d771bbeae63245b8304ef283c70"</span>, <span class="dt">filename =</span> <span class="st">"get-genes.R"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/source_gist">source_gist</a></span>(<span class="st">"42b41d771bbeae63245b8304ef283c70"</span>, <span class="dt">filename =</span> <span class="st">"get-genes.R"</span>)
 rsid &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"rs3934834"</span>, <span class="st">"rs3737728"</span>, <span class="st">"rs6687776"</span>, <span class="st">"rs9651273"</span>, <span class="st">"rs4970405"</span>,
           <span class="st">"rs12726255"</span>, <span class="st">"rs2298217"</span>, <span class="st">"rs4970362"</span>, <span class="st">"rs9660710"</span>, <span class="st">"rs4970420"</span>)
-<span class="kw"><a href="reference/snp_gene.html">snp_gene</a></span>(rsid)</code></pre></div>
+<span class="kw">snp_gene</span>(rsid)</code></pre></div>
 </div>
 <div id="possible-upcoming-features" class="section level2">
 <h2 class="hasAnchor">

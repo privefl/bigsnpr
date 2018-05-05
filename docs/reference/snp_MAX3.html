@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="MAX3 statistic — snp_MAX3" />
 
 <meta property="og:description" content="Compute the MAX3 statistic, which tests for three genetic models
@@ -39,8 +42,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -58,7 +59,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -121,10 +122,12 @@
     <div class="hidden name"><code>snp_MAX3.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Compute the MAX3 statistic, which tests for three genetic models
 (additive, recessive and dominant).</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>snp_MAX3</span>(<span class='no'>Gna</span>, <span class='no'>y01.train</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>Gna</span>), <span class='kw'>val</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.5</span>, <span class='fl'>1</span>))</pre>
     
@@ -203,7 +206,7 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 #&gt;  - attr(*, "transfo")=function (x)  
 #&gt;  - attr(*, "predict")=function (xtr)  
 #&gt;   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 98 15 100 3 15 3 98 100
-#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0x100ea530&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
+#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0xd89b510&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><div class='img'><img src='snp_MAX3-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><div class='img'><img src='snp_MAX3-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Armitage trend test (well calibrated because only one test)</span>

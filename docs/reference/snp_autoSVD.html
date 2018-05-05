@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Truncated SVD with pruning — snp_autoSVD" />
 
 <meta property="og:description" content="Fast truncated SVD which iteratively try to remove long-range LD regions
@@ -39,8 +42,6 @@ which appear in loadings of SVD." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -58,7 +59,7 @@ which appear in loadings of SVD." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -121,10 +122,12 @@ which appear in loadings of SVD." />
     <div class="hidden name"><code>snp_autoSVD.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Fast truncated SVD which iteratively try to remove long-range LD regions
 which appear in loadings of SVD.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>snp_autoSVD</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
   <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>), <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(), <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,

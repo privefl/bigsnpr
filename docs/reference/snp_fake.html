@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Fake a "bigSNP" — snp_fake" />
 
 <meta property="og:description" content="Fake a "bigSNP"" />
@@ -38,8 +41,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -57,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
       </span>
     </div>
 
@@ -120,9 +121,11 @@
     <div class="hidden name"><code>snp_fake.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Fake a "bigSNP"</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>snp_fake</span>(<span class='no'>n</span>, <span class='no'>m</span>)</pre>
     
@@ -160,17 +163,17 @@ with missing values.</p>
 #&gt; 
 #&gt; $map
 #&gt;    chromosome marker.ID genetic.dist physical.pos allele1 allele2
-#&gt; 1           1     snp_1            0            0       A       T
-#&gt; 2           1     snp_2            0            0       T       A
+#&gt; 1           1     snp_1            0            0       T       A
+#&gt; 2           1     snp_2            0            0       A       T
 #&gt; 3           1     snp_3            0            0       A       T
 #&gt; 4           1     snp_4            0            0       T       A
-#&gt; 5           1     snp_5            0            0       T       A
+#&gt; 5           1     snp_5            0            0       A       T
 #&gt; 6           1     snp_6            0            0       T       A
-#&gt; 7           1     snp_7            0            0       A       T
-#&gt; 8           1     snp_8            0            0       A       T
+#&gt; 7           1     snp_7            0            0       T       A
+#&gt; 8           1     snp_8            0            0       T       A
 #&gt; 9           1     snp_9            0            0       A       T
 #&gt; 10          1    snp_10            0            0       A       T
-#&gt; 11          1    snp_11            0            0       T       A
+#&gt; 11          1    snp_11            0            0       A       T
 #&gt; 12          1    snp_12            0            0       A       T
 #&gt; 
 #&gt; attr(,"class")
@@ -186,11 +189,11 @@ with missing values.</p>
 <span class='co'># Modify the genotype `big.matrix`</span>
 <span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'>sample</span>(<span class='fu'>as.raw</span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'>length</span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>G</span>[]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-#&gt; [1,]    1    2    2    1    0   NA    2   NA   NA     2     0     1
-#&gt; [2,]   NA   NA   NA    1    0   NA   NA    2   NA    NA     1     1
-#&gt; [3,]    1    1    0    1    2    0    0    0    1     1    NA    NA
-#&gt; [4,]    0    2    1    0    2    2   NA    0    1     0     2     1
-#&gt; [5,]    2    1   NA    1    2    2    0    2    1     0     2     2</div><div class='input'>
+#&gt; [1,]    0    0    2    1    0    2    2   NA    0     1     0     2
+#&gt; [2,]   NA    2    1   NA    1    2    2    0    2     1     0     2
+#&gt; [3,]    1    2    2    1    0   NA    2   NA   NA     2     0     1
+#&gt; [4,]   NA   NA   NA    1    0   NA   NA    2   NA    NA     1     1
+#&gt; [5,]    1    1    0    1    2    0    0    0    1     1    NA    NA</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
