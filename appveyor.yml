@@ -37,7 +37,7 @@ environment:
   - R_VERSION: devel
     PKGTYPE: source
 
-  - R_VERSION: release
+#  - R_VERSION: release
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
