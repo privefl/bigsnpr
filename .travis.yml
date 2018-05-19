@@ -14,7 +14,7 @@ matrix:
 
 sudo: false
 cache: packages
-warnings_are_errors: false
+warnings_are_errors: true
 r_check_args: "--no-manual --timings"
 
 env:
