@@ -1,7 +1,7 @@
 ---
 title: "Demonstration of packages bigsnpr and bigstatsr"
 author: "Florian Privé"
-date: "May 23, 2017"
+date: "June 28, 2018"
 output: html_document
 ---
 
@@ -100,12 +100,10 @@ cmsa.logit <- big_spLogReg(X = G, y01.train = y01[ind.train],
                            ind.train = ind.train, 
                            covar.train = obj.svd$u[ind.train, ],
                            ncores = NCORES)
-# Get predictions
+# Get predictions for the test set
 preds <- predict(cmsa.logit, X = G, ind.row = ind.test, 
                  covar.row = obj.svd$u[ind.test, ])
-dim(preds)
-preds.merge <- rowMeans(preds) 
 # Check AUC
-AUC(preds.merge, y01[ind.test])
+AUC(preds, y01[ind.test])
 ```
 

@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 0.3.1
-Date: 2018-05-08
+Version: 0.4.0
+Date: 2018-06-28
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -22,7 +22,7 @@ Language: en-US
 ByteCompile: TRUE
 Depends:
     R (>= 3.2.3), 
-    bigstatsr (>= 0.2.6)
+    bigstatsr (>= 0.4.0)
 Imports:
     data.table,
     doParallel,
