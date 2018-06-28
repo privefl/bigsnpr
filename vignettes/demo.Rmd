@@ -99,6 +99,7 @@ ind.test <- setdiff(rows_along(G), ind.train)
 cmsa.logit <- big_spLogReg(X = G, y01.train = y01[ind.train], 
                            ind.train = ind.train, 
                            covar.train = obj.svd$u[ind.train, ],
+                           alphas = c(1, 0.5, 0.05, 0.001),
                            ncores = NCORES)
 # Get predictions for the test set
 preds <- predict(cmsa.logit, X = G, ind.row = ind.test, 
