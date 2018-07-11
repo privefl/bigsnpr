@@ -48,7 +48,7 @@ Suggests:
     gaston,
     Hmisc,
     magrittr,
-    pcadapt (>= 4.0.1),
+    pcadapt (>= 4.0.3),
     testthat
 Remotes: privefl/bigstatsr, bcm-uga/pcadapt
 RoxygenNote: 6.0.1.9000
