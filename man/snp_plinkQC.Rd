@@ -6,7 +6,8 @@
 \usage{
 snp_plinkQC(plink.path, prefix.in, file.type = "--bfile",
   prefix.out = paste0(prefix.in, "_QC"), maf = 0.01, geno = 0.1,
-  mind = 0.1, hwe = 1e-50, autosome.only = FALSE, extra.options = "")
+  mind = 0.1, hwe = 1e-50, autosome.only = FALSE,
+  extra.options = "")
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}

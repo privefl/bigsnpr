@@ -5,9 +5,9 @@
 \title{Truncated SVD with pruning}
 \usage{
 snp_autoSVD(G, infos.chr, infos.pos, ind.row = rows_along(G),
-  ind.col = cols_along(G), fun.scaling = snp_scaleBinom(), thr.r2 = 0.2,
-  size = 500, k = 10, roll.size = 50, int.min.size = 20, ncores = 1,
-  verbose = TRUE)
+  ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
+  thr.r2 = 0.2, size = 500, k = 10, roll.size = 50,
+  int.min.size = 20, ncores = 1, verbose = TRUE)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}

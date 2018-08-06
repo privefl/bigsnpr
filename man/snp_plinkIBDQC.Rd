@@ -4,9 +4,9 @@
 \alias{snp_plinkIBDQC}
 \title{Identity-by-descent}
 \usage{
-snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL, pi.hat = 0.08,
-  ncores = 1, pruning.args = c(100, 0.2), do.blind.QC = TRUE,
-  extra.options = "")
+snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL,
+  pi.hat = 0.08, ncores = 1, pruning.args = c(100, 0.2),
+  do.blind.QC = TRUE, extra.options = "")
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}

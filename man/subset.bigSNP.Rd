@@ -4,8 +4,8 @@
 \alias{subset.bigSNP}
 \title{Subset}
 \usage{
-\method{subset}{bigSNP}(x, ind.row = rows_along(G), ind.col = cols_along(G),
-  ...)
+\method{subset}{bigSNP}(x, ind.row = rows_along(G),
+  ind.col = cols_along(G), ...)
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}

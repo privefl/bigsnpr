@@ -4,8 +4,8 @@
 \alias{snp_fastImpute}
 \title{Fast imputation}
 \usage{
-snp_fastImpute(Gna, infos.chr, alpha = 1e-04, size = 200, p.train = 0.8,
-  n.cor = nrow(Gna), seed = NA, ncores = 1)
+snp_fastImpute(Gna, infos.chr, alpha = 1e-04, size = 200,
+  p.train = 0.8, n.cor = nrow(Gna), seed = NA, ncores = 1)
 }
 \arguments{
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}

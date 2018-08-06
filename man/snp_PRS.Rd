@@ -4,8 +4,9 @@
 \alias{snp_PRS}
 \title{PRS}
 \usage{
-snp_PRS(G, betas.keep, ind.test = rows_along(G), ind.keep = cols_along(G),
-  same.keep = rep(TRUE, length(ind.keep)), lpS.keep = NULL, thr.list = 0)
+snp_PRS(G, betas.keep, ind.test = rows_along(G),
+  ind.keep = cols_along(G), same.keep = rep(TRUE, length(ind.keep)),
+  lpS.keep = NULL, thr.list = 0)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
