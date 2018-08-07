@@ -33,8 +33,6 @@ check_args <- function(...) {
 
 # MISSING VALUES
 assert_noNA        <- bigstatsr:::assert_noNA
-# TYPEOF
-assert_type        <- bigstatsr:::assert_type
 # DIRECTORY
 assert_dir         <- bigstatsr:::assert_dir
 # ARGS
@@ -52,9 +50,19 @@ assert_class       <- bigstatsr:::assert_class
 # FILE EXISTS
 assert_exist       <- bigstatsr:::assert_exist
 assert_noexist     <- bigstatsr:::assert_noexist
-# EXTENSION
-assert_ext         <- bigstatsr:::assert_ext
 # LENGTH
 assert_lengths     <- bigstatsr:::assert_lengths
+
+# EXTENSION
+assert_ext <- function(file, ext) {
+  if (!grepl(sprintf("\\.%s$", ext), file))
+    stop2("Extension of '%s' must be '.%s'.", file, ext)
+}
+
+# TYPEOF
+assert_type <- function(x, type)  {
+  if (typeof(x) != type)
+    stop2("'%s' is not of type '%s'.", deparse(substitute(x)), type)
+}
 
 ################################################################################
