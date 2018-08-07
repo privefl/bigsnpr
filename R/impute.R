@@ -16,7 +16,7 @@ FBM_infos <- function(Gna) {
     readRDS(rds)
   } else {
     # cat("Create\n")
-    FBM(2, ncol(Gna), backingfile = base, init = NA_real_, save = TRUE)
+    FBM(2, ncol(Gna), backingfile = base, init = NA_real_)$save()
   }
 }
 

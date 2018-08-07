@@ -50,8 +50,7 @@ subset.bigSNP <- function(x,
     code = G$code256,
     init = NULL,
     backingfile = getNewFile(x, "sub"),
-    create_bk = TRUE,
-    save = FALSE
+    create_bk = TRUE
   )
   replaceSNP(G2, G, rowInd = ind.row, colInd = ind.col)
 

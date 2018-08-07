@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 0.5.0
-Date: 2018-07-11
+Version: 0.6.1
+Date: 2018-08-06
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -22,7 +22,7 @@ Language: en-US
 ByteCompile: TRUE
 Depends:
     R (>= 3.2.3), 
-    bigstatsr (>= 0.4.0)
+    bigstatsr (>= 0.6.1)
 Imports:
     data.table,
     doParallel,
@@ -51,7 +51,7 @@ Suggests:
     pcadapt (>= 4.0.3),
     testthat
 Remotes: privefl/bigstatsr, bcm-uga/pcadapt
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues

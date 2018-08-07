@@ -51,8 +51,7 @@ snp_readBed <- function(bedfile, backingfile = sub("\\.bed$", "", bedfile)) {
     code = CODE_012,
     backingfile = backingfile,
     init = NULL,
-    create_bk = TRUE,
-    save = FALSE
+    create_bk = TRUE
   )
 
   # Fill the FBM from bedfile
