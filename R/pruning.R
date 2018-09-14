@@ -1,4 +1,4 @@
-#################################################################################
+################################################################################
 
 #' LD pruning and clumping
 #'
@@ -54,13 +54,14 @@
 #' @name pruning-clumping
 NULL
 
-#################################################################################
+################################################################################
 
 clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
                         thr.r2, exclude) {
 
   # init
-  ord.chr <- order(S[ind.chr], decreasing = TRUE)
+  S.chr <- `if`(is.null(S), snp_MAF(G, ind.row, ind.chr), S[ind.chr])
+  ord.chr <- order(S.chr, decreasing = TRUE)
   remain <- rep(TRUE, length(ind.chr))
   remain[match(exclude, ind.chr)] <- FALSE
 
@@ -111,10 +112,9 @@ snp_clumping <- function(G, infos.chr,
 
   check_args()
 
-  if (is.null(S)) S <- snp_MAF(G, ind.row = ind.row)
   args <- as.list(environment())
 
-  assert_lengths(infos.chr, S)
+  if (!is.null(S)) assert_lengths(infos.chr, S)
 
   do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
 }
