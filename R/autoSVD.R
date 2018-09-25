@@ -109,7 +109,8 @@ snp_autoSVD <- function(G,
                              ncores = ncores)
 
     # The -log10 p-values of being an outlier (by PC)
-    lpval <- -stats::predict(snp_pcadapt(G, obj.svd$u, ind.col = ind.keep))
+    lpval <- -stats::predict(
+      snp_pcadapt(G, obj.svd$u, ind.row, ind.keep, ncores = ncores))
     # Threshold of being an outlier based on Tukey's rule
     # http://math.stackexchange.com/a/966337
     lim <- stats::quantile(lpval, 0.75) + 1.5 * stats::IQR(lpval)

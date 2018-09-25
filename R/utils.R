@@ -60,11 +60,8 @@ NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
 ################################################################################
 
 write.table2 <- function(x, file) {
-  utils::write.table(x = x, file = file,
-                     quote = FALSE,
-                     sep = "\t",
-                     row.names = FALSE,
-                     col.names = FALSE)
+  data.table::fwrite(x, file, sep = "\t", quote = FALSE,
+                     row.names = FALSE, col.names = FALSE)
 }
 
 ################################################################################

@@ -32,32 +32,36 @@
 #'
 snp_pcadapt <- function(G, U.row,
                         ind.row = rows_along(G),
-                        ind.col = cols_along(G)) {
+                        ind.col = cols_along(G),
+                        ncores = 1) {
 
   if (is.null(dim(U.row))) U.row <- as.matrix(U.row)  # vector
   check_args()
 
   K <- ncol(U.row)
   stopifnot(all.equal(crossprod(U.row), diag(K)))
+  assert_lengths(rows_along(U.row), ind.row)
 
-  if (K == 1) {
-    big_univLinReg(G, as.vector(U.row), ind.train = ind.row, ind.col = ind.col)
-  } else {
-    zscores <- linRegPcadapt_cpp(G, U = U.row,
-                                 rowInd = ind.row,
-                                 colInd = ind.col)
-    dist <- robust::covRob(zscores, estim = "pairwiseGK")$dist
+  if (K == 1) return(big_univLinReg(G, as.vector(U.row),
+                                    ind.train = ind.row,
+                                    ind.col = ind.col,
+                                    ncores = ncores))
 
-    fun.pred <- eval(parse(text = sprintf(
-      "function(xtr) {
+  zscores <- big_parallelize(G, p.FUN = function(G, ind, ind.row) {
+    linRegPcadapt_cpp(G, U = U.row, rowInd = ind.row, colInd = ind)
+  }, p.combine = "rbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
+
+  dist <- robust::covRob(zscores, estim = "pairwiseGK")$dist
+
+  fun.pred <- eval(parse(text = sprintf(
+    "function(xtr) {
        stats::pchisq(xtr, df = %d, lower.tail = FALSE, log.p = TRUE) / log(10)
      }", K)))
 
-    structure(data.frame(score = dist),
-              class = c("mhtest", "data.frame"),
-              transfo = identity,
-              predict = fun.pred)
-  }
+  structure(data.frame(score = dist),
+            class = c("mhtest", "data.frame"),
+            transfo = identity,
+            predict = fun.pred)
 }
 
 ################################################################################

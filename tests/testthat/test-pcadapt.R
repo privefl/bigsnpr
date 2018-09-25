@@ -26,8 +26,7 @@ test_that("Same as pcadapt", {
   ################################################################################
 
   obj.svd <- big_SVD(G, snp_scaleBinom())
-  test <- bigsnpr:::linRegPcadapt_cpp(G, obj.svd$u,
-                                      rows_along(G), cols_along(G))
+  test <- bigsnpr:::linRegPcadapt_cpp(G, obj.svd$u, rows_along(G), cols_along(G))
 
   expect_equal(obj.svd$center / 2, obj.pcadapt$af, tolerance = 1e-8)
   expect_equal(abs(cov(obj.svd$u, obj.pcadapt$scores)), diag(10) / (nrow(G) - 1))
@@ -38,7 +37,7 @@ test_that("Same as pcadapt", {
 
   ################################################################################
 
-  obj.gwas <- snp_pcadapt(G, obj.svd$u)
+  obj.gwas <- snp_pcadapt(G, obj.svd$u, ncores = sample(1:2, 1))
   expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
                tolerance = 1e-2)
   expect_equal(snp_gc(obj.gwas)[[1]], as.numeric(obj.pcadapt$stat),
@@ -61,7 +60,7 @@ test_that("Same as pcadapt", {
 
   # K = 1
   obj.pcadapt <- pcadapt::pcadapt(bed, K = 1, min.maf = 0)
-  obj.gwas    <- snp_pcadapt(G, obj.svd$u[, 1])
+  obj.gwas    <- snp_pcadapt(G, obj.svd$u[, 1], ncores = sample(1:2, 1))
   obj.gwas.gc <- snp_gc(obj.gwas)
 
   snp_qq(obj.gwas)
