@@ -9,8 +9,6 @@ warning2         <- bigstatsr:::warning2
 
 stop2            <- bigstatsr:::stop2
 
-transform_levels <- bigstatsr:::transform_levels
-
 CutBySize        <- bigstatsr:::CutBySize
 
 seq2             <- bigstatsr:::seq2
