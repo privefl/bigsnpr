@@ -80,7 +80,8 @@ which appear in loadings of SVD.
 If you don't have any information about SNPs, you can try using
 \itemize{
 \item \code{infos.chr = rep(1, ncol(G))},
-\item \code{roll.size = 0}.
+\item \code{size = ncol(G)} (if SNPs are not sorted),
+\item \code{roll.size = 0} (if SNPs are not sorted).
 }
 
 Improvements will come in the future, as for example, warm starts in order

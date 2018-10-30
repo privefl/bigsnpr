@@ -32,7 +32,8 @@ getIntervals <- function(x, n = 2) {
 #'
 #' If you don't have any information about SNPs, you can try using
 #'   - `infos.chr = rep(1, ncol(G))`,
-#'   - `roll.size = 0`.
+#'   - `size = ncol(G)` (if SNPs are not sorted),
+#'   - `roll.size = 0` (if SNPs are not sorted).
 #'
 #' Improvements will come in the future, as for example, warm starts in order
 #' to make the SVD computations faster.
