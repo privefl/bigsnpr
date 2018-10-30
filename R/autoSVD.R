@@ -119,7 +119,8 @@ snp_autoSVD <- function(G,
 
     # Roll mean to get only consecutive outliers
     ind.excl <- which(rollMean(lpval, size = roll.size) > lim)
-    printf2("%d outliers detected..\n", length(ind.excl))
+    printf2("%d outlier%s detected..\n", length(ind.excl),
+            `if`(length(ind.excl) > 1, "s", ""))
 
     # Stop or continue?
     if (length(ind.excl) > 0) {
@@ -130,7 +131,8 @@ snp_autoSVD <- function(G,
       if (!is.null(infos.pos)) {
         # Regroup them by intervals to return long-range LD regions
         ind.range <- getIntervals(ind.excl, n = int.min.size)
-        printf2("%d long-range LD regions detected..\n", nrow(ind.range))
+        printf2("%d long-range LD region%s detected..\n", nrow(ind.range),
+                `if`(nrow(ind.range) > 1, "s", ""))
         if (nrow(ind.range) > 0) {
           LRLDR.add <- cbind(
             infos.chr[ind.keep[ind.range[, 1]]],

@@ -1,3 +1,9 @@
+## bigsnpr 0.7.0
+
+- Add parameter `is.size.in.bp` to `snp_autoSVD()` for the clumping part.
+
+- Change the threshold of outlier detection in `snp_autoSVD()` (it now detects less outliers). See the documentation details if you don't have any information about SNPs.
+
 ## bigsnpr 0.6
 
 - Keep up with {bigstatsr}.
