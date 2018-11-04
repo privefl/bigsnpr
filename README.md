@@ -52,4 +52,4 @@ snp_gene(rsid)
 ## Bug report
 
 Please open an issue if you find a bug.
-If you want help using **bigstatsr**, please post on Stack Overflow with the tag *bigstatsr* (not yet created). [How to make a great R reproducible example?](https://stackoverflow.com/q/5963269/6103040)
+If you want help using **bigstatsr**, please post on Stack Overflow with the tag *bigstatsr*. [How to make a great R reproducible example?](https://stackoverflow.com/q/5963269/6103040)
