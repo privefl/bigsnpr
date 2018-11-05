@@ -87,4 +87,5 @@ probas_read <- readBin(probas_con, what = 1L, size = 1, signed = FALSE, n = 5 * 
 stopifnot(length(probas_read) == 2 * N)
 probas_read
 summary(dosage <- 2 - (2 * probas_read[c(TRUE, FALSE)] + probas_read[c(FALSE, TRUE)]) / 255)
-
+stopifnot(D == (4 + 2 + 1 + 1 + N + 1 + 1 + 2 * N))
+stopifnot(D == (10 + 3 * N))
