@@ -35,9 +35,8 @@ environment:
 
   matrix:
   - R_VERSION: devel
-    PKGTYPE: source
-
-#  - R_VERSION: release
+#    PKGTYPE: source
+  - R_VERSION: release
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
