@@ -9,11 +9,27 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-int read_int(std::istream * ptr_stream, std::streamsize n_byte = 4) {
+int read_uint32(std::istream * ptr_stream) {
   // https://stackoverflow.com/a/32066210/6103040
-  int N;
-  ptr_stream->read(reinterpret_cast<char *>(&N), n_byte);
+  uint32_t N;
+  ptr_stream->read(reinterpret_cast<char *>(&N), 4);
   return N;
+}
+
+int read_uint16(std::istream * ptr_stream) {
+  uint16_t N;
+  ptr_stream->read(reinterpret_cast<char *>(&N), 2);
+  return N;
+}
+
+int read_int(std::istream * ptr_stream, std::streamsize n_byte = 4) {
+  if (n_byte == 4) {
+    return read_uint32(ptr_stream);
+  } else if (n_byte == 2) {
+    return read_uint16(ptr_stream);
+  } else {
+    Rcpp::stop("Not supported.");
+  }
 }
 
 std::string read_string(std::ifstream * ptr_stream, std::streamsize n_byte = 2) {
@@ -37,8 +53,6 @@ void read_variant(std::ifstream * ptr_stream,
                   CharacterVector& A1,
                   CharacterVector& A2) {
 
-  boost::unordered_map<std::string, int>::iterator got;
-
   std::string id   = read_string(ptr_stream);
   std::string rsid = read_string(ptr_stream);
   std::string chr  = read_string(ptr_stream);
@@ -51,7 +65,7 @@ void read_variant(std::ifstream * ptr_stream,
   int C = read_int(ptr_stream) - 4;
   int D = read_int(ptr_stream);
 
-  got = mymap.find(id);
+  boost::unordered_map<std::string, int>::iterator got = mymap.find(id);
   if (got == mymap.end()) {
 
     // we don't want this variant -> go to next variant
@@ -163,9 +177,12 @@ DataFrame readbgen(const CharacterVector& filenames,
   if (mymap.size() > 0) {
     Rcpp::warning("%d variants have not been matched.", mymap.size());
     int N = macc.nrow();
-    for (auto& x: mymap) {
-      int j = x.second;
+    boost::unordered_map<std::string, int>::iterator it = mymap.begin(),
+      end = mymap.end();
+    while (it != end) {
+      int j = it->second;
       for (int i = 0; i < N; i++) macc(i, j) = 3;  // set as missing
+      it++;
     }
   }
 
