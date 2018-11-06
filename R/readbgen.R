@@ -23,9 +23,8 @@
 #' __You shouldn't read from BGEN files more than once.__ Instead, use
 #' [snp_attach] to load the "bigSNP" object in any R session from backing files.
 #'
-#' @example
 #' @export
-snp_readBed <- function(bgenfiles, backingfile, snp_id) {
+snp_readBGEN <- function(bgenfiles, backingfile, snp_id) {
 
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)
