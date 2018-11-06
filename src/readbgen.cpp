@@ -163,9 +163,12 @@ DataFrame readbgen(const CharacterVector& filenames,
   if (mymap.size() > 0) {
     Rcpp::warning("%d variants have not been matched.", mymap.size());
     int N = macc.nrow();
-    for (auto& x: mymap) {
-      int j = x.second;
+    boost::unordered_map<std::string, int>::iterator it = mymap.begin(),
+      end = mymap.end();
+    while (it != end) {
+      int j = it->second;
       for (int i = 0; i < N; i++) macc(i, j) = 3;  // set as missing
+      it++;
     }
   }
 
