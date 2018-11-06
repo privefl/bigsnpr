@@ -26,15 +26,9 @@
 #' - `49` for pruning (as in PLINK),
 #' - `500` for clumping (I use this for a chip of 500K SNPs).
 #'
-#' @param thr.r2 Threshold over the squared correlation between two SNPs.
-#' Default is `0.2`.
-#'
 #' @param exclude Vector of SNP indices to exclude anyway. For example,
 #' can be used to exclude long-range LD regions (see Price2008). Another use
 #' can be for thresholding with respect to p-values associated with `S`.
-#'
-#' @param is.size.in.bp Is the specified size is corresponding to
-#' kilo base-pairs. Default is `FALSE` (it is only SNP counts).
 #'
 #' @references Price AL, Weale ME, Patterson N, et al.
 #' Long-Range LD Can Confound Genome Scans in Admixed Populations.

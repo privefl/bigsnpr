@@ -1,9 +1,5 @@
 ################################################################################
 
-MY_THEME <- bigstatsr:::MY_THEME
-
-################################################################################
-
 #' Manhattan plot
 #'
 #' Creates a manhattan plot.
@@ -76,14 +72,14 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
   ind <- `if`(cond, seq_along(lpval), head(order(lpval), npoints))
   ymin <- -lpval[tail(ind, 1)]
   subtitle <- substitute(expression((values >= val)), list(val = signif(ymin)))
-  p <- MY_THEME(ggplot(data.frame(pos = all.pos, lp = -lpval)[ind, ],
-                       aes(pos, lp)), coeff = coeff) +
+  p <- ggplot(data.frame(pos = all.pos, lp = -lpval)[ind, ], aes(pos, lp)) +
     geom_point(color = all.colors[ind]) +
     scale_x_continuous(breaks = label.pos, labels = labels,
                        limits = range(all.pos)) +
     labs(title = "Manhattan Plot", x = "Chromosome",
          y = expression(-log[10](italic("p-value"))),
-         subtitle = `if`(cond, NULL, eval(subtitle)))
+         subtitle = `if`(cond, NULL, eval(subtitle))) +
+    theme_bigstatsr(size.rel = coeff)
 
   `if`(cond, p, structure(p, subset = ind))
 }

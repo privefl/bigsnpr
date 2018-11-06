@@ -34,8 +34,9 @@ prs <- snp_PRS(G, betas.keep = gwas.train$estim[ind.keep],
 # AUC as a function of the number of predictors
 aucs <- apply(prs, 2, AUC, target = y01[ind.test])
 library(ggplot2)
-bigstatsr:::MY_THEME(qplot(nb.pred, aucs)) +
+qplot(nb.pred, aucs) +
   geom_line() +
   scale_x_log10(breaks = nb.pred) +
-  labs(x = "Number of predictors", y = "AUC")
+  labs(x = "Number of predictors", y = "AUC") +
+  theme_bigstatsr()
 
