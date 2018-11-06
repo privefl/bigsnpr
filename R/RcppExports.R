@@ -29,6 +29,10 @@ pruning2 <- function(BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr
     .Call(`_bigsnpr_pruning2`, BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
 }
 
+readbgen <- function(filenames, snp_id, BM) {
+    .Call(`_bigsnpr_readbgen`, filenames, snp_id, BM)
+}
+
 readbina <- function(filename, BM, tab) {
     .Call(`_bigsnpr_readbina`, filename, BM, tab)
 }

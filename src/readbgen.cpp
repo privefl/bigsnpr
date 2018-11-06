@@ -29,20 +29,21 @@ std::string read_string(std::ifstream * ptr_stream, std::streamsize n_byte = 2) 
 
 void read_variant(std::ifstream * ptr_stream,
                   boost::unordered_map<std::string, int>& mymap,
+                  BMAcc<unsigned char>& macc,
                   CharacterVector& ID,
                   CharacterVector& RSID,
                   CharacterVector& CHR,
-                  NumericVector&   POS,
+                  NumericVector  & POS,
                   CharacterVector& A1,
                   CharacterVector& A2) {
 
   boost::unordered_map<std::string, int>::iterator got;
 
-  std::string id = read_string(ptr_stream);
+  std::string id   = read_string(ptr_stream);
   std::string rsid = read_string(ptr_stream);
-  std::string chr = read_string(ptr_stream);
+  std::string chr  = read_string(ptr_stream);
   int pos = read_int(ptr_stream);
-  int K = read_int(ptr_stream, 2);
+  int K   = read_int(ptr_stream, 2);
   myassert(K == 2, "Only 2 alleles allowed.");
   std::string a1 = read_string(ptr_stream, 4);
   std::string a2 = read_string(ptr_stream, 4);
@@ -60,6 +61,7 @@ void read_variant(std::ifstream * ptr_stream,
 
     // we want this variant
     int j = got->second;
+    mymap.erase(got);
 
     // store variant info
     ID[j]   = id;
@@ -73,23 +75,22 @@ void read_variant(std::ifstream * ptr_stream,
     unsigned char buffer_in[C];
     ptr_stream->read((char *)buffer_in, C);
     unsigned char buffer_out[D];
-    // https://gist.github.com/arq5x/5315739
-    // zlib struct
+    // zlib struct (https://gist.github.com/arq5x/5315739)
     z_stream infstream;
     infstream.zalloc = Z_NULL;
-    infstream.zfree = Z_NULL;
+    infstream.zfree  = Z_NULL;
     infstream.opaque = Z_NULL;
-    infstream.avail_in = C;            // size of input
-    infstream.next_in = buffer_in;     // input char array
-    infstream.avail_out = D;           // size of output
-    infstream.next_out = buffer_out;   // output char array
+    infstream.avail_in  = C;             // size of input
+    infstream.next_in   = buffer_in;     // input char array
+    infstream.avail_out = D;             // size of output
+    infstream.next_out  = buffer_out;    // output char array
     // the actual DE-compression work.
     myassert(inflateInit(&infstream) == Z_OK, "Problem when decompressing.");
     myassert(inflate(&infstream, Z_NO_FLUSH) != Z_STREAM_ERROR,
              "Problem when decompressing.");
     inflateEnd(&infstream);
 
-    // read decompress data
+    // read decompress probabilities and store them as rounded dosages
     double x, coeff = 100 / 255;
     int N = (D - 10) / 3;
     for (int i = 0, i2 = 10 + N; i2 < N; i++, i2 += 2) { // Skip infos + ploidy
@@ -102,19 +103,27 @@ void read_variant(std::ifstream * ptr_stream,
 
 /******************************************************************************/
 
-void read_file(std::string filename) {
+void read_file(std::string filename,
+               boost::unordered_map<std::string, int>& mymap,
+               BMAcc<unsigned char>& macc,
+               CharacterVector& ID,
+               CharacterVector& RSID,
+               CharacterVector& CHR,
+               NumericVector  & POS,
+               CharacterVector& A1,
+               CharacterVector& A2) {
 
   std::ifstream stream(filename.c_str(), std::ifstream::binary);
   if (!stream) Rcpp::stop("Error while opening '%s'.", filename);
 
-  // Get past the header block -> go to first variant
+  // get past the header block -> go to first variant
   int offset = read_int(&stream);
   read_int(&stream);
   int n_var = read_int(&stream);  // number of variants in the file
   stream.seekg(offset - 8, std::ios_base::cur);
 
   for (int j = 0; j < n_var; j++) {
-    read_variant(&stream);
+    read_variant(&stream, mymap, macc, ID, RSID, CHR, POS, A1, A2);
   }
 
   stream.close();
@@ -127,19 +136,38 @@ DataFrame readbgen(const CharacterVector& filenames,
                    const CharacterVector& snp_id,
                    Environment BM) {
 
+  // FBM accessor
   XPtr<FBM> xpBM = BM["address"];
-  unsigned char* ptr = static_cast<unsigned char*>(xpBM->matrix());
+  BMAcc<unsigned char> macc(xpBM);
 
+  // output variant info
   int M = snp_id.size();
   CharacterVector ID(M, NA_STRING), RSID(M, NA_STRING), CHR(M, NA_STRING);
   NumericVector POS(M, NA_REAL);
   CharacterVector A1(M, NA_STRING), A2(M, NA_STRING);
 
-  for (int k = 0; k < filenames.size(); k++) {
-    read_file(filenames[k], ID, RSID, CHR, POS, A1, A2);
+  // use boost::unordered_map to speed up search
+  boost::unordered_map<std::string, int> mymap;
+  mymap.reserve(M);
+  for (int j = 0; j < M; j++) {
+    mymap.insert(std::make_pair(as<std::string>(snp_id[j]), j));
   }
 
-  // Warn if some SNPs have not been found
+  // read BGEN files one by one
+  for (int k = 0; k < filenames.size(); k++) {
+    read_file(as<std::string>(filenames[k]), mymap, macc,
+              ID, RSID, CHR, POS, A1, A2);
+  }
+
+  // warn if some variants have not been found
+  if (mymap.size() > 0) {
+    Rcpp::warning("%d variants have not been matched.", mymap.size());
+    int N = macc.nrow();
+    for (auto& x: mymap) {
+      int j = x.second;
+      for (int i = 0; i < N; i++) macc(i, j) = 3;  // set as missing
+    }
+  }
 
   return DataFrame::create(
     Named("chromosome") = CHR,
