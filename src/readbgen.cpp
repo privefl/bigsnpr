@@ -9,20 +9,22 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-int read_uint32(std::istream * ptr_stream) {
-  // https://stackoverflow.com/a/32066210/6103040
+// https://stackoverflow.com/a/32066210/6103040
+inline int read_uint32(std::istream * ptr_stream) {
   uint32_t N;
   ptr_stream->read(reinterpret_cast<char *>(&N), 4);
   return N;
 }
 
-int read_uint16(std::istream * ptr_stream) {
+inline int read_uint16(std::istream * ptr_stream) {
   uint16_t N;
   ptr_stream->read(reinterpret_cast<char *>(&N), 2);
   return N;
 }
 
-int read_int(std::istream * ptr_stream, std::streamsize n_byte = 4) {
+/******************************************************************************/
+
+inline int read_int(std::istream * ptr_stream, std::streamsize n_byte = 4) {
   if (n_byte == 4) {
     return read_uint32(ptr_stream);
   } else if (n_byte == 2) {
@@ -32,7 +34,8 @@ int read_int(std::istream * ptr_stream, std::streamsize n_byte = 4) {
   }
 }
 
-std::string read_string(std::ifstream * ptr_stream, std::streamsize n_byte = 2) {
+inline std::string read_string(std::ifstream * ptr_stream,
+                               std::streamsize n_byte = 2) {
   int len = read_int(ptr_stream, n_byte);
   // https://stackoverflow.com/a/38623543/6103040
   char buffer[len + 1];
@@ -53,31 +56,31 @@ void read_variant(std::ifstream * ptr_stream,
                   CharacterVector& A1,
                   CharacterVector& A2) {
 
-  std::string id   = read_string(ptr_stream);
-  std::string rsid = read_string(ptr_stream);
-  std::string chr  = read_string(ptr_stream);
-  int pos = read_int(ptr_stream);
-  int K   = read_int(ptr_stream, 2);
-  myassert(K == 2, "Only 2 alleles allowed.");
-  std::string a1 = read_string(ptr_stream, 4);
-  std::string a2 = read_string(ptr_stream, 4);
-
-  int C = read_int(ptr_stream) - 4;
-  int D = read_int(ptr_stream);
-
+  std::string id = read_string(ptr_stream);
   boost::unordered_map<std::string, int>::iterator got = mymap.find(id);
+
   if (got == mymap.end()) {
 
     // we don't want this variant -> go to next variant
+    ptr_stream->seekg(18, std::ios_base::cur);
+    int C = read_int(ptr_stream);
     ptr_stream->seekg(C, std::ios_base::cur);
 
   } else {
 
-    // we want this variant
-    int j = got->second;
-    mymap.erase(got);
+    Rcout << "Found one!!" << std::endl;
+
+    // we want this variant -> get info
+    std::string rsid = read_string(ptr_stream);
+    std::string chr  = read_string(ptr_stream);
+    int pos = read_int(ptr_stream);
+    int K   = read_int(ptr_stream, 2);
+    myassert(K == 2, "Only 2 alleles allowed.");
+    std::string a1 = read_string(ptr_stream, 4);
+    std::string a2 = read_string(ptr_stream, 4);
 
     // store variant info
+    int j = got->second;
     ID[j]   = id;
     RSID[j] = rsid;
     CHR[j]  = chr;
@@ -86,6 +89,8 @@ void read_variant(std::ifstream * ptr_stream,
     A2[j]   = a2;
 
     // decompress variant data
+    int C = read_int(ptr_stream) - 4;
+    int D = read_int(ptr_stream);
     unsigned char buffer_in[C];
     ptr_stream->read((char *)buffer_in, C);
     unsigned char buffer_out[D];
@@ -112,6 +117,9 @@ void read_variant(std::ifstream * ptr_stream,
       macc(i, j) = 207 - std::round(coeff * x);
     }
 
+    // no longer need to search for this variant
+    mymap.erase(got);
+
   }
 }
 
@@ -137,6 +145,9 @@ void read_file(std::string filename,
   stream.seekg(offset - 8, std::ios_base::cur);
 
   for (int j = 0; j < n_var; j++) {
+    if (j % 100000 == 0) {
+      Rcout << j << std::endl;
+    }
     read_variant(&stream, mymap, macc, ID, RSID, CHR, POS, A1, A2);
   }
 
