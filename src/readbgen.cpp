@@ -56,30 +56,35 @@ void read_variant(std::ifstream * ptr_stream,
                   CharacterVector& A1,
                   CharacterVector& A2) {
 
-  std::string id = read_string(ptr_stream);
+  std::string id   = read_string(ptr_stream);
+  std::string rsid = read_string(ptr_stream);
+  std::string chr  = read_string(ptr_stream);
+  int pos = read_int(ptr_stream);
+  int K   = read_int(ptr_stream, 2);
+  myassert(K == 2, "Only 2 alleles allowed.");
+  std::string a1 = read_string(ptr_stream, 4);
+  std::string a2 = read_string(ptr_stream, 4);
+
+  int C = read_int(ptr_stream) - 4;
+  int D = read_int(ptr_stream);
+
+  // Rcout << id << std::endl;
   boost::unordered_map<std::string, int>::iterator got = mymap.find(id);
+
+  if (id.compare("1:10616_CCGCCGTTGCAAAGGCGCGCCG_C") == 0) {
+    Rcout << "Found first one!!" << std::endl;
+  }
 
   if (got == mymap.end()) {
 
     // we don't want this variant -> go to next variant
-    ptr_stream->seekg(18, std::ios_base::cur);
-    int C = read_int(ptr_stream);
     ptr_stream->seekg(C, std::ios_base::cur);
 
   } else {
 
     Rcout << "Found one!!" << std::endl;
 
-    // we want this variant -> get info
-    std::string rsid = read_string(ptr_stream);
-    std::string chr  = read_string(ptr_stream);
-    int pos = read_int(ptr_stream);
-    int K   = read_int(ptr_stream, 2);
-    myassert(K == 2, "Only 2 alleles allowed.");
-    std::string a1 = read_string(ptr_stream, 4);
-    std::string a2 = read_string(ptr_stream, 4);
-
-    // store variant info
+    // we want this variant -> store variant info
     int j = got->second;
     ID[j]   = id;
     RSID[j] = rsid;
@@ -89,8 +94,6 @@ void read_variant(std::ifstream * ptr_stream,
     A2[j]   = a2;
 
     // decompress variant data
-    int C = read_int(ptr_stream) - 4;
-    int D = read_int(ptr_stream);
     unsigned char buffer_in[C];
     ptr_stream->read((char *)buffer_in, C);
     unsigned char buffer_out[D];
@@ -145,9 +148,7 @@ void read_file(std::string filename,
   stream.seekg(offset - 8, std::ios_base::cur);
 
   for (int j = 0; j < n_var; j++) {
-    if (j % 100000 == 0) {
-      Rcout << j << std::endl;
-    }
+    if (j % 100000 == 0) Rcout << j << std::endl;
     read_variant(&stream, mymap, macc, ID, RSID, CHR, POS, A1, A2);
   }
 
@@ -198,12 +199,12 @@ DataFrame readbgen(const CharacterVector& filenames,
   }
 
   return DataFrame::create(
-    Named("chromosome") = CHR,
-    Named("marker.ID") = ID,
-    Named("rsID") = RSID,
+    Named("chromosome")   = CHR,
+    Named("marker.ID")    = ID,
+    Named("rsID")         = RSID,
     Named("physical.pos") = POS,
-    Named("allele1") = A1,
-    Named("allele2") = A2
+    Named("allele1")      = A1,
+    Named("allele2")      = A2
   );
 }
 
