@@ -52,7 +52,7 @@ void read_variant(std::ifstream * ptr_stream,
 
   std::string id   = read_string(ptr_stream);
   std::string rsid = read_string(ptr_stream);
-  Rcout << rsid << std::endl;
+  // Rcout << rsid << std::endl;
   std::string chr  = read_string(ptr_stream);
   int pos = read_int(ptr_stream);
   int K   = read_int(ptr_stream, 2);
@@ -83,8 +83,7 @@ void read_variant(std::ifstream * ptr_stream,
   inflateEnd(&infstream);
 
   // read decompress probabilities and store them as rounded dosages
-  int x;
-  int N = (D - 10) / 3;
+  int x, N = (D - 10) / 3;
   for (int i = 0, i2 = 10 + N; i2 < D; i++, i2 += 2) { // Skip infos + ploidy
     x = 2 * buffer_out[i2] + buffer_out[i2 + 1];
     ptr_mat[i] = decode[x];
@@ -113,6 +112,7 @@ void read_bgen(std::string filename,
 
   // read variants one by one
   for (int k = 0; k < K; k++) {
+    if (k % 10000 == 0) Rcout << k << std::endl;
     stream.seekg(offsets[k]);
     j = ind_col[k] - 1;
     read_variant(&stream, ptr_mat + n * j, decode);

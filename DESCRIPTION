@@ -22,7 +22,7 @@ Language: en-US
 ByteCompile: TRUE
 Depends:
     R (>= 3.3.0), 
-    bigstatsr (>= 0.6.2)
+    bigstatsr (>= 0.7.3)
 Imports:
     data.table,
     doParallel,

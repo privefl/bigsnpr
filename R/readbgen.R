@@ -1,5 +1,9 @@
 ################################################################################
 
+DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
+
+################################################################################
+
 #' Read BGEN files into a "bigSNP"
 #'
 #' Function to read the UK Biobank BGEN files into a [bigSNP][bigSNP-class].
@@ -15,8 +19,8 @@
 #'   The corresponding ".bgen.bgi" index files must exist.
 #' @param backingfile The path (without extension) for the backing files
 #'   for the cache of the [bigSNP][bigSNP-class] object.
-#' @param list_snp_rsid List (same length as the number of BGEN files) of
-#'  character vector of SNP rsIDs to read.
+#' @param list_snp_pos List (same length as the number of BGEN files) of
+#'  SNP position to read.
 #' @param bgi_dir Directory of index files. Default is the same as `bgenfiles`.
 #'
 #' @return The path to the RDS file that stores the `bigSNP` object.
@@ -29,7 +33,7 @@
 #' @import foreach
 #'
 #' @export
-snp_readBGEN <- function(bgenfiles, backingfile, list_snp_rsid,
+snp_readBGEN <- function(bgenfiles, backingfile, list_snp_pos,
                          bgi_dir = dirname(bgenfiles)) {
 
   if (!requireNamespace("RSQLite", quietly = TRUE))
@@ -45,9 +49,10 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_rsid,
   bgifiles <- file.path(bgi_dir, paste0(basename(bgenfiles), ".bgi"))
   sapply(c(bgenfiles, bgifiles), assert_exist)
 
-  # Check list_snp_rsid
-  assert_class(list_snp_rsid, "list")
-  sizes <- lengths(list_snp_rsid)
+  # Check list_snp_pos
+  assert_class(list_snp_pos, "list")
+  sapply(list_snp_pos, assert_nona)
+  sizes <- lengths(list_snp_pos)
   assert_lengths(sizes, bgenfiles)
 
   # Prepare Filebacked Big Matrix
@@ -63,28 +68,27 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_rsid,
   # Fill the FBM from BGEN files (and get SNP info)
   snp.info <- foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %do% {
 
-    snp_rsid <- list_snp_rsid[[ic]]
+    snp_pos <- list_snp_pos[[ic]]
 
     # Read variant info (+ position in file) from index files
     db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifiles[ic])
     infos <- dplyr::tbl(db_con, "Variant") %>%
-      dplyr::filter(rsid %in% snp_rsid) %>%
+      dplyr::filter(position %in% snp_pos) %>%
       dplyr::collect()
     RSQLite::dbDisconnect(db_con)
     offsets <- as.double(infos$file_start_position)
 
     # Check if found all SNPs
-    ind <- match(snp_rsid, infos$rsid)
+    ind <- match(snp_pos, infos$position)
     if (anyNA(ind)) stop2("Some variants have not been found.")
 
     # Get dosages in FBM
     ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
-    read_bgen(bgenfiles, offsets, G, ind.col[match(infos$rsid, snp_rsid)],
-              207 - round(0:510 * 100 / 255))
+    read_bgen(bgenfiles, offsets, G, ind.col[match(infos$position, snp_pos)],
+              DECODE_BGEN)
 
     # Return variant info
-    infos[ind, c(1, 3, 2, 5, 6)] %>%
-      stats::setNames(NAMES.MAP[-3])
+    stats::setNames(infos[ind, c(1, 3, 2, 5, 6)], NAMES.MAP[-3])
   }
 
   # Create the bigSNP object
