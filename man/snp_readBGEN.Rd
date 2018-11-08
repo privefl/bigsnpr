@@ -4,7 +4,7 @@
 \alias{snp_readBGEN}
 \title{Read BGEN files into a "bigSNP"}
 \usage{
-snp_readBGEN(bgenfiles, backingfile, list_snp_pos,
+snp_readBGEN(bgenfiles, backingfile, list_snp_id,
   bgi_dir = dirname(bgenfiles))
 }
 \arguments{
@@ -14,8 +14,9 @@ The corresponding ".bgen.bgi" index files must exist.}
 \item{backingfile}{The path (without extension) for the backing files
 for the cache of the \link[=bigSNP-class]{bigSNP} object.}
 
-\item{list_snp_pos}{List (same length as the number of BGEN files) of
-SNP position to read.}
+\item{list_snp_id}{List (same length as the number of BGEN files) of
+character vector of SNP IDs to read. These should be in the form
+\code{"<chr>_<pos>_<a1>_<a2>"} (e.g. \code{"1_88169_C_T"}).}
 
 \item{bgi_dir}{Directory of index files. Default is the same as \code{bgenfiles}.}
 }

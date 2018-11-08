@@ -112,7 +112,7 @@ void read_bgen(std::string filename,
 
   // read variants one by one
   for (int k = 0; k < K; k++) {
-    if (k % 10000 == 0) Rcout << k << std::endl;
+    // if (k % 10000 == 0) Rcout << k << std::endl;
     stream.seekg(offsets[k]);
     j = ind_col[k] - 1;
     read_variant(&stream, ptr_mat + n * j, decode);

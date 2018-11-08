@@ -19,8 +19,9 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #'   The corresponding ".bgen.bgi" index files must exist.
 #' @param backingfile The path (without extension) for the backing files
 #'   for the cache of the [bigSNP][bigSNP-class] object.
-#' @param list_snp_pos List (same length as the number of BGEN files) of
-#'  SNP position to read.
+#' @param list_snp_id List (same length as the number of BGEN files) of
+#'  character vector of SNP IDs to read. These should be in the form
+#'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"`).
 #' @param bgi_dir Directory of index files. Default is the same as `bgenfiles`.
 #'
 #' @return The path to the RDS file that stores the `bigSNP` object.
@@ -33,7 +34,7 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #' @import foreach
 #'
 #' @export
-snp_readBGEN <- function(bgenfiles, backingfile, list_snp_pos,
+snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
                          bgi_dir = dirname(bgenfiles)) {
 
   if (!requireNamespace("RSQLite", quietly = TRUE))
@@ -49,10 +50,10 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_pos,
   bgifiles <- file.path(bgi_dir, paste0(basename(bgenfiles), ".bgi"))
   sapply(c(bgenfiles, bgifiles), assert_exist)
 
-  # Check list_snp_pos
-  assert_class(list_snp_pos, "list")
-  sapply(list_snp_pos, assert_nona)
-  sizes <- lengths(list_snp_pos)
+  # Check list_snp_id
+  assert_class(list_snp_id, "list")
+  sapply(list_snp_id, assert_nona)
+  sizes <- lengths(list_snp_id)
   assert_lengths(sizes, bgenfiles)
 
   # Prepare Filebacked Big Matrix
@@ -68,24 +69,30 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_pos,
   # Fill the FBM from BGEN files (and get SNP info)
   snp.info <- foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %do% {
 
-    snp_pos <- list_snp_pos[[ic]]
+    snp_id <- sub("^.*?_", "", list_snp_id[[ic]])
 
     # Read variant info (+ position in file) from index files
     db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifiles[ic])
     infos <- dplyr::tbl(db_con, "Variant") %>%
-      dplyr::filter(position %in% snp_pos) %>%
+      dplyr::mutate(myid = paste(position, allele1, allele2, sep = "_")) %>%
+      dplyr::filter(myid %in% snp_id) %>%
       dplyr::collect()
     RSQLite::dbDisconnect(db_con)
-    offsets <- as.double(infos$file_start_position)
 
-    # Check if found all SNPs
-    ind <- match(snp_pos, infos$position)
-    if (anyNA(ind)) stop2("Some variants have not been found.")
+    ind <- match(snp_id, infos$myid)
+    if (anyNA(ind)) {
+      saveRDS(snp_id[is.na(ind)], tmp <- tempfile(fileext = ".rds"))
+      stop2("Some variants have not been found (stored in '%s').", tmp)
+    }
 
     # Get dosages in FBM
-    ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
-    read_bgen(bgenfiles, offsets, G, ind.col[match(infos$position, snp_pos)],
-              DECODE_BGEN)
+    read_bgen(
+      filename = bgenfiles[ic],
+      offsets = as.double(infos$file_start_position),
+      BM = G,
+      ind_col = (sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic]))[order(ind)],
+      decode = DECODE_BGEN
+    )
 
     # Return variant info
     stats::setNames(infos[ind, c(1, 3, 2, 5, 6)], NAMES.MAP[-3])
