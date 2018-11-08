@@ -126,17 +126,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// readbgen
-DataFrame readbgen(const CharacterVector& filenames, const CharacterVector& snp_id, Environment BM);
-RcppExport SEXP _bigsnpr_readbgen(SEXP filenamesSEXP, SEXP snp_idSEXP, SEXP BMSEXP) {
+// read_bgen
+void read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_col, RawVector decode);
+RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_colSEXP, SEXP decodeSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const CharacterVector& >::type filenames(filenamesSEXP);
-    Rcpp::traits::input_parameter< const CharacterVector& >::type snp_id(snp_idSEXP);
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type offsets(offsetsSEXP);
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
-    rcpp_result_gen = Rcpp::wrap(readbgen(filenames, snp_id, BM));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< RawVector >::type decode(decodeSEXP);
+    read_bgen(filename, offsets, BM, ind_col, decode);
+    return R_NilValue;
 END_RCPP
 }
 // readbina
@@ -198,7 +199,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_clumping2", (DL_FUNC) &_bigsnpr_clumping2, 10},
     {"_bigsnpr_pruning", (DL_FUNC) &_bigsnpr_pruning, 9},
     {"_bigsnpr_pruning2", (DL_FUNC) &_bigsnpr_pruning2, 10},
-    {"_bigsnpr_readbgen", (DL_FUNC) &_bigsnpr_readbgen, 3},
+    {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 5},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},

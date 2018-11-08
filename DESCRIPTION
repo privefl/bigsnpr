@@ -49,6 +49,7 @@ Suggests:
     Hmisc,
     magrittr,
     pcadapt (>= 4.0.3),
+    RSQLite,
     testthat
 Remotes: privefl/bigstatsr, bcm-uga/pcadapt
 RoxygenNote: 6.1.0

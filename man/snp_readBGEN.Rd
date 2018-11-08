@@ -4,16 +4,20 @@
 \alias{snp_readBGEN}
 \title{Read BGEN files into a "bigSNP"}
 \usage{
-snp_readBGEN(bgenfiles, backingfile, snp_id)
+snp_readBGEN(bgenfiles, backingfile, list_snp_rsid,
+  bgi_dir = dirname(bgenfiles))
 }
 \arguments{
-\item{bgenfiles}{Character vector of paths to files with extension ".bgen".}
+\item{bgenfiles}{Character vector of paths to files with extension ".bgen".
+The corresponding ".bgen.bgi" index files must exist.}
 
 \item{backingfile}{The path (without extension) for the backing files
 for the cache of the \link[=bigSNP-class]{bigSNP} object.}
 
-\item{snp_id}{Character vector of SNP IDs (not rsid) to read
-(e.g. "1:88169_C_T" in the UK Biobank).}
+\item{list_snp_rsid}{List (same length as the number of BGEN files) of
+character vector of SNP rsIDs to read.}
+
+\item{bgi_dir}{Directory of index files. Default is the same as \code{bgenfiles}.}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.

@@ -29,8 +29,8 @@ pruning2 <- function(BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr
     .Call(`_bigsnpr_pruning2`, BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
 }
 
-readbgen <- function(filenames, snp_id, BM) {
-    .Call(`_bigsnpr_readbgen`, filenames, snp_id, BM)
+read_bgen <- function(filename, offsets, BM, ind_col, decode) {
+    invisible(.Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_col, decode))
 }
 
 readbina <- function(filename, BM, tab) {
