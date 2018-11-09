@@ -1,3 +1,7 @@
+## bigsnpr 0.8.0
+
+- Add function `snp_readBGEN()` to read UK Biobank BGEN files in `bigSNP` format.
+
 ## bigsnpr 0.7.0
 
 - Add parameter `is.size.in.bp` to `snp_autoSVD()` for the clumping part.

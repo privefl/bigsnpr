@@ -1,7 +1,6 @@
 /******************************************************************************/
 
-#include <bigstatsr/BMCodeAcc.h>
-#include <boost/unordered_map.hpp>
+#include <bigstatsr/BMAcc.h>
 #include <fstream>
 #include <zlib.h>
 
@@ -83,13 +82,17 @@ void read_variant(std::ifstream * ptr_stream,
            "Problem when decompressing.");
   inflateEnd(&infstream);
 
-  // read decompress probabilities and store them as rounded dosages
-  int i, i2, i3, x, N = (D - 10) / 3;
-  for (i = 0, i2 = 10 + N; i2 < D; i++, i2 += 2) { // Skip infos + ploidy
-    i3 = ind_row[i];
-    if (i3 >= 0) {
-      x = 2 * buffer_out[i2] + buffer_out[i2 + 1];
-      ptr_mat[i3] = decode[x];
+  // read decompress "probabilities" and store them as rounded dosages
+  int i, i_pld, i_prblt, i_G, x, N = (D - 10) / 3;
+  for (i = 0, i_pld = 8, i_prblt = 10 + N; i_prblt < D; i++, i_pld++, i_prblt += 2) {
+    i_G = ind_row[i];
+    if (i_G >= 0) {
+      if (buffer_out[i_pld] >= 0x80) {
+        ptr_mat[i_G] = 208;  // missing
+      } else {
+        x = 2 * buffer_out[i_prblt] + buffer_out[i_prblt + 1];
+        ptr_mat[i_G] = decode[x];
+      }
     }
   }
 }
