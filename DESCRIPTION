@@ -30,6 +30,7 @@ Imports:
     foreach, 
     ggplot2,
     gsubfn,
+    magrittr,
     Matrix,
     parallel, 
     Rcpp, 
@@ -47,7 +48,6 @@ Suggests:
     covr,
     gaston,
     Hmisc,
-    magrittr,
     pcadapt (>= 4.0.3),
     RSQLite,
     testthat

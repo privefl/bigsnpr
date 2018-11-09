@@ -10,6 +10,7 @@
 ^cran-comments\.md$
 ^tmp-tests$
 ^tmp-save$
+^tmp-data$
 ^tmp-protocols$
 ^tmp-files$
 ^tmp-results$

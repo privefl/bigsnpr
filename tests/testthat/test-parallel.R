@@ -5,6 +5,9 @@ context("PARALLEL")
 # https://github.com/hadley/testthat/issues/567
 Sys.unsetenv("R_TESTS")
 
+not_cran <- identical(Sys.getenv("BIGSNPR_CRAN"), "false")
+NCORES <- `if`(not_cran, 2, 1)
+
 ################################################################################
 
 test <- snp_attachExtdata()
@@ -26,7 +29,7 @@ test_that("Sequential and Parallel", {
   skip_on_cran()
   snp_autoSVD(G, CHR, POS, ind.row = 1:200, ind.col = sample(5000, 300))
   expect_equal(snp_autoSVD(G, CHR, POS),
-               snp_autoSVD(G, CHR, POS, ncores = 2), tolerance = 1e-6)
+               snp_autoSVD(G, CHR, POS, ncores = NCORES), tolerance = 1e-6)
 })
 
 ################################################################################

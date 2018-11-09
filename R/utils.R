@@ -16,7 +16,8 @@ seq2             <- bigstatsr:::seq2
 ################################################################################
 
 # global variable definitions due to non standard evaluations
-utils::globalVariables(c("ic", "f", "lp", "LD.wiki34", "OS", "arch"))
+utils::globalVariables(c("ic", "f", "lp", "LD.wiki34", "OS", "arch",
+                         "position", "allele1", "allele2", "myid"))
 
 ################################################################################
 
