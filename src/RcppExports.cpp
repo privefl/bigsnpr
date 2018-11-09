@@ -127,16 +127,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // read_bgen
-void read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_col, RawVector decode);
-RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_colSEXP, SEXP decodeSEXP) {
+void read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode);
+RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type offsets(offsetsSEXP);
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< RawVector >::type decode(decodeSEXP);
-    read_bgen(filename, offsets, BM, ind_col, decode);
+    read_bgen(filename, offsets, BM, ind_row, ind_col, decode);
     return R_NilValue;
 END_RCPP
 }
@@ -199,7 +200,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_clumping2", (DL_FUNC) &_bigsnpr_clumping2, 10},
     {"_bigsnpr_pruning", (DL_FUNC) &_bigsnpr_pruning, 9},
     {"_bigsnpr_pruning2", (DL_FUNC) &_bigsnpr_pruning2, 10},
-    {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 5},
+    {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 6},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},

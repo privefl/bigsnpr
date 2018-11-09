@@ -48,6 +48,7 @@ inline std::string read_string(std::ifstream * ptr_stream,
 
 void read_variant(std::ifstream * ptr_stream,
                   unsigned char * ptr_mat,
+                  const IntegerVector& ind_row,
                   const RawVector& decode) {
 
   std::string id   = read_string(ptr_stream);
@@ -83,10 +84,13 @@ void read_variant(std::ifstream * ptr_stream,
   inflateEnd(&infstream);
 
   // read decompress probabilities and store them as rounded dosages
-  int x, N = (D - 10) / 3;
-  for (int i = 0, i2 = 10 + N; i2 < D; i++, i2 += 2) { // Skip infos + ploidy
-    x = 2 * buffer_out[i2] + buffer_out[i2 + 1];
-    ptr_mat[i] = decode[x];
+  int i, i2, i3, x, N = (D - 10) / 3;
+  for (i = 0, i2 = 10 + N; i2 < D; i++, i2 += 2) { // Skip infos + ploidy
+    i3 = ind_row[i];
+    if (i3 >= 0) {
+      x = 2 * buffer_out[i2] + buffer_out[i2 + 1];
+      ptr_mat[i3] = decode[x];
+    }
   }
 }
 
@@ -96,6 +100,7 @@ void read_variant(std::ifstream * ptr_stream,
 void read_bgen(std::string filename,
                NumericVector offsets,
                Environment BM,
+               IntegerVector ind_row,
                IntegerVector ind_col,
                RawVector decode) {
 
@@ -115,7 +120,7 @@ void read_bgen(std::string filename,
     // if (k % 10000 == 0) Rcout << k << std::endl;
     stream.seekg(offsets[k]);
     j = ind_col[k] - 1;
-    read_variant(&stream, ptr_mat + n * j, decode);
+    read_variant(&stream, ptr_mat + n * j, ind_row, decode);
   }
 
   stream.close();
