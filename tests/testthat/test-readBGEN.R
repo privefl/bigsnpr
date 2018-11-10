@@ -1,13 +1,11 @@
 ################################################################################
 
-library(bigsnpr)
-library(testthat)
 context("READ_BGEN")
 
 bgen_file <- system.file("testdata", "example.8bits.bgen", package = "bigsnpr")
 variants <- readRDS(system.file("testdata", "bgen_variants.rds", package = "bigsnpr"))
 dosages <- readRDS(system.file("testdata", "bgen_dosages.rds", package = "bigsnpr"))
-IDs <- with(variants, paste(1, physical.pos, allele1, allele2, sep = "_"))
+IDs <- with(variants, paste0("1:", paste(physical.pos, allele1, allele2, sep = "_")))
 # variants 18 & 19 have identical IDs
 excl <- c(18, 19)
 

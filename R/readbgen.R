@@ -21,7 +21,7 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #'   for the cache of the [bigSNP][bigSNP-class] object.
 #' @param list_snp_id List (same length as the number of BGEN files) of
 #'  character vector of SNP IDs to read. These should be in the form
-#'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"`).
+#'  `"<chr>:<pos>_<a1>_<a2>"` (e.g. `"1:88169_C_T"`).
 #'  **This function assumes that these IDs are uniquely identifying variants.**
 #' @param bgi_dir Directory of index files. Default is the same as `bgenfiles`.
 #' @param ind_row An optional vector of the row indices (individuals) that
@@ -79,15 +79,15 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
 
     snp_id <- gsubfn::strapply(
       X = list_snp_id[[ic]],
-      pattern = "^(.*?)(_.*)$",
+      pattern = "^(.*?)(:.*)$",
       FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y)
     )
 
     # Read variant info (+ position in file) from index files
     db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifiles[ic])
     infos <- dplyr::tbl(db_con, "Variant") %>%
-      dplyr::mutate(myid = paste(chromosome, position, allele1, allele2,
-                                 sep = "_")) %>%
+      dplyr::mutate(myid = paste0(chromosome, ":", position, "_",
+                                  allele1, "_", allele2)) %>%
       dplyr::filter(myid %in% snp_id) %>%
       dplyr::collect()
     RSQLite::dbDisconnect(db_con)

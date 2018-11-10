@@ -16,7 +16,8 @@ for the cache of the \link[=bigSNP-class]{bigSNP} object.}
 
 \item{list_snp_id}{List (same length as the number of BGEN files) of
 character vector of SNP IDs to read. These should be in the form
-\code{"<chr>_<pos>_<a1>_<a2>"} (e.g. \code{"1_88169_C_T"}).}
+\code{"<chr>:<pos>_<a1>_<a2>"} (e.g. \code{"1:88169_C_T"}).
+\strong{This function assumes that these IDs are uniquely identifying variants.}}
 
 \item{ind_row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr
