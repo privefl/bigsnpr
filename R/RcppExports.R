@@ -30,7 +30,7 @@ pruning2 <- function(BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr
 }
 
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode) {
-    invisible(.Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_row, ind_col, decode))
+    .Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_row, ind_col, decode)
 }
 
 readbina <- function(filename, BM, tab) {

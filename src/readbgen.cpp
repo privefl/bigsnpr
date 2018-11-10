@@ -48,15 +48,18 @@ inline std::string read_string(std::ifstream * ptr_stream,
 void read_variant(std::ifstream * ptr_stream,
                   unsigned char * ptr_mat,
                   const IntegerVector& ind_row,
-                  const RawVector& decode) {
+                  const RawVector& decode,
+                  std::vector<std::string>& ID) {
 
   std::string id   = read_string(ptr_stream);
+  ID.push_back(id);
   std::string rsid = read_string(ptr_stream);
   // Rcout << rsid << std::endl;
   std::string chr  = read_string(ptr_stream);
   int pos = read_int(ptr_stream);
+  myassert(pos > 0, "Positions should be positive.");
   int K   = read_int(ptr_stream, 2);
-  // myassert(K == 2, "Only 2 alleles allowed.");
+  myassert(K == 2, "Only 2 alleles allowed.");
   std::string a1 = read_string(ptr_stream, 4);
   std::string a2 = read_string(ptr_stream, 4);
 
@@ -100,12 +103,12 @@ void read_variant(std::ifstream * ptr_stream,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-void read_bgen(std::string filename,
-               NumericVector offsets,
-               Environment BM,
-               IntegerVector ind_row,
-               IntegerVector ind_col,
-               RawVector decode) {
+CharacterVector read_bgen(std::string filename,
+                          NumericVector offsets,
+                          Environment BM,
+                          IntegerVector ind_row,
+                          IntegerVector ind_col,
+                          RawVector decode) {
 
   XPtr<FBM> xpBM = BM["address"];
   unsigned char* ptr_mat = static_cast<unsigned char*>(xpBM->matrix());
@@ -113,6 +116,7 @@ void read_bgen(std::string filename,
   std::size_t j, n = xpBM->nrow();
   int K = offsets.size();
   myassert(ind_col.size() == K, ERROR_DIM);
+  std::vector<std::string> ID; ID.reserve(K);
 
   // connection to BGEN file
   std::ifstream stream(filename.c_str(), std::ifstream::binary);
@@ -123,10 +127,12 @@ void read_bgen(std::string filename,
     // if (k % 10000 == 0) Rcout << k << std::endl;
     stream.seekg(offsets[k]);
     j = ind_col[k] - 1;
-    read_variant(&stream, ptr_mat + n * j, ind_row, decode);
+    read_variant(&stream, ptr_mat + n * j, ind_row, decode, ID);
   }
 
   stream.close();
+
+  return wrap(ID);
 }
 
 /******************************************************************************/

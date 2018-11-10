@@ -127,9 +127,10 @@ BEGIN_RCPP
 END_RCPP
 }
 // read_bgen
-void read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode);
+CharacterVector read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode);
 RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type offsets(offsetsSEXP);
@@ -137,8 +138,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< RawVector >::type decode(decodeSEXP);
-    read_bgen(filename, offsets, BM, ind_row, ind_col, decode);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(read_bgen(filename, offsets, BM, ind_row, ind_col, decode));
+    return rcpp_result_gen;
 END_RCPP
 }
 // readbina

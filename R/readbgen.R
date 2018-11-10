@@ -21,7 +21,7 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #'   for the cache of the [bigSNP][bigSNP-class] object.
 #' @param list_snp_id List (same length as the number of BGEN files) of
 #'  character vector of SNP IDs to read. These should be in the form
-#'  `"<chr>:<pos>_<a1>_<a2>"` (e.g. `"1:88169_C_T"`).
+#'  `"<chr>:<pos>_<a1>_<a2>"` (e.g. `"1:88169_C_T"` or `"01:88169_C_T"`).
 #'  **This function assumes that these IDs are uniquely identifying variants.**
 #' @param bgi_dir Directory of index files. Default is the same as `bgenfiles`.
 #' @param ind_row An optional vector of the row indices (individuals) that
@@ -80,7 +80,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     snp_id <- gsubfn::strapply(
       X = list_snp_id[[ic]],
       pattern = "^(.*?)(:.*)$",
-      FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y)
+      FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
+      simplify = 'c'
     )
 
     # Read variant info (+ position in file) from index files
@@ -101,17 +102,20 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     # Get dosages in FBM
     ind2 <- match(infos$myid, snp_id)
     ind.col <- (sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic]))[ind2]
-    read_bgen(
+    ID <- read_bgen(
       filename = bgenfiles[ic],
       offsets = as.double(infos$file_start_position),
       BM = G,
       ind_row = ind.row,
       ind_col = ind.col,
       decode = DECODE_BGEN
-    ) # TODO: return variant IDs??
+    )
 
     # Return variant info
-    stats::setNames(infos[ind, c(1, 3, 2, 5, 6)], NAMES.MAP[-3])
+    infos[ind, ] %>%
+      dplyr::bind_cols(marker.ID = ID) %>%
+      dplyr::select(chromosome, marker.ID, rsid, physical.pos = position,
+                    allele1, allele2)
   } # TODO: parallel??
 
   # Create the bigSNP object

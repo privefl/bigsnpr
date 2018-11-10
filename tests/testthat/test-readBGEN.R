@@ -11,6 +11,16 @@ excl <- c(18, 19)
 
 ################################################################################
 
+expect_identical(
+  gsubfn::strapply(
+    X = c("1:88169_C_T", "01:88169_C_T"),
+    pattern = "^(.*?)(:.*)$",
+    FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
+    simplify = 'c'
+  ),
+  c("01:88169_C_T", "01:88169_C_T")
+)
+
 test_that("raises some errors", {
   expect_error(snp_attach(snp_readBGEN(bgen_file, tempfile(), IDs)),
                "'list_snp_id' is not of class 'list'.", fixed = TRUE)
