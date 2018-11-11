@@ -40,7 +40,8 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #' @export
 snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
                          ind_row = NULL,
-                         bgi_dir = dirname(bgenfiles)) {
+                         bgi_dir = dirname(bgenfiles),
+                         ncores = 1) {
 
   if (!requireNamespace("RSQLite", quietly = TRUE))
     stop2("Please install package 'RSQLite'.")
@@ -75,7 +76,14 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   )
 
   # Fill the FBM from BGEN files (and get SNP info)
-  snp.info <- foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %do% {
+  if (ncores == 1) {
+    registerDoSEQ()
+  } else {
+    cl <- parallel::makeCluster(ncores)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl), add = TRUE)
+  }
+  snp.info <- foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %dopar% {
 
     snp_id <- gsubfn::strapply(
       X = list_snp_id[[ic]],

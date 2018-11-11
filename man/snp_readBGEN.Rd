@@ -5,7 +5,7 @@
 \title{Read BGEN files into a "bigSNP"}
 \usage{
 snp_readBGEN(bgenfiles, backingfile, list_snp_id, ind_row = NULL,
-  bgi_dir = dirname(bgenfiles))
+  bgi_dir = dirname(bgenfiles), ncores = 1)
 }
 \arguments{
 \item{bgenfiles}{Character vector of paths to files with extension ".bgen".
