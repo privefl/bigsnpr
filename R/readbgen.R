@@ -47,6 +47,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
 
   if (!requireNamespace("RSQLite", quietly = TRUE))
     stop2("Please install package 'RSQLite'.")
+  if (!requireNamespace("dbplyr", quietly = TRUE))
+    stop2("Please install package 'dbplyr'.")
 
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)

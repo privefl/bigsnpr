@@ -44,12 +44,13 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 Suggests:
-    spelling, 
     covr,
+    dbplyr,
     gaston,
     Hmisc,
     pcadapt (>= 4.0.3),
     RSQLite,
+    spelling, 
     testthat
 Remotes: privefl/bigstatsr, bcm-uga/pcadapt
 RoxygenNote: 6.1.0
