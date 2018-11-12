@@ -33,10 +33,7 @@ environment:
     USE_RTOOLS: true
     BIGSNPR_CRAN: false
     R_CHECK_ARGS: "--no-manual --timings"
-
-  matrix:
-  - R_VERSION: release
-#  - R_VERSION: devel
+    R_VERSION: release
 #    PKGTYPE: source
 
 
