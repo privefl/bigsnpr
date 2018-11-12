@@ -1,5 +1,10 @@
-bgen_file <- "inst/testdata/example.8bits.bgen"
+# https://bitbucket.org/gavinband/bgen/src/default/example/example.8bits.bgen
+bgen_file <- "tmp-data/example.8bits.bgen"
 # system(glue::glue("bgenix -g {bgen_file} -index"))
+
+saveRDS(readBin(bgen_file, what = raw(), n = 1e6), "inst/testdata/bgen_example.rds")
+saveRDS(readBin(paste0(bgen_file, ".bgi"), what = raw(), n = 1e6),
+        "inst/testdata/bgi_example.rds")
 
 library(dplyr)
 db_con <- RSQLite::dbConnect(RSQLite::SQLite(), paste0(bgen_file, ".bgi"))

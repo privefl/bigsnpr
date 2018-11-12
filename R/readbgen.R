@@ -21,7 +21,7 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #'   for the cache of the [bigSNP][bigSNP-class] object.
 #' @param list_snp_id List (same length as the number of BGEN files) of
 #'  character vector of SNP IDs to read. These should be in the form
-#'  `"<chr>:<pos>_<a1>_<a2>"` (e.g. `"1:88169_C_T"` or `"01:88169_C_T"`).
+#'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"` or `"01_88169_C_T"`).
 #'  **This function assumes that these IDs are uniquely identifying variants.**
 #' @param bgi_dir Directory of index files. Default is the same as `bgenfiles`.
 #' @param ind_row An optional vector of the row indices (individuals) that
@@ -91,7 +91,7 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
 
     snp_id <- gsubfn::strapply(
       X = list_snp_id[[ic]],
-      pattern = "^(.*?)(:.*)$",
+      pattern = "^(.+?)(_.+_.+_.+)$",
       FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
       empty = stop("Wrong format of some SNPs."),
       simplify = 'c'
@@ -101,14 +101,15 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifiles[ic])
     on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
     infos <- dplyr::tbl(db_con, "Variant") %>%
-      dplyr::mutate(myid = paste0(chromosome, ":", position, "_",
-                                  allele1, "_", allele2)) %>%
+      dplyr::mutate(
+        myid = paste(chromosome, position, allele1, allele2, sep = "_")) %>%
       dplyr::filter(myid %in% snp_id) %>%
       dplyr::collect()
 
     ind <- match(snp_id, infos$myid)
     if (anyNA(ind)) {
-      saveRDS(snp_id[is.na(ind)], tmp <- tempfile(fileext = ".rds"))
+      saveRDS(snp_id[is.na(ind)],
+              tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifiles[ic]))
       stop2("Some variants have not been found (stored in '%s').", tmp)
     }
 

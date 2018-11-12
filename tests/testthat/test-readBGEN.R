@@ -2,10 +2,17 @@
 
 context("READ_BGEN")
 
-bgen_file <- system.file("testdata", "example.8bits.bgen", package = "bigsnpr")
+# need to write bgen/bgi files because can't have binary files..
+library(magrittr)
+bgen_file <- tempfile(fileext = ".bgen")
+system.file("testdata", "bgen_example.rds", package = "bigsnpr") %>%
+  readRDS() %>% writeBin(bgen_file, useBytes = TRUE)
+system.file("testdata", "bgi_example.rds",  package = "bigsnpr") %>%
+  readRDS() %>% writeBin(paste0(bgen_file, ".bgi"), useBytes = TRUE)
+
 variants <- readRDS(system.file("testdata", "bgen_variants.rds", package = "bigsnpr"))
 dosages <- readRDS(system.file("testdata", "bgen_dosages.rds", package = "bigsnpr"))
-IDs <- with(variants, paste0("1:", paste(physical.pos, allele1, allele2, sep = "_")))
+IDs <- with(variants, paste(1, physical.pos, allele1, allele2, sep = "_"))
 # variants 18 & 19 have identical IDs
 excl <- c(18, 19)
 
@@ -27,8 +34,8 @@ test_that("raises some errors", {
 test_that("gsubfn::strapply() works as expected", {
   expect_error(
     gsubfn::strapply(
-      X = c("1:88169_C_T", "01:88169_C_T", "LOL"),
-      pattern = "^(.*?)(:.*)$",
+      X = c("1_88169_C_T", "01_88169_C_T", "1:88169_C_T"),
+      pattern = "^(.+?)(_.+_.+_.+)$",
       FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
       empty = stop("Wrong format of SNPs."),
       simplify = 'c'
@@ -37,13 +44,13 @@ test_that("gsubfn::strapply() works as expected", {
   )
   expect_identical(
     gsubfn::strapply(
-      X = c("1:88169_C_T", "01:88169_C_T"),
-      pattern = "^(.*?)(:.*)$",
+      X = c("1_88169_C_T", "01_88169_C_T"),
+      pattern = "^(.+?)(_.+_.+_.+)$",
       FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
       empty = stop("Wrong format of SNPs."),
       simplify = 'c'
     ),
-    c("01:88169_C_T", "01:88169_C_T")
+    c("01_88169_C_T", "01_88169_C_T")
   )
 })
 
