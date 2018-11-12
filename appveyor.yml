@@ -30,7 +30,7 @@ environment:
     _R_CHECK_FORCE_SUGGESTS_: 0
     R_ARCH: x64
     USE_RTOOLS: true
-    BIGSNPR_CRAN: true
+    BIGSNPR_CRAN: false
     R_CHECK_ARGS: "--no-manual --timings"
 
   matrix:

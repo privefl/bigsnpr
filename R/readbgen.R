@@ -97,12 +97,12 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
 
     # Read variant info (+ position in file) from index files
     db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifiles[ic])
+    on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
     infos <- dplyr::tbl(db_con, "Variant") %>%
       dplyr::mutate(myid = paste0(chromosome, ":", position, "_",
                                   allele1, "_", allele2)) %>%
       dplyr::filter(myid %in% snp_id) %>%
       dplyr::collect()
-    RSQLite::dbDisconnect(db_con)
 
     ind <- match(snp_id, infos$myid)
     if (anyNA(ind)) {

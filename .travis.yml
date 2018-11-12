@@ -19,7 +19,7 @@ r_check_args: "--no-manual --timings"
 
 env:
  global:
-   - BIGSNPR_CRAN: true
+   - BIGSNPR_CRAN: false
    - _R_CHECK_FORCE_SUGGESTS_: false
 
 notifications:
