@@ -24,6 +24,9 @@ are used. If not specified, all rows are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{bgi_dir}{Directory of index files. Default is the same as \code{bgenfiles}.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.

@@ -17,7 +17,8 @@ seq2             <- bigstatsr:::seq2
 
 # global variable definitions due to non standard evaluations
 utils::globalVariables(c("ic", "f", "lp", "LD.wiki34", "OS", "arch",
-                         "chromosome", "position", "allele1", "allele2", "myid"))
+                         "chromosome", "position", "allele1", "allele2",
+                         "myid", "marker.ID", "rsid"))
 
 ################################################################################
 

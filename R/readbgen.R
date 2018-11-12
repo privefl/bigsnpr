@@ -27,6 +27,8 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #' @param ind_row An optional vector of the row indices (individuals) that
 #'   are used. If not specified, all rows are used.\cr
 #'   **Don't use negative indices.**
+#' @param ncores Number of cores used. Default doesn't use parallelism.
+#'   You may use [nb_cores].
 #'
 #' @return The path to the RDS file that stores the `bigSNP` object.
 #' Note that this function creates one other file which stores the values of
@@ -89,6 +91,7 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
       X = list_snp_id[[ic]],
       pattern = "^(.*?)(:.*)$",
       FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
+      empty = stop("Wrong format of some SNPs."),
       simplify = 'c'
     )
 
@@ -120,17 +123,13 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     )
 
     # Return variant info
-    infos[ind, ] %>%
-      dplyr::bind_cols(marker.ID = ID) %>%
+    dplyr::bind_cols(infos, marker.ID = ID)[ind, ] %>%
       dplyr::select(chromosome, marker.ID, rsid, physical.pos = position,
                     allele1, allele2)
   } # TODO: parallel??
 
   # Create the bigSNP object
-  snp.list <- structure(
-    list(genotypes = G, map = snp.info),
-    class = "bigSNP"
-  )
+  snp.list <- structure(list(genotypes = G, map = snp.info), class = "bigSNP")
 
   # save it and return the path of the saved object
   rds <- sub("\\.bk$", ".rds", G$backingfile)

@@ -1,5 +1,5 @@
 bgen_file <- "inst/testdata/example.8bits.bgen"
-system(glue::glue("bgenix -g {bgen_file} -index"))
+# system(glue::glue("bgenix -g {bgen_file} -index"))
 
 library(dplyr)
 db_con <- RSQLite::dbConnect(RSQLite::SQLite(), paste0(bgen_file, ".bgi"))
@@ -12,9 +12,14 @@ str(res)
 stopifnot(all(res$ploidy == 2))
 stopifnot(any(res$phased) == FALSE)
 
-variants <- mutate_if(res$variants, is.factor, as.character)
-saveRDS(as_tibble(setNames(variants[c(1, 3, 2, 5:6)], bigsnpr:::NAMES.MAP[-3])),
-        "inst/testdata/bgen_variants.rds")
+variants <- res$variants %>%
+  as_tibble() %>%
+  mutate_if(is.factor, as.character) %>%
+  mutate(marker.ID = sub("^RSID_", "SNPID_", rsid), allele2 = allele1) %>%
+  select(chromosome, marker.ID, rsid, physical.pos = position,
+         allele1 = allele0, allele2)
+
+saveRDS(variants, "inst/testdata/bgen_variants.rds")
 
 # compute dosages from probabilities
 DIM <- dim(res$data)
