@@ -27,8 +27,8 @@ on_failure:
 
 environment:
   global:
-    _R_CHECK_FORCE_SUGGESTS_: 0
-    WARNINGS_ARE_ERRORS: 1
+    _R_CHECK_FORCE_SUGGESTS_: false
+    WARNINGS_ARE_ERRORS: true
     R_ARCH: x64
     USE_RTOOLS: true
     BIGSNPR_CRAN: false
