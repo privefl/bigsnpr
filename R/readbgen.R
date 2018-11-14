@@ -66,10 +66,13 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   sizes <- lengths(list_snp_id)
   assert_lengths(sizes, bgenfiles)
 
-  # Prepare Filebacked Big Matrix
+  # Samples
+  assert_nona(ind_row)
   N <- readBin(bgenfiles[1], what = 1L, size = 4, n = 4)[4]
   ind.row <- `if`(is.null(ind_row), seq_len(N),
                   match(seq_len(N), ind_row, nomatch = 0)) - 1L
+
+  # Prepare Filebacked Big Matrix
   G <- FBM.code256(
     nrow = sum(ind.row >= 0),
     ncol = sum(sizes),
