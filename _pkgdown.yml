@@ -15,8 +15,6 @@ navbar:
         href: articles/how-to-PCA.html
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
-      - text: "Dosage data: proof of concept"
-        href: articles/dosage.html
   right:
     - text: "About"
       icon: fa-user
@@ -29,6 +27,7 @@ reference:
     contents:
       - snp_readBed
       - snp_writeBed
+      - snp_readBGEN
       - snp_attach
       - snp_attachExtdata
   - title: "External software"

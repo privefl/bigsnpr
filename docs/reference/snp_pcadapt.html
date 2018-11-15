@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -35,6 +37,7 @@ This provides a statistical tool for outlier detection based on
 Principal Component Analysis. This corresponds to the statistic based
 on mahalanobis distance, as implemented in package pcadapt." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -61,7 +64,7 @@ on mahalanobis distance, as implemented in package pcadapt." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
       </span>
     </div>
 
@@ -85,9 +88,6 @@ on mahalanobis distance, as implemented in package pcadapt." />
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
-    </li>
-    <li>
-      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -133,7 +133,8 @@ on mahalanobis distance, as implemented in package <strong>pcadapt</strong>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>U.row</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>))</pre>
+    <pre class="usage"><span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>U.row</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,6 +162,11 @@ are used. If not specified, all rows are used.<br />
 If not specified, all columns are used.<br />
 <strong>Don't use negative indices.</strong></p></td>
     </tr>
+    <tr>
+      <th>ncores</th>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -183,7 +189,8 @@ Molecular ecology resources, 17(1), 67-77.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
 <span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>G</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; (2)</div><div class='input'><span class='fu'>plot</span>(<span class='no'>obj.svd</span>) <span class='co'># there seems to be 3 "significant" components</span></div><div class='img'><img src='snp_pcadapt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>pcadapt</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>obj.svd</span>$<span class='no'>u</span>[, <span class='fl'>1</span>:<span class='fl'>3</span>])
+<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>G</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='fu'>plot</span>(<span class='no'>obj.svd</span>) <span class='co'># there seems to be 3 "significant" components</span></div><div class='img'><img src='snp_pcadapt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>pcadapt</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>obj.svd</span>$<span class='no'>u</span>[, <span class='fl'>1</span>:<span class='fl'>3</span>])
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>pcadapt</span>))</div><div class='img'><img src='snp_pcadapt-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

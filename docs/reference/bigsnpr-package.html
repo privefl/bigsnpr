@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -31,8 +33,9 @@
 <meta property="og:title" content="bigsnpr: Analysis of Massive SNP Arrays — bigsnpr-package" />
 
 <meta property="og:description" content="Easy-to-use, efficient, flexible and scalable tools
-for the analysis of massive SNP arrays &lt;doi:10.1093/bioinformatics/bty185&gt;." />
+    for the analysis of massive SNP arrays &amp;lt;doi:10.1093/bioinformatics/bty185&amp;gt;." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -59,7 +62,7 @@ for the analysis of massive SNP arrays &lt;doi:10.1093/bioinformatics/bty185&gt;
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
       </span>
     </div>
 
@@ -83,9 +86,6 @@ for the analysis of massive SNP arrays &lt;doi:10.1093/bioinformatics/bty185&gt;
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
-    </li>
-    <li>
-      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -125,7 +125,7 @@ for the analysis of massive SNP arrays &lt;doi:10.1093/bioinformatics/bty185&gt;
     <div class="ref-description">
     
     <p>Easy-to-use, efficient, flexible and scalable tools
-for the analysis of massive SNP arrays &lt;doi:10.1093/bioinformatics/bty185&gt;.</p>
+    for the analysis of massive SNP arrays &lt;doi:10.1093/bioinformatics/bty185&gt;.</p>
     
     </div>
 
@@ -181,6 +181,16 @@ If not specified, all columns are used.<br />
       <th>ncores</th>
       <td><p>Number of cores used. Default doesn't use parallelism.
 You may use nb_cores.</p></td>
+    </tr>
+    <tr>
+      <th>thr.r2</th>
+      <td><p>Threshold over the squared correlation between two SNPs.
+Default is <code>0.2</code>.</p></td>
+    </tr>
+    <tr>
+      <th>is.size.in.bp</th>
+      <td><p>Is the specified size is corresponding to
+kilo base-pairs. Default is <code>FALSE</code> (it is only SNP counts).</p></td>
     </tr>
     </table>
     

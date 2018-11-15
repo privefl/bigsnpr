@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -32,6 +34,7 @@
 
 <meta property="og:description" content="Binomial(n, p) scaling where n is fixed and p is estimated." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -58,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
       </span>
     </div>
 
@@ -82,9 +85,6 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
-    </li>
-    <li>
-      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -164,8 +164,9 @@ PLoS Genet 2(12): e190.
 <span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'>matrix</span>(<span class='fl'>0</span>, <span class='fl'>93</span>, <span class='fl'>170</span>)
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>0.2</span>
 <span class='no'>a</span>[] <span class='kw'>&lt;-</span> <span class='fu'>rbinom</span>(<span class='fu'>length</span>(<span class='no'>a</span>), <span class='fl'>2</span>, <span class='no'>p</span>)
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>add_code256</span>(<span class='fu'>big_copy</span>(<span class='no'>a</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"raw"</span>), <span class='kw'>code</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'>rep</span>(<span class='fl'>NA</span>, <span class='fl'>253</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Assignment will down cast from double to raw.</span>
-#&gt; <span class='warning'>Hint: To remove this warning, use options(bigstatsr.typecast.warning = FALSE).</span></div><div class='input'><span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'>snp_scaleBinom</span>())</div><div class='output co'>#&gt; (2)</div><div class='input'><span class='fu'>str</span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
+<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>add_code256</span>(<span class='fu'>big_copy</span>(<span class='no'>a</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"raw"</span>), <span class='kw'>code</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'>rep</span>(<span class='fl'>NA</span>, <span class='fl'>253</span>)))
+<span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'>snp_scaleBinom</span>())
+<span class='fu'>str</span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
 #&gt;  $ d     : num [1:10] 22.2 21.6 21.5 21.2 20.8 ...
 #&gt;  $ u     : num [1:93, 1:10] 0.0732 -0.0378 -0.0762 0.0364 0.0444 ...
 #&gt;  $ v     : num [1:170, 1:10] 0.1075 -0.0331 0.0592 -0.0504 0.1216 ...

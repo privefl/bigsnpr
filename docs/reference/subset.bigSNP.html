@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -33,6 +35,7 @@
 <meta property="og:description" content="A method to get a subset (copy) of a bigSNP.
 This new bigSNP will also be backed by files (in the same directory)." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -59,7 +62,7 @@ This new bigSNP will also be backed by files (in the same directory)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
       </span>
     </div>
 
@@ -83,9 +86,6 @@ This new bigSNP will also be backed by files (in the same directory)." />
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
-    </li>
-    <li>
-      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -130,8 +130,8 @@ This new <code>bigSNP</code> will also be backed by files (in the same directory
     </div>
 
     <pre class="usage"><span class='co'># S3 method for bigSNP</span>
-<span class='fu'>subset</span>(<span class='no'>x</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='no'>...</span>)</pre>
+<span class='fu'>subset</span>(<span class='no'>x</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
+  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,18 +172,21 @@ input bigSNP backing files.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>str</span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>())</div><div class='output co'>#&gt; List of 3
-#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 7 fields
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 10 fields
 #&gt;   ..$ extptr     :&lt;externalptr&gt; 
 #&gt;   ..$ nrow       : int 517
 #&gt;   ..$ ncol       : int 4542
 #&gt;   ..$ type       : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile: chr "/tmp/Rtmp6nJeat/filee696ecab05f.bk"
+#&gt;   ..$ backingfile: chr "/tmp/Rtmpu6eJky/file12e767b1788.bk"
 #&gt;   ..$ address    :&lt;externalptr&gt; 
+#&gt;   ..$ bk         : chr "/tmp/Rtmpu6eJky/file12e767b1788.bk"
+#&gt;   ..$ rds        : chr "/tmp/Rtmpu6eJky/file12e767b1788.rds"
+#&gt;   ..$ is_saved   : logi TRUE
 #&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   ..and 21 methods, of which 7 are  possibly relevant:
-#&gt;   ..  as.FBM, copy#envRefClass, initialize, initialize#FBM, save,
-#&gt;   ..  show#envRefClass, show#FBM
+#&gt;   ..and 24 methods, of which 10 are  possibly relevant:
+#&gt;   ..  add_columns, as.FBM, bm, bm.desc, copy#envRefClass, initialize,
+#&gt;   ..  initialize#FBM, save, show#envRefClass, show#FBM
 #&gt;  $ fam      :'data.frame':	517 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...
 #&gt;   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...
@@ -202,18 +205,21 @@ input bigSNP backing files.</p>
 <span class='co'># keep only first 50 samples and SNPs</span>
 <span class='no'>rdsfile</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>)
 <span class='fu'>str</span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile</span>))</div><div class='output co'>#&gt; List of 3
-#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 7 fields
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 10 fields
 #&gt;   ..$ extptr     :&lt;externalptr&gt; 
 #&gt;   ..$ nrow       : int 50
 #&gt;   ..$ ncol       : int 50
 #&gt;   ..$ type       : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile: chr "/tmp/Rtmp6nJeat/filee696ecab05f_sub1.bk"
+#&gt;   ..$ backingfile: chr "/tmp/Rtmpu6eJky/file12e767b1788_sub1.bk"
 #&gt;   ..$ address    :&lt;externalptr&gt; 
+#&gt;   ..$ bk         : chr "/tmp/Rtmpu6eJky/file12e767b1788_sub1.bk"
+#&gt;   ..$ rds        : chr "/tmp/Rtmpu6eJky/file12e767b1788_sub1.rds"
+#&gt;   ..$ is_saved   : logi TRUE
 #&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   ..and 21 methods, of which 7 are  possibly relevant:
-#&gt;   ..  as.FBM, copy#envRefClass, initialize, initialize#FBM, save,
-#&gt;   ..  show#envRefClass, show#FBM
+#&gt;   ..and 24 methods, of which 10 are  possibly relevant:
+#&gt;   ..  add_columns, as.FBM, bm, bm.desc, copy#envRefClass, initialize,
+#&gt;   ..  initialize#FBM, save, show#envRefClass, show#FBM
 #&gt;  $ fam      :'data.frame':	50 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:50] "POP1" "POP1" "POP1" "POP1" ...
 #&gt;   ..$ sample.ID  : chr [1:50] "IND0" "IND1" "IND2" "IND3" ...
@@ -232,18 +238,21 @@ input bigSNP backing files.</p>
 <span class='co'># remove only first 50 samples and SNPs</span>
 <span class='no'>rdsfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>))
 <span class='fu'>str</span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile2</span>))</div><div class='output co'>#&gt; List of 3
-#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 7 fields
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 10 fields
 #&gt;   ..$ extptr     :&lt;externalptr&gt; 
 #&gt;   ..$ nrow       : int 467
 #&gt;   ..$ ncol       : int 4492
 #&gt;   ..$ type       : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile: chr "/tmp/Rtmp6nJeat/filee696ecab05f_sub2.bk"
+#&gt;   ..$ backingfile: chr "/tmp/Rtmpu6eJky/file12e767b1788_sub2.bk"
 #&gt;   ..$ address    :&lt;externalptr&gt; 
+#&gt;   ..$ bk         : chr "/tmp/Rtmpu6eJky/file12e767b1788_sub2.bk"
+#&gt;   ..$ rds        : chr "/tmp/Rtmpu6eJky/file12e767b1788_sub2.rds"
+#&gt;   ..$ is_saved   : logi TRUE
 #&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   ..and 21 methods, of which 7 are  possibly relevant:
-#&gt;   ..  as.FBM, copy#envRefClass, initialize, initialize#FBM, save,
-#&gt;   ..  show#envRefClass, show#FBM
+#&gt;   ..and 24 methods, of which 10 are  possibly relevant:
+#&gt;   ..  add_columns, as.FBM, bm, bm.desc, copy#envRefClass, initialize,
+#&gt;   ..  initialize#FBM, save, show#envRefClass, show#FBM
 #&gt;  $ fam      :'data.frame':	467 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:467] "POP2" "POP2" "POP2" "POP2" ...
 #&gt;   ..$ sample.ID  : chr [1:467] "IND50" "IND51" "IND52" "IND53" ...

@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -32,6 +34,7 @@
 
 <meta property="og:description" content="Polygenic Risk Scores with possible clumping and thresholding." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -58,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
       </span>
     </div>
 
@@ -82,9 +85,6 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
-    </li>
-    <li>
-      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -127,8 +127,9 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>snp_PRS</span>(<span class='no'>G</span>, <span class='no'>betas.keep</span>, <span class='kw'>ind.test</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.keep</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>same.keep</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>TRUE</span>, <span class='fu'>length</span>(<span class='no'>ind.keep</span>)), <span class='kw'>lpS.keep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_PRS</span>(<span class='no'>G</span>, <span class='no'>betas.keep</span>, <span class='kw'>ind.test</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
+  <span class='kw'>ind.keep</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>), <span class='kw'>same.keep</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>TRUE</span>, <span class='fu'>length</span>(<span class='no'>ind.keep</span>)),
+  <span class='kw'>lpS.keep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.list</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,10 +187,11 @@ columns correspond to <code>thr.list</code>.</p>
 <span class='no'>y01</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
 
 <span class='co'># PCA -&gt; covariables</span>
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_autoSVD.html'>snp_autoSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>POS</span>)</div><div class='output co'>#&gt; Phase of clumping at r2 &gt; 0.2.. keep 952 SNPs.
+<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_autoSVD.html'>snp_autoSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>POS</span>)</div><div class='output co'>#&gt; Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 952 SNPs.
 #&gt; 
 #&gt; Iteration 1:
 #&gt; Computing SVD..
+#&gt; 0 outlier detected..
 #&gt; 
 #&gt; Converged!</div><div class='input'>
 <span class='co'># train and test set</span>
@@ -219,10 +221,11 @@ columns correspond to <code>thr.list</code>.</p>
 <span class='co'># AUC as a function of the number of predictors</span>
 <span class='no'>aucs</span> <span class='kw'>&lt;-</span> <span class='fu'>apply</span>(<span class='no'>prs</span>, <span class='fl'>2</span>, <span class='no'>AUC</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='no'>y01</span>[<span class='no'>ind.test</span>])
 <span class='fu'>library</span>(<span class='no'>ggplot2</span>)
-<span class='kw pkg'>bigstatsr</span><span class='kw ns'>:::</span><span class='fu'>MY_THEME</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/qplot'>qplot</a></span>(<span class='no'>nb.pred</span>, <span class='no'>aucs</span>)) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>() +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='no'>nb.pred</span>) +
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>)</div><div class='img'><img src='snp_PRS-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span>(<span class='no'>nb.pred</span>, <span class='no'>aucs</span>) +
+  <span class='fu'><a href='ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>() +
+  <span class='fu'><a href='ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='no'>nb.pred</span>) +
+  <span class='fu'><a href='ggplot2.tidyverse.org/reference/labs.html'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>) +
+  <span class='fu'>theme_bigstatsr</span>()</div><div class='img'><img src='snp_PRS-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

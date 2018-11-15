@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Long-range LD regions — LD.wiki34 • bigsnpr</title>
+<title>Read BGEN files into a "bigSNP" — snp_readBGEN • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Long-range LD regions — LD.wiki34" />
+<meta property="og:title" content="Read BGEN files into a "bigSNP" — snp_readBGEN" />
 
-<meta property="og:description" content="34 long-range Linkage Disequilibrium (LD) regions for the human genome
-based on some wiki table." />
+<meta property="og:description" content="Function to read the UK Biobank BGEN files into a bigSNP." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -117,37 +116,90 @@ based on some wiki table." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Long-range LD regions</h1>
+    <h1>Read BGEN files into a "bigSNP"</h1>
     
-    <div class="hidden name"><code>LD.wiki34.Rd</code></div>
+    <div class="hidden name"><code>snp_readBGEN.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>34 long-range Linkage Disequilibrium (LD) regions for the human genome
-based on some <a href='https://goo.gl/0Ou7uI'>wiki table</a>.</p>
+    <p>Function to read the UK Biobank BGEN files into a <a href='bigSNP-class.html'>bigSNP</a>.</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>LD.wiki34</span></pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <pre class="usage"><span class='fu'>snp_readBGEN</span>(<span class='no'>bgenfiles</span>, <span class='no'>backingfile</span>, <span class='no'>list_snp_id</span>, <span class='kw'>ind_row</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>bgi_dir</span> <span class='kw'>=</span> <span class='fu'>dirname</span>(<span class='no'>bgenfiles</span>), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>bgenfiles</th>
+      <td><p>Character vector of paths to files with extension ".bgen".
+The corresponding ".bgen.bgi" index files must exist.</p></td>
+    </tr>
+    <tr>
+      <th>backingfile</th>
+      <td><p>The path (without extension) for the backing files
+for the cache of the <a href='bigSNP-class.html'>bigSNP</a> object.</p></td>
+    </tr>
+    <tr>
+      <th>list_snp_id</th>
+      <td><p>List (same length as the number of BGEN files) of
+character vector of SNP IDs to read. These should be in the form
+<code>"&lt;chr&gt;_&lt;pos&gt;_&lt;a1&gt;_&lt;a2&gt;"</code> (e.g. <code>"1_88169_C_T"</code> or <code>"01_88169_C_T"</code>).
+<strong>This function assumes that these IDs are uniquely identifying variants.</strong></p></td>
+    </tr>
+    <tr>
+      <th>ind_row</th>
+      <td><p>An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.<br />
+<strong>Don't use negative indices.</strong></p></td>
+    </tr>
+    <tr>
+      <th>bgi_dir</th>
+      <td><p>Directory of index files. Default is the same as <code>bgenfiles</code>.</p></td>
+    </tr>
+    <tr>
+      <th>ncores</th>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with 34 rows (regions) and 4 variables:</p><ul>
-<li><p><code>Chr</code>: region's chromosome</p></li>
-<li><p><code>Start</code>: starting position of the region (in bp)</p></li>
-<li><p><code>Stop</code>: stopping position of the region (in bp)</p></li>
-<li><p><code>ID</code>: some ID of the region.</p></li>
-</ul>
+    <p>The path to the RDS file that stores the <code>bigSNP</code> object.
+Note that this function creates one other file which stores the values of
+the Filebacked Big Matrix.<br />
+<strong>You shouldn't read from BGEN files more than once.</strong> Instead, use
+<a href='snp_attach.html'>snp_attach</a> to load the "bigSNP" object in any R session from backing files.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>For more information on this format, please visit
+<a href='https://bitbucket.org/gavinband/bgen/'>BGEN webpage</a>.</p>
+<p>This function is designed to read UK Biobank imputation files. This assumes
+that variants have been compressed with zlib, that there are only 2 possible
+alleles, and that each probability is stored on 8 bits.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'># See e.g. https://github.com/privefl/UKBiobank/blob/master/10-get-dosages.R
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -8,8 +8,8 @@
 <title>Analysis of Massive SNP Arrays • bigsnpr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><meta property="og:title" content="Analysis of Massive SNP Arrays">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script><meta property="og:title" content="Analysis of Massive SNP Arrays">
 <meta property="og:description" content="Easy-to-use, efficient, flexible and scalable tools
     for the analysis of massive SNP arrays &lt;doi:10.1093/bioinformatics/bty185&gt;.">
 <meta name="twitter:card" content="summary">
@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
       </span>
     </div>
 
@@ -54,9 +54,6 @@
     </li>
     <li>
       <a href="articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
-    </li>
-    <li>
-      <a href="articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -91,28 +88,28 @@
 <div id="bigsnpr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#bigsnpr" class="anchor"></a>bigsnpr</h1></div>
-<p><strong>bignspr</strong> is an R Package for the analysis of massive SNP arrays. It enhances the features of <a href="https://privefl.github.io/bigstatsr">package <strong>bigstatsr</strong></a> for the purpose of analysing genotype data.</p>
+<p>{bignspr} is an R package for the analysis of massive SNP arrays. It enhances the features of <a href="https://privefl.github.io/bigstatsr">package {bigstatsr}</a> for the purpose of analysing genotype data.</p>
 <p><a href="https://privefl.github.io/bigsnpr/articles/demo.html">Quick demo</a></p>
 <p><a href="https://privefl.github.io/bigsnpr/reference/index.html"><strong>LIST OF FEATURES</strong></a></p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Not on CRAN for now because of download_plink()</span>
-<span class="co"># For the current version</span>
-devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"privefl/bigsnpr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># For the current version</span>
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"privefl/bigsnpr"</span>)</code></pre></div>
 </div>
-<div id="input-format" class="section level2">
+<div id="input-formats" class="section level2">
 <h2 class="hasAnchor">
-<a href="#input-format" class="anchor"></a>Input format</h2>
-<p>For now, this package only read <em>bed</em>/<em>bim</em>/<em>fam</em> files (PLINK preferred format) using <code>snp_readBed</code>. Before reading into this package’s special format, quality control and conversion can be done using PLINK, which can be called directly from R using <code>snp_plinkQC</code> and <code>snp_plinkIBDQC</code>.</p>
-<p>I use a class called <code>bigSNP</code> for representing infos on massive SNP arrays. One <code>bigSNP</code> has at least 3 elements:</p>
+<a href="#input-formats" class="anchor"></a>Input formats</h2>
+<p>This package reads <em>bed</em>/<em>bim</em>/<em>fam</em> files (PLINK preferred format) using function <code><a href="reference/snp_readBed.html">snp_readBed()</a></code>. Before reading into this package’s special format, quality control and conversion can be done using PLINK, which can be called directly from R using <code>snp_plinkQC</code> and <code>snp_plinkIBDQC</code>.</p>
+<p><strong>This package now also reads UK Biobank BGEN files using function <code><a href="reference/snp_readBGEN.html">snp_readBGEN()</a></code>.</strong></p>
+<p>This package uses a class called <code>bigSNP</code> for representing SNP data. A <code>bigSNP</code> object is just a list with some elements:</p>
 <ul>
 <li>
-<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are SNPs. This corresponds to the “bed” file, but each element is encoded on 8 bits rather than only 2 bits for PLINK binary files, which allows for storing more information, without taking too much disk space.</li>
+<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are SNPs. This stores genotypes calls or dosages (rounded to 2 decimal places).</li>
 <li>
-<code>fam</code>: A <code>data.frame</code> containing some information on the SNPs (read from the “.fam” file).</li>
+<code>fam</code>: A <code>data.frame</code> containing some information on the SNPs.</li>
 <li>
-<code>map</code>: A <code>data.frame</code> giving some information on the individuals (read from the “.bim” file).</li>
+<code>map</code>: A <code>data.frame</code> giving some information on the individuals.</li>
 </ul>
 </div>
 <div id="get-genes-associated-with-snps" class="section level2">
@@ -127,16 +124,16 @@ rsid &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"r
 <h2 class="hasAnchor">
 <a href="#possible-upcoming-features" class="anchor"></a>Possible upcoming features</h2>
 <ul>
-<li>Support for other input formats. Note that there is room for coding <strong>allele dosages</strong> (rounded to two decimal places). See <a href="https://privefl.github.io/bigsnpr/articles/dosage.html">this vignette</a>.</li>
 <li>Imputation of probabilities and multiple imputation.</li>
 <li>An interactive QC procedure (call rates, difference of missingness between cases and controls, MAF cutoff, relatedness, HWE, autosomal only, others?).</li>
 <li>Proper integration of haploid species.</li>
 </ul>
+<p>You can request some feature by opening an issue.</p>
 </div>
 <div id="bug-report" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-report" class="anchor"></a>Bug report</h2>
-<p>Please open an issue if you find a bug. If you want help using <strong>bigstatsr</strong>, please post on Stack Overflow with the tag <em>bigstatsr</em> (not yet created). <a href="https://stackoverflow.com/q/5963269/6103040">How to make a great R reproducible example?</a></p>
+<p>Please open an issue if you find a bug. If you want help using {bigstatsr}, please post on Stack Overflow with the tag <em>bigstatsr</em>. <a href="https://stackoverflow.com/q/5963269/6103040">How to make a great R reproducible example?</a></p>
 </div>
 </div>
 

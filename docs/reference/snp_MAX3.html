@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -33,6 +35,7 @@
 <meta property="og:description" content="Compute the MAX3 statistic, which tests for three genetic models
 (additive, recessive and dominant)." />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -59,7 +62,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0</span>
       </span>
     </div>
 
@@ -83,9 +86,6 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
-    </li>
-    <li>
-      <a href="../articles/dosage.html">Dosage data: proof of concept</a>
     </li>
   </ul>
 </li>
@@ -129,7 +129,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>snp_MAX3</span>(<span class='no'>Gna</span>, <span class='no'>y01.train</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>Gna</span>), <span class='kw'>val</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.5</span>, <span class='fl'>1</span>))</pre>
+    <pre class="usage"><span class='fu'>snp_MAX3</span>(<span class='no'>Gna</span>, <span class='no'>y01.train</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>Gna</span>), <span class='kw'>val</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>0.5</span>,
+  <span class='fl'>1</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,8 +206,8 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 #&gt;  $ score: num  3.976 1.591 0.551 2.22 0.201 ...
 #&gt;  - attr(*, "transfo")=function (x)  
 #&gt;  - attr(*, "predict")=function (xtr)  
-#&gt;   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 98 15 100 3 15 3 98 100
-#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0xd89b510&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
+#&gt;   ..- attr(*, "srcref")= 'srcref' int  98 15 100 3 15 3 98 100
+#&gt;   .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0x7556968&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><div class='img'><img src='snp_MAX3-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><div class='img'><img src='snp_MAX3-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Armitage trend test (well calibrated because only one test)</span>
