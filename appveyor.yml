@@ -27,16 +27,15 @@ on_failure:
 
 environment:
   global:
-    _R_CHECK_FORCE_SUGGESTS_: 0
+    _R_CHECK_FORCE_SUGGESTS_: false
+    WARNINGS_ARE_ERRORS: true
     R_ARCH: x64
     USE_RTOOLS: true
-    NOT_CRAN: true
+    BIGSNPR_CRAN: false
     R_CHECK_ARGS: "--no-manual --timings"
-
-  matrix:
-  - R_VERSION: devel
+    R_VERSION: release
 #    PKGTYPE: source
-  - R_VERSION: release
+
 
 artifacts:
   - path: '*.Rcheck\**\*.log'

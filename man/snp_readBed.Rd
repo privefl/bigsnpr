@@ -10,7 +10,7 @@ snp_readBed(bedfile, backingfile = sub("\\\\.bed$", "", bedfile))
 \item{bedfile}{Path to file with extension ".bed" to read.
 You need the corresponding ".bim" and ".fam" in the same directory.}
 
-\item{backingfile}{The path (without extension) for the backing file(s)
+\item{backingfile}{The path (without extension) for the backing files
 for the cache of the \link[=bigSNP-class]{bigSNP} object. Default takes the bedfile
 without the ".bed" extension.}
 }

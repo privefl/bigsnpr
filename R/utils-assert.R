@@ -33,6 +33,7 @@ check_args <- function(...) {
 
 # MISSING VALUES
 assert_noNA        <- bigstatsr:::assert_noNA
+assert_nona        <- bigstatsr:::assert_nona
 # DIRECTORY
 assert_dir         <- bigstatsr:::assert_dir
 # ARGS

@@ -55,8 +55,6 @@ getIntervals <- function(x, n = 2) {
 #' @inherit bigstatsr::big_randomSVD return
 #' @export
 #'
-#' @import foreach
-#'
 #' @examples
 #' ex <- snp_attachExtdata()
 #'

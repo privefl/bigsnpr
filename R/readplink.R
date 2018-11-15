@@ -12,7 +12,7 @@
 #'
 #' @param bedfile Path to file with extension ".bed" to read.
 #' You need the corresponding ".bim" and ".fam" in the same directory.
-#' @param backingfile The path (without extension) for the backing file(s)
+#' @param backingfile The path (without extension) for the backing files
 #' for the cache of the [bigSNP][bigSNP-class] object. Default takes the bedfile
 #' without the ".bed" extension.
 #'

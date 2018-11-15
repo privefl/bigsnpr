@@ -5,9 +5,12 @@ Aschard
 Bazin
 bedfile
 bedfiles
+bgen
+bgi
 bigSNP
 bigstatsr
 bim
+biobank
 bioinformatics
 Biometrics
 Blum
@@ -81,3 +84,4 @@ Weale
 XGBoost
 Zheng
 Zhu
+zlib
