@@ -39,6 +39,9 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #' @importFrom magrittr %>%
 #' @import foreach
 #'
+#' @examples
+#' # See e.g. https://github.com/privefl/UKBiobank/blob/master/10-get-dosages.R
+#'
 #' @export
 snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
                          ind_row = NULL,

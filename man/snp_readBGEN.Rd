@@ -46,3 +46,7 @@ This function is designed to read UK Biobank imputation files. This assumes
 that variants have been compressed with zlib, that there are only 2 possible
 alleles, and that each probability is stored on 8 bits.
 }
+\examples{
+# See e.g. https://github.com/privefl/UKBiobank/blob/master/10-get-dosages.R
+
+}
