@@ -34,7 +34,7 @@ SEXP corMat(Environment BM,
   double x, y;
   double xSum, xxSum, deno_x;
   double ySum, yySum, deno_y;
-  double xySum, num, r, t;
+  double xySum, num, r;
 
   // pre-computation
   NumericVector sumX(m), sumXX(m);
@@ -67,36 +67,30 @@ SEXP corMat(Environment BM,
         y = macc(i, j0);
 
         if (isna(y)) {
-          // printf("Missing value at pos (%d, %d)\n", i+1, j0+1); // DEBUG
           N--;
-          if (isna(x)) { // both missing
+          if (isna(x)) {       // both missing
             // nothing to do
-          } else { // y is missing but not x
+          } else {             // y is missing, but not x
             xSum -= x;
             xxSum -= x*x;
           }
         } else {
-          if (isna(x)) { // x is missing but not y
+          if (isna(x)) {       // x is missing, but not y
             ySum -= y;
             yySum -= y*y;
             N--;
-          } else { // both not missing
+          } else {             // none missing
             xySum += x * y;
           }
         }
       }
-      // printf("N = %d\n", N); // DEBUG
+
       num = xySum - xSum * ySum / N;
       deno_x = xxSum - xSum * xSum / N;
       deno_y = yySum - ySum * ySum / N;
       r = num / sqrt(deno_x * deno_y);
-      t = r * sqrt((N - 2) / (1 - r*r));
-      // printf("%f -- %d -- %f -- %f\n", r, N, std::abs(t), thr[N-1]); // DEBUG
-      // printf(" = %d\n", N); // DEBUG
-      // if (r*r > 0.2) corr(j, j0) = r; // DEBUG
 
-      // abs() is converting to int...
-      if (std::abs(t) > thr[N-1]) corr(j, j0) = r;
+      if (std::abs(r) > thr[N-1]) corr(j, j0) = r;
     }
   }
 

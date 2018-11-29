@@ -42,13 +42,14 @@ snp_cor <- function(Gna,
                          df = seq_along(ind.row) - 2,
                          lower.tail = FALSE)
   )
+  THR <- q.alpha / sqrt(seq_along(ind.row) - 2 + q.alpha^2)
 
   corr <- forceSymmetric(corMat(
     BM = Gna,
     rowInd = ind.row,
     colInd = ind.col,
     size = size,
-    thr = q.alpha
+    thr = THR
   ))
 
   if (fill.diag) diag(corr) <- 1

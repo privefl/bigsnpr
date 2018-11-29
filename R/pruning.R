@@ -30,6 +30,9 @@
 #' can be used to exclude long-range LD regions (see Price2008). Another use
 #' can be for thresholding with respect to p-values associated with `S`.
 #'
+#' @param thr.r2 Threshold over the squared correlation between two SNPs.
+#'   Default is `0.2`.
+#'
 #' @references Price AL, Weale ME, Patterson N, et al.
 #' Long-Range LD Can Confound Genome Scans in Admixed Populations.
 #' Am J Hum Genet. 2008;83(1):132-135.
@@ -53,16 +56,21 @@ NULL
 clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
                         thr.r2, exclude) {
 
-  # init
-  S.chr <- `if`(is.null(S), snp_MAF(G, ind.row, ind.chr), S[ind.chr])
-  ord.chr <- order(S.chr, decreasing = TRUE)
-  remain <- rep(TRUE, length(ind.chr))
-  remain[match(exclude, ind.chr)] <- FALSE
-
   # cache some computations
   stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr)
   n <- length(ind.row)
   denoX <- (n - 1) * stats$var
+
+  # statistic to prioritize SNPs
+  if (is.null(S)) {
+    af <- stats$sum / (2 * n)
+    S.chr <- pmin(af, 1 - af)
+  } else {
+    S.chr <- S[ind.chr]
+  }
+  ord.chr <- order(S.chr, decreasing = TRUE)
+  remain <- rep(TRUE, length(ind.chr))
+  remain[match(exclude, ind.chr)] <- FALSE
 
   # main algo
   if (is.size.in.bp) {

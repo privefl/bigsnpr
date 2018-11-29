@@ -37,9 +37,6 @@ If not specified, all columns are used.\cr
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
-\item{thr.r2}{Threshold over the squared correlation between two SNPs.
-Default is \code{0.2}.}
-
 \item{is.size.in.bp}{Is the specified size is corresponding to
 kilo base-pairs. Default is \code{FALSE} (it is only SNP counts).}
 }

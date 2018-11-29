@@ -51,6 +51,8 @@ getIntervals <- function(x, n = 2) {
 #' @param int.min.size Minimum number of consecutive outlier SNPs
 #'   in order to be reported as long-range LD region. Default is `20`.
 #' @param verbose Output some information on the iterations? Default is `TRUE`.
+#' @param thr.r2 Threshold over the squared correlation between two SNPs.
+#'   Default is `0.2`. Use `NA` if you want to skip the clumping step.
 #'
 #' @inherit bigstatsr::big_randomSVD return
 #' @export
@@ -85,16 +87,21 @@ snp_autoSVD <- function(G,
   printf2 <- function(...) if (verbose) printf(...)
 
   # First clumping
-  printf2("Phase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
-  ind.keep <- snp_clumping(G, infos.chr,
-                           ind.row = ind.row,
-                           exclude = setdiff(cols_along(G), ind.col),
-                           thr.r2 = thr.r2,
-                           size = size,
-                           is.size.in.bp = is.size.in.bp,
-                           infos.pos = infos.pos,
-                           ncores = ncores)
-  printf2("keep %d SNPs.\n", length(ind.keep))
+  if (is.na(thr.r2)) {
+    printf2("Skipping clumping.\n")
+    ind.keep <- ind.col
+  } else {
+    printf2("Phase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
+    ind.keep <- snp_clumping(G, infos.chr,
+                             ind.row = ind.row,
+                             exclude = setdiff(cols_along(G), ind.col),
+                             thr.r2 = thr.r2,
+                             size = size,
+                             is.size.in.bp = is.size.in.bp,
+                             infos.pos = infos.pos,
+                             ncores = ncores)
+    printf2("keep %d SNPs.\n", length(ind.keep))
+  }
 
   iter <- 1L
   LRLDR <- LD.wiki34[0, 1:3]

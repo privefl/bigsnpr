@@ -14,13 +14,15 @@ ind.col <- seq_len(m)
 size <- round(runif(1, 1, 200))
 
 r <- sqrt(0.2)
-t <- r * sqrt((length(ind.row)-2)/(1-r^2))
+t <- r * sqrt((length(ind.row) - 2) / (1 - r^2))
+r_again <- t / sqrt(length(ind.row) - 2 + t^2)
+expect_equal(r_again, r)
 
 corr <- bigsnpr:::corMat(BM = G,
                          rowInd = ind.row,
                          colInd = ind.col,
                          size = size,
-                         thr = rep(t, n))
+                         thr = rep(r, n))
 corr2 <- corr^2
 
 ################################################################################
@@ -34,7 +36,7 @@ stopifnot(all(snps.ind[, 1] < snps.ind[, 2]))
 ind.size <- which((snps.ind[, 2] - snps.ind[, 1]) <= size)
 
 library(Matrix)
-corr.true <- as(matrix(0, m, m), "dgCMatrix")
+corr.true <- Matrix(0, m, m, sparse = TRUE)
 corr.true[snps.ind[ind.size, , drop = FALSE]] <- true$R2[ind.size]
 
 test_that("Same correlations as PLINK", {
@@ -64,7 +66,7 @@ m <- length(ind.col)
 true <- Hmisc::rcorr(G[ind.row, ind.col])
 ind <- which(true$P < alpha)
 
-corr <- snp_cor(G = G,
+corr <- snp_cor(Gna = G,
                 ind.row = ind.row,
                 ind.col = ind.col,
                 alpha = alpha)

@@ -35,7 +35,7 @@ for every column, to scale each of their elements such as followed:
 \deqn{\frac{X_{i,j} - mean_j}{sd_j}.} Default is \code{snp_scaleBinom()}.}
 
 \item{thr.r2}{Threshold over the squared correlation between two SNPs.
-Default is \code{0.2}.}
+Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
 
 \item{size}{Radius of the window's size for the LD evaluations of the initial
 step of clumping. Default is \code{500}. See parameter \code{is.size.in.bp}.}

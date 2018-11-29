@@ -34,9 +34,6 @@
 #' @param ncores Number of cores used. Default doesn't use parallelism.
 #'   You may use [nb_cores].
 #'
-#' @param thr.r2 Threshold over the squared correlation between two SNPs.
-#'   Default is `0.2`.
-#'
 #' @param is.size.in.bp Is the specified size is corresponding to
 #'   kilo base-pairs. Default is `FALSE` (it is only SNP counts).
 #'
