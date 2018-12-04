@@ -1,3 +1,7 @@
+## bigsnpr 0.8.1
+
+- Change url to download PLINK 1.9.
+
 ## bigsnpr 0.8.0
 
 - Add function `snp_readBGEN()` to read UK Biobank BGEN files in `bigSNP` format.
