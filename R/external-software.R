@@ -33,12 +33,12 @@ download_plink <- function(dir = tempdir()) {
   # https://regex101.com/r/jC8nB0/143
   plink.names  <- gsubfn::strapply(
     X = readLines("https://www.cog-genomics.org/plink2"),
-    pattern = "(/static/bin/.*/plink_.+?(?<!dev)\\.zip)",
+    pattern = "(http://s3.amazonaws.com/plink1-assets/plink_.+?(?<!dev)\\.zip)",
     simplify = "c",
     perl = TRUE
   )
   plink.builds <- data.frame(
-    url = paste0("https://www.cog-genomics.org", plink.names),
+    url = plink.names,
     OS = c(rep("Unix", 2), "Mac", rep("Windows", 2)),
     arch = c(64, 32, 64, 64, 32),
     stringsAsFactors = FALSE
