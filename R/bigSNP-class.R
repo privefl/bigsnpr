@@ -1,12 +1,14 @@
 ################################################################################
 
-# code genotype calls or missing values
+#' CODE_012: code genotype calls (3) and missing values.
+#' @rdname snp_codes
+#' @export
 CODE_012 <- c(0, 1, 2, rep(NA, 253))
 
-# used in `snp_double`
-CODE_01  <- c(0, 1, rep(NA, 254))
-
-# code genotype calls, missing values, imputed calls and imputed allele dosages
+#' CODE_DOSAGE: code genotype calls and missing values (4), and imputed calls (3)
+#' and imputed allele dosages rounded to two decimal places (201).
+#' @rdname snp_codes
+#' @export
 CODE_DOSAGE <- c(0, 1, 2, NA, 0, 1, 2, seq(0, 2, by = 0.01), rep(NA, 48))
 
 ################################################################################

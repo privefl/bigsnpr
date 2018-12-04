@@ -1,6 +1,11 @@
 ################################################################################
 
 CODE_IMPUTE_LABEL <- c(0, 0.5, 1, rep(NA, 253))
+
+#' CODE_IMPUTE_PRED: code genotype calls and missing values (4),
+#' and imputed calls (3).
+#' @rdname snp_codes
+#' @export
 CODE_IMPUTE_PRED  <- c(0, 1, 2, NA, 0, 1, 2, rep(NA, 249))
 
 ################################################################################
