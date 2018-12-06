@@ -33,7 +33,7 @@ test_that("raises some errors", {
 
 test_that("gsubfn::strapply() works as expected", {
   expect_error(format_snp_id(c("1_88169_C_T", "01_88169_C_T", "1:88169_C_T")),
-               "Wrong format of SNPs.", fixed = TRUE)
+               "Wrong format of some SNPs.", fixed = TRUE)
   expect_identical(format_snp_id(c("1_88169_C_T", "01_88169_C_T")),
                    c("01_88169_C_T", "01_88169_C_T"))
 })

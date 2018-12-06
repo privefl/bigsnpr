@@ -1,3 +1,7 @@
+## bigsnpr 0.8.2
+
+- Add `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format.
+
 ## bigsnpr 0.8.1
 
 - Change url to download PLINK 1.9.

@@ -6,6 +6,21 @@
 
 using namespace Rcpp;
 
+// r2_bgen
+NumericVector r2_bgen(std::string filename, NumericVector offsets, LogicalVector use_ind, NumericVector decode, NumericVector y);
+RcppExport SEXP _bigsnpr_r2_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP use_indSEXP, SEXP decodeSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type offsets(offsetsSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type use_ind(use_indSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type decode(decodeSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(r2_bgen(filename, offsets, use_ind, decode, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // replaceSNP
 void replaceSNP(Environment BM, Environment BM2, const IntegerVector& rowInd, const IntegerVector& colInd);
 RcppExport SEXP _bigsnpr_replaceSNP(SEXP BMSEXP, SEXP BM2SEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
@@ -194,6 +209,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 5},
     {"_bigsnpr_linRegPcadapt_cpp", (DL_FUNC) &_bigsnpr_linRegPcadapt_cpp, 4},
