@@ -32,26 +32,10 @@ test_that("raises some errors", {
 ################################################################################
 
 test_that("gsubfn::strapply() works as expected", {
-  expect_error(
-    gsubfn::strapply(
-      X = c("1_88169_C_T", "01_88169_C_T", "1:88169_C_T"),
-      pattern = "^(.+?)(_.+_.+_.+)$",
-      FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
-      empty = stop("Wrong format of SNPs."),
-      simplify = 'c'
-    ),
-    "Wrong format of SNPs.", fixed = TRUE
-  )
-  expect_identical(
-    gsubfn::strapply(
-      X = c("1_88169_C_T", "01_88169_C_T"),
-      pattern = "^(.+?)(_.+_.+_.+)$",
-      FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
-      empty = stop("Wrong format of SNPs."),
-      simplify = 'c'
-    ),
-    c("01_88169_C_T", "01_88169_C_T")
-  )
+  expect_error(format_snp_id(c("1_88169_C_T", "01_88169_C_T", "1:88169_C_T")),
+               "Wrong format of SNPs.", fixed = TRUE)
+  expect_identical(format_snp_id(c("1_88169_C_T", "01_88169_C_T")),
+                   c("01_88169_C_T", "01_88169_C_T"))
 })
 
 ################################################################################

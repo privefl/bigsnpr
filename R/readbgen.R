@@ -1,6 +1,57 @@
 ################################################################################
 
-DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
+# use 2 characters for chromosomes: 1 -> 01
+format_snp_id <- function(snp_id) {
+  gsubfn::strapply(
+    X = snp_id,
+    pattern = "^(.+?)(_.+_.+_.+)$",
+    FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
+    empty = stop("Wrong format of some SNPs."),
+    simplify = 'c'
+  )
+}
+
+################################################################################
+
+#' Read variant info from one BGI file
+#'
+#' @param bgifile Path to one file with extension ".bgi".
+#' @param snp_id Character vector of SNP IDs. These should be in the form
+#'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"` or `"01_88169_C_T"`).
+#'  **This function assumes that these IDs are uniquely identifying variants.**
+#'
+#' @return A data frame containing variant infos.
+#'
+#' @importFrom magrittr %>%
+#'
+#' @export
+snp_readBGI <- function(bgifile, snp_id) {
+
+  # check for packages
+  if (!requireNamespace("RSQLite", quietly = TRUE))
+    stop2("Please install package 'RSQLite'.")
+  if (!requireNamespace("dbplyr", quietly = TRUE))
+    stop2("Please install package 'dbplyr'.")
+
+  # read variant info from index files
+  db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
+  on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
+  infos <- dplyr::tbl(db_con, "Variant") %>%
+    dplyr::mutate(
+      myid = paste(chromosome, position, allele1, allele2, sep = "_")) %>%
+    dplyr::filter(myid %in% snp_id) %>%
+    dplyr::collect()
+
+  # check
+  ind <- match(snp_id, infos$myid)
+  if (anyNA(ind)) {
+    saveRDS(snp_id[is.na(ind)],
+            tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifile))
+    stop2("Some variants have not been found (stored in '%s').", tmp)
+  }
+
+  infos
+}
 
 ################################################################################
 
@@ -28,7 +79,7 @@ DECODE_BGEN <- as.raw(207 - round(0:510 * 100 / 255))
 #'   are used. If not specified, all rows are used.\cr
 #'   **Don't use negative indices.**
 #' @param ncores Number of cores used. Default doesn't use parallelism.
-#'   You may use [nb_cores].
+#'   You may use [nb_cores()].
 #'
 #' @return The path to the RDS file that stores the `bigSNP` object.
 #' Note that this function creates one other file which stores the values of
@@ -48,11 +99,6 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
                          bgi_dir = dirname(bgenfiles),
                          ncores = 1) {
 
-  if (!requireNamespace("RSQLite", quietly = TRUE))
-    stop2("Please install package 'RSQLite'.")
-  if (!requireNamespace("dbplyr", quietly = TRUE))
-    stop2("Please install package 'dbplyr'.")
-
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)
   assert_noexist(paste0(backingfile, ".bk"))
@@ -66,8 +112,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   # Check list_snp_id
   assert_class(list_snp_id, "list")
   sapply(list_snp_id, assert_nona)
+  assert_lengths(list_snp_id, bgenfiles)
   sizes <- lengths(list_snp_id)
-  assert_lengths(sizes, bgenfiles)
 
   # Samples
   assert_nona(ind_row)
@@ -98,29 +144,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     # Fill the FBM from BGEN files (and get SNP info)
     foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %dopar% {
 
-      snp_id <- gsubfn::strapply(
-        X = list_snp_id[[ic]],
-        pattern = "^(.+?)(_.+_.+_.+)$",
-        FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
-        empty = stop("Wrong format of some SNPs."),
-        simplify = 'c'
-      )
-
-      # Read variant info (+ position in file) from index files
-      db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifiles[ic])
-      on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
-      infos <- dplyr::tbl(db_con, "Variant") %>%
-        dplyr::mutate(
-          myid = paste(chromosome, position, allele1, allele2, sep = "_")) %>%
-        dplyr::filter(myid %in% snp_id) %>%
-        dplyr::collect()
-
-      ind <- match(snp_id, infos$myid)
-      if (anyNA(ind)) {
-        saveRDS(snp_id[is.na(ind)],
-                tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifiles[ic]))
-        stop2("Some variants have not been found (stored in '%s').", tmp)
-      }
+      snp_id <- format_snp_id(list_snp_id[[ic]])
+      infos <- snp_readBGI(bgifiles[ic], snp_id)
 
       # Get dosages in FBM
       ind2 <- match(infos$myid, snp_id)
@@ -131,11 +156,11 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
         BM = G,
         ind_row = ind.row,
         ind_col = ind.col,
-        decode = DECODE_BGEN
+        decode = as.raw(207 - round(0:510 * 100 / 255))
       )
 
       # Return variant info
-      dplyr::bind_cols(infos, marker.ID = ID)[ind, ] %>%
+      dplyr::bind_cols(infos, marker.ID = ID)[match(snp_id, infos$myid), ] %>%
         dplyr::select(chromosome, marker.ID, rsid, physical.pos = position,
                       allele1, allele2)
     }
