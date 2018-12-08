@@ -4,11 +4,13 @@
 #'
 #' @inheritParams snp_readBGEN
 #' @param ind_row A vector of the row indices (individuals) that are used.
+#'   Missing values in either `ind_row` or `y_row` are removed.
 #'   **Make sure to use indices corresponding to your training set only.**
 #' @param y_row A vector corresponding to `ind_row` and representing the trait
 #'   with which to compute correlations.
+#'   Missing values in either `ind_row` or `y_row` are removed.
 #'
-#' @return A vector of log10(p-values) corresponding to the statistic
+#' @return A list of vectors of log10(p-values) corresponding to the statistic
 #'   \eqn{n \times r^2}, where r is the correlation of each variant with `y_row`.
 #'
 #' @import foreach
@@ -30,9 +32,14 @@ snp_assocBGEN <- function(bgenfiles, list_snp_id, y_row, ind_row,
   assert_lengths(list_snp_id, bgenfiles)
 
   # Samples
-  assert_nona(ind_row)
-  assert_nona(y_row)
   assert_lengths(y_row, ind_row)
+  na_row <- is.na(ind_row) | is.na(y_row)
+  if (any(na_row)) {
+    printf("%d individuals removed due to missing values (out of %d).",
+           sum(na_row), length(na_row))
+    y_row <- y_row[!na_row]
+    ind_row <- ind_row[!na_row]
+  }
   if (any(duplicated(ind_row))) stop2("Can't have duplicated samples.")
   y_row <- y_row[order(ind_row)]
   N <- readBin(bgenfiles[1], what = 1L, size = 4, n = 4)[4]
@@ -44,7 +51,7 @@ snp_assocBGEN <- function(bgenfiles, list_snp_id, y_row, ind_row,
     doParallel::registerDoParallel(cl)
     on.exit(parallel::stopCluster(cl), add = TRUE)
   }
-  r2 <- foreach(ic = seq_along(bgenfiles), .combine = 'c') %dopar% {
+  r2 <- foreach(ic = seq_along(bgenfiles)) %dopar% {
 
     snp_id <- format_snp_id(list_snp_id[[ic]])
     infos <- snp_readBGI(bgifiles[ic], snp_id)
@@ -60,9 +67,11 @@ snp_assocBGEN <- function(bgenfiles, list_snp_id, y_row, ind_row,
     r2[match(snp_id, infos$myid)]
   }
 
-  deno_y <- sum(y_row^2) - sum(y_row)^2 / length(y_row)
-  stats::pchisq(length(y_row) * r2 / deno_y, df = 1, lower.tail = FALSE,
-                log.p = TRUE) / log(10)
+  lapply(r2, function(r2) {
+    deno_y <- sum(y_row^2) - sum(y_row)^2 / length(y_row)
+    stats::pchisq(length(y_row) * r2 / deno_y, df = 1, lower.tail = FALSE,
+                  log.p = TRUE) / log(10)
+  })
 }
 
 ################################################################################

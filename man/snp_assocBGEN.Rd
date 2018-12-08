@@ -17,9 +17,11 @@ character vector of SNP IDs to read. These should be in the form
 \strong{This function assumes that these IDs are uniquely identifying variants.}}
 
 \item{y_row}{A vector corresponding to \code{ind_row} and representing the trait
-with which to compute correlations.}
+with which to compute correlations.
+Missing values in either \code{ind_row} or \code{y_row} are removed.}
 
 \item{ind_row}{A vector of the row indices (individuals) that are used.
+Missing values in either \code{ind_row} or \code{y_row} are removed.
 \strong{Make sure to use indices corresponding to your training set only.}}
 
 \item{bgi_dir}{Directory of index files. Default is the same as \code{bgenfiles}.}
@@ -28,7 +30,7 @@ with which to compute correlations.}
 You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
-A vector of log10(p-values) corresponding to the statistic
+A list of vectors of log10(p-values) corresponding to the statistic
 \eqn{n \times r^2}, where r is the correlation of each variant with \code{y_row}.
 }
 \description{
