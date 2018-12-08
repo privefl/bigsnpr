@@ -7,7 +7,7 @@
  
 # bigsnpr
 
-{bignspr} is an R package for the analysis of massive SNP arrays. It enhances the features of [package {bigstatsr}](https://privefl.github.io/bigstatsr) for the purpose of analysing genotype data, designed mostly for human genetics.
+{bignspr} is an R package for the analysis of massive SNP arrays. It enhances the features of [package {bigstatsr}](https://privefl.github.io/bigstatsr) for the purpose of analysing genotype data, primarily designed for human genetics.
 
 [Quick demo](https://privefl.github.io/bigsnpr/articles/demo.html)
 
