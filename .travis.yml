@@ -6,6 +6,7 @@ matrix:
   include:
   - r: release
     os: osx
+    brew_packages: libgit2
   - r: release
     os: linux
     after_success: travis_wait Rscript -e 'covr::codecov()'
