@@ -24,12 +24,12 @@ utils::globalVariables(c("ic", "f", "lp", "LD.wiki34", "OS", "arch",
 
 # functions for encoding/decoding bed files
 getCode <- function(NA.VAL = 3L) {
-  geno.raw <- as.logical(rawToBits(as.raw(0:255)))
+  geno.raw <- !as.logical(rawToBits(as.raw(0:255)))
   s <- c(TRUE, FALSE)
   geno1 <- geno.raw[s]
   geno2 <- geno.raw[!s]
   geno <- geno1 + geno2
-  geno[geno1 & !geno2] <- NA.VAL
+  geno[!geno1 & geno2] <- NA.VAL
   dim(geno) <- c(4, 256)
   storage.mode(geno) <- "raw"
   geno

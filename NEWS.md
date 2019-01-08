@@ -1,3 +1,7 @@
+## bigsnpr 0.9.0
+
+- When reading bed files, switch reading of Os and 2s to be consistent with other software.
+
 ## bigsnpr 0.8.2
 
 - Add `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format.

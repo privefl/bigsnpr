@@ -68,7 +68,7 @@ test_that("Same as pcadapt", {
 
   tmp <- obj.pcadapt$scores[, 1]; names(tmp) <- NULL
   expect_equal(tmp, obj.svd$u[, 1], tolerance = 1e-6)
-  expect_equal(as.vector(obj.pcadapt$zscores), obj.gwas$score, tolerance = 1e-3)
+  expect_equal(as.vector(obj.pcadapt$zscores), obj.gwas$score, tolerance = 1e-2)
   # plot(obj.pcadapt$pvalues, predict(obj.gwas.gc, log10 = FALSE))
 
   # expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
