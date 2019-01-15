@@ -67,12 +67,12 @@ imputeChr <- function(Gna, infos.imp, ind.chr, alpha, size, p.train, n.cor, seed
           ind.col <- ind.chr[which(corr[, i] != 0)]
           if (length(ind.col) < 5L)
             ind.col <- intersect(setdiff(-size:size + snp, snp), ind.chr)
-
+                    
           bst <- xgboost(
             data = X2[ind.train, ind.col, drop = FALSE],
             label = X.label[ind.train],
             objective = "binary:logistic",
-            base_score = mean(X.label[ind.train]) / 2,
+            base_score = min(max(1e-7, mean(X.label[ind.train])), 1 - 1e-7),
             nrounds = 10,
             params = list(max_depth = 4),
             nthread = 1,
