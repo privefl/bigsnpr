@@ -3,13 +3,11 @@
 library(bigsnpr)
 plink <- download_plink("tmp-data/")
 bed <- snp_plinkQC(plink, prefix.in = "tmp-data/1kg_phase1_all",
-                   geno = 0, maf = 0.05, hwe = 1e-10, autosome.only = TRUE,
-                   extra.options = " --thin 0.05")
+                   geno = 0, maf = 0.05, hwe = 1e-10,
+                   extra.options = " --chr 2,6,8 --thin 0.1")
 
-bed2 <- snp_plinkIBDQC(plink, bed, pi.hat = 0.05, ncores = nb_cores())
-
-rds <- snp_readBed(bed2)
-snp <- snp_attach(rds)
+rds <- snp_readBed(bed)
+snp <- snp_attach("tmp-data/1kg_phase1_all_QC.rds")
 G <- snp$genotypes
 counts <- big_counts(G)
 sum(counts[4, ])
@@ -24,6 +22,18 @@ fam <- dplyr::left_join(fam, pop, by = c("Population" = "Population Code"))
 snp$fam$family.ID <- paste(fam$`Super Population`, fam$Population, sep = "_")
 snp$fam$paternal.ID <- snp$fam$maternal.ID <- 0L
 
-maf <- snp_MAF(G)
+ind <- which(fam$Relationship == "unrel")
+maf <- snp_MAF(G, ind)
 
-snp_writeBed(snp, "tmp-data/public-data.bed", ind.col = which(maf > 0.05))
+bed <- snp_writeBed(snp, tempfile(fileext = ".bed"),
+                    ind.row = ind, ind.col = which(maf > 0.05))
+
+rds <- snp_readBed(bed)
+snp <- snp_attach(rds)
+G <- snp$genotypes
+set.seed(1)
+pheno <- pkg.paper.PRS::get_pheno(G, 0.8, 10)
+snp$fam$affection <- pheno$pheno
+
+snp_writeBed(snp, "tmp-data/public-data.bed")
+saveRDS(pheno, file = "tmp-data/public-data-pheno.rds")
