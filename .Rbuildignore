@@ -1,3 +1,4 @@
+^vignettes/tmp-data$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .git

@@ -1,0 +1,128 @@
+---
+title: "Exercises using packages bigsnpr and bigstatsr"
+author: "Florian Privé"
+date: "January 22, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+In this document, I show how to use some of the features of packages {bigsnpr} and {bigstatsr}.
+Note that many functions used here come from package {bigstatsr} and could therefore be used on other data encoded as matrix-like (outside of the field of genotype data).
+
+## Get data
+
+```{r setup, include=FALSE}
+unlink(paste0("tmp-data/public-data", c(".bk", ".rds")))
+options(htmltools.dir.version = FALSE, width = 65)
+knitr::opts_knit$set(global.par = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align='center', dev='png', dpi = 95)
+```
+
+Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. I store those files in a directory called `"tmp-data"` here.
+
+You can see [there](https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R) how I generated these data from [the 1000 Genomes project](https://www.nature.com/articles/nature15393).
+
+## Read from the PLINK files
+
+```{r}
+# Load packages bigsnpr and bigstatsr
+library(bigsnpr)
+# Read from bed/bim/fam, it will create new files.
+snp_readBed("tmp-data/public-data.bed")
+# Attach the "bigSNP" object in R session
+obj.bigSNP <- snp_attach("tmp-data/public-data.rds")
+# See how it looks like
+str(obj.bigSNP, max.level = 2, strict.width = "cut")
+# Get aliases for useful slots
+G   <- obj.bigSNP$genotypes
+CHR <- obj.bigSNP$map$chromosome
+POS <- obj.bigSNP$map$physical.pos
+y   <- obj.bigSNP$fam$affection
+sex <- obj.bigSNP$fam$sex
+pop <- obj.bigSNP$fam$family.ID
+NCORES <- nb_cores()
+# Check some counts for the 10 first SNPs
+big_counts(G, ind.col = 1:10)
+```
+
+## What you must do
+
+You need to 
+
+- Explore the data
+
+- Assess population structure of the data
+
+- Find the variables associated with the disease status (`y`)
+
+- Predict the disease status using the following indices as training/test sets:
+
+    ```{r}
+    # Divide the indices in training/test sets
+    set.seed(1)
+    ind.train <- sample(nrow(G), 400)
+    ind.test <- setdiff(rows_along(G), ind.train)
+    ```
+
+For this, you can use whatever tools you want because the data is quite small. 
+In the following section, I give some (scalable) solutions using using packages {bigstatsr} and {bigsnpr}.
+
+## Solution using {bigstatsr} and {bigsnpr}
+
+### Population structure: Principal Component Analysis
+
+Let us compute first principal components of the scaled genotype matrix:
+
+```{r}
+# Compute partial SVD using random projections
+svd <- big_randomSVD(G, big_scale(), ncores = nb_cores())
+# Scree plot
+plot(svd)
+library(ggplot2)
+# Scores plot + color for population
+plot(svd, type = "scores") +
+  aes(color = pop)
+plot(svd, type = "scores", scores = 3:4) +
+  aes(color = pop)
+# Loadings (effects of each variable for each PC)
+plot(svd, type = "loadings", loadings = 1:10, coeff = 0.4)
+```
+
+Looking at the loadings, we can see that the PCA captures some variation due to large correlation between variables. To learn more about this possible pitfall, please look at [this vignette](https://privefl.github.io/bigsnpr/articles/how-to-PCA.html).
+
+### Association: Genome-Wide Association Study (GWAS)
+
+```{r}
+# Association of each variable of `G` with `y` (adjusting for some `covar`)
+gwas <- big_univLogReg(G, y, covar.train = svd$u, ncores = nb_cores())
+# Histogram of p-values
+plot(gwas)
+# Q-Q plot
+plot(gwas, type = "Q-Q") + xlim(1, NA)  # snp_qq(gwas) + xlim(1, NA)
+# Manhattan plot
+snp_manhattan(gwas, CHR, POS, npoints = 20e3) +
+  geom_hline(yintercept = -log10(5e-8), color = "red")
+```
+
+### Polygenic Risk Score (PRS) with Penalized Logistic Regression
+
+```{r}
+# Penalized logistic regression for many alphas and lambdas
+mod <- big_spLogReg(G, y[ind.train], ind.train, covar.train = svd$u[ind.train, ],
+                    K = 5, alphas = 10^(-(0:4)), ncores = nb_cores())
+```
+
+```{r}
+# Plot regularization paths
+plot(mod)
+# Get summaries of models
+summary(mod)
+```
+
+```{r}
+# Get the predictions for the test set
+pred <- predict(mod, G, ind.test, covar.row = svd$u[ind.test, ])
+# Assess the Area Under the ROC Curve
+AUC(pred, y[ind.test])
+```

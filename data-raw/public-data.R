@@ -32,6 +32,7 @@ rds <- snp_readBed(bed)
 snp <- snp_attach(rds)
 G <- snp$genotypes
 set.seed(1)
+# devtools::install_github("privefl/paper2-PRS/pkg.paper.PRS")
 pheno <- pkg.paper.PRS::get_pheno(G, 0.8, 10)
 snp$fam$affection <- pheno$pheno
 
