@@ -120,23 +120,22 @@ obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <span class="co"># See how it looks like</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(obj.bigSNP, <span class="dt">max.level =</span> <span class="dv">2</span>, <span class="dt">strict.width =</span> <span class="st">"cut"</span>)</code></pre></div>
 <pre><code>## List of 3
-##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"..
+##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 10 ..
 ##   ..and 24 methods, of which 10 are  possibly relevant:
-##   ..  add_columns, as.FBM, bm, bm.desc, copy#envRefClass,
-##   ..  initialize, initialize#FBM, save, show#envRefClass,
-##   ..  show#FBM
+##   ..  add_columns, as.FBM, bm, bm.desc, copy#envRefClass, initialize,
+##   ..  initialize#FBM, save, show#envRefClass, show#FBM
 ##  $ fam      :'data.frame':   559 obs. of  6 variables:
-##   ..$ family.ID  : chr [1:559] "EUR_GBR" "EUR_GBR" "EUR_GBR" ""..
-##   ..$ sample.ID  : chr [1:559] "HG00096" "HG00097" "HG00099" ""..
+##   ..$ family.ID  : chr [1:559] "EUR_GBR" "EUR_GBR" "EUR_GBR" "EUR_GBR" ...
+##   ..$ sample.ID  : chr [1:559] "HG00096" "HG00097" "HG00099" "HG00100" ...
 ##   ..$ paternal.ID: int [1:559] 0 0 0 0 0 0 0 0 0 0 ...
 ##   ..$ maternal.ID: int [1:559] 0 0 0 0 0 0 0 0 0 0 ...
 ##   ..$ sex        : int [1:559] 1 2 2 2 1 2 1 2 2 1 ...
 ##   ..$ affection  : int [1:559] 0 0 1 0 1 1 1 1 0 1 ...
 ##  $ map      :'data.frame':   130619 obs. of  6 variables:
 ##   ..$ chromosome  : int [1:130619] 2 2 2 2 2 2 2 2 2 2 ...
-##   ..$ marker.ID   : chr [1:130619] "rs28469191" "rs6548219" "r"..
+##   ..$ marker.ID   : chr [1:130619] "rs28469191" "rs6548219" "rs4522651" "..
 ##   ..$ genetic.dist: int [1:130619] 0 0 0 0 0 0 0 0 0 0 ...
-##   ..$ physical.pos: int [1:130619] 29970 30762 34049 38733 4105..
+##   ..$ physical.pos: int [1:130619] 29970 30762 34049 38733 41054 47648 52..
 ##   ..$ allele1     : chr [1:130619] "C" "A" "A" "G" ...
 ##   ..$ allele2     : chr [1:130619] "T" "G" "G" "GA" ...
 ##  - attr(*, "class")= chr "bigSNP"</code></pre>
@@ -211,8 +210,7 @@ gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, 
 <p><img src="exo_files/figure-html/unnamed-chunk-6-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Q-Q plot</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas, <span class="dt">type =</span> <span class="st">"Q-Q"</span>) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>)  <span class="co"># snp_qq(gwas) + xlim(1, NA)</span></code></pre></div>
-<pre><code>## Warning: Removed 117557 rows containing missing values
-## (geom_point).</code></pre>
+<pre><code>## Warning: Removed 117557 rows containing missing values (geom_point).</code></pre>
 <p><img src="exo_files/figure-html/unnamed-chunk-6-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Manhattan plot</span>
 <span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(gwas, CHR, POS, <span class="dt">npoints =</span> <span class="fl">20e3</span>) <span class="op">+</span>
@@ -244,13 +242,13 @@ mod &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(G, y[ind.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get summaries of models</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mod)</code></pre></div>
 <pre><code>## # A tibble: 5 x 6
-##    alpha validation_loss intercept beta           nb_var message 
-##    &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;          &lt;int&gt; &lt;list&gt;  
-## 1 0.0001           0.552     -1.56 &lt;dbl [130,629…  57869 &lt;chr [5…
-## 2 0.001            0.533     -3.09 &lt;dbl [130,629…  12255 &lt;chr [5…
-## 3 0.01             0.486     -4.61 &lt;dbl [130,629…   2156 &lt;chr [5…
-## 4 0.1              0.452     -3.52 &lt;dbl [130,629…    775 &lt;chr [5…
-## 5 1                0.434     -3.24 &lt;dbl [130,629…    367 &lt;chr [5…</code></pre>
+##    alpha validation_loss intercept beta            nb_var message  
+##    &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;           &lt;int&gt; &lt;list&gt;   
+## 1 0.0001           0.552     -1.56 &lt;dbl [130,629]&gt;  57869 &lt;chr [5]&gt;
+## 2 0.001            0.533     -3.09 &lt;dbl [130,629]&gt;  12255 &lt;chr [5]&gt;
+## 3 0.01             0.486     -4.61 &lt;dbl [130,629]&gt;   2156 &lt;chr [5]&gt;
+## 4 0.1              0.452     -3.52 &lt;dbl [130,629]&gt;    775 &lt;chr [5]&gt;
+## 5 1                0.434     -3.24 &lt;dbl [130,629]&gt;    367 &lt;chr [5]&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the predictions for the test set</span>
 pred &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(mod, G, ind.test, <span class="dt">covar.row =</span> svd<span class="op">$</span>u[ind.test, ])
 <span class="co"># Assess the Area Under the ROC Curve</span>
