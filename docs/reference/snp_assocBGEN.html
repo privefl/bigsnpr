@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAF — snp_MAF • bigsnpr</title>
+<title>Compute quick association statistics from BGEN files — snp_assocBGEN • bigsnpr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="MAF — snp_MAF" />
+<meta property="og:title" content="Compute quick association statistics from BGEN files — snp_assocBGEN" />
 
-<meta property="og:description" content="Minor Allele Frequency." />
+<meta property="og:description" content="Compute quick association statistics from BGEN files" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -121,57 +121,64 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>MAF</h1>
+    <h1>Compute quick association statistics from BGEN files</h1>
     
-    <div class="hidden name"><code>snp_MAF.Rd</code></div>
+    <div class="hidden name"><code>snp_assocBGEN.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Minor Allele Frequency.</p>
+    <p>Compute quick association statistics from BGEN files</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>snp_MAF</span>(<span class='no'>G</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/options'>getOption</a></span>(<span class='st'>"bigsnpr.nploidy"</span>))</pre>
+    <pre class="usage"><span class='fu'>snp_assocBGEN</span>(<span class='no'>bgenfiles</span>, <span class='no'>list_snp_id</span>, <span class='no'>y_row</span>, <span class='no'>ind_row</span>,
+  <span class='kw'>bgi_dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/basename'>dirname</a></span>(<span class='no'>bgenfiles</span>), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>G</th>
-      <td><p>A FBM.code256
-(typically <code>&lt;bigSNP&gt;$genotypes</code>).<br />
-<strong>You shouldn't have missing values in your data or SNPs with 0 MAF.</strong></p></td>
+      <th>bgenfiles</th>
+      <td><p>Character vector of paths to files with extension ".bgen".
+The corresponding ".bgen.bgi" index files must exist.</p></td>
     </tr>
     <tr>
-      <th>ind.row</th>
-      <td><p>An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.<br />
-<strong>Don't use negative indices.</strong></p></td>
+      <th>list_snp_id</th>
+      <td><p>List (same length as the number of BGEN files) of
+character vector of SNP IDs to read. These should be in the form
+<code>"&lt;chr&gt;_&lt;pos&gt;_&lt;a1&gt;_&lt;a2&gt;"</code> (e.g. <code>"1_88169_C_T"</code> or <code>"01_88169_C_T"</code>).
+<strong>This function assumes that these IDs are uniquely identifying variants.</strong></p></td>
     </tr>
     <tr>
-      <th>ind.col</th>
-      <td><p>An optional vector of the column indices (SNPs) that are used.
-If not specified, all columns are used.<br />
-<strong>Don't use negative indices.</strong></p></td>
+      <th>y_row</th>
+      <td><p>A vector corresponding to <code>ind_row</code> and representing the trait
+with which to compute correlations.
+Missing values in either <code>ind_row</code> or <code>y_row</code> are removed.</p></td>
     </tr>
     <tr>
-      <th>nploidy</th>
-      <td><p>Number of trials, parameter of the binomial distribution.
-Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</p></td>
+      <th>ind_row</th>
+      <td><p>A vector of the row indices (individuals) that are used.
+Missing values in either <code>ind_row</code> or <code>y_row</code> are removed.
+<strong>Make sure to use indices corresponding to your training set only.</strong></p></td>
+    </tr>
+    <tr>
+      <th>bgi_dir</th>
+      <td><p>Directory of index files. Default is the same as <code>bgenfiles</code>.</p></td>
+    </tr>
+    <tr>
+      <th>ncores</th>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use <code>nb_cores()</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of MAFs, corresponding to <code>ind.col</code>.</p>
+    <p>A list of vectors of log10(p-values) corresponding to the statistic
+\(n \times r^2\), where r is the correlation of each variant with <code>y_row</code>.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>obj.bigsnp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAF</span>(<span class='no'>obj.bigsnp</span>$<span class='no'>genotypes</span>))</div><div class='output co'>#&gt;  num [1:4542] 0.342 0.206 0.237 0.185 0.456 ...</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -179,9 +186,7 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>
