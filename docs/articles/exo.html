@@ -181,52 +181,66 @@ ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdo
 <h3 class="hasAnchor">
 <a href="#population-structure-principal-component-analysis" class="anchor"></a>Population structure: Principal Component Analysis</h3>
 <p>Let us compute first principal components of the scaled genotype matrix:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute partial SVD using random projections</span>
-svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="kw">big_scale</span>(), <span class="dt">ncores =</span> <span class="kw">nb_cores</span>())
-<span class="co"># Scree plot</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute partial SVD (10 PCs by default) using random projections</span>
+<span class="co"># big_scale() computes means and standard deviations for scaling</span>
+svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="kw">big_scale</span>(), <span class="dt">ncores =</span> <span class="kw">nb_cores</span>())</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Scree plot</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-3-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-4-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)
 <span class="co"># Scores plot + color for population</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-3-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-4-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>, <span class="dt">scores =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">4</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-3-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-4-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Loadings (effects of each variable for each PC)</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"loadings"</span>, <span class="dt">loadings =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">coeff =</span> <span class="fl">0.4</span>)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-3-4.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-5-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <p>Looking at the loadings, we can see that the PCA captures some variation due to large correlation between variables. To learn more about this possible pitfall, please look at <a href="https://privefl.github.io/bigsnpr/articles/how-to-PCA.html">this vignette</a>.</p>
 </div>
 <div id="association-genome-wide-association-study-gwas" class="section level3">
 <h3 class="hasAnchor">
 <a href="#association-genome-wide-association-study-gwas" class="anchor"></a>Association: Genome-Wide Association Study (GWAS)</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Association of each variable of `G` with `y` (adjusting for some `covar`)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Association of each variable of `G` with `y` (adjusting for 10 PCs)</span>
 gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, <span class="dt">covar.train =</span> svd<span class="op">$</span>u, <span class="dt">ncores =</span> <span class="kw">nb_cores</span>())</code></pre></div>
 <pre><code>## For 1 columns, IRLS didn't converge; `glm` was used instead.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Histogram of p-values</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-4-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-6-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Q-Q plot</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas, <span class="dt">type =</span> <span class="st">"Q-Q"</span>) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>)  <span class="co"># snp_qq(gwas) + xlim(1, NA)</span></code></pre></div>
 <pre><code>## Warning: Removed 117557 rows containing missing values
 ## (geom_point).</code></pre>
-<p><img src="exo_files/figure-html/unnamed-chunk-4-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-6-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Manhattan plot</span>
 <span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(gwas, CHR, POS, <span class="dt">npoints =</span> <span class="fl">20e3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="dt">yintercept =</span> <span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log10</a></span>(<span class="fl">5e-8</span>), <span class="dt">color =</span> <span class="st">"red"</span>)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-4-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-6-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 </div>
-<div id="polygenic-risk-score-prs-with-penalized-logistic-regression" class="section level3">
+<div id="polygenic-risk-score-prs-with-penalized-logistic-regression-plr" class="section level3">
 <h3 class="hasAnchor">
-<a href="#polygenic-risk-score-prs-with-penalized-logistic-regression" class="anchor"></a>Polygenic Risk Score (PRS) with Penalized Logistic Regression</h3>
+<a href="#polygenic-risk-score-prs-with-penalized-logistic-regression-plr" class="anchor"></a>Polygenic Risk Score (PRS) with Penalized Logistic Regression (PLR)</h3>
+<p><span class="math display">\[\arg\!\min_{\beta_0,~\beta}(\lambda, \alpha)\left\{ \underbrace{ -\sum_{i=1}^n \left( y_i \log\left(p_i\right) + (1 - y_i) \log\left(1 - p_i\right) \right) }_\text{Loss function} + \underbrace{ \lambda \left((1-\alpha)\frac{1}{2}\|\beta\|_2^2 + \alpha \|\beta\|_1\right) }_\text{Penalization} \right\}\]</span></p>
+<p>where</p>
+<ul>
+<li><p><span class="math inline">\(p_i=1/\left(1+\exp\left(-(\beta_0 + x_i^T\beta)\right)\right)\)</span></p></li>
+<li><p><span class="math inline">\(x\)</span> is denoting the genotypes and covariables (e.g. principal components),</p></li>
+<li><p><span class="math inline">\(y\)</span> is the disease status we want to predict,</p></li>
+<li><p><span class="math inline">\(\lambda\)</span> is a regularization parameter that needs to be determined and</p></li>
+<li><p><span class="math inline">\(\alpha\)</span> determines relative parts of the regularization <span class="math inline">\(0 \le \alpha \le 1\)</span>.</p></li>
+</ul>
+<p><br></p>
+<p>If you want to learn more about our implementation of PLR, please look at <a href="https://doi.org/10.1101/403337">this paper</a>.</p>
+<p><br></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Penalized logistic regression for many alphas and lambdas</span>
 mod &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(G, y[ind.train], ind.train, <span class="dt">covar.train =</span> svd<span class="op">$</span>u[ind.train, ],
                     <span class="dt">K =</span> <span class="dv">5</span>, <span class="dt">alphas =</span> <span class="dv">10</span><span class="op">^</span>(<span class="op">-</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>)), <span class="dt">ncores =</span> <span class="kw">nb_cores</span>())</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot regularization paths</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot regularization paths (from high lambda to low lambda) </span>
+<span class="co"># for each validation set (color) and each alpha (facet)</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mod)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-6-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-8-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get summaries of models</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mod)</code></pre></div>
 <pre><code>## # A tibble: 5 x 6

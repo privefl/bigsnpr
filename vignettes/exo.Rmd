@@ -75,8 +75,12 @@ In the following section, I give some (scalable) solutions using using packages 
 Let us compute first principal components of the scaled genotype matrix:
 
 ```{r}
-# Compute partial SVD using random projections
+# Compute partial SVD (10 PCs by default) using random projections
+# big_scale() computes means and standard deviations for scaling
 svd <- big_randomSVD(G, big_scale(), ncores = nb_cores())
+```
+
+```{r}
 # Scree plot
 plot(svd)
 library(ggplot2)
@@ -85,6 +89,9 @@ plot(svd, type = "scores") +
   aes(color = pop)
 plot(svd, type = "scores", scores = 3:4) +
   aes(color = pop)
+```
+
+```{r, fig.asp=1.4}
 # Loadings (effects of each variable for each PC)
 plot(svd, type = "loadings", loadings = 1:10, coeff = 0.4)
 ```
@@ -94,7 +101,7 @@ Looking at the loadings, we can see that the PCA captures some variation due to 
 ### Association: Genome-Wide Association Study (GWAS)
 
 ```{r}
-# Association of each variable of `G` with `y` (adjusting for some `covar`)
+# Association of each variable of `G` with `y` (adjusting for 10 PCs)
 gwas <- big_univLogReg(G, y, covar.train = svd$u, ncores = nb_cores())
 # Histogram of p-values
 plot(gwas)
@@ -105,7 +112,27 @@ snp_manhattan(gwas, CHR, POS, npoints = 20e3) +
   geom_hline(yintercept = -log10(5e-8), color = "red")
 ```
 
-### Polygenic Risk Score (PRS) with Penalized Logistic Regression
+### Polygenic Risk Score (PRS) with Penalized Logistic Regression (PLR)
+
+$$\arg\!\min_{\beta_0,~\beta}(\lambda, \alpha)\left\{ \underbrace{ -\sum_{i=1}^n \left( y_i \log\left(p_i\right) + (1 - y_i) \log\left(1 - p_i\right) \right) }_\text{Loss function} + \underbrace{ \lambda \left((1-\alpha)\frac{1}{2}\|\beta\|_2^2 + \alpha \|\beta\|_1\right) }_\text{Penalization} \right\}$$
+
+where
+
+- $p_i=1/\left(1+\exp\left(-(\beta_0 + x_i^T\beta)\right)\right)$
+
+- $x$ is denoting the genotypes and covariables (e.g. principal components), 
+
+- $y$ is the disease status we want to predict, 
+
+- $\lambda$ is a regularization parameter that needs to be determined and
+
+- $\alpha$ determines relative parts of the regularization $0 \le \alpha \le 1$. 
+
+<br>
+
+If you want to learn more about our implementation of PLR, please look at [this paper](https://doi.org/10.1101/403337).
+
+<br>
 
 ```{r}
 # Penalized logistic regression for many alphas and lambdas
@@ -114,7 +141,8 @@ mod <- big_spLogReg(G, y[ind.train], ind.train, covar.train = svd$u[ind.train, ]
 ```
 
 ```{r}
-# Plot regularization paths
+# Plot regularization paths (from high lambda to low lambda) 
+# for each validation set (color) and each alpha (facet)
 plot(mod)
 # Get summaries of models
 summary(mod)
