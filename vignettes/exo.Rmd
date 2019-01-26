@@ -77,7 +77,7 @@ Let us compute first principal components of the scaled genotype matrix:
 ```{r}
 # Compute partial SVD (10 PCs by default) using random projections
 # big_scale() computes means and standard deviations for scaling
-svd <- big_randomSVD(G, big_scale(), ncores = nb_cores())
+svd <- big_randomSVD(G, big_scale(), ncores = NCORES)
 ```
 
 ```{r}
@@ -102,7 +102,7 @@ Looking at the loadings, we can see that the PCA captures some variation due to 
 
 ```{r}
 # Association of each variable of `G` with `y` (adjusting for 10 PCs)
-gwas <- big_univLogReg(G, y, covar.train = svd$u, ncores = nb_cores())
+gwas <- big_univLogReg(G, y, covar.train = svd$u, ncores = NCORES)
 # Histogram of p-values
 plot(gwas)
 # Q-Q plot
@@ -137,7 +137,7 @@ If you want to learn more about our implementation of PLR, please look at [this 
 ```{r}
 # Penalized logistic regression for many alphas and lambdas
 mod <- big_spLogReg(G, y[ind.train], ind.train, covar.train = svd$u[ind.train, ],
-                    K = 5, alphas = 10^(-(0:4)), ncores = nb_cores())
+                    K = 5, alphas = 10^(-(0:4)), ncores = NCORES)
 ```
 
 ```{r}
