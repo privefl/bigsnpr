@@ -182,7 +182,7 @@ ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdo
 <p>Let us compute first principal components of the scaled genotype matrix:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute partial SVD (10 PCs by default) using random projections</span>
 <span class="co"># big_scale() computes means and standard deviations for scaling</span>
-svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="kw">big_scale</span>(), <span class="dt">ncores =</span> <span class="kw">nb_cores</span>())</code></pre></div>
+svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="kw">big_scale</span>(), <span class="dt">ncores =</span> NCORES)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Scree plot</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd)</code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-4-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
@@ -203,7 +203,7 @@ svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span
 <h3 class="hasAnchor">
 <a href="#association-genome-wide-association-study-gwas" class="anchor"></a>Association: Genome-Wide Association Study (GWAS)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Association of each variable of `G` with `y` (adjusting for 10 PCs)</span>
-gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, <span class="dt">covar.train =</span> svd<span class="op">$</span>u, <span class="dt">ncores =</span> <span class="kw">nb_cores</span>())</code></pre></div>
+gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, <span class="dt">covar.train =</span> svd<span class="op">$</span>u, <span class="dt">ncores =</span> NCORES)</code></pre></div>
 <pre><code>## For 1 columns, IRLS didn't converge; `glm` was used instead.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Histogram of p-values</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas)</code></pre></div>
@@ -234,7 +234,7 @@ gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, 
 <p><br></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Penalized logistic regression for many alphas and lambdas</span>
 mod &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(G, y[ind.train], ind.train, <span class="dt">covar.train =</span> svd<span class="op">$</span>u[ind.train, ],
-                    <span class="dt">K =</span> <span class="dv">5</span>, <span class="dt">alphas =</span> <span class="dv">10</span><span class="op">^</span>(<span class="op">-</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>)), <span class="dt">ncores =</span> <span class="kw">nb_cores</span>())</code></pre></div>
+                    <span class="dt">K =</span> <span class="dv">5</span>, <span class="dt">alphas =</span> <span class="dv">10</span><span class="op">^</span>(<span class="op">-</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>)), <span class="dt">ncores =</span> NCORES)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot regularization paths (from high lambda to low lambda) </span>
 <span class="co"># for each validation set (color) and each alpha (facet)</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mod)</code></pre></div>
