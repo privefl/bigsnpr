@@ -39,7 +39,7 @@ Imports:
     stats,
     xgboost
 LinkingTo:
-    BH,
+    rmio,
     bigstatsr,
     Rcpp,
     RcppArmadillo
@@ -54,7 +54,7 @@ Suggests:
     RSQLite,
     spelling, 
     testthat
-Remotes: privefl/bigstatsr, bcm-uga/pcadapt
+Remotes: privefl/bigstatsr@penafactor, bcm-uga/pcadapt
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
