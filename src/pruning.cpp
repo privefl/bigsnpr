@@ -95,7 +95,7 @@ LogicalVector clumping2(Environment BM,
   for (k = 0; k < m; k++) {
 
     j0 = ordInd[k] - 1;
-    cont1 = cont2 = keep[j0] = true;
+    keep[j0] = cont1 = cont2 = true;
     pos_min = pos[j0] - size;
     pos_max = pos[j0] + size;
 

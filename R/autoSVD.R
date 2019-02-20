@@ -77,7 +77,7 @@ snp_autoSVD <- function(G,
                         k = 10,
                         roll.size = 50,
                         int.min.size = 20,
-                        is.size.in.bp = FALSE,
+                        is.size.in.bp = !is.null(infos.pos),
                         ncores = 1,
                         verbose = TRUE) {
 
