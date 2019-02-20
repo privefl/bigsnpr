@@ -19,7 +19,6 @@ bp
 bty
 cbind
 Chr
-CODE_IMPUTE_PRED
 Devlin
 diploidy
 doi
@@ -65,6 +64,7 @@ plinkQC
 PLoS
 Polygenic
 polymorphism
+PRED
 Preprint
 Privé
 PRS
