@@ -1,12 +1,15 @@
 ################################################################################
 
-#' LD pruning and clumping
+#' LD clumping
 #'
 #' For a `bigSNP`:
 #' - `snp_pruning`: LD pruning. Similar to "`--indep-pairwise (size+1) 1 thr.r2`"
-#'   in [PLINK](https://www.cog-genomics.org/plink/1.9/ld).
-#'   (`step` is fixed to 1).
-#' - `snp_clumping`: LD clumping.
+#'   in [PLINK](https://www.cog-genomics.org/plink/1.9/ld)
+#'   (`step` is fixed to 1). **This function is deprecated (see
+#' [this article](https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html)).**
+#' - `snp_clumping`: LD clumping. If you do not provide any statistic to rank
+#'   SNPs, it would use minor allele frequencies (MAFs), making clumping similar
+#'   to pruning.
 #' - `snp_indLRLDR`: Get SNP indices of long-range LD regions for the
 #'   human genome.
 #'
@@ -19,12 +22,13 @@
 #' means significantly different from 0, you must use `abs(S)` instead.\cr
 #' If not specified, the MAF is computed and used.
 #'
-#' @param size For one SNP, number of SNPs at its left and its right to
-#' be tested for being correlated with this particular SNP.
-#' This parameter should be adjusted with respect to the number of SNPs.
-#' The default are
+#' @param size For one SNP, window size around this SNP to compute correlations.
+#' The defaults are
 #' - `49` for pruning (as in PLINK),
-#' - `500` for clumping (I use this for a chip of 500K SNPs).
+#' - `100 / thr.r2` for clumping (0.2 -> 500; 0.1 -> 1000; 0.5 -> 200).
+#' If not providing `infos.pos` (`NULL`, the default), this is a window in
+#' number of SNPs, otherwise it is a window in kbp (genetic distance).
+#' I recommend you to provide the positions if available.
 #'
 #' @param exclude Vector of SNP indices to exclude anyway. For example,
 #' can be used to exclude long-range LD regions (see Price2008). Another use
@@ -39,76 +43,21 @@
 #' \url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}
 #'
 #' @return
-#' - `snp_pruning` & `snp_pruning`: SNP indices which are __kept__.
-#' - `snp_indLRLDR`: SNP indices to be used as (part of) the
-#' __`exclude`__ parameter of `snp_pruning` or `snp_clumping`.
-#'
-#' @details I recommend to use clumping rather than pruning. See
-#' [this article](https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html).
+#' - `snp_clumping()`: SNP indices that are __kept__.
+#' - `snp_indLRLDR()`: SNP indices to be used as (part of) the '__`exclude`__'
+#'   parameter of `snp_clumping()`.
 #'
 #' @example examples/example-pruning.R
 #'
-#' @name pruning-clumping
-NULL
-
-################################################################################
-
-clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
-                        thr.r2, exclude) {
-
-  # cache some computations
-  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr)
-  n <- length(ind.row)
-  denoX <- (n - 1) * stats$var
-
-  # statistic to prioritize SNPs
-  if (is.null(S)) {
-    af <- stats$sum / (2 * n)
-    S.chr <- pmin(af, 1 - af)
-  } else {
-    S.chr <- S[ind.chr]
-  }
-  ord.chr <- order(S.chr, decreasing = TRUE)
-  remain <- rep(TRUE, length(ind.chr))
-  remain[match(exclude, ind.chr)] <- FALSE
-
-  # main algo
-  if (is.size.in.bp) {
-    stopifnot(length(infos.pos) != 0) # TODO: better test
-    keep <- clumping2(G,
-                      rowInd = ind.row,
-                      colInd = ind.chr,
-                      ordInd = ord.chr,
-                      remain = remain,
-                      pos = c(infos.pos[ind.chr], .Machine$integer.max),
-                      sumX = stats$sum,
-                      denoX = denoX,
-                      size = size * 1000, # in bp
-                      thr = thr.r2)
-  } else {
-    keep <- clumping(G,
-                     rowInd = ind.row,
-                     colInd = ind.chr,
-                     ordInd = ord.chr,
-                     remain = remain,
-                     sumX = stats$sum,
-                     denoX = denoX,
-                     size = size,
-                     thr = thr.r2)
-  }
-
-  ind.chr[keep]
-}
-
 #' @export
-#' @rdname pruning-clumping
+#'
 snp_clumping <- function(G, infos.chr,
                          ind.row = rows_along(G),
                          S = NULL,
-                         size = 500,
-                         is.size.in.bp = FALSE,
-                         infos.pos = NULL,
                          thr.r2 = 0.2,
+                         size = 100 / thr.r2,
+                         infos.pos = NULL,
+                         is.size.in.bp = !is.null(infos.pos),
                          exclude = NULL,
                          ncores = 1) {
 
@@ -123,54 +72,55 @@ snp_clumping <- function(G, infos.chr,
 
 ################################################################################
 
-pruningChr <- function(G, ind.chr, ind.row, nploidy,
-                       size, is.size.in.bp, infos.pos, thr.r2, exclude) {
+clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
+                        thr.r2, exclude) {
+
+  ind.chr <- setdiff(ind.chr, exclude)
 
   # cache some computations
-  stats <- big_colstats(G, ind.row, ind.chr)
-  m.chr <- length(ind.chr)
-  keep <- rep(TRUE, m.chr)
-  keep[match(exclude, ind.chr)] <- FALSE
+  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr)
   n <- length(ind.row)
-  p <- stats$sum / (nploidy * n)
-  maf <- pmin(p, 1 - p)
   denoX <- (n - 1) * stats$var
-  # nulls <- which(denoX == 0)
-  # if (l <- length(nulls)) {
-  #   message2("Excluding %d monoallelic markers...", l)
-  #   keep[nulls] <- FALSE
-  # }
+
+  # statistic to prioritize SNPs
+  if (is.null(S)) {
+    af <- stats$sum / (2 * n)
+    S.chr <- pmin(af, 1 - af)
+  } else {
+    S.chr <- S[ind.chr]
+  }
+  ord.chr <- order(S.chr, decreasing = TRUE)
 
   # main algo
   if (is.size.in.bp) {
     stopifnot(length(infos.pos) != 0) # TODO: better test
-    keep <- pruning2(G,
+    keep <- clumping2(G,
+                      rowInd = ind.row,
+                      colInd = ind.chr,
+                      ordInd = ord.chr,
+                      pos = infos.pos[ind.chr],
+                      sumX = stats$sum,
+                      denoX = denoX,
+                      size = size * 1000, # in bp
+                      thr = thr.r2)
+  } else {
+    keep <- clumping(G,
                      rowInd = ind.row,
                      colInd = ind.chr,
-                     keep = keep,
-                     pos = c(infos.pos[ind.chr], .Machine$integer.max),
-                     mafX = maf,
+                     ordInd = ord.chr,
                      sumX = stats$sum,
                      denoX = denoX,
-                     size = size * 1000, # in bp
+                     size = size,
                      thr = thr.r2)
-  } else {
-    keep <- pruning(G,
-                    rowInd = ind.row,
-                    colInd = ind.chr,
-                    keep = keep,
-                    mafX = maf,
-                    sumX = stats$sum,
-                    denoX = denoX,
-                    size = size,
-                    thr = thr.r2)
   }
 
   ind.chr[keep]
 }
 
+################################################################################
+
 #' @export
-#' @rdname pruning-clumping
+#' @rdname snp_clumping
 snp_pruning <- function(G, infos.chr,
                         ind.row = rows_along(G),
                         size = 49,
@@ -183,9 +133,13 @@ snp_pruning <- function(G, infos.chr,
 
   check_args()
 
-  args <- as.list(environment())
+  warning2("Pruning is deprecated; using clumping (on MAF) instead..\n%s",
+           "See why there: https://goo.gl/Td5YYv.")
 
-  do.call(what = snp_split, args = c(args, FUN = pruningChr, combine = 'c'))
+  args <- c(as.list(environment()), list(S = NULL))
+  args[["nploidy"]] <- NULL
+
+  do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
 }
 
 ################################################################################
@@ -208,12 +162,12 @@ snp_pruning <- function(G, infos.chr,
 #'
 #' @import foreach
 #' @export
-#' @rdname pruning-clumping
+#' @rdname snp_clumping
 snp_indLRLDR <- function(infos.chr, infos.pos, LD.regions = LD.wiki34) {
 
   check_args()
 
-  foreach(ic = 1:nrow(LD.regions), .combine = 'c') %do% {
+  foreach(ic = rows_along(LD.regions), .combine = 'c') %do% {
     which((infos.chr == LD.regions[ic, "Chr"]) &
             (infos.pos >= LD.regions[ic, "Start"]) &
             (infos.pos <= LD.regions[ic, "Stop"]))

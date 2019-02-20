@@ -1,10 +1,18 @@
+## bigsnpr 0.10.0
+
+- For memory-mapping, now use *mio* instead of *boost*.
+
+- `snp_clumping()` (and `snp_autoSVD()`) now has a `size` that is inversely proportional to `thr.r2`.
+
+- `snp_pruning()` is deprecated (and will be removed someday); now always use `snp_clumping()`.
+
 ## bigsnpr 0.9.0
 
 - When reading bed files, switch reading of Os and 2s to be consistent with other software.
 
 ## bigsnpr 0.8.2
 
-- Add `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format.
+- Add `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.
 
 ## bigsnpr 0.8.1
 

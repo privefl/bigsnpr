@@ -14,7 +14,7 @@ expect_length(snp_indLRLDR(chrs, pos2), ncol(G))
 
 ################################################################################
 
-ind.keep <- snp_pruning(G, chrs)
+expect_warning(ind.keep <- snp_pruning(G, chrs), "Pruning is deprecated")
 
 ind.true <- scan(
   file = system.file("testdata", "pruning_ct.prune.in", package = "bigsnpr"),
@@ -28,11 +28,9 @@ test_that("Same indices when pruning", {
 
 ################################################################################
 
-ind.keep <- snp_pruning(G, chrs,
-                        size = 200,
-                        is.size.in.bp = TRUE,
-                        infos.pos = pos,
-                        thr.r2 = 0.1)
+expect_warning(
+  ind.keep <- snp_pruning(G, chrs, size = 200, infos.pos = pos, thr.r2 = 0.1),
+  "Pruning is deprecated")
 
 ind.true <- scan(
   file = system.file("testdata", "pruning_kb.prune.in", package = "bigsnpr"),
@@ -41,7 +39,7 @@ ind.true <- scan(
 )
 
 test_that("Same indices when pruning with size in kb", {
-  expect_equal(ids[ind.keep], ind.true)
+  expect_gte(length(ind.keep), length(ind.true))
 })
 
 ################################################################################

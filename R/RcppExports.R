@@ -17,20 +17,12 @@ linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
     .Call(`_bigsnpr_linRegPcadapt_cpp`, BM, U, rowInd, colInd)
 }
 
-clumping <- function(BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping`, BM, rowInd, colInd, ordInd, remain, sumX, denoX, size, thr)
+clumping <- function(BM, rowInd, colInd, ordInd, sumX, denoX, size, thr) {
+    .Call(`_bigsnpr_clumping`, BM, rowInd, colInd, ordInd, sumX, denoX, size, thr)
 }
 
-clumping2 <- function(BM, rowInd, colInd, ordInd, remain, pos, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping2`, BM, rowInd, colInd, ordInd, remain, pos, sumX, denoX, size, thr)
-}
-
-pruning <- function(BM, rowInd, colInd, keep, mafX, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_pruning`, BM, rowInd, colInd, keep, mafX, sumX, denoX, size, thr)
-}
-
-pruning2 <- function(BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_pruning2`, BM, rowInd, colInd, keep, pos, mafX, sumX, denoX, size, thr)
+clumping2 <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
+    .Call(`_bigsnpr_clumping2`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
 
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode) {
