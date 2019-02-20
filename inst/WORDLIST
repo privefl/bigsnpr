@@ -1,5 +1,6 @@
 advisor
 al
+AppVeyor
 Armitage
 Aschard
 Bazin
@@ -18,6 +19,7 @@ bp
 bty
 cbind
 Chr
+CODE_IMPUTE_PRED
 Devlin
 diploidy
 doi
@@ -26,6 +28,7 @@ Elsevier
 Elston
 et
 fam
+FBM
 Ferreira
 filebacked
 Filebacked
@@ -40,6 +43,7 @@ Hugues
 IBD
 iteratively
 Kathe
+kbp
 LD
 loadings
 Luu
@@ -49,6 +53,7 @@ mahalanobis
 Maller
 MAXL
 Mbp
+mio
 nb
 Neale
 parallelize
@@ -66,9 +71,12 @@ PRS
 QCed
 rds
 RDS
+README
 readRDS
 reproducibility
 Roeder
+rOpenSci
+rsnps
 scalable
 Shashaank
 snp
