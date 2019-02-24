@@ -1,6 +1,5 @@
 /******************************************************************************/
 
-#include <RcppArmadillo.h>
 #include <bigstatsr/BMCodeAcc.h>
 
 using namespace Rcpp;

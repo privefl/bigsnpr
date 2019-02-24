@@ -1,10 +1,18 @@
+## bigsnpr 0.10.0
+
+- For memory-mapping, now use *mio* instead of *boost*.
+
+- `snp_clumping()` (and `snp_autoSVD()`) now has a `size` that is inversely proportional to `thr.r2`.
+
+- `snp_pruning()` is deprecated (and will be removed someday); now always use `snp_clumping()`.
+
 ## bigsnpr 0.9.0
 
 - When reading bed files, switch reading of Os and 2s to be consistent with other software.
 
 ## bigsnpr 0.8.2
 
-- Add `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format.
+- Add `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.
 
 ## bigsnpr 0.8.1
 
@@ -34,7 +42,7 @@
 
 ## bigsnpr 0.2.7
 
-- Faster defaults + possibility to estimate correlations based on a subset of individuals for `snp_fastImpute`. Also store infos in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the *Bioinformatics* paper were `alpha = 0.02` and `size = 500` (instead of `1e-4` and `200` now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).
+- Faster defaults + possibility to estimate correlations based on a subset of individuals for `snp_fastImpute`. Also store information in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the *Bioinformatics* paper were `alpha = 0.02` and `size = 500` (instead of `1e-4` and `200` now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).
 
 ## bigsnpr 0.2.5
 

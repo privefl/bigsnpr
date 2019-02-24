@@ -73,11 +73,11 @@ snp_autoSVD <- function(G,
                         ind.col = cols_along(G),
                         fun.scaling = snp_scaleBinom(),
                         thr.r2 = 0.2,
-                        size = 500,
+                        size = 100 / thr.r2,
                         k = 10,
                         roll.size = 50,
                         int.min.size = 20,
-                        is.size.in.bp = FALSE,
+                        is.size.in.bp = !is.null(infos.pos),
                         ncores = 1,
                         verbose = TRUE) {
 

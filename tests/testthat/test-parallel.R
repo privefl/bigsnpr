@@ -20,8 +20,6 @@ expect_equal(order(POS), seq_along(POS))
 ################################################################################
 
 test_that("Sequential and Parallel", {
-  expect_equal(snp_pruning(G, CHR),
-               snp_pruning(G, CHR, ncores = 2))
 
   expect_equal(snp_clumping(G, CHR),
                snp_clumping(G, CHR, ncores = 2))

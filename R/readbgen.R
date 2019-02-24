@@ -33,7 +33,7 @@ snp_readBGI <- function(bgifile, snp_id) {
   if (!requireNamespace("dbplyr", quietly = TRUE))
     stop2("Please install package 'dbplyr'.")
 
-  # read variant info from index files
+  # read variant information from index files
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
   on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
   infos <- dplyr::tbl(db_con, "Variant") %>%
