@@ -8,11 +8,19 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
+inline unsigned char sample_from_prob(double p0, double p1) {
+  double first = ::unif_rand() * 255 - p0;
+  return((first < 0) ? 4 : ((first < p1) ? 5 : 6));
+}
+
+/******************************************************************************/
+
 void read_variant(std::ifstream * ptr_stream,
                   unsigned char * ptr_mat,
                   const IntegerVector& ind_row,
                   const RawVector& decode,
-                  std::vector<std::string>& ID) {
+                  std::vector<std::string>& ID,
+                  bool dosage) {
 
   std::string id   = read_string(ptr_stream);
   ID.push_back(id);
@@ -49,15 +57,17 @@ void read_variant(std::ifstream * ptr_stream,
   inflateEnd(&infstream);
 
   // read decompress "probabilities" and store them as rounded dosages
-  int i, i_pld, i_prblt, i_G, x, N = (D - 10) / 3;
-  for (i = 0, i_pld = 8, i_prblt = 10 + N; i_prblt < D; i++, i_pld++, i_prblt += 2) {
-    i_G = ind_row[i];
-    if (i_G >= 0) {
+  int N = (D - 10) / 3;
+  for (int i = 0, i_pld = 8, i_prblt = 10 + N; i_prblt < D; i++, i_pld++, i_prblt += 2) {
+    int i_G = ind_row[i];
+    if (i_G >= 0) {  // sample that we want to keep
       if (buffer_out[i_pld] >= 0x80) {
-        ptr_mat[i_G] = 208;  // missing
+        ptr_mat[i_G] = 3;  // missing
       } else {
-        x = 2 * buffer_out[i_prblt] + buffer_out[i_prblt + 1];
-        ptr_mat[i_G] = decode[x];
+        // probabilities * 255
+        unsigned char p0 = buffer_out[i_prblt];
+        unsigned char p1 = buffer_out[i_prblt + 1];
+        ptr_mat[i_G] = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
       }
     }
   }
@@ -71,7 +81,8 @@ CharacterVector read_bgen(std::string filename,
                           Environment BM,
                           IntegerVector ind_row,
                           IntegerVector ind_col,
-                          RawVector decode) {
+                          RawVector decode,
+                          bool dosage) {
 
   XPtr<FBM> xpBM = BM["address"];
   unsigned char* ptr_mat = static_cast<unsigned char*>(xpBM->matrix());
@@ -90,7 +101,7 @@ CharacterVector read_bgen(std::string filename,
     // if (k % 10000 == 0) Rcout << k << std::endl;
     stream.seekg(offsets[k]);
     j = ind_col[k] - 1;
-    read_variant(&stream, ptr_mat + n * j, ind_row, decode, ID);
+    read_variant(&stream, ptr_mat + n * j, ind_row, decode, ID, dosage);
   }
 
   stream.close();

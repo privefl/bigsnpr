@@ -88,10 +88,10 @@ snp_autoSVD <- function(G,
 
   # First clumping
   if (is.na(thr.r2)) {
-    printf2("Skipping clumping.\n")
+    printf2("\nSkipping clumping.\n")
     ind.keep <- ind.col
   } else {
-    printf2("Phase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
+    printf2("\nPhase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
     ind.keep <- snp_clumping(G, infos.chr,
                              ind.row = ind.row,
                              exclude = setdiff(cols_along(G), ind.col),

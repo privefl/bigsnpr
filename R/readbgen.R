@@ -80,6 +80,10 @@ snp_readBGI <- function(bgifile, snp_id) {
 #'   **Don't use negative indices.**
 #' @param ncores Number of cores used. Default doesn't use parallelism.
 #'   You may use [nb_cores()].
+#' @param read_as How to read BGEN probabilities? Currently implemented:
+#'   - as dosages (rounded to two decimal places), the default,
+#'   - as hard calls, randomly sampled based on those probabilities
+#'   (similar to PLINK option '`--hard-call-threshold random`').
 #'
 #' @return The path to the RDS file that stores the `bigSNP` object.
 #' Note that this function creates one other file which stores the values of
@@ -97,7 +101,10 @@ snp_readBGI <- function(bgifile, snp_id) {
 snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
                          ind_row = NULL,
                          bgi_dir = dirname(bgenfiles),
+                         read_as = c("dosage", "random"),
                          ncores = 1) {
+
+  dosage <- identical(match.arg(read_as), "dosage")
 
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)
@@ -156,7 +163,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
         BM = G,
         ind_row = ind.row,
         ind_col = ind.col,
-        decode = as.raw(207 - round(0:510 * 100 / 255))
+        decode = as.raw(207 - round(0:510 * 100 / 255)),
+        dosage = dosage
       )
 
       # Return variant info

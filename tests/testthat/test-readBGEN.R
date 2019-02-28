@@ -86,3 +86,21 @@ test_that("works with multiple files", {
 })
 
 ################################################################################
+
+test_that("read as random hard calls", {
+  G <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs)))$genotypes[]
+  all_G <- replicate(100, simplify = FALSE, {
+    test <- snp_readBGEN(bgen_file, tempfile(), list(IDs), read_as = "random")
+    snp_attach(test)$genotypes[]
+  })
+  expect_false(any(sapply(all_G[-1], identical, all_G[[1]])))
+  G_mean <- Reduce('+', all_G) / length(all_G)
+  # G[1:5, 1:5] - G_mean[1:5, 1:5]
+  # plot(G_mean, G, pch = 20, col = scales::alpha("black", 0.1))
+  expect_identical(G_mean[is.na(G)], rep(NA_real_, 2))
+  expect_equal(G_mean[!is.na(G)], G[!is.na(G)], tolerance = 0.1)
+  lm_coef <- stats::lm(G_mean[!is.na(G)] ~ G[!is.na(G)])$coef
+  expect_equal(unname(lm_coef), c(0, 1), tolerance = 1e-3)
+})
+
+################################################################################

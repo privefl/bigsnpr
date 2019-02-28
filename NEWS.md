@@ -1,3 +1,7 @@
+## bigsnpr 0.10.1
+
+- Add parameter `read_as` for `snp_readBGEN()`. It is now possible to sample BGEN probabilities as random hard calls using `read_as = "random"`. Default remains reading probabilities as dosages.
+
 ## bigsnpr 0.10.0
 
 - For memory-mapping, now use *mio* instead of *boost*.
@@ -12,7 +16,7 @@
 
 ## bigsnpr 0.8.2
 
-- Add `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.
+- Add function `snp_assocBGEN()` for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.
 
 ## bigsnpr 0.8.1
 

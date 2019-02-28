@@ -5,7 +5,8 @@
 \title{Read BGEN files into a "bigSNP"}
 \usage{
 snp_readBGEN(bgenfiles, backingfile, list_snp_id, ind_row = NULL,
-  bgi_dir = dirname(bgenfiles), ncores = 1)
+  bgi_dir = dirname(bgenfiles), read_as = c("dosage", "random"),
+  ncores = 1)
 }
 \arguments{
 \item{bgenfiles}{Character vector of paths to files with extension ".bgen".
@@ -24,6 +25,13 @@ are used. If not specified, all rows are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{bgi_dir}{Directory of index files. Default is the same as \code{bgenfiles}.}
+
+\item{read_as}{How to read BGEN probabilities? Currently implemented:
+\itemize{
+\item as dosages (rounded to two decimal places), the default,
+\item as hard calls, randomly sampled based on those probabilities
+(similar to PLINK option '\code{--hard-call-threshold random}').
+}}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \code{\link[=nb_cores]{nb_cores()}}.}

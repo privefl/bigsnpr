@@ -101,8 +101,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // read_bgen
-CharacterVector read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode);
-RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP) {
+CharacterVector read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode, bool dosage);
+RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP, SEXP dosageSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -112,7 +112,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< RawVector >::type decode(decodeSEXP);
-    rcpp_result_gen = Rcpp::wrap(read_bgen(filename, offsets, BM, ind_row, ind_col, decode));
+    Rcpp::traits::input_parameter< bool >::type dosage(dosageSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_bgen(filename, offsets, BM, ind_row, ind_col, decode, dosage));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -174,7 +175,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_linRegPcadapt_cpp", (DL_FUNC) &_bigsnpr_linRegPcadapt_cpp, 4},
     {"_bigsnpr_clumping", (DL_FUNC) &_bigsnpr_clumping, 8},
     {"_bigsnpr_clumping2", (DL_FUNC) &_bigsnpr_clumping2, 9},
-    {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 6},
+    {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 7},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},

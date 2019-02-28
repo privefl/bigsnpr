@@ -25,8 +25,8 @@ clumping2 <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
     .Call(`_bigsnpr_clumping2`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
 
-read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode) {
-    .Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_row, ind_col, decode)
+read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage) {
+    .Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_row, ind_col, decode, dosage)
 }
 
 readbina <- function(filename, BM, tab) {
