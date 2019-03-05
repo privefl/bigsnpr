@@ -17,9 +17,9 @@ expect_error(snp_autoSVD(G, CHR, POS), "only integers")
 expect_is(obj.svd <- snp_autoSVD(G, CHR), "big_SVD")
 expect_identical(attr(obj.svd, "lrldr"), LD.wiki34[0, 1:3])
 
-obj.svd2 <- snp_autoSVD(G, CHR, POS2, size = 5, is.size.in.bp = FALSE)
+obj.svd2 <- snp_autoSVD(G, CHR, size = 5)
 expect_gt(length(attr(obj.svd2, "subset")), length(attr(obj.svd, "subset")))
-obj.svd3 <- snp_autoSVD(G, CHR, POS2, size = 5, is.size.in.bp = TRUE)
+obj.svd3 <- snp_autoSVD(G, CHR, POS2, size = 5)
 expect_lt(length(attr(obj.svd3, "subset")), length(attr(obj.svd2, "subset")))
 
 obj.svd4 <- snp_autoSVD(G, CHR, roll.size = 0)

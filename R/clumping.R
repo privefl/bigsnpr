@@ -23,12 +23,10 @@
 #' If not specified, the MAF is computed and used.
 #'
 #' @param size For one SNP, window size around this SNP to compute correlations.
-#' The defaults are
-#' - `49` for pruning (as in PLINK),
-#' - `100 / thr.r2` for clumping (0.2 -> 500; 0.1 -> 1000; 0.5 -> 200).
+#' Default is `100 / thr.r2` for clumping (0.2 -> 500; 0.1 -> 1000; 0.5 -> 200).
 #' If not providing `infos.pos` (`NULL`, the default), this is a window in
 #' number of SNPs, otherwise it is a window in kbp (genetic distance).
-#' I recommend you to provide the positions if available.
+#' I recommend that you provide the positions if available.
 #'
 #' @param exclude Vector of SNP indices to exclude anyway. For example,
 #' can be used to exclude long-range LD regions (see Price2008). Another use
@@ -57,11 +55,14 @@ snp_clumping <- function(G, infos.chr,
                          thr.r2 = 0.2,
                          size = 100 / thr.r2,
                          infos.pos = NULL,
-                         is.size.in.bp = !is.null(infos.pos),
+                         is.size.in.bp = NULL,
                          exclude = NULL,
                          ncores = 1) {
 
   check_args()
+
+  if (!missing(is.size.in.bp))
+    warning2("Parameter 'is.size.in.bp' is deprecated.")
 
   args <- as.list(environment())
 
@@ -92,27 +93,18 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
   ord.chr <- order(S.chr, decreasing = TRUE)
 
   # main algo
-  if (is.size.in.bp) {
-    stopifnot(length(infos.pos) != 0) # TODO: better test
-    keep <- clumping2(G,
-                      rowInd = ind.row,
-                      colInd = ind.chr,
-                      ordInd = ord.chr,
-                      pos = infos.pos[ind.chr],
-                      sumX = stats$sum,
-                      denoX = denoX,
-                      size = size * 1000, # in bp
-                      thr = thr.r2)
-  } else {
-    keep <- clumping(G,
-                     rowInd = ind.row,
-                     colInd = ind.chr,
-                     ordInd = ord.chr,
-                     sumX = stats$sum,
-                     denoX = denoX,
-                     size = size,
-                     thr = thr.r2)
-  }
+  keep <- clumping2(
+    G,
+    rowInd = ind.row,
+    colInd = ind.chr,
+    ordInd = ord.chr,
+    pos    = `if`(is.null(infos.pos), 1000L * seq_along(ind.chr),
+                  infos.pos[ind.chr]),
+    sumX   = stats$sum,
+    denoX  = denoX,
+    size   = size * 1000L, # in bp
+    thr    = thr.r2
+  )
 
   ind.chr[keep]
 }

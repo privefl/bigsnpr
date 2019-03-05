@@ -7,7 +7,7 @@
 snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
   ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
   thr.r2 = 0.2, size = 100/thr.r2, k = 10, roll.size = 50,
-  int.min.size = 20, is.size.in.bp = !is.null(infos.pos), ncores = 1,
+  int.min.size = 20, is.size.in.bp = NULL, ncores = 1,
   verbose = TRUE)
 }
 \arguments{
@@ -37,8 +37,11 @@ for every column, to scale each of their elements such as followed:
 \item{thr.r2}{Threshold over the squared correlation between two SNPs.
 Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
 
-\item{size}{Radius of the window's size for the LD evaluations of the initial
-step of clumping. Default is \code{500}. See parameter \code{is.size.in.bp}.}
+\item{size}{For one SNP, window size around this SNP to compute correlations.
+Default is \code{100 / thr.r2} for clumping (0.2 -> 500; 0.1 -> 1000; 0.5 -> 200).
+If not providing \code{infos.pos} (\code{NULL}, the default), this is a window in
+number of SNPs, otherwise it is a window in kbp (genetic distance).
+I recommend that you provide the positions if available.}
 
 \item{k}{Number of singular vectors/values to compute. Default is \code{10}.
 \strong{This algorithm should be used to compute a few singular vectors/values.}}
@@ -49,8 +52,7 @@ Default is \code{50}.}
 \item{int.min.size}{Minimum number of consecutive outlier SNPs
 in order to be reported as long-range LD region. Default is \code{20}.}
 
-\item{is.size.in.bp}{Is the specified size is corresponding to
-kilo base-pairs. Default is \code{FALSE} (it is only SNP counts).}
+\item{is.size.in.bp}{Deprecated.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

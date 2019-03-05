@@ -5,6 +5,10 @@ r2_bgen <- function(filename, offsets, use_ind, decode, y) {
     .Call(`_bigsnpr_r2_bgen`, filename, offsets, use_ind, decode, y)
 }
 
+clumping2 <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
+    .Call(`_bigsnpr_clumping2`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
+}
+
 replaceSNP <- function(BM, BM2, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_replaceSNP`, BM, BM2, rowInd, colInd))
 }
@@ -15,14 +19,6 @@ corMat <- function(BM, rowInd, colInd, size, thr) {
 
 linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
     .Call(`_bigsnpr_linRegPcadapt_cpp`, BM, U, rowInd, colInd)
-}
-
-clumping <- function(BM, rowInd, colInd, ordInd, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping`, BM, rowInd, colInd, ordInd, sumX, denoX, size, thr)
-}
-
-clumping2 <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping2`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
 
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage) {

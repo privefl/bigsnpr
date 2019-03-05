@@ -39,11 +39,10 @@ getIntervals <- function(x, n = 2) {
 #' to make the SVD computations faster.
 #'
 #' @inheritParams bigsnpr-package
+#' @inheritParams snp_clumping
 #' @param fun.scaling A function that returns a named list of `mean` and `sd`
 #'   for every column, to scale each of their elements such as followed:
 #'   \deqn{\frac{X_{i,j} - mean_j}{sd_j}.} Default is `snp_scaleBinom()`.
-#' @param size Radius of the window's size for the LD evaluations of the initial
-#'   step of clumping. Default is `500`. See parameter `is.size.in.bp`.
 #' @param k Number of singular vectors/values to compute. Default is `10`.
 #'   **This algorithm should be used to compute a few singular vectors/values.**
 #' @param roll.size Radius of rolling windows to smooth log-p-values.
@@ -77,11 +76,14 @@ snp_autoSVD <- function(G,
                         k = 10,
                         roll.size = 50,
                         int.min.size = 20,
-                        is.size.in.bp = !is.null(infos.pos),
+                        is.size.in.bp = NULL,
                         ncores = 1,
                         verbose = TRUE) {
 
   check_args()
+
+  if (!missing(is.size.in.bp))
+    warning2("Parameter 'is.size.in.bp' is deprecated.")
 
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
@@ -97,7 +99,6 @@ snp_autoSVD <- function(G,
                              exclude = setdiff(cols_along(G), ind.col),
                              thr.r2 = thr.r2,
                              size = size,
-                             is.size.in.bp = is.size.in.bp,
                              infos.pos = infos.pos,
                              ncores = ncores)
     printf2("keep %d SNPs.\n", length(ind.keep))

@@ -24,7 +24,6 @@ expect_equal(pval, pval2, tolerance = 1e-4)
 ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
                          S = abs(gwas$score),
                          size = 250, # as PLINK default
-                         is.size.in.bp = TRUE,
                          infos.pos = test$map$physical.pos)
 ind.keep2 <- readRDS(system.file("testdata", "clumping.rds",
                                  package = "bigsnpr"))

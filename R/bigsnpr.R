@@ -34,8 +34,7 @@
 #' @param ncores Number of cores used. Default doesn't use parallelism.
 #'   You may use [nb_cores].
 #'
-#' @param is.size.in.bp Is the specified size is corresponding to
-#'   kilo base-pairs. Default is `FALSE` (it is only SNP counts).
+#' @param is.size.in.bp Deprecated.
 #'
 "_PACKAGE"
 

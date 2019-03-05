@@ -6,69 +6,6 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-// Clumping within a distance in number of SNPs
-// [[Rcpp::export]]
-LogicalVector clumping(Environment BM,
-                       const IntegerVector& rowInd,
-                       const IntegerVector& colInd,
-                       const IntegerVector& ordInd,
-                       const NumericVector& sumX,
-                       const NumericVector& denoX,
-                       int size,
-                       double thr) {
-
-  XPtr<FBM> xpBM = BM["address"];
-  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
-  int n = macc.nrow();
-  int m = macc.ncol();
-
-  double xySum, num, r2;
-  int i, j, j0, k, l;
-
-  LogicalVector keep(m, false);
-
-  for (k = 0; k < m; k++) {
-
-    j0 = ordInd[k] - 1;
-    keep[j0] = true;
-
-    for (l = 1; l <= size; l++) {  // within a window..
-
-      j = j0 + l;
-      if (j < m && keep[j]) {  // look only at already selected ones
-        xySum = 0;
-        for (i = 0; i < n; i++) {
-          xySum += macc(i, j) * macc(i, j0);
-        }
-        num = xySum - sumX[j] * sumX[j0] / n;
-        r2 = num * num / (denoX[j] * denoX[j0]);
-        if (r2 > thr) {
-          keep[j0] = false;  // prune
-          break;
-        }
-      }
-
-      j = j0 - l;
-      if (j >= 0 && keep[j]) {  // look only at already selected ones
-        xySum = 0;
-        for (i = 0; i < n; i++) {
-          xySum += macc(i, j) * macc(i, j0);
-        }
-        num = xySum - sumX[j] * sumX[j0] / n;
-        r2 = num * num / (denoX[j] * denoX[j0]);
-        if (r2 > thr) {
-          keep[j0] = false;  // prune
-          break;
-        }
-      }
-    }
-  }
-
-  return keep;
-}
-
-/******************************************************************************/
-
 // Clumping within a distance in bp
 // [[Rcpp::export]]
 LogicalVector clumping2(Environment BM,

@@ -1,3 +1,7 @@
+## bigsnpr 0.10.2
+
+- Parameter `is.size.in.bp` is deprecated.
+
 ## bigsnpr 0.10.1
 
 - Add parameter `read_as` for `snp_readBGEN()`. It is now possible to sample BGEN probabilities as random hard calls using `read_as = "random"`. Default remains reading probabilities as dosages.
