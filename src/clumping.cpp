@@ -8,15 +8,15 @@ using namespace Rcpp;
 
 // Clumping within a distance in bp
 // [[Rcpp::export]]
-LogicalVector clumping2(Environment BM,
-                        const IntegerVector& rowInd,
-                        const IntegerVector& colInd,
-                        const IntegerVector& ordInd,
-                        const IntegerVector& pos,
-                        const NumericVector& sumX,
-                        const NumericVector& denoX,
-                        int size,
-                        double thr) {
+LogicalVector clumping_chr(Environment BM,
+                           const IntegerVector& rowInd,
+                           const IntegerVector& colInd,
+                           const IntegerVector& ordInd,
+                           const IntegerVector& pos,
+                           const NumericVector& sumX,
+                           const NumericVector& denoX,
+                           int size,
+                           double thr) {
 
   XPtr<FBM> xpBM = BM["address"];
   SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
@@ -76,6 +76,91 @@ LogicalVector clumping2(Environment BM,
   }
 
   return keep;
+}
+
+/******************************************************************************/
+
+// Clumping within a distance in bp (with cached correlations)
+// [[Rcpp::export]]
+List clumping_chr_cached(Environment BM,
+                         arma::sp_mat sqcor,
+                         const IntegerVector& rowInd,
+                         const IntegerVector& colInd,
+                         const IntegerVector& ordInd,
+                         const IntegerVector& pos,
+                         const NumericVector& sumX,
+                         const NumericVector& denoX,
+                         int size,
+                         double thr) {
+
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
+  int n = macc.nrow();
+  int m = macc.ncol();
+  myassert((int)sqcor.n_rows == m, ERROR_DIM);
+  myassert((int)sqcor.n_cols == m, ERROR_DIM);
+
+  double xySum, num;
+  int i, j, j0, k, l, pos_min, pos_max;
+  bool cont1, cont2;
+
+  LogicalVector keep(m, false);
+
+  for (k = 0; k < m; k++) {
+
+    j0 = ordInd[k] - 1;
+    keep[j0] = true;
+    cont1 = cont2 = true;
+    pos_min = pos[j0] - size;
+    pos_max = pos[j0] + size;
+
+    for (l = 1; cont1 || cont2; l++) {
+
+      if (cont1) {
+        j = j0 + l;
+        cont1 = (j < m) && (pos[j] <= pos_max);  // within a window..
+        if (cont1 && keep[j]) {  // look only at already selected ones
+
+          if (sqcor(j, j0) == 0) {  // squared correlation not computed yet
+            xySum = 0;
+            for (i = 0; i < n; i++) {
+              xySum += macc(i, j) * macc(i, j0);
+            }
+            num = xySum - sumX[j] * sumX[j0] / n;
+            sqcor(j, j0) = num * num / (denoX[j] * denoX[j0]);
+          }
+
+          if (sqcor(j, j0) > thr) {
+            keep[j0] = false;  // prune
+            break;
+          }
+        }
+      }
+
+      if (cont2) {
+        j = j0 - l;
+        cont2 = (j >= 0) && (pos[j] >= pos_min);  // within a window..
+        if (cont2 && keep[j]) {  // look only at already selected ones
+
+          if (sqcor(j, j0) == 0) {  // squared correlation not computed yet
+            xySum = 0;
+            for (i = 0; i < n; i++) {
+              xySum += macc(i, j) * macc(i, j0);
+            }
+            num = xySum - sumX[j] * sumX[j0] / n;
+            sqcor(j, j0) = num * num / (denoX[j] * denoX[j0]);
+          }
+
+          if (sqcor(j, j0) > thr) {
+            keep[j0] = false;  // prune
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return List::create(keep, sqcor);
 }
 
 /******************************************************************************/

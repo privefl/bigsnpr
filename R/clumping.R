@@ -93,7 +93,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
   ord.chr <- order(S.chr, decreasing = TRUE)
 
   # main algo
-  keep <- clumping2(
+  keep <- clumping_chr(
     G,
     rowInd = ind.row,
     colInd = ind.chr,

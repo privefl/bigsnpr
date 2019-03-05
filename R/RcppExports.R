@@ -5,8 +5,12 @@ r2_bgen <- function(filename, offsets, use_ind, decode, y) {
     .Call(`_bigsnpr_r2_bgen`, filename, offsets, use_ind, decode, y)
 }
 
-clumping2 <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping2`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
+clumping_chr <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
+    .Call(`_bigsnpr_clumping_chr`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
+}
+
+clumping_chr_cached <- function(BM, sqcor, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
+    .Call(`_bigsnpr_clumping_chr_cached`, BM, sqcor, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
 
 replaceSNP <- function(BM, BM2, rowInd, colInd) {
