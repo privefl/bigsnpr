@@ -34,7 +34,7 @@ environment:
     BIGSNPR_CRAN: false
     R_CHECK_ARGS: "--no-manual --timings"
     R_VERSION: release
-#    PKGTYPE: source
+    PKGTYPE: source
 
 
 artifacts:
