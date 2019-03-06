@@ -94,11 +94,11 @@ snp_grid_clumping <- function(G, infos.chr, infos.pos, lpS,
 
   grid <- expand.grid(
     size    = BASE_SIZE_CLMP,
-    thr.imp = THR_IMP,
     thr.r2  = THR_CLMP,
+    thr.imp = THR_IMP,
     chr     = ALL_CHR
   )
-  grid$size <- as.integer(grid$size / grid.thr.r2)
+  grid$size <- as.integer(grid$size / grid$thr.r2)
 
   structure(all_keep, grid = grid)
 }
