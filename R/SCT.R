@@ -11,9 +11,8 @@ NULL
 #'
 #' @rdname SCT
 #' @export
-snp_grid_clumping <- function(G, infos.chr, infos.pos,
+snp_grid_clumping <- function(G, infos.chr, infos.pos, lpS,
                               ind.row = rows_along(G),
-                              lpS = NULL,
                               grid.thr.r2 = c(0.01, 0.05, 0.2, 0.8, 0.95),
                               grid.base.size = c(30, 100, 300),
                               infos.imp = NULL,
@@ -46,7 +45,7 @@ snp_grid_clumping <- function(G, infos.chr, infos.pos,
     # Init chromosome
     ind.chr   <- setdiff(which(infos.chr == chr), exclude)
     info.chr  <- infos.imp[ind.chr]
-    S.chr     <- S[ind.chr]
+    S.chr     <- lpS[ind.chr]
     pos.chr   <- infos.pos[ind.chr]
     stats     <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr)
     sumX.chr  <- stats$sum
@@ -127,7 +126,7 @@ snp_grid_PRS <- function(
   n_thr_pval <- length(grid.lpS.thr)
   grid_size <- length(all_keep[[1]]) * n_thr_pval
   scores_all_chr <- matrix(0, length(ind.row), grid_size)
-  scores_by_chr <- FBM(nrow(G), grid_size * length(all_keep),
+  scores_by_chr <- FBM(length(ind.row), length(all_keep) * grid_size,
                        backingfile = backingfile)$save()
 
   if (ncores == 1) {
