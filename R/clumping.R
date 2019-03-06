@@ -81,7 +81,6 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
   # cache some computations
   stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr)
   n <- length(ind.row)
-  denoX <- (n - 1) * stats$var
 
   # statistic to prioritize SNPs
   if (is.null(S)) {
@@ -90,18 +89,17 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
   } else {
     S.chr <- S[ind.chr]
   }
-  ord.chr <- order(S.chr, decreasing = TRUE)
 
   # main algo
   keep <- clumping_chr(
     G,
     rowInd = ind.row,
     colInd = ind.chr,
-    ordInd = ord.chr,
+    ordInd = order(S.chr, decreasing = TRUE),
     pos    = `if`(is.null(infos.pos), 1000L * seq_along(ind.chr),
                   infos.pos[ind.chr]),
     sumX   = stats$sum,
-    denoX  = denoX,
+    denoX  = (n - 1) * stats$var,
     size   = size * 1000L, # in bp
     thr    = thr.r2
   )
