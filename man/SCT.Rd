@@ -17,7 +17,7 @@ snp_grid_PRS(G, all_keep, betas, lpS, grid.lpS.thr = exp(seq(log(0.1),
   same_ref = rep(TRUE, length(betas)), backingfile = tempfile(),
   ncores = 1)
 
-snp_grid_stacking(multi_PRS, y.train, all_keep, covar.train = matrix(0,
+snp_grid_stacking(multi_PRS, y.train, covar.train = matrix(0,
   length(y.train), 0L), pf.covar = rep(0, ncol(covar.train)),
   alphas = 10^(-(0:4)), ncores = 1)
 }

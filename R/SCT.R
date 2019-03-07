@@ -166,7 +166,7 @@ snp_grid_PRS <- function(
 #'
 #' @rdname SCT
 #' @export
-snp_grid_stacking <- function(multi_PRS, y.train, all_keep,
+snp_grid_stacking <- function(multi_PRS, y.train,
                               covar.train = matrix(0, length(y.train), 0L),
                               pf.covar = rep(0, ncol(covar.train)),
                               alphas = 10^(-(0:4)),
@@ -195,7 +195,7 @@ snp_grid_stacking <- function(multi_PRS, y.train, all_keep,
   beta_stacking[ind_col] <- head(beta_best_mod, length(ind_col))
 
   ind_last_thr <- 1L + sapply(lpS, function(lp) sum(lp > lpS_thr))
-  coef <- rep(0, length(beta_stacking))
+  coef <- rep(0, length(beta_gwas))
   n_thr_pval <- length(lpS_thr)
   ind <- seq_len(n_thr_pval)
   for (ind.keep in unlist(all_keep, recursive = FALSE)) {
