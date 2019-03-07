@@ -4,17 +4,22 @@
 \alias{SCT}
 \alias{snp_grid_clumping}
 \alias{snp_grid_PRS}
+\alias{snp_grid_stacking}
 \title{Stacked C+T (SCT)}
 \usage{
-snp_grid_clumping(G, infos.chr, infos.pos, ind.row = rows_along(G),
-  lpS = NULL, grid.thr.r2 = c(0.01, 0.05, 0.2, 0.8, 0.95),
-  grid.base.size = c(30, 100, 300), infos.imp = NULL,
-  grid.thr.imp = NULL, exclude = NULL, ncores = 1)
+snp_grid_clumping(G, infos.chr, infos.pos, lpS, ind.row = rows_along(G),
+  grid.thr.r2 = c(0.01, 0.05, 0.2, 0.8, 0.95), grid.base.size = c(30,
+  100, 300), infos.imp = NULL, grid.thr.imp = NULL, exclude = NULL,
+  ncores = 1)
 
 snp_grid_PRS(G, all_keep, betas, lpS, grid.lpS.thr = exp(seq(log(0.1),
   log(0.999 * max(lpS)), length.out = 50)), ind.row = rows_along(G),
   same_ref = rep(TRUE, length(betas)), backingfile = tempfile(),
   ncores = 1)
+
+snp_grid_stacking(multi_PRS, y.train, all_keep, covar.train = matrix(0,
+  length(y.train), 0L), pf.covar = rep(0, ncol(covar.train)),
+  alphas = 10^(-(0:4)), ncores = 1)
 }
 \description{
 Polygenic Risk Scores for a grid of clumping and thresholding parameters.

@@ -150,7 +150,67 @@ snp_grid_PRS <- function(
     offset <- offset + grid_size
   }
 
-  structure(scores_all_chr, rds = scores_by_chr$rds)
+  structure(
+    scores_all_chr,
+    rds = scores_by_chr$rds,
+    lpS = lpS,
+    grid.lpS.thr = grid.lpS.thr,
+    betas = betas,
+    all_keep = all_keep
+  )
+}
+
+################################################################################
+
+#' Stacking over PRS grid
+#'
+#' @rdname SCT
+#' @export
+snp_grid_stacking <- function(multi_PRS, y.train, all_keep,
+                              covar.train = matrix(0, length(y.train), 0L),
+                              pf.covar = rep(0, ncol(covar.train)),
+                              alphas = 10^(-(0:4)),
+                              ncores = 1) {
+
+  rds       <- attr(multi_PRS, "rds")
+  lpS       <- attr(multi_PRS, "lpS")
+  lpS_thr   <- attr(multi_PRS, "grid.lpS.thr")
+  beta_gwas <- attr(multi_PRS, "betas")
+  all_keep  <- attr(multi_PRS, "all_keep")
+
+  # scores_all_chr <- multi_PRS
+  scores_by_chr <- big_attach(rds)
+
+  suppressWarnings(
+    mod <- `if`(length(unique(y.train)) == 2, big_spLogReg, big_spLinReg)(
+      scores_by_chr, y.train, alphas = alphas, ncores = ncores,
+      covar.train = covar.train, pf.covar = pf.covar
+    )
+  )
+
+  best_mod <- summary(mod, best.only = TRUE)
+  beta_best_mod <- best_mod$beta[[1]]
+  beta_stacking <- rep(0, ncol(scores_by_chr))
+  ind_col <- attr(mod, "ind.col")
+  beta_stacking[ind_col] <- head(beta_best_mod, length(ind_col))
+
+  ind_last_thr <- 1L + sapply(lpS, function(lp) sum(lp > lpS_thr))
+  coef <- rep(0, length(beta_stacking))
+  n_thr_pval <- length(lpS_thr)
+  ind <- seq_len(n_thr_pval)
+  for (ind.keep in unlist(all_keep, recursive = FALSE)) {
+    b <- beta_stacking[ind]
+    b2 <- c(0, cumsum(b))
+    coef[ind.keep] <- coef[ind.keep] + b2[ind_last_thr[ind.keep]]
+    ind <- ind + n_thr_pval
+  }
+
+  list(
+    intercept  = best_mod$intercept,
+    beta.G     = coef * beta_gwas,
+    beta.covar = tail(beta_best_mod, -length(ind_col)),
+    mod = mod
+  )
 }
 
 ################################################################################
