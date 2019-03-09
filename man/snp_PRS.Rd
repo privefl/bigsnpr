@@ -26,7 +26,7 @@ output of \link{snp_clumping}). Default doesn't clump.}
 reference allele is the same for G. Default is all \code{TRUE} (for example when
 you train the betas on the same dataset). Otherwise, use \link{same_ref}.}
 
-\item{lpS.keep}{Numeric vector of \code{-log10(p.value)} associated with
+\item{lpS.keep}{Numeric vector of \code{-log10(p-value)} associated with
 \code{betas.keep}. Default doesn't use thresholding.}
 
 \item{thr.list}{Threshold vector on \code{lpS.keep} at which SNPs are excluded if

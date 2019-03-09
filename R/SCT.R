@@ -2,6 +2,8 @@
 
 #' Stacked C+T (SCT)
 #'
+#' @inheritParams bigsnpr-package
+#'
 #' @name SCT
 NULL
 
@@ -9,21 +11,30 @@ NULL
 
 #' Grid of clumping
 #'
+#' @param grid.thr.r2 Grid of thresholds over the squared correlation between
+#'   two SNPs for clumping. Default is `c(0.01, 0.05, 0.1, 0.2, 0.5, 0.8, 0.95)`.
+#' @param grid.base.size Grid for base window sizes. Sizes are then computed as
+#'   `base.size / thr.r2` (in kb). Default is `c(50, 100, 200, 500)`.
+#' @param infos.imp Vector of imputation scores. Default is all `1` if you do
+#'   not provide it.
+#' @param grid.thr.imp Grid of thresholds over `infos.imp` (default is `1`), but
+#'   you should change it (e.g. `c(0.3, 0.6, 0.9, 0.95)`) if providing `infos.imp`.
+#' @param exclude Vector of SNP indices to exclude anyway.
+#'
 #' @rdname SCT
 #' @export
-snp_grid_clumping <- function(G, infos.chr, infos.pos, lpS,
-                              ind.row = rows_along(G),
-                              grid.thr.r2 = c(0.01, 0.05, 0.2, 0.8, 0.95),
-                              grid.base.size = c(30, 100, 300),
-                              infos.imp = NULL,
-                              grid.thr.imp = NULL,
-                              exclude = NULL,
-                              ncores = 1) {
+snp_grid_clumping <- function(
+  G, infos.chr, infos.pos, lpS,
+  ind.row = rows_along(G),
+  grid.thr.r2 = c(0.01, 0.05, 0.1, 0.2, 0.5, 0.8, 0.95),
+  grid.base.size = c(50, 100, 200, 500),
+  infos.imp = rep(1, ncol(G)),
+  grid.thr.imp = 1,
+  exclude = NULL,
+  ncores = 1
+) {
 
   check_args()
-
-  if (is.null(infos.imp)) infos.imp <- rep(1, ncol(G))
-  if (is.null(grid.thr.imp)) grid.thr.imp <- 1
   assert_lengths(cols_along(G), infos.chr, infos.pos, infos.imp)
 
   THR_IMP        <- sort(unique(grid.thr.imp))
@@ -105,23 +116,47 @@ snp_grid_clumping <- function(G, infos.chr, infos.pos, lpS,
 
 ################################################################################
 
+#' Sequence, evenly spaced on a logarithmic scale
+#'
+#' @inheritParams base::seq
+#'
+#' @examples
+#' seq_log(1, 1000, 4)
+#' seq_log(1, 100, 5)
+#'
+#' @export
+seq_log <- function(from, to, length.out) {
+  exp(seq(log(from), log(to), length.out = length.out))
+}
+
 #' Grid of PRS
 #'
 #' Polygenic Risk Scores for a grid of clumping and thresholding parameters.
+#'
+#' @param all_keep Output of `snp_grid_clumping()` (indices passing clumping).
+#' @param betas Numeric vector of weights (effect sizes from GWAS) associated
+#'   with each variant (column of `G`). If alleles are reversed, make sure to
+#'   multiply corresponding effects by `-1`.
+#' @param lpS Numeric vector of `-log10(p-value)` associated with `betas`.
+#' @param grid.lpS.thr Sequence of thresholds to apply on `lpS`.
+#'   You may want to make a grid evenly spaced on a logarithmic scale,
+#'   i.e. on a log-log scale for p-values.
+#' @param backingfile Prefix for backingfiles where to store scores of C+T.
+#'   As we typically use a large grid, this can result in a large matrix so that
+#'   we store it on disk. Default uses a temporary file.
 #'
 #' @rdname SCT
 #' @export
 snp_grid_PRS <- function(
   G, all_keep, betas, lpS,
-  grid.lpS.thr = exp(seq(log(0.1), log(0.999 * max(lpS)), length.out = 50)),
+  grid.lpS.thr = seq_log(0.1, 0.999 * max(lpS), 50),
   ind.row = rows_along(G),
-  same_ref = rep(TRUE, length(betas)),
   backingfile = tempfile(),
   ncores = 1
 ) {
 
   check_args()
-  assert_lengths(cols_along(G), betas, lpS, same_ref)
+  assert_lengths(cols_along(G), betas, lpS)
 
   n_thr_pval <- length(grid.lpS.thr)
   grid_size <- length(all_keep[[1]]) * n_thr_pval
@@ -141,7 +176,7 @@ snp_grid_PRS <- function(
     all_prs_chr <- foreach(ind.keep = ind_keep, .combine = "cbind") %dopar% {
       snp_PRS(
         G, ind.test = ind.row, ind.keep = ind.keep,
-        betas.keep = betas[ind.keep], same.keep = same_ref[ind.keep],
+        betas.keep = betas[ind.keep],
         lpS.keep = lpS[ind.keep], thr.list = grid.lpS.thr
       )
     }
@@ -163,6 +198,21 @@ snp_grid_PRS <- function(
 ################################################################################
 
 #' Stacking over PRS grid
+#'
+#' Stacking over many Polygenic Risk Scores, corresponding to a grid of many
+#' different parameters for clumping and thresholding.
+#'
+#' @param multi_PRS Output of `snp_grid_PRS()`. It stores the C+T scores for
+#'   all parameters of the grid, and the `rds` file for accessing C+T scores
+#'   stored on disk (that also have the dimension of chromosomes).
+#'   It also stores as attributes the input parameters `all_keep`, `betas`,
+#'   `lpS` and `grid.lpS.thr` that are also needed in this function.
+#' @param y.train Vector of phenotypes. If there are two levels (binary 0/1),
+#'   it uses [big_spLogReg()] for stacking, otherwise [big_spLinReg()].
+#' @param covar.train Matrix of covariates.
+#' @param pf.covar A multiplicative factor for the penalty applied to each
+#'   covariate. Default does not penalize covariates (factors equal to `0`).
+#' @param alphas Vector of values for grid-search. See [big_spLogReg()].
 #'
 #' @rdname SCT
 #' @export

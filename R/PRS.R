@@ -70,7 +70,7 @@ prodVecRev <- function(G, betas.col, same.col, ind.row, ind.col) {
 #' @param same.keep A logical vector associated with `betas.keep` whether the
 #'   reference allele is the same for G. Default is all `TRUE` (for example when
 #'   you train the betas on the same dataset). Otherwise, use [same_ref].
-#' @param lpS.keep Numeric vector of `-log10(p.value)` associated with
+#' @param lpS.keep Numeric vector of `-log10(p-value)` associated with
 #'   `betas.keep`. Default doesn't use thresholding.
 #' @param thr.list Threshold vector on `lpS.keep` at which SNPs are excluded if
 #'   they are not significant enough. Default doesn't use thresholding.

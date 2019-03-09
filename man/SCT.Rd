@@ -8,19 +8,86 @@
 \title{Stacked C+T (SCT)}
 \usage{
 snp_grid_clumping(G, infos.chr, infos.pos, lpS, ind.row = rows_along(G),
-  grid.thr.r2 = c(0.01, 0.05, 0.2, 0.8, 0.95), grid.base.size = c(30,
-  100, 300), infos.imp = NULL, grid.thr.imp = NULL, exclude = NULL,
-  ncores = 1)
+  grid.thr.r2 = c(0.01, 0.05, 0.1, 0.2, 0.5, 0.8, 0.95),
+  grid.base.size = c(50, 100, 200, 500), infos.imp = rep(1, ncol(G)),
+  grid.thr.imp = 1, exclude = NULL, ncores = 1)
 
-snp_grid_PRS(G, all_keep, betas, lpS, grid.lpS.thr = exp(seq(log(0.1),
-  log(0.999 * max(lpS)), length.out = 50)), ind.row = rows_along(G),
-  same_ref = rep(TRUE, length(betas)), backingfile = tempfile(),
+snp_grid_PRS(G, all_keep, betas, lpS, grid.lpS.thr = seq_log(0.1, 0.999 *
+  max(lpS), 50), ind.row = rows_along(G), backingfile = tempfile(),
   ncores = 1)
 
 snp_grid_stacking(multi_PRS, y.train, covar.train = matrix(0,
   length(y.train), 0L), pf.covar = rep(0, ncol(covar.train)),
   alphas = 10^(-(0:4)), ncores = 1)
 }
+\arguments{
+\item{G}{A \link[=FBM.code256-class]{FBM.code256}
+(typically \code{<bigSNP>$genotypes}).\cr
+\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
+
+\item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
+Typically \code{<bigSNP>$map$chromosome}.}
+
+\item{infos.pos}{Vector of integers specifying the physical position
+on a chromosome (in base pairs) of each SNP.\cr
+Typically \code{<bigSNP>$map$physical.pos}.}
+
+\item{lpS}{Numeric vector of \code{-log10(p-value)} associated with \code{betas}.}
+
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
+
+\item{grid.thr.r2}{Grid of thresholds over the squared correlation between
+two SNPs for clumping. Default is \code{c(0.01, 0.05, 0.1, 0.2, 0.5, 0.8, 0.95)}.}
+
+\item{grid.base.size}{Grid for base window sizes. Sizes are then computed as
+\code{base.size / thr.r2} (in kb). Default is \code{c(50, 100, 200, 500)}.}
+
+\item{infos.imp}{Vector of imputation scores. Default is all \code{1} if you do
+not provide it.}
+
+\item{grid.thr.imp}{Grid of thresholds over \code{infos.imp} (default is \code{1}), but
+you should change it (e.g. \code{c(0.3, 0.6, 0.9, 0.95)}) if providing \code{infos.imp}.}
+
+\item{exclude}{Vector of SNP indices to exclude anyway.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
+
+\item{all_keep}{Output of \code{snp_grid_clumping()} (indices passing clumping).}
+
+\item{betas}{Numeric vector of weights (effect sizes from GWAS) associated
+with each variant (column of \code{G}). If alleles are reversed, make sure to
+multiply corresponding effects by \code{-1}.}
+
+\item{grid.lpS.thr}{Sequence of thresholds to apply on \code{lpS}.
+You may want to make a grid evenly spaced on a logarithmic scale,
+i.e. on a log-log scale for p-values.}
+
+\item{backingfile}{Prefix for backingfiles where to store scores of C+T.
+As we typically use a large grid, this can result in a large matrix so that
+we store it on disk. Default uses a temporary file.}
+
+\item{multi_PRS}{Output of \code{snp_grid_PRS()}. It stores the C+T scores for
+all parameters of the grid, and the \code{rds} file for accessing C+T scores
+stored on disk (that also have the dimension of chromosomes).
+It also stores as attributes the input parameters \code{all_keep}, \code{betas},
+\code{lpS} and \code{grid.lpS.thr} that are also needed in this function.}
+
+\item{y.train}{Vector of phenotypes. If there are two levels (binary 0/1),
+it uses \code{\link[=big_spLogReg]{big_spLogReg()}} for stacking, otherwise \code{\link[=big_spLinReg]{big_spLinReg()}}.}
+
+\item{covar.train}{Matrix of covariates.}
+
+\item{pf.covar}{A multiplicative factor for the penalty applied to each
+covariate. Default does not penalize covariates (factors equal to \code{0}).}
+
+\item{alphas}{Vector of values for grid-search. See \code{\link[=big_spLogReg]{big_spLogReg()}}.}
+}
 \description{
 Polygenic Risk Scores for a grid of clumping and thresholding parameters.
+
+Stacking over many Polygenic Risk Scores, corresponding to a grid of many
+different parameters for clumping and thresholding.
 }
