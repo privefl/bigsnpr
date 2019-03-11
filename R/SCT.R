@@ -213,6 +213,7 @@ snp_grid_PRS <- function(
 #' @param pf.covar A multiplicative factor for the penalty applied to each
 #'   covariate. Default does not penalize covariates (factors equal to `0`).
 #' @param alphas Vector of values for grid-search. See [big_spLogReg()].
+#' @param ... Other parameters to be passed to [big_spLogReg()].
 #'
 #' @rdname SCT
 #' @export
@@ -220,7 +221,7 @@ snp_grid_stacking <- function(multi_PRS, y.train,
                               covar.train = matrix(0, length(y.train), 0L),
                               pf.covar = rep(0, ncol(covar.train)),
                               alphas = 10^(-(0:4)),
-                              ncores = 1) {
+                              ncores = 1, ...) {
 
   rds       <- attr(multi_PRS, "rds")
   lpS       <- attr(multi_PRS, "lpS")
@@ -234,7 +235,7 @@ snp_grid_stacking <- function(multi_PRS, y.train,
   suppressWarnings(
     mod <- `if`(length(unique(y.train)) == 2, big_spLogReg, big_spLinReg)(
       scores_by_chr, y.train, alphas = alphas, ncores = ncores,
-      covar.train = covar.train, pf.covar = pf.covar
+      covar.train = covar.train, pf.covar = pf.covar, ...
     )
   )
 

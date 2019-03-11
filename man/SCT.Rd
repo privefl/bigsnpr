@@ -18,7 +18,7 @@ snp_grid_PRS(G, all_keep, betas, lpS, grid.lpS.thr = seq_log(0.1, 0.999 *
 
 snp_grid_stacking(multi_PRS, y.train, covar.train = matrix(0,
   length(y.train), 0L), pf.covar = rep(0, ncol(covar.train)),
-  alphas = 10^(-(0:4)), ncores = 1)
+  alphas = 10^(-(0:4)), ncores = 1, ...)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
@@ -84,6 +84,8 @@ it uses \code{\link[=big_spLogReg]{big_spLogReg()}} for stacking, otherwise \cod
 covariate. Default does not penalize covariates (factors equal to \code{0}).}
 
 \item{alphas}{Vector of values for grid-search. See \code{\link[=big_spLogReg]{big_spLogReg()}}.}
+
+\item{...}{Other parameters to be passed to \code{\link[=big_spLogReg]{big_spLogReg()}}.}
 }
 \description{
 Polygenic Risk Scores for a grid of clumping and thresholding parameters.
