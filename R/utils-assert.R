@@ -3,6 +3,7 @@
 check_args <- function(...) {
 
   if (getOption("bigstatsr.check.args")) {
+
     args <- as.list(parent.frame())
 
     check <- c(
@@ -11,8 +12,8 @@ check_args <- function(...) {
         x           = "assert_class(x, 'bigSNP')",
         G           = "assert_class(G, 'FBM.code256'); assert_noNA(G)",
         Gna         = "assert_class(Gna, 'FBM.code256')",
-        infos.chr   = "assert_int(infos.chr); assert_pos(infos.chr)",
-        infos.pos   = "assert_int(infos.pos); assert_pos(infos.pos)",
+        infos.chr   = "assert_int(infos.chr); assert_pos(infos.chr); assert_sorted(infos.chr)",
+        infos.pos   = "assert_int(infos.pos); assert_pos(infos.pos); assert_sorted(infos.pos)",
         ncores      = "assert_cores(ncores)",
         ind.row     = "assert_int(ind.row);   assert_pos(ind.row)",
         ind.train   = "assert_int(ind.train); assert_pos(ind.train)",
@@ -64,6 +65,14 @@ assert_ext <- function(file, ext) {
 assert_type <- function(x, type)  {
   if (typeof(x) != type)
     stop2("'%s' is not of type '%s'.", deparse(substitute(x)), type)
+}
+
+################################################################################
+
+# SORT
+assert_sorted <- function(x)  {
+  if (is.unsorted(x))
+    stop2("'%s' is not sorted.", deparse(substitute(x)))
 }
 
 ################################################################################

@@ -10,7 +10,8 @@ pos <- test$map$physical.pos
 
 expect_length(snp_indLRLDR(chrs, pos), 0)
 pos2 <- round(runif(length(pos), 48060567, 52060567))
-expect_length(snp_indLRLDR(chrs, pos2), ncol(G))
+expect_error(snp_indLRLDR(chrs, pos2))
+expect_length(snp_indLRLDR(chrs, sort(pos2)), ncol(G))
 
 ################################################################################
 
