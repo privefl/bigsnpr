@@ -35,6 +35,9 @@ snp_pcadapt <- function(G, U.row,
                         ind.col = cols_along(G),
                         ncores = 1) {
 
+  if (!requireNamespace("robust", quietly = TRUE))
+    stop2("Please install package 'robust'.")
+
   if (is.null(dim(U.row))) U.row <- as.matrix(U.row)  # vector
   check_args()
 

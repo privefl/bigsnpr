@@ -26,18 +26,14 @@ Depends:
 Imports:
     data.table,
     doParallel,
-    dplyr,
     foreach, 
     ggplot2,
     gsubfn,
     magrittr,
     Matrix,
-    parallel, 
-    Rcpp, 
-    reshape2,
-    robust,
-    stats,
-    xgboost
+    parallel,
+    Rcpp,
+    stats
 LinkingTo:
     bigstatsr,
     Rcpp,
@@ -48,12 +44,15 @@ Suggests:
     bindata,
     covr,
     dbplyr,
+    dplyr,
     gaston,
     Hmisc,
     pcadapt (>= 4.0.3),
+    robust,
     RSQLite,
     spelling, 
-    testthat
+    testthat,
+    xgboost
 Remotes: privefl/bigstatsr, bcm-uga/pcadapt
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)

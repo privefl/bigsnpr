@@ -67,8 +67,8 @@ imputeChr <- function(Gna, infos.imp, ind.chr, alpha, size, p.train, n.cor, seed
           ind.col <- ind.chr[which(corr[, i] != 0)]
           if (length(ind.col) < 5L)
             ind.col <- intersect(setdiff(-size:size + snp, snp), ind.chr)
-                    
-          bst <- xgboost(
+
+          bst <- xgboost::xgboost(
             data = X2[ind.train, ind.col, drop = FALSE],
             label = X.label[ind.train],
             objective = "binary:logistic",
@@ -119,7 +119,7 @@ imputeChr <- function(Gna, infos.imp, ind.chr, alpha, size, p.train, n.cor, seed
 #' - the estimated proportion of imputation errors by SNP (second row).
 #' @export
 #'
-#' @import Matrix xgboost
+#' @import Matrix
 #'
 #' @example examples/example-impute.R
 #'
@@ -130,6 +130,9 @@ snp_fastImpute <- function(Gna, infos.chr,
                            n.cor = nrow(Gna),
                            seed = NA,
                            ncores = 1) {
+
+  if (!requireNamespace("xgboost", quietly = TRUE))
+    stop2("Please install package 'xgboost'.")
 
   check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
 
