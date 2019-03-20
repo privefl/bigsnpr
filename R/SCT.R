@@ -63,6 +63,7 @@ snp_grid_clumping <- function(
     denoX.chr <- (length(ind.row) - 1) * stats$var
     spcor.chr <- sparseMatrix(i = integer(), j = integer(), x = double(),
                               dims = rep(length(ind.chr), 2))
+    assert_sorted(pos.chr)
 
     for (thr.imp in THR_IMP) {
 
@@ -70,7 +71,7 @@ snp_grid_clumping <- function(
       ind <- which(info.chr >= thr.imp)
 
       ind.chr   <- ind.chr[ind]
-      spcor.chr <- spcor.chr[ind, ind]
+      spcor.chr <- spcor.chr[ind, ind, drop = FALSE]
       info.chr  <- info.chr[ind]
       pos.chr   <- pos.chr[ind]
       S.chr     <- S.chr[ind]

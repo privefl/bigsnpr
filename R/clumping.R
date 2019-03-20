@@ -89,6 +89,8 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
   } else {
     S.chr <- S[ind.chr]
   }
+  pos.chr <- `if`(is.null(infos.pos), 1000L * seq_along(ind.chr), infos.pos[ind.chr])
+  assert_sorted(pos.chr)
 
   # main algo
   keep <- clumping_chr(
@@ -96,8 +98,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, is.size.in.bp, infos.pos,
     rowInd = ind.row,
     colInd = ind.chr,
     ordInd = order(S.chr, decreasing = TRUE),
-    pos    = `if`(is.null(infos.pos), 1000L * seq_along(ind.chr),
-                  infos.pos[ind.chr]),
+    pos    = pos.chr,
     sumX   = stats$sum,
     denoX  = (n - 1) * stats$var,
     size   = size * 1000L, # in bp

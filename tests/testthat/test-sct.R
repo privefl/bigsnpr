@@ -15,6 +15,11 @@ y <- sample(0:1, size = nrow(G), replace = TRUE)
 
 ################################################################################
 
+expect_error(snp_grid_clumping(G, CHR, sample(POS), lpS = lpval),
+             "'pos.chr' is not sorted.")
+expect_length(snp_grid_clumping(G, c(CHR[-1], 22), c(POS[-1], 1), lpS = lpval,
+                                grid.thr.r2 = 0.2, grid.base.size = 50), 3)
+
 all_keep <- snp_grid_clumping(G, CHR, POS, lpS = lpval, ncores = 2,
                               grid.thr.r2 = c(0.05, 0.2, 0.8),
                               grid.base.size = c(100, 200))
