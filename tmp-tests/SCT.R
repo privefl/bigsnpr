@@ -144,6 +144,8 @@ seq_log <- function(from, to, length.out) {
 #' @param backingfile Prefix for backingfiles where to store scores of C+T.
 #'   As we typically use a large grid, this can result in a large matrix so that
 #'   we store it on disk. Default uses a temporary file.
+#' @param type Type of backingfile values. Either `"float"` (the default) or
+#'   `"double"`. Using `"float"` requires half disk space.
 #'
 #' @rdname SCT
 #' @export
@@ -152,6 +154,7 @@ snp_grid_PRS <- function(
   grid.lpS.thr = seq_log(0.1, 0.999 * max(lpS), 50),
   ind.row = rows_along(G),
   backingfile = tempfile(),
+  type = c("float", "double"),
   ncores = 1
 ) {
 
@@ -161,7 +164,7 @@ snp_grid_PRS <- function(
   n_thr_pval <- length(grid.lpS.thr)
   scores_all_chr <- rep(list(0), length(all_keep[[1]]))
   scores_by_chr <- FBM(length(ind.row), sum(lengths(all_keep)) * n_thr_pval,
-                       backingfile = backingfile)$save()
+                       backingfile = backingfile, type = match.arg(type))$save()
 
   if (ncores == 1) {
     registerDoSEQ()
