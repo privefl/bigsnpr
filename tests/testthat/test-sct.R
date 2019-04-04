@@ -36,27 +36,30 @@ all_keep2 <- lapply(rows_along(grid), function(i) {
 ################################################################################
 
 multi_PRS <- snp_grid_PRS(G, all_keep, betas, lpval, grid.lpS.thr = 0:5, ncores = 2)
+expect_identical(typeof(multi_PRS), "float")
 
 multi_PRS2 <- lapply(all_keep2, function(ind.keep) {
   snp_PRS(G, betas[ind.keep], ind.keep = ind.keep, lpS.keep = lpval[ind.keep],
           thr.list = 0:5)
 })
-expect_equal(do.call("cbind", multi_PRS2), multi_PRS, check.attributes = FALSE)
+expect_equal(do.call("cbind", multi_PRS2),
+             multi_PRS[, 1:36] + multi_PRS[, 37:72],
+             check.attributes = FALSE, tolerance = 1e-7)
 
 multi_PRS3 <- lapply(unlist(all_keep, recursive = FALSE), function(ind.keep) {
   snp_PRS(G, betas[ind.keep], ind.keep = ind.keep, lpS.keep = lpval[ind.keep],
           thr.list = 0:5)
 })
-expect_equal(do.call("cbind", multi_PRS3), big_attach(attr(multi_PRS, "rds"))[],
-             check.attributes = FALSE)
+expect_equal(do.call("cbind", multi_PRS3), multi_PRS[],
+             check.attributes = FALSE, tolerance = 1e-7)
 
 ################################################################################
 
 new_betas <- snp_grid_stacking(multi_PRS, y, alphas = 1e-3, ncores = 2)
 expect_length(new_betas$beta.covar, 0)
 expect_equal(
-  predict(new_betas$mod, big_attach(attr(multi_PRS, "rds")), proba = FALSE),
+  predict(new_betas$mod, multi_PRS, proba = FALSE),
   new_betas$intercept + big_prodVec(G, new_betas$beta.G),
-  check.attributes = FALSE)
+  check.attributes = FALSE, tolerance = 1e-7)
 
 ################################################################################

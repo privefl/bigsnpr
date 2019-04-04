@@ -14,7 +14,7 @@ snp_grid_clumping(G, infos.chr, infos.pos, lpS, ind.row = rows_along(G),
 
 snp_grid_PRS(G, all_keep, betas, lpS, grid.lpS.thr = seq_log(0.1, 0.999 *
   max(lpS), 50), ind.row = rows_along(G), backingfile = tempfile(),
-  ncores = 1)
+  type = c("float", "double"), ncores = 1)
 
 snp_grid_stacking(multi_PRS, y.train, covar.train = matrix(0,
   length(y.train), 0L), pf.covar = rep(0, ncol(covar.train)),
@@ -68,6 +68,9 @@ i.e. on a log-log scale for p-values.}
 \item{backingfile}{Prefix for backingfiles where to store scores of C+T.
 As we typically use a large grid, this can result in a large matrix so that
 we store it on disk. Default uses a temporary file.}
+
+\item{type}{Type of backingfile values. Either \code{"float"} (the default) or
+\code{"double"}. Using \code{"float"} requires half disk space.}
 
 \item{multi_PRS}{Output of \code{snp_grid_PRS()}. It stores the C+T scores for
 all parameters of the grid, and the \code{rds} file for accessing C+T scores

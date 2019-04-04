@@ -144,6 +144,8 @@ seq_log <- function(from, to, length.out) {
 #' @param backingfile Prefix for backingfiles where to store scores of C+T.
 #'   As we typically use a large grid, this can result in a large matrix so that
 #'   we store it on disk. Default uses a temporary file.
+#' @param type Type of backingfile values. Either `"float"` (the default) or
+#'   `"double"`. Using `"float"` requires half disk space.
 #'
 #' @rdname SCT
 #' @export
@@ -152,17 +154,19 @@ snp_grid_PRS <- function(
   grid.lpS.thr = seq_log(0.1, 0.999 * max(lpS), 50),
   ind.row = rows_along(G),
   backingfile = tempfile(),
+  type = c("float", "double"),
   ncores = 1
 ) {
 
   check_args()
   assert_lengths(cols_along(G), betas, lpS)
 
-  n_thr_pval <- length(grid.lpS.thr)
-  grid_size <- length(all_keep[[1]]) * n_thr_pval
-  scores_all_chr <- matrix(0, length(ind.row), grid_size)
-  scores_by_chr <- FBM(length(ind.row), length(all_keep) * grid_size,
-                       backingfile = backingfile)$save()
+  all_keep2 <- unlist(all_keep, recursive = FALSE)
+  n_thr <- length(grid.lpS.thr)
+  multi_PRS <- FBM(nrow = length(ind.row),
+                   ncol = length(all_keep2) * n_thr,
+                   backingfile = backingfile,
+                   type = match.arg(type))
 
   if (ncores == 1) {
     registerDoSEQ()
@@ -171,27 +175,24 @@ snp_grid_PRS <- function(
     doParallel::registerDoParallel(cl)
     on.exit(parallel::stopCluster(cl), add = TRUE)
   }
-  offset <- 0L
-  for (ind_keep in all_keep) {
-    all_prs_chr <- foreach(ind.keep = ind_keep, .combine = "cbind") %dopar% {
-      snp_PRS(
-        G, ind.test = ind.row, ind.keep = ind.keep,
-        betas.keep = betas[ind.keep],
-        lpS.keep = lpS[ind.keep], thr.list = grid.lpS.thr
-      )
-    }
-    scores_all_chr <- scores_all_chr + all_prs_chr
-    scores_by_chr[, offset + seq_len(grid_size)] <- all_prs_chr
-    offset <- offset + grid_size
+  foreach(ic = seq_along(all_keep2)) %dopar% {
+    ind.keep <- all_keep2[[ic]]
+    prs <- snp_PRS(
+      G, ind.test = ind.row, ind.keep = ind.keep,
+      betas.keep = betas[ind.keep],
+      lpS.keep = lpS[ind.keep], thr.list = grid.lpS.thr
+    )
+    without_downcast_warning(
+      multi_PRS[, (ic - 1L) * n_thr + seq_len(n_thr)] <- prs)
+    NULL
   }
 
   structure(
-    scores_all_chr,
-    rds = scores_by_chr$rds,
+    multi_PRS$save(),
     lpS = lpS,
     grid.lpS.thr = grid.lpS.thr,
     betas = betas,
-    all_keep = all_keep
+    all_keep2 = all_keep2
   )
 }
 
@@ -223,25 +224,21 @@ snp_grid_stacking <- function(multi_PRS, y.train,
                               alphas = 10^(-(0:4)),
                               ncores = 1, ...) {
 
-  rds       <- attr(multi_PRS, "rds")
   lpS       <- attr(multi_PRS, "lpS")
   lpS_thr   <- attr(multi_PRS, "grid.lpS.thr")
   beta_gwas <- attr(multi_PRS, "betas")
-  all_keep  <- attr(multi_PRS, "all_keep")
-
-  # scores_all_chr <- multi_PRS
-  scores_by_chr <- big_attach(rds)
+  all_keep2 <- attr(multi_PRS, "all_keep2")
 
   suppressWarnings(
     mod <- `if`(length(unique(y.train)) == 2, big_spLogReg, big_spLinReg)(
-      scores_by_chr, y.train, alphas = alphas, ncores = ncores,
+      multi_PRS, y.train, alphas = alphas, ncores = ncores,
       covar.train = covar.train, pf.covar = pf.covar, ...
     )
   )
 
   best_mod <- summary(mod, best.only = TRUE)
   beta_best_mod <- best_mod$beta[[1]]
-  beta_stacking <- rep(0, ncol(scores_by_chr))
+  beta_stacking <- rep(0, ncol(multi_PRS))
   ind_col <- attr(mod, "ind.col")
   beta_stacking[ind_col] <- head(beta_best_mod, length(ind_col))
 
@@ -249,7 +246,7 @@ snp_grid_stacking <- function(multi_PRS, y.train,
   coef <- rep(0, length(beta_gwas))
   n_thr_pval <- length(lpS_thr)
   ind <- seq_len(n_thr_pval)
-  for (ind.keep in unlist(all_keep, recursive = FALSE)) {
+  for (ind.keep in all_keep2) {
     b <- beta_stacking[ind]
     b2 <- c(0, cumsum(b))
     coef[ind.keep] <- coef[ind.keep] + b2[ind_last_thr[ind.keep]]
