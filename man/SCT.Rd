@@ -12,13 +12,13 @@ snp_grid_clumping(G, infos.chr, infos.pos, lpS, ind.row = rows_along(G),
   grid.base.size = c(50, 100, 200, 500), infos.imp = rep(1, ncol(G)),
   grid.thr.imp = 1, exclude = NULL, ncores = 1)
 
-snp_grid_PRS(G, all_keep, betas, lpS, grid.lpS.thr = seq_log(0.1, 0.999 *
-  max(lpS), 50), ind.row = rows_along(G), backingfile = tempfile(),
+snp_grid_PRS(G, all_keep, betas, lpS, n_thr_lpS = 30,
+  grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS)), max(lpS),
+  n_thr_lpS), ind.row = rows_along(G), backingfile = tempfile(),
   type = c("float", "double"), ncores = 1)
 
-snp_grid_stacking(multi_PRS, y.train, covar.train = matrix(0,
-  length(y.train), 0L), pf.covar = rep(0, ncol(covar.train)),
-  alphas = 10^(-(0:4)), ncores = 1, ...)
+snp_grid_stacking(multi_PRS, y.train, alphas = c(1, 0.01, 1e-04),
+  ncores = 1, ...)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
@@ -61,9 +61,11 @@ You may use \link{nb_cores}.}
 with each variant (column of \code{G}). If alleles are reversed, make sure to
 multiply corresponding effects by \code{-1}.}
 
+\item{n_thr_lpS}{Length for default \code{grid.lpS.thr}. Default is \code{30}.}
+
 \item{grid.lpS.thr}{Sequence of thresholds to apply on \code{lpS}.
-You may want to make a grid evenly spaced on a logarithmic scale,
-i.e. on a log-log scale for p-values.}
+Default is a grid (of length \code{n_thr_lpS}) evenly spaced on a logarithmic
+scale, i.e. on a log-log scale for p-values.}
 
 \item{backingfile}{Prefix for backingfiles where to store scores of C+T.
 As we typically use a large grid, this can result in a large matrix so that
@@ -72,23 +74,23 @@ we store it on disk. Default uses a temporary file.}
 \item{type}{Type of backingfile values. Either \code{"float"} (the default) or
 \code{"double"}. Using \code{"float"} requires half disk space.}
 
-\item{multi_PRS}{Output of \code{snp_grid_PRS()}. It stores the C+T scores for
-all parameters of the grid, and the \code{rds} file for accessing C+T scores
-stored on disk (that also have the dimension of chromosomes).
-It also stores as attributes the input parameters \code{all_keep}, \code{betas},
-\code{lpS} and \code{grid.lpS.thr} that are also needed in this function.}
+\item{multi_PRS}{Output of \code{snp_grid_PRS()}.}
 
 \item{y.train}{Vector of phenotypes. If there are two levels (binary 0/1),
 it uses \code{\link[=big_spLogReg]{big_spLogReg()}} for stacking, otherwise \code{\link[=big_spLinReg]{big_spLinReg()}}.}
 
-\item{covar.train}{Matrix of covariates.}
+\item{alphas}{Vector of values for grid-search. See \code{\link[=big_spLogReg]{big_spLogReg()}}.
+Default for this function is \code{c(1, 0.01, 0.0001)}.}
 
-\item{pf.covar}{A multiplicative factor for the penalty applied to each
-covariate. Default does not penalize covariates (factors equal to \code{0}).}
-
-\item{alphas}{Vector of values for grid-search. See \code{\link[=big_spLogReg]{big_spLogReg()}}.}
-
-\item{...}{Other parameters to be passed to \code{\link[=big_spLogReg]{big_spLogReg()}}.}
+\item{...}{Other parameters to be passed to \code{\link[=big_spLogReg]{big_spLogReg()}}.
+For example, using \code{covar.train}, you can add covariates in the model with
+all C+T scores. You can also use \code{pf.covar} to unpenalize these covariates.}
+}
+\value{
+\code{snp_grid_PRS()}: An \code{FBM} (matrix on disk) that stores the C+T scores
+for all parameters of the grid (and for each chromosome separately).
+It also stores as attributes the input parameters \code{all_keep}, \code{betas},
+\code{lpS} and \code{grid.lpS.thr} that are also needed in \code{snp_grid_stacking()}.
 }
 \description{
 Polygenic Risk Scores for a grid of clumping and thresholding parameters.

@@ -35,8 +35,16 @@ all_keep2 <- lapply(rows_along(grid), function(i) {
 
 ################################################################################
 
+expect_error(snp_grid_PRS(G, all_keep, betas, lpval, type = "integer"))
+
+multi_PRS <- snp_grid_PRS(G, all_keep, betas, lpval, type = "double",
+                          n_thr_lpS = (n <- sample(10:30, 1)))
+expect_identical(typeof(multi_PRS), "double")
+expect_equal(dim(multi_PRS), c(nrow(G), n * sum(lengths(all_keep))))
+
 multi_PRS <- snp_grid_PRS(G, all_keep, betas, lpval, grid.lpS.thr = 0:5, ncores = 2)
 expect_identical(typeof(multi_PRS), "float")
+expect_equal(dim(multi_PRS), c(nrow(G), 6 * sum(lengths(all_keep))))
 
 multi_PRS2 <- lapply(all_keep2, function(ind.keep) {
   snp_PRS(G, betas[ind.keep], ind.keep = ind.keep, lpS.keep = lpval[ind.keep],
