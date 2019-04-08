@@ -12,7 +12,7 @@ snp_grid_clumping(G, infos.chr, infos.pos, lpS, ind.row = rows_along(G),
   grid.base.size = c(50, 100, 200, 500), infos.imp = rep(1, ncol(G)),
   grid.thr.imp = 1, exclude = NULL, ncores = 1)
 
-snp_grid_PRS(G, all_keep, betas, lpS, n_thr_lpS = 30,
+snp_grid_PRS(G, all_keep, betas, lpS, n_thr_lpS = 50,
   grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS)), max(lpS),
   n_thr_lpS), ind.row = rows_along(G), backingfile = tempfile(),
   type = c("float", "double"), ncores = 1)
@@ -61,7 +61,7 @@ You may use \link{nb_cores}.}
 with each variant (column of \code{G}). If alleles are reversed, make sure to
 multiply corresponding effects by \code{-1}.}
 
-\item{n_thr_lpS}{Length for default \code{grid.lpS.thr}. Default is \code{30}.}
+\item{n_thr_lpS}{Length for default \code{grid.lpS.thr}. Default is \code{50}.}
 
 \item{grid.lpS.thr}{Sequence of thresholds to apply on \code{lpS}.
 Default is a grid (of length \code{n_thr_lpS}) evenly spaced on a logarithmic

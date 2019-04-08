@@ -140,7 +140,7 @@ seq_log <- function(from, to, length.out) {
 #'   with each variant (column of `G`). If alleles are reversed, make sure to
 #'   multiply corresponding effects by `-1`.
 #' @param lpS Numeric vector of `-log10(p-value)` associated with `betas`.
-#' @param n_thr_lpS Length for default `grid.lpS.thr`. Default is `30`.
+#' @param n_thr_lpS Length for default `grid.lpS.thr`. Default is `50`.
 #' @param grid.lpS.thr Sequence of thresholds to apply on `lpS`.
 #'   Default is a grid (of length `n_thr_lpS`) evenly spaced on a logarithmic
 #'   scale, i.e. on a log-log scale for p-values.
@@ -159,7 +159,7 @@ seq_log <- function(from, to, length.out) {
 #' @export
 snp_grid_PRS <- function(
   G, all_keep, betas, lpS,
-  n_thr_lpS = 30,
+  n_thr_lpS = 50,
   grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS)), max(lpS), n_thr_lpS),
   ind.row = rows_along(G),
   backingfile = tempfile(),
