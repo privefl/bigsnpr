@@ -85,15 +85,16 @@ flip_strand <- function(allele) {
 
 #' Match alleles
 #'
-#' Match alleles between summary statistics and SNP information. Account for
-#' strand flips and reverse reference alleles (opposite effect).
+#' Match alleles between summary statistics and SNP information.
+#' Match by "chr", "pos", "a0", "a1", accounting for strand flips (as an option)
+#' and reverse reference alleles (opposite effect).
 #'
 #' @param sumstats A data frame with columns "chr", "pos", "a0", "a1" and "beta".
 #' @param info_snp A data frame with columns "chr", "pos", "a0" and "a1".
 #' @param strand_flip Whether it should try to flip strand? (default) If so,
-#'  ambiguous alleles [A/T] and [C/G] are removed.
+#'  ambiguous alleles A/T and C/G are removed.
 #'
-#' @return A data frame joined by the chromosome, position and matching alleles.
+#' @return A single data frame joined by chromosome, position and alleles.
 #' @export
 #'
 #' @import data.table
@@ -111,18 +112,13 @@ snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
 
   # augment dataset to match reverse alleles
   if (strand_flip) {
-
     is_ambiguous <- with(sumstats, paste(a0, a1) %in% c("A T", "T A", "C G", "G C"))
-    nb_ambiguous <- sum(is_ambiguous)
-    if (nb_ambiguous > 0) {
-      message2("%s ambiguous SNPs have been removed.",
-               format(nb_ambiguous, big.mark = ","))
-    }
+    message2("%s ambiguous SNPs have been removed.",
+             format(sum(is_ambiguous), big.mark = ","))
     sumstats2 <- sumstats[!is_ambiguous, ]
     sumstats3 <- sumstats2
     sumstats2$`_FLIP_` <- FALSE
     sumstats3$`_FLIP_` <- TRUE
-    ACTG <- c("A" = "T", "C" = "G", "T" = "A", "G" = "C")
     sumstats3$a0 <- flip_strand(sumstats2$a0)
     sumstats3$a1 <- flip_strand(sumstats2$a1)
     sumstats3 <- rbind(sumstats2, sumstats3)
