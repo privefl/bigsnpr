@@ -1,7 +1,7 @@
 ---
 title: "Exercises using packages bigsnpr and bigstatsr"
 author: "Florian Privé"
-date: "January 22, 2019"
+date: "April 18, 2019"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -13,13 +13,20 @@ Note that many functions used here come from package {bigstatsr} and could there
 ## Get data
 
 ```{r setup, include=FALSE}
-unlink(paste0("tmp-data/public-data", c(".bk", ".rds")))
 options(htmltools.dir.version = FALSE, width = 75)
-knitr::opts_knit$set(global.par = TRUE)
+knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
 knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png', dpi = 95)
 ```
 
 Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. I store those files in a directory called `"tmp-data"` here.
+
+```{r, echo=FALSE, eval=FALSE}
+unzip("data-raw/public-data.zip")
+```
+
+```{r, echo=FALSE}
+unlink(paste0("tmp-data/public-data", c(".bk", ".rds")))
+```
 
 You can see [there](https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R) how I generated these data from [the 1000 Genomes project](https://www.nature.com/articles/nature15393).
 
@@ -112,7 +119,31 @@ snp_manhattan(gwas, CHR, POS, npoints = 20e3) +
   geom_hline(yintercept = -log10(5e-8), color = "red")
 ```
 
-### Polygenic Risk Score (PRS) with Penalized Logistic Regression (PLR)
+### Polygenic Risk Score (PRS) 
+
+#### with Clumping and Thresholding (C+T)
+
+\[\rm{PRS}_i = \sum_{\substack{j \in S_\text{clumping} \\ p_j~<~p_T}} \hat\beta_j \cdot G_{i,j}~,\] 
+
+where $\hat\beta_j$ ($p_j$) are the effect sizes (p-values) estimated from the GWAS and $G_{i,j}$ is the allele count (genotype) for individual $i$ and SNP $j$.
+
+```{r}
+sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+lpval <- -log10(sumstats$p)
+ind.keep <- snp_clumping(G, CHR, ind.row = ind.train, S = lpval, infos.pos = POS, ncores = 3)
+THR <- seq_log(1, 8, length.out = 20)
+prs <- snp_PRS(G, sumstats$beta[ind.keep], ind.keep = ind.keep, 
+               lpS.keep = lpval[ind.keep], thr.list = THR)
+# Learn the optimal threshold on the training set
+aucs <- apply(prs[ind.train, ], 2, AUC, target = y[ind.train])
+plot(THR, aucs, xlab = "-log10(p-value)", ylab = "AUC", pch = 20)
+# Evaluate on the test set
+AUC(prs[ind.test, which.max(aucs)], y[ind.test])
+```
+
+(TODO: ADD SCT)
+
+#### with Penalized Logistic Regression (PLR)
 
 $$\arg\!\min_{\beta_0,~\beta}(\lambda, \alpha)\left\{ \underbrace{ -\sum_{i=1}^n \left( y_i \log\left(p_i\right) + (1 - y_i) \log\left(1 - p_i\right) \right) }_\text{Loss function} + \underbrace{ \lambda \left((1-\alpha)\frac{1}{2}\|\beta\|_2^2 + \alpha \|\beta\|_1\right) }_\text{Penalization} \right\}$$
 

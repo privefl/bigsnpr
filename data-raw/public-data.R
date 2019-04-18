@@ -1,4 +1,6 @@
-# https://www.dropbox.com/s/k9ptc4kep9hmvz5/1kg_phase1_all.tar.gz?dl=1
+# download.file("https://www.dropbox.com/s/k9ptc4kep9hmvz5/1kg_phase1_all.tar.gz?dl=1",
+#               destfile = "tmp-data/1kg_phase1_all.tar.gz")
+# untar("tmp-data/1kg_phase1_all.tar.gz", exdir = "tmp-data/")
 
 library(bigsnpr)
 plink <- download_plink("tmp-data/")
@@ -22,19 +24,33 @@ fam <- dplyr::left_join(fam, pop, by = c("Population" = "Population Code"))
 snp$fam$family.ID <- paste(fam$`Super Population`, fam$Population, sep = "_")
 snp$fam$paternal.ID <- snp$fam$maternal.ID <- 0L
 
-ind <- which(fam$Relationship == "unrel")
-maf <- snp_MAF(G, ind)
+ind_norel <- which(fam$Relationship == "unrel")
+maf <- snp_MAF(G, ind_norel)
 
 bed <- snp_writeBed(snp, tempfile(fileext = ".bed"),
-                    ind.row = ind, ind.col = which(maf > 0.05))
+                    ind.row = ind_norel, ind.col = which(maf > 0.05))
 
 rds <- snp_readBed(bed)
 snp <- snp_attach(rds)
 G <- snp$genotypes
+CHR <- snp$map$chromosome
+POS <- snp$map$physical.pos
 set.seed(1)
 # devtools::install_github("privefl/paper2-PRS/pkg.paper.PRS")
-pheno <- pkg.paper.PRS::get_pheno(G, 0.8, 10)
+pheno <- pkg.paper.PRS::get_pheno(G, 0.8, 100)
 snp$fam$affection <- pheno$pheno
+s <- scale(G[, pheno$set]) %*% pheno$effects + rnorm(nrow(G), sd = 2)
+obj.svd <- snp_autoSVD(G, CHR, POS, thr.r2 = 0.1)
+plot(obj.svd, type = "scores")
+gwas <- big_univLinReg(G, s, covar.train = obj.svd$u, ncores = nb_cores())
+plot(gwas)
+snp_manhattan(gwas, CHR, POS)
+y_hat <- mean(pheno$pheno)
+plot(pheno$effects, gwas$estim[pheno$set] * y_hat * (1 - y_hat), pch = 20); abline(0, 1, col = "red")
+sumstats <- cbind.data.frame(snp$map[-3], beta = gwas$estim, p = predict(gwas, log10 = FALSE))
 
 snp_writeBed(snp, "tmp-data/public-data.bed")
 saveRDS(pheno, file = "tmp-data/public-data-pheno.rds")
+bigreadr::fwrite2(sumstats, "tmp-data/public-data-sumstats.txt")
+zip("data-raw/public-data.zip",
+    paste0("tmp-data/public-data", c(".bed", ".bim", ".fam", "-pheno.rds", "-sumstats.txt")))
