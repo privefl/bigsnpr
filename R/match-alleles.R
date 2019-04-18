@@ -82,6 +82,8 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #' @return A data frame joined by the chromosome, position and matching alleles.
 #' @export
 #'
+#' @import data.table
+#'
 #' @example examples/example-match.R
 snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
 
@@ -112,7 +114,7 @@ snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
     ACTG <- c("A" = "T", "C" = "G", "T" = "A", "G" = "C")
     sumstats3$a0 <- ACTG[sumstats2$a0]
     sumstats3$a1 <- ACTG[sumstats2$a1]
-    sumstats3 <- rbind(sumstats2, na.omit(sumstats3))
+    sumstats3 <- rbind(sumstats2, sumstats3)
   } else {
     sumstats3 <- sumstats
     sumstats3$`_FLIP_` <- FALSE
@@ -126,17 +128,14 @@ snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
   sumstats4$beta <- -sumstats3$beta
   sumstats4 <- rbind(sumstats3, sumstats4)
 
-  matched <- dplyr::arrange(
-    dplyr::inner_join(sumstats4, info_snp, na_matches = "never",
-                      by = c("chr", "pos", "a0", "a1")),
-    chr, pos
-  )
+  matched <- merge(as.data.table(sumstats4), as.data.table(info_snp),
+                   by = c("chr", "pos", "a0", "a1"), all = FALSE)
   message2("%s variants have been matched; %s were flipped and %s were reversed.",
            format(nrow(matched),         big.mark = ","),
            format(sum(matched$`_FLIP_`), big.mark = ","),
            format(sum(matched$`_REV_`),  big.mark = ","))
 
-  dplyr::select(matched, -`_FLIP_`, -`_REV_`)
+  as.data.frame(matched[, c("_FLIP_", "_REV_") := NULL][order(chr, pos)])
 }
 
 ################################################################################
