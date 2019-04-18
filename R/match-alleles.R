@@ -69,6 +69,20 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 
 ################################################################################
 
+flip_strand <- function(allele) {
+
+  if (!requireNamespace("dplyr", quietly = TRUE))
+    stop2("Please install package 'dplyr'.")
+
+  dplyr::case_when(
+    allele == "A" ~ "T",
+    allele == "C" ~ "G",
+    allele == "T" ~ "A",
+    allele == "G" ~ "C",
+    TRUE ~ NA_character_
+  )
+}
+
 #' Match alleles
 #'
 #' Match alleles between summary statistics and SNP information. Account for
@@ -86,9 +100,6 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #'
 #' @example examples/example-match.R
 snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
-
-  if (!requireNamespace("dplyr", quietly = TRUE))
-    stop2("Please install package 'dplyr'.")
 
   if (!all(c("chr", "pos", "a0", "a1", "beta") %in% names(sumstats)))
     stop2("Please use proper names for variables in 'sumstats'.")
@@ -112,8 +123,8 @@ snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
     sumstats2$`_FLIP_` <- FALSE
     sumstats3$`_FLIP_` <- TRUE
     ACTG <- c("A" = "T", "C" = "G", "T" = "A", "G" = "C")
-    sumstats3$a0 <- ACTG[sumstats2$a0]
-    sumstats3$a1 <- ACTG[sumstats2$a1]
+    sumstats3$a0 <- flip_strand(sumstats2$a0)
+    sumstats3$a1 <- flip_strand(sumstats2$a1)
     sumstats3 <- rbind(sumstats2, sumstats3)
   } else {
     sumstats3 <- sumstats
