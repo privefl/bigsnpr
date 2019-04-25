@@ -1,3 +1,9 @@
+## bigsnpr 0.11.0
+
+- add 3 SCT functions `snp_grid_*()` to improve from Clumping and Thresholding (preprint coming soon).
+
+- add `snp_match()` function to match between summary statistics and some SNP information.
+
 ## bigsnpr 0.10.2
 
 - Parameter `is.size.in.bp` is deprecated.
