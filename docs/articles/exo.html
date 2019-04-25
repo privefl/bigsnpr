@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.0</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1>Exercises using packages bigsnpr and bigstatsr</h1>
                         <h4 class="author">Florian Privé</h4>
             
-            <h4 class="date">January 22, 2019</h4>
+            <h4 class="date">April 18, 2019</h4>
       
       
       <div class="hidden name"><code>exo.Rmd</code></div>
@@ -114,7 +114,7 @@
 <pre><code>## Le chargement a nécessité le package : bigstatsr</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Read from bed/bim/fam, it will create new files.</span>
 <span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(<span class="st">"tmp-data/public-data.bed"</span>)</code></pre></div>
-<pre><code>## [1] "/home/privef/Bureau/bigsnpr/vignettes/tmp-data/public-data.rds"</code></pre>
+<pre><code>## [1] "/home/privef/Bureau/bigsnpr/tmp-data/public-data.rds"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Attach the "bigSNP" object in R session</span>
 obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="st">"tmp-data/public-data.rds"</span>)
 <span class="co"># See how it looks like</span>
@@ -130,29 +130,29 @@ obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 ##   ..$ paternal.ID: int [1:559] 0 0 0 0 0 0 0 0 0 0 ...
 ##   ..$ maternal.ID: int [1:559] 0 0 0 0 0 0 0 0 0 0 ...
 ##   ..$ sex        : int [1:559] 1 2 2 2 1 2 1 2 2 1 ...
-##   ..$ affection  : int [1:559] 0 0 1 0 1 1 1 1 0 1 ...
-##  $ map      :'data.frame':   130619 obs. of  6 variables:
-##   ..$ chromosome  : int [1:130619] 2 2 2 2 2 2 2 2 2 2 ...
-##   ..$ marker.ID   : chr [1:130619] "rs28469191" "rs6548219" "rs4522651" "..
-##   ..$ genetic.dist: int [1:130619] 0 0 0 0 0 0 0 0 0 0 ...
-##   ..$ physical.pos: int [1:130619] 29970 30762 34049 38733 41054 47648 52..
-##   ..$ allele1     : chr [1:130619] "C" "A" "A" "G" ...
-##   ..$ allele2     : chr [1:130619] "T" "G" "G" "GA" ...
+##   ..$ affection  : int [1:559] 2 1 1 1 1 1 2 1 1 1 ...
+##  $ map      :'data.frame':   131276 obs. of  6 variables:
+##   ..$ chromosome  : int [1:131276] 2 2 2 2 2 2 2 2 2 2 ...
+##   ..$ marker.ID   : chr [1:131276] "rs13386112" "rs4263140" "rs28446791""..
+##   ..$ genetic.dist: int [1:131276] 0 0 0 0 0 0 0 0 0 0 ...
+##   ..$ physical.pos: int [1:131276] 21243 29422 30091 36787 51141 53020 61..
+##   ..$ allele1     : chr [1:131276] "T" "G" "G" "T" ...
+##   ..$ allele2     : chr [1:131276] "C" "A" "C" "C" ...
 ##  - attr(*, "class")= chr "bigSNP"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get aliases for useful slots</span>
 G   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>genotypes
 CHR &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>chromosome
 POS &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>physical.pos
-y   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection
+y   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection <span class="op">-</span><span class="st"> </span><span class="dv">1</span>
 sex &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>sex
 pop &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>family.ID
 NCORES &lt;-<span class="st"> </span><span class="kw">nb_cores</span>()
 <span class="co"># Check some counts for the 10 first SNPs</span>
 <span class="kw">big_counts</span>(G, <span class="dt">ind.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-## 0     374  335  453  378  492  483  479  483  479   469
-## 1     142  178   85  138   62   69   70   69   71    78
-## 2      43   46   21   43    5    7   10    7    9    12
+## 0     476  376  378  380  481  463  389  476  483   478
+## 1      64  143  139  136   71   84  133   71   70    70
+## 2      19   40   42   43    7   12   37   12    6    11
 ## &lt;NA&gt;    0    0    0    0    0    0    0    0    0     0</code></pre>
 </div>
 <div id="what-you-must-do" class="section level2">
@@ -185,41 +185,63 @@ ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdo
 svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="kw">big_scale</span>(), <span class="dt">ncores =</span> NCORES)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Scree plot</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-4-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-6-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)
 <span class="co"># Scores plot + color for population</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-4-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
+<p><img src="exo_files/figure-html/unnamed-chunk-6-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>, <span class="dt">scores =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">4</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-4-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
+<p><img src="exo_files/figure-html/unnamed-chunk-6-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Loadings (effects of each variable for each PC)</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"loadings"</span>, <span class="dt">loadings =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">coeff =</span> <span class="fl">0.4</span>)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-5-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-7-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <p>Looking at the loadings, we can see that the PCA captures some variation due to large correlation between variables. To learn more about this possible pitfall, please look at <a href="https://privefl.github.io/bigsnpr/articles/how-to-PCA.html">this vignette</a>.</p>
 </div>
 <div id="association-genome-wide-association-study-gwas" class="section level3">
 <h3 class="hasAnchor">
 <a href="#association-genome-wide-association-study-gwas" class="anchor"></a>Association: Genome-Wide Association Study (GWAS)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Association of each variable of `G` with `y` (adjusting for 10 PCs)</span>
-gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, <span class="dt">covar.train =</span> svd<span class="op">$</span>u, <span class="dt">ncores =</span> NCORES)</code></pre></div>
-<pre><code>## For 1 columns, IRLS didn't converge; `glm` was used instead.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Histogram of p-values</span>
+gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, <span class="dt">covar.train =</span> svd<span class="op">$</span>u, <span class="dt">ncores =</span> NCORES)
+<span class="co"># Histogram of p-values</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-6-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-8-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Q-Q plot</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas, <span class="dt">type =</span> <span class="st">"Q-Q"</span>) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>)  <span class="co"># snp_qq(gwas) + xlim(1, NA)</span></code></pre></div>
-<pre><code>## Warning: Removed 117557 rows containing missing values (geom_point).</code></pre>
-<p><img src="exo_files/figure-html/unnamed-chunk-6-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas, <span class="dt">type =</span> <span class="st">"Q-Q"</span>) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>)  <span class="co"># snp_qq(gwas) + xlim(1, NA)</span></code></pre></div>
+<pre><code>## Warning: Removed 118148 rows containing missing values (geom_point).</code></pre>
+<p><img src="exo_files/figure-html/unnamed-chunk-8-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Manhattan plot</span>
 <span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(gwas, CHR, POS, <span class="dt">npoints =</span> <span class="fl">20e3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="dt">yintercept =</span> <span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log10</a></span>(<span class="fl">5e-8</span>), <span class="dt">color =</span> <span class="st">"red"</span>)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-6-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_abline">geom_hline</a></span>(<span class="dt">yintercept =</span> <span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log10</a></span>(<span class="fl">5e-8</span>), <span class="dt">color =</span> <span class="st">"red"</span>)</code></pre></div>
+<p><img src="exo_files/figure-html/unnamed-chunk-8-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 </div>
-<div id="polygenic-risk-score-prs-with-penalized-logistic-regression-plr" class="section level3">
+<div id="polygenic-risk-score-prs" class="section level3">
 <h3 class="hasAnchor">
-<a href="#polygenic-risk-score-prs-with-penalized-logistic-regression-plr" class="anchor"></a>Polygenic Risk Score (PRS) with Penalized Logistic Regression (PLR)</h3>
+<a href="#polygenic-risk-score-prs" class="anchor"></a>Polygenic Risk Score (PRS)</h3>
+<div id="with-clumping-and-thresholding-ct" class="section level4">
+<h4 class="hasAnchor">
+<a href="#with-clumping-and-thresholding-ct" class="anchor"></a>with Clumping and Thresholding (C+T)</h4>
+<p><span class="math display">\[\rm{PRS}_i = \sum_{\substack{j \in S_\text{clumping} \\ p_j~&lt;~p_T}} \hat\beta_j \cdot G_{i,j}~,\]</span></p>
+<p>where <span class="math inline">\(\hat\beta_j\)</span> (<span class="math inline">\(p_j\)</span>) are the effect sizes (p-values) estimated from the GWAS and <span class="math inline">\(G_{i,j}\)</span> is the allele count (genotype) for individual <span class="math inline">\(i\)</span> and SNP <span class="math inline">\(j\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sumstats &lt;-<span class="st"> </span>bigreadr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/bigreadr/topics/fread2">fread2</a></span>(<span class="st">"tmp-data/public-data-sumstats.txt"</span>)
+lpval &lt;-<span class="st"> </span><span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log10</a></span>(sumstats<span class="op">$</span>p)
+ind.keep &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(G, CHR, <span class="dt">ind.row =</span> ind.train, <span class="dt">S =</span> lpval, <span class="dt">infos.pos =</span> POS, <span class="dt">ncores =</span> <span class="dv">3</span>)
+THR &lt;-<span class="st"> </span><span class="kw"><a href="../reference/seq_log.html">seq_log</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dt">length.out =</span> <span class="dv">20</span>)
+prs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_PRS.html">snp_PRS</a></span>(G, sumstats<span class="op">$</span>beta[ind.keep], <span class="dt">ind.keep =</span> ind.keep, 
+               <span class="dt">lpS.keep =</span> lpval[ind.keep], <span class="dt">thr.list =</span> THR)
+<span class="co"># Learn the optimal threshold on the training set</span>
+aucs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(prs[ind.train, ], <span class="dv">2</span>, AUC, <span class="dt">target =</span> y[ind.train])
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(THR, aucs, <span class="dt">xlab =</span> <span class="st">"-log10(p-value)"</span>, <span class="dt">ylab =</span> <span class="st">"AUC"</span>, <span class="dt">pch =</span> <span class="dv">20</span>)</code></pre></div>
+<p><img src="exo_files/figure-html/unnamed-chunk-9-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Evaluate on the test set</span>
+<span class="kw">AUC</span>(prs[ind.test, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which.min">which.max</a></span>(aucs)], y[ind.test])</code></pre></div>
+<pre><code>## [1] 0.6386096</code></pre>
+<p>(TODO: ADD SCT)</p>
+</div>
+<div id="with-penalized-logistic-regression-plr" class="section level4">
+<h4 class="hasAnchor">
+<a href="#with-penalized-logistic-regression-plr" class="anchor"></a>with Penalized Logistic Regression (PLR)</h4>
 <p><span class="math display">\[\arg\!\min_{\beta_0,~\beta}(\lambda, \alpha)\left\{ \underbrace{ -\sum_{i=1}^n \left( y_i \log\left(p_i\right) + (1 - y_i) \log\left(1 - p_i\right) \right) }_\text{Loss function} + \underbrace{ \lambda \left((1-\alpha)\frac{1}{2}\|\beta\|_2^2 + \alpha \|\beta\|_1\right) }_\text{Penalization} \right\}\]</span></p>
 <p>where</p>
 <ul>
@@ -238,22 +260,23 @@ mod &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(G, y[ind.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot regularization paths (from high lambda to low lambda) </span>
 <span class="co"># for each validation set (color) and each alpha (facet)</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mod)</code></pre></div>
-<p><img src="exo_files/figure-html/unnamed-chunk-8-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
+<p><img src="exo_files/figure-html/unnamed-chunk-11-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get summaries of models</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mod)</code></pre></div>
 <pre><code>## # A tibble: 5 x 6
 ##    alpha validation_loss intercept beta            nb_var message  
 ##    &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;           &lt;int&gt; &lt;list&gt;   
-## 1 0.0001           0.552     -1.56 &lt;dbl [130,629]&gt;  57869 &lt;chr [5]&gt;
-## 2 0.001            0.533     -3.09 &lt;dbl [130,629]&gt;  12255 &lt;chr [5]&gt;
-## 3 0.01             0.486     -4.61 &lt;dbl [130,629]&gt;   2156 &lt;chr [5]&gt;
-## 4 0.1              0.452     -3.52 &lt;dbl [130,629]&gt;    775 &lt;chr [5]&gt;
-## 5 1                0.434     -3.24 &lt;dbl [130,629]&gt;    367 &lt;chr [5]&gt;</code></pre>
+## 1 0.0001           0.503     -1.68 &lt;dbl [131,286]&gt;  57052 &lt;chr [5]&gt;
+## 2 0.001            0.505     -2.26 &lt;dbl [131,286]&gt;  12968 &lt;chr [5]&gt;
+## 3 0.01             0.504     -2.76 &lt;dbl [131,286]&gt;   2765 &lt;chr [5]&gt;
+## 4 0.1              0.504     -2.98 &lt;dbl [131,286]&gt;    689 &lt;chr [5]&gt;
+## 5 1                0.502     -3.16 &lt;dbl [131,286]&gt;    369 &lt;chr [5]&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the predictions for the test set</span>
 pred &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(mod, G, ind.test, <span class="dt">covar.row =</span> svd<span class="op">$</span>u[ind.test, ])
 <span class="co"># Assess the Area Under the ROC Curve</span>
 <span class="kw">AUC</span>(pred, y[ind.test])</code></pre></div>
-<pre><code>## [1] 0.8294991</code></pre>
+<pre><code>## [1] 0.6614078</code></pre>
+</div>
 </div>
 </div>
   </div>

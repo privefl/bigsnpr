@@ -38,7 +38,7 @@ POS <- snp$map$physical.pos
 set.seed(1)
 # devtools::install_github("privefl/paper2-PRS/pkg.paper.PRS")
 pheno <- pkg.paper.PRS::get_pheno(G, 0.8, 100)
-snp$fam$affection <- pheno$pheno
+snp$fam$affection <- pheno$pheno + 1
 s <- scale(G[, pheno$set]) %*% pheno$effects + rnorm(nrow(G), sd = 2)
 obj.svd <- snp_autoSVD(G, CHR, POS, thr.r2 = 0.1)
 plot(obj.svd, type = "scores")

@@ -45,7 +45,7 @@ str(obj.bigSNP, max.level = 2, strict.width = "cut")
 G   <- obj.bigSNP$genotypes
 CHR <- obj.bigSNP$map$chromosome
 POS <- obj.bigSNP$map$physical.pos
-y   <- obj.bigSNP$fam$affection
+y   <- obj.bigSNP$fam$affection - 1
 sex <- obj.bigSNP$fam$sex
 pop <- obj.bigSNP$fam$family.ID
 NCORES <- nb_cores()
