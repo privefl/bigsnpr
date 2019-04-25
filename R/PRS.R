@@ -1,53 +1,5 @@
 ################################################################################
 
-#' Determine reference divergence
-#'
-#' Determine reference divergence while accounting for strand flips.
-#'
-#' @param ref1 The reference alleles of the first dataset.
-#' @param alt1 The alternative alleles of the first dataset.
-#' @param ref2 The reference alleles of the second dataset.
-#' @param alt2 The alternative alleles of the second dataset.
-#'
-#' @return A logical vector whether the references alleles are the same.
-#'   Missing values can result from missing values in the inputs or from
-#'   ambiguous strands.
-#' @export
-#'
-#' @importFrom dplyr %>%
-#'
-#' @examples
-#' same_ref(ref1 = c("A", "C", "T", "G", NA),
-#'          alt1 = c("C", "T", "C", "A", "A"),
-#'          ref2 = c("A", "C", "A", "A", "C"),
-#'          alt2 = c("C", "G", "G", "G", "A"))
-same_ref <- function(ref1, alt1, ref2, alt2) {
-
-  ACTG <- c("A", "C", "T", "G")
-  REV_ACTG <- stats::setNames(c("T", "G", "A", "C"), ACTG)
-
-  decoder <- expand.grid(list(ACTG, ACTG, ACTG, ACTG)) %>%
-    dplyr::mutate(status = dplyr::case_when(
-      # BAD: same reference/alternative alleles in a dataset
-      (Var1 == Var2) | (Var3 == Var4) ~ NA,
-      # GOOD/TRUE: same reference/alternative alleles between datasets
-      (Var1 == Var3) & (Var2 == Var4) ~ TRUE,
-      # GOOD/FALSE: reverse reference/alternative alleles
-      (Var1 == Var4) & (Var2 == Var3) ~ FALSE,
-      # GOOD/TRUE: same reference/alternative alleles after strand flip
-      (REV_ACTG[Var1] == Var3) & (REV_ACTG[Var2] == Var4) ~ TRUE,
-      # GOOD/FALSE: reverse reference/alternative alleles after strand flip
-      (REV_ACTG[Var1] == Var4) & (REV_ACTG[Var2] == Var3) ~ FALSE,
-      # BAD: the rest
-      TRUE ~ NA
-    )) %>%
-    reshape2::acast(Var1 ~ Var2 ~ Var3 ~ Var4, value.var = "status")
-
-  decoder[cbind(ref1, alt1, ref2, alt2)]
-}
-
-################################################################################
-
 prodVecRev <- function(G, betas.col, same.col, ind.row, ind.col) {
   betas.col.mod <- (2 * same.col - 1) * betas.col
   big_prodVec(G, betas.col.mod, ind.row, ind.col) +
@@ -70,7 +22,7 @@ prodVecRev <- function(G, betas.col, same.col, ind.row, ind.col) {
 #' @param same.keep A logical vector associated with `betas.keep` whether the
 #'   reference allele is the same for G. Default is all `TRUE` (for example when
 #'   you train the betas on the same dataset). Otherwise, use [same_ref].
-#' @param lpS.keep Numeric vector of `-log10(p.value)` associated with
+#' @param lpS.keep Numeric vector of `-log10(p-value)` associated with
 #'   `betas.keep`. Default doesn't use thresholding.
 #' @param thr.list Threshold vector on `lpS.keep` at which SNPs are excluded if
 #'   they are not significant enough. Default doesn't use thresholding.

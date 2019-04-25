@@ -3,6 +3,7 @@
 check_args <- function(...) {
 
   if (getOption("bigstatsr.check.args")) {
+
     args <- as.list(parent.frame())
 
     check <- c(
@@ -64,6 +65,14 @@ assert_ext <- function(file, ext) {
 assert_type <- function(x, type)  {
   if (typeof(x) != type)
     stop2("'%s' is not of type '%s'.", deparse(substitute(x)), type)
+}
+
+################################################################################
+
+# SORT
+assert_sorted <- function(x)  {
+  if (is.unsorted(x))
+    stop2("'%s' is not sorted.", deparse(substitute(x)))
 }
 
 ################################################################################

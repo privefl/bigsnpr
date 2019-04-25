@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 0.10.2
-Date: 2019-03-05
+Version: 0.11.0
+Date: 2019-04-25
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -26,18 +26,14 @@ Depends:
 Imports:
     data.table,
     doParallel,
-    dplyr,
     foreach, 
     ggplot2,
     gsubfn,
     magrittr,
     Matrix,
-    parallel, 
-    Rcpp, 
-    reshape2,
-    robust,
-    stats,
-    xgboost
+    parallel,
+    Rcpp,
+    stats
 LinkingTo:
     bigstatsr,
     Rcpp,
@@ -48,12 +44,15 @@ Suggests:
     bindata,
     covr,
     dbplyr,
+    dplyr,
     gaston,
     Hmisc,
     pcadapt (>= 4.0.3),
+    robust,
     RSQLite,
     spelling, 
-    testthat
+    testthat,
+    xgboost
 Remotes: privefl/bigstatsr, bcm-uga/pcadapt
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
