@@ -14,7 +14,7 @@ snp_readBGI(bgifile, snp_id)
 \strong{This function assumes that these IDs are uniquely identifying variants.}}
 }
 \value{
-A data frame containing variant infos.
+A data frame containing variant information.
 }
 \description{
 Read variant info from one BGI file

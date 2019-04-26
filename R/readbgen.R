@@ -20,7 +20,7 @@ format_snp_id <- function(snp_id) {
 #'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"` or `"01_88169_C_T"`).
 #'  **This function assumes that these IDs are uniquely identifying variants.**
 #'
-#' @return A data frame containing variant infos.
+#' @return A data frame containing variant information.
 #'
 #' @importFrom magrittr %>%
 #'

@@ -3,6 +3,7 @@ al
 AppVeyor
 Armitage
 Aschard
+backingfile
 Bazin
 bedfile
 bedfiles
@@ -18,7 +19,7 @@ Blum
 bp
 bty
 cbind
-Chr
+chr
 Devlin
 diploidy
 doi
@@ -42,7 +43,7 @@ Hugues
 IBD
 iteratively
 Kathe
-kbp
+kb
 LD
 loadings
 Luu
@@ -59,13 +60,14 @@ parallelize
 parApply
 pcadapt
 ped
+phenotype
 PLINK
 plinkQC
 PLoS
 Polygenic
 polymorphism
 PRED
-Preprint
+preprint
 Privé
 PRS
 QCed
@@ -78,6 +80,7 @@ Roeder
 rOpenSci
 rsnps
 scalable
+SCT
 Shashaank
 snp
 SNP's

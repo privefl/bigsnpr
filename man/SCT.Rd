@@ -82,9 +82,9 @@ it uses \code{\link[=big_spLogReg]{big_spLogReg()}} for stacking, otherwise \cod
 \item{alphas}{Vector of values for grid-search. See \code{\link[=big_spLogReg]{big_spLogReg()}}.
 Default for this function is \code{c(1, 0.01, 0.0001)}.}
 
-\item{...}{Other parameters to be passed to \code{\link[=big_spLogReg]{big_spLogReg()}}.
-For example, using \code{covar.train}, you can add covariates in the model with
-all C+T scores. You can also use \code{pf.covar} to unpenalize these covariates.}
+\item{...}{Other parameters to be passed to \code{\link[=big_spLogReg]{big_spLogReg()}}. For example,
+using \code{covar.train}, you can add covariates in the model with all C+T scores.
+You can also use \code{pf.covar} if you do not want to penalize these covariates.}
 }
 \value{
 \code{snp_grid_PRS()}: An \code{FBM} (matrix on disk) that stores the C+T scores
