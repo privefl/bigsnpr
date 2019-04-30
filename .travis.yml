@@ -14,20 +14,9 @@ matrix:
     os: linux
 
 sudo: false
-#cache: packages
+cache: packages
 warnings_are_errors: true
 r_check_args: "--no-manual --timings"
-
-cache:
-  - ccache
-
-addons:
-  apt:
-    packages:
-     - ccache
-
-before_install:
-  - mkdir $HOME/.R && echo -e 'CXX_STD = CXX14\n\nVER=\nCCACHE=ccache\nCC=$(CCACHE) gcc$(VER) -std=gnu99\nCXX=$(CCACHE) g++$(VER)\nC11=$(CCACHE) g++$(VER)\nC14=$(CCACHE) g++$(VER)\nFC=$(CCACHE) gfortran$(VER)\nF77=$(CCACHE) gfortran$(VER)' > $HOME/.R/Makevars
 
 env:
  global:
