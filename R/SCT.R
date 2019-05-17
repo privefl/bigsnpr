@@ -196,13 +196,16 @@ snp_grid_PRS <- function(
     NULL
   }
 
-  structure(
-    multi_PRS$save(),
+  res <- structure(
+    multi_PRS,
     lpS = lpS,
     grid.lpS.thr = grid.lpS.thr,
     betas = betas,
     all_keep = all_keep
   )
+
+  saveRDS(res, multi_PRS$rds)
+  res
 }
 
 ################################################################################

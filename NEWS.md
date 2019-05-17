@@ -1,8 +1,12 @@
+## bigsnpr 0.11.1
+
+- When using `snp_grid_PRS()`, it now stores not only the FBM, but also the input parameters as attributes (the whole result basically).
+
 ## bigsnpr 0.11.0
 
-- add 3 SCT functions `snp_grid_*()` to improve from Clumping and Thresholding (preprint coming soon).
+- Add 3 SCT functions `snp_grid_*()` to improve from Clumping and Thresholding (preprint coming soon).
 
-- add `snp_match()` function to match between summary statistics and some SNP information.
+- Add `snp_match()` function to match between summary statistics and some SNP information.
 
 ## bigsnpr 0.10.2
 
