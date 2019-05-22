@@ -17,7 +17,7 @@ NumericMatrix linRegPcadapt_cpp(Environment BM,
   int n = macc.nrow();
   int m = macc.ncol();
   int K = U.n_cols;
-  myassert((int)U.n_rows == n, ERROR_DIM);
+  myassert_size(U.n_rows, n);
 
   arma::mat res(K, m);
   arma::vec y(n), betas(K), eps(n);

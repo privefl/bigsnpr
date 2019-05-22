@@ -89,7 +89,7 @@ CharacterVector read_bgen(std::string filename,
 
   std::size_t j, n = xpBM->nrow();
   int K = offsets.size();
-  myassert(ind_col.size() == K, ERROR_DIM);
+  myassert_size(ind_col.size(), K);
   std::vector<std::string> ID; ID.reserve(K);
 
   // connection to BGEN file

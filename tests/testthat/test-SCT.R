@@ -33,6 +33,28 @@ all_keep2 <- lapply(rows_along(grid), function(i) {
                    c(all_keep[[1]][[i]], all_keep[[2]][[i]]))
 })
 
+infos <- runif(ncol(G), 0.2)
+all_keep3 <- snp_grid_clumping(G, CHR, POS, lpS = lpval, ncores = 2,
+                               grid.thr.r2 = c(0.05, 0.2, 0.8),
+                               grid.base.size = c(100, 200),
+                               infos.imp = infos,
+                               grid.thr.imp = c(0.3, 0.8, 0.95))
+grid3 <- attr(all_keep3, "grid")
+expect_equal(dim(grid3), c(18, 4))
+expect_equal(grid3$thr.imp, rep(c(0.3, 0.8, 0.95), each = 6))
+expect_equal(grid3$grp.num, rep(1, 18))
+
+groups <- lapply(c(0.3, 0.8, 0.95), function(thr) which(infos >= thr))
+all_keep4 <- snp_grid_clumping(G, CHR, POS, lpS = lpval, ncores = 2,
+                               grid.thr.r2 = c(0.05, 0.2, 0.8),
+                               grid.base.size = c(100, 200),
+                               groups = groups)
+expect_equal(all_keep4, all_keep3, check.attributes = FALSE)
+grid4 <- attr(all_keep4, "grid")
+expect_equal(dim(grid4), c(18, 4))
+expect_equal(grid4$thr.imp, rep(1, 18))
+expect_equal(grid4$grp.num, rep(1:3, each = 6))
+
 ################################################################################
 
 expect_error(snp_grid_PRS(G, all_keep, betas, lpval, type = "integer"))

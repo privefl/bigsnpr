@@ -9,8 +9,8 @@ clumping_chr <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr
     .Call(`_bigsnpr_clumping_chr`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
 
-clumping_chr_cached <- function(BM, sqcor, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping_chr_cached`, BM, sqcor, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
+clumping_chr_cached <- function(BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
+    .Call(`_bigsnpr_clumping_chr_cached`, BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
 
 replaceSNP <- function(BM, BM2, rowInd, colInd) {

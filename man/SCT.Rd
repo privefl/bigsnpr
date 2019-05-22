@@ -10,7 +10,8 @@
 snp_grid_clumping(G, infos.chr, infos.pos, lpS, ind.row = rows_along(G),
   grid.thr.r2 = c(0.01, 0.05, 0.1, 0.2, 0.5, 0.8, 0.95),
   grid.base.size = c(50, 100, 200, 500), infos.imp = rep(1, ncol(G)),
-  grid.thr.imp = 1, exclude = NULL, ncores = 1)
+  grid.thr.imp = 1, groups = list(cols_along(G)), exclude = NULL,
+  ncores = 1)
 
 snp_grid_PRS(G, all_keep, betas, lpS, n_thr_lpS = 50,
   grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS)), max(lpS),
@@ -49,6 +50,11 @@ not provide it.}
 
 \item{grid.thr.imp}{Grid of thresholds over \code{infos.imp} (default is \code{1}), but
 you should change it (e.g. \code{c(0.3, 0.6, 0.9, 0.95)}) if providing \code{infos.imp}.}
+
+\item{groups}{List of vectors of indices to define your own categories.
+This could be used e.g. to derive C+T scores using two different GWAS
+summary statistics, or to include other information such as functional
+annotations. Default just makes one group with all variants.}
 
 \item{exclude}{Vector of SNP indices to exclude anyway.}
 

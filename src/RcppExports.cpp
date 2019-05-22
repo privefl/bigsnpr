@@ -41,13 +41,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // clumping_chr_cached
-List clumping_chr_cached(Environment BM, arma::sp_mat sqcor, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, const IntegerVector& pos, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP _bigsnpr_clumping_chr_cached(SEXP BMSEXP, SEXP sqcorSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+List clumping_chr_cached(Environment BM, arma::sp_mat sqcor, const IntegerVector& spInd, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, const IntegerVector& pos, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
+RcppExport SEXP _bigsnpr_clumping_chr_cached(SEXP BMSEXP, SEXP sqcorSEXP, SEXP spIndSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
     Rcpp::traits::input_parameter< arma::sp_mat >::type sqcor(sqcorSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type spInd(spIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ordInd(ordIndSEXP);
@@ -56,7 +57,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
-    rcpp_result_gen = Rcpp::wrap(clumping_chr_cached(BM, sqcor, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr));
+    rcpp_result_gen = Rcpp::wrap(clumping_chr_cached(BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -173,7 +174,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 9},
-    {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 10},
+    {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 11},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 5},
     {"_bigsnpr_linRegPcadapt_cpp", (DL_FUNC) &_bigsnpr_linRegPcadapt_cpp, 4},

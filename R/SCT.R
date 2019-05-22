@@ -19,6 +19,10 @@ NULL
 #'   not provide it.
 #' @param grid.thr.imp Grid of thresholds over `infos.imp` (default is `1`), but
 #'   you should change it (e.g. `c(0.3, 0.6, 0.9, 0.95)`) if providing `infos.imp`.
+#' @param groups List of vectors of indices to define your own categories.
+#'   This could be used e.g. to derive C+T scores using two different GWAS
+#'   summary statistics, or to include other information such as functional
+#'   annotations. Default just makes one group with all variants.
 #' @param exclude Vector of SNP indices to exclude anyway.
 #'
 #' @rdname SCT
@@ -30,12 +34,14 @@ snp_grid_clumping <- function(
   grid.base.size = c(50, 100, 200, 500),
   infos.imp = rep(1, ncol(G)),
   grid.thr.imp = 1,
+  groups = list(cols_along(G)),
   exclude = NULL,
   ncores = 1
 ) {
 
   check_args()
   assert_lengths(cols_along(G), infos.chr, infos.pos, infos.imp)
+  assert_class(groups, "list")
 
   THR_IMP        <- sort(unique(grid.thr.imp))
   THR_CLMP       <- sort(unique(grid.thr.r2))
@@ -78,25 +84,32 @@ snp_grid_clumping <- function(
       sumX.chr  <- sumX.chr[ind]
       denoX.chr <- denoX.chr[ind]
 
-      # Loop over parameters of clumping
-      for (thr.clmp in THR_CLMP) {
-        for (base.size.clmp in BASE_SIZE_CLMP) {
+      # TODO: test my mimicking infos.imp & with group with one value and with no value
+      for (group in groups) {
 
-          res <- clumping_chr_cached(
-            G, spcor.chr,
-            rowInd = ind.row,
-            colInd = ind.chr,
-            ordInd = order(S.chr, decreasing = TRUE),
-            pos    = pos.chr,
-            sumX   = sumX.chr,
-            denoX  = denoX.chr,
-            size   = 1000 * base.size.clmp / thr.clmp, # in bp
-            thr    = thr.clmp
-          )
+        ind2 <- which(ind.chr %in% group)
 
-          ind.keep[[i]] <- ind.chr[res[[1]]]
-          i <- i + 1
-          spcor.chr <- res[[2]]
+        # Loop over parameters of clumping
+        for (thr.clmp in THR_CLMP) {
+          for (base.size.clmp in BASE_SIZE_CLMP) {
+
+            # TODO: make sure to use the right subsetting (with ordInd)
+            res <- clumping_chr_cached(
+              G, spcor.chr, ind2 - 1L,
+              rowInd = ind.row,
+              colInd = ind.chr[ind2],
+              ordInd = order(S.chr[ind2], decreasing = TRUE),
+              pos    = pos.chr[ind2],
+              sumX   = sumX.chr[ind2],
+              denoX  = denoX.chr[ind2],
+              size   = 1000 * base.size.clmp / thr.clmp, # in bp
+              thr    = thr.clmp
+            )
+
+            ind.keep[[i]] <- ind.chr[ind2][res[[1]]]
+            i <- i + 1
+            spcor.chr <- res[[2]]
+          }
         }
       }
     }
@@ -107,6 +120,7 @@ snp_grid_clumping <- function(
   grid <- expand.grid(
     size    = BASE_SIZE_CLMP,
     thr.r2  = THR_CLMP,
+    grp.num = seq_along(groups),
     thr.imp = THR_IMP
   )
   grid$size <- as.integer(grid$size / grid$thr.r2)

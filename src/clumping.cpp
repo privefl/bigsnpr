@@ -25,7 +25,7 @@ LogicalVector clumping_chr(Environment BM,
 
   double xySum, num, r2;
   int i, j, j0, k, l, pos_min, pos_max;
-  bool cont1, cont2;
+  bool not_max, not_min;
 
   LogicalVector keep(m, false);
 
@@ -33,16 +33,16 @@ LogicalVector clumping_chr(Environment BM,
 
     j0 = ordInd[k] - 1;
     keep[j0] = true;
-    cont1 = cont2 = true;
+    not_max = not_min = true;
     pos_min = pos[j0] - size;
     pos_max = pos[j0] + size;
 
-    for (l = 1; cont1 || cont2; l++) {
+    for (l = 1; not_max || not_min; l++) {
 
-      if (cont1) {
+      if (not_max) {
         j = j0 + l;
-        cont1 = (j < m) && (pos[j] <= pos_max);  // within a window..
-        if (cont1 && keep[j]) {  // look only at already selected ones
+        not_max = (j < m) && (pos[j] <= pos_max);  // within a window..
+        if (not_max && keep[j]) {  // look only at already selected ones
           xySum = 0;
           for (i = 0; i < n; i++) {
             xySum += macc(i, j) * macc(i, j0);
@@ -56,10 +56,10 @@ LogicalVector clumping_chr(Environment BM,
         }
       }
 
-      if (cont2) {
+      if (not_min) {
         j = j0 - l;
-        cont2 = (j >= 0) && (pos[j] >= pos_min);  // within a window..
-        if (cont2 && keep[j]) {  // look only at already selected ones
+        not_min = (j >= 0) && (pos[j] >= pos_min);  // within a window..
+        if (not_min && keep[j]) {  // look only at already selected ones
           xySum = 0;
           for (i = 0; i < n; i++) {
             xySum += macc(i, j) * macc(i, j0);
@@ -84,6 +84,7 @@ LogicalVector clumping_chr(Environment BM,
 // [[Rcpp::export]]
 List clumping_chr_cached(Environment BM,
                          arma::sp_mat sqcor,
+                         const IntegerVector& spInd,
                          const IntegerVector& rowInd,
                          const IntegerVector& colInd,
                          const IntegerVector& ordInd,
@@ -97,61 +98,63 @@ List clumping_chr_cached(Environment BM,
   SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
   int n = macc.nrow();
   int m = macc.ncol();
-  myassert((int)sqcor.n_rows == m, ERROR_DIM);
-  myassert((int)sqcor.n_cols == m, ERROR_DIM);
+  myassert_size(spInd.size(), m);
 
   double xySum, num;
-  int i, j, j0, k, l, pos_min, pos_max;
-  bool cont1, cont2;
+  int i, j, j_sp, j0, j0_sp, k, l, pos_min, pos_max;
+  bool not_max, not_min;
 
   LogicalVector keep(m, false);
 
   for (k = 0; k < m; k++) {
 
     j0 = ordInd[k] - 1;
+    j0_sp = spInd[j0]; // -1 in R
     keep[j0] = true;
-    cont1 = cont2 = true;
+    not_max = not_min = true;
     pos_min = pos[j0] - size;
     pos_max = pos[j0] + size;
 
-    for (l = 1; cont1 || cont2; l++) {
+    for (l = 1; not_max || not_min; l++) {
 
-      if (cont1) {
+      if (not_max) {
         j = j0 + l;
-        cont1 = (j < m) && (pos[j] <= pos_max);  // within a window..
-        if (cont1 && keep[j]) {  // look only at already selected ones
+        j_sp = spInd[j]; // -1 in R
+        not_max = (j < m) && (pos[j] <= pos_max);  // within a window..
+        if (not_max && keep[j]) {  // look only at already selected ones
 
-          if (sqcor(j, j0) == 0) {  // squared correlation not computed yet
+          if (sqcor(j_sp, j0_sp) == 0) {  // squared correlation not computed yet
             xySum = 0;
             for (i = 0; i < n; i++) {
               xySum += macc(i, j) * macc(i, j0);
             }
             num = xySum - sumX[j] * sumX[j0] / n;
-            sqcor(j, j0) = num * num / (denoX[j] * denoX[j0]);
+            sqcor(j_sp, j0_sp) = num * num / (denoX[j] * denoX[j0]);
           }
 
-          if (sqcor(j, j0) > thr) {
+          if (sqcor(j_sp, j0_sp) > thr) {
             keep[j0] = false;  // prune
             break;
           }
         }
       }
 
-      if (cont2) {
+      if (not_min) {
         j = j0 - l;
-        cont2 = (j >= 0) && (pos[j] >= pos_min);  // within a window..
-        if (cont2 && keep[j]) {  // look only at already selected ones
+        j_sp = spInd[j]; // -1 in R
+        not_min = (j >= 0) && (pos[j] >= pos_min);  // within a window..
+        if (not_min && keep[j]) {  // look only at already selected ones
 
-          if (sqcor(j, j0) == 0) {  // squared correlation not computed yet
+          if (sqcor(j_sp, j0_sp) == 0) {  // squared correlation not computed yet
             xySum = 0;
             for (i = 0; i < n; i++) {
               xySum += macc(i, j) * macc(i, j0);
             }
             num = xySum - sumX[j] * sumX[j0] / n;
-            sqcor(j, j0) = num * num / (denoX[j] * denoX[j0]);
+            sqcor(j_sp, j0_sp) = num * num / (denoX[j] * denoX[j0]);
           }
 
-          if (sqcor(j, j0) > thr) {
+          if (sqcor(j_sp, j0_sp) > thr) {
             keep[j0] = false;  // prune
             break;
           }
