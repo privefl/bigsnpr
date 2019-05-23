@@ -1,0 +1,206 @@
+---
+title: "SCT"
+author: "Florian Privé"
+date: "May 23, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+In this document, I explain and show how to use SCT (Stacked Clumping and Thresholding).
+
+Please also refer to and cite the corresponding paper:
+
+
+## Data
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 75)
+knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
+```
+
+Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. I store those files in a directory called `"tmp-data"` here.
+
+```{r, echo=FALSE, eval=FALSE}
+unzip("data-raw/public-data.zip")
+```
+
+```{r, echo=FALSE}
+unlink(paste0("tmp-data/public-data", c(".bk", ".rds")))
+unlink(paste0("tmp-data/public-data-scores", c(".bk", ".rds")))
+```
+
+You can see [there](https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R) how I generated these data from [the 1000 Genomes project](https://www.nature.com/articles/nature15393).
+
+First, you need to read from the PLINK files (or BGEN files).
+
+```{r}
+# Load packages bigsnpr and bigstatsr
+library(bigsnpr)
+# Read from bed/bim/fam, it will create new files.
+snp_readBed("tmp-data/public-data.bed")
+# Attach the "bigSNP" object in R session
+obj.bigSNP <- snp_attach("tmp-data/public-data.rds")
+# See how it looks like
+str(obj.bigSNP, max.level = 2, strict.width = "cut")
+# Get aliases for useful slots
+G   <- obj.bigSNP$genotypes
+CHR <- obj.bigSNP$map$chromosome
+POS <- obj.bigSNP$map$physical.pos
+y   <- obj.bigSNP$fam$affection - 1
+NCORES <- nb_cores()
+# Check some counts for the 10 first SNPs
+big_counts(G, ind.col = 1:10)
+# Read external summary statistics
+sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+str(sumstats)
+```
+
+```{r}
+set.seed(1)
+ind.train <- sample(nrow(G), 400)
+ind.test <- setdiff(rows_along(G), ind.train)
+```
+
+
+## Steps in SCT
+
+There are four steps in SCT that you can perform using functions `snp_match()` and `snp_grid_*()`.
+
+### Matching variants
+
+```{r, error=TRUE}
+snp_match(sumstats, obj.bigSNP$map)
+```
+
+You need to have variables `"chr"`, `"pos"`, `"a0"` and `"a1"` in both summary statistics and variant information from the genotype data, as they are used to match variants between these two data frames.
+
+```{r}
+names(sumstats) <- c("chr", "rsid", "pos", "a0", "a1", "beta", "p")
+map <- obj.bigSNP$map[-(2:3)]
+names(map) <- c("chr", "pos", "a0", "a1")
+info_snp <- snp_match(sumstats, map)
+```
+
+If no or few variants are actually flipped, you might want to disable the strand flipping option.
+
+```{r}
+info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
+beta <- info_snp$beta
+lpval <- -log10(info_snp$p)
+```
+
+### Clumping
+
+First, you need to compute sets of clumping corresponding to many hyper-parameters (threshold of correlation for clumping, window size of LD checking, and possibly imputation accuracy threshold).
+
+```{r, cache=TRUE}
+all_keep <- snp_grid_clumping(G, CHR, POS, ind.row = ind.train,
+                              lpS = lpval, ncores = NCORES)
+str(all_keep)  ## only 3 chromosomes in these data
+```
+
+Here, we use 28 (7 x 4) different sets of hyper-parameters for clumping.
+
+```{r}
+
+attr(all_keep, "grid")
+```
+
+### Thresholding
+
+Then, for each chromosome, for each set of clumping indices previously computed and for each p-value threshold, the corresponding C+T score is computed.
+
+```{r}
+multi_PRS <- snp_grid_PRS(G, all_keep, beta, lpval, ind.row = ind.train,
+                          backingfile = "tmp-data/public-data-scores", 
+                          n_thr_lpS = 50, ncores = NCORES)
+dim(multi_PRS)  ## 4200 C+T scores
+```
+
+### Stacking
+
+A penalized regression is finally used to learn a linear combination of all C+T scores. 
+
+```{r}
+final_mod <- snp_grid_stacking(multi_PRS, y[ind.train], ncores = NCORES, K = 4)
+summary(final_mod$mod)
+plot(final_mod$mod)
+```
+
+For options of fitting penalized regressions, see [this vignette](https://privefl.github.io/bigstatsr/articles/penalized-regressions.html).
+
+From stacking C+T scores, we can derive a unique vector of weights.
+
+```{r}
+new_beta <- final_mod$beta.G
+ind <- which(new_beta != 0)
+```
+
+```{r}
+library(ggplot2)
+ggplot(data.frame(y = new_beta, x = beta)[ind, ]) +
+  geom_abline(slope = 1, intercept = 0, color = "red") +
+  geom_abline(slope = 0, intercept = 0, color = "blue") +
+  geom_point(aes(x, y), size = 0.6) +
+  theme_bigstatsr() +
+  labs(x = "Effect sizes from GWAS", y = "Non-zero effect sizes from SCT")
+```
+
+We can use this vector of SNP weights to predict in another set.
+
+```{r}
+pred <- final_mod$intercept + 
+  big_prodVec(G, new_beta[ind], ind.row = ind.test, ind.col = ind)
+ggplot(data.frame(
+  Phenotype = factor(y[ind.test], levels = 0:1, labels = c("Control", "Case")),
+  Probability = 1 / (1 + exp(-pred)))) + 
+  theme_bigstatsr() +
+  geom_density(aes(Probability, fill = Phenotype), alpha = 0.3)
+AUCBoot(pred, y[ind.test])
+```
+
+## Best C+T score
+
+If you want to compute the best C+T score based on the computed grid, you can do:
+
+```{r, message=FALSE}
+library(tidyverse)
+grid2 <- attr(all_keep, "grid") %>%
+  mutate(thr.lp = list(attr(multi_PRS, "grid.lpS.thr")), num = row_number()) %>%
+  unnest()
+s <- nrow(grid2)
+grid2$auc <- big_apply(multi_PRS, a.FUN = function(X, ind, s, y.train) {
+  # Sum over all chromosomes, for the same C+T parameters
+  single_PRS <- rowSums(X[, ind + s * (0:2)])  ## replace by 0:21 in real data
+  bigstatsr::AUC(single_PRS, y.train)
+}, ind = 1:s, s = s, y.train = y[ind.train],
+a.combine = 'c', block.size = 1, ncores = NCORES)
+```
+
+```{r}
+max_prs <- grid2 %>% arrange(desc(auc)) %>% slice(1:10) %>% print() %>% slice(1)
+```
+
+```{r, fig.asp=2.5, out.width="50%"}
+ggplot(grid2) +
+  geom_point(aes(thr.lp, auc)) +
+  # facet_grid(thr.imp ~ thr.r2 + size) +
+  facet_grid(thr.r2 + size ~ .) +
+  scale_x_log10(limits = c(1, NA)) +
+  ylim(0.55, NA) +
+  theme_bigstatsr(size.rel = 0.6) +
+  labs(x = "-log10(p-value) threshold (log scale)", y = "AUC")
+```
+
+```{r}
+ind.keep <- unlist(map(all_keep, max_prs$num))
+sum(lpval[ind.keep] > max_prs$thr.lp)
+AUCBoot(
+  snp_PRS(G, beta[ind.keep], ind.test = ind.test, ind.keep = ind.keep,
+          lpS.keep = lpval[ind.keep], thr.list = max_prs$thr.lp),
+  y[ind.test]
+)
+```
+
