@@ -13,6 +13,8 @@ POS2 <- round(POS + 1)
 ################################################################################
 
 expect_error(snp_autoSVD(G, CHR, POS), "only integers")
+expect_error(snp_autoSVD(G, CHR[-1], POS2), bigstatsr:::GET_ERROR_DIM())
+expect_error(snp_autoSVD(G, CHR, POS2[-1]), bigstatsr:::GET_ERROR_DIM())
 
 expect_is(obj.svd <- snp_autoSVD(G, CHR), "big_SVD")
 expect_identical(attr(obj.svd, "lrldr"), LD.wiki34[0, 1:3])

@@ -81,6 +81,8 @@ snp_autoSVD <- function(G,
                         verbose = TRUE) {
 
   check_args()
+  assert_lengths(infos.chr, cols_along(G))
+  if (!is.null(infos.pos)) assert_lengths(infos.pos, cols_along(G))
 
   if (!missing(is.size.in.bp))
     warning2("Parameter 'is.size.in.bp' is deprecated.")
