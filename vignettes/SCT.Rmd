@@ -1,5 +1,5 @@
 ---
-title: "Computing polygenic scores using Stacked Clumping and Thresholding"
+title: "Computing polygenic scores using Stacked Clumping and Thresholding (SCT)"
 author: "Florian Privé and Michael Blum"
 date: "May 23, 2019"
 output: html_document
@@ -47,24 +47,24 @@ CHR <- obj.bigSNP$map$chromosome
 POS <- obj.bigSNP$map$physical.pos
 y   <- obj.bigSNP$fam$affection - 1
 NCORES <- nb_cores()
-# Check some counts for the 10 first SNPs
+# Check some counts for the 10 first variants
 big_counts(G, ind.col = 1:10)
 # Read external summary statistics
 sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
 str(sumstats)
 ```
 
-We split genotype data using part of the data to learn parameters of stacking and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are `"ntrain"`=400 individuals in the training. **We should provide recommendations here about how to choose `ntrain`**.
+We split genotype data using part of the data to learn parameters of stacking and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.
 
 ```{r}
 set.seed(1)
-ind.train <- sample(nrow(G), ntrain <- 400)
+ind.train <- sample(nrow(G), 400)
 ind.test <- setdiff(rows_along(G), ind.train)
 ```
 
 ## Matching variants between genotype data and summary statistics 
 
-To match variants contained in genotype data and summary statistics, the variables `"chr"` (chromosome number), `"pos"` (position), `"a0"` (reference allele) and `"a1"` (derived allele) should be available in the summary statistics and in the genotype data. These 4 variables are used to match variants between the two data frames.
+To match variants contained in genotype data and summary statistics, the variables `"chr"` (chromosome number), `"pos"` (genetic position), `"a0"` (reference allele) and `"a1"` (derived allele) should be available in the summary statistics and in the genotype data. These 4 variables are used to match variants between the two data frames.
 
 ```{r}
 names(sumstats) <- c("chr", "rsid", "pos", "a0", "a1", "beta", "p")
@@ -73,8 +73,7 @@ names(map) <- c("chr", "pos", "a0", "a1")
 info_snp <- snp_match(sumstats, map)
 ```
 
-**The next piece of code and text requires more explanation**
-If no or few variants are actually flipped, you might want to disable the strand flipping option.
+If no or few variants are actually flipped, you might want to disable the strand flipping option. Here, these are simulated data so all variants use the same strand and the same reference.
 
 ```{r}
 info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
@@ -82,14 +81,14 @@ beta <- info_snp$beta
 lpval <- -log10(info_snp$p)
 ```
 
-## Computing C+ T scores for a grid of parameters and chromosomes
+## Computing C+T scores for a grid of parameters and chromosomes
 
 ### Clumping
 
-First, the function `"snp_grid_clumping"` computes sets of SNPs resulting from the clumping procedure that is applied repeatedly with different values of hyper-parameters (threshold of correlation for clumping, window size, and possibly imputation accuracy threshold). By default, the function uses 28 (7 thresholds of correlation x 4 window sizes) different sets of hyper-parameters for generating sets of SNPs resulting from clumping.
+First, the function `snp_grid_clumping()` computes sets of variants resulting from the clumping procedure that is applied repeatedly with different values of hyper-parameters (threshold of correlation for clumping, window size, and possibly imputation accuracy threshold). By default, the function uses 28 (7 thresholds of correlation x 4 window sizes) different sets of hyper-parameters for generating sets of variants resulting from clumping.
 
 ```{r, cache=TRUE}
-#The clumping step might take some time to complete
+# The clumping step might take some time to complete
 all_keep <- snp_grid_clumping(G, CHR, POS, ind.row = ind.train,
                               lpS = lpval, ncores = NCORES)
 attr(all_keep, "grid")
@@ -97,16 +96,16 @@ attr(all_keep, "grid")
 
 ### Thresholding
 
-Then, for each chromosome, for each set of SNPs resulting from clumping and for each p-value threshold, the function `"snp_grid_PRS"` computes C+T scores.
+Then, for each chromosome, for each set of variants resulting from clumping and for each p-value threshold, the function `snp_grid_PRS()` computes C+T scores.
 
 ```{r}
 multi_PRS <- snp_grid_PRS(G, all_keep, beta, lpval, ind.row = ind.train,
                           backingfile = "tmp-data/public-data-scores", 
                           n_thr_lpS = 50, ncores = NCORES)
-dim(multi_PRS)  ## 4200 C+T scores
+dim(multi_PRS)  ## 4200 C+T scores for 400 individuals
 ```
 
-## Stacking C+ T predictions
+## Stacking C+T predictions
 
 A penalized regression is finally used to learn an optimal linear combination of C+T scores. 
 
@@ -134,17 +133,20 @@ ggplot(data.frame(y = new_beta, x = beta)[ind, ]) +
   labs(x = "Effect sizes from GWAS", y = "Non-zero effect sizes from SCT")
 ```
 
-We can use this vector of SNP weights to compute polygenic risk scores on the test set and evaluate the Area Under the Curve (AUC). 
+We can use this vector of variant weights to compute polygenic risk scores on the test set and evaluate the Area Under the Curve (AUC). 
 
 ```{r}
 pred <- final_mod$intercept + 
   big_prodVec(G, new_beta[ind], ind.row = ind.test, ind.col = ind)
+AUCBoot(pred, y[ind.test])
+```
+
+```{r}
 ggplot(data.frame(
   Phenotype = factor(y[ind.test], levels = 0:1, labels = c("Control", "Case")),
   Probability = 1 / (1 + exp(-pred)))) + 
   theme_bigstatsr() +
   geom_density(aes(Probability, fill = Phenotype), alpha = 0.3)
-AUCBoot(pred, y[ind.test])
 ```
 
 ## Best C+T predictions
@@ -169,17 +171,6 @@ a.combine = 'c', block.size = 1, ncores = NCORES)
 max_prs <- grid2 %>% arrange(desc(auc)) %>% slice(1:10) %>% print() %>% slice(1)
 ```
 
-```{r, fig.asp=2.5, out.width="50%"}
-ggplot(grid2) +
-  geom_point(aes(thr.lp, auc)) +
-  # facet_grid(thr.imp ~ thr.r2 + size) +
-  facet_grid(thr.r2 + size ~ .) +
-  scale_x_log10(limits = c(1, NA)) +
-  ylim(0.55, NA) +
-  theme_bigstatsr(size.rel = 0.6) +
-  labs(x = "-log10(p-value) threshold (log scale)", y = "AUC")
-```
-
 ```{r}
 ind.keep <- unlist(map(all_keep, max_prs$num))
 sum(lpval[ind.keep] > max_prs$thr.lp)
@@ -190,7 +181,7 @@ AUCBoot(
 )
 ```
 
-For this example, the best C+T predictions provides an AUC of 62% whereas stacking, which should be preferred, provides an AUC of 68%.
+For this example, the best C+T predictions provides an AUC of 63% whereas stacking, which should be preferred, provides an AUC of 68%.
 
 ### Reference
 
