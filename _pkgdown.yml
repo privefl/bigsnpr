@@ -17,6 +17,8 @@ navbar:
         href: articles/how-to-PCA.html
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
+      - text: "Computing polygenic scores using Stacked Clumping and Thresholding (SCT)"
+        href: articles/SCT.html
   right:
     - text: "About"
       icon: fa-user
@@ -49,6 +51,12 @@ reference:
       - snp_PRS
       - snp_cor
       - snp_fastImpute
+  - title: "Stacked Clumping and Thresholding (SCT)"
+    contents:
+      - snp_match
+      - snp_grid_clumping
+      - snp_grid_PRS
+      - snp_grid_stacking
   - title: "Multiple testing - plots"
     contents:
       - snp_gc

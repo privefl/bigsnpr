@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -90,6 +90,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -133,7 +136,8 @@
     </div>
 
     <pre class="usage"><span class='fu'>snp_readBGEN</span>(<span class='no'>bgenfiles</span>, <span class='no'>backingfile</span>, <span class='no'>list_snp_id</span>, <span class='kw'>ind_row</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>bgi_dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/basename'>dirname</a></span>(<span class='no'>bgenfiles</span>), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+  <span class='kw'>bgi_dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/basename'>dirname</a></span>(<span class='no'>bgenfiles</span>), <span class='kw'>read_as</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"dosage"</span>, <span class='st'>"random"</span>),
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,6 +168,14 @@ are used. If not specified, all rows are used.<br />
     <tr>
       <th>bgi_dir</th>
       <td><p>Directory of index files. Default is the same as <code>bgenfiles</code>.</p></td>
+    </tr>
+    <tr>
+      <th>read_as</th>
+      <td><p>How to read BGEN probabilities? Currently implemented:</p><ul>
+<li><p>as dosages (rounded to two decimal places), the default,</p></li>
+<li><p>as hard calls, randomly sampled based on those probabilities
+(similar to PLINK option '<code>--hard-call-threshold random</code>').</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>ncores</th>

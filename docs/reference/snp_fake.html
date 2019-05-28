@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -90,6 +90,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -169,17 +172,17 @@ with missing values.</p>
 #&gt; $map
 #&gt;    chromosome marker.ID genetic.dist physical.pos allele1 allele2
 #&gt; 1           1     snp_1            0            0       T       C
-#&gt; 2           1     snp_2            0            0       C       T
+#&gt; 2           1     snp_2            0            0       T       C
 #&gt; 3           1     snp_3            0            0       C       T
-#&gt; 4           1     snp_4            0            0       T       C
-#&gt; 5           1     snp_5            0            0       C       T
-#&gt; 6           1     snp_6            0            0       T       C
-#&gt; 7           1     snp_7            0            0       T       C
-#&gt; 8           1     snp_8            0            0       T       C
+#&gt; 4           1     snp_4            0            0       C       T
+#&gt; 5           1     snp_5            0            0       T       C
+#&gt; 6           1     snp_6            0            0       C       T
+#&gt; 7           1     snp_7            0            0       C       T
+#&gt; 8           1     snp_8            0            0       C       T
 #&gt; 9           1     snp_9            0            0       C       T
-#&gt; 10          1    snp_10            0            0       C       T
-#&gt; 11          1    snp_11            0            0       C       T
-#&gt; 12          1    snp_12            0            0       C       T
+#&gt; 10          1    snp_10            0            0       T       C
+#&gt; 11          1    snp_11            0            0       T       C
+#&gt; 12          1    snp_12            0            0       T       C
 #&gt; 
 #&gt; attr(,"class")
 #&gt; [1] "bigSNP"</div><div class='input'>
@@ -194,11 +197,11 @@ with missing values.</p>
 <span class='co'># Modify the genotype `big.matrix`</span>
 <span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/raw'>as.raw</a></span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>G</span>[]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-#&gt; [1,]    0    0    2    1    0    2    2   NA    0     1     0     2
-#&gt; [2,]   NA    2    1   NA    1    2    2    0    2     1     0     2
-#&gt; [3,]    1    2    2    1    0   NA    2   NA   NA     2     0     1
-#&gt; [4,]   NA   NA   NA    1    0   NA   NA    2   NA    NA     1     1
-#&gt; [5,]    1    1    0    1    2    0    0    0    1     1    NA    NA</div><div class='input'>
+#&gt; [1,]    2   NA    2    1    1    0   NA    1    1     2     1    NA
+#&gt; [2,]    1    1    0   NA    0    2    2    2    0     2     1     0
+#&gt; [3,]   NA   NA    1    1   NA    1    2    2    0     1     2    NA
+#&gt; [4,]    1   NA    1    1    2   NA   NA    1    0    NA     1     1
+#&gt; [5,]    2    0    0    2   NA    2    0   NA    1     1     1    NA</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

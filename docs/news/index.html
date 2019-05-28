@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -87,6 +87,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -122,6 +125,44 @@
       
     </div>
 
+    <div id="bigsnpr-0-11-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-0-11-1" class="anchor"></a>bigsnpr 0.11.1</h2>
+<ul>
+<li>When using <code><a href="../reference/SCT.html">snp_grid_PRS()</a></code>, it now stores not only the FBM, but also the input parameters as attributes (the whole result basically).</li>
+</ul>
+</div>
+    <div id="bigsnpr-0-11-0" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-0-11-0" class="anchor"></a>bigsnpr 0.11.0</h2>
+<ul>
+<li><p>Add 3 SCT functions <code>snp_grid_*()</code> to improve from Clumping and Thresholding (preprint coming soon).</p></li>
+<li><p>Add <code><a href="../reference/snp_match.html">snp_match()</a></code> function to match between summary statistics and some SNP information.</p></li>
+</ul>
+</div>
+    <div id="bigsnpr-0-10-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-0-10-2" class="anchor"></a>bigsnpr 0.10.2</h2>
+<ul>
+<li>Parameter <code>is.size.in.bp</code> is deprecated.</li>
+</ul>
+</div>
+    <div id="bigsnpr-0-10-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-0-10-1" class="anchor"></a>bigsnpr 0.10.1</h2>
+<ul>
+<li>Add parameter <code>read_as</code> for <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code>. It is now possible to sample BGEN probabilities as random hard calls using <code>read_as = "random"</code>. Default remains reading probabilities as dosages.</li>
+</ul>
+</div>
+    <div id="bigsnpr-0-10-0" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-0-10-0" class="anchor"></a>bigsnpr 0.10.0</h2>
+<ul>
+<li><p>For memory-mapping, now use <em>mio</em> instead of <em>boost</em>.</p></li>
+<li><p><code><a href="../reference/snp_clumping.html">snp_clumping()</a></code> (and <code><a href="../reference/snp_autoSVD.html">snp_autoSVD()</a></code>) now has a <code>size</code> that is inversely proportional to <code>thr.r2</code>.</p></li>
+<li><p><code><a href="../reference/snp_clumping.html">snp_pruning()</a></code> is deprecated (and will be removed someday); now always use <code><a href="../reference/snp_clumping.html">snp_clumping()</a></code>.</p></li>
+</ul>
+</div>
     <div id="bigsnpr-0-9-0" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsnpr-0-9-0" class="anchor"></a>bigsnpr 0.9.0</h2>
@@ -133,7 +174,7 @@
 <h2 class="hasAnchor">
 <a href="#bigsnpr-0-8-2" class="anchor"></a>bigsnpr 0.8.2</h2>
 <ul>
-<li>Add <code><a href="../reference/snp_assocBGEN.html">snp_assocBGEN()</a></code> for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format.</li>
+<li>Add function <code><a href="../reference/snp_assocBGEN.html">snp_assocBGEN()</a></code> for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.</li>
 </ul>
 </div>
     <div id="bigsnpr-0-8-1" class="section level2">
@@ -184,7 +225,7 @@
 <h2 class="hasAnchor">
 <a href="#bigsnpr-0-2-7" class="anchor"></a>bigsnpr 0.2.7</h2>
 <ul>
-<li>Faster defaults + possibility to estimate correlations based on a subset of individuals for <code>snp_fastImpute</code>. Also store infos in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the <em>Bioinformatics</em> paper were <code>alpha = 0.02</code> and <code>size = 500</code> (instead of <code>1e-4</code> and <code>200</code> now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).</li>
+<li>Faster defaults + possibility to estimate correlations based on a subset of individuals for <code>snp_fastImpute</code>. Also store information in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the <em>Bioinformatics</em> paper were <code>alpha = 0.02</code> and <code>size = 500</code> (instead of <code>1e-4</code> and <code>200</code> now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).</li>
 </ul>
 </div>
     <div id="bigsnpr-0-2-5" class="section level2">
@@ -208,6 +249,11 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#bigsnpr-0-11-1">0.11.1</a></li>
+        <li><a href="#bigsnpr-0-11-0">0.11.0</a></li>
+        <li><a href="#bigsnpr-0-10-2">0.10.2</a></li>
+        <li><a href="#bigsnpr-0-10-1">0.10.1</a></li>
+        <li><a href="#bigsnpr-0-10-0">0.10.0</a></li>
         <li><a href="#bigsnpr-0-9-0">0.9.0</a></li>
         <li><a href="#bigsnpr-0-8-2">0.8.2</a></li>
         <li><a href="#bigsnpr-0-8-1">0.8.1</a></li>

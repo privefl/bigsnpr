@@ -64,7 +64,7 @@ which appear in loadings of SVD." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@ which appear in loadings of SVD." />
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -136,8 +139,8 @@ which appear in loadings of SVD.</p>
 
     <pre class="usage"><span class='fu'>snp_autoSVD</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
   <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>), <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(),
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,8 +188,11 @@ Default is <code>0.2</code>. Use <code>NA</code> if you want to skip the clumpin
     </tr>
     <tr>
       <th>size</th>
-      <td><p>Radius of the window's size for the LD evaluations of the initial
-step of clumping. Default is <code>500</code>. See parameter <code>is.size.in.bp</code>.</p></td>
+      <td><p>For one SNP, window size around this SNP to compute correlations.
+Default is <code>100 / thr.r2</code> for clumping (0.2 -&gt; 500; 0.1 -&gt; 1000; 0.5 -&gt; 200).
+If not providing <code>infos.pos</code> (<code>NULL</code>, the default), this is a window in
+number of SNPs, otherwise it is a window in kb (genetic distance).
+I recommend that you provide the positions if available.</p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -205,8 +211,7 @@ in order to be reported as long-range LD region. Default is <code>20</code>.</p>
     </tr>
     <tr>
       <th>is.size.in.bp</th>
-      <td><p>Is the specified size is corresponding to
-kilo base-pairs. Default is <code>FALSE</code> (it is only SNP counts).</p></td>
+      <td><p>Deprecated.</p></td>
     </tr>
     <tr>
       <th>ncores</th>
@@ -250,7 +255,8 @@ to make the SVD computations faster.</p>
 
 <span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_autoSVD</span>(<span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>ex</span>$<span class='no'>genotypes</span>,
                        <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>ex</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>,
-                       <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>ex</span>$<span class='no'>map</span>$<span class='no'>physical.position</span>)</div><div class='output co'>#&gt; Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 4270 SNPs.
+                       <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>ex</span>$<span class='no'>map</span>$<span class='no'>physical.position</span>)</div><div class='output co'>#&gt; 
+#&gt; Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 4270 SNPs.
 #&gt; 
 #&gt; Iteration 1:
 #&gt; Computing SVD..

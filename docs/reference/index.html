@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -87,6 +87,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -221,9 +224,9 @@
       <tr>
         
         <td>
-          <p><code><a href="pruning-clumping.html">snp_clumping()</a></code> <code><a href="pruning-clumping.html">snp_pruning()</a></code> <code><a href="pruning-clumping.html">snp_indLRLDR()</a></code> </p>
+          <p><code><a href="snp_clumping.html">snp_clumping()</a></code> <code><a href="snp_clumping.html">snp_pruning()</a></code> <code><a href="snp_clumping.html">snp_indLRLDR()</a></code> </p>
         </td>
-        <td><p>LD pruning and clumping</p></td>
+        <td><p>LD clumping</p></td>
       </tr><tr>
         
         <td>
@@ -248,6 +251,26 @@
           <p><code><a href="snp_fastImpute.html">snp_fastImpute()</a></code> </p>
         </td>
         <td><p>Fast imputation</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-stacked-clumping-and-thresholding-sct-" class="hasAnchor"><a href="#section-stacked-clumping-and-thresholding-sct-" class="anchor"></a>Stacked Clumping and Thresholding (SCT)</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="snp_match.html">snp_match()</a></code> </p>
+        </td>
+        <td><p>Match alleles</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SCT.html">snp_grid_clumping()</a></code> <code><a href="SCT.html">snp_grid_PRS()</a></code> <code><a href="SCT.html">snp_grid_stacking()</a></code> </p>
+        </td>
+        <td><p>Stacked C+T (SCT)</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -347,6 +370,7 @@
       <li><a href="#section-i-o">I/O</a></li>
       <li><a href="#section-external-software">External software</a></li>
       <li><a href="#section-pruning-correlation">Pruning / correlation</a></li>
+      <li><a href="#section-stacked-clumping-and-thresholding-sct-">Stacked Clumping and Thresholding (SCT)</a></li>
       <li><a href="#section-multiple-testing-plots">Multiple testing - plots</a></li>
       <li><a href="#section-utilities">Utilities</a></li>
     </ul>

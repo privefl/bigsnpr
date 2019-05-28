@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -57,6 +57,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -157,12 +160,12 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 <pre><code>##  [1] 0.043 0.091 0.154 0.177 0.234 0.283 0.338 0.372 0.436 0.450</code></pre>
 <p>Let’s convert this to our format <code>bigSNP</code> in order to write corresponding PLINK files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(bigsnpr)</code></pre></div>
-<pre><code>## Le chargement a nécessité le package : bigstatsr</code></pre>
+<pre><code>## Loading required package: bigstatsr</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fake &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_fake.html">snp_fake</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(X), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(X))
 fake<span class="op">$</span>genotypes[] &lt;-<span class="st"> </span>X
 tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempfile</a></span>()
 <span class="kw"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span>(fake, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(tmp, <span class="st">".bed"</span>))</code></pre></div>
-<pre><code>## [1] "/tmp/Rtmpd9ikMt/filecc21da9b98a.bed"</code></pre>
+<pre><code>## [1] "/tmp/RtmpUQIhOw/file131c713bfd4b.bed"</code></pre>
 </div>
 <div id="pruning" class="section level2">
 <h2 class="hasAnchor">
@@ -186,9 +189,11 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 <pre><code>##       V1
 ## 1 snp_10</code></pre>
 <p>The first SNP is pruned because of its correlation with the second. The second SNP is pruned because of its correlation with the third and so on. In the end, only the last SNP (10th) is kept with the LD pruning procedure of PLINK, which corresponds to less than 18% of the total variance.</p>
-<p>You can also do the pruning directly in R with <code><a href="../reference/pruning-clumping.html">snp_pruning()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pruning-clumping.html">snp_pruning</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
-<pre><code>## [1] 10</code></pre>
+<p>You can also do the pruning directly in R with <code><a href="../reference/snp_clumping.html">snp_pruning()</a></code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/snp_clumping.html">snp_pruning</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
+<pre><code>## Warning: Pruning is deprecated; using clumping (on MAF) instead..
+## See why there: https://goo.gl/Td5YYv.</code></pre>
+<pre><code>## [1]  2  4  6  8 10</code></pre>
 </div>
 <div id="clumping" class="section level2">
 <h2 class="hasAnchor">
@@ -211,8 +216,8 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 ## 4   1 1  snp_4  0 0.823     1    1   0   0    0     0 snp_3(1)
 ## 5   1 1  snp_2  0 0.909     1    1   0   0    0     0 snp_1(1)</code></pre>
 <p>So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.</p>
-<p>You can also do the clumping (on MAF by default) directly in R with <code><a href="../reference/pruning-clumping.html">snp_clumping()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/pruning-clumping.html">snp_clumping</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
+<p>You can also do the clumping (on MAF by default) directly in R with <code><a href="../reference/snp_clumping.html">snp_clumping()</a></code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
 <pre><code>## [1]  2  4  6  8 10</code></pre>
 </div>
 <div id="conclusion" class="section level2">

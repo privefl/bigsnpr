@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -57,6 +57,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -111,7 +114,7 @@
 <a href="#read-from-the-plink-files" class="anchor"></a>Read from the PLINK files</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load packages bigsnpr and bigstatsr</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(bigsnpr)</code></pre></div>
-<pre><code>## Le chargement a nécessité le package : bigstatsr</code></pre>
+<pre><code>## Loading required package: bigstatsr</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Read from bed/bim/fam, it will create new files.</span>
 <span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(<span class="st">"tmp-data/public-data.bed"</span>)</code></pre></div>
 <pre><code>## [1] "/home/privef/Bureau/bigsnpr/tmp-data/public-data.rds"</code></pre>

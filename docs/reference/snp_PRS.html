@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -90,6 +90,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -158,7 +161,7 @@ You may want to see big_univLinReg or big_univLogReg.</p></td>
     <tr>
       <th>ind.keep</th>
       <td><p>Column (SNP) indices to use (if using clumping, the
-output of <a href='pruning-clumping.html'>snp_clumping</a>). Default doesn't clump.</p></td>
+output of <a href='snp_clumping.html'>snp_clumping</a>). Default doesn't clump.</p></td>
     </tr>
     <tr>
       <th>same.keep</th>
@@ -168,7 +171,7 @@ you train the betas on the same dataset). Otherwise, use <a href='same_ref.html'
     </tr>
     <tr>
       <th>lpS.keep</th>
-      <td><p>Numeric vector of <code>-log10(p.value)</code> associated with
+      <td><p>Numeric vector of <code>-log10(p-value)</code> associated with
 <code>betas.keep</code>. Default doesn't use thresholding.</p></td>
     </tr>
     <tr>
@@ -192,7 +195,8 @@ columns correspond to <code>thr.list</code>.</p>
 <span class='no'>y01</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
 
 <span class='co'># PCA -&gt; covariables</span>
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_autoSVD.html'>snp_autoSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>POS</span>)</div><div class='output co'>#&gt; Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 952 SNPs.
+<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_autoSVD.html'>snp_autoSVD</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>POS</span>)</div><div class='output co'>#&gt; 
+#&gt; Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 952 SNPs.
 #&gt; 
 #&gt; Iteration 1:
 #&gt; Computing SVD..
@@ -208,7 +212,7 @@ columns correspond to <code>thr.list</code>.</p>
                              <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='no'>ind.train</span>,
                              <span class='kw'>covar.train</span> <span class='kw'>=</span> <span class='no'>obj.svd</span>$<span class='no'>u</span>[<span class='no'>ind.train</span>, ])
 <span class='co'># clumping</span>
-<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='pruning-clumping.html'>snp_clumping</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>,
+<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_clumping.html'>snp_clumping</a></span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>CHR</span>,
                          <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='no'>ind.train</span>,
                          <span class='kw'>S</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='no'>gwas.train</span>$<span class='no'>score</span>))
 <span class='co'># -log10(p-values) and thresolding</span>
@@ -226,10 +230,10 @@ columns correspond to <code>thr.list</code>.</p>
 <span class='co'># AUC as a function of the number of predictors</span>
 <span class='no'>aucs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>prs</span>, <span class='fl'>2</span>, <span class='no'>AUC</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='no'>y01</span>[<span class='no'>ind.test</span>])
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span>(<span class='no'>nb.pred</span>, <span class='no'>aucs</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>() +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='no'>nb.pred</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>) +
+<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/qplot'>qplot</a></span>(<span class='no'>nb.pred</span>, <span class='no'>aucs</span>) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>() +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous'>scale_x_log10</a></span>(<span class='kw'>breaks</span> <span class='kw'>=</span> <span class='no'>nb.pred</span>) +
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/labs'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Number of predictors"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>) +
   <span class='fu'>theme_bigstatsr</span>()</div><div class='img'><img src='snp_PRS-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

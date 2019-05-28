@@ -32,7 +32,8 @@
 
 <meta property="og:title" content="Determine reference divergence — same_ref" />
 
-<meta property="og:description" content="Determine reference divergence while accounting for strand flips." />
+<meta property="og:description" content="Determine reference divergence while accounting for strand flips.
+This does not remove ambiguous alleles." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -90,6 +91,9 @@
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -128,7 +132,8 @@
 
     <div class="ref-description">
     
-    <p>Determine reference divergence while accounting for strand flips.</p>
+    <p>Determine reference divergence while accounting for strand flips.
+<strong>This does not remove ambiguous alleles.</strong></p>
     
     </div>
 
@@ -161,6 +166,10 @@
 Missing values can result from missing values in the inputs or from
 ambiguous strands.</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='snp_match.html'>snp_match()</a></code></p></div>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>same_ref</span>(<span class='kw'>ref1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"C"</span>, <span class='st'>"T"</span>, <span class='st'>"G"</span>, <span class='fl'>NA</span>),
@@ -174,6 +183,8 @@ ambiguous strands.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

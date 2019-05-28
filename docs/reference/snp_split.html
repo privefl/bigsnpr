@@ -64,7 +64,7 @@ on each SNP, independently." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@ on each SNP, independently." />
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -196,21 +199,28 @@ to each part (chromosome) and finally combine the results.</p>
 #&gt; 
 #&gt;   check_args()
 #&gt; 
-#&gt;   args &lt;- as.list(environment())
+#&gt;   warning2("Pruning is deprecated; using clumping (on MAF) instead..\n%s",
+#&gt;            "See why there: https://goo.gl/Td5YYv.")
 #&gt; 
-#&gt;   do.call(what = snp_split, args = c(args, FUN = pruningChr, combine = 'c'))
+#&gt;   args &lt;- c(as.list(environment()), list(S = NULL))
+#&gt;   args[["nploidy"]] &lt;- NULL
+#&gt; 
+#&gt;   do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
 #&gt; }
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_clumping</span></div><div class='output co'>#&gt; function(G, infos.chr,
 #&gt;                          ind.row = rows_along(G),
 #&gt;                          S = NULL,
-#&gt;                          size = 500,
-#&gt;                          is.size.in.bp = FALSE,
-#&gt;                          infos.pos = NULL,
 #&gt;                          thr.r2 = 0.2,
+#&gt;                          size = 100 / thr.r2,
+#&gt;                          infos.pos = NULL,
+#&gt;                          is.size.in.bp = NULL,
 #&gt;                          exclude = NULL,
 #&gt;                          ncores = 1) {
 #&gt; 
 #&gt;   check_args()
+#&gt; 
+#&gt;   if (!missing(is.size.in.bp))
+#&gt;     warning2("Parameter 'is.size.in.bp' is deprecated.")
 #&gt; 
 #&gt;   args &lt;- as.list(environment())
 #&gt; 
@@ -225,6 +235,9 @@ to each part (chromosome) and finally combine the results.</p>
 #&gt;                            n.cor = nrow(Gna),
 #&gt;                            seed = NA,
 #&gt;                            ncores = 1) {
+#&gt; 
+#&gt;   if (!requireNamespace("xgboost", quietly = TRUE))
+#&gt;     stop2("Please install package 'xgboost'.")
 #&gt; 
 #&gt;   check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
 #&gt; 

@@ -64,7 +64,7 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs." />
     </li>
     <li>
       <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
   </ul>
 </li>
@@ -187,7 +190,7 @@ If not specified, all columns are used.<br />
 <span class='co'># Same content</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/all.equal'>all.equal</a></span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[])</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/all.equal'>all.equal</a></span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/all.equal'>all.equal</a></span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># Two different backingfiles</span>
-<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmpb8hG7s/file3f419cb6dbc.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmpb8hG7s/file3f432f988c0.bk"</div></pre>
+<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmp3lBDK2/file774322ac5f73.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmp3lBDK2/file77435e587a2c.bk"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
