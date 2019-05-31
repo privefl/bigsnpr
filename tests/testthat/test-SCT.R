@@ -55,6 +55,19 @@ expect_equal(dim(grid4), c(18, 4))
 expect_equal(grid4$thr.imp, rep(1, 18))
 expect_equal(grid4$grp.num, rep(1:3, each = 6))
 
+groups2 <- list(NULL, 1, cols_along(G))
+all_keep5 <- snp_grid_clumping(G, CHR, POS, lpS = lpval, ncores = 2,
+                               grid.thr.r2 = c(0.05, 0.2, 0.8),
+                               grid.base.size = c(100, 200),
+                               groups = groups2)
+expect_equal(all_keep5, check.attributes = FALSE,
+             list(c(rep(list(integer(), 1), each = 6), all_keep[[1]]),
+                  c(rep(list(integer()), 12), all_keep[[2]])))
+grid5 <- attr(all_keep5, "grid")
+expect_equal(dim(grid5), c(18, 4))
+expect_equal(grid5$thr.imp, rep(1, 18))
+expect_equal(grid5$grp.num, rep(1:3, each = 6))
+
 ################################################################################
 
 expect_error(snp_grid_PRS(G, all_keep, betas, lpval, type = "integer"))
