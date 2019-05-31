@@ -19,7 +19,8 @@ snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
-\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
+\strong{You shouldn't have missing values.} Also, remember to do quality control,
+e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
 Typically \code{<bigSNP>$map$chromosome}.}

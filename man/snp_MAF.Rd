@@ -10,7 +10,8 @@ snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
-\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
+\strong{You shouldn't have missing values.} Also, remember to do quality control,
+e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr

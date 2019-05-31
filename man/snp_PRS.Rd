@@ -11,7 +11,8 @@ snp_PRS(G, betas.keep, ind.test = rows_along(G),
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
-\strong{You shouldn't have missing values in your data or SNPs with 0 MAF.}}
+\strong{You shouldn't have missing values.} Also, remember to do quality control,
+e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{betas.keep}{Numeric vector of weights associated with each SNP
 corresponding to \code{ind.keep}.

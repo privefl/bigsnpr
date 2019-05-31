@@ -10,7 +10,7 @@ snp_fastImpute(Gna, infos.chr, alpha = 1e-04, size = 200,
 \arguments{
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
-You can have missing values in your data.}
+You can have missing values in these data.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
 Typically \code{<bigSNP>$map$chromosome}.}
