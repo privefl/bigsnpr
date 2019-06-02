@@ -3,7 +3,7 @@ Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
 Version: 0.11.2
-Date: 2019-05-22
+Date: 2019-06-02
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 

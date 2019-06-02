@@ -7,6 +7,10 @@ context("PLINK_QC")
 # Get PLINK executable
 PLINK <- download_plink()
 
+unlink(plink2 <- download_plink2())
+unlink(plink2 <- download_plink2(AVX2 = FALSE))
+expect_false(grepl(plink2, "avx2"))
+
 ################################################################################
 
 # Filter on MAF

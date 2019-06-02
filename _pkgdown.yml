@@ -37,6 +37,7 @@ reference:
   - title: "External software"
     contents:
       - download_plink
+      - download_plink2
       - snp_plinkQC
       - snp_plinkIBDQC
       - snp_plinkRmSamples

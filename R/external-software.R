@@ -13,7 +13,8 @@ get_os <- function() {
   }
 }
 
-#' Download PLINK 1.9
+
+#' Download PLINK
 #'
 #' Download PLINK 1.9 from \url{https://www.cog-genomics.org/plink2}.
 #'
@@ -33,6 +34,7 @@ download_plink <- function(dir = tempdir()) {
   # https://regex101.com/r/jC8nB0/143
   plink.names  <- gsubfn::strapply(
     X = readLines("https://www.cog-genomics.org/plink2"),
+    # http://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20190304.zip
     pattern = "(http://s3.amazonaws.com/plink1-assets/plink_.+?(?<!dev)\\.zip)",
     simplify = "c",
     perl = TRUE
@@ -46,6 +48,53 @@ download_plink <- function(dir = tempdir()) {
 
   myArch <- 8 * .Machine$sizeof.pointer
   url <- subset(plink.builds, OS == myOS & arch == myArch)[["url"]]
+
+  utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
+  PLINK <- utils::unzip(plink.zip,
+                        files = basename(PLINK),
+                        exdir = dirname(PLINK))
+  Sys.chmod(PLINK, mode = (file.info(PLINK)$mode | "111"))
+
+  PLINK
+}
+
+
+#' Download PLINK
+#'
+#' Download PLINK 2.0 from \url{https://www.cog-genomics.org/plink/2.0/}.
+#'
+#' @param AVX2 Whether to download the AVX2 version?
+#'   Default is `TRUE` and possible only for 64 bits architectures.
+#'
+#' @export
+#'
+#' @rdname download_plink
+#'
+download_plink2 <- function(dir = tempdir(), AVX2 = TRUE) {
+
+  myOS <- get_os()
+  PLINK <- file.path(dir, `if`(myOS == "Windows", "plink2.exe", "plink2"))
+  if (file.exists(PLINK)) return(PLINK)
+
+  # https://regex101.com/r/jC8nB0/143
+  plink.names  <- gsubfn::strapply(
+    X = readLines("https://www.cog-genomics.org/plink/2.0/"),
+    # http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20190527.zip
+    pattern = "(http://s3.amazonaws.com/plink2-assets/plink2_.+?(?<!dev)\\.zip)",
+    simplify = "c",
+    perl = TRUE
+  )
+  plink.builds <- data.frame(
+    url  = plink.names,
+    OS   = c(rep("Unix", 3),      rep("Mac", 2),  rep("Windows", 3)),
+    arch = c(64, 64, 32,          64, 64,         64, 64, 32),
+    avx2 = c(TRUE, FALSE, FALSE,  TRUE, FALSE,    TRUE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+
+  myArch <- 8 * .Machine$sizeof.pointer
+  if (myArch == 32) AVX2 <- FALSE
+  url <- subset(plink.builds, OS == myOS & arch == myArch & avx2 == AVX2)[["url"]]
 
   utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
   PLINK <- utils::unzip(plink.zip,
