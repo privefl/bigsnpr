@@ -50,8 +50,11 @@ test_that("same as package {rbgen}", {
 
 ################################################################################
 
+setdiff2 <- function(x, y) x[!x %in% y]
+
 test_that("works with a subset of SNPs", {
-  ind_snp <- setdiff(sample(length(IDs), 50), excl)
+  ind_snp <- setdiff2(sample(length(IDs), 100, replace = TRUE), excl)
+  expect_gte(length(ind_snp), 85)
   test2 <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]),
                                    ncores = ncores()))
   G2 <- test2$genotypes
@@ -61,8 +64,8 @@ test_that("works with a subset of SNPs", {
 })
 
 test_that("works with a subset of individuals", {
-  ind_snp <- setdiff(sample(length(IDs), 50), excl)
-  ind_row <- sample(500, 100)
+  ind_snp <- setdiff2(sample(length(IDs), 100, replace = TRUE), excl)
+  ind_row <- sample(500, 100, replace = TRUE)
   test3 <- snp_attach(
     snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]), ind_row, ncores = ncores()))
   G3 <- test3$genotypes
@@ -74,8 +77,8 @@ test_that("works with a subset of individuals", {
 ################################################################################
 
 test_that("works with multiple files", {
-  ind_snp <- setdiff(sample(length(IDs), 50), excl)
-  ind_row <- sample(500, 100)
+  ind_snp <- setdiff2(sample(length(IDs), 100, replace = TRUE), excl)
+  ind_row <- sample(500, 100, replace = TRUE)
   list_IDs <- split(IDs[ind_snp], sort(rep_len(1:3, length(ind_snp))))
   test4 <- snp_attach(
     snp_readBGEN(rep(bgen_file, 3), tempfile(), list_IDs, ind_row, ncores = ncores()))

@@ -50,7 +50,7 @@ snp_readBGI <- function(bgifile, snp_id) {
     stop2("Some variants have not been found (stored in '%s').", tmp)
   }
 
-  infos
+  infos[ind, ]
 }
 
 ################################################################################
@@ -123,14 +123,15 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   sizes <- lengths(list_snp_id)
 
   # Samples
+  if (is.null(ind_row)) {
+    N <- readBin(bgenfiles[1], what = 1L, size = 4, n = 4)[4]
+    ind_row <- seq_len(N)
+  }
   assert_nona(ind_row)
-  N <- readBin(bgenfiles[1], what = 1L, size = 4, n = 4)[4]
-  ind.row <- `if`(is.null(ind_row), seq_len(N),
-                  match(seq_len(N), ind_row, nomatch = 0)) - 1L
 
   # Prepare Filebacked Big Matrix
   G <- FBM.code256(
-    nrow = sum(ind.row >= 0),
+    nrow = length(ind_row),
     ncol = sum(sizes),
     code = CODE_DOSAGE,
     backingfile = backingfile,
@@ -155,20 +156,19 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
       infos <- snp_readBGI(bgifiles[ic], snp_id)
 
       # Get dosages in FBM
-      ind2 <- match(infos$myid, snp_id)
-      ind.col <- (sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic]))[ind2]
+      ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
       ID <- read_bgen(
         filename = bgenfiles[ic],
         offsets = as.double(infos$file_start_position),
         BM = G,
-        ind_row = ind.row,
+        ind_row = ind_row - 1L,
         ind_col = ind.col,
         decode = as.raw(207 - round(0:510 * 100 / 255)),
         dosage = dosage
       )
 
       # Return variant info
-      dplyr::bind_cols(infos, marker.ID = ID)[match(snp_id, infos$myid), ] %>%
+      dplyr::bind_cols(infos, marker.ID = ID) %>%
         dplyr::select(chromosome, marker.ID, rsid, physical.pos = position,
                       allele1, allele2)
     }

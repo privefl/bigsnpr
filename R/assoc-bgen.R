@@ -2,6 +2,8 @@
 
 #' Compute quick association statistics from BGEN files
 #'
+#' **THIS FUNCTION WILL BE MODIFIED SOON.**
+#'
 #' @inheritParams snp_readBGEN
 #' @param ind_row A vector of the row indices (individuals) that are used.
 #'   Missing values in either `ind_row` or `y_row` are removed.

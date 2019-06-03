@@ -1,3 +1,7 @@
+## bigsnpr 0.11.3
+
+- Fix a bug in `snp_readBGEN()` that could not handle duplicated variants or individuals.
+
 ## bigsnpr 0.11.1
 
 - When using `snp_grid_PRS()`, it now stores not only the FBM, but also the input parameters as attributes (the whole result basically).

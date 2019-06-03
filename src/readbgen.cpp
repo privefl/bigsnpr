@@ -56,19 +56,20 @@ void read_variant(std::ifstream * ptr_stream,
            "Problem when decompressing.");
   inflateEnd(&infstream);
 
-  // read decompress "probabilities" and store them as rounded dosages
+  // read decompress "probabilities" and store them as rounded dosages or hard calls
   int N = (D - 10) / 3;
-  for (int i = 0, i_pld = 8, i_prblt = 10 + N; i_prblt < D; i++, i_pld++, i_prblt += 2) {
+  int n = ind_row.size();
+  for (int i = 0; i < n; i++) {
     int i_G = ind_row[i];
-    if (i_G >= 0) {  // sample that we want to keep
-      if (buffer_out[i_pld] >= 0x80) {
-        ptr_mat[i_G] = 3;  // missing
-      } else {
-        // probabilities * 255
-        unsigned char p0 = buffer_out[i_prblt];
-        unsigned char p1 = buffer_out[i_prblt + 1];
-        ptr_mat[i_G] = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
-      }
+    int i_pld = 8 + i_G;
+    if (buffer_out[i_pld] >= 0x80) {
+      ptr_mat[i] = 3;  // missing
+    } else {
+      // probabilities * 255
+      int i_prblt = 10 + N + 2 * i_G;
+      unsigned char p0 = buffer_out[i_prblt];
+      unsigned char p1 = buffer_out[i_prblt + 1];
+      ptr_mat[i] = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
     }
   }
 }

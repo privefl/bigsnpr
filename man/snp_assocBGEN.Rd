@@ -34,5 +34,5 @@ A list of vectors of log10(p-values) corresponding to the statistic
 \eqn{n \times r^2}, where r is the correlation of each variant with \code{y_row}.
 }
 \description{
-Compute quick association statistics from BGEN files
+\strong{THIS FUNCTION WILL BE MODIFIED SOON.}
 }
