@@ -16,8 +16,9 @@ inline bool isna(double x) {
 SEXP corMat(Environment BM,
             const IntegerVector& rowInd,
             const IntegerVector& colInd,
-            int size,
-            const NumericVector& thr) {
+            double size,
+            const NumericVector& thr,
+            const NumericVector& pos) {
 
   XPtr<FBM> xpBM = BM["address"];
   NumericVector code = clone(as<NumericVector>(BM["code256"]));
@@ -33,28 +34,28 @@ SEXP corMat(Environment BM,
   double x, y;
   double xSum, xxSum, deno_x;
   double ySum, yySum, deno_y;
-  double xySum, num, r;
+  double pos_min, xySum, num, r;
 
-  // pre-computation
   NumericVector sumX(m), sumXX(m);
 
-  for (j = 0; j < m; j++) {
+  for (j0 = 0; j0 < m; j0++) {
+
+    // pre-computation
     xSum = xxSum = 0;
     for (i = 0; i < n; i++) {
-      x = macc(i, j);
-
+      x = macc(i, j0);
       if (!isna(x)) {
         xSum += x;
         xxSum += x*x;
       }
     }
-    sumX[j] = xSum;
-    sumXX[j] = xxSum;
-  }
+    sumX[j0] = xSum;
+    sumXX[j0] = xxSum;
 
-  // main computation
-  for (j0 = 0; j0 < m; j0++) {
-    for (j = std::max(0, j0 - size); j < j0; j++) {
+    // main computation
+    pos_min = pos[j0] - size;
+    for (j = j0 - 1; (j >= 0) && (pos[j] >= pos_min); j--) {
+
       N = n;
       xySum = 0;
       xSum = sumX[j];

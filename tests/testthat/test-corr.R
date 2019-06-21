@@ -22,7 +22,8 @@ corr <- bigsnpr:::corMat(BM = G,
                          rowInd = ind.row,
                          colInd = ind.col,
                          size = size,
-                         thr = rep(r, n))
+                         thr = rep(r, n),
+                         pos = seq_along(ind.col))
 corr2 <- corr^2
 
 ################################################################################
@@ -88,6 +89,30 @@ test_that("Same correlations (no diagonal) as Hmisc", {
   expect_equal(dim(corr2), c(m, m))
   expect_equal(corr2[ind], true$r[ind])
   expect_equal(2*length(corr2@i), length(ind))
+})
+
+################################################################################
+
+corr3 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                 alpha = alpha, fill.diag = FALSE,
+                 size = 5)
+
+corr4 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                 alpha = alpha, fill.diag = FALSE,
+                 size = 5e3, infos.pos = 1e6 * seq_along(ind.col))
+
+corr5 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                 alpha = alpha, fill.diag = FALSE,
+                 size = 5e-3, infos.pos = seq_along(ind.col))
+
+corr6 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                 alpha = alpha, fill.diag = FALSE,
+                 size = 5e-3, infos.pos = 1000 * seq_along(ind.col))
+
+test_that("Information on position is used", {
+  expect_equal(corr4, corr3)
+  expect_equal(corr5, corr3)
+  expect_length(corr6@x, 0)
 })
 
 ################################################################################

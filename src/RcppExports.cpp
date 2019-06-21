@@ -75,17 +75,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // corMat
-SEXP corMat(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, int size, const NumericVector& thr);
-RcppExport SEXP _bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+SEXP corMat(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos);
+RcppExport SEXP _bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP posSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
-    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type thr(thrSEXP);
-    rcpp_result_gen = Rcpp::wrap(corMat(BM, rowInd, colInd, size, thr));
+    Rcpp::traits::input_parameter< const NumericVector& >::type pos(posSEXP);
+    rcpp_result_gen = Rcpp::wrap(corMat(BM, rowInd, colInd, size, thr, pos));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -176,7 +177,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 9},
     {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 11},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
-    {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 5},
+    {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 6},
     {"_bigsnpr_linRegPcadapt_cpp", (DL_FUNC) &_bigsnpr_linRegPcadapt_cpp, 4},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 7},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},

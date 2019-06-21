@@ -17,8 +17,8 @@ replaceSNP <- function(BM, BM2, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_replaceSNP`, BM, BM2, rowInd, colInd))
 }
 
-corMat <- function(BM, rowInd, colInd, size, thr) {
-    .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr)
+corMat <- function(BM, rowInd, colInd, size, thr, pos) {
+    .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos)
 }
 
 linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
