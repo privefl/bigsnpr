@@ -87,6 +87,9 @@ snp_autoSVD <- function(G,
   if (!missing(is.size.in.bp))
     warning2("Parameter 'is.size.in.bp' is deprecated.")
 
+  if (!requireNamespace("robust", quietly = TRUE))
+    stop2("Please install package 'robust'.")
+
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
