@@ -435,6 +435,8 @@ snp_plinkIBDQC <- function(plink.path,
 #'   value for this parameter is `ncores = parallel::detectCores() - 1`.
 #' @param extra.options Other options to be passed to Beagle as a string. More
 #'   options can be found at Beagle's website.
+#' @param plink.options Other options to be passed to PLINK as a string. More
+#'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
 #'
 #' @references B L Browning and S R Browning (2016).
 #' Genotype imputation with millions of reference samples.
@@ -451,7 +453,8 @@ snp_beagleImpute <- function(beagle.path,
                              bedfile.out = NULL,
                              memory.max = 3,
                              ncores = 1,
-                             extra.options = "") {
+                             extra.options = "",
+                             plink.options = "") {
 
   # get input and output right
   prefix.in <- sub("\\.bed$", "", bedfile.in)
@@ -470,7 +473,8 @@ snp_beagleImpute <- function(beagle.path,
       "--bfile", prefix.in,
       "--recode vcf bgz", # .vcf.gz extension
       "--out", tmpfile1,
-      "--threads", ncores
+      "--threads", ncores,
+      plink.options
     )
   )
   vcf1 <- paste0(tmpfile1, ".vcf.gz")
@@ -495,7 +499,8 @@ snp_beagleImpute <- function(beagle.path,
     paste(
       plink.path,
       "--vcf", vcf2,
-      "--out", prefix.out
+      "--out", prefix.out,
+      plink.options
     )
   )
 
