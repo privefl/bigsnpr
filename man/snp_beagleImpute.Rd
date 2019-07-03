@@ -5,7 +5,8 @@
 \title{Imputation}
 \usage{
 snp_beagleImpute(beagle.path, plink.path, bedfile.in, bedfile.out = NULL,
-  memory.max = 3, ncores = 1, extra.options = "")
+  memory.max = 3, ncores = 1, extra.options = "",
+  plink.options = "")
 }
 \arguments{
 \item{beagle.path}{Path to the executable of Beagle v4+.}
@@ -25,6 +26,9 @@ value for this parameter is \code{ncores = parallel::detectCores() - 1}.}
 
 \item{extra.options}{Other options to be passed to Beagle as a string. More
 options can be found at Beagle's website.}
+
+\item{plink.options}{Other options to be passed to PLINK as a string. More
+options can be found at \url{https://www.cog-genomics.org/plink2/filter}.}
 }
 \value{
 The path of the new bedfile.
