@@ -5,6 +5,14 @@ r2_bgen <- function(filename, offsets, use_ind, decode, y) {
     .Call(`_bigsnpr_r2_bgen`, filename, offsets, use_ind, decode, y)
 }
 
+bedcolvars <- function(path, n_total, m_total, row_ind, col_ind, lookup_byte) {
+    .Call(`_bigsnpr_bedcolvars`, path, n_total, m_total, row_ind, col_ind, lookup_byte)
+}
+
+bed_clumping_chr <- function(path, n_total, m_total, row_ind, col_ind, lookup_byte, lookup_scale, ordInd, pos, size, thr) {
+    .Call(`_bigsnpr_bed_clumping_chr`, path, n_total, m_total, row_ind, col_ind, lookup_byte, lookup_scale, ordInd, pos, size, thr)
+}
+
 clumping_chr <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
     .Call(`_bigsnpr_clumping_chr`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }

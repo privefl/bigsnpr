@@ -21,6 +21,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bedcolvars
+ListOf<NumericVector> bedcolvars(const std::string path, int n_total, int m_total, const IntegerVector& row_ind, const IntegerVector& col_ind, const RawMatrix& lookup_byte);
+RcppExport SEXP _bigsnpr_bedcolvars(SEXP pathSEXP, SEXP n_totalSEXP, SEXP m_totalSEXP, SEXP row_indSEXP, SEXP col_indSEXP, SEXP lookup_byteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< int >::type n_total(n_totalSEXP);
+    Rcpp::traits::input_parameter< int >::type m_total(m_totalSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type row_ind(row_indSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type col_ind(col_indSEXP);
+    Rcpp::traits::input_parameter< const RawMatrix& >::type lookup_byte(lookup_byteSEXP);
+    rcpp_result_gen = Rcpp::wrap(bedcolvars(path, n_total, m_total, row_ind, col_ind, lookup_byte));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bed_clumping_chr
+LogicalVector bed_clumping_chr(const std::string path, int n_total, int m_total, const IntegerVector& row_ind, const IntegerVector& col_ind, const RawMatrix& lookup_byte, const NumericMatrix& lookup_scale, const IntegerVector& ordInd, const IntegerVector& pos, int size, double thr);
+RcppExport SEXP _bigsnpr_bed_clumping_chr(SEXP pathSEXP, SEXP n_totalSEXP, SEXP m_totalSEXP, SEXP row_indSEXP, SEXP col_indSEXP, SEXP lookup_byteSEXP, SEXP lookup_scaleSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< int >::type n_total(n_totalSEXP);
+    Rcpp::traits::input_parameter< int >::type m_total(m_totalSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type row_ind(row_indSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type col_ind(col_indSEXP);
+    Rcpp::traits::input_parameter< const RawMatrix& >::type lookup_byte(lookup_byteSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ordInd(ordIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type pos(posSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
+    rcpp_result_gen = Rcpp::wrap(bed_clumping_chr(path, n_total, m_total, row_ind, col_ind, lookup_byte, lookup_scale, ordInd, pos, size, thr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // clumping_chr
 LogicalVector clumping_chr(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, const IntegerVector& pos, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
 RcppExport SEXP _bigsnpr_clumping_chr(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
@@ -174,6 +211,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
+    {"_bigsnpr_bedcolvars", (DL_FUNC) &_bigsnpr_bedcolvars, 6},
+    {"_bigsnpr_bed_clumping_chr", (DL_FUNC) &_bigsnpr_bed_clumping_chr, 11},
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 9},
     {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 11},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},

@@ -3,9 +3,8 @@
 
 /******************************************************************************/
 
-#include <mio/mmap.hpp>
+#include <bigstatsr/utils.h>
 #include <system_error> // for std::error_code
-#include <Rcpp.h>
 
 using namespace Rcpp;
 using std::size_t;
@@ -14,14 +13,11 @@ using std::size_t;
 
 class bedAcc {
 public:
-  bedAcc(const std::string path, int n, int p,
+  bedAcc(const std::string path, size_t n, size_t m,
          const IntegerVector& row_ind,
          const IntegerVector& col_ind,
-         const RawMatrix& lookup_byte) {
-
-    size_t n = n, p = p, n_byte = (n + 3) / 4;
-    _lookup_byte = lookup_byte;
-
+         const RawMatrix& lookup_byte) :
+  n(n), m(m), n_byte((n + 3) / 4), _lookup_byte(lookup_byte) {
 
     // Memory-map the bed file
     std::error_code error;
@@ -44,8 +40,10 @@ public:
     if (error) Rcpp::stop("Error when mapping file:\n  %s.\n", error.message());
 
     // Check if given dimensions match the file
-    if ((this->n_byte * this->p) != this->ro_ummap.size())
-      Rcpp::stop("n or p does not match the dimensions of the file.");
+    if ((this->n_byte * this->m) != this->ro_ummap.size())
+      Rcpp::stop("n or m does not match the dimensions of the file.");
+
+    _pMat = ro_ummap.data();
 
 
     // Indices of sub-view of bed file
@@ -63,8 +61,8 @@ public:
     std::vector<size_t> col_ind2(p_sub);
     for (size_t j = 0; j < p_sub; j++) {
       // 'col_ind' indices comes from R, so begins at 1
-      ind = static_cast<size_t>(col_ind[j] - 1);
-      myassert(ind < p, ERROR_BOUNDS);
+      size_t ind = static_cast<size_t>(col_ind[j] - 1);
+      myassert(ind < m, ERROR_BOUNDS);
       col_ind2[j] = ind;
     }
     _col_ind = col_ind2;
@@ -74,13 +72,13 @@ public:
   size_t ncol() const { return _col_ind.size(); }
 
   inline unsigned char operator() (size_t i, size_t j) {
-    int i2 = _row_ind[i];
-    const unsigned char byte = _pMat[i / 4 + _col_ind[j] * n_byte];
-    return _lookup_byte(i % 4, byte);
+    size_t i2 = _row_ind[i];
+    const unsigned char byte = _pMat[i2 / 4 + _col_ind[j] * n_byte];
+    return _lookup_byte(i2 % 4, byte);
   }
 
 protected:
-  size_t n, p, n_byte;
+  size_t n, m, n_byte;
   mio::ummap_source ro_ummap;
   const unsigned char* _pMat;
   RawMatrix _lookup_byte;
@@ -91,25 +89,17 @@ protected:
 
 class bedAccScaled : public bedAcc {
 public:
-  bedAccScaled(const std::string path, int n, int p,
+  bedAccScaled(const std::string path, size_t n, size_t m,
                const IntegerVector& row_ind,
                const IntegerVector& col_ind,
-               const IntegerVector& lookup_byte,
-               // af should be ALL allele frequencies
-               const NumericVector& af,
-               double NA_VAL,
-               double ploidy = 2) :
-  bedAcc(path, n, p, row_ind, col_ind, lookup_byte) {
+               const RawMatrix& lookup_byte,
+               const NumericMatrix& lookup_scale) :
+  bedAcc(path, n, m, row_ind, col_ind, lookup_byte) {
 
-    _lookup_scale = NumericMatrix(4, p);
-    for (size_t j = 0; j < p; j++) {
-      double af_j = af[_col_ind[j]];
-      for (size_t i = 0; i < 3; i++) {
-        _lookup_scale(i, j) =
-          (i - ploidy * af_j) / sqrt(ploidy * af_j * (1 - af_j));
-      }
-      _lookup_scale(3, j) = NA_VAL;
-    }
+    myassert_size(lookup_scale.nrow(), 4);
+    myassert_size(lookup_scale.ncol(), col_ind.size());
+
+    _lookup_scale = lookup_scale;
   };
 
   inline double operator() (size_t i, size_t j) {
