@@ -5,7 +5,7 @@
 \title{MAF}
 \usage{
 snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
-  nploidy = getOption("bigsnpr.nploidy"))
+  nploidy = 2)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}

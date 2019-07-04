@@ -120,7 +120,7 @@ snp_pruning <- function(G, infos.chr,
                         infos.pos = NULL,
                         thr.r2 = 0.2,
                         exclude = NULL,
-                        nploidy = getOption("bigsnpr.nploidy"),
+                        nploidy = 2,
                         ncores = 1) {
 
   check_args()

@@ -33,7 +33,7 @@
 #' abline(h = 2 * p, col = "red")
 #' plot(X.svd$scale)
 #' abline(h = sqrt(2 * p * (1 - p)), col = "red")
-snp_scaleBinom <- function(nploidy = getOption("bigsnpr.nploidy")) {
+snp_scaleBinom <- function(nploidy = 2) {
 
   function(X,
            ind.row = rows_along(X),
@@ -67,7 +67,7 @@ snp_scaleBinom <- function(nploidy = getOption("bigsnpr.nploidy")) {
 snp_MAF <- function(G,
                     ind.row = rows_along(G),
                     ind.col = cols_along(G),
-                    nploidy = getOption("bigsnpr.nploidy")) {
+                    nploidy = 2) {
 
   p <- big_colstats(G, ind.row = ind.row, ind.col = ind.col)$sum /
     (nploidy * length(ind.row))
