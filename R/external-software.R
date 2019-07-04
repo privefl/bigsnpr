@@ -270,9 +270,7 @@ snp_plinkRmSamples <- function(plink.path,
   if (is.data.frame(df.or.files)) {
     data.infos <- df.or.files
   } else if (is.character(df.or.files)) {
-    data.infos <- foreach(f = df.or.files, .combine = 'rbind') %do% {
-      data.table::fread(f, data.table = FALSE, ...)
-    }
+    data.infos <- bigreadr::fread2(df.or.files, ...)
   } else {
     stop2("'df.or.files' must be a data.frame or a vector of file paths.")
   }
@@ -397,7 +395,7 @@ snp_plinkIBDQC <- function(plink.path,
   )
 
   # get genomefile as a data.frame
-  tmp <- data.table::fread(paste0(tmpfile, ".genome"), data.table = FALSE)
+  tmp <- bigreadr::fread2(paste0(tmpfile, ".genome"))
   if (nrow(tmp)) { # if there are samples to filter
 
     if (do.blind.QC) {

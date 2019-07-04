@@ -27,7 +27,7 @@ family IDs to match with those of the study. Default is the second one.}
 \item{col.sample.ID}{Index of the column containing the
 sample IDs to match with those of the study. Default is the first one.}
 
-\item{...}{Any additional parameter to pass to \link[data.table:fread]{fread}.
+\item{...}{Any additional parameter to pass to \code{\link[bigreadr:fread2]{bigreadr::fread2()}}.
 Particularly, option \code{header = FALSE} is sometimes needed.}
 }
 \value{

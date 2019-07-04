@@ -24,6 +24,7 @@ Depends:
     R (>= 3.3), 
     bigstatsr (>= 0.9.4)
 Imports:
+    bigreadr (>= 0.1.6),
     data.table,
     doParallel,
     foreach, 
@@ -40,7 +41,6 @@ LinkingTo:
     RcppArmadillo,
     rmio
 Suggests:
-    bigreadr,
     bindata,
     covr,
     dbplyr,
