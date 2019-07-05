@@ -1,23 +1,24 @@
 /******************************************************************************/
 
-#include "bed-acc.h"
-#include <bigstatsr/colstats.hpp>
+#include "bed-acc.hpp"
+#include <bigstatsr/prodMatVec.hpp>
 
 /******************************************************************************/
 
 // [[Rcpp::export]]
-ListOf<NumericVector> bedcolvars(const std::string path,
-                                 int n_total, int m_total,
-                                 const IntegerVector& row_ind,
-                                 const IntegerVector& col_ind,
-                                 const RawMatrix& lookup_byte) {
+List bed_stats(Environment obj_bed,
+               const IntegerVector& ind_row,
+               const IntegerVector& ind_col) {
 
-  bedAcc macc(path, n_total, m_total, row_ind, col_ind, lookup_byte);
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAcc macc(xp_bed, ind_row, ind_col);
   size_t n = macc.nrow();
   size_t m = macc.ncol();
 
-  NumericVector res(m), res2(m), res3(m);
-  double x, xSum, xxSum, c;
+  NumericVector sum(m), var(m);
+  IntegerVector nb_nona_col(m), nb_nona_row(n);
+  double x, xSum, xxSum;
+  int c;
 
   for (size_t j = 0; j < m; j++) {
     xSum = xxSum = c = 0;
@@ -28,88 +29,53 @@ ListOf<NumericVector> bedcolvars(const std::string path,
         xSum += x;
         xxSum += x*x;
         c++;
+        nb_nona_row[i]++;
       }
     }
-    res[j] = xxSum - xSum * xSum / n;
-    res2[j] = xSum;
-    res3[j] = c;
+    sum[j] = xSum;
+    var[j] = (xxSum - xSum * xSum / c) / (c - 1);
+    nb_nona_col[j] = c;
   }
 
-  int n_bad = Rcpp::sum(res3 < (n / 2));
+  int n_bad = Rcpp::sum(2 * nb_nona_col < n);
   if (n_bad > 0) Rcpp::warning("%d variants have >50%% missing values.", n_bad);
+  n_bad = Rcpp::sum(2 * nb_nona_row < m);
+  if (n_bad > 0) Rcpp::warning("%d samples have >50%% missing values.", n_bad);
 
-  return List::create(_["sum"]  = res2,
-                      _["var"]  = res / (res3 - 1),
-                      _["nona"] = res3);
+  return List::create(_["sum"]  = sum,
+                      _["var"]  = var,
+                      _["nb_nona_col"] = nb_nona_col,
+                      _["nb_nona_row"] = nb_nona_row);
 }
 
 /******************************************************************************/
 
-// Clumping within a distance in bp (directly on a bed file)
 // [[Rcpp::export]]
-LogicalVector bed_clumping_chr(const std::string path, int n_total, int m_total,
-                               const IntegerVector& row_ind,
-                               const IntegerVector& col_ind,
-                               const RawMatrix& lookup_byte,
-                               const NumericMatrix& lookup_scale,
-                               const IntegerVector& ordInd,
-                               const IntegerVector& pos,
-                               int size,
-                               double thr) {
+NumericVector pMatVec4(Environment obj_bed,
+                       const IntegerVector& ind_row,
+                       const IntegerVector& ind_col,
+                       const NumericVector& center,
+                       const NumericVector& scale,
+                       const NumericVector& x) {
 
-  bedAccScaled macc(path, n_total, m_total, row_ind, col_ind, lookup_byte,
-                    lookup_scale);
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
 
-  int n = macc.nrow();
-  int m = macc.ncol();
+  return bigstatsr::pMatVec4(macc, x);
+}
 
-  LogicalVector keep(m, false);
+// [[Rcpp::export]]
+NumericVector cpMatVec4(Environment obj_bed,
+                        const IntegerVector& ind_row,
+                        const IntegerVector& ind_col,
+                        const NumericVector& center,
+                        const NumericVector& scale,
+                        const NumericVector& x) {
 
-  for (int k = 0; k < m; k++) {
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
 
-    int j0 = ordInd[k] - 1;
-    keep[j0] = true;
-    bool not_min = true;
-    bool not_max = true;
-    int pos_min = pos[j0] - size;
-    int pos_max = pos[j0] + size;
-
-    for (int l = 1; not_max || not_min; l++) {
-
-      if (not_max) {
-        int j = j0 + l;
-        not_max = (j < m) && (pos[j] <= pos_max);  // within a window..
-        if (not_max && keep[j]) {  // look only at already selected ones
-          double r = 0;
-          for (int i = 0; i < n; i++) {
-            r += macc(i, j) * macc(i, j0);
-          }
-          if ((r * r) > thr) {
-            // Rcout << r << std::endl;
-            keep[j0] = false;  // prune
-            break;
-          }
-        }
-      }
-
-      if (not_min) {
-        int j = j0 - l;
-        not_min = (j >= 0) && (pos[j] >= pos_min);  // within a window..
-        if (not_min && keep[j]) {  // look only at already selected ones
-          double r = 0;
-          for (int i = 0; i < n; i++) {
-            r += macc(i, j) * macc(i, j0);
-          }
-          if ((r * r) > thr) {
-            keep[j0] = false;  // prune
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  return keep;
+  return bigstatsr::cpMatVec4(macc, x);
 }
 
 /******************************************************************************/

@@ -7,7 +7,7 @@
 \alias{snp_indLRLDR}
 \title{LD clumping}
 \usage{
-bed_clumping(bedfile, ind.row = seq_len(n_total), S = NULL,
+bed_clumping(bedfile, ind.row = rows_along(obj.bed), S = NULL,
   thr.r2 = 0.2, size = 100/thr.r2, exclude = NULL, ncores = 1)
 
 snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL,

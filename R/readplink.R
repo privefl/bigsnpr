@@ -1,33 +1,5 @@
 ################################################################################
 
-#' Replace extension '.bed'
-#'
-#' @param path String with extension '.bed'.
-#' @param replacement Replacement of '.bed'. Default replaces by nothing.
-#'   Can be useful to replace e.g. by '.bim' or '.fam'.
-#' @param stop_if_not_ext If `replacement != ""`, whether to error if
-#'   replacement is not an extension (starting with a '.').
-#'
-#' @return String with extension '.bed' replaced by `replacement`.
-#' @export
-#'
-#' @examples
-#' path <- "toto.bed"
-#' sub_bed(path)
-#' sub_bed(path, ".bim")
-#' sub_bed(path, ".fam")
-#' sub_bed(path, "_QC", stop_if_not_ext = FALSE)
-sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
-  pattern <- "\\.bed$"
-  if (!grepl(pattern, path))
-    stop2("Path '%s' must have 'bed' extension.", path)
-  if (stop_if_not_ext && nchar(replacement) > 0 && substr(replacement, 1, 1) != ".")
-    stop2("Replacement must be an extension starting with '.' if provided.")
-  sub(pattern, replacement, path)
-}
-
-################################################################################
-
 #' Read PLINK files into a "bigSNP"
 #'
 #' Function to read bed/bim/fam files into a [bigSNP][bigSNP-class].

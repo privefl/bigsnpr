@@ -1,24 +1,31 @@
-# bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
 bedfile <- "../Dubois2010_data/FinnuncorrNLITUK1UK3hap300_QC_norel.bed"
-bimfile <- sub("\\.bed$", ".bim", bedfile)
-famfile <- sub("\\.bed$", ".fam", bedfile)
-n_total <- bigreadr::nlines(famfile)
-m_total <- bigreadr::nlines(bimfile)
-ind.row <- seq_len(n_total)
-chr <- bigreadr::fread2(bimfile, select = 1)[[1]]
-ind.col <- which(chr == 1)
-lookup_byte <- bigsnpr:::getCode()
-Rcpp::sourceCpp('src/bed-fun.cpp')
-stats <- bedcolvars(bedfile, n_total, m_total, ind.row, ind.col, lookup_byte)
-center <- stats$sum / stats$nona
-scale <- sqrt(stats$var * (stats$nona - 1))
-lookup_scale <- rbind(t(sapply(0:2, function(g) (g - center) / scale)), 0)
-ord <- sample(length(ind.col))
-pos <- bigreadr::fread2(bimfile, select = 4)[[1]]
-keep <- bed_clumping_chr(bedfile, n_total, m_total, ind.row, ind.col,
-                         lookup_byte, lookup_scale,
-                         ord, pos[ind.col], 500e3, 0.2)
-mean(keep)
+assert_exist <- bigsnpr:::assert_exist
+NAMES.MAP <- bigsnpr:::NAMES.MAP
+NAMES.FAM <- bigsnpr:::NAMES.FAM
+obj.bed <- bed(bedfile)
+obj.bed$bedfile
+obj.bed$famfile
+obj.bed$nrow
+obj.bed$ncol
+ind.row <- seq_len(obj.bed$nrow)
+ind.col <- seq_len(obj.bed$ncol)
 
-system.time(ind.keep <- bed_clumping(bedfile, ncores = nb_cores()))  # 70 sec
-length(ind.keep)
+system.time(ind.keep <- bed_clumping(bedfile, ncores = nb_cores())) # 55-60 sec
+
+stats <- bigsnpr:::bed_stats(obj.bed, ind.row, ind.col)
+af <- stats$sum / (2 * stats$nb_nona_col)
+center <- 2 * af
+scale <- sqrt(2 * af * (1 - af))
+
+bigsnpr:::cpMatVec4(obj.bed, ind.row, ind.col, center, scale,
+                    rnorm(obj.bed$nrow))
+
+system.time(svd <- bed_randomSVD(obj.bed, ind.col = ind.keep))  # 230 sec
+plot(svd)
+plot(svd, type = "scores")
+plot(svd, type = "scores", scores = 3:4)
+plot(svd, type = "scores", scores = 5:6)
+plot(svd, type = "loadings", loadings = 1:6, coeff = 0.5)
+
+cor(stats$nb_nona_row, svd$u)

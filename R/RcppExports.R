@@ -5,12 +5,24 @@ r2_bgen <- function(filename, offsets, use_ind, decode, y) {
     .Call(`_bigsnpr_r2_bgen`, filename, offsets, use_ind, decode, y)
 }
 
-bedcolvars <- function(path, n_total, m_total, row_ind, col_ind, lookup_byte) {
-    .Call(`_bigsnpr_bedcolvars`, path, n_total, m_total, row_ind, col_ind, lookup_byte)
+bedXPtr <- function(path, n, p) {
+    .Call(`_bigsnpr_bedXPtr`, path, n, p)
 }
 
-bed_clumping_chr <- function(path, n_total, m_total, row_ind, col_ind, lookup_byte, lookup_scale, ordInd, pos, size, thr) {
-    .Call(`_bigsnpr_bed_clumping_chr`, path, n_total, m_total, row_ind, col_ind, lookup_byte, lookup_scale, ordInd, pos, size, thr)
+bed_stats <- function(obj_bed, ind_row, ind_col) {
+    .Call(`_bigsnpr_bed_stats`, obj_bed, ind_row, ind_col)
+}
+
+pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
+    .Call(`_bigsnpr_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
+}
+
+cpMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
+    .Call(`_bigsnpr_cpMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
+}
+
+bed_clumping_chr <- function(obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr) {
+    .Call(`_bigsnpr_bed_clumping_chr`, obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr)
 }
 
 clumping_chr <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {

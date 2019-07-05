@@ -5,25 +5,18 @@
 #' @export
 #'
 bed_clumping <- function(bedfile,
-                         ind.row = seq_len(n_total),
+                         ind.row = rows_along(obj.bed),
                          S = NULL,
                          thr.r2 = 0.2,
                          size = 100 / thr.r2,
                          exclude = NULL,
                          ncores = 1) {
 
-  # Get other files
-  bimfile <- sub_bed(bedfile, ".bim")
-  famfile <- sub_bed(bedfile, ".fam")
-  # Check if all three files exist
-  sapply(c(bedfile, bimfile, famfile), assert_exist)
+  obj.bed <- bed(bedfile)
+  rm(bedfile)
 
-  n_total <- bigreadr::nlines(famfile)
-  snp_info <- bigreadr::fread2(bimfile, select = c(1, 4))
-  m_total <- nrow(snp_info)
-  infos.chr <- snp_info[[1]]
-  infos.pos <- snp_info[[2]]
-  rm(bimfile, famfile, snp_info)
+  infos.chr <- obj.bed$map$chromosome
+  infos.pos <- obj.bed$map$physical.pos
 
   args <- as.list(environment())
 
@@ -34,18 +27,15 @@ bed_clumping <- function(bedfile,
 
 ################################################################################
 
-bedClumpingChr <- function(bedfile, n_total, m_total,
-                           S, ind.chr, ind.row, size, infos.pos,
+bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
                            thr.r2, exclude) {
 
   ind.chr <- setdiff(ind.chr, exclude)
 
   # cache some computations
-  lookup_byte <- getCode()
-  stats <- bedcolvars(bedfile, n_total, m_total, ind.row, ind.chr, lookup_byte)
-  center <- stats$sum / stats$nona
-  scale <- sqrt(stats$var * (stats$nona - 1))
-  lookup_scale <- rbind(t(sapply(0:2, function(g) (g - center) / scale)), 0)
+  stats <- bed_stats(obj.bed, ind.row, ind.chr)
+  center <- stats$sum / stats$nb_nona_col
+  scale <- sqrt(stats$var * (stats$nb_nona_col - 1))
 
   # statistic to prioritize SNPs
   if (is.null(S)) {
@@ -60,13 +50,15 @@ bedClumpingChr <- function(bedfile, n_total, m_total,
 
   # main algo
   keep <- bed_clumping_chr(
-    bedfile, n_total, m_total,
-    ind.row, ind.chr,
-    lookup_byte, lookup_scale,
-    ordInd = order(S.chr, decreasing = TRUE),
-    pos    = pos.chr,
-    size   = size * 1000L, # in bp
-    thr    = thr.r2
+    obj_bed = obj.bed,
+    ind_row = ind.row,
+    ind_col = ind.chr,
+    center  = center,
+    scale   = scale,
+    ordInd  = order(S.chr, decreasing = TRUE),
+    pos     = pos.chr,
+    size    = size * 1000L, # in bp
+    thr     = thr.r2
   )
 
   ind.chr[keep]

@@ -21,40 +21,80 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// bedcolvars
-ListOf<NumericVector> bedcolvars(const std::string path, int n_total, int m_total, const IntegerVector& row_ind, const IntegerVector& col_ind, const RawMatrix& lookup_byte);
-RcppExport SEXP _bigsnpr_bedcolvars(SEXP pathSEXP, SEXP n_totalSEXP, SEXP m_totalSEXP, SEXP row_indSEXP, SEXP col_indSEXP, SEXP lookup_byteSEXP) {
+// bedXPtr
+SEXP bedXPtr(std::string path, int n, int p);
+RcppExport SEXP _bigsnpr_bedXPtr(SEXP pathSEXP, SEXP nSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::string >::type path(pathSEXP);
-    Rcpp::traits::input_parameter< int >::type n_total(n_totalSEXP);
-    Rcpp::traits::input_parameter< int >::type m_total(m_totalSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type row_ind(row_indSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type col_ind(col_indSEXP);
-    Rcpp::traits::input_parameter< const RawMatrix& >::type lookup_byte(lookup_byteSEXP);
-    rcpp_result_gen = Rcpp::wrap(bedcolvars(path, n_total, m_total, row_ind, col_ind, lookup_byte));
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(bedXPtr(path, n, p));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bed_stats
+List bed_stats(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col);
+RcppExport SEXP _bigsnpr_bed_stats(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    rcpp_result_gen = Rcpp::wrap(bed_stats(obj_bed, ind_row, ind_col));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pMatVec4
+NumericVector pMatVec4(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericVector& x);
+RcppExport SEXP _bigsnpr_pMatVec4(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(pMatVec4(obj_bed, ind_row, ind_col, center, scale, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpMatVec4
+NumericVector cpMatVec4(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericVector& x);
+RcppExport SEXP _bigsnpr_cpMatVec4(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpMatVec4(obj_bed, ind_row, ind_col, center, scale, x));
     return rcpp_result_gen;
 END_RCPP
 }
 // bed_clumping_chr
-LogicalVector bed_clumping_chr(const std::string path, int n_total, int m_total, const IntegerVector& row_ind, const IntegerVector& col_ind, const RawMatrix& lookup_byte, const NumericMatrix& lookup_scale, const IntegerVector& ordInd, const IntegerVector& pos, int size, double thr);
-RcppExport SEXP _bigsnpr_bed_clumping_chr(SEXP pathSEXP, SEXP n_totalSEXP, SEXP m_totalSEXP, SEXP row_indSEXP, SEXP col_indSEXP, SEXP lookup_byteSEXP, SEXP lookup_scaleSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+LogicalVector bed_clumping_chr(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const IntegerVector& ordInd, const IntegerVector& pos, int size, double thr);
+RcppExport SEXP _bigsnpr_bed_clumping_chr(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::string >::type path(pathSEXP);
-    Rcpp::traits::input_parameter< int >::type n_total(n_totalSEXP);
-    Rcpp::traits::input_parameter< int >::type m_total(m_totalSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type row_ind(row_indSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type col_ind(col_indSEXP);
-    Rcpp::traits::input_parameter< const RawMatrix& >::type lookup_byte(lookup_byteSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type lookup_scale(lookup_scaleSEXP);
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ordInd(ordIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type pos(posSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
-    rcpp_result_gen = Rcpp::wrap(bed_clumping_chr(path, n_total, m_total, row_ind, col_ind, lookup_byte, lookup_scale, ordInd, pos, size, thr));
+    rcpp_result_gen = Rcpp::wrap(bed_clumping_chr(obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -211,8 +251,11 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
-    {"_bigsnpr_bedcolvars", (DL_FUNC) &_bigsnpr_bedcolvars, 6},
-    {"_bigsnpr_bed_clumping_chr", (DL_FUNC) &_bigsnpr_bed_clumping_chr, 11},
+    {"_bigsnpr_bedXPtr", (DL_FUNC) &_bigsnpr_bedXPtr, 3},
+    {"_bigsnpr_bed_stats", (DL_FUNC) &_bigsnpr_bed_stats, 3},
+    {"_bigsnpr_pMatVec4", (DL_FUNC) &_bigsnpr_pMatVec4, 6},
+    {"_bigsnpr_cpMatVec4", (DL_FUNC) &_bigsnpr_cpMatVec4, 6},
+    {"_bigsnpr_bed_clumping_chr", (DL_FUNC) &_bigsnpr_bed_clumping_chr, 9},
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 9},
     {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 11},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},

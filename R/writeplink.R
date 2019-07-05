@@ -20,8 +20,6 @@ snp_writeBed <- function(x, bedfile,
 
   check_args(G = "assert_class(G, 'FBM.code256')")
 
-  # check extension of file
-  assert_ext(bedfile, "bed")
   # get other files
   bimfile <- sub_bed(bedfile, ".bim")
   famfile <- sub_bed(bedfile, ".fam")

@@ -4,7 +4,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 IntegerMatrix get_code(int NA_VAL = 3) {
 
-  IntegerVector num = IntegerVector::create(0, NA_VAL, 1, 2);
+  IntegerVector num = IntegerVector::create(2, NA_VAL, 1, 0);
   IntegerMatrix code(4, 256);
 
   int i, k, k2;
@@ -25,5 +25,5 @@ IntegerMatrix get_code(int NA_VAL = 3) {
 test <- get_code()
 true <- bigsnpr:::getCode()
 storage.mode(true) <- "integer"
-identical(test, ifelse(true == 3, 3L, 2L - true))
+identical(test, true)
 */
