@@ -31,7 +31,7 @@ bed_clumping <- function(bedfile,
 
   if (!is.null(S)) assert_lengths(infos.chr, S)
 
-  do.call(what = snp_split, args = c(args, FUN = clumpingChr, combine = 'c'))
+  do.call(what = snp_split, args = c(args, FUN = bedClumpingChr, combine = 'c'))
 }
 
 ################################################################################

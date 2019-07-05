@@ -35,6 +35,9 @@ ListOf<NumericVector> bedcolvars(const std::string path,
     res3[j] = c;
   }
 
+  int n_bad = Rcpp::sum(res3 < (n / 2));
+  if (n_bad > 0) Rcpp::warning("%d variants have >50%% missing values.", n_bad);
+
   return List::create(_["sum"]  = res2,
                       _["var"]  = res / (res3 - 1),
                       _["nona"] = res3);

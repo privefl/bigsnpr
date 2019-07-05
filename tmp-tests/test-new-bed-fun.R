@@ -1,5 +1,5 @@
-bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
-# bedfile <- "../Dubois2010_data/FinnuncorrNLITUK1UK3hap300_QC_norel.bed"
+# bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+bedfile <- "../Dubois2010_data/FinnuncorrNLITUK1UK3hap300_QC_norel.bed"
 bimfile <- sub("\\.bed$", ".bim", bedfile)
 famfile <- sub("\\.bed$", ".fam", bedfile)
 n_total <- bigreadr::nlines(famfile)
@@ -20,3 +20,5 @@ keep <- bed_clumping_chr(bedfile, n_total, m_total, ind.row, ind.col,
                          ord, pos[ind.col], 500e3, 0.2)
 mean(keep)
 
+system.time(ind.keep <- bed_clumping(bedfile, ncores = nb_cores()))  # 70 sec
+length(ind.keep)
