@@ -23,8 +23,8 @@ snp_writeBed <- function(x, bedfile,
   # check extension of file
   assert_ext(bedfile, "bed")
   # get other files
-  bimfile <- sub("\\.bed$", ".bim", bedfile)
-  famfile <- sub("\\.bed$", ".fam", bedfile)
+  bimfile <- sub_bed(bedfile, ".bim")
+  famfile <- sub_bed(bedfile, ".fam")
   # check if files already exist
   sapply(c(bedfile, bimfile, famfile), assert_noexist)
 

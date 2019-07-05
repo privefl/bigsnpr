@@ -15,8 +15,7 @@
 #'
 #' @export
 snp_save <- function(x) {
-  saveRDS(x, sub("\\.bk$", ".rds", x$genotypes$backingfile))
-
+  saveRDS(x, sub_bk(x$genotypes$backingfile, ".rds"))
   x
 }
 

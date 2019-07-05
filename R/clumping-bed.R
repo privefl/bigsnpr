@@ -12,11 +12,9 @@ bed_clumping <- function(bedfile,
                          exclude = NULL,
                          ncores = 1) {
 
-  # Check extension of file
-  assert_ext(bedfile, "bed")
   # Get other files
-  bimfile <- sub("\\.bed$", ".bim", bedfile)
-  famfile <- sub("\\.bed$", ".fam", bedfile)
+  bimfile <- sub_bed(bedfile, ".bim")
+  famfile <- sub_bed(bedfile, ".fam")
   # Check if all three files exist
   sapply(c(bedfile, bimfile, famfile), assert_exist)
 

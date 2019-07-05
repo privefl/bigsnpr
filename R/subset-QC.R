@@ -67,7 +67,7 @@ subset.bigSNP <- function(x,
                         class = "bigSNP")
 
   # save it and return the path of the saved object
-  rds <- sub("\\.bk$", ".rds", G2$backingfile)
+  rds <- sub_bk(G2$backingfile, ".rds")
   saveRDS(snp.list, rds)
   rds
 }

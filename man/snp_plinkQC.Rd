@@ -49,7 +49,7 @@ using \href{https://www.cog-genomics.org/plink2}{PLINK 1.9}.
 }
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-prefix  <- sub("\\\\.bed$", "", bedfile)
+prefix  <- sub_bed(bedfile)
 plink <- download_plink()
 test <- snp_plinkQC(plink.path = plink,
                     prefix.in = prefix,

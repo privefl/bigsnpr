@@ -8,7 +8,7 @@ test$map$`p-values` <- runif(nrow(test$map))
 str(test$map)
 
 # Reading again
-test.savedIn <- sub("\\.bk$", ".rds", test$genotypes$backingfile)
+test.savedIn <- sub_bk(test$genotypes$backingfile, ".rds")
 test2 <- snp_attach(rdsfile = test.savedIn)
 str(test2$map) # new slot wasn't saved
 

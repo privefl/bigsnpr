@@ -190,7 +190,7 @@ download_beagle <- function(dir = tempdir()) {
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-#' prefix  <- sub("\\.bed$", "", bedfile)
+#' prefix  <- sub_bed(bedfile)
 #' plink <- download_plink()
 #' test <- snp_plinkQC(plink.path = plink,
 #'                     prefix.in = prefix,
@@ -281,9 +281,9 @@ snp_plinkRmSamples <- function(plink.path,
   system(
     paste(
       plink.path,
-      "--bfile", sub("\\.bed$", "", bedfile.in),
+      "--bfile", sub_bed(bedfile.in),
       "--make-bed",
-      "--out", sub("\\.bed$", "", bedfile.out),
+      "--out", sub_bed(bedfile.out),
       "--remove", tmpfile
     )
   )
@@ -359,7 +359,7 @@ snp_plinkIBDQC <- function(plink.path,
   # check extension of file
   assert_ext(bedfile.in, "bed")
   # get file without extension
-  prefix.in <- sub("\\.bed$", "", bedfile.in)
+  prefix.in <- sub_bed(bedfile.in)
 
   # get possibly new file
   if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
@@ -455,10 +455,10 @@ snp_beagleImpute <- function(beagle.path,
                              plink.options = "") {
 
   # get input and output right
-  prefix.in <- sub("\\.bed$", "", bedfile.in)
+  prefix.in <- sub_bed(bedfile.in)
   if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_impute.bed")
   assert_noexist(bedfile.out)
-  prefix.out <- sub("\\.bed$", "", bedfile.out)
+  prefix.out <- sub_bed(bedfile.out)
 
   # get temporary files
   tmpfile1 <- tempfile()

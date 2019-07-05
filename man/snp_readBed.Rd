@@ -4,7 +4,7 @@
 \alias{snp_readBed}
 \title{Read PLINK files into a "bigSNP"}
 \usage{
-snp_readBed(bedfile, backingfile = sub("\\\\.bed$", "", bedfile))
+snp_readBed(bedfile, backingfile = sub_bed(bedfile))
 }
 \arguments{
 \item{bedfile}{Path to file with extension ".bed" to read.

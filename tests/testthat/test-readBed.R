@@ -10,6 +10,17 @@ test2 <- gaston::read.bed.matrix(bedfile, verbose = FALSE)
 
 ################################################################################
 
+test_that("sub_bed() works", {
+  expect_identical(sub_bed("toto.bed"), "toto")
+  expect_identical(sub_bed("toto.bed", ".bim"), "toto.bim")
+  expect_error(sub_bed("toto.bed2"),
+               "Path 'toto.bed2' must have 'bed' extension.")
+  expect_error(sub_bed("toto.bed", "bim"), "extension starting with '.'")
+  expect_identical(sub_bed("toto.bed", "bim", stop_if_not_ext = FALSE), "totobim")
+})
+
+################################################################################
+
 test_that("same genotype matrix as gaston (reversed)", {
   expect_equivalent(G[], 2L - gaston::as.matrix(test2))
   expect_equivalent(test$fam, test2@ped[1:6])
@@ -22,7 +33,7 @@ test_that("good class", {
 
 ################################################################################
 
-path <- sub("\\.bk$", "", G$backingfile)
+path <- sub_bk(G$backingfile)
 
 test_that("Error: already exists", {
   expect_error(snp_readBed(bedfile, backingfile = path),
@@ -34,7 +45,7 @@ test_that("Error: already exists", {
 
 test_that("same sign as PLINK (no switch 0 <-> 2)", {
   plink <- download_plink()
-  prefix <- sub("\\.bed$", "", bedfile)
+  prefix <- sub_bed(bedfile)
   tmp <- tempfile()
   system(glue::glue("{plink} --bfile {prefix} --assoc --allow-no-sex --out {tmp}"))
 

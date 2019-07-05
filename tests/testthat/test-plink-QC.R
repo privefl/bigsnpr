@@ -19,7 +19,7 @@ bedfile <- snp_attachExtdata() %>%
   snp_writeBed(tempfile(fileext = ".bed"))
 
 snp_plinkQC(plink.path = PLINK,
-            prefix.in = sub("\\.bed$", "", bedfile),
+            prefix.in = sub_bed(bedfile),
             prefix.out = tempfile(),
             maf = 0.2,
             extra.options = "--allow-no-sex") %>%

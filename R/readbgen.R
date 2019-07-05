@@ -178,7 +178,7 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   snp.list <- structure(list(genotypes = G, map = snp.info), class = "bigSNP")
 
   # save it and return the path of the saved object
-  rds <- sub("\\.bk$", ".rds", G$backingfile)
+  rds <- sub_bk(G$backingfile, ".rds")
   saveRDS(snp.list, rds)
   rds
 }

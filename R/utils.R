@@ -68,7 +68,7 @@ write.table2 <- function(x, file) {
 
 getNewFile <- function(x, type) {
 
-  root <- sub("\\.bk$", "", x$genotypes$backingfile)
+  root <- sub_bk(x$genotypes$backingfile)
   EXTS <- c("bk", "rds")
 
   number <- 1
