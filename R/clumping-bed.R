@@ -65,3 +65,21 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
 }
 
 ################################################################################
+
+#' @import foreach
+#' @export
+#' @rdname snp_clumping
+bed_indLRLDR <- function(bedfile, LD.regions = LD.wiki34) {
+
+  snp_infos <- bigreadr::fread2(sub_bed(bedfile, ".bim"))
+  infos.chr <- snp_infos[[1]]
+  infos.pos <- snp_infos[[4]]
+
+  foreach(ic = rows_along(LD.regions), .combine = 'c') %do% {
+    which((infos.chr == LD.regions[ic, "Chr"]) &
+            (infos.pos >= LD.regions[ic, "Start"]) &
+            (infos.pos <= LD.regions[ic, "Stop"]))
+  }
+}
+
+################################################################################

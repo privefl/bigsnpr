@@ -37,19 +37,7 @@ Note that to obtain the Principal Components, you must use
 An algorithm for partial SVD (or PCA) of a Filebacked Big Matrix based on the
 algorithm in RSpectra (by Yixuan Qiu and Jiali Mei).\cr
 This algorithm is linear in time in all dimensions and is very
-memory-efficient. Thus, it can be used on very large big.matrices.
-}
-\note{
-The idea of using this Implicitly Restarted Arnoldi Method algorithm
-comes from G. Abraham, Y. Qiu, and M. Inouye,
-FlashPCA2: principal component analysis of biobank-scale genotype datasets,
-bioRxiv: \url{https://doi.org/10.1101/094714}.
-\cr
-It proved to be faster than our implementation of the "blanczos" algorithm
-in Rokhlin, V., Szlam, A., & Tygert, M. (2010).
-A Randomized Algorithm for Principal Component Analysis.
-SIAM Journal on Matrix Analysis and Applications, 31(3), 1100-1124.
-\url{https://doi.org/10.1137/080736417}.
+memory-efficient. Thus, it can be used on very large bed files.
 }
 \seealso{
 \link[RSpectra:svds]{svds}
