@@ -41,6 +41,10 @@ corMat <- function(BM, rowInd, colInd, size, thr, pos) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos)
 }
 
+multLinReg <- function(obj_bed, ind_row, ind_col, center, scale, u) {
+    .Call(`_bigsnpr_multLinReg`, obj_bed, ind_row, ind_col, center, scale, u)
+}
+
 linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
     .Call(`_bigsnpr_linRegPcadapt_cpp`, BM, U, rowInd, colInd)
 }

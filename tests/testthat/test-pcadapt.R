@@ -28,12 +28,16 @@ test_that("Same as pcadapt", {
   obj.svd <- big_SVD(G, snp_scaleBinom())
   test <- bigsnpr:::linRegPcadapt_cpp(G, obj.svd$u, rows_along(G), cols_along(G))
 
-  expect_equal(obj.svd$center / 2, obj.pcadapt$af, tolerance = 1e-8)
-  expect_equal(abs(cov(obj.svd$u, obj.pcadapt$scores)), diag(10) / (nrow(G) - 1))
-  expect_equal(abs(cor(obj.svd$v, obj.pcadapt$loadings)), diag(10),
-               tolerance = 1e-2, check.attributes = FALSE)
-  expect_equal(abs(cor(test, obj.pcadapt$zscores)), diag(10),
-               tolerance = 1e-2, check.attributes = FALSE)
+  expect_equal(obj.svd$center / 2, obj.pcadapt$af)
+  expect_equal(obj.svd$d, obj.pcadapt$singular.values * sqrt((nrow(G) - 1) * ncol(G)))
+  expect_equal(obj.svd$u, obj.pcadapt$scores,   tolerance = 1e-4)
+  expect_equal(obj.svd$v, obj.pcadapt$loadings, tolerance = 1e-2)
+  expect_equal(test,      obj.pcadapt$zscores,  tolerance = 1e-2)
+  # expect_equal(abs(cov(obj.svd$u, obj.pcadapt$scores)), diag(10) / (nrow(G) - 1))
+  # expect_equal(abs(cor(obj.svd$v, obj.pcadapt$loadings)), diag(10),
+  #              tolerance = 1e-2, check.attributes = FALSE)
+  # expect_equal(abs(cor(test, obj.pcadapt$zscores)), diag(10),
+  #              tolerance = 1e-2, check.attributes = FALSE)
 
   ################################################################################
 

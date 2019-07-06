@@ -26,15 +26,15 @@ NumericMatrix linRegPcadapt_cpp(Environment BM,
 
   for (j = 0; j < m; j++) {
     sum_y = 0;
-    for (i = 0; i < n; i++) { // j-th SNP (centered)
+    for (i = 0; i < n; i++) {
       y[i] = macc(i, j);
       sum_y += y[i];
     }
-    y -= sum_y / n;
+    y -= sum_y / n;  // j-th SNP (centered)
 
     betas = U.t() * y;
     eps = y - U * betas;
-    res.col(j) = betas / sqrt(dot(eps, eps) / (n - K));
+    res.col(j) = betas / sqrt(dot(eps, eps) / (n - K - 1));
   }
 
   return as<NumericMatrix>(wrap(res.t()));
