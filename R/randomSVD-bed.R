@@ -177,7 +177,7 @@ svds4.seq <- function(obj.bed, ind.row, ind.col, k, tol, verbose) {
 #' @seealso [svds][RSpectra::svds]
 #'
 bed_randomSVD <- function(
-  obj.bed,
+  bedfile,
   ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed),
   k = 10,
@@ -186,6 +186,7 @@ bed_randomSVD <- function(
   ncores = 1
 ) {
 
+  obj.bed <- bed(bedfile)
   check_args()
 
   if (ncores > 1) {

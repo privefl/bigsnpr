@@ -70,10 +70,11 @@ snp_pcadapt <- function(G, U.row,
 
 #' @export
 #' @rdname snp_pcadapt
-bed_pcadapt <- function(obj.bed, U.row,
+bed_pcadapt <- function(bedfile, U.row,
                         ind.row = rows_along(obj.bed),
                         ind.col = cols_along(obj.bed),
                         ncores = 1) {
+  obj.bed <- bed(bedfile)
   check_args()
   pcadapt0(obj.bed, U.row, ind.row, ind.col, ncores)
 }

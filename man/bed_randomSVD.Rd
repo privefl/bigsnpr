@@ -4,7 +4,7 @@
 \alias{bed_randomSVD}
 \title{Randomized partial SVD}
 \usage{
-bed_randomSVD(obj.bed, ind.row = rows_along(obj.bed),
+bed_randomSVD(bedfile, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), k = 10, tol = 1e-04,
   verbose = FALSE, ncores = 1)
 }

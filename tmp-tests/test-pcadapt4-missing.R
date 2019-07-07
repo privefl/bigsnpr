@@ -19,7 +19,7 @@ snp2$genotypes <- G2
 bedfile2 <- snp_writeBed(snp2, tempfile(fileext = ".bed"))
 
 ind.keep2 <- bed_clumping(bedfile2)
-svd2 <- bed_randomSVD(bed(bedfile2), ind.col = ind.keep2)
+svd2 <- bed_randomSVD(bedfile2, ind.col = ind.keep2)
 U2 <- svd2$u
 plot(U, U2)
 plot(U[, 1:2], U2[, 1:2], pch = 20); abline(0, 1, col = "red")
@@ -29,8 +29,7 @@ coef <- sapply(cols_along(G2), function(j) {
 })
 # all.equal(coef, big_univLinReg(G, U[, 9])$score)
 
-obj.bed <- bed(bedfile2)
-test <- bigsnpr:::multLinReg(obj.bed, rows_along(G), cols_along(G), U2)
+test <- bigsnpr:::multLinReg(bed(bedfile2), rows_along(G), cols_along(G), U2)
 all.equal(test[, 9], coef)
 
 bed4pcadapt <- pcadapt::read.pcadapt(bedfile2, type = "bed")
