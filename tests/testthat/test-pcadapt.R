@@ -43,11 +43,11 @@ test_that("Same as pcadapt", {
   ################################################################################
 
   obj.gwas <- snp_pcadapt(G, obj.svd$u, ncores = sample(1:2, 1))
-  expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
-               tolerance = 1e-2)
-  expect_equal(snp_gc(obj.gwas)[[1]], as.numeric(obj.pcadapt$stat),
-               tolerance = 1e-1)
-  expect_equal(predict(snp_gc(obj.gwas), log10 = FALSE), obj.pcadapt$pvalues,
+  expect_equal(bigsnpr:::getLambdaGC(obj.gwas), 1)  ## always GC
+  expect_equal(get("lamGC", envir = environment(attr(obj.gwas, "transfo"))),
+               obj.pcadapt$gif, tolerance = 1e-2)
+  expect_equal(obj.gwas$score, as.numeric(obj.pcadapt$stat), tolerance = 1e-1)
+  expect_equal(predict(obj.gwas, log10 = FALSE), obj.pcadapt$pvalues,
                tolerance = 1e-1)
 
   ################################################################################
@@ -66,22 +66,17 @@ test_that("Same as pcadapt", {
   # K = 1
   obj.pcadapt <- pcadapt::pcadapt(bed, K = 1, min.maf = 0)
   obj.gwas    <- snp_pcadapt(G, obj.svd$u[, 1], ncores = sample(1:2, 1))
-  obj.gwas.gc <- snp_gc(obj.gwas)
 
   snp_qq(obj.gwas)
-  snp_qq(obj.gwas.gc)
 
-  tmp <- obj.pcadapt$scores[, 1]; names(tmp) <- NULL
-  expect_equal(tmp, obj.svd$u[, 1], tolerance = 1e-6)
-  expect_equal(as.vector(obj.pcadapt$zscores), obj.gwas$score, tolerance = 1e-2)
-  # plot(obj.pcadapt$pvalues, predict(obj.gwas.gc, log10 = FALSE))
-
-  # expect_equal(bigsnpr:::getLambdaGC(obj.gwas), obj.pcadapt$gif,
-  #              tolerance = 1e-2)
-  # expect_equal(snp_gc(obj.gwas)[[1]], as.numeric(obj.pcadapt$stat),
-  #              tolerance = 1e-2)
-  # expect_equal(predict(snp_gc(obj.gwas), log10 = FALSE), obj.pcadapt$pvalues,
-  #              tolerance = 1e-2)
+  expect_equal(bigsnpr:::getLambdaGC(obj.gwas), 1)  ## always GC
+  expect_equal(get("lamGC", envir = environment(attr(obj.gwas, "transfo"))),
+               obj.pcadapt$gif, tolerance = 1e-2)
+  expect_equal(obj.gwas$score, as.numeric(obj.pcadapt$stat), tolerance = 1e-2)
+  expect_equal(predict(obj.gwas, log10 = FALSE), obj.pcadapt$pvalues,
+               tolerance = 1e-2)
+  expect_equal(obj.pcadapt$scores[, 1],   obj.svd$u[, 1], tolerance = 1e-8)
+  expect_equal(obj.pcadapt$loadings[, 1], obj.svd$v[, 1], tolerance = 1e-8)
 
   ################################################################################
 

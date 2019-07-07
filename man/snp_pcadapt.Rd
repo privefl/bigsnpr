@@ -2,10 +2,14 @@
 % Please edit documentation in R/pcadapt.R
 \name{snp_pcadapt}
 \alias{snp_pcadapt}
+\alias{bed_pcadapt}
 \title{Outlier detection}
 \usage{
 snp_pcadapt(G, U.row, ind.row = rows_along(G), ind.col = cols_along(G),
   ncores = 1)
+
+bed_pcadapt(obj.bed, U.row, ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed), ncores = 1)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
