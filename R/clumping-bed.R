@@ -18,6 +18,8 @@ bed_clumping <- function(bedfile,
   infos.chr <- obj.bed$map$chromosome
   infos.pos <- obj.bed$map$physical.pos
 
+  check_args()
+
   args <- as.list(environment())
 
   if (!is.null(S)) assert_lengths(infos.chr, S)
@@ -74,6 +76,8 @@ bed_indLRLDR <- function(bedfile, LD.regions = LD.wiki34) {
   snp_infos <- bigreadr::fread2(sub_bed(bedfile, ".bim"))
   infos.chr <- snp_infos[[1]]
   infos.pos <- snp_infos[[4]]
+
+  check_args()
 
   foreach(ic = rows_along(LD.regions), .combine = 'c') %do% {
     which((infos.chr == LD.regions[ic, "Chr"]) &
