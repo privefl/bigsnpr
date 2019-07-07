@@ -34,6 +34,7 @@ Imports:
     Matrix,
     parallel,
     Rcpp,
+    robust,
     stats
 LinkingTo:
     bigstatsr,
@@ -48,7 +49,6 @@ Suggests:
     gaston,
     Hmisc,
     pcadapt (>= 4.0.3),
-    robust,
     RSQLite,
     spelling, 
     testthat,

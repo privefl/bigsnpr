@@ -1,5 +1,5 @@
 bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
-bedfile <- "../Dubois2010_data/FinnuncorrNLITUK1UK3hap300_QC_norel.bed"
+# bedfile <- "../Dubois2010_data/FinnuncorrNLITUK1UK3hap300_QC_norel.bed"
 assert_exist <- bigsnpr:::assert_exist
 NAMES.MAP <- bigsnpr:::NAMES.MAP
 NAMES.FAM <- bigsnpr:::NAMES.FAM

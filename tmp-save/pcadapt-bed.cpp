@@ -13,7 +13,7 @@ NumericMatrix multLinReg(Environment obj_bed,
                          const NumericMatrix& u) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
-  bedAcc macc(xp_bed, ind_row, ind_col);
+  bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
   size_t n = macc.nrow();
   size_t p = macc.ncol();
   int K = u.ncol();

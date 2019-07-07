@@ -168,32 +168,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // multLinReg
-NumericMatrix multLinReg(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericMatrix& u);
-RcppExport SEXP _bigsnpr_multLinReg(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP uSEXP) {
+NumericMatrix multLinReg(SEXP obj, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericMatrix& U);
+RcppExport SEXP _bigsnpr_multLinReg(SEXP objSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP USEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type u(uSEXP);
-    rcpp_result_gen = Rcpp::wrap(multLinReg(obj_bed, ind_row, ind_col, center, scale, u));
-    return rcpp_result_gen;
-END_RCPP
-}
-// linRegPcadapt_cpp
-NumericMatrix linRegPcadapt_cpp(Environment BM, const arma::mat& U, const IntegerVector& rowInd, const IntegerVector& colInd);
-RcppExport SEXP _bigsnpr_linRegPcadapt_cpp(SEXP BMSEXP, SEXP USEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type U(USEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
-    rcpp_result_gen = Rcpp::wrap(linRegPcadapt_cpp(BM, U, rowInd, colInd));
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type U(USEXP);
+    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, ind_row, ind_col, U));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -276,8 +260,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 11},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 6},
-    {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 6},
-    {"_bigsnpr_linRegPcadapt_cpp", (DL_FUNC) &_bigsnpr_linRegPcadapt_cpp, 4},
+    {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 4},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 7},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
