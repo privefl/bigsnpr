@@ -4,16 +4,13 @@
 #'
 #' @export
 #'
-bed_clumping <- function(bedfile,
+bed_clumping <- function(obj.bed,
                          ind.row = rows_along(obj.bed),
                          S = NULL,
                          thr.r2 = 0.2,
                          size = 100 / thr.r2,
                          exclude = NULL,
                          ncores = 1) {
-
-  obj.bed <- bed(bedfile)
-  rm(bedfile)
 
   infos.chr <- obj.bed$map$chromosome
   infos.pos <- obj.bed$map$physical.pos
@@ -64,26 +61,6 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
   )
 
   ind.chr[keep]
-}
-
-################################################################################
-
-#' @import foreach
-#' @export
-#' @rdname snp_clumping
-bed_indLRLDR <- function(bedfile, LD.regions = LD.wiki34) {
-
-  snp_infos <- bigreadr::fread2(sub_bed(bedfile, ".bim"))
-  infos.chr <- snp_infos[[1]]
-  infos.pos <- snp_infos[[4]]
-
-  check_args()
-
-  foreach(ic = rows_along(LD.regions), .combine = 'c') %do% {
-    which((infos.chr == LD.regions[ic, "Chr"]) &
-            (infos.pos >= LD.regions[ic, "Start"]) &
-            (infos.pos <= LD.regions[ic, "Stop"]))
-  }
 }
 
 ################################################################################

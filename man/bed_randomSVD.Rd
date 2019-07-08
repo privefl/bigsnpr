@@ -4,11 +4,22 @@
 \alias{bed_randomSVD}
 \title{Randomized partial SVD}
 \usage{
-bed_randomSVD(bedfile, ind.row = rows_along(obj.bed),
+bed_randomSVD(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), k = 10, tol = 1e-04,
   verbose = FALSE, ncores = 1)
 }
 \arguments{
+\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+Use \code{obj.bed <- bed(bedfile)} to get this object.}
+
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
+
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.\cr
+\strong{Don't use negative indices.}}
+
 \item{k}{Number of singular vectors/values to compute. Default is \code{10}.
 \strong{This algorithm should be used to compute only a
 few singular vectors/values.}}
@@ -17,6 +28,9 @@ few singular vectors/values.}}
 Default is \code{1e-4}.}
 
 \item{verbose}{Should some progress be printed? Default is \code{FALSE}.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 A named list (an S3 class "big_SVD") of

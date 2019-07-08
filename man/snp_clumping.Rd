@@ -2,16 +2,13 @@
 % Please edit documentation in R/clumping-bed.R, R/clumping.R
 \name{bed_clumping}
 \alias{bed_clumping}
-\alias{bed_indLRLDR}
 \alias{snp_clumping}
 \alias{snp_pruning}
 \alias{snp_indLRLDR}
 \title{LD clumping}
 \usage{
-bed_clumping(bedfile, ind.row = rows_along(obj.bed), S = NULL,
+bed_clumping(obj.bed, ind.row = rows_along(obj.bed), S = NULL,
   thr.r2 = 0.2, size = 100/thr.r2, exclude = NULL, ncores = 1)
-
-bed_indLRLDR(bedfile, LD.regions = LD.wiki34)
 
 snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL,
   thr.r2 = 0.2, size = 100/thr.r2, infos.pos = NULL,
@@ -24,8 +21,8 @@ snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 49,
 snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 }
 \arguments{
-\item{bedfile}{Path to file with extension ".bed" to read.
-You need the corresponding ".bim" and ".fam" in the same directory.}
+\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr
@@ -54,10 +51,6 @@ can be for thresholding with respect to p-values associated with \code{S}.}
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
-\item{LD.regions}{A \code{data.frame} with columns "Chr", "Start" and "Stop".
-Default use the table of 34 long-range LD regions that you can find
-\href{https://goo.gl/0Ou7uI}{there}.}
-
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
 (typically \code{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
@@ -74,6 +67,10 @@ Typically \code{<bigSNP>$map$physical.pos}.}
 
 \item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
+
+\item{LD.regions}{A \code{data.frame} with columns "Chr", "Start" and "Stop".
+Default use the table of 34 long-range LD regions that you can find
+\href{https://goo.gl/0Ou7uI}{there}.}
 }
 \value{
 \itemize{

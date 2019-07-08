@@ -162,7 +162,7 @@ snp_autoSVD <- function(G,
 
 #' @rdname snp_autoSVD
 #' @export
-bed_autoSVD <- function(bedfile,
+bed_autoSVD <- function(obj.bed,
                         ind.row = rows_along(obj.bed),
                         ind.col = cols_along(obj.bed),
                         thr.r2 = 0.2,
@@ -173,7 +173,6 @@ bed_autoSVD <- function(bedfile,
                         ncores = 1,
                         verbose = TRUE) {
 
-  obj.bed <- bed(bedfile)
   infos.chr <- obj.bed$map$chromosome
   infos.pos <- obj.bed$map$physical.pos
 

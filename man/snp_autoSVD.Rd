@@ -11,7 +11,7 @@ snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
   int.min.size = 20, is.size.in.bp = NULL, ncores = 1,
   verbose = TRUE)
 
-bed_autoSVD(bedfile, ind.row = rows_along(obj.bed),
+bed_autoSVD(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), thr.r2 = 0.2, size = 100/thr.r2,
   k = 10, roll.size = 50, int.min.size = 20, ncores = 1,
   verbose = TRUE)
@@ -66,8 +66,8 @@ You may use \link{nb_cores}.}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 
-\item{bedfile}{Path to file with extension ".bed" to read.
-You need the corresponding ".bim" and ".fam" in the same directory.}
+\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+Use \code{obj.bed <- bed(bedfile)} to get this object.}
 }
 \value{
 A named list (an S3 class "big_SVD") of

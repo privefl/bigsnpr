@@ -151,7 +151,7 @@ svds4.seq <- function(obj.bed, ind.row, ind.col, k, tol, verbose) {
 #' This algorithm is linear in time in all dimensions and is very
 #' memory-efficient. Thus, it can be used on very large bed files.
 #'
-#' @inheritParams bigstatsr-package
+#' @inheritParams bigsnpr-package
 #' @param k Number of singular vectors/values to compute. Default is `10`.
 #' **This algorithm should be used to compute only a
 #' few singular vectors/values.**
@@ -176,17 +176,14 @@ svds4.seq <- function(obj.bed, ind.row, ind.col, k, tol, verbose) {
 #' @example examples/example-randomSVD.R
 #' @seealso [svds][RSpectra::svds]
 #'
-bed_randomSVD <- function(
-  bedfile,
-  ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed),
-  k = 10,
-  tol = 1e-4,
-  verbose = FALSE,
-  ncores = 1
-) {
+bed_randomSVD <- function(obj.bed,
+                          ind.row = rows_along(obj.bed),
+                          ind.col = cols_along(obj.bed),
+                          k = 10,
+                          tol = 1e-4,
+                          verbose = FALSE,
+                          ncores = 1) {
 
-  obj.bed <- bed(bedfile)
   check_args()
 
   if (ncores > 1) {
