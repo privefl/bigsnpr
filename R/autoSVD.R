@@ -187,7 +187,7 @@ bed_autoSVD <- function(obj.bed,
     ind.keep <- ind.col
   } else {
     printf2("\nPhase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
-    ind.keep <- bed_clumping(bedfile,
+    ind.keep <- bed_clumping(obj.bed,
                              ind.row = ind.row,
                              exclude = setdiff(cols_along(obj.bed), ind.col),
                              thr.r2 = thr.r2,
@@ -202,7 +202,7 @@ bed_autoSVD <- function(obj.bed,
     printf2("\nIteration %d:\n", iter)
     printf2("Computing SVD..\n")
     # SVD
-    obj.svd <- bed_randomSVD(bedfile,
+    obj.svd <- bed_randomSVD(obj.bed,
                              ind.row = ind.row,
                              ind.col = ind.keep,
                              k = k,
@@ -210,7 +210,7 @@ bed_autoSVD <- function(obj.bed,
 
     # -log10(p-values) of being an outlier
     lpval <- -stats::predict(
-      bed_pcadapt(bedfile, obj.svd$u, ind.row, ind.keep, ncores = ncores))
+      bed_pcadapt(obj.bed, obj.svd$u, ind.row, ind.keep, ncores = ncores))
     # Bonferroni-corrected threshold
     lim <- -log10(0.05 / length(lpval))
 
