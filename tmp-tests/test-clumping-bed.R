@@ -1,3 +1,4 @@
+library(bigsnpr)
 fake <- snp_fake(200, 100)
 fake$genotypes[] <- sample(0:3, length(fake$genotypes), replace = TRUE,
                            prob = c(1, 1, 1, 3))

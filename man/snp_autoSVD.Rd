@@ -2,12 +2,18 @@
 % Please edit documentation in R/autoSVD.R
 \name{snp_autoSVD}
 \alias{snp_autoSVD}
+\alias{bed_autoSVD}
 \title{Truncated SVD with pruning}
 \usage{
 snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
   ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
   thr.r2 = 0.2, size = 100/thr.r2, k = 10, roll.size = 50,
   int.min.size = 20, is.size.in.bp = NULL, ncores = 1,
+  verbose = TRUE)
+
+bed_autoSVD(bedfile, ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed), thr.r2 = 0.2, size = 100/thr.r2,
+  k = 10, roll.size = 50, int.min.size = 20, ncores = 1,
   verbose = TRUE)
 }
 \arguments{
@@ -59,6 +65,9 @@ in order to be reported as long-range LD region. Default is \code{20}.}
 You may use \link{nb_cores}.}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
+
+\item{bedfile}{Path to file with extension ".bed" to read.
+You need the corresponding ".bim" and ".fam" in the same directory.}
 }
 \value{
 A named list (an S3 class "big_SVD") of

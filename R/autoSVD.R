@@ -87,9 +87,6 @@ snp_autoSVD <- function(G,
   if (!missing(is.size.in.bp))
     warning2("Parameter 'is.size.in.bp' is deprecated.")
 
-  if (!requireNamespace("robust", quietly = TRUE))
-    stop2("Please install package 'robust'.")
-
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
@@ -125,6 +122,96 @@ snp_autoSVD <- function(G,
     # -log10(p-values) of being an outlier
     lpval <- -stats::predict(
       snp_pcadapt(G, obj.svd$u, ind.row, ind.keep, ncores = ncores))
+    # Bonferroni-corrected threshold
+    lim <- -log10(0.05 / length(lpval))
+
+    # Roll mean to get only consecutive outliers
+    ind.excl <- which(rollMean(lpval, size = roll.size) > lim)
+    printf2("%d outlier%s detected..\n", length(ind.excl),
+            `if`(length(ind.excl) > 1, "s", ""))
+
+    # Stop or continue?
+    if (length(ind.excl) > 0) {
+      ind.keep <- ind.keep[-ind.excl]
+      iter <- iter + 1L
+
+      # Detection of long-range LD regions
+      if (!is.null(infos.pos)) {
+        # Regroup them by intervals to return long-range LD regions
+        ind.range <- getIntervals(ind.excl, n = int.min.size)
+        printf2("%d long-range LD region%s detected..\n", nrow(ind.range),
+                `if`(nrow(ind.range) > 1, "s", ""))
+        if (nrow(ind.range) > 0) {
+          LRLDR.add <- cbind(
+            infos.chr[ind.keep[ind.range[, 1]]],
+            matrix(infos.pos[ind.keep[ind.range]], ncol = 2)
+          )
+          LRLDR[nrow(LRLDR) + rows_along(LRLDR.add), ] <- LRLDR.add
+        }
+      }
+    } else {
+      printf2("\nConverged!\n")
+      break
+    }
+  }
+
+  structure(obj.svd, subset = ind.keep, lrldr = LRLDR)
+}
+
+################################################################################
+
+#' @rdname snp_autoSVD
+#' @export
+bed_autoSVD <- function(bedfile,
+                        ind.row = rows_along(obj.bed),
+                        ind.col = cols_along(obj.bed),
+                        thr.r2 = 0.2,
+                        size = 100 / thr.r2,
+                        k = 10,
+                        roll.size = 50,
+                        int.min.size = 20,
+                        ncores = 1,
+                        verbose = TRUE) {
+
+  obj.bed <- bed(bedfile)
+  infos.chr <- obj.bed$map$chromosome
+  infos.pos <- obj.bed$map$physical.pos
+
+  check_args()
+
+  # Verbose?
+  printf2 <- function(...) if (verbose) printf(...)
+
+  # First clumping
+  if (is.na(thr.r2)) {
+    printf2("\nSkipping clumping.\n")
+    ind.keep <- ind.col
+  } else {
+    printf2("\nPhase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
+    ind.keep <- bed_clumping(bedfile,
+                             ind.row = ind.row,
+                             exclude = setdiff(cols_along(obj.bed), ind.col),
+                             thr.r2 = thr.r2,
+                             size = size,
+                             ncores = ncores)
+    printf2("keep %d SNPs.\n", length(ind.keep))
+  }
+
+  iter <- 1L
+  LRLDR <- LD.wiki34[0, 1:3]
+  repeat {
+    printf2("\nIteration %d:\n", iter)
+    printf2("Computing SVD..\n")
+    # SVD
+    obj.svd <- bed_randomSVD(bedfile,
+                             ind.row = ind.row,
+                             ind.col = ind.keep,
+                             k = k,
+                             ncores = ncores)
+
+    # -log10(p-values) of being an outlier
+    lpval <- -stats::predict(
+      bed_pcadapt(bedfile, obj.svd$u, ind.row, ind.keep, ncores = ncores))
     # Bonferroni-corrected threshold
     lim <- -log10(0.05 / length(lpval))
 
