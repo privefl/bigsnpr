@@ -2,7 +2,7 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 0.11.5
+Version: 0.12.0
 Date: 2019-07-05
 Authors@R: c(
     person("Florian", "Privé", 
@@ -32,9 +32,11 @@ Imports:
     gsubfn,
     magrittr,
     Matrix,
+    methods,
     parallel,
     Rcpp,
     robust,
+    RSpectra,
     stats
 LinkingTo:
     bigstatsr,

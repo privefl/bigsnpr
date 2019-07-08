@@ -11,6 +11,9 @@
 
 \S4method{length}{bed}(x)
 }
+\arguments{
+\item{x}{Object of type \code{bed}.}
+}
 \description{
 Methods for the bed class
 

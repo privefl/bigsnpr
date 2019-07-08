@@ -1,7 +1,7 @@
 /******************************************************************************/
 
 #include <bigstatsr/BMCodeAcc.h>
-#include "bed-acc.hpp"
+#include "bed-acc.h"
 
 using namespace Rcpp;
 

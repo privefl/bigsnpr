@@ -48,6 +48,7 @@ sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
 #' obj.bed <- bed(bedfile)
 #'
 #' @exportClass bed
+#' @importFrom methods new
 #'
 bed_RC <- methods::setRefClass(
 
@@ -71,7 +72,7 @@ bed_RC <- methods::setRefClass(
     # infos.pos = function() bigreadr::fread2(.self$bimfile, select = 4)[[1]],
 
     address = function() {
-      if (identical(.self$extptr, methods::new("externalptr"))) { # nil
+      if (identical(.self$extptr, new("externalptr"))) { # nil
         .self$extptr <- bedXPtr(.self$bedfile, .self$nrow, .self$ncol)
       }
       .self$extptr
@@ -111,15 +112,15 @@ bed_RC <- methods::setRefClass(
 #'
 #' @export
 #'
-bed <- function(bedfile) methods::new(Class = "bed", bedfile = bedfile)
+bed <- function(bedfile) new(Class = "bed", bedfile = bedfile)
 
 ################################################################################
 
 #' Methods for the bed class
 #'
-#' @name bed-methods
+#' @param x Object of type `bed`.
 #'
-#' @rdname bed-methods
+#' @name bed-methods
 NULL
 
 ################################################################################

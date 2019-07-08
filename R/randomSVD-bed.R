@@ -61,7 +61,7 @@ svds4.par <- function(obj.bed, ind.row, ind.col, k, tol, verbose, ncores) {
       ind.col.part <- ind.col[lo:up]
 
       # Scaling
-      stats <- bigsnpr:::bed_stats(obj.bed, ind.row, ind.col.part)
+      stats <- bed_stats(obj.bed, ind.row, ind.col.part)
       af <- stats$sum / (2 * stats$nb_nona_col)
       center <- 2 * af
       scale <- sqrt(2 * af * (1 - af))
@@ -113,7 +113,7 @@ svds4.seq <- function(obj.bed, ind.row, ind.col, k, tol, verbose) {
   m <- length(ind.col)
 
   # scaling
-  stats <- bigsnpr:::bed_stats(obj.bed, ind.row, ind.col)
+  stats <- bed_stats(obj.bed, ind.row, ind.col)
   af <- stats$sum / (2 * stats$nb_nona_col)
   center <- 2 * af
   scale <- sqrt(2 * af * (1 - af))
@@ -173,7 +173,6 @@ svds4.seq <- function(obj.bed, ind.row, ind.col, k, tol, verbose) {
 #' Note that to obtain the Principal Components, you must use
 #' [predict][predict.big_SVD] on the result. See examples.
 #'
-#' @example examples/example-randomSVD.R
 #' @seealso [svds][RSpectra::svds]
 #'
 bed_randomSVD <- function(obj.bed,
