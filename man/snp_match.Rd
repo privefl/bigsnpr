@@ -4,23 +4,26 @@
 \alias{snp_match}
 \title{Match alleles}
 \usage{
-snp_match(sumstats, info_snp, strand_flip = TRUE)
+snp_match(sumstats, info_snp, strand_flip = TRUE, join_by_pos = TRUE)
 }
 \arguments{
 \item{sumstats}{A data frame with columns "chr", "pos", "a0", "a1" and "beta".}
 
 \item{info_snp}{A data frame with columns "chr", "pos", "a0" and "a1".}
 
-\item{strand_flip}{Whether it should try to flip strand? (default) If so,
-ambiguous alleles A/T and C/G are removed.}
+\item{strand_flip}{Whether to try to flip strand? (default is \code{TRUE})
+If so, ambiguous alleles A/T and C/G are removed.}
+
+\item{join_by_rsid}{Whether to join by chromosome and position (default),
+or instead by rsid.}
 }
 \value{
-A single data frame joined by chromosome, position and alleles.
+A single data frame with matched variants.
 }
 \description{
 Match alleles between summary statistics and SNP information.
-Match by "chr", "pos", "a0", "a1", accounting for strand flips (as an option)
-and reverse reference alleles (opposite effect).
+Match by ("chr", "a0", "a1") and ("pos" or "rsid"), accounting for possible
+strand flips and reverse reference alleles (opposite effects).
 }
 \examples{
 sumstats <- data.frame(

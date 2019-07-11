@@ -22,9 +22,9 @@ Language: en-US
 ByteCompile: TRUE
 Depends:
     R (>= 3.3), 
-    bigstatsr (>= 0.9.7)
+    bigstatsr (>= 0.9.8)
 Imports:
-    bigreadr (>= 0.1.6),
+    bigreadr (>= 0.1.7),
     data.table,
     doParallel,
     foreach, 
@@ -55,7 +55,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr
+Remotes: privefl/bigstatsr, privefl/bigreadr
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr

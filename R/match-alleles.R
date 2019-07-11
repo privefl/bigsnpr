@@ -86,29 +86,40 @@ flip_strand <- function(allele) {
 #' Match alleles
 #'
 #' Match alleles between summary statistics and SNP information.
-#' Match by "chr", "pos", "a0", "a1", accounting for strand flips (as an option)
-#' and reverse reference alleles (opposite effect).
+#' Match by ("chr", "a0", "a1") and ("pos" or "rsid"), accounting for possible
+#' strand flips and reverse reference alleles (opposite effects).
 #'
 #' @param sumstats A data frame with columns "chr", "pos", "a0", "a1" and "beta".
 #' @param info_snp A data frame with columns "chr", "pos", "a0" and "a1".
-#' @param strand_flip Whether it should try to flip strand? (default) If so,
-#'  ambiguous alleles A/T and C/G are removed.
+#' @param strand_flip Whether to try to flip strand? (default is `TRUE`)
+#'   If so, ambiguous alleles A/T and C/G are removed.
+#' @param join_by_rsid Whether to join by chromosome and position (default),
+#'   or instead by rsid.
 #'
-#' @return A single data frame joined by chromosome, position and alleles.
+#' @return A single data frame with matched variants.
 #' @export
 #'
 #' @import data.table
 #'
 #' @example examples/example-match.R
-snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
+snp_match <- function(sumstats, info_snp,
+                      strand_flip = TRUE,
+                      join_by_pos = TRUE) {
 
-  if (!all(c("chr", "pos", "a0", "a1", "beta") %in% names(sumstats)))
-    stop2("Please use proper names for variables in 'sumstats'.")
-  if (!all(c("chr", "pos", "a0", "a1") %in% names(info_snp)))
-    stop2("Please use proper names for variables in 'info_snp'.")
+  sumstats$`_NUM_ID_` <- rows_along(sumstats)
+  info_snp$`_NUM_ID_` <- rows_along(info_snp)
 
-  message2("%s variants in summary statistics.",
-           format(nrow(sumstats), big.mark = ","))
+  join_by <- c("chr", NA, "a0", "a1")
+  join_by[2] <- `if`(join_by_pos, "pos", "rsid")
+
+  if (!all(c(join_by, "beta") %in% names(sumstats)))
+    stop2("Please use proper names for variables in 'sumstats'. Expected '%s'.",
+          paste(c(join_by, "beta"), collapse = ", "))
+  if (!all(c(join_by, "pos") %in% names(info_snp)))
+    stop2("Please use proper names for variables in 'info_snp'. Expected '%s'.",
+          paste(unique(c(join_by, "pos")), collapse = ", "))
+
+  message2("%s variants to be matched.", format(nrow(sumstats), big.mark = ","))
 
   # augment dataset to match reverse alleles
   if (strand_flip) {
@@ -136,7 +147,7 @@ snp_match <- function(sumstats, info_snp, strand_flip = TRUE) {
   sumstats4 <- rbind(sumstats3, sumstats4)
 
   matched <- merge(as.data.table(sumstats4), as.data.table(info_snp),
-                   by = c("chr", "pos", "a0", "a1"), all = FALSE)
+                   by = join_by, all = FALSE, suffixes = c(".ss", ""))
   message2("%s variants have been matched; %s were flipped and %s were reversed.",
            format(nrow(matched),         big.mark = ","),
            format(sum(matched$`_FLIP_`), big.mark = ","),
