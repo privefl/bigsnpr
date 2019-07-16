@@ -22,7 +22,7 @@ Language: en-US
 ByteCompile: TRUE
 Depends:
     R (>= 3.3), 
-    bigstatsr (>= 0.9.8)
+    bigstatsr (>= 0.9.9)
 Imports:
     bigreadr (>= 0.1.7),
     data.table,
@@ -36,6 +36,7 @@ Imports:
     parallel,
     Rcpp,
     robust,
+    robustbase,
     RSpectra,
     stats
 LinkingTo:

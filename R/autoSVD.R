@@ -160,6 +160,11 @@ snp_autoSVD <- function(G,
 
 ################################################################################
 
+tukeyMC <- function(stat, coef = 1.5) {
+  robustbase::adjboxStats(stat, coef = coef)$fence[2]
+}
+
+
 #' @rdname snp_autoSVD
 #' @export
 bed_autoSVD <- function(obj.bed,
@@ -170,6 +175,8 @@ bed_autoSVD <- function(obj.bed,
                         k = 10,
                         roll.size = 50,
                         int.min.size = 20,
+                        tukey.coef = 3,
+                        min.mac = 5,
                         ncores = 1,
                         verbose = TRUE) {
 
@@ -177,6 +184,15 @@ bed_autoSVD <- function(obj.bed,
   infos.pos <- obj.bed$map$physical.pos
 
   check_args()
+
+  if (min.mac > 0) {
+    stats <- bed_stats(obj.bed, ind.row, ind.col)
+    mac.nok <- (stats$sum < min.mac)
+    if (sum(mac.nok) > 0) {
+      warning2("Discarding %d variants with MAC < %d..", sum(mac.nok), min.mac)
+      ind.col <- ind.col[!mac.nok]
+    }
+  }
 
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
@@ -211,11 +227,10 @@ bed_autoSVD <- function(obj.bed,
     # -log10(p-values) of being an outlier
     lpval <- -stats::predict(
       bed_pcadapt(obj.bed, obj.svd$u, ind.row, ind.keep, ncores = ncores))
-    # Bonferroni-corrected threshold
-    lim <- -log10(0.05 / length(lpval))
 
     # Roll mean to get only consecutive outliers
-    ind.excl <- which(rollMean(lpval, size = roll.size) > lim)
+    lpval2 <- rollMean(lpval, size = roll.size)
+    ind.excl <- which(lpval2 > tukeyMC(lpval2, tukey.coef))
     printf2("%d outlier%s detected..\n", length(ind.excl),
             `if`(length(ind.excl) > 1, "s", ""))
 

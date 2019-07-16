@@ -7,9 +7,8 @@ map.1000G <- bigreadr::fread2(
 )
 
 info_snp <- snp_match(
-  cbind(map.1000G[-3], "_NUM_ID_" = rows_along(map.1000G), beta = 1),
-  cbind(setNames(celiac$map[-3], c("chr", "rsid", "pos", "a1", "a0")),
-        "_NUM_ID_" = rows_along(celiac$map)),
+  cbind(map.1000G[-3], beta = 1),
+  setNames(celiac$map[-3], c("chr", "rsid", "pos", "a1", "a0")),
   join_by_pos = FALSE
 )
 info_snp

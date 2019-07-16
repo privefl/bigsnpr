@@ -1,4 +1,4 @@
-setwd("tmp-data")
+wd <- setwd("tmp-data")
 
 # https://cran.r-project.org/web/packages/plinkQC/vignettes/Genomes1000.pdf
 download.file("https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst?dl=1",
@@ -29,6 +29,15 @@ bed <- snp_plinkQC(
 )
 file.size("1000G_phase3_common_hapmap.bed") / 1024^2  # 787 MB
 
+download_plink(".")
+snp_plinkIBDQC("./plink",
+               "1000G_phase3_common_hapmap.bed",
+               pi.hat = 0.25,
+               pruning.args = c(2000, 0.1),
+               ncores = NCORES,
+               extra.options = "--memory 8000")
+
+
 zip("1000G_phase3_common_hapmap.zip",
     paste0("1000G_phase3_common_hapmap", c(".bed", ".bim", ".fam")))
 
@@ -37,3 +46,5 @@ system("./plink2 --bfile 1000G_phase3_common_hapmap --freq --out 1000G_phase3_co
 af <- bigreadr::fread2("1000G_phase3_common_hapmap.afreq", select = "ALT_FREQS")[[1]]
 summary(af)
 sum(af > 0.05)
+
+setwd(wd)
