@@ -33,7 +33,7 @@ download_plink <- function(dir = tempdir()) {
 
   # https://regex101.com/r/jC8nB0/143
   plink.names  <- gsubfn::strapply(
-    X = readLines("https://www.cog-genomics.org/plink2"),
+    X = readLines("http://www.cog-genomics.org/plink2"),
     # http://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20190304.zip
     pattern = "(http://s3.amazonaws.com/plink1-assets/plink_.+?(?<!dev)\\.zip)",
     simplify = "c",
@@ -78,7 +78,7 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE) {
 
   # https://regex101.com/r/jC8nB0/143
   plink.names  <- gsubfn::strapply(
-    X = readLines("https://www.cog-genomics.org/plink/2.0/"),
+    X = readLines("http://www.cog-genomics.org/plink/2.0/"),
     # http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20190527.zip
     pattern = "(http://s3.amazonaws.com/plink2-assets/plink2_.+?(?<!dev)\\.zip)",
     simplify = "c",
