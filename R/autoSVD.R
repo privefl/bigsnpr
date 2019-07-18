@@ -1,6 +1,18 @@
 ################################################################################
 #### Useful functions ####
 
+# Outlier detection (upper)
+tukey_MC_up <- function(x, coef = NULL, a = -4, b = 3, alpha = 0.05) {
+
+  if (is.null(coef)) {
+    alpha <- alpha / sum(!is.na(x))  # Bonferroni correction
+    coef <- (qnorm(alpha, lower.tail = FALSE) - 0.6744898) / 1.34898
+  }
+
+  robustbase::adjboxStats(x, coef = coef, a = a, b = b,
+                          do.conf = FALSE, do.out = FALSE)$fence[2]
+}
+
 # apply a gaussian smoothing
 rollMean <- function(x, size) {
 
@@ -106,10 +118,10 @@ snp_autoSVD <- function(G,
     printf2("keep %d SNPs.\n", length(ind.keep))
   }
 
-  iter <- 1L
+  iter <- 0L
   LRLDR <- LD.wiki34[0, 1:3]
   repeat {
-    printf2("\nIteration %d:\n", iter)
+    printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
     # SVD
     obj.svd <- big_randomSVD(G,
@@ -126,19 +138,18 @@ snp_autoSVD <- function(G,
     lim <- -log10(0.05 / length(lpval))
 
     # Roll mean to get only consecutive outliers
-    ind.excl <- which(rollMean(lpval, size = roll.size) > lim)
-    printf2("%d outlier%s detected..\n", length(ind.excl),
-            `if`(length(ind.excl) > 1, "s", ""))
+    ind.col.excl <- which(rollMean(lpval, size = roll.size) > lim)
+    printf2("%d outlier%s detected..\n", length(ind.col.excl),
+            `if`(length(ind.col.excl) > 1, "s", ""))
 
     # Stop or continue?
-    if (length(ind.excl) > 0) {
-      ind.keep <- ind.keep[-ind.excl]
-      iter <- iter + 1L
+    if (length(ind.col.excl) > 0) {
+      ind.keep <- ind.keep[-ind.col.excl]
 
       # Detection of long-range LD regions
       if (!is.null(infos.pos)) {
         # Regroup them by intervals to return long-range LD regions
-        ind.range <- getIntervals(ind.excl, n = int.min.size)
+        ind.range <- getIntervals(ind.col.excl, n = int.min.size)
         printf2("%d long-range LD region%s detected..\n", nrow(ind.range),
                 `if`(nrow(ind.range) > 1, "s", ""))
         if (nrow(ind.range) > 0) {
@@ -175,8 +186,9 @@ bed_autoSVD <- function(obj.bed,
                         k = 10,
                         roll.size = 50,
                         int.min.size = 20,
-                        tukey.coef = 3,
-                        min.mac = 5,
+                        tukey.coef.row = 1.5,
+                        tukey.coef.col = 3,
+                        min.mac = 10,
                         ncores = 1,
                         verbose = TRUE) {
 
@@ -185,7 +197,7 @@ bed_autoSVD <- function(obj.bed,
 
   check_args()
 
-  if (min.mac > 0) {
+  if (min.mac > 0) { ## TODO: option in svd instead
     stats <- bed_stats(obj.bed, ind.row, ind.col)
     mac.nok <- (stats$sum < min.mac)
     if (sum(mac.nok) > 0) {
@@ -212,10 +224,10 @@ bed_autoSVD <- function(obj.bed,
     printf2("keep %d SNPs.\n", length(ind.keep))
   }
 
-  iter <- 1L
+  iter <- 0L
   LRLDR <- LD.wiki34[0, 1:3]
   repeat {
-    printf2("\nIteration %d:\n", iter)
+    printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
     # SVD
     obj.svd <- bed_randomSVD(obj.bed,
@@ -224,25 +236,36 @@ bed_autoSVD <- function(obj.bed,
                              k = k,
                              ncores = ncores)
 
-    # -log10(p-values) of being an outlier
+    # check for outlier samples
+    stat <- log(dbscan::lof(obj.svd$u, k = 10))
+    ind.row.excl <- which(stat > tukeyMC(stat, tukey.coef.row))
+    printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
+            `if`(length(ind.row.excl) > 1, "s", ""))
+
+    # -log10(p-values) of being an outlier variant
     lpval <- -stats::predict(
       bed_pcadapt(obj.bed, obj.svd$u, ind.row, ind.keep, ncores = ncores))
 
     # Roll mean to get only consecutive outliers
     lpval2 <- rollMean(lpval, size = roll.size)
-    ind.excl <- which(lpval2 > tukeyMC(lpval2, tukey.coef))
-    printf2("%d outlier%s detected..\n", length(ind.excl),
-            `if`(length(ind.excl) > 1, "s", ""))
+    ind.col.excl <- which(lpval2 > tukeyMC(lpval2, tukey.coef.col))
+    printf2("%d outlier variant%s detected..\n", length(ind.col.excl),
+            `if`(length(ind.col.excl) > 1, "s", ""))
 
     # Stop or continue?
-    if (length(ind.excl) > 0) {
-      ind.keep <- ind.keep[-ind.excl]
-      iter <- iter + 1L
+    cont <- FALSE
+    if (length(ind.row.excl) > 0) {
+      ind.row <- ind.row[-ind.row.excl]
+      cont <- TRUE
+    }
+    if (length(ind.col.excl) > 0) {
+      ind.keep <- ind.keep[-ind.col.excl]
+      cont <- TRUE
 
       # Detection of long-range LD regions
       if (!is.null(infos.pos)) {
         # Regroup them by intervals to return long-range LD regions
-        ind.range <- getIntervals(ind.excl, n = int.min.size)
+        ind.range <- getIntervals(ind.col.excl, n = int.min.size)
         printf2("%d long-range LD region%s detected..\n", nrow(ind.range),
                 `if`(nrow(ind.range) > 1, "s", ""))
         if (nrow(ind.range) > 0) {
@@ -253,13 +276,15 @@ bed_autoSVD <- function(obj.bed,
           LRLDR[nrow(LRLDR) + rows_along(LRLDR.add), ] <- LRLDR.add
         }
       }
-    } else {
+    }
+
+    if (!cont) {
       printf2("\nConverged!\n")
       break
     }
   }
 
-  structure(obj.svd, subset = ind.keep, lrldr = LRLDR)
+  structure(obj.svd, subset.row = ind.row, subset = ind.keep, lrldr = LRLDR)
 }
 
 ################################################################################

@@ -13,8 +13,8 @@ snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
 
 bed_autoSVD(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), thr.r2 = 0.2, size = 100/thr.r2,
-  k = 10, roll.size = 50, int.min.size = 20, tukey.coef = 3,
-  min.mac = 5, ncores = 1, verbose = TRUE)
+  k = 10, roll.size = 50, int.min.size = 20, tukey.coef.row = 1.5,
+  tukey.coef.col = 3, min.mac = 10, ncores = 1, verbose = TRUE)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
