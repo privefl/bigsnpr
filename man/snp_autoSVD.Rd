@@ -2,7 +2,7 @@
 % Please edit documentation in R/autoSVD.R
 \name{snp_autoSVD}
 \alias{snp_autoSVD}
-\alias{bed_autoSVD}
+\alias{bed_autoSVD2}
 \title{Truncated SVD with pruning}
 \usage{
 snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
@@ -11,10 +11,11 @@ snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
   int.min.size = 20, is.size.in.bp = NULL, ncores = 1,
   verbose = TRUE)
 
-bed_autoSVD(obj.bed, ind.row = rows_along(obj.bed),
+bed_autoSVD2(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), thr.r2 = 0.2, size = 100/thr.r2,
-  k = 10, roll.size = 50, int.min.size = 20, tukey.coef.row = 1.5,
-  tukey.coef.col = 3, min.mac = 10, ncores = 1, verbose = TRUE)
+  k = 10, roll.size = 50, int.min.size = 20, alpha.tukey = 0.05,
+  lof.k = ceiling(length(ind.row)^(1/3)), min.mac = 10, ncores = 1,
+  verbose = TRUE)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
@@ -68,6 +69,13 @@ You may use \link{nb_cores}.}
 
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
+
+\item{alpha.tukey}{Default is \code{0.05}. The type-I error rate in outlier
+detection (Bonferonni-corrected afterwards).}
+
+\item{lof.k}{Size of the neighborhood in local outlier factor (LOF) detection
+for samples. Default is \code{ceiling(length(ind.row)^(1/3))}. This is \code{10} for
+a sample size of 1000, \code{25} for 15K and \code{80} for 500K.}
 }
 \value{
 A named list (an S3 class "big_SVD") of

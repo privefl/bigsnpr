@@ -41,7 +41,8 @@ NumericMatrix multLinReg(C macc, const NumericMatrix& U) {
     for (int k = 0; k < K; k++) {
       double num = xySum[k] - xSum * ySum[k] / nona;
       double deno_y = yySum[k] - ySum[k] * ySum[k] / nona;
-      res(j, k) = num * sqrt((nona - 2) / (deno_x * deno_y - num * num));
+      double deno = deno_x * deno_y - num * num;
+      res(j, k) = (deno == 0 || nona < 2) ? NA_REAL : num * sqrt((nona - 2) / deno);
     }
   }
 

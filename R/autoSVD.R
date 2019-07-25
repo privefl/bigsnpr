@@ -171,33 +171,35 @@ snp_autoSVD <- function(G,
 
 ################################################################################
 
-tukeyMC <- function(stat, coef = 1.5) {
-  robustbase::adjboxStats(stat, coef = coef)$fence[2]
-}
-
-
 #' @rdname snp_autoSVD
+#'
+#' @param alpha.tukey Default is `0.05`. The type-I error rate in outlier
+#'   detection (Bonferonni-corrected afterwards).
+#' @param lof.k Size of the neighborhood in local outlier factor (LOF) detection
+#'   for samples. Default is `ceiling(length(ind.row)^(1/3))`. This is `10` for
+#'   a sample size of 1000, `25` for 15K and `80` for 500K.
+#'
 #' @export
-bed_autoSVD <- function(obj.bed,
-                        ind.row = rows_along(obj.bed),
-                        ind.col = cols_along(obj.bed),
-                        thr.r2 = 0.2,
-                        size = 100 / thr.r2,
-                        k = 10,
-                        roll.size = 50,
-                        int.min.size = 20,
-                        tukey.coef.row = 1.5,
-                        tukey.coef.col = 3,
-                        min.mac = 10,
-                        ncores = 1,
-                        verbose = TRUE) {
+bed_autoSVD2 <- function(obj.bed,
+                         ind.row = rows_along(obj.bed),
+                         ind.col = cols_along(obj.bed),
+                         thr.r2 = 0.2,
+                         size = 100 / thr.r2,
+                         k = 10,
+                         roll.size = 50,
+                         int.min.size = 20,
+                         alpha.tukey = 0.05,
+                         lof.k = ceiling(length(ind.row)^(1/3)),
+                         min.mac = 10,
+                         ncores = 1,
+                         verbose = TRUE) {
 
   infos.chr <- obj.bed$map$chromosome
   infos.pos <- obj.bed$map$physical.pos
 
   check_args()
 
-  if (min.mac > 0) { ## TODO: option in svd instead
+  if (min.mac > 0) { ## TODO: option in svd() instead
     stats <- bed_stats(obj.bed, ind.row, ind.col)
     mac.nok <- (stats$sum < min.mac)
     if (sum(mac.nok) > 0) {
@@ -237,18 +239,22 @@ bed_autoSVD <- function(obj.bed,
                              ncores = ncores)
 
     # check for outlier samples
-    stat <- log(dbscan::lof(obj.svd$u, k = 10))
-    ind.row.excl <- which(stat > tukeyMC(stat, tukey.coef.row))
+    U <- obj.svd$u
+    maha <- robust::covRob(U, estim = "pairwiseGK",
+                           distance = FALSE, corr = FALSE)
+    eigs <- eigen(unname(maha$cov))
+    U2 <- U %*% sweep(eigs$vectors, 2, sqrt(eigs$values), '/')
+
+    S.row <- log(dbscan::lof(U2, k = lof.k))
+    ind.row.excl <- which(S.row > tukey_MC_up(S.row, alpha = alpha.tukey))
     printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
             `if`(length(ind.row.excl) > 1, "s", ""))
 
-    # -log10(p-values) of being an outlier variant
-    lpval <- -stats::predict(
-      bed_pcadapt(obj.bed, obj.svd$u, ind.row, ind.keep, ncores = ncores))
-
-    # Roll mean to get only consecutive outliers
-    lpval2 <- rollMean(lpval, size = roll.size)
-    ind.col.excl <- which(lpval2 > tukeyMC(lpval2, tukey.coef.col))
+    # check for outlier variants
+    S.col <- log(rowSums(obj.svd$v^2))
+    # roll mean to get only consecutive outliers
+    S2.col <- rollMean(S.col, size = roll.size)
+    ind.col.excl <- which(S2.col > tukey_MC_up(S2.col, alpha = alpha.tukey))
     printf2("%d outlier variant%s detected..\n", length(ind.col.excl),
             `if`(length(ind.col.excl) > 1, "s", ""))
 
@@ -284,7 +290,7 @@ bed_autoSVD <- function(obj.bed,
     }
   }
 
-  structure(obj.svd, subset.row = ind.row, subset = ind.keep, lrldr = LRLDR)
+  structure(obj.svd, subset.row = ind.row, subset.col = ind.keep, lrldr = LRLDR)
 }
 
 ################################################################################
