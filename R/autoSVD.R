@@ -5,12 +5,37 @@
 tukey_MC_up <- function(x, coef = NULL, a = -4, b = 3, alpha = 0.05) {
 
   if (is.null(coef)) {
-    alpha <- alpha / sum(!is.na(x))  # Bonferroni correction
-    coef <- (qnorm(alpha, lower.tail = FALSE) - 0.6744898) / 1.34898
+    m <- sum(!is.na(x))
+    alpha_m <- 1 - (1 - alpha)^(1/m)
+    coef <- (qnorm(alpha_m, lower.tail = FALSE) - 0.6744898) / 1.34898
   }
 
   robustbase::adjboxStats(x, coef = coef, a = a, b = b,
                           do.conf = FALSE, do.out = FALSE)$fence[2]
+}
+
+# Local Outlier Factor (LOF)
+LOF <- function(U, seq_k = c(4, 10, 30)) {
+
+  knn <- nabor::knn(U, k = max(seq_k) + 1)
+  ids <- knn$nn.idx[, -1]
+  dists <- knn$nn.dists[, -1]
+
+  lof3 <- sapply(seq_k, function(k) {
+
+    lrd <- sapply(rows_along(dists), function(i) {
+      maxs <- pmax(dists[ids[i, 1:k], k], dists[i, 1:k])
+      1 / mean(maxs)
+    })
+
+    lof.num <- sapply(rows_along(ids), function(i) {
+      mean(lrd[ids[i, 1:k]])
+    })
+
+    lof.num / lrd
+  })
+
+  apply(lof3, 1, max)
 }
 
 # apply a gaussian smoothing
@@ -174,7 +199,7 @@ snp_autoSVD <- function(G,
 #' @rdname snp_autoSVD
 #'
 #' @param alpha.tukey Default is `0.05`. The type-I error rate in outlier
-#'   detection (Bonferonni-corrected afterwards).
+#'   detection (that is further corrected for multiple testing).
 #' @param lof.k Size of the neighborhood in local outlier factor (LOF) detection
 #'   for samples. Default is `ceiling(length(ind.row)^(1/3))`. This is `10` for
 #'   a sample size of 1000, `25` for 15K and `80` for 500K.
@@ -189,7 +214,7 @@ bed_autoSVD2 <- function(obj.bed,
                          roll.size = 50,
                          int.min.size = 20,
                          alpha.tukey = 0.05,
-                         lof.k = ceiling(length(ind.row)^(1/3)),
+                         # lof.k = ceiling(length(ind.row)^(1/3)),
                          min.mac = 10,
                          ncores = 1,
                          verbose = TRUE) {
@@ -245,7 +270,7 @@ bed_autoSVD2 <- function(obj.bed,
     eigs <- eigen(unname(maha$cov))
     U2 <- U %*% sweep(eigs$vectors, 2, sqrt(eigs$values), '/')
 
-    S.row <- log(dbscan::lof(U2, k = lof.k))
+    S.row <- log(LOF(U2))
     ind.row.excl <- which(S.row > tukey_MC_up(S.row, alpha = alpha.tukey))
     printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
             `if`(length(ind.row.excl) > 1, "s", ""))

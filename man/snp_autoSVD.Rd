@@ -14,8 +14,7 @@ snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
 bed_autoSVD2(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), thr.r2 = 0.2, size = 100/thr.r2,
   k = 10, roll.size = 50, int.min.size = 20, alpha.tukey = 0.05,
-  lof.k = ceiling(length(ind.row)^(1/3)), min.mac = 10, ncores = 1,
-  verbose = TRUE)
+  min.mac = 10, ncores = 1, verbose = TRUE)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
@@ -71,7 +70,7 @@ You may use \link{nb_cores}.}
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
 \item{alpha.tukey}{Default is \code{0.05}. The type-I error rate in outlier
-detection (Bonferonni-corrected afterwards).}
+detection (that is further corrected for multiple testing).}
 
 \item{lof.k}{Size of the neighborhood in local outlier factor (LOF) detection
 for samples. Default is \code{ceiling(length(ind.row)^(1/3))}. This is \code{10} for
