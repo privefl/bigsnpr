@@ -7,9 +7,10 @@ context("PLINK_QC")
 # Get PLINK executable
 PLINK <- download_plink()
 
-unlink(plink2 <- download_plink2())
 unlink(plink2 <- download_plink2(AVX2 = FALSE))
 expect_false(grepl(plink2, "avx2"))
+
+PLINK2 <- download_plink2()
 
 ################################################################################
 
@@ -64,5 +65,22 @@ indiv.keep <-
 
 expect_length(union(indiv.keep, df.pair$IID1), nrow(K))
 expect_length(intersect(indiv.keep, df.pair$IID1), 0)
+
+################################################################################
+
+obj.snp <- snp_attachExtdata()
+G <- obj.snp$genotypes
+G[1, ] <- round(colMeans(G[2:3, ]))
+bedfile <- snp_writeBed(obj.snp, tempfile(fileext = ".bed"))
+
+bedfile2 <- snp_plinkKINGQC(PLINK2, bedfile)
+expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
+                 c("#FID\tIID", "POP1\tIND2"))
+
+bedfile3 <- snp_plinkKINGQC(PLINK2, bedfile, thr.king = 0.3,
+                            bedfile.out = tempfile(fileext = ".bed"))
+expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
+
+expect_error(snp_plinkKINGQC(PLINK, bedfile), "This requires PLINK v2")
 
 ################################################################################

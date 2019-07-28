@@ -33,7 +33,7 @@ Default is \code{TRUE}. If \code{FALSE}, return the \code{data.frame} of the cor
 
 \item{extra.options}{Other options to be passed to PLINK as a string
 (for the IBD part). More options can be found at
-\url{https://www.cog-genomics.org/plink/1.9/ibd}.}
+\url{http://www.cog-genomics.org/plink/1.9/ibd}.}
 }
 \value{
 The path of the new bedfile.
@@ -42,7 +42,7 @@ then the path of the input bedfile is returned.
 }
 \description{
 Quality Control based on Identity-by-descent (IBD) computed by
-\href{https://www.cog-genomics.org/plink2}{PLINK 1.9}
+\href{http://www.cog-genomics.org/plink2}{PLINK 1.9}
 using its method-of-moments.
 }
 \examples{
@@ -66,12 +66,6 @@ snp_plinkRmSamples(plink, bedfile,
 
 }
 \references{
-Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
-Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
-\emph{PLINK: a tool set for whole-genome association and population-based linkage
-analyses.} American Journal of Human Genetics 81 (3). Elsevier: 559–75.
-\url{http://dx.doi.org/10.1086/519795}.
-
 Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 \emph{Second-generation PLINK: rising to the challenge of larger and richer

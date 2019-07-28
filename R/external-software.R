@@ -16,7 +16,7 @@ get_os <- function() {
 
 #' Download PLINK
 #'
-#' Download PLINK 1.9 from \url{https://www.cog-genomics.org/plink2}.
+#' Download PLINK 1.9 from \url{http://www.cog-genomics.org/plink2}.
 #'
 #' @param dir The directory where to put the PLINK executable.
 #'   Default is a temporary directory.
@@ -61,7 +61,7 @@ download_plink <- function(dir = tempdir()) {
 
 #' Download PLINK
 #'
-#' Download PLINK 2.0 from \url{https://www.cog-genomics.org/plink/2.0/}.
+#' Download PLINK 2.0 from \url{http://www.cog-genomics.org/plink/2.0/}.
 #'
 #' @param AVX2 Whether to download the AVX2 version?
 #'   Default is `TRUE` and possible only for 64 bits architectures.
@@ -146,14 +146,14 @@ download_beagle <- function(dir = tempdir()) {
 #' Quality Control
 #'
 #' Quality Control (QC) and possible conversion to *bed*/*bim*/*fam* files
-#' using [**PLINK 1.9**](https://www.cog-genomics.org/plink2).
+#' using [**PLINK 1.9**](http://www.cog-genomics.org/plink2).
 #'
 #' @param plink.path Path to the executable of PLINK 1.9.
 #' @param prefix.in Prefix (path without extension) of the dataset to be QCed.
 #' @param file.type Type of the dataset to be QCed. Default is `"--bfile"` and
 #'   corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map
 #'   files or `"--vcf"` for a VCF file. More information can be found at
-#'   \url{https://www.cog-genomics.org/plink/1.9/input}.
+#'   \url{http://www.cog-genomics.org/plink/1.9/input}.
 #' @param prefix.out Prefix (path without extension) of the bed/bim/fam dataset
 #'   to be created. Default is created by appending `"_QC"` to `prefix.in`.
 #' @param maf Minimum Minor Allele Frequency (MAF) for a SNP to be kept.
@@ -167,19 +167,13 @@ download_beagle <- function(dir = tempdir()) {
 #' @param autosome.only Whether to exclude all unplaced and non-autosomal
 #'   variants? Default is `FALSE`.
 #' @param extra.options Other options to be passed to PLINK as a string. More
-#'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
+#'   options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
 #'
 #' @return The path of the newly created bedfile.
 #'
 #' @export
 #'
 #' @references
-#' Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
-#' Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
-#' *PLINK: a tool set for whole-genome association and population-based linkage
-#' analyses.* American Journal of Human Genetics 81 (3). Elsevier: 559–75.
-#' \url{http://dx.doi.org/10.1086/519795}.
-#'
 #' Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 #' Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 #' *Second-generation PLINK: rising to the challenge of larger and richer
@@ -296,7 +290,7 @@ snp_plinkRmSamples <- function(plink.path,
 #' Identity-by-descent
 #'
 #' Quality Control based on Identity-by-descent (IBD) computed by
-#' [**PLINK 1.9**](https://www.cog-genomics.org/plink2)
+#' [**PLINK 1.9**](http://www.cog-genomics.org/plink2)
 #' using its method-of-moments.
 #'
 #' @inheritParams snp_plinkRmSamples
@@ -310,7 +304,7 @@ snp_plinkRmSamples <- function(plink.path,
 #'   (the step size is fixed to 1). Default is `c(100, 0.2)`.
 #' @param extra.options Other options to be passed to PLINK as a string
 #'   (for the IBD part). More options can be found at
-#'   \url{https://www.cog-genomics.org/plink/1.9/ibd}.
+#'   \url{http://www.cog-genomics.org/plink/1.9/ibd}.
 #' @param do.blind.QC Whether to do QC with `pi.hat` without visual inspection.
 #'   Default is `TRUE`. If `FALSE`, return the `data.frame` of the corresponding
 #'   ".genome" file without doing QC. One could use
@@ -356,8 +350,6 @@ snp_plinkIBDQC <- function(plink.path,
   # temporary file
   tmpfile <- tempfile()
 
-  # check extension of file
-  assert_ext(bedfile.in, "bed")
   # get file without extension
   prefix.in <- sub_bed(bedfile.in)
 
@@ -396,7 +388,7 @@ snp_plinkIBDQC <- function(plink.path,
 
   # get genomefile as a data.frame
   tmp <- bigreadr::fread2(paste0(tmpfile, ".genome"))
-  if (nrow(tmp)) { # if there are samples to filter
+  if (nrow(tmp) > 0) { # if there are samples to filter
 
     if (do.blind.QC) {
       snp_plinkRmSamples(plink.path, bedfile.in, bedfile.out, tmp)
@@ -415,12 +407,82 @@ snp_plinkIBDQC <- function(plink.path,
 
 ################################################################################
 
+#' Relationship-based pruning
+#'
+#' Quality Control based on KING-robust kinship estimator. More information can
+#' be found at \url{http://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
+#'
+#' @param plink2.path Path to the executable of PLINK 2.
+#' @inheritParams snp_plinkIBDQC
+#' @param thr.king  Note that KING kinship coefficients are scaled such that
+#'   duplicate samples have kinship 0.5, not 1. First-degree relations
+#'   (parent-child, full siblings) correspond to ~0.25, second-degree relations
+#'   correspond to ~0.125, etc. It is conventional to use a cutoff of ~0.354
+#'   (the geometric mean of 0.5 and 0.25) to screen for monozygotic twins and
+#'   duplicate samples, ~0.177 (**default**) to add first-degree relations, etc.
+#' @param extra.options Other options to be passed to PLINK2 as a string.
+#'
+#' @return The path of the new bedfile.
+#' @export
+#'
+#' @inherit snp_plinkQC references
+#' @references
+#' Manichaikul, Ani, Josyf C. Mychaleckyj, Stephen S. Rich, Kathy Daly,
+#' Michele Sale, and Wei-Min Chen. "Robust relationship inference in genome-wide
+#' association studies." Bioinformatics 26, no. 22 (2010): 2867-2873.
+#'
+#' @seealso [download_plink2] [snp_plinkQC]
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+#' plink2 <- download_plink2()
+#' test <- snp_plinkKINGQC(plink2, bedfile,
+#'                         bedfile.out = tempfile(fileext = ".bed"),
+#'                         ncores = 2)
+#'
+snp_plinkKINGQC <- function(plink2.path,
+                            bedfile.in,
+                            bedfile.out = NULL,
+                            thr.king = 0.177,
+                            ncores = 1,
+                            extra.options = "") {
+
+  # check PLINK version
+  v <- system(paste(plink2.path, "--version"), intern = TRUE)
+  if (!identical(substr(v, 1, 8), "PLINK v2"))
+    stop2("This requires PLINK v2; got '%s' instead.", v)
+
+  # get file without extension
+  prefix.in <- sub_bed(bedfile.in)
+
+  # get possibly new file
+  if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
+  assert_noexist(bedfile.out)
+
+  # compute KING-robust kinship coefficients and filter
+  system(
+    paste(
+      plink2.path,
+      "--bfile", prefix.in,
+      "--king-cutoff", thr.king,
+      "--make-bed",
+      "--out", sub_bed(bedfile.out),
+      "--threads", ncores,
+      extra.options
+    )
+  )
+
+  bedfile.out
+}
+
+################################################################################
+
 #' Imputation
 #'
 #' Imputation using **Beagle** version 4.
 #'
 #' Downloads and more information can be found at the following websites
-#' - [PLINK](https://www.cog-genomics.org/plink2),
+#' - [PLINK](http://www.cog-genomics.org/plink2),
 #' - [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html).
 #'
 #' @param beagle.path Path to the executable of Beagle v4+.
@@ -434,7 +496,7 @@ snp_plinkIBDQC <- function(plink.path,
 #' @param extra.options Other options to be passed to Beagle as a string. More
 #'   options can be found at Beagle's website.
 #' @param plink.options Other options to be passed to PLINK as a string. More
-#'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
+#'   options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
 #'
 #' @references B L Browning and S R Browning (2016).
 #' Genotype imputation with millions of reference samples.
