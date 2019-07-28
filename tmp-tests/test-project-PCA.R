@@ -6,22 +6,25 @@ map.1000G <- bigreadr::fread2(
   col.names = c("chr", "rsid", "osef", "pos", "a1", "a0")
 )
 
+# bed_celiac <- "../paper2-PRS/backingfiles/celiacQC.bed"
+bed_celiac <- "../Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
 info_snp <- snp_match(
   cbind(map.1000G[-3], beta = 1),
-  setNames(bed("../paper2-PRS/backingfiles/celiacQC.bed")$map[-3],
-           c("chr", "rsid", "pos", "a1", "a0")),
+  setNames(bed(bed_celiac)$map[-3], c("chr", "rsid", "pos", "a1", "a0")),
   join_by_pos = FALSE
 )
 info_snp
 
 
-fam <- bed.1000G$fam
-ped <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped")
-fam2 <- dplyr::left_join(fam[c(2, 5)], ped[c(1:5, 7)],
-                         by = c("sample.ID" = "Individual ID", "sex" = "Gender"))
-pop <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/20131219.populations.tsv")
-fam2 <- dplyr::left_join(fam2, pop[1:3], by = c("Population" = "Population Code"))
-str(fam2)
+{
+  fam <- bed.1000G$fam
+  ped <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped")
+  fam2 <- dplyr::left_join(fam[c(2, 5)], ped[c(1:5, 7)],
+                           by = c("sample.ID" = "Individual ID", "sex" = "Gender"))
+  pop <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/20131219.populations.tsv")
+  fam2 <- dplyr::left_join(fam2, pop[1:3], by = c("Population" = "Population Code"))
+  str(fam2)
+}
 
 ind <- which(fam2$`Super Population` == "EUR")
 ind <- rows_along(fam2)
@@ -34,10 +37,9 @@ ind.col <- info_snp$`_NUM_ID_.ss`
 CHR <- infos.chr <- obj.bed$map$chromosome
 POS <- infos.pos <- obj.bed$map$physical.pos
 
-# First clumping
+# Auto SVD
 svd.1000G <- obj.svd <- bed_autoSVD2(obj.bed, ind.row = ind, ind.col = ind.col,
                                      k = nPC, ncores = NCORES)
-
 
 
 library(ggplot2)

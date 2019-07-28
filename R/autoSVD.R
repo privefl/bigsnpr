@@ -253,6 +253,7 @@ bed_autoSVD2 <- function(obj.bed,
 
   iter <- 0L
   LRLDR <- LD.wiki34[0, 1:3]
+  prev = list()
   repeat {
     printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
@@ -262,6 +263,7 @@ bed_autoSVD2 <- function(obj.bed,
                              ind.col = ind.keep,
                              k = k,
                              ncores = ncores)
+    prev[[iter]] <- structure(obj.svd, subset.row = ind.row, subset.col = ind.keep)
 
     # check for outlier samples
     U <- obj.svd$u
@@ -315,7 +317,8 @@ bed_autoSVD2 <- function(obj.bed,
     }
   }
 
-  structure(obj.svd, subset.row = ind.row, subset.col = ind.keep, lrldr = LRLDR)
+  structure(obj.svd, subset.row = ind.row, subset.col = ind.keep,
+            lrldr = LRLDR, prev = prev)
 }
 
 ################################################################################
