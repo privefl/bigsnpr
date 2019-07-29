@@ -53,6 +53,10 @@ readbina <- function(filename, BM, tab) {
     .Call(`_bigsnpr_readbina`, filename, BM, tab)
 }
 
+readbina2 <- function(BM, obj_bed, ind_row, ind_col) {
+    invisible(.Call(`_bigsnpr_readbina2`, BM, obj_bed, ind_row, ind_col))
+}
+
 writebina <- function(filename, BM, tab, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_writebina`, filename, BM, tab, rowInd, colInd))
 }

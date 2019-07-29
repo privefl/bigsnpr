@@ -55,3 +55,17 @@ test_that("same sign as PLINK (no switch 0 <-> 2)", {
 })
 
 ################################################################################
+
+test_that("snp_readBed2() works", {
+  bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+  ind.row <- sample(nrow(G), nrow(G) / 2, replace = TRUE)
+  ind.col <- sample(ncol(G), ncol(G) / 2, replace = TRUE)
+
+  test2 <- snp_attach(snp_readBed2(bedfile, backingfile = tempfile(),
+                                   ind.row, ind.col))
+  test3 <- snp_attach(subset(test, ind.row, ind.col))
+  expect_equal(test2$genotypes[], test3$genotypes[])
+  expect_equal(test2[-1], test3[-1])
+})
+
+################################################################################

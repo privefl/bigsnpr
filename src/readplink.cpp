@@ -2,6 +2,7 @@
 
 #include <bigstatsr/BMCodeAcc.h>
 #include <fstream>
+#include "bed-acc.h"
 
 using namespace Rcpp;
 using namespace std;
@@ -52,6 +53,26 @@ bool readbina(const char * filename,
   delete[] buffer;
 
   return is_eof;
+}
+
+// [[Rcpp::export]]
+void readbina2(Environment BM,
+               Environment obj_bed,
+               const IntegerVector& ind_row,
+               const IntegerVector& ind_col) {
+
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAcc macc_bed(xp_bed, ind_row, ind_col);
+
+  XPtr<FBM> xpBM = BM["address"];
+  BMAcc<unsigned char> macc_fbm(xpBM);
+
+  size_t n = macc_bed.nrow();
+  size_t m = macc_bed.ncol();
+
+  for (size_t j = 0; j < m; j++)
+    for (size_t i = 0; i < n; i++)
+      macc_fbm(i, j) = macc_bed(i, j);
 }
 
 /******************************************************************************/

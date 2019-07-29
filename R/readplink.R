@@ -66,6 +66,49 @@ snp_readBed <- function(bedfile, backingfile = sub_bed(bedfile)) {
   rds
 }
 
+#' @inheritParams bigsnpr-package
+#' @rdname snp_readBed
+#' @export
+snp_readBed2 <- function(bedfile, backingfile = sub_bed(bedfile),
+                         ind.row = rows_along(obj.bed),
+                         ind.col = cols_along(obj.bed)) {
+
+  # Check if backingfile already exists
+  backingfile <- path.expand(backingfile)
+  assert_noexist(paste0(backingfile, ".bk"))
+
+  # Get mapping of bed
+  obj.bed <- bed(bedfile)
+
+  # Read map and family files
+  fam <- obj.bed$fam[ind.row, ]; rownames(fam) <- rows_along(fam)
+  bim <- obj.bed$map[ind.col, ]; rownames(bim) <- rows_along(bim)
+
+  # Prepare Filebacked Big Matrix
+  bigGeno <- FBM.code256(
+    nrow = nrow(fam),
+    ncol = nrow(bim),
+    code = CODE_012,
+    backingfile = backingfile,
+    init = NULL,
+    create_bk = TRUE
+  )
+
+  # Fill the FBM from bedfile
+  readbina2(bigGeno, obj.bed, ind.row, ind.col)
+
+  # Create the bigSNP object
+  snp.list <- structure(list(genotypes = bigGeno,
+                             fam = fam,
+                             map = bim),
+                        class = "bigSNP")
+
+  # save it and return the path of the saved object
+  rds <- sub_bk(bigGeno$backingfile, ".rds")
+  saveRDS(snp.list, rds)
+  rds
+}
+
 ################################################################################
 
 #' Attach a "bigSNP" from backing files
