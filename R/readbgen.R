@@ -2,13 +2,10 @@
 
 # use 2 characters for chromosomes: 1 -> 01
 format_snp_id <- function(snp_id) {
-  gsubfn::strapply(
-    X = snp_id,
-    pattern = "^(.+?)(_.+_.+_.+)$",
-    FUN = function(x, y) paste0(ifelse(nchar(x) == 1, paste0("0", x), x), y),
-    empty = stop("Wrong format of some SNPs."),
-    simplify = 'c'
-  )
+  # if chr is only one digit, append a '0' to the beginning
+  snp_id <- ifelse(substr(snp_id, 2, 2) == "_", paste0("0", snp_id), snp_id)
+  if (any(substr(snp_id, 3, 3) != "_")) stop("Wrong format of some variants.")
+  snp_id
 }
 
 ################################################################################
