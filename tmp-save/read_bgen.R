@@ -1,6 +1,13 @@
 # http://www.well.ox.ac.uk/~gav/bgen_format/
 
-file <- "tmp-data/first_bytes.bgen"
+# library(magrittr)
+# file <- tempfile(fileext = ".bgen")
+# system.file("testdata", "bgen_example.rds", package = "bigsnpr") %>%
+#   readRDS() %>% writeBin(bgen_file, useBytes = TRUE)
+# system.file("testdata", "bgi_example.rds",  package = "bigsnpr") %>%
+#   readRDS() %>% writeBin(paste0(bgen_file, ".bgi"), useBytes = TRUE)
+
+file <- "tmp-data/test.bgen"
 file_con <- file(file, open = "rb", raw = TRUE)
 
 
@@ -8,7 +15,7 @@ file_con <- file(file, open = "rb", raw = TRUE)
 first4 <- readBin(file_con, what = 1L, size = 4)        ## 15,609,036
 
 # The header block
-header <- readBin(file_con, what = raw(), n = first4)
+header <- readBin(file_con, what = raw(), n = first4 - 4)
 writeBin(header, tmp <- tempfile())
 header_con <- file(tmp, open = "rb", raw = TRUE)
 
@@ -23,9 +30,9 @@ stopifnot(identical(magic_number, charToRaw("bgen")))
 
 flags <- readBin(header_con, what = raw(), n = 4)
 flags_bits <- rawToBits(flags)
-flags_bits[1:2]  ## 1 -> use zlib
-flags_bits[3:6]  ## 2 -> layout 2
-flags_bits[32]   ## 0 -> no sample identifiers
+flags_bits[1:2]  ## 01 00 -> 1 -> use zlib
+flags_bits[3:6]  ## 00 01 00 00 -> 2 -> layout 2
+flags_bits[32]   ## 01 -> 1 -> sample identifiers
 tail(header, 4)
 
 
@@ -39,19 +46,19 @@ rawToChar(rsid)  ## "rs367896724"
 L_chr <- readBin(file_con, what = 1L, size = 2, signed = FALSE)   ## 2
 chr <- readBin(file_con, what = raw(), n = L_chr)
 rawToChar(chr)   ## "01"
-pos <- readBin(file_con, what = 1L, size = 4, signed = FALSE)     ## 10177
+pos <- readBin(file_con, what = 1L, size = 4)     ## 10177
 K <- readBin(file_con, what = 1L, size = 2, signed = FALSE)       ## 2
 stopifnot(K == 2)
-L_a1 <- readBin(file_con, what = 1L, size = 4, signed = FALSE)    ## 1
+L_a1 <- readBin(file_con, what = 1L, size = 4)    ## 1
 a1 <- readBin(file_con, what = raw(), n = L_a1)
 rawToChar(a1)   ## "A"
-L_a2 <- readBin(file_con, what = 1L, size = 4, signed = FALSE)    ## 2
+L_a2 <- readBin(file_con, what = 1L, size = 4)    ## 2
 a2 <- readBin(file_con, what = raw(), n = L_a2)
 rawToChar(a2)   ## "AC"
 # possibly more alleles... (but here, only 2!)
-C <- readBin(file_con, what = 1L, size = 4, signed = FALSE)       ## 930,596
-D <- readBin(file_con, what = 1L, size = 4, signed = FALSE)       ## 1,462,237
-probas_compressed <- readBin(file_con, what = raw(), n = C - 4)   ## 78 9c ec ..
+C <- readBin(file_con, what = 1L, size = 4)       ## 930,596
+D <- readBin(file_con, what = 1L, size = 4)       ## 1,462,237
+probas_compressed <- readBin(file_con, what = raw(), n = C - 4)   ## 78 9c ..
 
 
 # Next variant

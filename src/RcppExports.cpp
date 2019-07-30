@@ -79,6 +79,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// read_bed_scaled
+NumericMatrix read_bed_scaled(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale);
+RcppExport SEXP _bigsnpr_read_bed_scaled(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_bed_scaled(obj_bed, ind_row, ind_col, center, scale));
+    return rcpp_result_gen;
+END_RCPP
+}
 // bed_clumping_chr
 LogicalVector bed_clumping_chr(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const IntegerVector& ordInd, const IntegerVector& pos, int size, double thr);
 RcppExport SEXP _bigsnpr_bed_clumping_chr(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
@@ -268,6 +283,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_bed_stats", (DL_FUNC) &_bigsnpr_bed_stats, 3},
     {"_bigsnpr_pMatVec4", (DL_FUNC) &_bigsnpr_pMatVec4, 6},
     {"_bigsnpr_cpMatVec4", (DL_FUNC) &_bigsnpr_cpMatVec4, 6},
+    {"_bigsnpr_read_bed_scaled", (DL_FUNC) &_bigsnpr_read_bed_scaled, 5},
     {"_bigsnpr_bed_clumping_chr", (DL_FUNC) &_bigsnpr_bed_clumping_chr, 9},
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 9},
     {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 11},

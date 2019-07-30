@@ -21,6 +21,10 @@ cpMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
     .Call(`_bigsnpr_cpMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
 }
 
+read_bed_scaled <- function(obj_bed, ind_row, ind_col, center, scale) {
+    .Call(`_bigsnpr_read_bed_scaled`, obj_bed, ind_row, ind_col, center, scale)
+}
+
 bed_clumping_chr <- function(obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr) {
     .Call(`_bigsnpr_bed_clumping_chr`, obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr)
 }
