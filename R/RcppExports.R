@@ -69,7 +69,3 @@ testWrite <- function(v, filename) {
     invisible(.Call(`_bigsnpr_testWrite`, v, filename))
 }
 
-roll_mean <- function(x, w) {
-    .Call(`_bigsnpr_roll_mean`, x, w)
-}
-

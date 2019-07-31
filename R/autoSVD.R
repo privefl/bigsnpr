@@ -39,15 +39,7 @@ LOF <- function(U, seq_k = c(4, 10, 30)) {
 }
 
 # apply a gaussian smoothing
-rollMean <- function(x, size) {
-
-  len <- 2 * size + 1
-
-  lims <- stats::qnorm(range(stats::ppoints(len)))
-  weights <- stats::dnorm(seq(lims[1], lims[2], length.out = len))
-
-  roll_mean(x, weights)
-}
+rollMean <- bigutilsr::rollmean
 
 # regroup consecutive integers in intervals
 getIntervals <- function(x, n = 2) {

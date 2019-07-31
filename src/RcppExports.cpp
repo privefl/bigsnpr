@@ -264,18 +264,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// roll_mean
-NumericVector roll_mean(const NumericVector& x, const NumericVector& w);
-RcppExport SEXP _bigsnpr_roll_mean(SEXP xSEXP, SEXP wSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type w(wSEXP);
-    rcpp_result_gen = Rcpp::wrap(roll_mean(x, w));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
@@ -295,7 +283,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 4},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},
-    {"_bigsnpr_roll_mean", (DL_FUNC) &_bigsnpr_roll_mean, 2},
     {NULL, NULL, 0}
 };
 
