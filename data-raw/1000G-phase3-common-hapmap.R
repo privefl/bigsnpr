@@ -14,10 +14,12 @@ plink2 <- download_plink2(".")
 # Uncompress file
 system("./plink2 --zst-decompress all_phase3.pgen.zst > all_phase3.pgen")
 system("./plink2 --zst-decompress all_phase3.pvar.zst > all_phase3.pvar")
+
 # Get rsIDs of variants in HapMap3
-rsid.hapmap3 <- bigreadr::fread2(input = "ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.map.bz2",
+rsid.hapmap3 <- bigreadr::fread2("ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.map.bz2",
                                  select = 2)
 writeLines(rsid.hapmap3[[1]], "hapmap3-rsid.txt")
+
 # Filtering to HapMap3 variants + QC + convertion to bed
 bed <- snp_plinkQC(
   plink.path = plink2,
@@ -28,23 +30,28 @@ bed <- snp_plinkQC(
   extra.options = "--max-alleles 2 --memory 8000 --extract hapmap3-rsid.txt"
 )
 file.size("1000G_phase3_common_hapmap.bed") / 1024^2  # 787 MB
+unlink("all_phase3.*")
 
-download_plink(".")
-snp_plinkIBDQC("./plink",
-               "1000G_phase3_common_hapmap.bed",
-               pi.hat = 0.25,
-               pruning.args = c(2000, 0.1),
-               ncores = NCORES,
-               extra.options = "--memory 8000")
+# Remove related individuals
+bed2 <- snp_plinkKINGQC(plink2, bed, thr.king = 0.177, ncores = nb_cores())
 
+# Get additional information on individuals
+fam <- bed(bed2)$fam
+ped <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped")
+fam2 <- dplyr::left_join(fam[c(2, 5)], ped[c(2, 5, 7)],
+                         by = c(sample.ID = "Individual ID", sex = "Gender"))
+pop <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/20131219.populations.tsv")
+fam3 <- dplyr::left_join(fam2, pop[1:3], by = c("Population" = "Population Code"))
+str(fam3)
+bigreadr::fwrite2(fam3, sub_bed(bed2, ".fam2"), sep = "\t")
+readLines("1000G_phase3_common_hapmap_norel.fam2", n = 5)
 
+# Zip files
 zip("1000G_phase3_common_hapmap.zip",
-    paste0("1000G_phase3_common_hapmap", c(".bed", ".bim", ".fam")))
+    paste0("1000G_phase3_common_hapmap_norel", c(".bed", ".bim", ".fam", ".fam2")))
+file.size("1000G_phase3_common_hapmap.zip") / 1024^2  # 305 MB
 
+unlink(list.files(pattern = "^1000G_phase3_common_hapmap.*[^(\\.zip)]$"))
 
-system("./plink2 --bfile 1000G_phase3_common_hapmap --freq --out 1000G_phase3_common_hapmap")
-af <- bigreadr::fread2("1000G_phase3_common_hapmap.afreq", select = "ALT_FREQS")[[1]]
-summary(af)
-sum(af > 0.05)
 
 setwd(wd)
