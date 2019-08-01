@@ -130,20 +130,9 @@ snp_grid_clumping <- function(
 
 ################################################################################
 
-#' Sequence, evenly spaced on a logarithmic scale
-#'
-#' @inheritParams base::seq
-#'
-#' @examples
-#' seq_log(1, 1000, 4)
-#' seq_log(1, 100, 5)
-#'
+#' @importFrom bigutilsr seq_log
 #' @export
-seq_log <- function(from, to, length.out) {
-  exp(
-    seq(from = log(from), to = log(to), length.out = length.out)
-  )
-}
+bigutilsr::seq_log
 
 #' Grid of PRS
 #'
