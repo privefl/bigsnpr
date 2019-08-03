@@ -4,13 +4,16 @@
 \alias{download_1000G}
 \title{Download 1000G}
 \usage{
-download_1000G(dir, overwrite = FALSE)
+download_1000G(dir, overwrite = FALSE, delete_zip = TRUE)
 }
 \arguments{
 \item{dir}{The directory where to put the downloaded files.}
 
 \item{overwrite}{Whether to overwrite files when downloading and unzipping?
-Default is \code{FALSE}, so this function does not do anything the second time.}
+Default is \code{FALSE}.}
+
+\item{delete_zip}{Whether to delete zip after uncompressing the file in it?
+Default is \code{TRUE}.}
 }
 \value{
 The path of the downloaded bed file.

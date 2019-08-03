@@ -20,19 +20,20 @@ get_os <- function() {
 #'
 #' @param dir The directory where to put the PLINK executable.
 #'   Default is a temporary directory.
+#' @param overwrite Whether to overwrite file? Default is `FALSE`.
 #'
 #' @return The path of the downloaded PLINK executable.
 #'
 #' @export
 #'
-download_plink <- function(dir = tempdir()) {
+download_plink <- function(dir = tempdir(), overwrite = FALSE) {
 
   myOS <- get_os()
   PLINK <- file.path(dir, `if`(myOS == "Windows", "plink.exe", "plink"))
-  if (file.exists(PLINK)) return(PLINK)
+  if (!overwrite && file.exists(PLINK)) return(PLINK)
 
   # https://regex101.com/r/jC8nB0/143
-  plink.names  <- gsubfn::strapply(
+  plink.names <- gsubfn::strapply(
     X = readLines("http://www.cog-genomics.org/plink2"),
     # http://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20190304.zip
     pattern = "(http://s3.amazonaws.com/plink1-assets/plink_.+?(?<!dev)\\.zip)",
@@ -70,14 +71,14 @@ download_plink <- function(dir = tempdir()) {
 #'
 #' @rdname download_plink
 #'
-download_plink2 <- function(dir = tempdir(), AVX2 = TRUE) {
+download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE) {
 
   myOS <- get_os()
   PLINK <- file.path(dir, `if`(myOS == "Windows", "plink2.exe", "plink2"))
-  if (file.exists(PLINK)) return(PLINK)
+  if (!overwrite && file.exists(PLINK)) return(PLINK)
 
   # https://regex101.com/r/jC8nB0/143
-  plink.names  <- gsubfn::strapply(
+  plink.names <- gsubfn::strapply(
     X = readLines("http://www.cog-genomics.org/plink/2.0/"),
     # http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20190527.zip
     pattern = "(http://s3.amazonaws.com/plink2-assets/plink2_.+?(?<!dev)\\.zip)",
@@ -124,7 +125,7 @@ download_beagle <- function(dir = tempdir()) {
   url <- "https://faculty.washington.edu/browning/beagle/"
 
   # https://regex101.com/r/jC8nB0/141
-  jar  <- gsubfn::strapply(
+  jar <- gsubfn::strapply(
     X = readLines(paste0(url, "beagle.html")),
     pattern = "(beagle.+?\\.jar)",
     simplify = "c",

@@ -5,12 +5,18 @@ context("PLINK_QC")
 ################################################################################
 
 # Get PLINK executable
-PLINK <- download_plink()
+plink <- download_plink()
+expect_false(grepl("plink2", plink))
 
-unlink(plink2 <- download_plink2(AVX2 = FALSE))
-expect_false(grepl(plink2, "avx2"))
+plink2 <- download_plink2(overwrite = TRUE)
+expect_true(grepl("plink2", plink2))
+plink2.version <- system(paste(plink2, "--version"), intern = TRUE)
+expect_true(grepl("AVX2", plink2.version))
 
-PLINK2 <- download_plink2()
+plink2 <- download_plink2(overwrite = TRUE, AVX2 = FALSE)
+expect_true(grepl("plink2", plink2))
+plink2.version <- system(paste(plink2, "--version"), intern = TRUE)
+expect_false(grepl("AVX2", plink2.version))
 
 ################################################################################
 
@@ -19,7 +25,7 @@ library(magrittr)
 bedfile <- snp_attachExtdata() %>%
   snp_writeBed(tempfile(fileext = ".bed"))
 
-snp_plinkQC(plink.path = PLINK,
+snp_plinkQC(plink.path = plink,
             prefix.in = sub_bed(bedfile),
             prefix.out = tempfile(),
             maf = 0.2,
@@ -35,7 +41,7 @@ snp_plinkQC(plink.path = PLINK,
 ################################################################################
 
 # IBD
-df.pair <- snp_plinkIBDQC(plink.path = PLINK,
+df.pair <- snp_plinkIBDQC(plink.path = plink,
                           bedfile.in = bedfile,
                           bedfile.out = tempfile(fileext = ".bed"),
                           pi.hat = 0.1,
@@ -54,7 +60,7 @@ K <- snp_attachExtdata() %>%
 expect_lt(t.test(K[ind.pair], K, alternative = "greater")$p.value, 1e-16)
 
 indiv.keep <-
-  snp_plinkRmSamples(plink.path = PLINK,
+  snp_plinkRmSamples(plink.path = plink,
                      bedfile.in = bedfile,
                      bedfile.out = tempfile(fileext = ".bed"),
                      df.or.files = df.pair) %>%
@@ -73,14 +79,15 @@ G <- obj.snp$genotypes
 G[1, ] <- round(colMeans(G[2:3, ]))
 bedfile <- snp_writeBed(obj.snp, tempfile(fileext = ".bed"))
 
-bedfile2 <- snp_plinkKINGQC(PLINK2, bedfile)
+bedfile2 <- snp_plinkKINGQC(plink2, bedfile)
 expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
                  c("#FID\tIID", "POP1\tIND2"))
 
-bedfile3 <- snp_plinkKINGQC(PLINK2, bedfile, thr.king = 0.3,
+bedfile3 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
                             bedfile.out = tempfile(fileext = ".bed"))
 expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
 
-expect_error(snp_plinkKINGQC(PLINK, bedfile), "This requires PLINK v2")
+expect_error(snp_plinkKINGQC(plink, bedfile), "This requires PLINK v2")
+unlink(plink2)
 
 ################################################################################
