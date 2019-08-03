@@ -36,8 +36,6 @@ Imports:
     methods,
     parallel,
     Rcpp,
-    robust,
-    robustbase,
     RSpectra,
     stats
 LinkingTo:

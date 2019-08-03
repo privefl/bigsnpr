@@ -1,45 +1,4 @@
 ################################################################################
-#### Useful functions ####
-
-# Outlier detection (upper)
-tukey_MC_up <- function(x, coef = NULL, a = -4, b = 3, alpha = 0.05) {
-
-  if (is.null(coef)) {
-    m <- sum(!is.na(x))
-    alpha_m <- 1 - (1 - alpha)^(1/m)
-    coef <- (qnorm(alpha_m, lower.tail = FALSE) - 0.6744898) / 1.34898
-  }
-
-  robustbase::adjboxStats(x, coef = coef, a = a, b = b,
-                          do.conf = FALSE, do.out = FALSE)$fence[2]
-}
-
-# Local Outlier Factor (LOF)
-LOF <- function(U, seq_k = c(4, 10, 30)) {
-
-  knn <- nabor::knn(U, k = max(seq_k) + 1)
-  ids <- knn$nn.idx[, -1]
-  dists <- knn$nn.dists[, -1]
-
-  lof3 <- sapply(seq_k, function(k) {
-
-    lrd <- sapply(rows_along(dists), function(i) {
-      maxs <- pmax(dists[ids[i, 1:k], k], dists[i, 1:k])
-      1 / mean(maxs)
-    })
-
-    lof.num <- sapply(rows_along(ids), function(i) {
-      mean(lrd[ids[i, 1:k]])
-    })
-
-    lof.num / lrd
-  })
-
-  apply(lof3, 1, max)
-}
-
-# apply a gaussian smoothing
-rollMean <- bigutilsr::rollmean
 
 # regroup consecutive integers in intervals
 getIntervals <- function(x, n = 2) {
@@ -155,7 +114,8 @@ snp_autoSVD <- function(G,
     lim <- -log10(0.05 / length(lpval))
 
     # Roll mean to get only consecutive outliers
-    ind.col.excl <- which(rollMean(lpval, size = roll.size) > lim)
+    lpval2 <- bigutilsr::rollmean(lpval, size = roll.size)
+    ind.col.excl <- which(lpval2 > lim)
     printf2("%d outlier%s detected..\n", length(ind.col.excl),
             `if`(length(ind.col.excl) > 1, "s", ""))
 
@@ -258,22 +218,18 @@ bed_autoSVD2 <- function(obj.bed,
     prev[[iter]] <- structure(obj.svd, subset.row = ind.row, subset.col = ind.keep)
 
     # check for outlier samples
-    U <- obj.svd$u
-    maha <- robust::covRob(U, estim = "pairwiseGK",
-                           distance = FALSE, corr = FALSE)
-    eigs <- eigen(unname(maha$cov))
-    U2 <- U %*% sweep(eigs$vectors, 2, sqrt(eigs$values), '/')
-
-    S.row <- log(LOF(U2))
-    ind.row.excl <- which(S.row > tukey_MC_up(S.row, alpha = alpha.tukey))
+    S.row <- bigutilsr::LOF(obj.svd$u, robMaha = TRUE)
+    S.row.thr <- bigutilsr::tukey_mc_up(S.row, alpha = alpha.tukey)
+    ind.row.excl <- which(S.row > S.row.thr)
     printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
             `if`(length(ind.row.excl) > 1, "s", ""))
 
     # check for outlier variants
     S.col <- log(rowSums(obj.svd$v^2))
     # roll mean to get only consecutive outliers
-    S2.col <- rollMean(S.col, size = roll.size)
-    ind.col.excl <- which(S2.col > tukey_MC_up(S2.col, alpha = alpha.tukey))
+    S2.col <- bigutilsr::rollmean(S.col, size = roll.size)
+    S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
+    ind.col.excl <- which(S2.col > S2.col.thr)
     printf2("%d outlier variant%s detected..\n", length(ind.col.excl),
             `if`(length(ind.col.excl) > 1, "s", ""))
 
