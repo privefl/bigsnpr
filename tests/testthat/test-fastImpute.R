@@ -13,7 +13,7 @@ suppressMessages({
 
 bigsnp <- snp_attachExtdata()
 G <- bigsnp$genotypes
-expect_equal(G$code256, bigsnpr:::CODE_012)
+expect_equal(G$code256, CODE_012)
 corr <- snp_cor(G)
 ind <- which(apply(corr, 2, function(x) max(x[x < 1])) > 0.6)
 
@@ -44,7 +44,7 @@ time <- system.time(
 counts <- big_counts(GNA)
 expect_equal(sum(counts[4, ]), nrow(indNA))
 
-GNA$code256 <- bigsnpr:::CODE_IMPUTE_PRED
+GNA$code256 <- CODE_IMPUTE_PRED
 infosNA <- data_frame(
   col = indNA[, 2],
   error = (GNA[indNA] != G[indNA])
@@ -78,7 +78,7 @@ G2 <- bigsnpr:::FBM_infos(G)
 ind <- 1:11 + 150
 G2[1, ind] <- seq(0, 1, 0.1)
 G2 <- snp_fastImpute(G, CHR)
-G3 <- G$copy(bigsnpr:::CODE_IMPUTE_PRED)
+G3 <- G$copy(CODE_IMPUTE_PRED)
 nbNA <- colSums(is.na(G3[]))
 expect_true(all(nbNA[ind] > 0))
 expect_true(all(nbNA[-ind] == 0))

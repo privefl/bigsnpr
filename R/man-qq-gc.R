@@ -90,7 +90,7 @@ getLambdaGC <- function(gwas, tol = 1e-8) {
 
   check_args()
 
-  xtr <- attr(gwas, "transfo")(na.omit(gwas)[["score"]])
+  xtr <- attr(gwas, "transfo")(stats::na.omit(gwas)[["score"]])
   PREDICT <-  attr(gwas, "predict")
   MEDIAN <- log10(0.5)
   f.opt <- function(x) (PREDICT(x) - MEDIAN)

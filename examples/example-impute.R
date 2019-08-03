@@ -8,7 +8,7 @@ G2[, 1:5]
 big_counts(G, ind.col = 1:10)
 # You need to change the code of G
 # To make this permanent, you need to save (modify) the file on disk
-fake$genotypes$code256 <- bigsnpr:::CODE_IMPUTE_PRED
+fake$genotypes$code256 <- CODE_IMPUTE_PRED
 fake <- snp_save(fake)
 big_counts(fake$genotypes)[4, ]
 

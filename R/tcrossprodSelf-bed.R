@@ -15,7 +15,7 @@ bed_tcrossprodSelf <- function(
   block.size = block_size(length(ind.row))
 ) {
 
-  stats <- bigsnpr:::bed_stats(obj.bed, ind.row, ind.col)
+  stats <- bed_stats(obj.bed, ind.row, ind.col)
   af <- stats$sum / (2 * stats$nb_nona_col)
   center <- 2 * af
   scale <- sqrt(2 * af * (1 - af))
@@ -28,10 +28,10 @@ bed_tcrossprodSelf <- function(
 
   K <- FBM(n, n, init = 0)
 
-  intervals <- bigsnpr:::CutBySize(m, block.size)
+  intervals <- CutBySize(m, block.size)
 
   for (j in rows_along(intervals)) {
-    ind <- bigsnpr:::seq2(intervals[j, ])
+    ind <- seq2(intervals[j, ])
     tmp <- read_bed_scaled(obj.bed, ind.row, ind.col[ind],
                            center[ind], scale2[ind])
     bigstatsr:::incrSup2(K, tcrossprod(tmp))
