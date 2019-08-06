@@ -1,3 +1,5 @@
+################################################################################
+
 #' @inherit bigstatsr::big_tcrossprodSelf title description params return details
 #' @inheritParams bigsnpr-package
 #'
@@ -37,8 +39,10 @@ bed_tcrossprodSelf <- function(
     bigstatsr:::incrSup2(K, tcrossprod(tmp))
   }
 
-  # Complete the lower part of the symmetric matrix
+  # Complete the lower part of the symmetric matrix + further scaling
   bigstatsr:::complete2(K)
   bigstatsr:::scaleK(K, rep(0, n), rep(0, n), scale3, 0)
   structure(K, stats = stats)
 }
+
+################################################################################

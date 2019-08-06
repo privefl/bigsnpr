@@ -1,8 +1,9 @@
 library(bigsnpr)
 
 bedfile.new <- "../Dubois2010_data/FinnuncorrNLITUK3hap550.bed"
+# bedfile.new <- "../POPRES_data/POPRES_allchr_QC.bed"
 bed.new <- bed(bedfile.new)
-bedfile.ref <- "tmp-data/1000G_phase3_common_hapmap_norel.bed"
+bedfile.ref <- download_1000G("tmp-data")
 bed.ref <- bed(bedfile.ref)
 ind.row <- rows_along(bed.ref)
 strand_flip = TRUE
@@ -103,61 +104,30 @@ testscore <- U3
 
 
 system.time(test <- hdpca::select.nspike(eig.val, p, n, n.spikes.max = 50))
+# 587 sec
 test
-S <- eig.val / p
-hist(S2 <- log(head(eig.val, -1)), breaks = 50, freq = FALSE)
-curve(dnorm(x, median(S2), mad(S2)), col = "red", add = TRUE)
-print(q <- bigsnpr:::tukey_MC_up(S2, coef = NULL))
-abline(v = q, col = "red")
-sum(S2 > q, na.rm = TRUE)
-hist(S2[S2 > 12])
-
-hist(pval <- pnorm(S2, median(S2), mad(S2), lower.tail = FALSE))
-plot(head(pval, 80))
-
-hist(S3 <- diff(diff(S2)), breaks = 50)
-which(S3 > bigsnpr:::tukey_MC_up(S3))
+test$n.spikes # 21
+system.time(test2 <- bigutilsr::pca_nspike(eig.val))
+# 2 sec
+test2 # 21
 
 system.time(
-  score.adj.d2 <- hdpca::pc_adjust(eig.val, p, n, testscore,
-                                   method = "d.gsp", n.spikes.max = nPC)
+  score.adj.d2 <- bigutilsr::pca_adjust(testscore, eig.val, p)
 )
 
-system.time(
-  score.adj.o2 <- hdpca::pc_adjust(eig.val,p,n,testscore,
-                                   method="osp",n.spikes.max=nPC)
-)
-all.equal(score.adj.o2, score.adj.d2)
+fam2 <- bigreadr::fread2(sub_bed(bedfile.ref, ".fam2"))[attr(obj.svd, "subset.row"), ]
 
-system.time(
-  score.adj.l2 <- hdpca::pc_adjust(eig.val,p,n,testscore,
-                                   method="l.gsp",n.spikes.max=nPC)
-)
-all.equal(score.adj.l2, score.adj.o2)
-
-
-
-{
-  fam <- bed.ref$fam
-  ped <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped")
-  fam2 <- dplyr::left_join(fam[c(2, 5)], ped[c(1:5, 7)],
-                           by = c("sample.ID" = "Individual ID", "sex" = "Gender"))
-  pop <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/20131219.populations.tsv")
-  fam2 <- dplyr::left_join(fam2, pop[1:3], by = c("Population" = "Population Code"))
-  str(fam2)
-}
-
-pop <- fam2$`Super Population`[attr(obj.svd, "subset.row")]
+pop <- fam2$`Super Population`
 ggplot() +
   geom_point(aes(V1, V2, color = pop), data = as.data.frame(predict(obj.svd))) +
   labs(color = "Pop 1000G") +
-  geom_point(aes(V1, V2), data = as.data.frame(score.adj.d2), alpha = 0.1) +
+  geom_point(aes(V1, V2), data = as.data.frame(score.adj.d2), alpha = 0.3) +
   theme_bigstatsr()
 
 ggplot() +
   geom_point(aes(V3, V4, color = pop), data = as.data.frame(predict(obj.svd))) +
   labs(color = "Pop 1000G") +
-  geom_point(aes(V3, V4), data = as.data.frame(score.adj.d2), alpha = 0.1) +
+  geom_point(aes(V3, V4), data = as.data.frame(score.adj.d2), alpha = 0.3) +
   theme_bigstatsr()
 
 plot_grid(
@@ -233,5 +203,35 @@ plot_grid(
   scale = 0.9
 )
 
+plot_grid(
 
+  ggplot() +
+    geom_point(aes(V1, V2), data = as.data.frame(score.adj.d2)) +
+    geom_point(aes(V1, V2, color = pop), alpha = 0.4,
+               data = as.data.frame(predict(obj.svd))) +
+    labs(color = "Pop 1000G") +
+    theme_bigstatsr(),
+
+  ggplot() +
+    geom_point(aes(V3, V4), data = as.data.frame(score.adj.d2)) +
+    geom_point(aes(V3, V4, color = pop), alpha = 0.4,
+               data = as.data.frame(predict(obj.svd))) +
+    labs(color = "Pop 1000G") +
+    theme_bigstatsr(),
+
+  ggplot() +
+    geom_point(aes(V5, V6), data = as.data.frame(score.adj.d2)) +
+    geom_point(aes(V5, V6, color = pop), alpha = 0.4,
+               data = as.data.frame(predict(obj.svd))) +
+    labs(color = "Pop 1000G") +
+    theme_bigstatsr(),
+
+  ggplot() +
+    geom_point(aes(V7, V8), data = as.data.frame(score.adj.d2)) +
+    geom_point(aes(V7, V8, color = pop), alpha = 0.4,
+               data = as.data.frame(predict(obj.svd))) +
+    labs(color = "Pop 1000G") +
+    theme_bigstatsr()
+
+)
 
