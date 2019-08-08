@@ -157,3 +157,62 @@ snp_match <- function(sumstats, info_snp,
 }
 
 ################################################################################
+
+#' Modify genome build
+#'
+#' Modify the physical position information of a data frale
+#' when converting genome build using executable *liftOver*.
+#'
+#' @param info_snp A data frame with columns "chr" and "pos".
+#' @param liftOver Path to liftOver executable.
+#'   Binaries can be downloaded at \url{https://bit.ly/2KvHugi} for Mac
+#'   and at \url{https://bit.ly/2TbSaEI} for Linux.
+#' @param from Genome build to convert from. Default is `hg18`.
+#' @param to Genome build to convert to. Default is `hg19`.
+#'
+#' @references
+#' Hinrichs, Angela S., et al. "The UCSC genome browser database: update 2006."
+#' Nucleic acids research 34.suppl_1 (2006): D590-D598.
+#'
+#' @return Input data frame `info_snp` with column "pos" in the new build.
+#' @export
+#'
+snp_modifyBuild <- function(info_snp, liftOver, from = "hg18", to = "hg19") {
+
+  if (!all(c("chr", "pos") %in% names(info_snp)))
+    stop2("Please use proper names for variables in 'info_snp'. Expected %s.",
+          "'chr' and 'pos'")
+
+  # Need BED UCSC file for liftOver
+  BED <- tempfile(fileext = ".BED")
+  info_BED <- with(info_snp, data.frame(
+    paste0("chr", chr), pos0 = pos - 1L, pos, id = rows_along(info_snp)))
+  bigreadr::fwrite2(info_BED, BED, col.names = FALSE, sep = " ")
+
+  # Make sure liftOver is executable
+  make_executable(liftOver)
+
+  # Need chain file
+  url <- paste0("ftp://hgdownload.cse.ucsc.edu/goldenPath/", from, "/liftOver/",
+                from, "To", tools::toTitleCase(to), ".over.chain.gz")
+  chain <- tempfile(fileext = ".over.chain.gz")
+  utils::download.file(url, destfile = chain)
+
+  # Run liftOver (usage: liftOver oldFile map.chain newFile unMapped)
+  lifted <- tempfile(fileext = ".BED")
+  unmaped <- tempfile(fileext = ".txt")
+  system(paste(liftOver, BED, chain, lifted, unmaped))
+
+  # readLines(lifted, n = 5)
+  new_pos <- bigreadr::fread2(lifted)
+
+  # readLines(unmaped, n = 6)
+  bad <- grep("^#", readLines(unmaped), value = TRUE, invert = TRUE)
+  message2("%d variants have not been mapped.", length(bad))
+
+  info_snp$pos <- NA
+  info_snp$pos[new_pos$V4] <- new_pos$V3
+  info_snp
+}
+
+################################################################################

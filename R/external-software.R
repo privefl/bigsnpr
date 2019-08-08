@@ -1,5 +1,11 @@
 ################################################################################
 
+make_executable <- function(exe) {
+  Sys.chmod(exe, mode = (file.info(exe)$mode | "111"))
+}
+
+################################################################################
+
 # https://github.com/r-lib/rappdirs/blob/master/R/utils.r
 get_os <- function() {
   if (.Platform$OS.type == "windows") {
@@ -13,6 +19,7 @@ get_os <- function() {
   }
 }
 
+################################################################################
 
 #' Download PLINK
 #'
@@ -54,11 +61,12 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE) {
   PLINK <- utils::unzip(plink.zip,
                         files = basename(PLINK),
                         exdir = dirname(PLINK))
-  Sys.chmod(PLINK, mode = (file.info(PLINK)$mode | "111"))
+  make_executable(PLINK)
 
   PLINK
 }
 
+################################################################################
 
 #' Download PLINK
 #'
@@ -74,8 +82,8 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE) {
 download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE) {
 
   myOS <- get_os()
-  PLINK <- file.path(dir, `if`(myOS == "Windows", "plink2.exe", "plink2"))
-  if (!overwrite && file.exists(PLINK)) return(PLINK)
+  PLINK2 <- file.path(dir, `if`(myOS == "Windows", "plink2.exe", "plink2"))
+  if (!overwrite && file.exists(PLINK2)) return(PLINK2)
 
   # https://regex101.com/r/jC8nB0/143
   plink.names <- gsubfn::strapply(
@@ -98,12 +106,12 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE) {
   url <- subset(plink.builds, OS == myOS & arch == myArch & avx2 == AVX2)[["url"]]
 
   utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
-  PLINK <- utils::unzip(plink.zip,
-                        files = basename(PLINK),
-                        exdir = dirname(PLINK))
-  Sys.chmod(PLINK, mode = (file.info(PLINK)$mode | "111"))
+  PLINK2 <- utils::unzip(plink.zip,
+                         files = basename(PLINK2),
+                         exdir = dirname(PLINK2))
+  make_executable(PLINK2)
 
-  PLINK
+  PLINK2
 }
 
 ################################################################################
@@ -132,14 +140,13 @@ download_beagle <- function(dir = tempdir()) {
     perl = TRUE
   )[[1]]
 
-  dest <- file.path(dir, jar)
-
-  if (!file.exists(dest)) {
-    utils::download.file(paste0(url, jar), destfile = dest)
-    Sys.chmod(dest, mode = (file.info(dest)$mode | "111"))
+  beagle <- file.path(dir, jar)
+  if (!file.exists(beagle)) {
+    utils::download.file(paste0(url, jar), destfile = beagle)
+    make_executable(beagle)
   }
 
-  dest
+  beagle
 }
 
 ################################################################################
