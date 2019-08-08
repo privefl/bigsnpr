@@ -18,14 +18,14 @@
 #'
 download_1000G <- function(dir, overwrite = FALSE, delete_zip = TRUE) {
 
-  files_unzipped <- file.path(dir, paste0("1000G_phase3_common_hapmap_norel",
+  files_unzipped <- file.path(dir, paste0("1000G_phase3_common_norel",
                                           c(".bed", ".bim", ".fam", ".fam2")))
 
   if (overwrite || !all(file.exists(files_unzipped))) {
 
-    zip <- file.path(dir, "1000G_phase3_common_hapmap.zip")
+    zip <- file.path(dir, "1000G_phase3_common.zip")
     if (overwrite || !file.exists(zip)) {
-      utils::download.file("https://ndownloader.figshare.com/files/16775654",
+      utils::download.file("https://ndownloader.figshare.com/files/17016137",
                            destfile = zip)
       if (delete_zip) on.exit(unlink(zip), add = TRUE)
     }
