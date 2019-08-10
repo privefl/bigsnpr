@@ -176,15 +176,6 @@ bed_autoSVD2 <- function(obj.bed,
 
   check_args()
 
-  if (min.mac > 0) { ## TODO: option in svd() instead
-    stats <- bed_stats(obj.bed, ind.row, ind.col)
-    mac.nok <- (stats$sum < min.mac)
-    if (sum(mac.nok) > 0) {
-      warning2("Discarding %d variants with MAC < %d..", sum(mac.nok), min.mac)
-      ind.col <- ind.col[!mac.nok]
-    }
-  }
-
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
@@ -201,6 +192,18 @@ bed_autoSVD2 <- function(obj.bed,
                              size = size,
                              ncores = ncores)
     printf2("keep %d SNPs.\n", length(ind.keep))
+  }
+
+  if (min.mac > 0) {
+    ac <- big_parallelize(obj.bed, function(X, ind, ind.row) {
+      bed_stats(X, ind.row, ind)$sum
+    }, p.combine = 'c', ind = ind.keep, ind.row = ind.row, ncores = ncores)
+
+    mac.nok <- (pmin(ac, 2 * length(ind.row) - ac) < min.mac)
+    if (sum(mac.nok) > 0) {
+      printf2("Discarding %d variants with MAC < %d.\n", sum(mac.nok), min.mac)
+      ind.keep <- ind.keep[!mac.nok]
+    }
   }
 
   iter <- 0L
