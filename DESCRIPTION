@@ -46,7 +46,7 @@ LinkingTo:
 Suggests:
     bindata,
     covr,
-    dbplyr,
+    dbplyr (>= 1.4),
     dplyr,
     gaston,
     Hmisc,
@@ -55,7 +55,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr, privefl/bigreadr, privefl/bigutilsr
+Remotes: privefl/bigstatsr, privefl/bigutilsr
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
