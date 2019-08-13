@@ -25,7 +25,7 @@ Depends:
     bigstatsr (>= 0.9.9)
 Imports:
     bigreadr (>= 0.1.7),
-    bigutilsr,
+    bigutilsr (>= 0.1),
     data.table,
     doParallel,
     foreach, 
