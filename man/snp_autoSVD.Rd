@@ -72,9 +72,8 @@ Use \code{obj.bed <- bed(bedfile)} to get this object.}
 \item{alpha.tukey}{Default is \code{0.05}. The type-I error rate in outlier
 detection (that is further corrected for multiple testing).}
 
-\item{lof.k}{Size of the neighborhood in local outlier factor (LOF) detection
-for samples. Default is \code{ceiling(length(ind.row)^(1/3))}. This is \code{10} for
-a sample size of 1000, \code{25} for 15K and \code{80} for 500K.}
+\item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
+Default is \code{10}.}
 }
 \value{
 A named list (an S3 class "big_SVD") of

@@ -152,9 +152,8 @@ snp_autoSVD <- function(G,
 #'
 #' @param alpha.tukey Default is `0.05`. The type-I error rate in outlier
 #'   detection (that is further corrected for multiple testing).
-#' @param lof.k Size of the neighborhood in local outlier factor (LOF) detection
-#'   for samples. Default is `ceiling(length(ind.row)^(1/3))`. This is `10` for
-#'   a sample size of 1000, `25` for 15K and `80` for 500K.
+#' @param min.mac Minimum minor allele count (MAC) for variants to be included.
+#'   Default is `10`.
 #'
 #' @export
 bed_autoSVD2 <- function(obj.bed,
@@ -166,7 +165,6 @@ bed_autoSVD2 <- function(obj.bed,
                          roll.size = 50,
                          int.min.size = 20,
                          alpha.tukey = 0.05,
-                         # lof.k = ceiling(length(ind.row)^(1/3)),
                          min.mac = 10,
                          ncores = 1,
                          verbose = TRUE) {

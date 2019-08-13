@@ -93,7 +93,7 @@ flip_strand <- function(allele) {
 #' @param info_snp A data frame with columns "chr", "pos", "a0" and "a1".
 #' @param strand_flip Whether to try to flip strand? (default is `TRUE`)
 #'   If so, ambiguous alleles A/T and C/G are removed.
-#' @param join_by_rsid Whether to join by chromosome and position (default),
+#' @param join_by_pos Whether to join by chromosome and position (default),
 #'   or instead by rsid.
 #'
 #' @return A single data frame with matched variants.

@@ -14,7 +14,7 @@ snp_match(sumstats, info_snp, strand_flip = TRUE, join_by_pos = TRUE)
 \item{strand_flip}{Whether to try to flip strand? (default is \code{TRUE})
 If so, ambiguous alleles A/T and C/G are removed.}
 
-\item{join_by_rsid}{Whether to join by chromosome and position (default),
+\item{join_by_pos}{Whether to join by chromosome and position (default),
 or instead by rsid.}
 }
 \value{
