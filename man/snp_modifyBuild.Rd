@@ -21,7 +21,7 @@ and at \url{https://bit.ly/2TbSaEI} for Linux.}
 Input data frame \code{info_snp} with column "pos" in the new build.
 }
 \description{
-Modify the physical position information of a data frale
+Modify the physical position information of a data frame
 when converting genome build using executable \emph{liftOver}.
 }
 \references{

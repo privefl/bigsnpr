@@ -12,7 +12,7 @@ download_1000G(dir, overwrite = FALSE, delete_zip = TRUE)
 \item{overwrite}{Whether to overwrite files when downloading and unzipping?
 Default is \code{FALSE}.}
 
-\item{delete_zip}{Whether to delete zip after uncompressing the file in it?
+\item{delete_zip}{Whether to delete zip after decompressing the file in it?
 Default is \code{TRUE}.}
 }
 \value{

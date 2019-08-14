@@ -9,7 +9,7 @@
 #' @param dir The directory where to put the downloaded files.
 #' @param overwrite Whether to overwrite files when downloading and unzipping?
 #'   Default is `FALSE`.
-#' @param delete_zip Whether to delete zip after uncompressing the file in it?
+#' @param delete_zip Whether to delete zip after decompressing the file in it?
 #'   Default is `TRUE`.
 #'
 #' @return The path of the downloaded bed file.

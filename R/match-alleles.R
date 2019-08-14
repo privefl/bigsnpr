@@ -160,7 +160,7 @@ snp_match <- function(sumstats, info_snp,
 
 #' Modify genome build
 #'
-#' Modify the physical position information of a data frale
+#' Modify the physical position information of a data frame
 #' when converting genome build using executable *liftOver*.
 #'
 #' @param info_snp A data frame with columns "chr" and "pos".
