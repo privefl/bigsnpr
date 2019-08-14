@@ -17,7 +17,7 @@
 ## Installation
 
 ```r
-devtools::install_github("privefl/bigsnpr")
+remotes::install_github("privefl/bigsnpr")
 ```
 
 
