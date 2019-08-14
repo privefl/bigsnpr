@@ -36,7 +36,7 @@ be found at \url{http://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
 }
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-plink2 <- download_plink2()
+plink2 <- download_plink2(AVX2 = FALSE)
 test <- snp_plinkKINGQC(plink2, bedfile,
                         bedfile.out = tempfile(fileext = ".bed"),
                         ncores = 2)

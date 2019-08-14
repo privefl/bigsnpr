@@ -443,7 +443,7 @@ snp_plinkIBDQC <- function(plink.path,
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-#' plink2 <- download_plink2()
+#' plink2 <- download_plink2(AVX2 = FALSE)
 #' test <- snp_plinkKINGQC(plink2, bedfile,
 #'                         bedfile.out = tempfile(fileext = ".bed"),
 #'                         ncores = 2)
