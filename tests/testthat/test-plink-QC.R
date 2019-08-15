@@ -79,13 +79,16 @@ G <- obj.snp$genotypes
 G[1, ] <- round(colMeans(G[2:3, ]))
 bedfile <- snp_writeBed(obj.snp, tempfile(fileext = ".bed"))
 
-bedfile2 <- snp_plinkKINGQC(plink2, bedfile)
-expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
-                 c("#FID\tIID", "POP1\tIND2"))
+if (.Machine$sizeof.pointer == 8) {
+  bedfile2 <- snp_plinkKINGQC(plink2, bedfile)
+  expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
+                   c("#FID\tIID", "POP1\tIND2"))
 
-bedfile3 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
-                            bedfile.out = tempfile(fileext = ".bed"))
-expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
+  bedfile3 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
+                              bedfile.out = tempfile(fileext = ".bed"))
+  expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
+}
+
 
 expect_error(snp_plinkKINGQC(plink, bedfile), "This requires PLINK v2")
 unlink(plink2)
