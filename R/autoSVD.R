@@ -226,7 +226,9 @@ bed_autoSVD2 <- function(obj.bed,
             `if`(length(ind.row.excl) > 1, "s", ""))
 
     # check for outlier variants
-    S.col <- log(rowSums(obj.svd$v^2))
+    # S.col <- log(rowSums(obj.svd$v^2))
+    S.col <- -stats::predict(
+      bed_pcadapt(obj.bed, obj.svd$u, ind.row, ind.keep, ncores = ncores))
     # roll mean to get only consecutive outliers
     S2.col <- bigutilsr::rollmean(S.col, size = roll.size)
     S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
