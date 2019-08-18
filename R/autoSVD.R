@@ -226,11 +226,14 @@ bed_autoSVD2 <- function(obj.bed,
             `if`(length(ind.row.excl) > 1, "s", ""))
 
     # check for outlier variants
-    # S.col <- log(rowSums(obj.svd$v^2))
-    S.col <- -stats::predict(
-      bed_pcadapt(obj.bed, obj.svd$u, ind.row, ind.keep, ncores = ncores))
-    # roll mean to get only consecutive outliers
-    S2.col <- bigutilsr::rollmean(S.col, size = roll.size)
+    gwas <- bed_pcadapt(obj.bed, U.row = obj.svd$u, ind.row = ind.row,
+                        ind.col = ind.keep, ncores = ncores)
+    S.col <- sqrt(gwas$score)
+    # roll mean to get only consecutive outliers (by chromosome)
+    ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
+    S2.col <- double(length(S.col))
+    for (ind in ind.split)
+      S2.col[ind] <- bigutilsr::rollmean(S.col[ind], roll.size)
     S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
     ind.col.excl <- which(S2.col > S2.col.thr)
     printf2("%d outlier variant%s detected..\n", length(ind.col.excl),
@@ -252,12 +255,13 @@ bed_autoSVD2 <- function(obj.bed,
         ind.range <- getIntervals(ind.col.excl, n = int.min.size)
         printf2("%d long-range LD region%s detected..\n", nrow(ind.range),
                 `if`(nrow(ind.range) > 1, "s", ""))
-        if (nrow(ind.range) > 0) {
-          LRLDR.add <- cbind(
-            infos.chr[ind.keep[ind.range[, 1]]],
-            matrix(infos.pos[ind.keep[ind.range]], ncol = 2)
-          )
-          LRLDR[nrow(LRLDR) + rows_along(LRLDR.add), ] <- LRLDR.add
+        for (i in rows_along(ind.range)) {
+          seq.range <- seq2(ind.range[i, ])
+          seq.range.chr <- infos.chr[ind.keep[seq.range]]
+          chr <- median(seq.range.chr)  ## to get mode
+          in.chr <- (infos.chr[ind.keep[seq.range]] == chr)
+          range.in.chr <- range(infos.pos[ind.keep[seq.range[in.chr]]])
+          LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)
         }
       }
     }
@@ -268,8 +272,13 @@ bed_autoSVD2 <- function(obj.bed,
     }
   }
 
-  structure(obj.svd, subset.row = ind.row, subset.col = ind.keep,
-            lrldr = LRLDR, prev = prev)
+  structure(
+    obj.svd,
+    subset.row = ind.row,
+    subset.col = ind.keep,
+    lrldr = LRLDR[with(LRLDR, order(Chr, Start, Stop)), ],
+    prev = prev
+  )
 }
 
 ################################################################################
