@@ -148,9 +148,39 @@ snp_autoSVD <- function(G,
 
 ################################################################################
 
+#' @examples
+#' X <- readRDS(system.file("testdata", "three-pops.rds", package = "bigutilsr"))
+#' pca <- prcomp(X, scale. = TRUE, rank. = 10)
+#' U <- pca$x
+#' robLOF(U)
+#' library(ggplot2)
+#' qplot(U[, 1], U[, 2], color = robLOF(U)) + coord_equal() +
+#'   scale_color_viridis_c()
+robLOF <- function(U, seq_k = c(4, 10, 30),
+                   combine = max,
+                   robMaha = FALSE,
+                   log = TRUE,
+                   ncores = 1) {
+
+  if (ncores == 1) {
+    registerDoSEQ()
+  } else {
+    cl <- parallel::makeCluster(ncores)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl), add = TRUE)
+  }
+  all_llof <- foreach(nPC = rev(tail(cols_along(U), -1)), .combine = "cbind") %:%
+    foreach(kNN = rev(seq_k), .combine = "cbind") %dopar% {
+      bigutilsr::LOF(U[, 1:nPC], seq_k = kNN, robMaha = robMaha, log = log)
+    }
+  apply(all_llof, 1, combine)
+}
+
+################################################################################
+
 #' @rdname snp_autoSVD
 #'
-#' @param alpha.tukey Default is `0.05`. The type-I error rate in outlier
+#' @param alpha.tukey Default is `0.1`. The type-I error rate in outlier
 #'   detection (that is further corrected for multiple testing).
 #' @param min.mac Minimum minor allele count (MAC) for variants to be included.
 #'   Default is `10`.
@@ -164,7 +194,7 @@ bed_autoSVD2 <- function(obj.bed,
                          k = 10,
                          roll.size = 50,
                          int.min.size = 20,
-                         alpha.tukey = 0.05,
+                         alpha.tukey = 0.1,
                          min.mac = 10,
                          ncores = 1,
                          verbose = TRUE) {
@@ -189,7 +219,7 @@ bed_autoSVD2 <- function(obj.bed,
                              thr.r2 = thr.r2,
                              size = size,
                              ncores = ncores)
-    printf2("keep %d SNPs.\n", length(ind.keep))
+    printf2("keep %d variants.\n", length(ind.keep))
   }
 
   if (min.mac > 0) {
@@ -198,10 +228,9 @@ bed_autoSVD2 <- function(obj.bed,
     }, p.combine = 'c', ind = ind.keep, ind.row = ind.row, ncores = ncores)
 
     mac.nok <- (pmin(ac, 2 * length(ind.row) - ac) < min.mac)
-    if (sum(mac.nok) > 0) {
-      printf2("Discarding %d variants with MAC < %d.\n", sum(mac.nok), min.mac)
-      ind.keep <- ind.keep[!mac.nok]
-    }
+    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
+            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
+    ind.keep <- ind.keep[!mac.nok]
   }
 
   iter <- 0L
@@ -219,7 +248,8 @@ bed_autoSVD2 <- function(obj.bed,
     prev[[iter]] <- structure(obj.svd, subset.row = ind.row, subset.col = ind.keep)
 
     # check for outlier samples
-    S.row <- bigutilsr::LOF(obj.svd$u, robMaha = TRUE)
+    UD <- predict(obj.svd)
+    S.row <- robLOF(UD, ncores = ncores)
     S.row.thr <- bigutilsr::tukey_mc_up(S.row, alpha = alpha.tukey)
     ind.row.excl <- which(S.row > S.row.thr)
     printf2("%d outlier sample%s detected..\n", length(ind.row.excl),

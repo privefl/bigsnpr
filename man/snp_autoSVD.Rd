@@ -13,7 +13,7 @@ snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
 
 bed_autoSVD2(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), thr.r2 = 0.2, size = 100/thr.r2,
-  k = 10, roll.size = 50, int.min.size = 20, alpha.tukey = 0.05,
+  k = 10, roll.size = 50, int.min.size = 20, alpha.tukey = 0.1,
   min.mac = 10, ncores = 1, verbose = TRUE)
 }
 \arguments{
@@ -69,7 +69,7 @@ You may use \link{nb_cores}.}
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
-\item{alpha.tukey}{Default is \code{0.05}. The type-I error rate in outlier
+\item{alpha.tukey}{Default is \code{0.1}. The type-I error rate in outlier
 detection (that is further corrected for multiple testing).}
 
 \item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
