@@ -156,7 +156,7 @@ snp_autoSVD <- function(G,
 #' library(ggplot2)
 #' qplot(U[, 1], U[, 2], color = robLOF(U)) + coord_equal() +
 #'   scale_color_viridis_c()
-robLOF <- function(U, seq_k = c(4, 10, 30),
+robLOF <- function(U, seq_kNN,
                    combine = max,
                    robMaha = FALSE,
                    log = TRUE,
@@ -169,11 +169,14 @@ robLOF <- function(U, seq_k = c(4, 10, 30),
     doParallel::registerDoParallel(cl)
     on.exit(parallel::stopCluster(cl), add = TRUE)
   }
-  all_llof <- foreach(nPC = rev(tail(cols_along(U), -1)), .combine = "cbind") %:%
-    foreach(kNN = rev(seq_k), .combine = "cbind") %dopar% {
-      bigutilsr::LOF(U[, 1:nPC], seq_k = kNN, robMaha = robMaha, log = log)
-    }
-  apply(all_llof, 1, combine)
+  all_llof <- foreach(nPC = rev(tail(cols_along(U), -1)), .combine = "cbind") %dopar% {
+    bigutilsr::LOF(U[, 1:nPC], seq_k = seq_kNN, robMaha = robMaha, log = log,
+                   combine = combine)
+  }
+
+  scale <- apply(all_llof, 2, bigutilsr::tukey_mc_up)
+  all_llof_scaled <- sweep(all_llof, 2, scale, '/')
+  apply(all_llof_scaled, 1, combine)
 }
 
 ################################################################################
@@ -194,6 +197,7 @@ bed_autoSVD2 <- function(obj.bed,
                          k = 10,
                          roll.size = 50,
                          int.min.size = 20,
+                         seq_kNN = 4:10,
                          alpha.tukey = 0.1,
                          min.mac = 10,
                          ncores = 1,
@@ -249,7 +253,7 @@ bed_autoSVD2 <- function(obj.bed,
 
     # check for outlier samples
     UD <- predict(obj.svd)
-    S.row <- robLOF(UD, ncores = ncores)
+    S.row <- robLOF(UD, seq_kNN = seq_kNN, ncores = ncores)
     S.row.thr <- bigutilsr::tukey_mc_up(S.row, alpha = alpha.tukey)
     ind.row.excl <- which(S.row > S.row.thr)
     printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
