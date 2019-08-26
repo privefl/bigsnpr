@@ -148,6 +148,8 @@ snp_autoSVD <- function(G,
 
 ################################################################################
 
+utils::globalVariables("nPC")
+
 #' @examples
 #' X <- readRDS(system.file("testdata", "three-pops.rds", package = "bigutilsr"))
 #' pca <- prcomp(X, scale. = TRUE, rank. = 10)
@@ -187,6 +189,8 @@ robLOF <- function(U, seq_kNN,
 #'   detection (that is further corrected for multiple testing).
 #' @param min.mac Minimum minor allele count (MAC) for variants to be included.
 #'   Default is `10`.
+#' @param seq_kNN Sequence of parameters for K-Nearest Neighbours used for
+#'   computing Local Outlier Factors (LOF) in sample outlier detection.
 #'
 #' @export
 bed_autoSVD2 <- function(obj.bed,
@@ -252,7 +256,7 @@ bed_autoSVD2 <- function(obj.bed,
     prev[[iter]] <- structure(obj.svd, subset.row = ind.row, subset.col = ind.keep)
 
     # check for outlier samples
-    UD <- predict(obj.svd)
+    UD <- stats::predict(obj.svd)
     S.row <- robLOF(UD, seq_kNN = seq_kNN, ncores = ncores)
     S.row.thr <- bigutilsr::tukey_mc_up(S.row, alpha = alpha.tukey)
     ind.row.excl <- which(S.row > S.row.thr)
@@ -292,7 +296,7 @@ bed_autoSVD2 <- function(obj.bed,
         for (i in rows_along(ind.range)) {
           seq.range <- seq2(ind.range[i, ])
           seq.range.chr <- infos.chr[ind.keep[seq.range]]
-          chr <- median(seq.range.chr)  ## to get mode
+          chr <- stats::median(seq.range.chr)  ## to get mode
           in.chr <- (infos.chr[ind.keep[seq.range]] == chr)
           range.in.chr <- range(infos.pos[ind.keep[seq.range[in.chr]]])
           LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)

@@ -69,6 +69,9 @@ You may use \link{nb_cores}.}
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
+\item{seq_kNN}{Sequence of parameters for K-Nearest Neighbours used for
+computing Local Outlier Factors (LOF) in sample outlier detection.}
+
 \item{alpha.tukey}{Default is \code{0.1}. The type-I error rate in outlier
 detection (that is further corrected for multiple testing).}
 
