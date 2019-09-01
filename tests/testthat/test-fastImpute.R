@@ -84,3 +84,29 @@ expect_true(all(nbNA[ind] > 0))
 expect_true(all(nbNA[-ind] == 0))
 
 ################################################################################
+
+G <- snp_attachExtdata("example-missing.bed")$genotypes
+# cbind(colMeans(G[]), colMeans(G[], na.rm = TRUE))
+expect_error(snp_fastImputeSimple(G, "mean"), "should be one of")
+
+G2 <- snp_fastImputeSimple(G, "mean0")
+expect_equal(G[c(11, 30, 122, 148), 2], rep(NA_real_, 4))
+expect_equal(G2[c(11, 30, 122, 148), 2], rep(2, 4))
+
+G3 <- snp_fastImputeSimple(G, "mean2")
+expect_equal(G3[c(11, 30, 122, 148), 2], rep(1.92, 4))
+expect_equal(G3[c(8, 18, 36, 55, 80, 139, 188), 4], rep(1.82, 7))
+
+G4 <- snp_fastImputeSimple(G, "mode")
+expect_equal(G4[c(7, 143), 492], rep(2, 2))
+expect_equal(G4[c(9, 68, 72, 178), 500], rep(1, 4))
+
+imp_val <- replicate(1000, {
+  G5 <- snp_fastImputeSimple(G, "random")
+  G5[c(9, 68, 72, 178), 500]
+})
+abs_val <- rbinom(4e5, size = 2, prob = mean(G[, 500], na.rm = TRUE) / 2)
+prop <- table(imp_val) / (table(abs_val) / 100)
+expect_equal(as.vector(prop), rep(1, 3), tolerance = 0.1)
+
+################################################################################

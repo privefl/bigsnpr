@@ -1,3 +1,7 @@
+## bigsnpr 0.12.0
+
+- Add `snp_fastImputeSimple()`: fast imputation via mode, mean or sampling according to allele frequencies.
+
 ## bigsnpr 0.11.3
 
 - Fix a bug in `snp_readBGEN()` that could not handle duplicated variants or individuals.

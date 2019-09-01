@@ -104,9 +104,9 @@ snp_attach <- function(rdsfile) {
 #' @return The example "bigSNP", filebacked in the "/tmp/" directory.
 #'
 #' @export
-snp_attachExtdata <- function(bedfile = "example.bed") {
+snp_attachExtdata <- function(bedfile = c("example.bed", "example-missing.bed")) {
 
-  bedfile <- system.file("extdata", bedfile, package = "bigsnpr")
+  bedfile <- system.file("extdata", match.arg(bedfile), package = "bigsnpr")
   snp_attach(
     snp_readBed(bedfile, backingfile = tempfile())
   )

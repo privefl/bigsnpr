@@ -21,6 +21,10 @@ corMat <- function(BM, rowInd, colInd, size, thr, pos) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos)
 }
 
+impute <- function(BM, rowInd, colInd, method) {
+    invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
+}
+
 linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
     .Call(`_bigsnpr_linRegPcadapt_cpp`, BM, U, rowInd, colInd)
 }
