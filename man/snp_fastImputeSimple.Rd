@@ -35,3 +35,6 @@ G[, 2]  # imputed, but still returning missing values
 G$copy(code = CODE_IMPUTE_PRED)[, 2]  # need to decode imputed values
 
 }
+\seealso{
+\code{\link[=snp_fastImpute]{snp_fastImpute()}}
+}

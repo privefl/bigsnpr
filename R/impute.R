@@ -121,6 +121,8 @@ imputeChr <- function(Gna, infos.imp, ind.chr, alpha, size, p.train, n.cor, seed
 #'
 #' @import Matrix
 #'
+#' @seealso [snp_fastImputeSimple()]
+#'
 #' @example examples/example-impute.R
 #'
 snp_fastImpute <- function(Gna, infos.chr,
@@ -159,6 +161,8 @@ snp_fastImpute <- function(Gna, infos.chr,
 #'
 #' @return A new `FBM.code256` object (same file, but different code).
 #' @export
+#'
+#' @seealso [snp_fastImpute()]
 #'
 #' @examples
 #' bigsnp <- snp_attachExtdata("example-missing.bed")

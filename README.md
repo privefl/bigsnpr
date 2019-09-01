@@ -13,6 +13,7 @@
 
 [**LIST OF FEATURES**](https://privefl.github.io/bigsnpr/reference/index.html)
 
+**Note that most of the algorithms of this package don't handle missing values.** You can use `snp_fastImpute()` (taking a few hours for a chip of 15K x 300K) and `snp_fastImputeSimple()` (taking a few minutes) to impute missing values of *genotyped* variants.
 
 ## Installation
 
