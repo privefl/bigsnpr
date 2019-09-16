@@ -1,13 +1,13 @@
 library(bigsnpr)
 
 bedfile.new <- "../Dubois2010_data/FinnuncorrNLITUK3hap550.bed"; build <- "hg19"
-bedfile.new <- "../POPRES_data/POPRES_allchr.bed"; build <- "hg18"
+# bedfile.new <- "../POPRES_data/POPRES_allchr.bed"; build <- "hg18"
 bed.new <- bed(bedfile.new)
 bedfile.ref <- download_1000G("tmp-data")
 bed.ref <- bed(bedfile.ref)
 ind.row <- rows_along(bed.ref)
 strand_flip = TRUE
-join_by_pos = TRUE
+join_by_pos = FALSE
 ncores <- nb_cores()
 nPC <- 20
 
@@ -105,7 +105,7 @@ n <- nrow(K)
 testscore <- U3
 
 
-system.time(test <- hdpca::select.nspike(eig.val, p, n, n.spikes.max = 50))
+# system.time(test <- hdpca::select.nspike(eig.val, p, n, n.spikes.max = 50))
 # 587 sec
 test
 test$n.spikes # 21
@@ -114,7 +114,7 @@ system.time(test2 <- bigutilsr::pca_nspike(eig.val))
 test2 # 21
 
 system.time(
-  score.adj.d2 <- bigutilsr::pca_adjust(testscore, eig.val, p, n.spikes = 8)
+  score.adj.d2 <- bigutilsr::pca_adjust(testscore, eig.val, p, n.spikes = test2)
 )
 attr(score.adj.d2, "shrinkage")
 # 0.9960032 0.9897782 0.9628025 0.9519429 0.7709360 0.7649171 0.7344308 0.7008195
@@ -242,10 +242,10 @@ plot_grid(
 )
 
 hist(S <- bigutilsr::covRob(score.adj.d2, estim = "pairwiseGK")$dist, breaks = 50)
-hist(S2 <- log(S), breaks = length(S) / 10)
+hist(S2 <- log(S), breaks = "FD")
 abline(v = (q <- bigutilsr::tukey_mc_up(S2)), col = "red")
-hist(S, breaks = length(S) / 10)
-hist(log(S2), breaks = length(S) / 10)
+hist(S, breaks = "FD")
+hist(log(S2), breaks = "FD")
 bigutilsr::pca_nspike(log(S2))
 hist(S[S < 60], breaks = length(S) / 10)
 bigutilsr::pca_nspike(S)
