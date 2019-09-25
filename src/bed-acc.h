@@ -106,6 +106,9 @@ public:
                const NumericVector& scale,
                double NA_VAL = 0) : bedAcc(bedPtr, ind_row, ind_col) {
 
+    myassert_size(center.size(), ind_col.size());
+    myassert_size(scale.size(),  ind_col.size());
+
     size_t p = ind_col.size();
     _lookup_scale = NumericMatrix(4, p);
     for (size_t j = 0; j < p; j++) {

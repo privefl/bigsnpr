@@ -82,7 +82,7 @@ bed_RC <- methods::setRefClass(
   methods = list(
     initialize = function(bedfile) {
 
-      .self$bedfile <- bedfile
+      .self$bedfile <- path.expand(bedfile)
 
       # Check if all three files exist
       sapply(c(.self$bedfile, .self$bimfile, .self$famfile), assert_exist)

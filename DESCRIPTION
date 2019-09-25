@@ -24,8 +24,8 @@ Depends:
     R (>= 3.3), 
     bigstatsr (>= 0.9.9)
 Imports:
-    bigreadr (>= 0.1.7),
-    bigutilsr (>= 0.1),
+    bigreadr (>= 0.1.10),
+    bigutilsr (>= 0.1.1),
     data.table,
     doParallel,
     foreach, 
