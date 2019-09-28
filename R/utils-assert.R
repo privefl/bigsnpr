@@ -12,6 +12,7 @@ check_args <- function(...) {
         x           = "assert_class(x, 'bigSNP')",
         G           = "assert_class(G, 'FBM.code256'); assert_noNA(G)",
         Gna         = "assert_class(Gna, 'FBM.code256')",
+        obj.bed     = "assert_class(obj.bed, 'bed')",
         infos.chr   = "assert_int(infos.chr); assert_pos(infos.chr)",
         infos.pos   = "assert_int(infos.pos); assert_pos(infos.pos)",
         ncores      = "assert_cores(ncores)",

@@ -12,8 +12,6 @@ svds4.par <- function(obj.bed, ind.row, ind.col, k, tol, verbose, ncores) {
   Ax   <- FBM(n, ncores)
   Atx  <- FBM(m, 1)
   calc <- FBM(ncores, 1, init = 0)
-  nb_nona_row <- FBM(n, ncores)
-  nb_nona_col <- FBM(m, 1, init = NA)
 
   cluster_type <- getOption("bigstatsr.cluster.type")
   if (verbose) {
@@ -28,30 +26,25 @@ svds4.par <- function(obj.bed, ind.row, ind.col, k, tol, verbose, ncores) {
 
     if (ic == 0) { # I'm the master
 
-      # Wait for slaves to compute statistics
-      while (anyNA(nb_nona_col[])) Sys.sleep(TIME * 100)
-      scale_At <- sqrt(n / nb_nona_col[])
-      scale_A  <- sqrt(m / rowSums(nb_nona_row[]))
-
       printf <- function(...) cat(sprintf(...))
       it <- 0
       # A
       A <- function(x, args) {
         printf("%d - computing A * x\n", it <<- it + 1)
-        Atx[] <- x * scale_At
+        Atx[] <- x
         calc[] <- 1  # make them work
         # Master wait for its slaves to finish working
         while (sum(calc[]) > 0) Sys.sleep(TIME)
-        rowSums(Ax[]) * scale_A
+        rowSums(Ax[])
       }
       # Atrans
       Atrans <- function(x, args) {
         printf("%d - computing At * x\n", it <<- it + 1)
-        Ax[, 1] <- x * scale_A
+        Ax[, 1] <- x
         calc[] <- 2  # make them work
         # Master wait for its slaves to finish working
         while (sum(calc[]) > 0) Sys.sleep(TIME)
-        Atx[] * scale_At
+        Atx[]
       }
 
       res <- RSpectra::svds(A, k, nu = k, nv = k, opts = list(tol = tol),
@@ -74,9 +67,6 @@ svds4.par <- function(obj.bed, ind.row, ind.col, k, tol, verbose, ncores) {
       center <- 2 * af
       scale <- sqrt(2 * af * (1 - af))
 
-      nb_nona_row[, ic]  <- stats$nb_nona_row
-      nb_nona_col[lo:up] <- stats$nb_nona_col
-
       repeat {
         # Slaves wait for their master to give them orders
         while (calc[ic] == 0) Sys.sleep(TIME)
@@ -84,12 +74,12 @@ svds4.par <- function(obj.bed, ind.row, ind.col, k, tol, verbose, ncores) {
         # Slaves do the hard work
         if (c == 1) {
           # Compute A * x (part)
-          Ax[, ic] <- pMatVec4(obj.bed, ind.row, ind.col.part, center, scale,
-                               Atx[lo:up]) #* m / stats$nb_nona_row -> by master
+          Ax[, ic] <-
+            pMatVec4(obj.bed, ind.row, ind.col.part, center, scale, Atx[lo:up])
         } else if (c == 2) {
           # Compute At * x (part)
-          Atx[lo:up] <- cpMatVec4(obj.bed, ind.row, ind.col.part, center, scale,
-                                  Ax[, 1]) #* n / stats$nb_nona_col -> by master
+          Atx[lo:up] <-
+            cpMatVec4(obj.bed, ind.row, ind.col.part, center, scale, Ax[, 1])
         } else if (c == 3) {
           # End
           break
@@ -128,20 +118,17 @@ svds4.seq <- function(obj.bed, ind.row, ind.col, k, tol, verbose) {
   center <- 2 * af
   scale <- sqrt(2 * af * (1 - af))
 
-  scale_A  <- sqrt(m / stats$nb_nona_row)
-  scale_At <- sqrt(n / stats$nb_nona_col)
-
   printf <- function(...) if (verbose) cat(sprintf(...))
   it <- 0
   # A
   A <- function(x, args) {
     printf("%d - computing A * x\n", it <<- it + 1)
-    pMatVec4(obj.bed, ind.row, ind.col, center, scale, x * scale_At) * scale_A
+    pMatVec4(obj.bed, ind.row, ind.col, center, scale, x)
   }
   # Atrans
   Atrans <- function(x, args) {
     printf("%d - computing At * x\n", it <<- it + 1)
-    cpMatVec4(obj.bed, ind.row, ind.col, center, scale, x * scale_A) * scale_At
+    cpMatVec4(obj.bed, ind.row, ind.col, center, scale, x)
   }
 
   res <- RSpectra::svds(A, k, nu = k, nv = k, opts = list(tol = tol),

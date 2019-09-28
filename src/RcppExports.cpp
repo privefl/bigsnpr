@@ -47,6 +47,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bed_wmean
+NumericVector bed_wmean(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& w);
+RcppExport SEXP _bigsnpr_bed_wmean(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(bed_wmean(obj_bed, ind_row, ind_col, w));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pMatVec4
 NumericVector pMatVec4(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericVector& x);
 RcppExport SEXP _bigsnpr_pMatVec4(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP xSEXP) {
@@ -269,6 +283,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
     {"_bigsnpr_bedXPtr", (DL_FUNC) &_bigsnpr_bedXPtr, 3},
     {"_bigsnpr_bed_stats", (DL_FUNC) &_bigsnpr_bed_stats, 3},
+    {"_bigsnpr_bed_wmean", (DL_FUNC) &_bigsnpr_bed_wmean, 4},
     {"_bigsnpr_pMatVec4", (DL_FUNC) &_bigsnpr_pMatVec4, 6},
     {"_bigsnpr_cpMatVec4", (DL_FUNC) &_bigsnpr_cpMatVec4, 6},
     {"_bigsnpr_read_bed_scaled", (DL_FUNC) &_bigsnpr_read_bed_scaled, 5},
