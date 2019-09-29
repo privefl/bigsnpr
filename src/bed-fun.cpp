@@ -51,41 +51,41 @@ List bed_stats(Environment obj_bed,
 
 /******************************************************************************/
 
-// [[Rcpp::export]]
-NumericVector bed_wmean(Environment obj_bed,
-                        const IntegerVector& ind_row,
-                        const IntegerVector& ind_col,
-                        const NumericVector& w) {
-
-  myassert_size(w.size(), ind_row.size());
-
-  XPtr<bed> xp_bed = obj_bed["address"];
-  bedAcc macc(xp_bed, ind_row, ind_col);
-  size_t n = macc.nrow();
-  size_t m = macc.ncol();
-
-  NumericVector wmean(m);
-  double x, xwSum, wSum, wSum0 = Rcpp::sum(w);
-  int c;
-
-  for (size_t j = 0; j < m; j++) {
-    xwSum = 0;
-    wSum = wSum0;
-    c = n;
-    for (size_t i = 0; i < n; i++) {
-      x = macc(i, j);
-      if (x != 3) {
-        xwSum += x * w[i];
-      } else {
-        c--;
-        wSum -= w[i];
-      }
-    }
-    wmean[j] = xwSum / wSum;
-  }
-
-  return wmean;
-}
+// // [[Rcpp::export]]
+// NumericVector bed_wmean(Environment obj_bed,
+//                         const IntegerVector& ind_row,
+//                         const IntegerVector& ind_col,
+//                         const NumericVector& w) {
+//
+//   myassert_size(w.size(), ind_row.size());
+//
+//   XPtr<bed> xp_bed = obj_bed["address"];
+//   bedAcc macc(xp_bed, ind_row, ind_col);
+//   size_t n = macc.nrow();
+//   size_t m = macc.ncol();
+//
+//   NumericVector wmean(m);
+//   double x, xwSum, wSum, wSum0 = Rcpp::sum(w);
+//   int c;
+//
+//   for (size_t j = 0; j < m; j++) {
+//     xwSum = 0;
+//     wSum = wSum0;
+//     c = n;
+//     for (size_t i = 0; i < n; i++) {
+//       x = macc(i, j);
+//       if (x != 3) {
+//         xwSum += x * w[i];
+//       } else {
+//         c--;
+//         wSum -= w[i];
+//       }
+//     }
+//     wmean[j] = xwSum / wSum;
+//   }
+//
+//   return wmean;
+// }
 
 /******************************************************************************/
 

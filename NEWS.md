@@ -1,3 +1,21 @@
+## bigsnpr 0.12.0
+
+- Add memory-mapping on PLINK (.bed) files with missing values + functions:
+    - `bed_autoSVD2()`
+    - `bed_clumping()`
+    - `bed_pcadapt()`
+    - `bed_projectPCA()`
+    - `bed_randomSVD()`
+    - `bed_tcrossprodSelf()`
+    - `download_1000G()`
+    - `snp_modifyBuild()`
+    - `snp_plinkKINGQC()`
+    - `snp_readBed2()`
+    
+- Using `robLOF()` for outlier sample detection in `autoSVD2`.
+
+- Remove option for changing ploidy (that was only partially supported).
+
 ## bigsnpr 0.11.3
 
 - Fix a bug in `snp_readBGEN()` that could not handle duplicated variants or individuals.
