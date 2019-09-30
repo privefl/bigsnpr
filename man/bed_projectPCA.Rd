@@ -52,6 +52,8 @@ detection (that is further corrected for multiple testing).}
 Default is \code{10}.}
   \item{seq_kNN}{Sequence of parameters for K-Nearest Neighbours used for
 computing Local Outlier Factors (LOF) in sample outlier detection.}
+  \item{max.iter}{Maximum number of iterations for outlier detection.
+Default is \code{10}.}
   \item{size}{For one SNP, window size around this SNP to compute correlations.
 Default is \code{100 / thr.r2} for clumping (0.2 -> 500; 0.1 -> 1000; 0.5 -> 200).
 If not providing \code{infos.pos} (\code{NULL}, the default), this is a window in
