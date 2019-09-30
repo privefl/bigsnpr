@@ -27,6 +27,10 @@ C++ object, to be used as a \code{XPtr<bed>} in C++ code
 \item \code{$famfile}: path to the corresponding fam file
 \item \code{$nrow}: number of samples in the bed file
 \item \code{$ncol}: number of variants in the bed file
+\item \code{$map}: data frame read from \code{$bimfile}
+\item \code{$fam}: data frame read from \code{$famfile}
+\item \code{$.map}: use \code{$map} instead
+\item \code{$.fam}: use \code{$fam} instead
 }
 }
 

@@ -42,6 +42,10 @@ sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
 #'   - `$famfile`: path to the corresponding fam file
 #'   - `$nrow`: number of samples in the bed file
 #'   - `$ncol`: number of variants in the bed file
+#'   - `$map`: data frame read from `$bimfile`
+#'   - `$fam`: data frame read from `$famfile`
+#'   - `$.map`: use `$map` instead
+#'   - `$.fam`: use `$fam` instead
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
@@ -57,16 +61,28 @@ bed_RC <- methods::setRefClass(
   fields = list(
     bedfile = "character",
     extptr  = "externalptr",
+    .fam    = "data.frame",
+    .map    = "data.frame",
 
     #### Active bindings
     bimfile = function() sub_bed(.self$bedfile, ".bim"),
     famfile = function() sub_bed(.self$bedfile, ".fam"),
 
-    nrow = function() bigreadr::nlines(.self$famfile),
-    ncol = function() bigreadr::nlines(.self$bimfile),
+    fam = function() {
+      if (base::ncol(.self$.fam) == 0) {
+        .self$.fam <- bigreadr::fread2(.self$famfile, col.names = NAMES.FAM)
+      }
+      .self$.fam
+    },
+    map = function() {
+      if (base::ncol(.self$.map) == 0) {
+        .self$.map <- bigreadr::fread2(.self$bimfile, col.names = NAMES.MAP)
+      }
+      .self$.map
+    },
 
-    fam = function() bigreadr::fread2(.self$famfile, col.names = NAMES.FAM),
-    map = function() bigreadr::fread2(.self$bimfile, col.names = NAMES.MAP),
+    nrow = function() base::nrow(.self$fam),
+    ncol = function() base::nrow(.self$map),
 
     # infos.chr = function() bigreadr::fread2(.self$bimfile, select = 1)[[1]],
     # infos.pos = function() bigreadr::fread2(.self$bimfile, select = 4)[[1]],
