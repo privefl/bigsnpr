@@ -13,10 +13,6 @@ bed_stats <- function(obj_bed, ind_row, ind_col) {
     .Call(`_bigsnpr_bed_stats`, obj_bed, ind_row, ind_col)
 }
 
-bed_wmean <- function(obj_bed, ind_row, ind_col, w) {
-    .Call(`_bigsnpr_bed_wmean`, obj_bed, ind_row, ind_col, w)
-}
-
 pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
     .Call(`_bigsnpr_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
 }
