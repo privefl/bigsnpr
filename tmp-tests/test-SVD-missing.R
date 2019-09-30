@@ -1,17 +1,17 @@
 library(bigsnpr)
-obj.bed <- bed("tmp-data/1000G_phase3_common_hapmap_norel.bed")
+bedfile <- "tmp-data/1000G_phase3_common_norel.bed"
+obj.bed <- bed(bedfile)
 set.seed(1); ind.col <- seq(1, ncol(obj.bed), by = 20)
 obj.svd <- bed_randomSVD(obj.bed, ind.col = ind.col)
 U <- obj.svd$u
 
-# snp_readBed2("tmp-data/1000G_phase3_common_hapmap_norel.bed", "tmp-data/1000G",
-#              ind.col = ind.col)
+snp_readBed2(bedfile, "tmp-data/1000G", ind.col = ind.col)
 snp <- snp_attach("tmp-data/1000G.rds")
 G <- snp$genotypes
 
 set.seed(NULL)
 G2 <- big_copy(G); M <- ncol(G); N <- nrow(G)
-hist(nbNA <- VGAM::rbetabinom.ab(M, size = N, shape1 = 0.7, shape2 = 10))
+hist(nbNA <- VGAM::rbetabinom.ab(M, size = N, shape1 = 0.5, shape2 = 10))
 sum(nbNA) / length(G)
 indNA <- cbind(
   unlist(
@@ -22,14 +22,14 @@ indNA <- cbind(
   rep(cols_along(G), nbNA)
 )
 G2[indNA] <- 3
-round(100 * big_counts(G2)[4, ] / nrow(G2), 1)
+hist(round(100 * big_counts(G2)[4, ] / nrow(G2), 1))
 G2[, 1]
 snp2 <- snp
 snp2$genotypes <- G2
 bedfile2 <- snp_writeBed(snp2, tempfile(fileext = ".bed"))
 
 obj.bed2 <- bed(bedfile2)
-svd2 <- bed_randomSVD(obj.bed2)
+svd2 <- bed_randomSVD(obj.bed2, ncores = nb_cores())
 U2 <- svd2$u
 plot(U, U2)
 plot(U[, 1:2], U2[, 1:2], pch = 20); abline(0, 1, col = "red")
