@@ -5,7 +5,7 @@
 \title{Relationship-based pruning}
 \usage{
 snp_plinkKINGQC(plink2.path, bedfile.in, bedfile.out = NULL,
-  thr.king = 0.177, ncores = 1, extra.options = "")
+  thr.king = 0.0884, ncores = 1, extra.options = "")
 }
 \arguments{
 \item{plink2.path}{Path to the executable of PLINK 2.}
@@ -20,7 +20,8 @@ duplicate samples have kinship 0.5, not 1. First-degree relations
 (parent-child, full siblings) correspond to ~0.25, second-degree relations
 correspond to ~0.125, etc. It is conventional to use a cutoff of ~0.354
 (the geometric mean of 0.5 and 0.25) to screen for monozygotic twins and
-duplicate samples, ~0.177 (\strong{default}) to add first-degree relations, etc.}
+duplicate samples, ~0.177 to remove first-degree relations as well, and
+0.0884 (\strong{default}) to remove second-degree relations as well, etc.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

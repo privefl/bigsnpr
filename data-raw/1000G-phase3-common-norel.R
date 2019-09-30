@@ -1,5 +1,7 @@
 wd <- setwd("tmp-data")
 
+unlink(list.files(pattern = "^1000G_phase3_common.*[^(\\.zip)]$"))
+
 # https://cran.r-project.org/web/packages/plinkQC/vignettes/Genomes1000.pdf
 download.file("https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst?dl=1",
               destfile = "all_phase3.pgen.zst")
@@ -37,7 +39,7 @@ bed <- snp_plinkQC(
 file.size("1000G_phase3_common.bed") / 1024^2  # 994 MB
 
 # Remove related individuals
-bed2 <- snp_plinkKINGQC(plink2, bed, thr.king = 0.177, ncores = nb_cores())
+bed2 <- snp_plinkKINGQC(plink2, bed, thr.king = 0.0884, ncores = nb_cores())
 
 # Get additional information on individuals
 fam <- bed(bed2)$fam
@@ -53,7 +55,7 @@ readLines("1000G_phase3_common_norel.fam2", n = 5)
 # Zip files
 zip("1000G_phase3_common.zip",
     paste0("1000G_phase3_common_norel", c(".bed", ".bim", ".fam", ".fam2")))
-file.size("1000G_phase3_common.zip") / 1024^2  # 360 MB
+file.size("1000G_phase3_common_norel.zip") / 1024^2  # 359 MB
 
 
 unlink("all_phase3.*")

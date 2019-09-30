@@ -80,7 +80,7 @@ G[1, ] <- round(colMeans(G[2:3, ]))
 bedfile <- snp_writeBed(obj.snp, tempfile(fileext = ".bed"))
 
 if (.Machine$sizeof.pointer == 8) {
-  bedfile2 <- snp_plinkKINGQC(plink2, bedfile)
+  bedfile2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177)
   expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
                    c("#FID\tIID", "POP1\tIND2"))
 
