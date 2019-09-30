@@ -1,8 +1,8 @@
 ################################################################################
 
-context("BED_RANDOM_SVD")
 # library(bigsnpr)
 # library(testthat)
+context("BED_RANDOM_SVD")
 
 ################################################################################
 
@@ -35,6 +35,12 @@ obj.svd3 <- bed_randomSVD(obj.bed2, ind.col = ind.keep2)
 expect_gt(mean(sqrt(colSums(cor(obj.svd3$u, obj.svd2$u)^2))), 0.9)
 expect_equal(obj.svd3$d, obj.svd2$d, tolerance = 0.1)
 expect_true(all(obj.svd3$d < obj.svd2$d))
+
+# Compute whole eigen decomposition
+K <- bed_tcrossprodSelf(obj.bed2, ind.col = ind.keep2)
+eig <- eigen(K[], symmetric = TRUE)
+expect_equal(sqrt(eig$values[1:10]), obj.svd3$d)
+expect_gt(mean(sqrt(colSums(cor(eig$vectors[, 1:10], obj.svd3$u)^2))), 0.999)
 
 ################################################################################
 

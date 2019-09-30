@@ -25,9 +25,6 @@ bed_tcrossprodSelf <- function(
   n <- length(ind.row)
   m <- length(ind.col)
 
-  scale2 <- scale * sqrt(stats$nb_nona_col / n)
-  scale3 <- sqrt(stats$nb_nona_row / m)
-
   K <- FBM(n, n, init = 0)
 
   intervals <- CutBySize(m, block.size)
@@ -35,13 +32,12 @@ bed_tcrossprodSelf <- function(
   for (j in rows_along(intervals)) {
     ind <- seq2(intervals[j, ])
     tmp <- read_bed_scaled(obj.bed, ind.row, ind.col[ind],
-                           center[ind], scale2[ind])
+                           center[ind], scale[ind])
     bigstatsr:::incrSup2(K, tcrossprod(tmp))
   }
 
-  # Complete the lower part of the symmetric matrix + further scaling
+  # Complete the lower part of the symmetric matrix
   bigstatsr:::complete2(K)
-  bigstatsr:::scaleK(K, rep(0, n), rep(0, n), scale3, 0)
   structure(K, stats = stats)
 }
 
