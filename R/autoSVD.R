@@ -212,10 +212,6 @@ bed_autoSVD2 <- function(obj.bed,
   iter <- 0L
   LRLDR <- LD.wiki34[0, 1:3]
   repeat {
-    if (iter >= max.iter) {
-      printf2("Maximum number of iterations reached.\n")
-      break
-    }
     printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
     # SVD
@@ -224,6 +220,11 @@ bed_autoSVD2 <- function(obj.bed,
                              ind.col = ind.keep,
                              k = k,
                              ncores = ncores)
+
+    if (iter >= max.iter) {
+      printf2("Maximum number of iterations reached.\n")
+      break
+    }
 
     # check for outlier samples
     UD <- stats::predict(obj.svd)

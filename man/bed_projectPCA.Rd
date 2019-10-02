@@ -4,11 +4,12 @@
 \alias{bed_projectPCA}
 \title{Projecting PCA}
 \usage{
-bed_projectPCA(bed.new, bed.ref, k = 10, ind.row = rows_along(bed.ref),
-  strand_flip = TRUE, join_by_pos = TRUE, match.min.prop = 0.5,
-  build.new = "hg19", build.ref = "hg19", liftOver = NULL, ...,
-  adjust = c("d.gsp", "l.gsp", "osp", "none"), verbose = TRUE,
-  ncores = 1)
+bed_projectPCA(bed.new, bed.ref, k = 10,
+  ind.row.new = rows_along(bed.new), ind.row.ref = rows_along(bed.ref),
+  ind.col.ref = cols_along(bed.ref), strand_flip = TRUE,
+  join_by_pos = TRUE, match.min.prop = 0.5, build.new = "hg19",
+  build.ref = "hg19", liftOver = NULL, ..., block.size = 500,
+  verbose = TRUE, ncores = 1)
 }
 \arguments{
 \item{bed.new}{Object of type bed, which is the mapping of the bed file of
@@ -19,7 +20,13 @@ the reference data. Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
 \item{k}{Number of principal components to compute and project.}
 
-\item{ind.row}{Rows to be used in the reference data. Default uses them all.}
+\item{ind.row.new}{Rows to be used in the target data. Default uses them all.}
+
+\item{ind.row.ref}{Rows to be used in the reference data.
+Default uses them all.}
+
+\item{ind.col.ref}{Columns to be potentially used in the reference data.
+Default uses all the ones in common with target data.}
 
 \item{strand_flip}{Whether to try to flip strand? (default is \code{TRUE})
 If so, ambiguous alleles A/T and C/G are removed.}
@@ -61,9 +68,7 @@ number of SNPs, otherwise it is a window in kb (genetic distance).
 I recommend that you provide the positions if available.}
 }}
 
-\item{adjust}{String specifying the estimation method.
-Possible values are \code{"d.gsp"} (default), \code{"l.gsp"}, \code{"osp"},
-or \code{"none"} (shrinkage-adjustement is skipped).}
+\item{block.size}{Maximum number of samples to read at once. Default is \code{500}.}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 
@@ -71,14 +76,14 @@ or \code{"none"} (shrinkage-adjustement is skipped).}
 You may use \link{nb_cores}.}
 }
 \value{
-The projected \code{k} principal components.
-See \code{attr(<object>, "shrinkage")} to get the shrinkage values and
-\code{attr(<object>, "obj.svd.ref")} to get the partial decomposition of the
-reference data.
+A list of 3 elements:
+\itemize{
+\item \code{$obj.svd.ref}: big_SVD object computed from reference data.
+\item \code{$simple_proj}: simple projection of new data into space of reference PCA.
+\item \code{$OADP_proj}: Online Augmentation, Decomposition, and Procrustes (OADP)
+projection of new data into space of reference PCA.
+}
 }
 \description{
-Projecting PCA of reference dataset to a target dataset.
-}
-\seealso{
-\code{\link[hdpca:pc_adjust]{hdpca::pc_adjust()}}
+Computing and projecting PCA of reference dataset to a target dataset.
 }

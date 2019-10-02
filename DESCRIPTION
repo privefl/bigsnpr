@@ -25,7 +25,7 @@ Depends:
     bigstatsr (>= 0.9.9)
 Imports:
     bigreadr (>= 0.1.10),
-    bigutilsr (>= 0.1.1),
+    bigutilsr (>= 0.1.2),
     data.table,
     doParallel,
     foreach, 
@@ -55,7 +55,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr
+Remotes: privefl/bigstatsr, privefl/bigutilsr
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
