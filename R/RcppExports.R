@@ -25,6 +25,10 @@ read_bed_scaled <- function(obj_bed, ind_row, ind_col, center, scale) {
     .Call(`_bigsnpr_read_bed_scaled`, obj_bed, ind_row, ind_col, center, scale)
 }
 
+prod_and_rowSumsSq <- function(obj_bed, ind_row, ind_col, center, scale, V) {
+    .Call(`_bigsnpr_prod_and_rowSumsSq`, obj_bed, ind_row, ind_col, center, scale, V)
+}
+
 bed_clumping_chr <- function(obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr) {
     .Call(`_bigsnpr_bed_clumping_chr`, obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr)
 }

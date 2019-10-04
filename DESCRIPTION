@@ -3,7 +3,7 @@ Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
 Version: 0.12.0
-Date: 2019-09-29
+Date: 2019-10-04
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -22,10 +22,10 @@ Language: en-US
 ByteCompile: TRUE
 Depends:
     R (>= 3.3), 
-    bigstatsr (>= 0.9.9)
+    bigstatsr (>= 0.9.10)
 Imports:
     bigreadr (>= 0.1.10),
-    bigutilsr (>= 0.1.2),
+    bigutilsr (>= 0.1.3),
     data.table,
     doParallel,
     foreach, 

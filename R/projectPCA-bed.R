@@ -62,7 +62,6 @@ download_1000G <- function(dir, overwrite = FALSE, delete_zip = TRUE) {
 #' @inheritParams snp_modifyBuild
 #' @inheritParams bed_autoSVD2
 #' @inheritDotParams bed_autoSVD2 -obj.bed -ind.row -ind.col -k -verbose -ncores
-#' @param block.size Maximum number of samples to read at once. Default is `500`.
 #'
 #' @return A list of 3 elements:
 #'   - `$obj.svd.ref`: big_SVD object computed from reference data.
@@ -83,7 +82,6 @@ bed_projectPCA <- function(bed.new, bed.ref, k = 10,
                            build.ref = "hg19",
                            liftOver = NULL,
                            ...,
-                           block.size = 500,
                            verbose = TRUE,
                            ncores = 1) {
 
@@ -122,34 +120,43 @@ bed_projectPCA <- function(bed.new, bed.ref, k = 10,
 
   printf2("\n[Step 3/3] Projecting PC scores on new data..\n")
 
-  keep    <- match(attr(obj.svd, "subset.col"), info_snp$`_NUM_ID_.ss`)
+  keep   <- match(attr(obj.svd, "subset.col"), info_snp$`_NUM_ID_.ss`)
+  X_norm <- FBM(length(ind.row.new), 1, init = 0)
+  XV     <- FBM(length(ind.row.new), k, init = 0)
 
-  proj_parts <- big_apply(
+  big_apply(
     bed.new,
-    a.FUN = function(X, ind, ind.col, center, scale, V, d) {
-      X.part <- read_bed_scaled(
+    a.FUN = function(X, ind, ind.row, ind.col, center, scale, V, XV, X_norm) {
+
+      res <- prod_and_rowSumsSq(
         obj_bed = X,
-        ind_row = ind,
-        ind_col = ind.col,
-        center  = center,
-        scale   = scale
+        ind_row = ind.row,
+        ind_col = ind.col[ind],
+        center  = center[ind],
+        scale   = scale[ind],
+        V       = V[ind, , drop = FALSE]
       )
-      bigutilsr::pca_OADP_proj(X.part, V, d)
+
+      big_increment(XV,     res[[1]], use_lock = TRUE)
+      big_increment(X_norm, res[[2]], use_lock = TRUE)
     },
-    ind = ind.row.new,
-    block.size = round(block.size / ncores),
+    ind = seq_along(keep),
     ncores = ncores,
+    ind.row = ind.row.new,
     ind.col = info_snp$`_NUM_ID_`[keep],
     center = (obj.svd$center - 1) * info_snp$beta[keep] + 1,
     scale = obj.svd$scale * info_snp$beta[keep],
     V = obj.svd$v,
-    d = obj.svd$d
+    XV = XV,
+    X_norm = X_norm
   )
+
+  XV <- XV[]
 
   list(
     obj.svd.ref = obj.svd,
-    simple_proj = do.call("rbind", lapply(proj_parts, function(x) x$simple_proj)),
-    OADP_proj   = do.call("rbind", lapply(proj_parts, function(x) x$OADP_proj))
+    simple_proj = XV,
+    OADP_proj   = bigutilsr::pca_OADP_proj2(XV, X_norm[], obj.svd$d)
   )
 }
 

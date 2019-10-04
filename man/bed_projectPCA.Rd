@@ -8,8 +8,8 @@ bed_projectPCA(bed.new, bed.ref, k = 10,
   ind.row.new = rows_along(bed.new), ind.row.ref = rows_along(bed.ref),
   ind.col.ref = cols_along(bed.ref), strand_flip = TRUE,
   join_by_pos = TRUE, match.min.prop = 0.5, build.new = "hg19",
-  build.ref = "hg19", liftOver = NULL, ..., block.size = 500,
-  verbose = TRUE, ncores = 1)
+  build.ref = "hg19", liftOver = NULL, ..., verbose = TRUE,
+  ncores = 1)
 }
 \arguments{
 \item{bed.new}{Object of type bed, which is the mapping of the bed file of
@@ -67,8 +67,6 @@ If not providing \code{infos.pos} (\code{NULL}, the default), this is a window i
 number of SNPs, otherwise it is a window in kb (genetic distance).
 I recommend that you provide the positions if available.}
 }}
-
-\item{block.size}{Maximum number of samples to read at once. Default is \code{500}.}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 

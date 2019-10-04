@@ -33,11 +33,9 @@ bed_tcrossprodSelf <- function(
     ind <- seq2(intervals[j, ])
     tmp <- read_bed_scaled(obj.bed, ind.row, ind.col[ind],
                            center[ind], scale[ind])
-    bigstatsr:::incrSup2(K, tcrossprod(tmp))
+    big_increment(K, tcrossprod(tmp))
   }
 
-  # Complete the lower part of the symmetric matrix
-  bigstatsr:::complete2(K)
   structure(K, stats = stats)
 }
 

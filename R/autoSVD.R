@@ -188,7 +188,7 @@ bed_autoSVD2 <- function(obj.bed,
     printf2("\nSkipping clumping.\n")
     ind.keep <- ind.col
   } else {
-    printf2("\nPhase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
+    printf2("\nPhase of clumping (on MAC) at r^2 > %s.. ", thr.r2)
     ind.keep <- bed_clumping(obj.bed,
                              ind.row = ind.row,
                              exclude = setdiff(cols_along(obj.bed), ind.col),

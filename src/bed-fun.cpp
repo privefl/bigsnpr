@@ -142,3 +142,38 @@ NumericMatrix read_bed_scaled(Environment obj_bed,
 }
 
 /******************************************************************************/
+
+// [[Rcpp::export]]
+List prod_and_rowSumsSq(Environment obj_bed,
+                        const IntegerVector& ind_row,
+                        const IntegerVector& ind_col,
+                        const NumericVector& center,
+                        const NumericVector& scale,
+                        const NumericMatrix& V) {
+
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAccScaled macc_bed(xp_bed, ind_row, ind_col, center, scale);
+
+  size_t n = macc_bed.nrow();
+  size_t m = macc_bed.ncol();
+  myassert_size(m, V.rows());
+  size_t K = V.cols();
+  size_t i, j, k;
+
+  NumericMatrix XV(n, K);
+  NumericVector rowSumsSq(n);
+
+  for (j = 0; j < m; j++) {
+    for (i = 0; i < n; i++) {
+      double x = macc_bed(i, j);
+      rowSumsSq[i] += x*x;
+      for (k = 0; k < K; k++) {
+        XV(i, k) += x * V(j, k);
+      }
+    }
+  }
+
+  return List::create(XV, rowSumsSq);
+}
+
+/******************************************************************************/
