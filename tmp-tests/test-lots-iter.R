@@ -1,5 +1,6 @@
 library(bigsnpr)
 obj.bed <- bed("../POPRES_data/POPRES_allchr.bed"); nPC <- 10
+# obj.bed <- bed("../POPRES_data/POPRES_allchr_QC_norel.bed"); nPC <- 10
 obj.svd <- bed_autoSVD2(obj.bed, k = nPC, ncores = nb_cores())
 plot(obj.svd)
 attr(obj.svd, "lrldr")

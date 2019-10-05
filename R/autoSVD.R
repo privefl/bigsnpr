@@ -228,8 +228,10 @@ bed_autoSVD2 <- function(obj.bed,
 
     # check for outlier samples
     UD <- stats::predict(obj.svd)
-    S.row <- bigutilsr::LOF(UD, seq_k = seq_kNN)
-    S.row.thr <- bigutilsr::tukey_mc_up(S.row, alpha = alpha.tukey)
+    knn <- nabor::knn(UD, k = 6)
+    dists <- knn$nn.dists[, -1, drop = FALSE]
+    S.row <- log(rowMeans(dists^2))
+    S.row.thr <- bigutilsr::hist_out(S.row, nboot = 100)$lim[2]
     ind.row.excl <- which(S.row > S.row.thr)
     printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
             `if`(length(ind.row.excl) > 1, "s", ""))
