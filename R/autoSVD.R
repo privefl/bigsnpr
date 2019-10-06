@@ -156,8 +156,8 @@ snp_autoSVD <- function(G,
 #'   Default is `10`.
 #' @param seq_kNN Sequence of parameters for K-Nearest Neighbours used for
 #'   computing Local Outlier Factors (LOF) in sample outlier detection.
-#' @param max.iter Maximum number of iterations for outlier detection.
-#'   Default is `10`.
+#' @param max.iter Maximum number of iterations of outlier detection.
+#'   Default is `5`.
 #'
 #' @export
 bed_autoSVD2 <- function(obj.bed,
@@ -168,12 +168,12 @@ bed_autoSVD2 <- function(obj.bed,
                          k = 10,
                          roll.size = 50,
                          int.min.size = 20,
-                         seq_kNN = 4:8,
+                         seq_kNN = 3:5,
                          alpha.tukey = 0.05,
                          min.mac = 10,
                          ncores = 1,
                          verbose = TRUE,
-                         max.iter = 10) {
+                         max.iter = 5) {
 
   infos.chr <- obj.bed$map$chromosome
   infos.pos <- obj.bed$map$physical.pos
@@ -221,17 +221,14 @@ bed_autoSVD2 <- function(obj.bed,
                              k = k,
                              ncores = ncores)
 
-    if (iter >= max.iter) {
+    if (iter > max.iter) {
       printf2("Maximum number of iterations reached.\n")
       break
     }
 
     # check for outlier samples
-    UD <- stats::predict(obj.svd)
-    knn <- nabor::knn(UD, k = 6)
-    dists <- knn$nn.dists[, -1, drop = FALSE]
-    S.row <- log(rowMeans(dists^2))
-    S.row.thr <- bigutilsr::hist_out(S.row, nboot = 100)$lim[2]
+    S.row <- bigutilsr::LOF(obj.svd$u)
+    S.row.thr <- bigutilsr::tukey_mc_up(S.row)
     ind.row.excl <- which(S.row > S.row.thr)
     printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
             `if`(length(ind.row.excl) > 1, "s", ""))

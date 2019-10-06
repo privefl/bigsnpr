@@ -13,9 +13,9 @@ snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
 
 bed_autoSVD2(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), thr.r2 = 0.2, size = 100/thr.r2,
-  k = 10, roll.size = 50, int.min.size = 20, seq_kNN = 4:8,
+  k = 10, roll.size = 50, int.min.size = 20, seq_kNN = 3:5,
   alpha.tukey = 0.05, min.mac = 10, ncores = 1, verbose = TRUE,
-  max.iter = 10)
+  max.iter = 5)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
@@ -79,8 +79,8 @@ detection (that is further corrected for multiple testing).}
 \item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
 Default is \code{10}.}
 
-\item{max.iter}{Maximum number of iterations for outlier detection.
-Default is \code{10}.}
+\item{max.iter}{Maximum number of iterations of outlier detection.
+Default is \code{5}.}
 }
 \value{
 A named list (an S3 class "big_SVD") of
