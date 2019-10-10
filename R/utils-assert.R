@@ -1,5 +1,15 @@
 ################################################################################
 
+#' @importFrom bigassertr printf message2 warning2 stop2
+#' @importFrom bigassertr assert_int assert_pos assert_01 assert_nona
+#' @importFrom bigassertr assert_lengths assert_sorted assert_args
+#' @importFrom bigassertr assert_noexist assert_exist assert_dir assert_ext
+#' @importFrom bigassertr assert_type assert_class
+#' @importFrom bigparallelr assert_cores
+assert_noNA <- bigstatsr:::assert_noNA
+
+################################################################################
+
 check_args <- function(...) {
 
   if (getOption("bigstatsr.check.args")) {
@@ -29,51 +39,6 @@ check_args <- function(...) {
     for (i in match(names(args), names(check)))
       if (!is.na(i)) with(args, eval(parse(text = check[i])))
   }
-}
-
-################################################################################
-
-# MISSING VALUES
-assert_noNA        <- bigstatsr:::assert_noNA
-assert_nona        <- bigstatsr:::assert_nona
-# DIRECTORY
-assert_dir         <- bigstatsr:::assert_dir
-# ARGS
-assert_args        <- bigstatsr:::assert_args
-# NUMBER OF CORES
-assert_cores       <- bigstatsr:::assert_cores
-# INTEGERS
-assert_int         <- bigstatsr:::assert_int
-# POSITIVE INDICES
-assert_pos         <- bigstatsr:::assert_pos
-# 0s AND 1s
-assert_01          <- bigstatsr:::assert_01
-# CLASS
-assert_class       <- bigstatsr:::assert_class
-# FILE EXISTS
-assert_exist       <- bigstatsr:::assert_exist
-assert_noexist     <- bigstatsr:::assert_noexist
-# LENGTH
-assert_lengths     <- bigstatsr:::assert_lengths
-
-# EXTENSION
-assert_ext <- function(file, ext) {
-  if (!grepl(sprintf("\\.%s$", ext), file))
-    stop2("Extension of '%s' must be '.%s'.", file, ext)
-}
-
-# TYPEOF
-assert_type <- function(x, type)  {
-  if (typeof(x) != type)
-    stop2("'%s' is not of type '%s'.", deparse(substitute(x)), type)
-}
-
-################################################################################
-
-# SORT
-assert_sorted <- function(x)  {
-  if (is.unsorted(x))
-    stop2("'%s' is not sorted.", deparse(substitute(x)))
 }
 
 ################################################################################

@@ -1,17 +1,7 @@
 ################################################################################
 # Same as in bigstatsr
-
-printf           <- bigstatsr:::printf
-
-message2         <- bigstatsr:::message2
-
-warning2         <- bigstatsr:::warning2
-
-stop2            <- bigstatsr:::stop2
-
-CutBySize        <- bigstatsr:::CutBySize
-
-seq2             <- bigstatsr:::seq2
+CutBySize <- bigstatsr:::CutBySize
+seq2      <- bigstatsr:::seq2
 
 ################################################################################
 
