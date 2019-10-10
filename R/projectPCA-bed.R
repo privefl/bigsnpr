@@ -124,9 +124,9 @@ bed_projectPCA <- function(bed.new, bed.ref, k = 10,
   X_norm <- FBM(length(ind.row.new), 1, init = 0)
   XV     <- FBM(length(ind.row.new), k, init = 0)
 
-  big_apply(
+  big_parallelize(
     bed.new,
-    a.FUN = function(X, ind, ind.row, ind.col, center, scale, V, XV, X_norm) {
+    p.FUN = function(X, ind, ind.row, ind.col, center, scale, V, XV, X_norm) {
 
       res <- prod_and_rowSumsSq(
         obj_bed = X,
