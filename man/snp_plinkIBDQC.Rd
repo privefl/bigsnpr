@@ -73,5 +73,5 @@ datasets.} GigaScience 4 (1): 7.
 \url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
 }
 \seealso{
-\link{download_plink} \link{snp_plinkQC}
+\link{download_plink} \link{snp_plinkQC} \link{snp_plinkKINGQC}
 }

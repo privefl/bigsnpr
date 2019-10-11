@@ -38,7 +38,9 @@ exact test p-value below the provided threshold. Default is \code{1e-50}.}
 variants? Default is \code{FALSE}.}
 
 \item{extra.options}{Other options to be passed to PLINK as a string. More
-options can be found at \url{http://www.cog-genomics.org/plink2/filter}.}
+options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
+If using PLINK 2.0, you could e.g. use \code{"--king-cutoff 0.0884"} to remove
+some related samples at the same time of quality controls.}
 }
 \value{
 The path of the newly created bedfile.

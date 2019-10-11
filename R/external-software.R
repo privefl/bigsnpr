@@ -176,6 +176,8 @@ download_beagle <- function(dir = tempdir()) {
 #'   variants? Default is `FALSE`.
 #' @param extra.options Other options to be passed to PLINK as a string. More
 #'   options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
+#'   If using PLINK 2.0, you could e.g. use `"--king-cutoff 0.0884"` to remove
+#'   some related samples at the same time of quality controls.
 #'
 #' @return The path of the newly created bedfile.
 #'
@@ -325,7 +327,7 @@ snp_plinkRmSamples <- function(plink.path,
 #'
 #' @inherit snp_plinkQC references
 #'
-#' @seealso [download_plink] [snp_plinkQC]
+#' @seealso [download_plink] [snp_plinkQC] [snp_plinkKINGQC]
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
@@ -430,6 +432,8 @@ snp_plinkIBDQC <- function(plink.path,
 #'   duplicate samples, ~0.177 to remove first-degree relations as well, and
 #'   0.0884 (**default**) to remove second-degree relations as well, etc.
 #' @param extra.options Other options to be passed to PLINK2 as a string.
+#' @param make.bed Whether to create new bed/bim/fam files (default).
+#'   Otherwise, returns a logical vector whether individuals are kept or not.
 #'
 #' @return The path of the new bedfile.
 #' @export
@@ -453,6 +457,7 @@ snp_plinkKINGQC <- function(plink2.path,
                             bedfile.in,
                             bedfile.out = NULL,
                             thr.king = 0.0884,
+                            make.bed = TRUE,
                             ncores = 1,
                             extra.options = "") {
 
@@ -465,8 +470,13 @@ snp_plinkKINGQC <- function(plink2.path,
   prefix.in <- sub_bed(bedfile.in)
 
   # get possibly new file
-  if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
-  assert_noexist(bedfile.out)
+  if (make.bed) {
+    if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
+    assert_noexist(bedfile.out)
+    prefix.out <- sub_bed(bedfile.out)
+  } else {
+    prefix.out <- tempfile()
+  }
 
   # compute KING-robust kinship coefficients and filter
   system(
@@ -474,14 +484,21 @@ snp_plinkKINGQC <- function(plink2.path,
       plink2.path,
       "--bfile", prefix.in,
       "--king-cutoff", thr.king,
-      "--make-bed",
-      "--out", sub_bed(bedfile.out),
+      if (make.bed) "--make-bed",
+      "--out", prefix.out,
       "--threads", ncores,
       extra.options
     )
   )
 
-  bedfile.out
+  if (make.bed) {
+    bedfile.out
+  } else {
+    fam <- bigreadr::fread2(sub_bed(bedfile, ".fam"), header = FALSE)
+    full_id <- paste(fam$V1, fam$V2, sep = "\t")
+    keep_id <- readLines(paste0(prefix.out, ".king.cutoff.in.id"))[-1]
+    full_id %in% keep_id
+  }
 }
 
 ################################################################################

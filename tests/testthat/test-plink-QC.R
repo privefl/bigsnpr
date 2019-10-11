@@ -83,10 +83,15 @@ if (.Machine$sizeof.pointer == 8) {
   bedfile2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177)
   expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
                    c("#FID\tIID", "POP1\tIND2"))
+  keep <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177, make.bed = FALSE)
+  expect_false(keep[3])
+  expect_true(all(keep[-3]))
 
   bedfile3 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
                               bedfile.out = tempfile(fileext = ".bed"))
   expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
+  keep2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3, make.bed = FALSE)
+  expect_true(all(keep2))
 }
 
 
