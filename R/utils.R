@@ -3,6 +3,7 @@
 # Same as in bigstatsr
 CutBySize <- bigstatsr:::CutBySize
 seq2      <- bigstatsr:::seq2
+as_vec    <- bigstatsr:::as_vec
 
 ################################################################################
 

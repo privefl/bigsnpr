@@ -90,12 +90,12 @@ List bed_stats(Environment obj_bed,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-NumericVector pMatVec4(Environment obj_bed,
-                       const IntegerVector& ind_row,
-                       const IntegerVector& ind_col,
-                       const NumericVector& center,
-                       const NumericVector& scale,
-                       const NumericVector& x) {
+NumericVector bed_pMatVec4(Environment obj_bed,
+                           const IntegerVector& ind_row,
+                           const IntegerVector& ind_col,
+                           const NumericVector& center,
+                           const NumericVector& scale,
+                           const NumericVector& x) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
@@ -104,12 +104,12 @@ NumericVector pMatVec4(Environment obj_bed,
 }
 
 // [[Rcpp::export]]
-NumericVector cpMatVec4(Environment obj_bed,
-                        const IntegerVector& ind_row,
-                        const IntegerVector& ind_col,
-                        const NumericVector& center,
-                        const NumericVector& scale,
-                        const NumericVector& x) {
+NumericVector bed_cpMatVec4(Environment obj_bed,
+                            const IntegerVector& ind_row,
+                            const IntegerVector& ind_col,
+                            const NumericVector& center,
+                            const NumericVector& scale,
+                            const NumericVector& x) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);

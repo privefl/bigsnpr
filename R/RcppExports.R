@@ -13,12 +13,12 @@ bed_stats <- function(obj_bed, ind_row, ind_col) {
     .Call(`_bigsnpr_bed_stats`, obj_bed, ind_row, ind_col)
 }
 
-pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
-    .Call(`_bigsnpr_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
+bed_pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
+    .Call(`_bigsnpr_bed_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
 }
 
-cpMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
-    .Call(`_bigsnpr_cpMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
+bed_cpMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
+    .Call(`_bigsnpr_bed_cpMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
 }
 
 read_bed_scaled <- function(obj_bed, ind_row, ind_col, center, scale) {
