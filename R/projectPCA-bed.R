@@ -192,17 +192,16 @@ bed_projectSelfPCA <- function(obj.svd, obj.bed, ind.row,
 
   assert_lengths(rows_along(obj.svd$v), ind.col)
 
-  keep   <- attr(obj.svd, "subset")
   X_norm <- FBM(length(ind.row), 1,               init = 0)
   XV     <- FBM(length(ind.row), ncol(obj.svd$v), init = 0)
 
   big_parallelize(
     obj.bed,
     p.FUN = part_prod,
-    ind = seq_along(keep),
+    ind = seq_along(ind.col),
     ncores = ncores,
     ind.row = ind.row,
-    ind.col = keep,
+    ind.col = ind.col,
     center = obj.svd$center,
     scale = obj.svd$scale,
     V = obj.svd$v,
