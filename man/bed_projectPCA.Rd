@@ -4,19 +4,20 @@
 \alias{bed_projectPCA}
 \title{Projecting PCA}
 \usage{
-bed_projectPCA(bed.new, bed.ref, k = 10,
-  ind.row.new = rows_along(bed.new), ind.row.ref = rows_along(bed.ref),
-  ind.col.ref = cols_along(bed.ref), strand_flip = TRUE,
+bed_projectPCA(obj.bed.ref, obj.bed.new, k = 10,
+  ind.row.new = rows_along(obj.bed.new),
+  ind.row.ref = rows_along(obj.bed.ref),
+  ind.col.ref = cols_along(obj.bed.ref), strand_flip = TRUE,
   join_by_pos = TRUE, match.min.prop = 0.5, build.new = "hg19",
   build.ref = "hg19", liftOver = NULL, ..., verbose = TRUE,
   ncores = 1)
 }
 \arguments{
-\item{bed.new}{Object of type bed, which is the mapping of the bed file of
-the target data. Use \code{obj.bed <- bed(bedfile)} to get this object.}
-
-\item{bed.ref}{Object of type bed, which is the mapping of the bed file of
+\item{obj.bed.ref}{Object of type bed, which is the mapping of the bed file of
 the reference data. Use \code{obj.bed <- bed(bedfile)} to get this object.}
+
+\item{obj.bed.new}{Object of type bed, which is the mapping of the bed file of
+the target data. Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
 \item{k}{Number of principal components to compute and project.}
 

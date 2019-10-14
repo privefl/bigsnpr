@@ -13,18 +13,15 @@ getIntervals <- function(x, n = 2) {
 
 ################################################################################
 
-#' Truncated SVD with pruning
+#' Truncated SVD while limiting LD
 #'
-#' Fast truncated SVD which iteratively try to remove long-range LD regions
-#' which appear in loadings of SVD.
+#' Fast truncated SVD with initial pruning and that iteratively removes
+#' long-range LD regions.
 #'
 #' If you don't have any information about SNPs, you can try using
 #'   - `infos.chr = rep(1, ncol(G))`,
 #'   - `size = ncol(G)` (if SNPs are not sorted),
 #'   - `roll.size = 0` (if SNPs are not sorted).
-#'
-#' Improvements will come in the future, as for example, warm starts in order
-#' to make the SVD computations faster.
 #'
 #' @inheritParams bigsnpr-package
 #' @inheritParams snp_clumping
@@ -226,13 +223,6 @@ bed_autoSVD2 <- function(obj.bed,
       break
     }
 
-    # check for outlier samples
-    S.row <- bigutilsr::LOF(obj.svd$u, seq_k = seq_kNN)
-    S.row.thr <- bigutilsr::tukey_mc_up(S.row, alpha = alpha.tukey)
-    ind.row.excl <- which(S.row > S.row.thr)
-    printf2("%d outlier sample%s detected..\n", length(ind.row.excl),
-            `if`(length(ind.row.excl) > 1, "s", ""))
-
     # check for outlier variants
     S.col <- sqrt(bigutilsr::covRob(obj.svd$v, estim = "pairwiseGK")$dist)
     # roll mean to get only consecutive outliers (by chromosome)
@@ -246,14 +236,9 @@ bed_autoSVD2 <- function(obj.bed,
             `if`(length(ind.col.excl) > 1, "s", ""))
 
     # Stop or continue?
-    cont <- FALSE
-    if (length(ind.row.excl) > 0) {
-      ind.row <- ind.row[-ind.row.excl]
-      cont <- TRUE
-    }
     if (length(ind.col.excl) > 0) {
+
       ind.keep <- ind.keep[-ind.col.excl]
-      cont <- TRUE
 
       # Detection of long-range LD regions
       if (!is.null(infos.pos)) {
@@ -270,9 +255,7 @@ bed_autoSVD2 <- function(obj.bed,
           LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)
         }
       }
-    }
-
-    if (!cont) {
+    } else {
       printf2("\nConverged!\n")
       break
     }
@@ -280,8 +263,7 @@ bed_autoSVD2 <- function(obj.bed,
 
   structure(
     obj.svd,
-    subset.row = ind.row,
-    subset.col = ind.keep,
+    subset = ind.keep,
     lrldr = LRLDR[with(LRLDR, order(Chr, Start, Stop)), ]
   )
 }

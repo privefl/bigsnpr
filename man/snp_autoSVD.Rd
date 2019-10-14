@@ -3,7 +3,7 @@
 \name{snp_autoSVD}
 \alias{snp_autoSVD}
 \alias{bed_autoSVD2}
-\title{Truncated SVD with pruning}
+\title{Truncated SVD while limiting LD}
 \usage{
 snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
   ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
@@ -98,8 +98,8 @@ Note that to obtain the Principal Components, you must use
 \link[=predict.big_SVD]{predict} on the result. See examples.
 }
 \description{
-Fast truncated SVD which iteratively try to remove long-range LD regions
-which appear in loadings of SVD.
+Fast truncated SVD with initial pruning and that iteratively removes
+long-range LD regions.
 }
 \details{
 If you don't have any information about SNPs, you can try using
@@ -108,9 +108,6 @@ If you don't have any information about SNPs, you can try using
 \item \code{size = ncol(G)} (if SNPs are not sorted),
 \item \code{roll.size = 0} (if SNPs are not sorted).
 }
-
-Improvements will come in the future, as for example, warm starts in order
-to make the SVD computations faster.
 }
 \examples{
 ex <- snp_attachExtdata()
