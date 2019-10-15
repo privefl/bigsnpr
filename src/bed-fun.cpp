@@ -51,6 +51,27 @@ List bed_stats(Environment obj_bed,
 
 /******************************************************************************/
 
+// [[Rcpp::export]]
+IntegerMatrix bed_counts_cpp(Environment obj_bed,
+                             const IntegerVector& ind_row,
+                             const IntegerVector& ind_col) {
+
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAcc macc(xp_bed, ind_row, ind_col);
+  size_t n = macc.nrow();
+  size_t m = macc.ncol();
+
+  IntegerMatrix res(4, m);
+
+  for (size_t j = 0; j < m; j++)
+    for (size_t i = 0; i < n; i++)
+      (res(macc(i, j), j))++;
+
+  return res;
+}
+
+/******************************************************************************/
+
 // // [[Rcpp::export]]
 // NumericVector bed_wmean(Environment obj_bed,
 //                         const IntegerVector& ind_row,

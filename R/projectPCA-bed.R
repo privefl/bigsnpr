@@ -179,7 +179,7 @@ bed_projectPCA <- function(obj.bed.ref, obj.bed.new, k = 10,
 #' @param ind.row Rows (individuals) to be projected.
 #' @param ind.col Columns that were used for computing PCA. If [bed_autoSVD2] was
 #'   used, then `attr(obj.svd, "subset")` is automatically used by default.
-#'   Otherwise (e.g. if [big_randomSVD] was used), you have to pass `ind.col`.
+#'   Otherwise (e.g. if [bed_randomSVD] was used), you have to pass `ind.col`.
 #' @inheritParams bigstatsr::big_parallelize
 #'
 #' @inherit bed_projectPCA return

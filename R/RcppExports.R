@@ -13,6 +13,10 @@ bed_stats <- function(obj_bed, ind_row, ind_col) {
     .Call(`_bigsnpr_bed_stats`, obj_bed, ind_row, ind_col)
 }
 
+bed_counts_cpp <- function(obj_bed, ind_row, ind_col) {
+    .Call(`_bigsnpr_bed_counts_cpp`, obj_bed, ind_row, ind_col)
+}
+
 bed_pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
     .Call(`_bigsnpr_bed_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
 }

@@ -73,6 +73,8 @@ snp_readBed2 <- function(bedfile, backingfile = sub_bed(bedfile),
                          ind.row = rows_along(obj.bed),
                          ind.col = cols_along(obj.bed)) {
 
+  check_args()
+
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)
   assert_noexist(paste0(backingfile, ".bk"))

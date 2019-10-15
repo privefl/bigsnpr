@@ -19,7 +19,7 @@ and the other individuals to be projected.}
 
 \item{ind.col}{Columns that were used for computing PCA. If \link{bed_autoSVD2} was
 used, then \code{attr(obj.svd, "subset")} is automatically used by default.
-Otherwise (e.g. if \link{big_randomSVD} was used), you have to pass \code{ind.col}.}
+Otherwise (e.g. if \link{bed_randomSVD} was used), you have to pass \code{ind.col}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

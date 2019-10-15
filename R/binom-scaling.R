@@ -98,16 +98,21 @@ snp_MAF <- function(G,
 #'
 #' str(bed_scaleBinom(obj.bed))
 #'
-#' str(big_randomSVD(obj.bed, bed_scaleBinom))
+#' str(bed_randomSVD(obj.bed, bed_scaleBinom))
 #'
 bed_scaleBinom <- function(obj.bed,
                            ind.row = rows_along(obj.bed),
-                           ind.col = cols_along(obj.bed)) {
+                           ind.col = cols_along(obj.bed),
+                           ncores = 1) {
 
-  stats <- bed_stats(obj.bed, ind.row, ind.col)
-  af <- stats$sum / (2 * stats$nb_nona_col)
+  af <- big_parallelize(obj.bed, function(X, ind, ind.row) {
+    stats <- bed_stats(obj.bed, ind.row, ind)
+    stats$sum / (2 * stats$nb_nona_col)
+  }, p.combine = 'c', ind = ind.col, ind.row = ind.row, ncores = ncores)
 
   data.frame(center = 2 * af, scale = sqrt(2 * af * (1 - af)))
 }
 
 ################################################################################
+
+

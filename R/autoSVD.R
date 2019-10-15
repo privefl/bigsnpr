@@ -145,6 +145,37 @@ snp_autoSVD <- function(G,
 
 ################################################################################
 
+#' Randomized partial SVD
+#'
+#' Partial SVD (or PCA) of a genotype matrix stored as a PLINK (.bed) file.#'
+#'
+#' @inheritParams bigsnpr-package
+#' @inherit bigstatsr::big_randomSVD params return
+#'
+#' @export
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+#' obj.bed <- bed(bedfile)
+#'
+#' str(bed_randomSVD(obj.bed))
+#'
+bed_randomSVD <- function(
+  obj.bed, fun.scaling = bed_scaleBinom,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  k = 10,
+  tol = 1e-4,
+  verbose = FALSE,
+  ncores = 1
+) {
+
+  big_randomSVD(obj.bed, fun.scaling, ind.row, ind.col, k, tol, verbose, ncores,
+                bed_prodVec, bed_cprodVec)
+}
+
+################################################################################
+
 #' @rdname snp_autoSVD
 #'
 #' @param alpha.tukey Default is `0.1`. The type-I error rate in outlier
@@ -160,6 +191,7 @@ snp_autoSVD <- function(G,
 bed_autoSVD2 <- function(obj.bed,
                          ind.row = rows_along(obj.bed),
                          ind.col = cols_along(obj.bed),
+                         fun.scaling = bed_scaleBinom,
                          thr.r2 = 0.2,
                          size = 100 / thr.r2,
                          k = 10,
@@ -212,7 +244,8 @@ bed_autoSVD2 <- function(obj.bed,
     printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
     # SVD
-    obj.svd <- big_randomSVD(obj.bed,
+    obj.svd <- bed_randomSVD(obj.bed,
+                             fun.scaling = fun.scaling,
                              ind.row = ind.row,
                              ind.col = ind.keep,
                              k = k,
