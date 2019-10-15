@@ -4,13 +4,18 @@
 \alias{bed_tcrossprodSelf}
 \title{Tcrossprod}
 \usage{
-bed_tcrossprodSelf(obj.bed, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed),
+bed_tcrossprodSelf(obj.bed, fun.scaling = bed_scaleBinom,
+  ind.row = rows_along(obj.bed), ind.col = cols_along(obj.bed),
   block.size = block_size(length(ind.row)))
 }
 \arguments{
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
+
+\item{fun.scaling}{A function that returns a named list of
+\code{mean} and \code{sd} for every column, to scale each of their elements
+such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
+Default doesn't use any scaling.}
 
 \item{ind.row}{An optional vector of the row indices that are used.
 If not specified, all rows are used. \strong{Don't use negative indices.}}

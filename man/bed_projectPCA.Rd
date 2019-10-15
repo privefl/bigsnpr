@@ -48,6 +48,9 @@ and at \url{https://bit.ly/2TbSaEI} for Linux.}
 
 \item{...}{Arguments passed on to \code{bed_autoSVD2}
 \describe{
+  \item{fun.scaling}{A function that returns a named list of \code{mean} and \code{sd}
+for every column, to scale each of their elements such as followed:
+\deqn{\frac{X_{i,j} - mean_j}{sd_j}.} Default is \code{snp_scaleBinom()}.}
   \item{roll.size}{Radius of rolling windows to smooth log-p-values.
 Default is \code{50}.}
   \item{int.min.size}{Minimum number of consecutive outlier SNPs

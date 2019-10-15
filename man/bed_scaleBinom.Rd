@@ -5,7 +5,7 @@
 \title{Binomial(2, p) scaling}
 \usage{
 bed_scaleBinom(obj.bed, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed), ncores = 1)
+  ind.col = cols_along(obj.bed))
 }
 \arguments{
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
@@ -18,9 +18,6 @@ are used. If not specified, all rows are used.\cr
 \item{ind.col}{An optional vector of the column indices (SNPs) that are used.
 If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
-
-\item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
 }
 \value{
 A data frame with \code{$center} and \code{$scale}.
