@@ -33,10 +33,15 @@ inline std::string read_string(std::ifstream * ptr_stream,
                                std::streamsize n_byte = 2) {
   int len = read_int(ptr_stream, n_byte);
   // https://stackoverflow.com/a/38623543/6103040
-  char buffer[len + 1];
+  char *buffer = new char[len + 1];
   ptr_stream->read(buffer, len);
   buffer[len] = '\0';
-  return std::string(buffer, len);
+
+  std::string str(buffer, len);
+
+  delete[] buffer;
+
+  return str;
 }
 
 /******************************************************************************/
