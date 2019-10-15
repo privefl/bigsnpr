@@ -1,5 +1,10 @@
 ## bigsnpr 0.12.0
 
+- Some functions from {bigstatsr} can now be used on PLINK (.bed) files:
+    - `big_prodVec()`
+    - `big_cprodVec()`
+    - `big_randomSVD()`
+
 - Add memory-mapping on PLINK (.bed) files with missing values + functions:
     - `bed_autoSVD2()`
     - `bed_clumping()`

@@ -76,3 +76,38 @@ snp_MAF <- function(G,
 }
 
 ################################################################################
+
+#' Binomial(2, p) scaling
+#'
+#' Binomial(2, p) scaling where `p` is estimated.
+#'
+#' @inheritParams bed_autoSVD2
+#'
+#' @return A data frame with `$center` and `$scale`.
+#'
+#' @details You will probably not use this function as is but as the
+#' `fun.scaling` parameter of other functions of package `bigstatsr`.
+#'
+#' @export
+#'
+#' @inherit snp_scaleBinom references
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+#' obj.bed <- bed(bedfile)
+#'
+#' str(bed_scaleBinom(obj.bed))
+#'
+#' str(big_randomSVD(obj.bed, bed_scaleBinom))
+#'
+bed_scaleBinom <- function(obj.bed,
+                           ind.row = rows_along(obj.bed),
+                           ind.col = cols_along(obj.bed)) {
+
+  stats <- bed_stats(obj.bed, ind.row, ind.col)
+  af <- stats$sum / (2 * stats$nb_nona_col)
+
+  data.frame(center = 2 * af, scale = sqrt(2 * af * (1 - af)))
+}
+
+################################################################################

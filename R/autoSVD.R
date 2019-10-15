@@ -212,7 +212,7 @@ bed_autoSVD2 <- function(obj.bed,
     printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
     # SVD
-    obj.svd <- bed_randomSVD(obj.bed,
+    obj.svd <- big_randomSVD(obj.bed,
                              ind.row = ind.row,
                              ind.col = ind.keep,
                              k = k,
