@@ -15,7 +15,7 @@
 #' obj.bed <- bed(bedfile)
 #'
 #' y.row <- rep(1, nrow(obj.bed))
-#' bed_cprodVec(obj.bed, y.row)
+#' str(bed_cprodVec(obj.bed, y.row))
 #'
 bed_cprodVec <- function(obj.bed, y.row,
                          ind.row = rows_along(obj.bed),
@@ -51,7 +51,7 @@ bed_cprodVec <- function(obj.bed, y.row,
 #' obj.bed <- bed(bedfile)
 #'
 #' y.col <- rep(1, ncol(obj.bed))
-#' bed_prodVec(obj.bed, y.col)
+#' str(bed_prodVec(obj.bed, y.col))
 #'
 bed_prodVec <- function(obj.bed, y.col,
                         ind.row = rows_along(obj.bed),

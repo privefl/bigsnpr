@@ -228,11 +228,8 @@ bed_autoSVD2 <- function(obj.bed,
   }
 
   if (min.mac > 0) {
-    ac <- big_parallelize(obj.bed, function(X, ind, ind.row) {
-      bed_stats(X, ind.row, ind)$sum
-    }, p.combine = 'c', ind = ind.keep, ind.row = ind.row, ncores = ncores)
-
-    mac.nok <- (pmin(ac, 2 * length(ind.row) - ac) < min.mac)
+    mac <- bed_MAF(obj.bed, ind.row, ind.keep, ncores = ncores)$mac
+    mac.nok <- (mac < min.mac)
     printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
             `if`(sum(mac.nok) > 1, "s", ""), min.mac)
     ind.keep <- ind.keep[!mac.nok]

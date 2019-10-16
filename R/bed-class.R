@@ -153,31 +153,3 @@ setMethod("dim",    signature(x = "bed"), function(x) c(x$nrow, x$ncol))
 setMethod("length", signature(x = "bed"), function(x) prod(dim(x) + 0))
 
 ################################################################################
-
-#' Counts
-#'
-#' Counts the number of 0s, 1s, 2s and NAs by variants in the bed file.
-#'
-#' @inheritParams bigsnpr-package
-#'
-#' @return A matrix of with 4 rows and `length(ind.col)` columns.
-#'
-#' @export
-#'
-#' @examples
-#' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
-#' obj.bed <- bed(bedfile)
-#'
-#' bed_counts(obj.bed, ind.col = 1:5)
-#'
-bed_counts <- function(obj.bed,
-                       ind.row = rows_along(obj.bed),
-                       ind.col = cols_along(obj.bed),
-                       ncores = 1) {
-
-  big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
-    bed_counts_cpp(obj.bed, ind.row, ind)
-  }, p.combine = "cbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
-}
-
-################################################################################

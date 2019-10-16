@@ -40,6 +40,8 @@ after applying a particular scaling to it.
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 obj.bed <- bed(bedfile)
+
 K <- bed_tcrossprodSelf(obj.bed)
 K[1:4, 1:6] / ncol(obj.bed)
+
 }

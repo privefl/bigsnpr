@@ -112,4 +112,77 @@ bed_scaleBinom <- function(obj.bed,
 
 ################################################################################
 
+#' Counts
+#'
+#' Counts the number of 0s, 1s, 2s and NAs by variants in the bed file.
+#'
+#' @inheritParams bigsnpr-package
+#'
+#' @return A matrix of with 4 rows and `length(ind.col)` columns.
+#'
+#' @export
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+#' obj.bed <- bed(bedfile)
+#'
+#' bed_counts(obj.bed, ind.col = 1:5)
+#'
+bed_counts <- function(obj.bed,
+                       ind.row = rows_along(obj.bed),
+                       ind.col = cols_along(obj.bed),
+                       ncores = 1) {
+
+  res <- big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
+    bed_counts_cpp(obj.bed, ind.row, ind)
+  }, p.combine = "cbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
+
+  rownames(res) <- c(0:2, NA)
+  res
+}
+
+################################################################################
+
+#' Allele frequencies
+#'
+#' Allele frequencies of a [bed] object.
+#'
+#' @inheritParams bigsnpr-package
+#'
+#' @return A data.frame with
+#'  - `$ac`: allele counts,
+#'  - `$mac`: minor allele counts,
+#'  - `$af`: allele frequencies,
+#'  - `$maf`: minor allele frequencies,
+#'  - `$N`: numbers of non-missing values.
+#'
+#' @export
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+#' obj.bed <- bed(bedfile)
+#'
+#' bed_MAF(obj.bed, ind.col = 1:5)
+#'
+bed_MAF <- function(obj.bed,
+                    ind.row = rows_along(obj.bed),
+                    ind.col = cols_along(obj.bed),
+                    ncores = 1) {
+
+  counts <- bed_counts(obj.bed, ind.row, ind.col, ncores)
+  ac <- counts[2, ] + 2 * counts[3, ]
+  nb_nona <- length(ind.row) - counts[4, ]
+  af <- ac / nb_nona
+
+  data.frame(
+    ac  = ac,
+    mac = pmin(ac, 2 * length(ind.row) - ac),
+    af  = af,
+    maf = pmin(af, 1 - af),
+    N   = nb_nona
+  )
+}
+
+################################################################################
+
 

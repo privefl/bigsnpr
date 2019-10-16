@@ -39,6 +39,6 @@ bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 obj.bed <- bed(bedfile)
 
 y.col <- rep(1, ncol(obj.bed))
-bed_prodVec(obj.bed, y.col)
+str(bed_prodVec(obj.bed, y.col))
 
 }
