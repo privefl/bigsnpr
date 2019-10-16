@@ -155,12 +155,10 @@ bed_projectPCA <- function(obj.bed.ref, obj.bed.new, k = 10,
     X_norm = X_norm
   )
 
-  XV <- XV[]
-
   list(
     obj.svd.ref = obj.svd,
-    simple_proj = XV,
-    OADP_proj   = bigutilsr::pca_OADP_proj2(XV, X_norm[], obj.svd$d)
+    simple_proj = XV[],
+    OADP_proj   = OADP_proj(XV, X_norm, obj.svd$d, ncores = ncores)
   )
 }
 
@@ -209,13 +207,20 @@ bed_projectSelfPCA <- function(obj.svd, obj.bed, ind.row,
     X_norm = X_norm
   )
 
-  XV <- XV[]
-
   list(
     obj.svd.ref = obj.svd,
-    simple_proj = XV,
-    OADP_proj   = bigutilsr::pca_OADP_proj2(XV, X_norm[], obj.svd$d)
+    simple_proj = XV[],
+    OADP_proj   = OADP_proj(XV, X_norm, obj.svd$d, ncores = ncores)
   )
+}
+
+################################################################################
+
+OADP_proj <- function(XV, X_norm, sval, ncores) {
+  bigparallelr::split_parapply(function(XV, X_norm, sval, ind) {
+    bigutilsr::pca_OADP_proj2(XV[ind, , drop = FALSE], X_norm[ind], sval)
+  }, ind = rows_along(XV), XV = XV, X_norm = X_norm, sval = sval,
+  .combine = "rbind", ncores = ncores)
 }
 
 ################################################################################
