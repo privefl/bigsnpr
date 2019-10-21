@@ -182,27 +182,27 @@ bed_randomSVD <- function(
 #'   detection (that is further corrected for multiple testing).
 #' @param min.mac Minimum minor allele count (MAC) for variants to be included.
 #'   Default is `10`.
-#' @param seq_kNN Sequence of parameters for K-Nearest Neighbours used for
+#' @param seq_kNN Sequence of parameters for K-Nearest Neighbors used for
 #'   computing Local Outlier Factors (LOF) in sample outlier detection.
 #' @param max.iter Maximum number of iterations of outlier detection.
 #'   Default is `5`.
 #'
 #' @export
-bed_autoSVD2 <- function(obj.bed,
-                         ind.row = rows_along(obj.bed),
-                         ind.col = cols_along(obj.bed),
-                         fun.scaling = bed_scaleBinom,
-                         thr.r2 = 0.2,
-                         size = 100 / thr.r2,
-                         k = 10,
-                         roll.size = 50,
-                         int.min.size = 20,
-                         seq_kNN = 3:5,
-                         alpha.tukey = 0.05,
-                         min.mac = 10,
-                         ncores = 1,
-                         verbose = TRUE,
-                         max.iter = 5) {
+bed_autoSVD <- function(obj.bed,
+                        ind.row = rows_along(obj.bed),
+                        ind.col = cols_along(obj.bed),
+                        fun.scaling = bed_scaleBinom,
+                        thr.r2 = 0.2,
+                        size = 100 / thr.r2,
+                        k = 10,
+                        roll.size = 50,
+                        int.min.size = 20,
+                        seq_kNN = 3:5,
+                        alpha.tukey = 0.05,
+                        min.mac = 10,
+                        ncores = 1,
+                        verbose = TRUE,
+                        max.iter = 5) {
 
   infos.chr <- obj.bed$map$chromosome
   infos.pos <- obj.bed$map$physical.pos

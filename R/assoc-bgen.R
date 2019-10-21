@@ -46,13 +46,8 @@ snp_assocBGEN <- function(bgenfiles, list_snp_id, y_row, ind_row,
   y_row <- y_row[order(ind_row)]
   N <- readBin(bgenfiles[1], what = 1L, size = 4, n = 4)[4]
 
-  if (ncores == 1) {
-    registerDoSEQ()
-  } else {
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-  }
+  bigparallelr::register_parallel(ncores)
+
   r2 <- foreach(ic = seq_along(bgenfiles)) %dopar% {
 
     snp_id <- format_snp_id(list_snp_id[[ic]])

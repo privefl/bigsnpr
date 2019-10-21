@@ -65,8 +65,6 @@ snp_getSampleInfos <- function(x, df.or.files,
                                pair.sep = "-_-",
                                ...) {
 
-  check_args()
-
   if (is.data.frame(df.or.files)) {
     data.infos <- df.or.files
   } else if (is.character(df.or.files)) {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/autoSVD.R
 \name{snp_autoSVD}
 \alias{snp_autoSVD}
-\alias{bed_autoSVD2}
+\alias{bed_autoSVD}
 \title{Truncated SVD while limiting LD}
 \usage{
 snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
@@ -11,7 +11,7 @@ snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
   int.min.size = 20, is.size.in.bp = NULL, ncores = 1,
   verbose = TRUE)
 
-bed_autoSVD2(obj.bed, ind.row = rows_along(obj.bed),
+bed_autoSVD(obj.bed, ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed), fun.scaling = bed_scaleBinom,
   thr.r2 = 0.2, size = 100/thr.r2, k = 10, roll.size = 50,
   int.min.size = 20, seq_kNN = 3:5, alpha.tukey = 0.05,
@@ -70,7 +70,7 @@ You may use \link{nb_cores}.}
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
-\item{seq_kNN}{Sequence of parameters for K-Nearest Neighbours used for
+\item{seq_kNN}{Sequence of parameters for K-Nearest Neighbors used for
 computing Local Outlier Factors (LOF) in sample outlier detection.}
 
 \item{alpha.tukey}{Default is \code{0.1}. The type-I error rate in outlier

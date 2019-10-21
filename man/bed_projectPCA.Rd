@@ -46,7 +46,7 @@ matched, otherwise stops with an error. Default is \code{50\%}.}
 Binaries can be downloaded at \url{https://bit.ly/2KvHugi} for Mac
 and at \url{https://bit.ly/2TbSaEI} for Linux.}
 
-\item{...}{Arguments passed on to \code{bed_autoSVD2}
+\item{...}{Arguments passed on to \code{bed_autoSVD}
 \describe{
   \item{fun.scaling}{A function that returns a named list of \code{mean} and \code{sd}
 for every column, to scale each of their elements such as followed:
@@ -61,7 +61,7 @@ Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
 detection (that is further corrected for multiple testing).}
   \item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
 Default is \code{10}.}
-  \item{seq_kNN}{Sequence of parameters for K-Nearest Neighbours used for
+  \item{seq_kNN}{Sequence of parameters for K-Nearest Neighbors used for
 computing Local Outlier Factors (LOF) in sample outlier detection.}
   \item{max.iter}{Maximum number of iterations of outlier detection.
 Default is \code{5}.}

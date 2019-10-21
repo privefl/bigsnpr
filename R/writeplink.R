@@ -30,8 +30,8 @@ snp_writeBed <- function(x, bedfile,
   assert_dir(dirname(bedfile))
 
   # write map and family files
-  write.table2(x$fam[ind.row, NAMES.FAM], file = famfile)
-  write.table2(x$map[ind.col, NAMES.MAP], file = bimfile)
+  write.table2(x$fam[ind.row, NAMES.FAM], file = famfile, na = 0)
+  write.table2(x$map[ind.col, NAMES.MAP], file = bimfile, na = 0)
 
   ## write bed file
   G.round <- G$copy(code = replace(round(G$code256), is.na(G$code256), 3))

@@ -46,3 +46,6 @@ info_snp <- data.frame(
 snp_match(sumstats, info_snp)
 snp_match(sumstats, info_snp, strand_flip = FALSE)
 }
+\seealso{
+\link{snp_modifyBuild}
+}

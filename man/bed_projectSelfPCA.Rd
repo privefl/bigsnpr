@@ -17,7 +17,7 @@ and the other individuals to be projected.}
 
 \item{ind.row}{Rows (individuals) to be projected.}
 
-\item{ind.col}{Columns that were used for computing PCA. If \link{bed_autoSVD2} was
+\item{ind.col}{Columns that were used for computing PCA. If \link{bed_autoSVD} was
 used, then \code{attr(obj.svd, "subset")} is automatically used by default.
 Otherwise (e.g. if \link{bed_randomSVD} was used), you have to pass \code{ind.col}.}
 

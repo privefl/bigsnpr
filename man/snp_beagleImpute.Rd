@@ -21,8 +21,8 @@ appending \code{"_impute"} to \code{prefix.in} (\code{bedfile.in} without extens
 \item{memory.max}{Max memory (in GB) to be used. It is internally rounded
 to be an integer. Default is \code{3}.}
 
-\item{ncores}{Number of cores to be used. Default is \code{1}. An usually good
-value for this parameter is \code{ncores = parallel::detectCores() - 1}.}
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 
 \item{extra.options}{Other options to be passed to Beagle as a string. More
 options can be found at Beagle's website.}

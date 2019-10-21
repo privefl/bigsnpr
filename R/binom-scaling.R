@@ -81,7 +81,7 @@ snp_MAF <- function(G,
 #'
 #' Binomial(2, p) scaling where `p` is estimated.
 #'
-#' @inheritParams bed_autoSVD2
+#' @inheritParams bed_autoSVD
 #'
 #' @return A data frame with `$center` and `$scale`.
 #'

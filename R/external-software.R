@@ -517,12 +517,12 @@ snp_plinkKINGQC <- function(plink2.path,
 #'   appending `"_impute"` to `prefix.in` (`bedfile.in` without extension).
 #' @param memory.max Max memory (in GB) to be used. It is internally rounded
 #'   to be an integer. Default is `3`.
-#' @param ncores Number of cores to be used. Default is `1`. An usually good
-#'   value for this parameter is `ncores = parallel::detectCores() - 1`.
 #' @param extra.options Other options to be passed to Beagle as a string. More
 #'   options can be found at Beagle's website.
 #' @param plink.options Other options to be passed to PLINK as a string. More
 #'   options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
+#' @param ncores Number of cores used. Default doesn't use parallelism.
+#'   You may use [nb_cores].
 #'
 #' @references B L Browning and S R Browning (2016).
 #' Genotype imputation with millions of reference samples.

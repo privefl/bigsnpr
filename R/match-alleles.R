@@ -99,6 +99,8 @@ flip_strand <- function(allele) {
 #' @return A single data frame with matched variants.
 #' @export
 #'
+#' @seealso [snp_modifyBuild]
+#'
 #' @import data.table
 #'
 #' @example examples/example-match.R

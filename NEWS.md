@@ -6,7 +6,7 @@
     - `big_randomSVD()`
 
 - Add memory-mapping on PLINK (.bed) files with missing values + functions:
-    - `bed_autoSVD2()`
+    - `bed_autoSVD()`
     - `bed_clumping()`
     - `bed_pcadapt()`
     - `bed_projectPCA()`

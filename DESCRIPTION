@@ -24,21 +24,18 @@ Depends:
     R (>= 3.3), 
     bigstatsr (>= 0.9.10)
 Imports:
-    bigassertr (>= 0.1),
-    bigparallelr (>= 0.1),
-    bigreadr (>= 0.1.10),
+    bigassertr (>= 0.1.1),
+    bigparallelr (>= 0.1.2),
+    bigreadr (>= 0.2),
     bigutilsr (>= 0.1.4),
     data.table,
-    doParallel,
     foreach, 
     ggplot2,
     gsubfn,
     magrittr,
     Matrix,
     methods,
-    parallel,
     Rcpp,
-    RSpectra,
     stats
 LinkingTo:
     bigstatsr,
@@ -52,13 +49,13 @@ Suggests:
     dplyr,
     gaston,
     Hmisc,
-    pcadapt (>= 4.0.3),
+    pcadapt (>= 4.1),
     RSQLite,
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr@splitpkg, privefl/bigutilsr, privefl/bigassertr, privefl/bigparallelr
-RoxygenNote: 6.1.0
+Remotes: privefl/bigstatsr@splitpkg, privefl/bigutilsr, privefl/bigparallelr
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues

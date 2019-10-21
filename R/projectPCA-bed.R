@@ -77,8 +77,8 @@ part_prod <- function(X, ind, ind.row, ind.col, center, scale, V, XV, X_norm) {
 #' @param build.new Genome build of the target data. Default is `hg19`.
 #' @param build.ref Genome build of the reference data. Default is `hg19`.
 #' @inheritParams snp_modifyBuild
-#' @inheritParams bed_autoSVD2
-#' @inheritDotParams bed_autoSVD2 -obj.bed -ind.row -ind.col -k -verbose -ncores
+#' @inheritParams bed_autoSVD
+#' @inheritDotParams bed_autoSVD -obj.bed -ind.row -ind.col -k -verbose -ncores
 #'
 #' @return A list of 3 elements:
 #'   - `$obj.svd.ref`: big_SVD object computed from reference data.
@@ -125,7 +125,7 @@ bed_projectPCA <- function(obj.bed.ref, obj.bed.new, k = 10,
 
   printf2("\n[Step 2/3] Computing (auto) SVD of reference..\n")
 
-  obj.svd <- bed_autoSVD2(
+  obj.svd <- bed_autoSVD(
     obj.bed.ref,
     ind.row = ind.row.ref,
     ind.col = intersect(ind.col.ref, info_snp$`_NUM_ID_.ss`),
@@ -157,7 +157,7 @@ bed_projectPCA <- function(obj.bed.ref, obj.bed.new, k = 10,
 
   list(
     obj.svd.ref = obj.svd,
-    simple_proj = XV[],
+    simple_proj = XV[, , drop = FALSE],
     OADP_proj   = OADP_proj(XV, X_norm, obj.svd$d, ncores = ncores)
   )
 }
@@ -175,7 +175,7 @@ bed_projectPCA <- function(obj.bed.ref, obj.bed.new, k = 10,
 #'   the data containing both the individuals that were used to compute the PCA
 #'   and the other individuals to be projected.
 #' @param ind.row Rows (individuals) to be projected.
-#' @param ind.col Columns that were used for computing PCA. If [bed_autoSVD2] was
+#' @param ind.col Columns that were used for computing PCA. If [bed_autoSVD] was
 #'   used, then `attr(obj.svd, "subset")` is automatically used by default.
 #'   Otherwise (e.g. if [bed_randomSVD] was used), you have to pass `ind.col`.
 #' @inheritParams bigstatsr::big_parallelize
@@ -209,7 +209,7 @@ bed_projectSelfPCA <- function(obj.svd, obj.bed, ind.row,
 
   list(
     obj.svd.ref = obj.svd,
-    simple_proj = XV[],
+    simple_proj = XV[, , drop = FALSE],
     OADP_proj   = OADP_proj(XV, X_norm, obj.svd$d, ncores = ncores)
   )
 }

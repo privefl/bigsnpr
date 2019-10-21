@@ -136,13 +136,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     create_bk = TRUE
   )
 
-  if (ncores == 1) {
-    registerDoSEQ()
-  } else {
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-  }
+  bigparallelr::register_parallel(ncores)
+
   # cleanup if error
   snp.info <- tryCatch(error = function(e) { unlink(G$backingfile); stop(e) }, {
 
