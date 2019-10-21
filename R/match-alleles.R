@@ -95,6 +95,8 @@ flip_strand <- function(allele) {
 #'   If so, ambiguous alleles A/T and C/G are removed.
 #' @param join_by_pos Whether to join by chromosome and position (default),
 #'   or instead by rsid.
+#' @param match.min.prop Minimum proportion of variants in the smallest data
+#'   to be matched, otherwise stops with an error. Default is `50%`.
 #'
 #' @return A single data frame with matched variants.
 #' @export
@@ -106,7 +108,8 @@ flip_strand <- function(allele) {
 #' @example examples/example-match.R
 snp_match <- function(sumstats, info_snp,
                       strand_flip = TRUE,
-                      join_by_pos = TRUE) {
+                      join_by_pos = TRUE,
+                      match.min.prop = 0.5) {
 
   sumstats$`_NUM_ID_` <- rows_along(sumstats)
   info_snp$`_NUM_ID_` <- rows_along(info_snp)
@@ -154,6 +157,9 @@ snp_match <- function(sumstats, info_snp,
            format(nrow(matched),         big.mark = ","),
            format(sum(matched$`_FLIP_`), big.mark = ","),
            format(sum(matched$`_REV_`),  big.mark = ","))
+
+  if (nrow(matched) < (match.min.prop * min(ncol(sumstats), ncol(info_snp))))
+    stop2("Not enough variants have been matched.")
 
   as.data.frame(matched[, c("_FLIP_", "_REV_") := NULL][order(chr, pos)])
 }

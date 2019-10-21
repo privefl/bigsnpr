@@ -35,8 +35,8 @@ If so, ambiguous alleles A/T and C/G are removed.}
 \item{join_by_pos}{Whether to join by chromosome and position (default),
 or instead by rsid.}
 
-\item{match.min.prop}{Minimum proportion of variants in target data to be
-matched, otherwise stops with an error. Default is \code{50\%}.}
+\item{match.min.prop}{Minimum proportion of variants in the smallest data
+to be matched, otherwise stops with an error. Default is \code{50\%}.}
 
 \item{build.new}{Genome build of the target data. Default is \code{hg19}.}
 

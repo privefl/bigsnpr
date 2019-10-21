@@ -72,8 +72,6 @@ part_prod <- function(X, ind, ind.row, ind.col, center, scale, V, XV, X_norm) {
 #' @param ind.col.ref Columns to be potentially used in the reference data.
 #'   Default uses all the ones in common with target data.
 #' @inheritParams snp_match
-#' @param match.min.prop Minimum proportion of variants in target data to be
-#'   matched, otherwise stops with an error. Default is `50%`.
 #' @param build.new Genome build of the target data. Default is `hg19`.
 #' @param build.ref Genome build of the reference data. Default is `hg19`.
 #' @inheritParams snp_modifyBuild
@@ -119,9 +117,9 @@ bed_projectPCA <- function(obj.bed.ref, obj.bed.new, k = 10,
                                from = build.new, to = build.ref)
   }
   info_snp <- snp_match(cbind(map.ref, beta = 1), map.new,
-                        strand_flip = strand_flip, join_by_pos = join_by_pos)
-  if (nrow(info_snp) < (ncol(obj.bed.new) * match.min.prop))
-    stop2("Not enough variants have been matched.")
+                        strand_flip = strand_flip,
+                        join_by_pos = join_by_pos,
+                        match.min.prop = match.min.prop)
 
   printf2("\n[Step 2/3] Computing (auto) SVD of reference..\n")
 

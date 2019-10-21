@@ -157,7 +157,9 @@ sumstats2 <- data.frame(
 
 expect_error(snp_match(sumstats2[-6], info_snp), "'chr, pos, a0, a1, beta'")
 expect_error(snp_match(sumstats2, info_snp[-5]), "'chr, pos, a0, a1'")
-expect_equal(dim(snp_match(sumstats2, info_snp)), c(0, 9))
+expect_error(snp_match(sumstats2, info_snp),
+             "Not enough variants have been matched.")
+expect_equal(dim(snp_match(sumstats2, info_snp, match.min.prop = 0)), c(0, 9))
 snp_info <- snp_match(sumstats2, info_snp, join_by_pos = FALSE)
 expect_equal(dim(snp_info), c(4, 9))
 expect_equal(snp_info$beta, c(1, -1, 1, 1))
