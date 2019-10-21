@@ -494,7 +494,7 @@ snp_plinkKINGQC <- function(plink2.path,
   if (make.bed) {
     bedfile.out
   } else {
-    fam <- bigreadr::fread2(sub_bed(bedfile, ".fam"), header = FALSE)
+    fam <- bigreadr::fread2(sub_bed(bedfile.in, ".fam"), header = FALSE)
     full_id <- paste(fam$V1, fam$V2, sep = "\t")
     keep_id <- readLines(paste0(prefix.out, ".king.cutoff.in.id"))[-1]
     full_id %in% keep_id
