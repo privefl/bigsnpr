@@ -22,6 +22,8 @@ env:
  global:
    - BIGSNPR_CRAN: false
    - _R_CHECK_FORCE_SUGGESTS_: false
+   - _R_CHECK_LENGTH_1_CONDITION_: verbose
+   - _R_CHECK_LENGTH_1_LOGIC2_: verbose
 
 notifications:
   email:
