@@ -27,7 +27,7 @@ Imports:
     bigassertr (>= 0.1.1),
     bigparallelr (>= 0.1.2),
     bigreadr (>= 0.2),
-    bigutilsr (>= 0.1.4),
+    bigutilsr (>= 0.2.1),
     data.table,
     foreach, 
     ggplot2,
@@ -54,7 +54,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr@splitpkg, privefl/bigutilsr, privefl/bigparallelr
+Remotes: privefl/bigstatsr@splitpkg, privefl/bigutilsr
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr

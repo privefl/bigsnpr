@@ -45,7 +45,7 @@ counts <- big_counts(GNA)
 expect_equal(sum(counts[4, ]), nrow(indNA))
 
 GNA$code256 <- CODE_IMPUTE_PRED
-infosNA <- data_frame(
+infosNA <- tibble(
   col = indNA[, 2],
   error = (GNA[indNA] != G[indNA])
 ) %>%

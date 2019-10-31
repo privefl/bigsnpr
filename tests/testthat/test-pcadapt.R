@@ -31,9 +31,9 @@ test_that("Same as pcadapt", {
 
   expect_equal(obj.svd$center / 2, obj.pcadapt$af)
   expect_equal(obj.svd$d, obj.pcadapt$singular.values * sqrt((nrow(G) - 1) * ncol(G)))
-  expect_equal(obj.svd$u, obj.pcadapt$scores,   tolerance = 1e-4)
-  expect_equal(obj.svd$v, obj.pcadapt$loadings, tolerance = 1e-2)
-  expect_equal(test,      obj.pcadapt$zscores,  tolerance = 1e-1)
+  expect_equal(abs(obj.svd$u), abs(obj.pcadapt$scores),   tolerance = 1e-4)
+  expect_equal(abs(obj.svd$v), abs(obj.pcadapt$loadings), tolerance = 1e-2)
+  expect_equal(test,           obj.pcadapt$zscores,       tolerance = 0.2)
   # expect_equal(abs(cov(obj.svd$u, obj.pcadapt$scores)), diag(10) / (nrow(G) - 1))
   # expect_equal(abs(cor(obj.svd$v, obj.pcadapt$loadings)), diag(10),
   #              tolerance = 1e-2, check.attributes = FALSE)
@@ -81,4 +81,3 @@ test_that("Same as pcadapt", {
   ################################################################################
 
 })
-
