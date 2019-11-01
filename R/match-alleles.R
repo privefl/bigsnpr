@@ -1,74 +1,5 @@
 ################################################################################
 
-#' Determine reference divergence
-#'
-#' Determine reference divergence while accounting for strand flips.
-#' **This does not remove ambiguous alleles.**
-#'
-#' @param ref1 The reference alleles of the first dataset.
-#' @param alt1 The alternative alleles of the first dataset.
-#' @param ref2 The reference alleles of the second dataset.
-#' @param alt2 The alternative alleles of the second dataset.
-#'
-#' @return A logical vector whether the references alleles are the same.
-#'   Missing values can result from missing values in the inputs or from
-#'   ambiguous strands.
-#' @export
-#'
-#' @seealso [snp_match()]
-#'
-#' @examples
-#' same_ref(ref1 = c("A", "C", "T", "G", NA),
-#'          alt1 = c("C", "T", "C", "A", "A"),
-#'          ref2 = c("A", "C", "A", "A", "C"),
-#'          alt2 = c("C", "G", "G", "G", "A"))
-same_ref <- function(ref1, alt1, ref2, alt2) {
-
-  # ACTG <- c("A", "C", "T", "G")
-  # REV_ACTG <- stats::setNames(c("T", "G", "A", "C"), ACTG)
-  #
-  # decoder <- expand.grid(list(ACTG, ACTG, ACTG, ACTG)) %>%
-  #   dplyr::mutate(status = dplyr::case_when(
-  #     # BAD: same reference/alternative alleles in a dataset
-  #     (Var1 == Var2) | (Var3 == Var4) ~ NA,
-  #     # GOOD/TRUE: same reference/alternative alleles between datasets
-  #     (Var1 == Var3) & (Var2 == Var4) ~ TRUE,
-  #     # GOOD/FALSE: reverse reference/alternative alleles
-  #     (Var1 == Var4) & (Var2 == Var3) ~ FALSE,
-  #     # GOOD/TRUE: same reference/alternative alleles after strand flip
-  #     (REV_ACTG[Var1] == Var3) & (REV_ACTG[Var2] == Var4) ~ TRUE,
-  #     # GOOD/FALSE: reverse reference/alternative alleles after strand flip
-  #     (REV_ACTG[Var1] == Var4) & (REV_ACTG[Var2] == Var3) ~ FALSE,
-  #     # BAD: the rest
-  #     TRUE ~ NA
-  #   )) %>%
-  #   reshape2::acast(Var1 ~ Var2 ~ Var3 ~ Var4, value.var = "status")
-
-  decoder <- structure(
-    c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, TRUE,
-      NA, NA, FALSE, NA, NA, NA, NA, NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA,
-      TRUE, NA, NA, NA, NA, NA, FALSE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-      TRUE, NA, NA, FALSE, NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA, FALSE,
-      NA, NA, TRUE, NA, NA, NA, NA, NA, NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA,
-      NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, FALSE, NA,
-      NA, TRUE, NA, NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-      NA, TRUE, NA, NA, NA, NA, NA, FALSE, NA, NA, NA, NA, FALSE, NA, NA, NA,
-      NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, TRUE, NA, NA, FALSE,
-      NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-      NA, NA, NA, NA, NA, NA, NA, NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA,
-      NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA, FALSE, NA, NA, TRUE, NA, NA,
-      FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, FALSE, NA,
-      NA, NA, NA, NA, TRUE, NA, NA, NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA,
-      NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
-      NA, NA, NA, NA, NA),
-    .Dim = rep(4, 4), .Dimnames = rep(list(c("A", "C", "T", "G")), 4)
-  )
-
-  decoder[cbind(ref1, alt1, ref2, alt2)]
-}
-
-################################################################################
-
 flip_strand <- function(allele) {
 
   if (!requireNamespace("dplyr", quietly = TRUE))
@@ -221,6 +152,76 @@ snp_modifyBuild <- function(info_snp, liftOver, from = "hg18", to = "hg19") {
   info_snp$pos <- NA
   info_snp$pos[new_pos$V4] <- new_pos$V3
   info_snp
+}
+
+################################################################################
+
+#' Determine reference divergence
+#'
+#' Determine reference divergence while accounting for strand flips.
+#' **This does not remove ambiguous alleles.**
+#'
+#' @param ref1 The reference alleles of the first dataset.
+#' @param alt1 The alternative alleles of the first dataset.
+#' @param ref2 The reference alleles of the second dataset.
+#' @param alt2 The alternative alleles of the second dataset.
+#'
+#' @return A logical vector whether the references alleles are the same.
+#'   Missing values can result from missing values in the inputs or from
+#'   ambiguous matching (e.g. matching A/C and A/G).
+#' @export
+#'
+#' @seealso [snp_match()]
+#'
+#' @examples
+#' same_ref(ref1 = c("A", "C", "T", "G", NA),
+#'          alt1 = c("C", "T", "C", "A", "A"),
+#'          ref2 = c("A", "C", "A", "A", "C"),
+#'          alt2 = c("C", "G", "G", "G", "A"))
+same_ref <- function(ref1, alt1, ref2, alt2) {
+
+  # ACTG <- c("A", "C", "T", "G")
+  # REV_ACTG <- stats::setNames(c("T", "G", "A", "C"), ACTG)
+  #
+  # decoder <- expand.grid(list(ACTG, ACTG, ACTG, ACTG)) %>%
+  #   dplyr::mutate(status = dplyr::case_when(
+  #     # BAD: same reference/alternative alleles in a dataset
+  #     (Var1 == Var2) | (Var3 == Var4) ~ NA,
+  #     # GOOD/TRUE: same reference/alternative alleles between datasets
+  #     (Var1 == Var3) & (Var2 == Var4) ~ TRUE,
+  #     # GOOD/FALSE: reverse reference/alternative alleles
+  #     (Var1 == Var4) & (Var2 == Var3) ~ FALSE,
+  #     # GOOD/TRUE: same reference/alternative alleles after strand flip
+  #     (REV_ACTG[Var1] == Var3) & (REV_ACTG[Var2] == Var4) ~ TRUE,
+  #     # GOOD/FALSE: reverse reference/alternative alleles after strand flip
+  #     (REV_ACTG[Var1] == Var4) & (REV_ACTG[Var2] == Var3) ~ FALSE,
+  #     # BAD: the rest
+  #     TRUE ~ NA
+  #   )) %>%
+  #   reshape2::acast(Var1 ~ Var2 ~ Var3 ~ Var4, value.var = "status")
+
+  decoder <- structure(
+    c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, TRUE,
+      NA, NA, FALSE, NA, NA, NA, NA, NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA,
+      TRUE, NA, NA, NA, NA, NA, FALSE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
+      TRUE, NA, NA, FALSE, NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA, FALSE,
+      NA, NA, TRUE, NA, NA, NA, NA, NA, NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA,
+      NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, FALSE, NA,
+      NA, TRUE, NA, NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA,
+      NA, TRUE, NA, NA, NA, NA, NA, FALSE, NA, NA, NA, NA, FALSE, NA, NA, NA,
+      NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, TRUE, NA, NA, FALSE,
+      NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
+      NA, NA, NA, NA, NA, NA, NA, NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA,
+      NA, NA, TRUE, NA, NA, FALSE, NA, NA, NA, NA, FALSE, NA, NA, TRUE, NA, NA,
+      FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, FALSE, NA,
+      NA, NA, NA, NA, TRUE, NA, NA, NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA,
+      NA, FALSE, NA, NA, TRUE, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
+      NA, NA, NA, NA, NA),
+    .Dim = rep(4, 4), .Dimnames = rep(list(c("A", "C", "T", "G")), 4)
+  )
+
+  to_decode <- do.call("cbind", lapply(list(ref1, alt1, ref2, alt2), as.character))
+  decoder[to_decode]
 }
 
 ################################################################################

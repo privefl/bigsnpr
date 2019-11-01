@@ -48,6 +48,7 @@ Suggests:
     dbplyr (>= 1.4),
     dplyr,
     gaston,
+    glue,
     Hmisc,
     pcadapt (>= 4.1),
     RSQLite,
