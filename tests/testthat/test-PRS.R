@@ -55,4 +55,16 @@ scores.cor2 <- sapply(cols_along(prs3), function(j) cor(prs3[, j], prs2[, j]))
 expect_equal(scores.cor2, rep(1, length(thrs2)),
              tolerance = 1e-3)
 
+# No threshold
+expect_message(snp_PRS(G, betas.keep = gwas$estim[ind.keep],
+                       ind.test = rows_along(G),
+                       ind.keep = ind.keep,
+                       lpS.keep = -predict(gwas)[ind.keep]),
+               "Thresholding disabled.")
+expect_message(snp_PRS(G, betas.keep = gwas$estim[ind.keep],
+                       ind.test = rows_along(G),
+                       ind.keep = ind.keep,
+                       thr.list = thrs2),
+               "Thresholding disabled.")
+
 ################################################################################

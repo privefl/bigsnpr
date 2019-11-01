@@ -55,3 +55,11 @@ expect_equal(bed_randomSVD(obj.bed2, ind.col = ind.keep2, ncores = NCORES),
              obj.svd3)
 
 ################################################################################
+
+# Test class bed
+expect_identical(capture.output(obj.bed2 <- print(obj.bed)),
+                 "A 'bed' object with 517 samples and 4542 variants.")
+expect_identical(obj.bed2, obj.bed)
+expect_equal(length(obj.bed), prod(dim(obj.bed)))
+
+################################################################################

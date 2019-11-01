@@ -41,10 +41,10 @@ snp_PRS <- function(G, betas.keep,
                     thr.list = 0) {
 
   check_args()
-  assert_lengths(betas.keep, ind.keep)
-  assert_lengths(same.keep, ind.keep)
-  stopifnot(sum(is.na(same.keep)) == 0)
+  assert_nona(same.keep)
   assert_type(same.keep, "logical")
+  assert_lengths(same.keep, ind.keep)
+  assert_lengths(betas.keep, ind.keep)
 
   # thresholding and projecting
   if (is.null(lpS.keep) || identical(thr.list, 0)) {
@@ -53,6 +53,7 @@ snp_PRS <- function(G, betas.keep,
                                        ind.test, ind.keep))
   } else {
     assert_lengths(lpS.keep, ind.keep)
+    assert_pos(lpS.keep, strict = FALSE)
 
     scores.all <- matrix(NA_real_, length(ind.test), length(thr.list))
     ind.rem <- seq_along(ind.keep)
