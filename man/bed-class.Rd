@@ -25,6 +25,7 @@ C++ object, to be used as a \code{XPtr<bed>} in C++ code
 \item \code{$bedfile}: path to the bed file
 \item \code{$bimfile}: path to the corresponding bim file
 \item \code{$famfile}: path to the corresponding fam file
+\item \code{$prefix}: path without extension
 \item \code{$nrow}: number of samples in the bed file
 \item \code{$ncol}: number of variants in the bed file
 \item \code{$map}: data frame read from \code{$bimfile}

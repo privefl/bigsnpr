@@ -172,11 +172,11 @@ bed_MAF <- function(obj.bed,
   counts <- bed_counts(obj.bed, ind.row, ind.col, ncores)
   ac <- counts[2, ] + 2 * counts[3, ]
   nb_nona <- length(ind.row) - counts[4, ]
-  af <- ac / nb_nona
+  af <- ac / (2 * nb_nona)
 
   data.frame(
     ac  = ac,
-    mac = pmin(ac, 2 * length(ind.row) - ac),
+    mac = pmin(ac, 2 * nb_nona - ac),
     af  = af,
     maf = pmin(af, 1 - af),
     N   = nb_nona

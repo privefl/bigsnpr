@@ -57,9 +57,36 @@ expect_equal(bed_randomSVD(obj.bed2, ind.col = ind.keep2, ncores = NCORES),
 ################################################################################
 
 # Test class bed
-expect_identical(capture.output(obj.bed2 <- print(obj.bed)),
+expect_identical(capture.output(obj.bed3 <- print(obj.bed)),
                  "A 'bed' object with 517 samples and 4542 variants.")
-expect_identical(obj.bed2, obj.bed)
+expect_identical(obj.bed3, obj.bed)
 expect_equal(length(obj.bed), prod(dim(obj.bed)))
+
+# Test counts and scaling
+ind.row <- sample(nrow(obj.bed), 300)
+ind.col <- sample(ncol(obj.bed), 4000)
+expect_identical(bed_counts(obj.bed2, ind.row, ind.col),
+                 big_counts(G, ind.row, ind.col))
+expect_identical(bed_counts(obj.bed2, ind.row, ind.col, ncores = 2),
+                 big_counts(G, ind.row, ind.col))
+
+G_nona <- snp_attachExtdata()$genotypes
+expect_identical(bed_counts(obj.bed, ind.row, ind.col),
+                 big_counts(G_nona, ind.row, ind.col))
+expect_identical(bed_counts(obj.bed, ind.row, ind.col, ncores = 2),
+                 big_counts(G_nona, ind.row, ind.col))
+expect_identical(bed_MAF(obj.bed, ind.row, ind.col)$N,
+                 rep(length(ind.row), length(ind.col)))
+expect_identical(bed_MAF(obj.bed, ind.row, ind.col)$maf,
+                 snp_MAF(G_nona, ind.row, ind.col))
+
+expect_identical(bed_MAF(obj.bed, ind.row, ind.col)$af,
+                 bed_MAF(obj.bed, ind.row, ind.col)$ac / (2 * length(ind.row)))
+expect_identical(bed_MAF(obj.bed2, ind.row, ind.col)$af,
+                 bed_MAF(obj.bed2, ind.row, ind.col)$ac /
+                   (2 * bed_MAF(obj.bed2, ind.row, ind.col)$N))
+expect_true(all(bed_MAF(obj.bed2, ind.row, ind.col)$af <= 1))
+expect_true(all(bed_MAF(obj.bed2, ind.row, ind.col)$ac <=
+                  (2 * bed_MAF(obj.bed2, ind.row, ind.col)$N)))
 
 ################################################################################

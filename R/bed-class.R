@@ -40,6 +40,7 @@ sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
 #'   - `$bedfile`: path to the bed file
 #'   - `$bimfile`: path to the corresponding bim file
 #'   - `$famfile`: path to the corresponding fam file
+#'   - `$prefix`: path without extension
 #'   - `$nrow`: number of samples in the bed file
 #'   - `$ncol`: number of variants in the bed file
 #'   - `$map`: data frame read from `$bimfile`
@@ -67,6 +68,7 @@ bed_RC <- methods::setRefClass(
     #### Active bindings
     bimfile = function() sub_bed(.self$bedfile, ".bim"),
     famfile = function() sub_bed(.self$bedfile, ".fam"),
+    prefix  = function() sub_bed(.self$bedfile),
 
     fam = function() {
       if (base::ncol(.self$.fam) == 0) {
