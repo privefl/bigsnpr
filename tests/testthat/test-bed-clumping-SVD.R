@@ -36,7 +36,8 @@ expect_gt(mean(sqrt(colSums(cor(obj.svd3$u, obj.svd2$u)^2))), 0.9)
 expect_equal(obj.svd3$d, obj.svd2$d, tolerance = 0.1)
 expect_true(all(obj.svd3$d < obj.svd2$d))
 
-expect_identical(bed_clumping(obj.bed2, S = bed_MAF(obj.bed2)$mac), ind.keep3)
+if (.Machine$sizeof.pointer == 8)
+  expect_identical(bed_clumping(obj.bed2, S = bed_MAF(obj.bed2)$mac), ind.keep3)
 
 # Compute whole eigen decomposition
 K <- bed_tcrossprodSelf(obj.bed2, ind.col = ind.keep2)
