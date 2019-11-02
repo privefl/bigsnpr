@@ -22,10 +22,11 @@ proj2 <- bed_projectPCA(obj.bed, obj.bed,
                         strand_flip = FALSE,
                         roll.size = 10,
                         thr.r2 = 0.8,
-                        ncores = 2)
+                        ncores = 2,
+                        verbose = FALSE)
 
 obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row,
-                        roll.size = 10, thr.r2 = 0.8)
+                        roll.size = 10, thr.r2 = 0.8, verbose = FALSE)
 proj3 <- bed_projectSelfPCA(obj.svd2, obj.bed, ind.row = ind.test)
 expect_equal(proj2, proj3)
 
@@ -57,10 +58,11 @@ proj2 <- bed_projectPCA(obj.bed, obj.bed,
                         strand_flip = FALSE,
                         roll.size = 10,
                         thr.r2 = 0.8,
-                        ncores = 2)
+                        ncores = 2,
+                        verbose = FALSE)
 
 obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row,
-                        roll.size = 10, thr.r2 = 0.8)
+                        roll.size = 10, thr.r2 = 0.8, verbose = FALSE)
 proj3 <- bed_projectSelfPCA(obj.svd2, obj.bed, ind.row = ind.test)
 expect_equal(proj2, proj3)
 

@@ -6,7 +6,7 @@
 \usage{
 snp_beagleImpute(beagle.path, plink.path, bedfile.in, bedfile.out = NULL,
   memory.max = 3, ncores = 1, extra.options = "",
-  plink.options = "")
+  plink.options = "", verbose = TRUE)
 }
 \arguments{
 \item{beagle.path}{Path to the executable of Beagle v4+.}
@@ -29,6 +29,8 @@ options can be found at Beagle's website.}
 
 \item{plink.options}{Other options to be passed to PLINK as a string. More
 options can be found at \url{http://www.cog-genomics.org/plink2/filter}.}
+
+\item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
 The path of the new bedfile.

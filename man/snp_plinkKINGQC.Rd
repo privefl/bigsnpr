@@ -6,7 +6,7 @@
 \usage{
 snp_plinkKINGQC(plink2.path, bedfile.in, bedfile.out = NULL,
   thr.king = 0.0884, make.bed = TRUE, ncores = 1,
-  extra.options = "")
+  extra.options = "", verbose = TRUE)
 }
 \arguments{
 \item{plink2.path}{Path to the executable of PLINK 2.}
@@ -31,6 +31,8 @@ Otherwise, returns a logical vector whether individuals are kept or not.}
 You may use \link{nb_cores}.}
 
 \item{extra.options}{Other options to be passed to PLINK2 as a string.}
+
+\item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
 The path of the new bedfile.

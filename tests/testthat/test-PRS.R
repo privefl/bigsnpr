@@ -12,7 +12,7 @@ y01 <- test$fam$affection - 1
 
 # PCA -> covariables
 obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome,
-                       infos.pos = test$map$physical.pos)
+                       infos.pos = test$map$physical.pos, verbose = FALSE)
 
 # GWAS
 gwas <- big_univLogReg(G, y01.train = y01, covar.train = obj.svd$u)

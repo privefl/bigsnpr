@@ -4,6 +4,10 @@ make_executable <- function(exe) {
   Sys.chmod(exe, mode = (file.info(exe)$mode | "111"))
 }
 
+system_verbose <- function(..., verbose) {
+  system(..., ignore.stdout = !verbose, ignore.stderr = !verbose)
+}
+
 ################################################################################
 
 # https://github.com/r-lib/rappdirs/blob/master/R/utils.r
@@ -178,6 +182,7 @@ download_beagle <- function(dir = tempdir()) {
 #'   options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
 #'   If using PLINK 2.0, you could e.g. use `"--king-cutoff 0.0884"` to remove
 #'   some related samples at the same time of quality controls.
+#' @param verbose Whether to show PLINK log? Default is `TRUE`.
 #'
 #' @return The path of the newly created bedfile.
 #'
@@ -216,7 +221,8 @@ snp_plinkQC <- function(plink.path,
                         mind = 0.1,
                         hwe = 1e-50,
                         autosome.only = FALSE,
-                        extra.options = "") {
+                        extra.options = "",
+                        verbose = TRUE) {
 
   # new bedfile, check if already exists
   bedfile.out <- paste0(prefix.out, ".bed")
@@ -226,7 +232,7 @@ snp_plinkQC <- function(plink.path,
   if (file.type == "--vcf") prefix.in <- paste0(prefix.in, ".vcf")
 
   # call PLINK 1.9
-  system(
+  system_verbose(
     paste(
       plink.path,
       file.type, prefix.in,
@@ -238,7 +244,8 @@ snp_plinkQC <- function(plink.path,
       "--make-bed",
       "--out", prefix.out,
       extra.options
-    )
+    ),
+    verbose = verbose
   )
 
   # return path to new bedfile
@@ -267,7 +274,8 @@ snp_plinkRmSamples <- function(plink.path,
                                df.or.files,
                                col.family.ID = 1,
                                col.sample.ID = 2,
-                               ...) {
+                               ...,
+                               verbose = TRUE) {
 
   assert_noexist(bedfile.out)
 
@@ -282,14 +290,15 @@ snp_plinkRmSamples <- function(plink.path,
   tmpfile <- tempfile()
   write.table2(data.infos[, c(col.family.ID, col.sample.ID)], tmpfile)
   # Make new bed with extraction
-  system(
+  system_verbose(
     paste(
       plink.path,
       "--bfile", sub_bed(bedfile.in),
       "--make-bed",
       "--out", sub_bed(bedfile.out),
       "--remove", tmpfile
-    )
+    ),
+    verbose = verbose
   )
 
   bedfile.out
@@ -355,7 +364,8 @@ snp_plinkIBDQC <- function(plink.path,
                            ncores = 1,
                            pruning.args = c(100, 0.2),
                            do.blind.QC = TRUE,
-                           extra.options = "") {
+                           extra.options = "",
+                           verbose = TRUE) {
 
   # temporary file
   tmpfile <- tempfile()
@@ -369,13 +379,14 @@ snp_plinkIBDQC <- function(plink.path,
 
   # prune if desired
   if (!is.null(pruning.args)) {
-    system(
+    system_verbose(
       paste(
         plink.path,
         "--bfile", prefix.in,
         "--indep-pairwise", pruning.args[1], 1, pruning.args[2],
         "--out", tmpfile
-      )
+      ),
+      verbose = verbose
     )
     opt.pruning <- paste0("--extract ", tmpfile, ".prune.in")
   } else {
@@ -383,7 +394,7 @@ snp_plinkIBDQC <- function(plink.path,
   }
 
   # compute IBD
-  system(
+  system_verbose(
     paste(
       plink.path,
       "--bfile", prefix.in,
@@ -393,7 +404,8 @@ snp_plinkIBDQC <- function(plink.path,
       "--out", tmpfile,
       "--threads", ncores,
       extra.options
-    )
+    ),
+    verbose = verbose
   )
 
   # get genomefile as a data.frame
@@ -459,7 +471,8 @@ snp_plinkKINGQC <- function(plink2.path,
                             thr.king = 0.0884,
                             make.bed = TRUE,
                             ncores = 1,
-                            extra.options = "") {
+                            extra.options = "",
+                            verbose = TRUE) {
 
   # check PLINK version
   v <- system(paste(plink2.path, "--version"), intern = TRUE)
@@ -479,7 +492,7 @@ snp_plinkKINGQC <- function(plink2.path,
   }
 
   # compute KING-robust kinship coefficients and filter
-  system(
+  system_verbose(
     paste(
       plink2.path,
       "--bfile", prefix.in,
@@ -488,7 +501,8 @@ snp_plinkKINGQC <- function(plink2.path,
       "--out", prefix.out,
       "--threads", ncores,
       extra.options
-    )
+    ),
+    verbose = verbose
   )
 
   if (make.bed) {
@@ -540,7 +554,8 @@ snp_beagleImpute <- function(beagle.path,
                              memory.max = 3,
                              ncores = 1,
                              extra.options = "",
-                             plink.options = "") {
+                             plink.options = "",
+                             verbose = TRUE) {
 
   # get input and output right
   prefix.in <- sub_bed(bedfile.in)
@@ -553,7 +568,7 @@ snp_beagleImpute <- function(beagle.path,
   tmpfile2 <- tempfile()
 
   # Convert bed/bim/fam to vcf
-  system(
+  system_verbose(
     paste(
       plink.path,
       "--bfile", prefix.in,
@@ -561,13 +576,14 @@ snp_beagleImpute <- function(beagle.path,
       "--out", tmpfile1,
       "--threads", ncores,
       plink.options
-    )
+    ),
+    verbose = verbose
   )
   vcf1 <- paste0(tmpfile1, ".vcf.gz")
   on.exit(file.remove(vcf1), add = TRUE)
 
   # Impute vcf with Beagle version 4
-  system(
+  system_verbose(
     paste(
       "java", sprintf("-Xmx%dg", round(memory.max)),
       "-jar", beagle.path,
@@ -575,19 +591,21 @@ snp_beagleImpute <- function(beagle.path,
       paste0("out=", tmpfile2),
       paste0("nthreads=", ncores),
       extra.options
-    )
+    ),
+    verbose = verbose
   )
   vcf2 <- paste0(tmpfile2, ".vcf.gz")
   on.exit(file.remove(vcf2), add = TRUE)
 
   # Convert back vcf to bed/bim/fam
-  system(
+  system_verbose(
     paste(
       plink.path,
       "--vcf", vcf2,
       "--out", prefix.out,
       plink.options
-    )
+    ),
+    verbose = verbose
   )
 
   # return path to new bedfile

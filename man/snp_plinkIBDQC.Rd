@@ -6,7 +6,7 @@
 \usage{
 snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL,
   pi.hat = 0.08, ncores = 1, pruning.args = c(100, 0.2),
-  do.blind.QC = TRUE, extra.options = "")
+  do.blind.QC = TRUE, extra.options = "", verbose = TRUE)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -34,6 +34,8 @@ Default is \code{TRUE}. If \code{FALSE}, return the \code{data.frame} of the cor
 \item{extra.options}{Other options to be passed to PLINK as a string
 (for the IBD part). More options can be found at
 \url{http://www.cog-genomics.org/plink/1.9/ibd}.}
+
+\item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
 The path of the new bedfile.
