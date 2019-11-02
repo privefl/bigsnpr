@@ -5,7 +5,7 @@
 \title{MAF}
 \usage{
 snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
-  nploidy = 2)
+  nploidy = 2, ncores = 1)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
@@ -23,6 +23,9 @@ If not specified, all columns are used.\cr
 
 \item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 A vector of MAFs, corresponding to \code{ind.col}.

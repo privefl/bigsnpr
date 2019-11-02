@@ -61,8 +61,6 @@ Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
 detection (that is further corrected for multiple testing).}
   \item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
 Default is \code{10}.}
-  \item{seq_kNN}{Sequence of parameters for K-Nearest Neighbors used for
-computing Local Outlier Factors (LOF) in sample outlier detection.}
   \item{max.iter}{Maximum number of iterations of outlier detection.
 Default is \code{5}.}
   \item{size}{For one SNP, window size around this SNP to compute correlations.

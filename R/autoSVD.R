@@ -37,6 +37,12 @@ getIntervals <- function(x, n = 2) {
 #' @param verbose Output some information on the iterations? Default is `TRUE`.
 #' @param thr.r2 Threshold over the squared correlation between two SNPs.
 #'   Default is `0.2`. Use `NA` if you want to skip the clumping step.
+#' @param alpha.tukey Default is `0.1`. The type-I error rate in outlier
+#'   detection (that is further corrected for multiple testing).
+#' @param min.mac Minimum minor allele count (MAC) for variants to be included.
+#'   Default is `10`.
+#' @param max.iter Maximum number of iterations of outlier detection.
+#'   Default is `5`.
 #'
 #' @inherit bigstatsr::big_randomSVD return
 #' @export
@@ -61,6 +67,9 @@ snp_autoSVD <- function(G,
                         k = 10,
                         roll.size = 50,
                         int.min.size = 20,
+                        alpha.tukey = 0.05,
+                        min.mac = 10,
+                        max.iter = 5,
                         is.size.in.bp = NULL,
                         ncores = 1,
                         verbose = TRUE) {
@@ -91,6 +100,15 @@ snp_autoSVD <- function(G,
     printf2("keep %d SNPs.\n", length(ind.keep))
   }
 
+  if (min.mac > 0) {
+    mac <- snp_MAF(G, ind.row, ind.keep, ncores = ncores) * (2 * length(ind.row))
+    assert_int(round(mac, 7))
+    mac.nok <- (mac < min.mac)
+    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
+            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
+    ind.keep <- ind.keep[!mac.nok]
+  }
+
   iter <- 0L
   LRLDR <- LD.wiki34[0, 1:3]
   repeat {
@@ -104,20 +122,26 @@ snp_autoSVD <- function(G,
                              k = k,
                              ncores = ncores)
 
-    # -log10(p-values) of being an outlier
-    lpval <- -stats::predict(
-      snp_pcadapt(G, obj.svd$u, ind.row, ind.keep, ncores = ncores))
-    # Bonferroni-corrected threshold
-    lim <- -log10(0.05 / length(lpval))
+    if (iter > max.iter) {
+      printf2("Maximum number of iterations reached.\n")
+      break
+    }
 
-    # Roll mean to get only consecutive outliers
-    lpval2 <- bigutilsr::rollmean(lpval, size = roll.size)
-    ind.col.excl <- which(lpval2 > lim)
-    printf2("%d outlier%s detected..\n", length(ind.col.excl),
+    # check for outlier variants
+    S.col <- sqrt(bigutilsr::covRob(obj.svd$v, estim = "pairwiseGK")$dist)
+    # roll mean to get only consecutive outliers (by chromosome)
+    ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
+    S2.col <- double(length(S.col))
+    for (ind in ind.split)
+      S2.col[ind] <- bigutilsr::rollmean(S.col[ind], roll.size)
+    S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
+    ind.col.excl <- which(S2.col > S2.col.thr)
+    printf2("%d outlier variant%s detected..\n", length(ind.col.excl),
             `if`(length(ind.col.excl) > 1, "s", ""))
 
     # Stop or continue?
     if (length(ind.col.excl) > 0) {
+
       ind.keep <- ind.keep[-ind.col.excl]
 
       # Detection of long-range LD regions
@@ -126,12 +150,13 @@ snp_autoSVD <- function(G,
         ind.range <- getIntervals(ind.col.excl, n = int.min.size)
         printf2("%d long-range LD region%s detected..\n", nrow(ind.range),
                 `if`(nrow(ind.range) > 1, "s", ""))
-        if (nrow(ind.range) > 0) {
-          LRLDR.add <- cbind(
-            infos.chr[ind.keep[ind.range[, 1]]],
-            matrix(infos.pos[ind.keep[ind.range]], ncol = 2)
-          )
-          LRLDR[nrow(LRLDR) + rows_along(LRLDR.add), ] <- LRLDR.add
+        for (i in rows_along(ind.range)) {
+          seq.range <- seq2(ind.range[i, ])
+          seq.range.chr <- infos.chr[ind.keep[seq.range]]
+          chr <- stats::median(seq.range.chr)  ## to get mode
+          in.chr <- (infos.chr[ind.keep[seq.range]] == chr)
+          range.in.chr <- range(infos.pos[ind.keep[seq.range[in.chr]]])
+          LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)
         }
       }
     } else {
@@ -140,7 +165,11 @@ snp_autoSVD <- function(G,
     }
   }
 
-  structure(obj.svd, subset = ind.keep, lrldr = LRLDR)
+  structure(
+    obj.svd,
+    subset = ind.keep,
+    lrldr = LRLDR[with(LRLDR, order(Chr, Start, Stop)), ]
+  )
 }
 
 ################################################################################
@@ -178,15 +207,6 @@ bed_randomSVD <- function(
 
 #' @rdname snp_autoSVD
 #'
-#' @param alpha.tukey Default is `0.1`. The type-I error rate in outlier
-#'   detection (that is further corrected for multiple testing).
-#' @param min.mac Minimum minor allele count (MAC) for variants to be included.
-#'   Default is `10`.
-#' @param seq_kNN Sequence of parameters for K-Nearest Neighbors used for
-#'   computing Local Outlier Factors (LOF) in sample outlier detection.
-#' @param max.iter Maximum number of iterations of outlier detection.
-#'   Default is `5`.
-#'
 #' @export
 bed_autoSVD <- function(obj.bed,
                         ind.row = rows_along(obj.bed),
@@ -197,12 +217,11 @@ bed_autoSVD <- function(obj.bed,
                         k = 10,
                         roll.size = 50,
                         int.min.size = 20,
-                        seq_kNN = 3:5,
                         alpha.tukey = 0.05,
                         min.mac = 10,
+                        max.iter = 5,
                         ncores = 1,
-                        verbose = TRUE,
-                        max.iter = 5) {
+                        verbose = TRUE) {
 
   infos.chr <- obj.bed$map$chromosome
   infos.pos <- obj.bed$map$physical.pos

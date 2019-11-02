@@ -67,11 +67,14 @@ snp_scaleBinom <- function(nploidy = 2) {
 snp_MAF <- function(G,
                     ind.row = rows_along(G),
                     ind.col = cols_along(G),
-                    nploidy = 2) {
+                    nploidy = 2,
+                    ncores = 1) {
 
-  p <- big_colstats(G, ind.row = ind.row, ind.col = ind.col)$sum /
-    (nploidy * length(ind.row))
+  ac <- big_parallelize(G, function(X, ind, ind.row) {
+    big_colstats(X, ind.row = ind.row, ind.col = ind)$sum
+  }, ind = ind.col, ind.row = ind.row, p.combine = 'c', ncores = ncores)
 
+  p <- ac / (nploidy * length(ind.row))
   pmin(p, 1 - p)
 }
 

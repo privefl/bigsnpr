@@ -21,7 +21,7 @@ test_that("Same as pcadapt", {
   write.table(t(G[]), tmpfile, quote = FALSE, sep = " ",
               row.names = FALSE, col.names = FALSE)
 
-  bed <- pcadapt::read.pcadapt(tmpfile, type = "pcadapt")
+  expect_output(bed <- pcadapt::read.pcadapt(tmpfile, type = "pcadapt"))
   obj.pcadapt <- pcadapt::pcadapt(bed, K = 10, min.maf = 0)
 
   ################################################################################
@@ -67,7 +67,11 @@ test_that("Same as pcadapt", {
   obj.pcadapt <- pcadapt::pcadapt(bed, K = 1, min.maf = 0)
   obj.gwas    <- snp_pcadapt(G, obj.svd$u[, 1], ncores = sample(1:2, 1))
 
-  snp_qq(obj.gwas)
+  expect_s3_class(snp_qq(obj.gwas), "ggplot")
+
+  obj.bed <- bed(snp_writeBed(bigsnp, bedfile = tempfile(fileext = ".bed")))
+  obj.gwas2 <- bed_pcadapt(obj.bed, obj.svd$u[, 1], ncores = sample(1:2, 1))
+  expect_equal(obj.gwas2, obj.gwas)
 
   expect_equal(bigsnpr:::getLambdaGC(obj.gwas), 1)  ## always GC
   expect_equal(get("lamGC", envir = environment(attr(obj.gwas, "transfo"))),

@@ -14,7 +14,7 @@ expect_error(bed_projectSelfPCA(obj.svd, obj.bed, ind.row = ind.test),
 proj <- bed_projectSelfPCA(obj.svd, obj.bed,
                            ind.row = rows_along(obj.bed),
                            ind.col = cols_along(obj.bed))
-expect_equal(proj$simple_proj[ind.row, ], predict(obj.svd), tolerance = 1e-5)
+expect_equal(proj$simple_proj[ind.row, ], predict(obj.svd), tolerance = 1e-4)
 
 proj2 <- bed_projectPCA(obj.bed, obj.bed,
                         ind.row.new = ind.test,
@@ -22,7 +22,6 @@ proj2 <- bed_projectPCA(obj.bed, obj.bed,
                         strand_flip = FALSE,
                         roll.size = 10,
                         thr.r2 = 0.8,
-                        ncores = 2,
                         verbose = FALSE)
 
 obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row,
@@ -58,7 +57,6 @@ proj2 <- bed_projectPCA(obj.bed, obj.bed,
                         strand_flip = FALSE,
                         roll.size = 10,
                         thr.r2 = 0.8,
-                        ncores = 2,
                         verbose = FALSE)
 
 obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row,
