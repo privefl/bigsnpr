@@ -64,6 +64,6 @@ proj2 <- bed_projectPCA(obj.bed, obj.bed,
 obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row,
                         roll.size = 10, thr.r2 = 0.8, verbose = FALSE)
 proj3 <- bed_projectSelfPCA(obj.svd2, obj.bed, ind.row = ind.test)
-expect_equal(proj2, proj3)
+expect_equal(proj2, proj3, tolerance = 1e-6)
 
 ################################################################################
