@@ -2,12 +2,6 @@
 
 context("READ_BED")
 
-test <- snp_attachExtdata()
-G <- test$genotypes
-
-bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-test2 <- gaston::read.bed.matrix(bedfile, verbose = FALSE)
-
 ################################################################################
 
 test_that("sub_bed() works", {
@@ -18,6 +12,14 @@ test_that("sub_bed() works", {
   expect_error(sub_bed("toto.bed", "bim"), "extension starting with '.'")
   expect_identical(sub_bed("toto.bed", "bim", stop_if_not_ext = FALSE), "totobim")
 })
+
+################################################################################
+
+test <- snp_attachExtdata()
+G <- test$genotypes
+
+bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+test2 <- gaston::read.bed.matrix(bedfile, verbose = FALSE)
 
 ################################################################################
 
@@ -47,7 +49,8 @@ test_that("same sign as PLINK (no switch 0 <-> 2)", {
   plink <- download_plink()
   prefix <- sub_bed(bedfile)
   tmp <- tempfile()
-  system(glue::glue("{plink} --bfile {prefix} --assoc --allow-no-sex --out {tmp}"))
+  system(glue::glue("{plink} --bfile {prefix} --assoc --allow-no-sex --out {tmp}"),
+         ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   gwas <- big_univLogReg(G, test$fam$affection - 1L)
   sumstats <- bigreadr::fread2(paste0(tmp, ".assoc"))

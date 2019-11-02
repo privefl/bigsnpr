@@ -7,7 +7,7 @@
 snp_plinkQC(plink.path, prefix.in, file.type = "--bfile",
   prefix.out = paste0(prefix.in, "_QC"), maf = 0.01, geno = 0.1,
   mind = 0.1, hwe = 1e-50, autosome.only = FALSE,
-  extra.options = "")
+  extra.options = "", verbose = TRUE)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -41,6 +41,8 @@ variants? Default is \code{FALSE}.}
 options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
 If using PLINK 2.0, you could e.g. use \code{"--king-cutoff 0.0884"} to remove
 some related samples at the same time of quality controls.}
+
+\item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
 The path of the newly created bedfile.
