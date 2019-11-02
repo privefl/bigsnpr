@@ -115,6 +115,6 @@ expect_length(new_betas$beta.covar, 0)
 expect_equal(
   predict(new_betas$mod, multi_PRS, proba = FALSE),
   new_betas$intercept + big_prodVec(G, new_betas$beta.G),
-  check.attributes = FALSE, tolerance = 1e-7)
+  check.attributes = FALSE, tolerance = 1e-6)
 
 ################################################################################

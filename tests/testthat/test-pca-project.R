@@ -49,7 +49,7 @@ ref   <- unlist(by(predict(obj.svd)[, 2:3],         pop[ind.row],  colMedians))
 pred1 <- unlist(by(proj$simple_proj[ind.test, 2:3], pop[ind.test], colMedians))
 pred2 <- unlist(by(proj$OADP_proj[ind.test, 2:3],   pop[ind.test], colMedians))
 expect_gt(sum(ref^2), sum(pred1^2))
-expect_lt(sum((ref[[k]] - pred2[[k]])^2), sum((ref[[k]] - pred1[[k]])^2))
+expect_lt(sum((ref - pred2)^2), sum((ref - pred1)^2))
 
 proj2 <- bed_projectPCA(obj.bed, obj.bed,
                         ind.row.new = ind.test,
