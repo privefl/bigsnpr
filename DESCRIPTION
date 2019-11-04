@@ -54,7 +54,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr, privefl/bigutilsr
+Remotes: privefl/bigstatsr@splitpkg, privefl/bigutilsr
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr

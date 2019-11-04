@@ -1,14 +1,6 @@
 ## bigsnpr 1.0.0
 
-TODO: 
-
-    - need to change PLINKKINGQC so that output both
-    - export read_bed_scaled()?
-    - verify `alpha.tukey`
-    - make bed class available in C++ header
-    - better rollmean?
-
-- Add memory-mapping on PLINK (.bed) files with missing values + functions:
+- Add memory-mapping on PLINK (.bed) files with missing values + new functions:
     - `bed()`
     - `bed_MAF()`
     - `bed_autoSVD()`
@@ -31,6 +23,8 @@ TODO:
 - Add 3 parameters to `autoSVD()`: `alpha.tukey`, `min.mac` and `max.iter`.
 
 - Remove option for changing ploidy (that was only partially supported).
+
+- Automatically apply `snp_gc()` to `pcadapt`.
 
 ## bigsnpr 0.11.3
 
