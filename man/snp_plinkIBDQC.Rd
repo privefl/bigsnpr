@@ -50,21 +50,21 @@ using its method-of-moments.
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 plink <- download_plink()
-test <- snp_plinkIBDQC(plink, bedfile,
-                       bedfile.out = tempfile(fileext = ".bed"),
-                       ncores = 2)
-test
-test2 <- snp_plinkIBDQC(plink, bedfile,
-                        do.blind.QC = FALSE,
-                        ncores = 2)
-str(test2)
+
+bedfile <- snp_plinkIBDQC(plink, bedfile,
+                          bedfile.out = tempfile(fileext = ".bed"),
+                          ncores = 2)
+
+df_rel <- snp_plinkIBDQC(plink, bedfile, do.blind.QC = FALSE, ncores = 2)
+str(df_rel)
+
 library(ggplot2)
-qplot(Z0, Z1, data = test2, col = RT)
-qplot(y = PI_HAT, data = test2) +
+qplot(Z0, Z1, data = df_rel, col = RT)
+qplot(y = PI_HAT, data = df_rel) +
   geom_hline(yintercept = 0.2, color = "blue", linetype = 2)
 snp_plinkRmSamples(plink, bedfile,
                    bedfile.out = tempfile(fileext = ".bed"),
-                   df.or.files = subset(test2, PI_HAT > 0.2))
+                   df.or.files = subset(df_rel, PI_HAT > 0.2))
 
 }
 \references{

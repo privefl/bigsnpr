@@ -5,7 +5,7 @@
 \title{Relationship-based pruning}
 \usage{
 snp_plinkKINGQC(plink2.path, bedfile.in, bedfile.out = NULL,
-  thr.king = 0.0884, make.bed = TRUE, ncores = 1,
+  thr.king = 2^-3.5, make.bed = TRUE, ncores = 1,
   extra.options = "", verbose = TRUE)
 }
 \arguments{
@@ -20,12 +20,13 @@ appending \code{"_norel"} to \code{prefix.in} (\code{bedfile.in} without extensi
 duplicate samples have kinship 0.5, not 1. First-degree relations
 (parent-child, full siblings) correspond to ~0.25, second-degree relations
 correspond to ~0.125, etc. It is conventional to use a cutoff of ~0.354
-(the geometric mean of 0.5 and 0.25) to screen for monozygotic twins and
-duplicate samples, ~0.177 to remove first-degree relations as well, and
-0.0884 (\strong{default}) to remove second-degree relations as well, etc.}
+(2^-1.5, the geometric mean of 0.5 and 0.25) to screen for monozygotic
+twins and duplicate samples, ~0.177 (2^-2.5) to remove first-degree
+relations as well, and ~0.0884 (2^-3.5, \strong{default}) to remove
+second-degree relations as well, etc.}
 
 \item{make.bed}{Whether to create new bed/bim/fam files (default).
-Otherwise, returns a logical vector whether individuals are kept or not.}
+Otherwise, returns a table with coefficients of related pairs.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
@@ -35,7 +36,7 @@ You may use \link{nb_cores}.}
 \item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
-The path of the new bedfile.
+See parameter \code{make-bed}.
 }
 \description{
 Quality Control based on KING-robust kinship estimator. More information can
@@ -44,9 +45,13 @@ be found at \url{http://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 plink2 <- download_plink2(AVX2 = FALSE)
-test <- snp_plinkKINGQC(plink2, bedfile,
-                        bedfile.out = tempfile(fileext = ".bed"),
-                        ncores = 2)
+
+bedfile2 <- snp_plinkKINGQC(plink2, bedfile,
+                            bedfile.out = tempfile(fileext = ".bed"),
+                            ncores = 2)
+
+df_rel <- snp_plinkKINGQC(plink2, bedfile, make.bed = FALSE, ncores = 2)
+str(df_rel)
 
 }
 \references{

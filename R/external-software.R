@@ -343,21 +343,21 @@ snp_plinkRmSamples <- function(plink.path,
 #' @examples
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #' plink <- download_plink()
-#' test <- snp_plinkIBDQC(plink, bedfile,
-#'                        bedfile.out = tempfile(fileext = ".bed"),
-#'                        ncores = 2)
-#' test
-#' test2 <- snp_plinkIBDQC(plink, bedfile,
-#'                         do.blind.QC = FALSE,
-#'                         ncores = 2)
-#' str(test2)
+#'
+#' bedfile <- snp_plinkIBDQC(plink, bedfile,
+#'                           bedfile.out = tempfile(fileext = ".bed"),
+#'                           ncores = 2)
+#'
+#' df_rel <- snp_plinkIBDQC(plink, bedfile, do.blind.QC = FALSE, ncores = 2)
+#' str(df_rel)
+#'
 #' library(ggplot2)
-#' qplot(Z0, Z1, data = test2, col = RT)
-#' qplot(y = PI_HAT, data = test2) +
+#' qplot(Z0, Z1, data = df_rel, col = RT)
+#' qplot(y = PI_HAT, data = df_rel) +
 #'   geom_hline(yintercept = 0.2, color = "blue", linetype = 2)
 #' snp_plinkRmSamples(plink, bedfile,
 #'                    bedfile.out = tempfile(fileext = ".bed"),
-#'                    df.or.files = subset(test2, PI_HAT > 0.2))
+#'                    df.or.files = subset(df_rel, PI_HAT > 0.2))
 #'
 snp_plinkIBDQC <- function(plink.path,
                            bedfile.in,
@@ -442,14 +442,15 @@ snp_plinkIBDQC <- function(plink.path,
 #'   duplicate samples have kinship 0.5, not 1. First-degree relations
 #'   (parent-child, full siblings) correspond to ~0.25, second-degree relations
 #'   correspond to ~0.125, etc. It is conventional to use a cutoff of ~0.354
-#'   (the geometric mean of 0.5 and 0.25) to screen for monozygotic twins and
-#'   duplicate samples, ~0.177 to remove first-degree relations as well, and
-#'   0.0884 (**default**) to remove second-degree relations as well, etc.
+#'   (2^-1.5, the geometric mean of 0.5 and 0.25) to screen for monozygotic
+#'   twins and duplicate samples, ~0.177 (2^-2.5) to remove first-degree
+#'   relations as well, and ~0.0884 (2^-3.5, **default**) to remove
+#'   second-degree relations as well, etc.
 #' @param extra.options Other options to be passed to PLINK2 as a string.
 #' @param make.bed Whether to create new bed/bim/fam files (default).
-#'   Otherwise, returns a logical vector whether individuals are kept or not.
+#'   Otherwise, returns a table with coefficients of related pairs.
 #'
-#' @return The path of the new bedfile.
+#' @return See parameter `make-bed`.
 #' @export
 #'
 #' @inherit snp_plinkQC references
@@ -463,14 +464,18 @@ snp_plinkIBDQC <- function(plink.path,
 #' @examples
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #' plink2 <- download_plink2(AVX2 = FALSE)
-#' test <- snp_plinkKINGQC(plink2, bedfile,
-#'                         bedfile.out = tempfile(fileext = ".bed"),
-#'                         ncores = 2)
+#'
+#' bedfile2 <- snp_plinkKINGQC(plink2, bedfile,
+#'                             bedfile.out = tempfile(fileext = ".bed"),
+#'                             ncores = 2)
+#'
+#' df_rel <- snp_plinkKINGQC(plink2, bedfile, make.bed = FALSE, ncores = 2)
+#' str(df_rel)
 #'
 snp_plinkKINGQC <- function(plink2.path,
                             bedfile.in,
                             bedfile.out = NULL,
-                            thr.king = 0.0884,
+                            thr.king = 2^-3.5,
                             make.bed = TRUE,
                             ncores = 1,
                             extra.options = "",
@@ -486,34 +491,46 @@ snp_plinkKINGQC <- function(plink2.path,
 
   # get possibly new file
   if (make.bed) {
+
     if (is.null(bedfile.out)) bedfile.out <- paste0(prefix.in, "_norel.bed")
     assert_noexist(bedfile.out)
-    prefix.out <- sub_bed(bedfile.out)
-  } else {
-    prefix.out <- tempfile()
-  }
 
-  # compute KING-robust kinship coefficients and filter
-  system_verbose(
-    paste(
-      plink2.path,
-      "--bfile", prefix.in,
-      "--king-cutoff", thr.king,
-      if (make.bed) "--make-bed",
-      "--out", prefix.out,
-      "--threads", ncores,
-      extra.options
-    ),
-    verbose = verbose
-  )
+    # compute KING-robust kinship coefficients and filter
+    system_verbose(
+      paste(
+        plink2.path,
+        "--bfile", prefix.in,
+        "--make-bed --king-cutoff", thr.king,
+        "--out", sub_bed(bedfile.out),
+        "--threads", ncores,
+        extra.options
+      ),
+      verbose = verbose
+    )
 
-  if (make.bed) {
     bedfile.out
+
   } else {
-    fam <- bigreadr::fread2(sub_bed(bedfile.in, ".fam"), header = FALSE)
-    full_id <- paste(fam$V1, fam$V2, sep = "\t")
-    keep_id <- readLines(paste0(prefix.out, ".king.cutoff.in.id"))[-1]
-    full_id %in% keep_id
+
+    prefix.out <- tempfile()
+
+    # compute table of KING-robust kinship coefficients
+    system_verbose(
+      paste(
+        plink2.path,
+        "--bfile", prefix.in,
+        "--make-king-table --king-table-filter", thr.king,
+        "--out", prefix.out,
+        "--threads", ncores,
+        extra.options
+      ),
+      verbose = verbose
+    )
+
+    rel_df <- bigreadr::fread2(paste0(prefix.out, ".kin0"), header = TRUE)
+    names(rel_df) <- sub("^#(.*)$", "\\1", names(rel_df))
+    rel_df
+
   }
 }
 
