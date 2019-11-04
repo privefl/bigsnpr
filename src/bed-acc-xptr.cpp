@@ -27,7 +27,7 @@ bed::bed(std::string path, int n, int m) : n(n), m(m), n_byte(ceil4(n)) {
   all variants for the first sample, list all variants for the second
   sample, etc */
   if (this->ro_ummap[2] != '\x01')
-    Rcpp::stop("Sample-major mode is not supported.");
+    Rcpp::stop("Variant-major is the only mode supported.");
 
   // Check if given dimensions match the file
   if ((3 + this->n_byte * this->m) != this->ro_ummap.size())

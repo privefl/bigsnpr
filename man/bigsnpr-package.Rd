@@ -45,7 +45,7 @@ Use \code{obj.bed <- bed(bedfile)} to get this object.}
 }
 \description{
 Easy-to-use, efficient, flexible and scalable tools
-    for the analysis of massive SNP arrays <doi:10.1093/bioinformatics/bty185>.
+    for analyzing massive SNP arrays <doi:10.1093/bioinformatics/bty185>.
 }
 \seealso{
 Useful links:

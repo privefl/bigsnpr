@@ -25,6 +25,17 @@ get_os <- function() {
 
 ################################################################################
 
+# Thanks @richfitz for this
+get_pattern <- function(x, pattern) {
+  sub(
+    pattern = pattern,
+    replacement = "\\1",
+    x = grep(pattern, x, value = TRUE)
+  )
+}
+
+################################################################################
+
 #' Download PLINK
 #'
 #' Download PLINK 1.9 from \url{http://www.cog-genomics.org/plink2}.
@@ -43,13 +54,10 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE) {
   PLINK <- file.path(dir, `if`(myOS == "Windows", "plink.exe", "plink"))
   if (!overwrite && file.exists(PLINK)) return(PLINK)
 
-  # https://regex101.com/r/jC8nB0/143
-  plink.names <- gsubfn::strapply(
-    X = readLines("http://www.cog-genomics.org/plink2"),
+  plink.names <- get_pattern(
+    x = readLines("http://www.cog-genomics.org/plink2"),
     # http://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20190304.zip
-    pattern = "(http://s3.amazonaws.com/plink1-assets/plink_.+?(?<!dev)\\.zip)",
-    simplify = "c",
-    perl = TRUE
+    pattern = ".*(http://s3.amazonaws.com/plink1-assets/plink_.+?\\.zip).*"
   )
   plink.builds <- data.frame(
     url = plink.names,
@@ -89,13 +97,10 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE) {
   PLINK2 <- file.path(dir, `if`(myOS == "Windows", "plink2.exe", "plink2"))
   if (!overwrite && file.exists(PLINK2)) return(PLINK2)
 
-  # https://regex101.com/r/jC8nB0/143
-  plink.names <- gsubfn::strapply(
-    X = readLines("http://www.cog-genomics.org/plink/2.0/"),
+  plink.names <- get_pattern(
+    x = readLines("http://www.cog-genomics.org/plink/2.0/"),
     # http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20190527.zip
-    pattern = "(http://s3.amazonaws.com/plink2-assets/plink2_.+?(?<!dev)\\.zip)",
-    simplify = "c",
-    perl = TRUE
+    pattern = ".*(http://s3.amazonaws.com/plink2-assets/plink2_.+?\\.zip).*"
   )
   plink.builds <- data.frame(
     url  = plink.names,
@@ -136,13 +141,10 @@ download_beagle <- function(dir = tempdir()) {
 
   url <- "https://faculty.washington.edu/browning/beagle/"
 
-  # https://regex101.com/r/jC8nB0/141
-  jar <- gsubfn::strapply(
-    X = readLines(paste0(url, "beagle.html")),
-    pattern = "(beagle.+?\\.jar)",
-    simplify = "c",
-    perl = TRUE
-  )[[1]]
+  jar <- get_pattern(
+    x = readLines(paste0(url, "beagle.html")),
+    pattern = ".*(beagle.+?\\.jar).*"
+  )
 
   beagle <- file.path(dir, jar)
   if (!file.exists(beagle)) {

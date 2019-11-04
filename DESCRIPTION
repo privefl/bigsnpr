@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 0.12.0
-Date: 2019-10-05
+Version: 1.0.0
+Date: 2019-11-03
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -15,14 +15,14 @@ Authors@R: c(
            email = "hugues.aschard@pasteur.fr",
            role = "ths"))
 Description: Easy-to-use, efficient, flexible and scalable tools
-    for the analysis of massive SNP arrays <doi:10.1093/bioinformatics/bty185>.
+    for analyzing massive SNP arrays <doi:10.1093/bioinformatics/bty185>.
 License: GPL-3
 LazyData: TRUE
 Language: en-US
 ByteCompile: TRUE
 Depends:
     R (>= 3.3), 
-    bigstatsr (>= 0.9.10)
+    bigstatsr (>= 1.0.0)
 Imports:
     bigassertr (>= 0.1.1),
     bigparallelr (>= 0.1.2),
@@ -31,7 +31,6 @@ Imports:
     data.table,
     foreach, 
     ggplot2,
-    gsubfn,
     magrittr,
     Matrix,
     methods,
@@ -55,7 +54,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr@splitpkg, privefl/bigutilsr
+Remotes: privefl/bigstatsr, privefl/bigutilsr
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr

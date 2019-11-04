@@ -1,23 +1,34 @@
-## bigsnpr 0.12.0
+## bigsnpr 1.0.0
 
-- Some functions from {bigstatsr} can now be used on PLINK (.bed) files:
-    - `big_prodVec()`
-    - `big_cprodVec()`
-    - `big_randomSVD()`
+TODO: 
+
+    - need to change PLINKKINGQC so that output both
+    - export read_bed_scaled()?
+    - verify `alpha.tukey`
+    - make bed class available in C++ header
+    - better rollmean?
 
 - Add memory-mapping on PLINK (.bed) files with missing values + functions:
+    - `bed()`
+    - `bed_MAF()`
     - `bed_autoSVD()`
     - `bed_clumping()`
+    - `bed_counts()`
+    - `bed_cprodVec()`
     - `bed_pcadapt()`
+    - `bed_prodVec()`
     - `bed_projectPCA()`
+    - `bed_projectSelfPCA()`
     - `bed_randomSVD()`
+    - `bed_scaleBinom()`
     - `bed_tcrossprodSelf()`
     - `download_1000G()`
     - `snp_modifyBuild()`
     - `snp_plinkKINGQC()`
     - `snp_readBed2()`
+    - `sub_bed()`
     
-- Using `robLOF()` for outlier sample detection in `autoSVD2`.
+- Add 3 parameters to `autoSVD()`: `alpha.tukey`, `min.mac` and `max.iter`.
 
 - Remove option for changing ploidy (that was only partially supported).
 

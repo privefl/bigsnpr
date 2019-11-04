@@ -88,8 +88,8 @@ snp_MAF <- function(G,
 #'
 #' @return A data frame with `$center` and `$scale`.
 #'
-#' @details You will probably not use this function as is but as the
-#' `fun.scaling` parameter of other functions of package `bigstatsr`.
+#' @details You will probably not use this function as is but as parameter
+#'   `fun.scaling` of other functions (e.g. `bed_autoSVD` and `bed_randomSVD`).
 #'
 #' @export
 #'

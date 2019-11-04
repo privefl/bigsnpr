@@ -20,7 +20,7 @@ A reference class for storing a pointer to a mapped version of a bed file.
 A \code{bed} object has many field:
 \itemize{
 \item \code{$address}: address of the external pointer containing the underlying
-C++ object, to be used as a \code{XPtr<bed>} in C++ code
+C++ object, to be used internally as a \code{XPtr<bed>} in C++ code
 \item \code{$extptr}: use \code{$address} instead
 \item \code{$bedfile}: path to the bed file
 \item \code{$bimfile}: path to the corresponding bim file
@@ -37,6 +37,6 @@ C++ object, to be used as a \code{XPtr<bed>} in C++ code
 
 \examples{
 bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
-obj.bed <- bed(bedfile)
+(obj.bed <- bed(bedfile))
 
 }

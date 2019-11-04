@@ -26,8 +26,8 @@ A data frame with \code{$center} and \code{$scale}.
 Binomial(2, p) scaling where \code{p} is estimated.
 }
 \details{
-You will probably not use this function as is but as the
-\code{fun.scaling} parameter of other functions of package \code{bigstatsr}.
+You will probably not use this function as is but as parameter
+\code{fun.scaling} of other functions (e.g. \code{bed_autoSVD} and \code{bed_randomSVD}).
 }
 \examples{
 bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")

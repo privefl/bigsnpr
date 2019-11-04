@@ -18,11 +18,16 @@
 #' sub_bed(path, ".fam")
 #' sub_bed(path, "_QC", stop_if_not_ext = FALSE)
 sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
+
   pattern <- "\\.bed$"
+
   if (!grepl(pattern, path))
     stop2("Path '%s' must have 'bed' extension.", path)
-  if (stop_if_not_ext && nchar(replacement) > 0 && substr(replacement, 1, 1) != ".")
+
+  if (stop_if_not_ext && (nchar(replacement) > 0) &&
+      (substr(replacement, 1, 1) != "."))
     stop2("Replacement must be an extension starting with '.' if provided.")
+
   sub(pattern, replacement, path)
 }
 
@@ -35,7 +40,7 @@ sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
 #' @details
 #' A `bed` object has many field:
 #'   - `$address`: address of the external pointer containing the underlying
-#'     C++ object, to be used as a `XPtr<bed>` in C++ code
+#'     C++ object, to be used internally as a `XPtr<bed>` in C++ code
 #'   - `$extptr`: use `$address` instead
 #'   - `$bedfile`: path to the bed file
 #'   - `$bimfile`: path to the corresponding bim file
@@ -50,7 +55,7 @@ sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
-#' obj.bed <- bed(bedfile)
+#' (obj.bed <- bed(bedfile))
 #'
 #' @exportClass bed
 #' @importFrom methods new

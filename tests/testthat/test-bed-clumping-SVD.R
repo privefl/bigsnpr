@@ -91,4 +91,9 @@ expect_true(all(bed_MAF(obj.bed2, ind.row, ind.col)$af <= 1))
 expect_true(all(bed_MAF(obj.bed2, ind.row, ind.col)$ac <=
                   (2 * bed_MAF(obj.bed2, ind.row, ind.col)$N)))
 
+ind1 <- sample(nrow(obj.bed2), 300)
+ind2 <- sample(ncol(obj.bed2), 3000)
+expect_identical(bed_scaleBinom(obj.bed2, ind1, ind2)$center,
+                 2 * bed_MAF(obj.bed2, ind1, ind2, ncores = 2)$af)
+
 ################################################################################
