@@ -39,6 +39,8 @@ This package uses a class called `bigSNP` for representing SNP data. A `bigSNP` 
 
 - Multiple imputation for GWAS (https://doi.org/10.1371/journal.pgen.1006091).
 
+- More interactive (visual) QC by wrapping around PLINK.
+
 You can request some feature by opening an issue.
 
 

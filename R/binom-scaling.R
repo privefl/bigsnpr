@@ -33,7 +33,7 @@
 #' abline(h = 2 * p, col = "red")
 #' plot(X.svd$scale)
 #' abline(h = sqrt(2 * p * (1 - p)), col = "red")
-snp_scaleBinom <- function(nploidy = getOption("bigsnpr.nploidy")) {
+snp_scaleBinom <- function(nploidy = 2) {
 
   function(X,
            ind.row = rows_along(X),
@@ -67,12 +67,125 @@ snp_scaleBinom <- function(nploidy = getOption("bigsnpr.nploidy")) {
 snp_MAF <- function(G,
                     ind.row = rows_along(G),
                     ind.col = cols_along(G),
-                    nploidy = getOption("bigsnpr.nploidy")) {
+                    nploidy = 2,
+                    ncores = 1) {
 
-  p <- big_colstats(G, ind.row = ind.row, ind.col = ind.col)$sum /
-    (nploidy * length(ind.row))
+  ac <- big_parallelize(G, function(X, ind, ind.row) {
+    big_colstats(X, ind.row = ind.row, ind.col = ind)$sum
+  }, ind = ind.col, ind.row = ind.row, p.combine = 'c', ncores = ncores)
 
+  p <- ac / (nploidy * length(ind.row))
   pmin(p, 1 - p)
 }
 
 ################################################################################
+
+#' Binomial(2, p) scaling
+#'
+#' Binomial(2, p) scaling where `p` is estimated.
+#'
+#' @inheritParams bed_autoSVD
+#'
+#' @return A data frame with `$center` and `$scale`.
+#'
+#' @details You will probably not use this function as is but as parameter
+#'   `fun.scaling` of other functions (e.g. `bed_autoSVD` and `bed_randomSVD`).
+#'
+#' @export
+#'
+#' @inherit snp_scaleBinom references
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+#' obj.bed <- bed(bedfile)
+#'
+#' str(bed_scaleBinom(obj.bed))
+#'
+#' str(bed_randomSVD(obj.bed, bed_scaleBinom))
+#'
+bed_scaleBinom <- function(obj.bed,
+                           ind.row = rows_along(obj.bed),
+                           ind.col = cols_along(obj.bed)) {
+
+  stats <- bed_stats(obj.bed, ind.row, ind.col)
+  af <- stats$sum / (2 * stats$nb_nona_col)
+
+  data.frame(center = 2 * af, scale = sqrt(2 * af * (1 - af)))
+}
+
+################################################################################
+
+#' Counts
+#'
+#' Counts the number of 0s, 1s, 2s and NAs by variants in the bed file.
+#'
+#' @inheritParams bigsnpr-package
+#'
+#' @return A matrix of with 4 rows and `length(ind.col)` columns.
+#'
+#' @export
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+#' obj.bed <- bed(bedfile)
+#'
+#' bed_counts(obj.bed, ind.col = 1:5)
+#'
+bed_counts <- function(obj.bed,
+                       ind.row = rows_along(obj.bed),
+                       ind.col = cols_along(obj.bed),
+                       ncores = 1) {
+
+  res <- big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
+    bed_counts_cpp(obj.bed, ind.row, ind)
+  }, p.combine = "cbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
+
+  rownames(res) <- c(0:2, NA)
+  res
+}
+
+################################################################################
+
+#' Allele frequencies
+#'
+#' Allele frequencies of a [bed] object.
+#'
+#' @inheritParams bigsnpr-package
+#'
+#' @return A data.frame with
+#'  - `$ac`: allele counts,
+#'  - `$mac`: minor allele counts,
+#'  - `$af`: allele frequencies,
+#'  - `$maf`: minor allele frequencies,
+#'  - `$N`: numbers of non-missing values.
+#'
+#' @export
+#'
+#' @examples
+#' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+#' obj.bed <- bed(bedfile)
+#'
+#' bed_MAF(obj.bed, ind.col = 1:5)
+#'
+bed_MAF <- function(obj.bed,
+                    ind.row = rows_along(obj.bed),
+                    ind.col = cols_along(obj.bed),
+                    ncores = 1) {
+
+  counts <- bed_counts(obj.bed, ind.row, ind.col, ncores)
+  ac <- counts[2, ] + 2 * counts[3, ]
+  nb_nona <- length(ind.row) - counts[4, ]
+  af <- ac / (2 * nb_nona)
+
+  data.frame(
+    ac  = ac,
+    mac = pmin(ac, 2 * nb_nona - ac),
+    af  = af,
+    maf = pmin(af, 1 - af),
+    N   = nb_nona
+  )
+}
+
+################################################################################
+
+

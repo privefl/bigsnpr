@@ -15,8 +15,7 @@
 #'
 #' @export
 snp_save <- function(x) {
-  saveRDS(x, sub("\\.bk$", ".rds", x$genotypes$backingfile))
-
+  saveRDS(x, sub_bk(x$genotypes$backingfile, ".rds"))
   x
 }
 
@@ -39,11 +38,10 @@ snp_save <- function(x) {
 #' Default is all but the first and the second columns.
 #' @param pair.sep Separator used for concatenation family and sample IDs
 #' in order to match easier. Default is `"-_-"`.
-#' @param ... Any additional parameter to pass to [fread][data.table::fread].
+#' @param ... Any additional parameter to pass to [bigreadr::fread2()].
 #' Particularly, option `header = FALSE` is sometimes needed.
 #'
 #' @return The requested information as a `data.frame`.
-#' @import foreach
 #'
 #' @examples
 #' test <- snp_attachExtdata()
@@ -51,9 +49,9 @@ snp_save <- function(x) {
 #' rle(test$fam$family.ID)
 #' # Get populations clusters from external files
 #' files <- system.file("extdata", paste0("cluster", 1:3), package = "bigsnpr")
-#' data.table::fread(files[1])
+#' bigreadr::fread2(files[1])
 #' # need header option
-#' data.table::fread(files[1], header = FALSE)
+#' bigreadr::fread2(files[1], header = FALSE)
 #' infos <- snp_getSampleInfos(test, files, header = FALSE)
 #' rle(infos[[1]])
 #'
@@ -67,14 +65,10 @@ snp_getSampleInfos <- function(x, df.or.files,
                                pair.sep = "-_-",
                                ...) {
 
-  check_args()
-
   if (is.data.frame(df.or.files)) {
     data.infos <- df.or.files
   } else if (is.character(df.or.files)) {
-    data.infos <- foreach(f = df.or.files, .combine = 'rbind') %do% {
-      data.table::fread(f, data.table = FALSE, ...)
-    }
+    data.infos <- bigreadr::fread2(df.or.files, ...)
   } else {
     stop2("'df.or.files' must be a data.frame or a vector of file paths.")
   }

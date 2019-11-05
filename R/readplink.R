@@ -24,23 +24,21 @@
 #'
 #' @example examples/example-readplink.R
 #' @export
-snp_readBed <- function(bedfile, backingfile = sub("\\.bed$", "", bedfile)) {
+snp_readBed <- function(bedfile, backingfile = sub_bed(bedfile)) {
 
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)
   assert_noexist(paste0(backingfile, ".bk"))
 
-  # Check extension of file
-  assert_ext(bedfile, "bed")
   # Get other files
-  bimfile <- sub("\\.bed$", ".bim", bedfile)
-  famfile <- sub("\\.bed$", ".fam", bedfile)
+  bimfile <- sub_bed(bedfile, ".bim")
+  famfile <- sub_bed(bedfile, ".fam")
   # Check if all three files exist
   sapply(c(bedfile, bimfile, famfile), assert_exist)
 
   # Read map and family files
-  fam <- data.table::fread(famfile, data.table = FALSE, col.names = NAMES.FAM)
-  bim <- data.table::fread(bimfile, data.table = FALSE, col.names = NAMES.MAP)
+  fam <- bigreadr::fread2(famfile, col.names = NAMES.FAM)
+  bim <- bigreadr::fread2(bimfile, col.names = NAMES.MAP)
 
   # Prepare Filebacked Big Matrix
   bigGeno <- FBM.code256(
@@ -63,7 +61,52 @@ snp_readBed <- function(bedfile, backingfile = sub("\\.bed$", "", bedfile)) {
                         class = "bigSNP")
 
   # save it and return the path of the saved object
-  rds <- sub("\\.bk$", ".rds", bigGeno$backingfile)
+  rds <- sub_bk(bigGeno$backingfile, ".rds")
+  saveRDS(snp.list, rds)
+  rds
+}
+
+#' @inheritParams bigsnpr-package
+#' @rdname snp_readBed
+#' @export
+snp_readBed2 <- function(bedfile, backingfile = sub_bed(bedfile),
+                         ind.row = rows_along(obj.bed),
+                         ind.col = cols_along(obj.bed)) {
+
+  check_args()
+
+  # Check if backingfile already exists
+  backingfile <- path.expand(backingfile)
+  assert_noexist(paste0(backingfile, ".bk"))
+
+  # Get mapping of bed
+  obj.bed <- bed(bedfile)
+
+  # Read map and family files
+  fam <- obj.bed$fam[ind.row, ]; rownames(fam) <- rows_along(fam)
+  bim <- obj.bed$map[ind.col, ]; rownames(bim) <- rows_along(bim)
+
+  # Prepare Filebacked Big Matrix
+  bigGeno <- FBM.code256(
+    nrow = nrow(fam),
+    ncol = nrow(bim),
+    code = CODE_012,
+    backingfile = backingfile,
+    init = NULL,
+    create_bk = TRUE
+  )
+
+  # Fill the FBM from bedfile
+  readbina2(bigGeno, obj.bed, ind.row, ind.col)
+
+  # Create the bigSNP object
+  snp.list <- structure(list(genotypes = bigGeno,
+                             fam = fam,
+                             map = bim),
+                        class = "bigSNP")
+
+  # save it and return the path of the saved object
+  rds <- sub_bk(bigGeno$backingfile, ".rds")
   saveRDS(snp.list, rds)
   rds
 }

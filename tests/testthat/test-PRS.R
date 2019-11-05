@@ -12,7 +12,7 @@ y01 <- test$fam$affection - 1
 
 # PCA -> covariables
 obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome,
-                       infos.pos = test$map$physical.pos)
+                       infos.pos = test$map$physical.pos, verbose = FALSE)
 
 # GWAS
 gwas <- big_univLogReg(G, y01.train = y01, covar.train = obj.svd$u)
@@ -54,5 +54,17 @@ expect_equal(dim(prs3), c(nrow(G), length(thrs2)))
 scores.cor2 <- sapply(cols_along(prs3), function(j) cor(prs3[, j], prs2[, j]))
 expect_equal(scores.cor2, rep(1, length(thrs2)),
              tolerance = 1e-3)
+
+# No threshold
+expect_message(snp_PRS(G, betas.keep = gwas$estim[ind.keep],
+                       ind.test = rows_along(G),
+                       ind.keep = ind.keep,
+                       lpS.keep = -predict(gwas)[ind.keep]),
+               "Thresholding disabled.")
+expect_message(snp_PRS(G, betas.keep = gwas$estim[ind.keep],
+                       ind.test = rows_along(G),
+                       ind.keep = ind.keep,
+                       thr.list = thrs2),
+               "Thresholding disabled.")
 
 ################################################################################

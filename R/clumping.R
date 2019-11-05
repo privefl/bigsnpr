@@ -3,17 +3,18 @@
 #' LD clumping
 #'
 #' For a `bigSNP`:
-#' - `snp_pruning`: LD pruning. Similar to "`--indep-pairwise (size+1) 1 thr.r2`"
+#' - `snp_pruning()`: LD pruning. Similar to "`--indep-pairwise (size+1) 1 thr.r2`"
 #'   in [PLINK](https://www.cog-genomics.org/plink/1.9/ld)
 #'   (`step` is fixed to 1). **This function is deprecated (see
 #' [this article](https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html)).**
-#' - `snp_clumping`: LD clumping. If you do not provide any statistic to rank
+#' - `snp_clumping()` (and `bed_clumping()`): LD clumping. If you do not provide any statistic to rank
 #'   SNPs, it would use minor allele frequencies (MAFs), making clumping similar
 #'   to pruning.
-#' - `snp_indLRLDR`: Get SNP indices of long-range LD regions for the
+#' - `snp_indLRLDR()`: Get SNP indices of long-range LD regions for the
 #'   human genome.
 #'
 #' @inheritParams bigsnpr-package
+#' @inheritParams snp_readBed
 #'
 #' @param S A vector of column statistics which express the importance
 #' of each SNP (the more important is the SNP, the greater should be
@@ -41,7 +42,7 @@
 #' \url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}
 #'
 #' @return
-#' - `snp_clumping()`: SNP indices that are __kept__.
+#' - `snp_clumping()` (and `bed_clumping()`): SNP indices that are __kept__.
 #' - `snp_indLRLDR()`: SNP indices to be used as (part of) the '__`exclude`__'
 #'   parameter of `snp_clumping()`.
 #'
@@ -119,7 +120,7 @@ snp_pruning <- function(G, infos.chr,
                         infos.pos = NULL,
                         thr.r2 = 0.2,
                         exclude = NULL,
-                        nploidy = getOption("bigsnpr.nploidy"),
+                        nploidy = 2,
                         ncores = 1) {
 
   check_args()

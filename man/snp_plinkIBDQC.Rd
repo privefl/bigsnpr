@@ -6,7 +6,7 @@
 \usage{
 snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL,
   pi.hat = 0.08, ncores = 1, pruning.args = c(100, 0.2),
-  do.blind.QC = TRUE, extra.options = "")
+  do.blind.QC = TRUE, extra.options = "", verbose = TRUE)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -33,7 +33,9 @@ Default is \code{TRUE}. If \code{FALSE}, return the \code{data.frame} of the cor
 
 \item{extra.options}{Other options to be passed to PLINK as a string
 (for the IBD part). More options can be found at
-\url{https://www.cog-genomics.org/plink/1.9/ibd}.}
+\url{http://www.cog-genomics.org/plink/1.9/ibd}.}
+
+\item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
 The path of the new bedfile.
@@ -42,36 +44,30 @@ then the path of the input bedfile is returned.
 }
 \description{
 Quality Control based on Identity-by-descent (IBD) computed by
-\href{https://www.cog-genomics.org/plink2}{PLINK 1.9}
+\href{http://www.cog-genomics.org/plink2}{PLINK 1.9}
 using its method-of-moments.
 }
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 plink <- download_plink()
-test <- snp_plinkIBDQC(plink, bedfile,
-                       bedfile.out = tempfile(fileext = ".bed"),
-                       ncores = 2)
-test
-test2 <- snp_plinkIBDQC(plink, bedfile,
-                        do.blind.QC = FALSE,
-                        ncores = 2)
-str(test2)
+
+bedfile <- snp_plinkIBDQC(plink, bedfile,
+                          bedfile.out = tempfile(fileext = ".bed"),
+                          ncores = 2)
+
+df_rel <- snp_plinkIBDQC(plink, bedfile, do.blind.QC = FALSE, ncores = 2)
+str(df_rel)
+
 library(ggplot2)
-qplot(Z0, Z1, data = test2, col = RT)
-qplot(y = PI_HAT, data = test2) +
+qplot(Z0, Z1, data = df_rel, col = RT)
+qplot(y = PI_HAT, data = df_rel) +
   geom_hline(yintercept = 0.2, color = "blue", linetype = 2)
 snp_plinkRmSamples(plink, bedfile,
                    bedfile.out = tempfile(fileext = ".bed"),
-                   df.or.files = subset(test2, PI_HAT > 0.2))
+                   df.or.files = subset(df_rel, PI_HAT > 0.2))
 
 }
 \references{
-Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
-Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
-\emph{PLINK: a tool set for whole-genome association and population-based linkage
-analyses.} American Journal of Human Genetics 81 (3). Elsevier: 559–75.
-\url{http://dx.doi.org/10.1086/519795}.
-
 Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 \emph{Second-generation PLINK: rising to the challenge of larger and richer
@@ -79,5 +75,5 @@ datasets.} GigaScience 4 (1): 7.
 \url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
 }
 \seealso{
-\link{download_plink} \link{snp_plinkQC}
+\link{download_plink} \link{snp_plinkQC} \link{snp_plinkKINGQC}
 }

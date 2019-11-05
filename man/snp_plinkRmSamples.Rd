@@ -5,7 +5,7 @@
 \title{Remove samples}
 \usage{
 snp_plinkRmSamples(plink.path, bedfile.in, bedfile.out, df.or.files,
-  col.family.ID = 1, col.sample.ID = 2, ...)
+  col.family.ID = 1, col.sample.ID = 2, ..., verbose = TRUE)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -27,8 +27,10 @@ family IDs to match with those of the study. Default is the second one.}
 \item{col.sample.ID}{Index of the column containing the
 sample IDs to match with those of the study. Default is the first one.}
 
-\item{...}{Any additional parameter to pass to \link[data.table:fread]{fread}.
+\item{...}{Any additional parameter to pass to \code{\link[bigreadr:fread2]{bigreadr::fread2()}}.
 Particularly, option \code{header = FALSE} is sometimes needed.}
+
+\item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
 The path of the new bedfile.

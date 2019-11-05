@@ -2,9 +2,13 @@
 % Please edit documentation in R/readplink.R
 \name{snp_readBed}
 \alias{snp_readBed}
+\alias{snp_readBed2}
 \title{Read PLINK files into a "bigSNP"}
 \usage{
-snp_readBed(bedfile, backingfile = sub("\\\\.bed$", "", bedfile))
+snp_readBed(bedfile, backingfile = sub_bed(bedfile))
+
+snp_readBed2(bedfile, backingfile = sub_bed(bedfile),
+  ind.row = rows_along(obj.bed), ind.col = cols_along(obj.bed))
 }
 \arguments{
 \item{bedfile}{Path to file with extension ".bed" to read.
@@ -13,6 +17,14 @@ You need the corresponding ".bim" and ".fam" in the same directory.}
 \item{backingfile}{The path (without extension) for the backing files
 for the cache of the \link[=bigSNP-class]{bigSNP} object. Default takes the bedfile
 without the ".bed" extension.}
+
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
+
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.\cr
+\strong{Don't use negative indices.}}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.

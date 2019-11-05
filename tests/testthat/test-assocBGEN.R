@@ -28,7 +28,7 @@ test_that("raises some errors", {
                "'list_snp_id' is not of class 'list'.", fixed = TRUE)
   expect_error(
     snp_assocBGEN(bgen_file, list(c(IDs, "LOL")), y, ind, ncores = ncores()),
-    "Wrong format of some SNPs.", fixed = TRUE)
+    "Wrong format of some variants.", fixed = TRUE)
 })
 
 ################################################################################

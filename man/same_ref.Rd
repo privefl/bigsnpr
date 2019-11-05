@@ -18,7 +18,7 @@ same_ref(ref1, alt1, ref2, alt2)
 \value{
 A logical vector whether the references alleles are the same.
 Missing values can result from missing values in the inputs or from
-ambiguous strands.
+ambiguous matching (e.g. matching A/C and A/G).
 }
 \description{
 Determine reference divergence while accounting for strand flips.

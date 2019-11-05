@@ -12,8 +12,7 @@ CODE_IMPUTE_PRED  <- c(0, 1, 2, NA, 0, 1, 2, rep(NA, 249))
 
 FBM_infos <- function(Gna) {
 
-  bk <- Gna$backingfile
-  base <- sub("\\.bk$", "-infos-impute", bk)
+  base <- sub_bk(Gna$backingfile, "-infos-impute", stop_if_not_ext = FALSE)
   rds <- paste0(base, ".rds")
 
   if (file.exists(rds)) {

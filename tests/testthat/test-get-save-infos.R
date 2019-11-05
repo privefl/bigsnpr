@@ -28,7 +28,7 @@ test_that("Warning if some individuals are not matched", {
 # change slot
 test$fam$family.ID <- infos
 # re-attach
-test <- snp_attach(sub("\\.bk$", ".rds", test$genotypes$backingfile))
+test <- snp_attach(sub_bk(test$genotypes$backingfile, ".rds"))
 
 test_that("family.ID with 19 pops after re-attaching", {
   expect_equal(length(rle(test$fam$family.ID)$values), 19)
@@ -41,7 +41,7 @@ test$fam$family.ID <- infos
 # save modifs
 test <- snp_save(test)
 # re-attach
-test <- snp_attach(sub("\\.bk$", ".rds", test$genotypes$backingfile))
+test <- snp_attach(sub_bk(test$genotypes$backingfile, ".rds"))
 
 test_that("slot pop is now equal to slot 3 different pops", {
   expect_equal(rle(test$fam$family.ID)$values,

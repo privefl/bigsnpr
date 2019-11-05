@@ -7,7 +7,7 @@
 snp_plinkQC(plink.path, prefix.in, file.type = "--bfile",
   prefix.out = paste0(prefix.in, "_QC"), maf = 0.01, geno = 0.1,
   mind = 0.1, hwe = 1e-50, autosome.only = FALSE,
-  extra.options = "")
+  extra.options = "", verbose = TRUE)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -17,7 +17,7 @@ snp_plinkQC(plink.path, prefix.in, file.type = "--bfile",
 \item{file.type}{Type of the dataset to be QCed. Default is \code{"--bfile"} and
 corresponds to bed/bim/fam files. You can also use \code{"--file"} for ped/map
 files or \code{"--vcf"} for a VCF file. More information can be found at
-\url{https://www.cog-genomics.org/plink/1.9/input}.}
+\url{http://www.cog-genomics.org/plink/1.9/input}.}
 
 \item{prefix.out}{Prefix (path without extension) of the bed/bim/fam dataset
 to be created. Default is created by appending \code{"_QC"} to \code{prefix.in}.}
@@ -38,18 +38,22 @@ exact test p-value below the provided threshold. Default is \code{1e-50}.}
 variants? Default is \code{FALSE}.}
 
 \item{extra.options}{Other options to be passed to PLINK as a string. More
-options can be found at \url{https://www.cog-genomics.org/plink2/filter}.}
+options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
+If using PLINK 2.0, you could e.g. use \code{"--king-cutoff 0.0884"} to remove
+some related samples at the same time of quality controls.}
+
+\item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
 \value{
 The path of the newly created bedfile.
 }
 \description{
 Quality Control (QC) and possible conversion to \emph{bed}/\emph{bim}/\emph{fam} files
-using \href{https://www.cog-genomics.org/plink2}{PLINK 1.9}.
+using \href{http://www.cog-genomics.org/plink2}{PLINK 1.9}.
 }
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-prefix  <- sub("\\\\.bed$", "", bedfile)
+prefix  <- sub_bed(bedfile)
 plink <- download_plink()
 test <- snp_plinkQC(plink.path = plink,
                     prefix.in = prefix,
@@ -64,12 +68,6 @@ test
 
 }
 \references{
-Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
-Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
-\emph{PLINK: a tool set for whole-genome association and population-based linkage
-analyses.} American Journal of Human Genetics 81 (3). Elsevier: 559–75.
-\url{http://dx.doi.org/10.1086/519795}.
-
 Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 \emph{Second-generation PLINK: rising to the challenge of larger and richer

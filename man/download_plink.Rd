@@ -5,13 +5,15 @@
 \alias{download_plink2}
 \title{Download PLINK}
 \usage{
-download_plink(dir = tempdir())
+download_plink(dir = tempdir(), overwrite = FALSE)
 
-download_plink2(dir = tempdir(), AVX2 = TRUE)
+download_plink2(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE)
 }
 \arguments{
 \item{dir}{The directory where to put the PLINK executable.
 Default is a temporary directory.}
+
+\item{overwrite}{Whether to overwrite file? Default is \code{FALSE}.}
 
 \item{AVX2}{Whether to download the AVX2 version?
 Default is \code{TRUE} and possible only for 64 bits architectures.}
@@ -20,7 +22,7 @@ Default is \code{TRUE} and possible only for 64 bits architectures.}
 The path of the downloaded PLINK executable.
 }
 \description{
-Download PLINK 1.9 from \url{https://www.cog-genomics.org/plink2}.
+Download PLINK 1.9 from \url{http://www.cog-genomics.org/plink2}.
 
-Download PLINK 2.0 from \url{https://www.cog-genomics.org/plink/2.0/}.
+Download PLINK 2.0 from \url{http://www.cog-genomics.org/plink/2.0/}.
 }

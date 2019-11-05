@@ -48,13 +48,8 @@ snp_grid_clumping <- function(
   BASE_SIZE_CLMP <- sort(unique(grid.base.size))
   ALL_CHR        <- sort(unique(infos.chr))
 
-  if (ncores == 1) {
-    registerDoSEQ()
-  } else {
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-  }
+  bigparallelr::register_parallel(ncores)
+
   all_keep <- foreach(chr = ALL_CHR, .packages = "Matrix") %dopar% {
 
     ind.keep <- list(); i <- 1
@@ -145,6 +140,8 @@ seq_log <- function(from, to, length.out) {
   )
 }
 
+################################################################################
+
 #' Grid of PRS
 #'
 #' Polygenic Risk Scores for a grid of clumping and thresholding parameters.
@@ -191,13 +188,8 @@ snp_grid_PRS <- function(
                    backingfile = backingfile,
                    type = match.arg(type))
 
-  if (ncores == 1) {
-    registerDoSEQ()
-  } else {
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-  }
+  bigparallelr::register_parallel(ncores)
+
   foreach(ic = seq_along(all_keep2)) %dopar% {
     ind.keep <- all_keep2[[ic]]
     prs <- snp_PRS(

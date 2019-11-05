@@ -41,13 +41,8 @@ snp_split <- function(infos.chr, FUN, combine, ncores = 1, ...) {
   ord.chrs <- order(sapply(ind.chrs, length), decreasing = TRUE)
   inv.ord.chrs <- match(seq_along(ord.chrs), ord.chrs)
 
-  if (ncores == 1) {
-    registerDoSEQ()
-  } else {
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
-  }
+  bigparallelr::register_parallel(ncores)
+
   # apply the function in decreasing order of chromosome lengths
   res.noorder <- foreach(ic = ord.chrs) %dopar% {
     ind.chr <- ind.chrs[[ic]]

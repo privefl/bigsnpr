@@ -38,9 +38,9 @@ void read_variant(std::ifstream * ptr_stream,
   int D = read_int(ptr_stream);
 
   // decompress variant data
-  unsigned char buffer_in[C];
+  unsigned char *buffer_in = new unsigned char[C];
   ptr_stream->read((char *)buffer_in, C);
-  unsigned char buffer_out[D];
+  unsigned char *buffer_out = new unsigned char[D];
   // zlib struct (https://gist.github.com/arq5x/5315739)
   z_stream infstream;
   infstream.zalloc = Z_NULL;
@@ -72,6 +72,9 @@ void read_variant(std::ifstream * ptr_stream,
       ptr_mat[i] = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
     }
   }
+
+  delete[] buffer_in;
+  delete[] buffer_out;
 }
 
 /******************************************************************************/

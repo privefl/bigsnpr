@@ -9,7 +9,7 @@ matrix:
     brew_packages: libgit2
   - r: release
     os: linux
-#    after_success: travis_wait 40 Rscript -e 'covr::codecov()'
+    #after_success: travis_wait 40 Rscript -e 'covr::codecov()'
   - r: devel
     os: linux
 
@@ -22,6 +22,8 @@ env:
  global:
    - BIGSNPR_CRAN: false
    - _R_CHECK_FORCE_SUGGESTS_: false
+   - _R_CHECK_LENGTH_1_CONDITION_: verbose
+   - _R_CHECK_LENGTH_1_LOGIC2_: verbose
 
 notifications:
   email:

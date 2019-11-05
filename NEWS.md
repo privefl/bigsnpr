@@ -1,3 +1,31 @@
+## bigsnpr 1.0.0
+
+- Add memory-mapping on PLINK (.bed) files with missing values + new functions:
+    - `bed()`
+    - `bed_MAF()`
+    - `bed_autoSVD()`
+    - `bed_clumping()`
+    - `bed_counts()`
+    - `bed_cprodVec()`
+    - `bed_pcadapt()`
+    - `bed_prodVec()`
+    - `bed_projectPCA()`
+    - `bed_projectSelfPCA()`
+    - `bed_randomSVD()`
+    - `bed_scaleBinom()`
+    - `bed_tcrossprodSelf()`
+    - `download_1000G()`
+    - `snp_modifyBuild()`
+    - `snp_plinkKINGQC()`
+    - `snp_readBed2()`
+    - `sub_bed()`
+    
+- Add 3 parameters to `autoSVD()`: `alpha.tukey`, `min.mac` and `max.iter`.
+
+- Remove option for changing ploidy (that was only partially supported).
+
+- Automatically apply `snp_gc()` to `pcadapt`.
+
 ## bigsnpr 0.12.0
 
 - Add `snp_fastImputeSimple()`: fast imputation via mode, mean or sampling according to allele frequencies.

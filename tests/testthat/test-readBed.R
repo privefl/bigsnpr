@@ -2,6 +2,19 @@
 
 context("READ_BED")
 
+################################################################################
+
+test_that("sub_bed() works", {
+  expect_identical(sub_bed("toto.bed"), "toto")
+  expect_identical(sub_bed("toto.bed", ".bim"), "toto.bim")
+  expect_error(sub_bed("toto.bed2"),
+               "Path 'toto.bed2' must have 'bed' extension.")
+  expect_error(sub_bed("toto.bed", "bim"), "extension starting with '.'")
+  expect_identical(sub_bed("toto.bed", "bim", stop_if_not_ext = FALSE), "totobim")
+})
+
+################################################################################
+
 test <- snp_attachExtdata()
 G <- test$genotypes
 
@@ -22,7 +35,7 @@ test_that("good class", {
 
 ################################################################################
 
-path <- sub("\\.bk$", "", G$backingfile)
+path <- sub_bk(G$backingfile)
 
 test_that("Error: already exists", {
   expect_error(snp_readBed(bedfile, backingfile = path),
@@ -34,13 +47,28 @@ test_that("Error: already exists", {
 
 test_that("same sign as PLINK (no switch 0 <-> 2)", {
   plink <- download_plink()
-  prefix <- sub("\\.bed$", "", bedfile)
+  prefix <- sub_bed(bedfile)
   tmp <- tempfile()
-  system(glue::glue("{plink} --bfile {prefix} --assoc --allow-no-sex --out {tmp}"))
+  system(glue::glue("{plink} --bfile {prefix} --assoc --allow-no-sex --out {tmp}"),
+         ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   gwas <- big_univLogReg(G, test$fam$affection - 1L)
   sumstats <- bigreadr::fread2(paste0(tmp, ".assoc"))
   expect_gt(cor(gwas$estim, log(sumstats$OR)), 0.99)
+})
+
+################################################################################
+
+test_that("snp_readBed2() works", {
+  bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+  ind.row <- sample(nrow(G), nrow(G) / 2, replace = TRUE)
+  ind.col <- sample(ncol(G), ncol(G) / 2, replace = TRUE)
+
+  test2 <- snp_attach(snp_readBed2(bedfile, backingfile = tempfile(),
+                                   ind.row, ind.col))
+  test3 <- snp_attach(subset(test, ind.row, ind.col))
+  expect_equal(test2$genotypes[], test3$genotypes[])
+  expect_equal(test2[-1], test3[-1])
 })
 
 ################################################################################

@@ -4,7 +4,7 @@
 \alias{snp_scaleBinom}
 \title{Binomial(n, p) scaling}
 \usage{
-snp_scaleBinom(nploidy = getOption("bigsnpr.nploidy"))
+snp_scaleBinom(nploidy = 2)
 }
 \arguments{
 \item{nploidy}{Number of trials, parameter of the binomial distribution.

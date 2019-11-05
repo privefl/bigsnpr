@@ -2,13 +2,20 @@
 % Please edit documentation in R/autoSVD.R
 \name{snp_autoSVD}
 \alias{snp_autoSVD}
-\title{Truncated SVD with pruning}
+\alias{bed_autoSVD}
+\title{Truncated SVD while limiting LD}
 \usage{
 snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
   ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
   thr.r2 = 0.2, size = 100/thr.r2, k = 10, roll.size = 50,
-  int.min.size = 20, is.size.in.bp = NULL, ncores = 1,
-  verbose = TRUE)
+  int.min.size = 20, alpha.tukey = 0.05, min.mac = 10,
+  max.iter = 5, is.size.in.bp = NULL, ncores = 1, verbose = TRUE)
+
+bed_autoSVD(obj.bed, ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed), fun.scaling = bed_scaleBinom,
+  thr.r2 = 0.2, size = 100/thr.r2, k = 10, roll.size = 50,
+  int.min.size = 20, alpha.tukey = 0.05, min.mac = 10,
+  max.iter = 5, ncores = 1, verbose = TRUE)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
@@ -53,12 +60,24 @@ Default is \code{50}.}
 \item{int.min.size}{Minimum number of consecutive outlier SNPs
 in order to be reported as long-range LD region. Default is \code{20}.}
 
+\item{alpha.tukey}{Default is \code{0.1}. The type-I error rate in outlier
+detection (that is further corrected for multiple testing).}
+
+\item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
+Default is \code{10}.}
+
+\item{max.iter}{Maximum number of iterations of outlier detection.
+Default is \code{5}.}
+
 \item{is.size.in.bp}{Deprecated.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
+
+\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+Use \code{obj.bed <- bed(bedfile)} to get this object.}
 }
 \value{
 A named list (an S3 class "big_SVD") of
@@ -76,8 +95,8 @@ Note that to obtain the Principal Components, you must use
 \link[=predict.big_SVD]{predict} on the result. See examples.
 }
 \description{
-Fast truncated SVD which iteratively try to remove long-range LD regions
-which appear in loadings of SVD.
+Fast truncated SVD with initial pruning and that iteratively removes
+long-range LD regions.
 }
 \details{
 If you don't have any information about SNPs, you can try using
@@ -86,9 +105,6 @@ If you don't have any information about SNPs, you can try using
 \item \code{size = ncol(G)} (if SNPs are not sorted),
 \item \code{roll.size = 0} (if SNPs are not sorted).
 }
-
-Improvements will come in the future, as for example, warm starts in order
-to make the SVD computations faster.
 }
 \examples{
 ex <- snp_attachExtdata()

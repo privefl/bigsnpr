@@ -30,13 +30,17 @@ snp_fake <- function(n, m) {
   bigGeno <- FBM.code256(n, m, code = CODE_012, init = as.raw(3))
 
   # fam
-  fam <- data.frame(0L, paste0("ind_", 1:n), 0L, 0L, 0L, -9L,
+  seq_n <- seq_len(n)
+  fam <- data.frame(paste0("fam_", seq_n), paste0("ind_", seq_n),
+                    0L, 0L, 0L, -9L,
                     stringsAsFactors = FALSE)
   names(fam) <- NAMES.FAM
 
   # map
+  seq_m <- seq_len(m)
   cond <- (stats::runif(m) > 0.5)
-  map <- data.frame(1L, paste0("snp_", 1:m), 0L, 0L,
+  map <- data.frame(1L, paste0("snp_", seq_m),
+                    0L, seq_m * 1000,
                     ifelse(cond, "C", "T"),
                     ifelse(cond, "T", "C"),
                     stringsAsFactors = FALSE)

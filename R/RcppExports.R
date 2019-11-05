@@ -5,6 +5,38 @@ r2_bgen <- function(filename, offsets, use_ind, decode, y) {
     .Call(`_bigsnpr_r2_bgen`, filename, offsets, use_ind, decode, y)
 }
 
+bedXPtr <- function(path, n, p) {
+    .Call(`_bigsnpr_bedXPtr`, path, n, p)
+}
+
+bed_stats <- function(obj_bed, ind_row, ind_col) {
+    .Call(`_bigsnpr_bed_stats`, obj_bed, ind_row, ind_col)
+}
+
+bed_counts_cpp <- function(obj_bed, ind_row, ind_col) {
+    .Call(`_bigsnpr_bed_counts_cpp`, obj_bed, ind_row, ind_col)
+}
+
+bed_pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
+    .Call(`_bigsnpr_bed_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
+}
+
+bed_cpMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x) {
+    .Call(`_bigsnpr_bed_cpMatVec4`, obj_bed, ind_row, ind_col, center, scale, x)
+}
+
+read_bed_scaled <- function(obj_bed, ind_row, ind_col, center, scale) {
+    .Call(`_bigsnpr_read_bed_scaled`, obj_bed, ind_row, ind_col, center, scale)
+}
+
+prod_and_rowSumsSq <- function(obj_bed, ind_row, ind_col, center, scale, V) {
+    .Call(`_bigsnpr_prod_and_rowSumsSq`, obj_bed, ind_row, ind_col, center, scale, V)
+}
+
+bed_clumping_chr <- function(obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr) {
+    .Call(`_bigsnpr_bed_clumping_chr`, obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr)
+}
+
 clumping_chr <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
     .Call(`_bigsnpr_clumping_chr`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
@@ -21,12 +53,12 @@ corMat <- function(BM, rowInd, colInd, size, thr, pos) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos)
 }
 
-impute <- function(BM, rowInd, colInd, method) {
-    invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
+multLinReg <- function(obj, ind_row, ind_col, U) {
+    .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U)
 }
 
-linRegPcadapt_cpp <- function(BM, U, rowInd, colInd) {
-    .Call(`_bigsnpr_linRegPcadapt_cpp`, BM, U, rowInd, colInd)
+impute <- function(BM, rowInd, colInd, method) {
+    invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
 }
 
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage) {
@@ -37,15 +69,15 @@ readbina <- function(filename, BM, tab) {
     .Call(`_bigsnpr_readbina`, filename, BM, tab)
 }
 
+readbina2 <- function(BM, obj_bed, ind_row, ind_col) {
+    invisible(.Call(`_bigsnpr_readbina2`, BM, obj_bed, ind_row, ind_col))
+}
+
 writebina <- function(filename, BM, tab, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_writebina`, filename, BM, tab, rowInd, colInd))
 }
 
 testWrite <- function(v, filename) {
     invisible(.Call(`_bigsnpr_testWrite`, v, filename))
-}
-
-roll_mean <- function(x, w) {
-    .Call(`_bigsnpr_roll_mean`, x, w)
 }
 

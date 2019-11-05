@@ -16,9 +16,9 @@ sum(counts[4, ])
 counts[, 1:10]
 
 fam <- snp$fam
-ped <- data.table::fread("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped", data.table = FALSE)
+ped <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped")
 fam <- dplyr::left_join(fam, ped, by = c("sample.ID" = "Individual ID"))
-pop <- data.table::fread("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/20131219.populations.tsv", data.table = FALSE)
+pop <- bigreadr::fread2("ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/20131219.populations.tsv")
 fam <- dplyr::left_join(fam, pop, by = c("Population" = "Population Code"))
 
 snp$fam$family.ID <- paste(fam$`Super Population`, fam$Population, sep = "_")

@@ -29,9 +29,9 @@ void r2_variant(std::ifstream * ptr_stream,
   int D = read_int(ptr_stream);
 
   // decompress variant data
-  unsigned char buffer_in[C];
+  unsigned char *buffer_in = new unsigned char[C];
   ptr_stream->read((char *)buffer_in, C);
-  unsigned char buffer_out[D];
+  unsigned char *buffer_out = new unsigned char[D];
   // zlib struct (https://gist.github.com/arq5x/5315739)
   z_stream infstream;
   infstream.zalloc = Z_NULL;
@@ -68,6 +68,9 @@ void r2_variant(std::ifstream * ptr_stream,
   num = xySum - xSum * ySum / n;
   deno_x = xxSum - xSum * xSum / n;
   *ptr_r2 = num * num / deno_x;  // divide by deno_y later
+
+  delete[] buffer_in;
+  delete[] buffer_out;
 }
 
 /******************************************************************************/

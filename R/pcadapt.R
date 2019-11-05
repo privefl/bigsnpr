@@ -1,5 +1,33 @@
 ################################################################################
 
+pcadapt0 <- function(G, U.row, ind.row, ind.col, ncores) {
+
+  if (is.null(dim(U.row))) U.row <- as.matrix(U.row)  # vector
+  K <- ncol(U.row)
+  assert_lengths(rows_along(U.row), ind.row)
+
+  tscores <- big_parallelize(G, p.FUN = function(G, ind, ind.row) {
+    multLinReg(G, ind_row = ind.row, ind_col = ind, U = U.row)
+  }, p.combine = "rbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
+
+  dist <- `if`(K == 1, (drop(tscores) - stats::median(tscores))^2,
+               bigutilsr::covRob(tscores, estim = "pairwiseGK")$dist)
+
+  fun.pred <- eval(parse(text = sprintf(
+    "function(xtr) {
+       stats::pchisq(xtr, df = %d, lower.tail = FALSE, log.p = TRUE) / log(10)
+     }", K)))
+
+  snp_gc(
+    structure(data.frame(score = dist),
+              class = c("mhtest", "data.frame"),
+              transfo = identity,
+              predict = fun.pred)
+  )
+}
+
+################################################################################
+
 #' Outlier detection
 #'
 #' Method to detect genetic markers involved in biological adaptation.
@@ -34,37 +62,20 @@ snp_pcadapt <- function(G, U.row,
                         ind.row = rows_along(G),
                         ind.col = cols_along(G),
                         ncores = 1) {
-
-  if (!requireNamespace("robust", quietly = TRUE))
-    stop2("Please install package 'robust'.")
-
-  if (is.null(dim(U.row))) U.row <- as.matrix(U.row)  # vector
   check_args()
+  pcadapt0(G, U.row, ind.row, ind.col, ncores)
+}
 
-  K <- ncol(U.row)
-  stopifnot(all.equal(crossprod(U.row), diag(K)))
-  assert_lengths(rows_along(U.row), ind.row)
+################################################################################
 
-  if (K == 1) return(big_univLinReg(G, as.vector(U.row),
-                                    ind.train = ind.row,
-                                    ind.col = ind.col,
-                                    ncores = ncores))
-
-  zscores <- big_parallelize(G, p.FUN = function(G, ind, ind.row) {
-    linRegPcadapt_cpp(G, U = U.row, rowInd = ind.row, colInd = ind)
-  }, p.combine = "rbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
-
-  dist <- robust::covRob(zscores, estim = "pairwiseGK")$dist
-
-  fun.pred <- eval(parse(text = sprintf(
-    "function(xtr) {
-       stats::pchisq(xtr, df = %d, lower.tail = FALSE, log.p = TRUE) / log(10)
-     }", K)))
-
-  structure(data.frame(score = dist),
-            class = c("mhtest", "data.frame"),
-            transfo = identity,
-            predict = fun.pred)
+#' @export
+#' @rdname snp_pcadapt
+bed_pcadapt <- function(obj.bed, U.row,
+                        ind.row = rows_along(obj.bed),
+                        ind.col = cols_along(obj.bed),
+                        ncores = 1) {
+  check_args()
+  pcadapt0(obj.bed, U.row, ind.row, ind.col, ncores)
 }
 
 ################################################################################

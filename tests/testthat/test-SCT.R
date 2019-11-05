@@ -4,6 +4,18 @@ context("SCT")
 
 ################################################################################
 
+test_that("seq_log() works", {
+  expect_equal(seq_log(1, 1000, 4), 10^(0:3))
+  expect_equal(seq_log(1, 100,  5), 10^(0:4 / 2))
+  expect_equal(seq_log(1000, 1, 4), rev(seq_log(1, 1000, 4)))
+  expect_equal(seq_log(100,  1, 5), rev(seq_log(1, 100,  5)))
+  expect_equal(seq_log(1, 1, 1), 1)
+  expect_equal(seq_log(1, 1, 5), rep(1, 5))
+  expect_error(seq_log(1, 1000, -4), "'length.out' must be a non-negative number")
+})
+
+################################################################################
+
 snp <- snp_attachExtdata()
 G <- snp$genotypes
 CHR <- rep(1:2, c(2542, 2000))
@@ -103,34 +115,6 @@ expect_length(new_betas$beta.covar, 0)
 expect_equal(
   predict(new_betas$mod, multi_PRS, proba = FALSE),
   new_betas$intercept + big_prodVec(G, new_betas$beta.G),
-  check.attributes = FALSE, tolerance = 1e-7)
-
-################################################################################
-
-sumstats <- data.frame(
-  chr = 1,
-  pos = c(86303, 86331, 162463, 752566, 755890, 758144),
-  a0 = c("T", "G", "C", "A", "T", "G"),
-  a1 = c("G", "A", "T", "G", "A", "A"),
-  beta = c(-1.868, 0.250, -0.671, 2.112, 0.239, 1.272),
-  p = c(0.860, 0.346, 0.900, 0.456, 0.776, 0.383)
-)
-
-info_snp <- data.frame(
-  id = c("rs2949417", "rs115209712", "rs143399298", "rs3094315", "rs3115858"),
-  chr = 1,
-  pos = c(86303, 86331, 162463, 752566, 755890),
-  a0 = c("T", "A", "G", "A", "T"),
-  a1 = c("G", "G", "A", "G", "A")
-)
-
-expect_message(matched1 <- snp_match(sumstats, info_snp),
-               "4 variants have been matched; 1 were flipped and 1 were reversed.")
-expect_equal(dim(matched1), c(4, 7))
-expect_equal(matched1$beta, sumstats$beta[1:4] * c(1, -1, 1, 1))
-expect_message(matched2 <- snp_match(sumstats, info_snp, strand_flip = FALSE),
-               "4 variants have been matched; 0 were flipped and 1 were reversed.")
-expect_equal(dim(matched2), c(4, 7))
-expect_equal(matched2$beta, sumstats$beta[c(1:2, 4:5)] * c(1, -1, 1, 1))
+  check.attributes = FALSE, tolerance = 1e-6)
 
 ################################################################################

@@ -29,7 +29,7 @@ corr2 <- corr^2
 ################################################################################
 
 file.ld <- system.file("testdata", "example.ld", package = "bigsnpr")
-true <- data.table::fread(file.ld, data.table = FALSE)
+true <- bigreadr::fread2(file.ld)
 snps.ind <- sapply(true[, c("SNP_A", "SNP_B")], match,
                    table = paste0("SNP", ind.col - 1))
 stopifnot(all(snps.ind[, 1] < snps.ind[, 2]))

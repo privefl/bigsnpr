@@ -1,17 +1,9 @@
 ################################################################################
+
 # Same as in bigstatsr
-
-printf           <- bigstatsr:::printf
-
-message2         <- bigstatsr:::message2
-
-warning2         <- bigstatsr:::warning2
-
-stop2            <- bigstatsr:::stop2
-
-CutBySize        <- bigstatsr:::CutBySize
-
-seq2             <- bigstatsr:::seq2
+CutBySize <- bigstatsr:::CutBySize
+seq2      <- bigstatsr:::seq2
+as_vec    <- bigstatsr:::as_vec
 
 ################################################################################
 
@@ -59,16 +51,16 @@ NAMES.FAM <- c("family.ID", "sample.ID", "paternal.ID",
 
 ################################################################################
 
-write.table2 <- function(x, file) {
+write.table2 <- function(x, file, ...) {
   data.table::fwrite(x, file, sep = "\t", quote = FALSE,
-                     row.names = FALSE, col.names = FALSE)
+                     row.names = FALSE, col.names = FALSE, ...)
 }
 
 ################################################################################
 
 getNewFile <- function(x, type) {
 
-  root <- sub("\\.bk$", "", x$genotypes$backingfile)
+  root <- sub_bk(x$genotypes$backingfile)
   EXTS <- c("bk", "rds")
 
   number <- 1

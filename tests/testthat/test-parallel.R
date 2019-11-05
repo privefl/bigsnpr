@@ -24,10 +24,12 @@ test_that("Sequential and Parallel", {
   expect_equal(snp_clumping(G, CHR),
                snp_clumping(G, CHR, ncores = 2))
 
-  skip_on_cran()
-  snp_autoSVD(G, CHR, POS, ind.row = 1:200, ind.col = sample(5000, 300))
-  expect_equal(snp_autoSVD(G, CHR, POS),
-               snp_autoSVD(G, CHR, POS, ncores = NCORES), tolerance = 1e-6)
+  snp_autoSVD(G, CHR, POS, ind.row = sample(nrow(G), 300),
+              ind.col = sample(ncol(G), 3000), verbose = FALSE)
+
+  expect_equal(snp_autoSVD(G, CHR, POS, verbose = FALSE),
+               snp_autoSVD(G, CHR, POS, ncores = NCORES, verbose = FALSE),
+               tolerance = 1e-6)
 })
 
 ################################################################################

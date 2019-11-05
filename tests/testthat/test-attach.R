@@ -7,7 +7,7 @@ context("ATTACH")
 test <- snp_attachExtdata()
 expect_null(test$savedIn)
 bkfile <- test$genotypes$backingfile
-rdsfile <- sub("\\.bk$", ".rds", bkfile)
+rdsfile <- sub_bk(bkfile, ".rds")
 
 ################################################################################
 
