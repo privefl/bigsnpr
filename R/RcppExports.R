@@ -53,12 +53,12 @@ corMat <- function(BM, rowInd, colInd, size, thr, pos) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos)
 }
 
-multLinReg <- function(obj, ind_row, ind_col, U) {
-    .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U)
-}
-
 impute <- function(BM, rowInd, colInd, method) {
     invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
+}
+
+multLinReg <- function(obj, ind_row, ind_col, U) {
+    .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U)
 }
 
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage) {
