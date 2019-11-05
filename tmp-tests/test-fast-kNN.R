@@ -1,8 +1,8 @@
 library(bigsnpr)
 library(bigutilsr)
 obj.bed <- bed("../paper2-PRS/backingfiles/celiacQC.bed"); nPC <- 15
-obj.bed <- bed("../POPRES_data/POPRES_allchr.bed"); nPC <- 10
-obj.bed <- bed("tmp-data/1000G_phase3_common_norel.bed"); nPC <- 20
+# obj.bed <- bed("../POPRES_data/POPRES_allchr.bed"); nPC <- 10
+# obj.bed <- bed("tmp-data/1000G_phase3_common_norel.bed"); nPC <- 20
 # obj.bed <- bed(system.file("extdata", "example.bed", package = "bigsnpr")); nPC <- 10
 
 stats <- bigsnpr:::bed_stats(obj.bed, rows_along(obj.bed), cols_along(obj.bed))
