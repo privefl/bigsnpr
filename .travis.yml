@@ -9,7 +9,7 @@ matrix:
     brew_packages: libgit2
   - r: release
     os: linux
-    after_success: travis_wait 40 Rscript -e 'covr::codecov()'
+    #after_success: travis_wait 40 Rscript -e 'covr::codecov()'
   - r: devel
     os: linux
 
