@@ -13,6 +13,7 @@
 
 [**LIST OF FEATURES**](https://privefl.github.io/bigsnpr/reference/index.html)
 
+**Note that most of the algorithms of this package don't handle missing values.** You can use `snp_fastImpute()` (taking a few hours for a chip of 15K x 300K) and `snp_fastImputeSimple()` (taking a few minutes) to impute missing values of *genotyped* variants.
 
 ## Installation
 
@@ -45,18 +46,21 @@ You can request some feature by opening an issue.
 
 ## Bug report
 
-Please open an issue if you find a bug.
-
-If you want help using {bigstatsr}, please post on Stack Overflow with the tag *bigstatsr*.
-
 [How to make a great R reproducible example?](https://stackoverflow.com/q/5963269/6103040)
 
+Please open an issue if you find a bug.
 
-## Get genes associated with SNPs
+If you want help using {bigstatsr}, please open an issue on [{bigstatsr}'s repo](https://github.com/privefl/bigstatsr/issues) or post on Stack Overflow with the tag *bigstatsr*.
 
-```r
-devtools::source_gist("42b41d771bbeae63245b8304ef283c70", filename = "get-genes.R")
-rsid <- c("rs3934834", "rs3737728", "rs6687776", "rs9651273", "rs4970405",
-          "rs12726255", "rs2298217", "rs4970362", "rs9660710", "rs4970420")
-snp_gene(rsid)
-```
+I will always redirect you to GitHub issues if you email me, so that others can benefit from our discussion.
+
+
+## References
+
+- Privé, Florian, et al. "Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr." Bioinformatics 34.16 (2018): 2781-2787.
+
+- Privé, Florian, Hugues Aschard, and Michael GB Blum. "Efficient implementation of penalized regression for genetic risk prediction." Genetics 212.1 (2019): 65-74.
+
+- Privé, Florian, et al. "Making the most of Clumping and Thresholding for polygenic scores." bioRxiv (2019): 653204.
+
+<br>

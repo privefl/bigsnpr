@@ -120,6 +120,8 @@ imputeChr <- function(Gna, infos.imp, ind.chr, alpha, size, p.train, n.cor, seed
 #'
 #' @import Matrix
 #'
+#' @seealso [snp_fastImputeSimple()]
+#'
 #' @example examples/example-impute.R
 #'
 snp_fastImpute <- function(Gna, infos.chr,
@@ -146,3 +148,42 @@ snp_fastImpute <- function(Gna, infos.chr,
 }
 
 ################################################################################
+
+#' Fast imputation
+#'
+#' Fast imputation via mode, mean or sampling according to allele frequencies.
+#'
+#' @inheritParams bigsnpr-package
+#' @param method Either `"random"` (sampling according to allele frequencies),
+#'   `"mean0"` (rounded mean), `"mean2"` (rounded mean to 2 decimal places),
+#'   `"mode"` (most frequent call).
+#'
+#' @return A new `FBM.code256` object (same file, but different code).
+#' @export
+#'
+#' @seealso [snp_fastImpute()]
+#'
+#' @examples
+#' bigsnp <- snp_attachExtdata("example-missing.bed")
+#' G <- bigsnp$genotypes
+#' G[, 2]  # some missing values
+#' G2 <- snp_fastImputeSimple(G)
+#' G2[, 2]  # no missing values anymore
+#' G[, 2]  # imputed, but still returning missing values
+#' G$copy(code = CODE_IMPUTE_PRED)[, 2]  # need to decode imputed values
+#'
+snp_fastImputeSimple <- function(
+  Gna, method = c("mode", "mean0", "mean2", "random"), ncores = 1) {
+
+  check_args()
+
+  stopifnot(identical(Gna$code256, CODE_012))
+
+  method <- match(match.arg(method), c("mode", "mean0", "mean2", "random"))
+  big_parallelize(Gna, function(X, ind, method) {
+    impute(X, rows_along(X), ind, method)
+  }, ncores = ncores, method = method)
+
+  CODE <- `if`(method == 3, CODE_DOSAGE, CODE_IMPUTE_PRED)
+  Gna$copy(code = CODE)
+}

@@ -80,3 +80,6 @@ Reduce(function(p, i) {
   coord_cartesian(ylim = range(df$pError, na.rm = TRUE)) +
   theme_bw(15)
 }
+\seealso{
+\code{\link[=snp_fastImputeSimple]{snp_fastImputeSimple()}}
+}

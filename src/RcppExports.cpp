@@ -211,6 +211,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+// impute
+void impute(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, int method);
+RcppExport SEXP _bigsnpr_impute(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP methodSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< int >::type method(methodSEXP);
+    impute(BM, rowInd, colInd, method);
+    return R_NilValue;
+END_RCPP
+}
+
 // multLinReg
 NumericMatrix multLinReg(SEXP obj, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericMatrix& U);
 RcppExport SEXP _bigsnpr_multLinReg(SEXP objSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP USEXP) {
@@ -309,6 +324,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 6},
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 4},
+    {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 4},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 7},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 4},

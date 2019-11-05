@@ -4,7 +4,7 @@
 \alias{snp_attachExtdata}
 \title{Attach a "bigSNP" for examples and tests}
 \usage{
-snp_attachExtdata(bedfile = "example.bed")
+snp_attachExtdata(bedfile = c("example.bed", "example-missing.bed"))
 }
 \arguments{
 \item{bedfile}{Name of one example bed file. Either

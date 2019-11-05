@@ -42,6 +42,8 @@ test_that("Sequential and Parallel + seeds", {
 
   expect_equal(snp_fastImpute(G2, CHR, seed = 2)[],
                snp_fastImpute(G3, CHR, seed = 2, ncores = 2)[])
+  expect_equal(snp_fastImputeSimple(G2, method = "mean2")[],
+               snp_fastImputeSimple(G3, method = "mean2", ncores = 2)[])
 
   expect_equal(G2[], G3[])
 })
