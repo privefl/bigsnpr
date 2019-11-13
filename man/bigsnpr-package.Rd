@@ -7,22 +7,22 @@
 \title{bigsnpr: Analysis of Massive SNP Arrays}
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
-Typically \code{<bigSNP>$map$chromosome}.}
+Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
-Typically \code{<bigSNP>$map$physical.pos}.}
+Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}

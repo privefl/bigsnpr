@@ -4,13 +4,23 @@
 \alias{bed_projectPCA}
 \title{Projecting PCA}
 \usage{
-bed_projectPCA(obj.bed.ref, obj.bed.new, k = 10,
+bed_projectPCA(
+  obj.bed.ref,
+  obj.bed.new,
+  k = 10,
   ind.row.new = rows_along(obj.bed.new),
   ind.row.ref = rows_along(obj.bed.ref),
-  ind.col.ref = cols_along(obj.bed.ref), strand_flip = TRUE,
-  join_by_pos = TRUE, match.min.prop = 0.5, build.new = "hg19",
-  build.ref = "hg19", liftOver = NULL, ..., verbose = TRUE,
-  ncores = 1)
+  ind.col.ref = cols_along(obj.bed.ref),
+  strand_flip = TRUE,
+  join_by_pos = TRUE,
+  match.min.prop = 0.5,
+  build.new = "hg19",
+  build.ref = "hg19",
+  liftOver = NULL,
+  ...,
+  verbose = TRUE,
+  ncores = 1
+)
 }
 \arguments{
 \item{obj.bed.ref}{Object of type bed, which is the mapping of the bed file of
@@ -36,7 +46,7 @@ If so, ambiguous alleles A/T and C/G are removed.}
 or instead by rsid.}
 
 \item{match.min.prop}{Minimum proportion of variants in the smallest data
-to be matched, otherwise stops with an error. Default is \code{50\%}.}
+to be matched, otherwise stops with an error. Default is \verb{50\%}.}
 
 \item{build.new}{Genome build of the target data. Default is \code{hg19}.}
 
@@ -46,29 +56,30 @@ to be matched, otherwise stops with an error. Default is \code{50\%}.}
 Binaries can be downloaded at \url{https://bit.ly/2KvHugi} for Mac
 and at \url{https://bit.ly/2TbSaEI} for Linux.}
 
-\item{...}{Arguments passed on to \code{bed_autoSVD}
-\describe{
-  \item{fun.scaling}{A function that returns a named list of \code{mean} and \code{sd}
+\item{...}{
+  Arguments passed on to \code{\link[=bed_autoSVD]{bed_autoSVD}}
+  \describe{
+    \item{\code{fun.scaling}}{A function that returns a named list of \code{mean} and \code{sd}
 for every column, to scale each of their elements such as followed:
 \deqn{\frac{X_{i,j} - mean_j}{sd_j}.} Default is \code{snp_scaleBinom()}.}
-  \item{roll.size}{Radius of rolling windows to smooth log-p-values.
+    \item{\code{roll.size}}{Radius of rolling windows to smooth log-p-values.
 Default is \code{50}.}
-  \item{int.min.size}{Minimum number of consecutive outlier SNPs
+    \item{\code{int.min.size}}{Minimum number of consecutive outlier SNPs
 in order to be reported as long-range LD region. Default is \code{20}.}
-  \item{thr.r2}{Threshold over the squared correlation between two SNPs.
+    \item{\code{thr.r2}}{Threshold over the squared correlation between two SNPs.
 Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
-  \item{alpha.tukey}{Default is \code{0.1}. The type-I error rate in outlier
+    \item{\code{alpha.tukey}}{Default is \code{0.1}. The type-I error rate in outlier
 detection (that is further corrected for multiple testing).}
-  \item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
+    \item{\code{min.mac}}{Minimum minor allele count (MAC) for variants to be included.
 Default is \code{10}.}
-  \item{max.iter}{Maximum number of iterations of outlier detection.
+    \item{\code{max.iter}}{Maximum number of iterations of outlier detection.
 Default is \code{5}.}
-  \item{size}{For one SNP, window size around this SNP to compute correlations.
+    \item{\code{size}}{For one SNP, window size around this SNP to compute correlations.
 Default is \code{100 / thr.r2} for clumping (0.2 -> 500; 0.1 -> 1000; 0.5 -> 200).
 If not providing \code{infos.pos} (\code{NULL}, the default), this is a window in
 number of SNPs, otherwise it is a window in kb (genetic distance).
 I recommend that you provide the positions if available.}
-}}
+  }}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 
@@ -78,9 +89,9 @@ You may use \link{nb_cores}.}
 \value{
 A list of 3 elements:
 \itemize{
-\item \code{$obj.svd.ref}: big_SVD object computed from reference data.
-\item \code{$simple_proj}: simple projection of new data into space of reference PCA.
-\item \code{$OADP_proj}: Online Augmentation, Decomposition, and Procrustes (OADP)
+\item \verb{$obj.svd.ref}: big_SVD object computed from reference data.
+\item \verb{$simple_proj}: simple projection of new data into space of reference PCA.
+\item \verb{$OADP_proj}: Online Augmentation, Decomposition, and Procrustes (OADP)
 projection of new data into space of reference PCA.
 }
 }

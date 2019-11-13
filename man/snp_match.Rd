@@ -4,8 +4,13 @@
 \alias{snp_match}
 \title{Match alleles}
 \usage{
-snp_match(sumstats, info_snp, strand_flip = TRUE, join_by_pos = TRUE,
-  match.min.prop = 0.5)
+snp_match(
+  sumstats,
+  info_snp,
+  strand_flip = TRUE,
+  join_by_pos = TRUE,
+  match.min.prop = 0.5
+)
 }
 \arguments{
 \item{sumstats}{A data frame with columns "chr", "pos", "a0", "a1" and "beta".}
@@ -19,7 +24,7 @@ If so, ambiguous alleles A/T and C/G are removed.}
 or instead by rsid.}
 
 \item{match.min.prop}{Minimum proportion of variants in the smallest data
-to be matched, otherwise stops with an error. Default is \code{50\%}.}
+to be matched, otherwise stops with an error. Default is \verb{50\%}.}
 }
 \value{
 A single data frame with matched variants.

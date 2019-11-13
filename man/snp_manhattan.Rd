@@ -4,20 +4,29 @@
 \alias{snp_manhattan}
 \title{Manhattan plot}
 \usage{
-snp_manhattan(gwas, infos.chr, infos.pos, colors = c("black", "grey60"),
-  dist.sep.chrs = 1e+07, ind.highlight = integer(0),
-  col.highlight = "red", labels = NULL, npoints = NULL, coeff = 1)
+snp_manhattan(
+  gwas,
+  infos.chr,
+  infos.pos,
+  colors = c("black", "grey60"),
+  dist.sep.chrs = 1e+07,
+  ind.highlight = integer(0),
+  col.highlight = "red",
+  labels = NULL,
+  npoints = NULL,
+  coeff = 1
+)
 }
 \arguments{
 \item{gwas}{A \code{mhtest} object with the p-values associated with each SNP.
 Typically, the output of \link{big_univLinReg}, \link{big_univLogReg} or \link{snp_pcadapt}.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
-Typically \code{<bigSNP>$map$chromosome}.}
+Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
-Typically \code{<bigSNP>$map$physical.pos}.}
+Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{colors}{Colors used for each chromosome (they are recycled).
 Default is an alternation of black and gray.}

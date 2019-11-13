@@ -4,8 +4,12 @@
 \alias{bed_MAF}
 \title{Allele frequencies}
 \usage{
-bed_MAF(obj.bed, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed), ncores = 1)
+bed_MAF(
+  obj.bed,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  ncores = 1
+)
 }
 \arguments{
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
@@ -25,11 +29,11 @@ You may use \link{nb_cores}.}
 \value{
 A data.frame with
 \itemize{
-\item \code{$ac}: allele counts,
-\item \code{$mac}: minor allele counts,
-\item \code{$af}: allele frequencies,
-\item \code{$maf}: minor allele frequencies,
-\item \code{$N}: numbers of non-missing values.
+\item \verb{$ac}: allele counts,
+\item \verb{$mac}: minor allele counts,
+\item \verb{$af}: allele frequencies,
+\item \verb{$maf}: minor allele frequencies,
+\item \verb{$N}: numbers of non-missing values.
 }
 }
 \description{

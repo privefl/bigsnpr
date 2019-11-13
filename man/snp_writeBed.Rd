@@ -4,8 +4,7 @@
 \alias{snp_writeBed}
 \title{Write PLINK files from a "bigSNP"}
 \usage{
-snp_writeBed(x, bedfile, ind.row = rows_along(G),
-  ind.col = cols_along(G))
+snp_writeBed(x, bedfile, ind.row = rows_along(G), ind.col = cols_along(G))
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}

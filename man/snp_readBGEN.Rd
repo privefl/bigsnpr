@@ -4,9 +4,15 @@
 \alias{snp_readBGEN}
 \title{Read BGEN files into a "bigSNP"}
 \usage{
-snp_readBGEN(bgenfiles, backingfile, list_snp_id, ind_row = NULL,
-  bgi_dir = dirname(bgenfiles), read_as = c("dosage", "random"),
-  ncores = 1)
+snp_readBGEN(
+  bgenfiles,
+  backingfile,
+  list_snp_id,
+  ind_row = NULL,
+  bgi_dir = dirname(bgenfiles),
+  read_as = c("dosage", "random"),
+  ncores = 1
+)
 }
 \arguments{
 \item{bgenfiles}{Character vector of paths to files with extension ".bgen".
@@ -30,7 +36,7 @@ are used. If not specified, all rows are used.\cr
 \itemize{
 \item as dosages (rounded to two decimal places), the default,
 \item as hard calls, randomly sampled based on those probabilities
-(similar to PLINK option '\code{--hard-call-threshold random}').
+(similar to PLINK option '\verb{--hard-call-threshold random}').
 }}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.

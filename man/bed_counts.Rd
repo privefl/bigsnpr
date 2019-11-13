@@ -4,8 +4,12 @@
 \alias{bed_counts}
 \title{Counts}
 \usage{
-bed_counts(obj.bed, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed), ncores = 1)
+bed_counts(
+  obj.bed,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  ncores = 1
+)
 }
 \arguments{
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.

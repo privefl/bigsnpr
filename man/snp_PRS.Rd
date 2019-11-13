@@ -4,13 +4,19 @@
 \alias{snp_PRS}
 \title{PRS}
 \usage{
-snp_PRS(G, betas.keep, ind.test = rows_along(G),
-  ind.keep = cols_along(G), same.keep = rep(TRUE, length(ind.keep)),
-  lpS.keep = NULL, thr.list = 0)
+snp_PRS(
+  G,
+  betas.keep,
+  ind.test = rows_along(G),
+  ind.keep = cols_along(G),
+  same.keep = rep(TRUE, length(ind.keep)),
+  lpS.keep = NULL,
+  thr.list = 0
+)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 

@@ -4,12 +4,17 @@
 \alias{snp_MAF}
 \title{MAF}
 \usage{
-snp_MAF(G, ind.row = rows_along(G), ind.col = cols_along(G),
-  nploidy = 2, ncores = 1)
+snp_MAF(
+  G,
+  ind.row = rows_along(G),
+  ind.col = cols_along(G),
+  nploidy = 2,
+  ncores = 1
+)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 

@@ -4,9 +4,17 @@
 \alias{snp_plinkIBDQC}
 \title{Identity-by-descent}
 \usage{
-snp_plinkIBDQC(plink.path, bedfile.in, bedfile.out = NULL,
-  pi.hat = 0.08, ncores = 1, pruning.args = c(100, 0.2),
-  do.blind.QC = TRUE, extra.options = "", verbose = TRUE)
+snp_plinkIBDQC(
+  plink.path,
+  bedfile.in,
+  bedfile.out = NULL,
+  pi.hat = 0.08,
+  ncores = 1,
+  pruning.args = c(100, 0.2),
+  do.blind.QC = TRUE,
+  extra.options = "",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -44,7 +52,7 @@ then the path of the input bedfile is returned.
 }
 \description{
 Quality Control based on Identity-by-descent (IBD) computed by
-\href{http://www.cog-genomics.org/plink2}{PLINK 1.9}
+\href{http://www.cog-genomics.org/plink2}{\strong{PLINK 1.9}}
 using its method-of-moments.
 }
 \examples{

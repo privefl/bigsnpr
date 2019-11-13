@@ -4,9 +4,13 @@
 \alias{bed_tcrossprodSelf}
 \title{Tcrossprod}
 \usage{
-bed_tcrossprodSelf(obj.bed, fun.scaling = bed_scaleBinom,
-  ind.row = rows_along(obj.bed), ind.col = cols_along(obj.bed),
-  block.size = block_size(length(ind.row)))
+bed_tcrossprodSelf(
+  obj.bed,
+  fun.scaling = bed_scaleBinom,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  block.size = block_size(length(ind.row))
+)
 }
 \arguments{
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
@@ -24,7 +28,7 @@ If not specified, all rows are used. \strong{Don't use negative indices.}}
 If not specified, all columns are used. \strong{Don't use negative indices.}}
 
 \item{block.size}{Maximum number of columns read at once.
-Default uses \link{block_size}.}
+Default uses \link[bigstatsr]{block_size}.}
 }
 \value{
 A temporary \link[=FBM-class]{FBM}, with the following two attributes:

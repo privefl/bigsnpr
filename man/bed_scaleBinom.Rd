@@ -4,8 +4,11 @@
 \alias{bed_scaleBinom}
 \title{Binomial(2, p) scaling}
 \usage{
-bed_scaleBinom(obj.bed, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed))
+bed_scaleBinom(
+  obj.bed,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed)
+)
 }
 \arguments{
 \item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
@@ -20,7 +23,7 @@ If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 }
 \value{
-A data frame with \code{$center} and \code{$scale}.
+A data frame with \verb{$center} and \verb{$scale}.
 }
 \description{
 Binomial(2, p) scaling where \code{p} is estimated.

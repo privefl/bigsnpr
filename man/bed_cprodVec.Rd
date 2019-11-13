@@ -4,9 +4,14 @@
 \alias{bed_cprodVec}
 \title{Cross-product with a vector}
 \usage{
-bed_cprodVec(obj.bed, y.row, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed), center = rep(0, length(ind.col)),
-  scale = rep(1, length(ind.col)))
+bed_cprodVec(
+  obj.bed,
+  y.row,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  center = rep(0, length(ind.col)),
+  scale = rep(1, length(ind.col))
+)
 }
 \arguments{
 \item{obj.bed}{A \link{bed} object.}

@@ -4,9 +4,14 @@
 \alias{bed_prodVec}
 \title{Product with a vector}
 \usage{
-bed_prodVec(obj.bed, y.col, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed), center = rep(0, length(ind.col)),
-  scale = rep(1, length(ind.col)))
+bed_prodVec(
+  obj.bed,
+  y.col,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  center = rep(0, length(ind.col)),
+  scale = rep(1, length(ind.col))
+)
 }
 \arguments{
 \item{obj.bed}{A \link{bed} object.}

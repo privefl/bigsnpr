@@ -4,9 +4,16 @@
 \alias{snp_plinkKINGQC}
 \title{Relationship-based pruning}
 \usage{
-snp_plinkKINGQC(plink2.path, bedfile.in, bedfile.out = NULL,
-  thr.king = 2^-3.5, make.bed = TRUE, ncores = 1,
-  extra.options = "", verbose = TRUE)
+snp_plinkKINGQC(
+  plink2.path,
+  bedfile.in,
+  bedfile.out = NULL,
+  thr.king = 2^-3.5,
+  make.bed = TRUE,
+  ncores = 1,
+  extra.options = "",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{plink2.path}{Path to the executable of PLINK 2.}

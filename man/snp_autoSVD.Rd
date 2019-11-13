@@ -5,30 +5,55 @@
 \alias{bed_autoSVD}
 \title{Truncated SVD while limiting LD}
 \usage{
-snp_autoSVD(G, infos.chr, infos.pos = NULL, ind.row = rows_along(G),
-  ind.col = cols_along(G), fun.scaling = snp_scaleBinom(),
-  thr.r2 = 0.2, size = 100/thr.r2, k = 10, roll.size = 50,
-  int.min.size = 20, alpha.tukey = 0.05, min.mac = 10,
-  max.iter = 5, is.size.in.bp = NULL, ncores = 1, verbose = TRUE)
+snp_autoSVD(
+  G,
+  infos.chr,
+  infos.pos = NULL,
+  ind.row = rows_along(G),
+  ind.col = cols_along(G),
+  fun.scaling = snp_scaleBinom(),
+  thr.r2 = 0.2,
+  size = 100/thr.r2,
+  k = 10,
+  roll.size = 50,
+  int.min.size = 20,
+  alpha.tukey = 0.05,
+  min.mac = 10,
+  max.iter = 5,
+  is.size.in.bp = NULL,
+  ncores = 1,
+  verbose = TRUE
+)
 
-bed_autoSVD(obj.bed, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed), fun.scaling = bed_scaleBinom,
-  thr.r2 = 0.2, size = 100/thr.r2, k = 10, roll.size = 50,
-  int.min.size = 20, alpha.tukey = 0.05, min.mac = 10,
-  max.iter = 5, ncores = 1, verbose = TRUE)
+bed_autoSVD(
+  obj.bed,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  fun.scaling = bed_scaleBinom,
+  thr.r2 = 0.2,
+  size = 100/thr.r2,
+  k = 10,
+  roll.size = 50,
+  int.min.size = 20,
+  alpha.tukey = 0.05,
+  min.mac = 10,
+  max.iter = 5,
+  ncores = 1,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
-Typically \code{<bigSNP>$map$chromosome}.}
+Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
-Typically \code{<bigSNP>$map$physical.pos}.}
+Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr

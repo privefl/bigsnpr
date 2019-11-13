@@ -7,16 +7,41 @@
 \alias{snp_indLRLDR}
 \title{LD clumping}
 \usage{
-bed_clumping(obj.bed, ind.row = rows_along(obj.bed), S = NULL,
-  thr.r2 = 0.2, size = 100/thr.r2, exclude = NULL, ncores = 1)
+bed_clumping(
+  obj.bed,
+  ind.row = rows_along(obj.bed),
+  S = NULL,
+  thr.r2 = 0.2,
+  size = 100/thr.r2,
+  exclude = NULL,
+  ncores = 1
+)
 
-snp_clumping(G, infos.chr, ind.row = rows_along(G), S = NULL,
-  thr.r2 = 0.2, size = 100/thr.r2, infos.pos = NULL,
-  is.size.in.bp = NULL, exclude = NULL, ncores = 1)
+snp_clumping(
+  G,
+  infos.chr,
+  ind.row = rows_along(G),
+  S = NULL,
+  thr.r2 = 0.2,
+  size = 100/thr.r2,
+  infos.pos = NULL,
+  is.size.in.bp = NULL,
+  exclude = NULL,
+  ncores = 1
+)
 
-snp_pruning(G, infos.chr, ind.row = rows_along(G), size = 49,
-  is.size.in.bp = FALSE, infos.pos = NULL, thr.r2 = 0.2,
-  exclude = NULL, nploidy = 2, ncores = 1)
+snp_pruning(
+  G,
+  infos.chr,
+  ind.row = rows_along(G),
+  size = 49,
+  is.size.in.bp = FALSE,
+  infos.pos = NULL,
+  thr.r2 = 0.2,
+  exclude = NULL,
+  nploidy = 2,
+  ncores = 1
+)
 
 snp_indLRLDR(infos.chr, infos.pos, LD.regions = LD.wiki34)
 }
@@ -52,16 +77,16 @@ can be for thresholding with respect to p-values associated with \code{S}.}
 You may use \link{nb_cores}.}
 
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
-Typically \code{<bigSNP>$map$chromosome}.}
+Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
-Typically \code{<bigSNP>$map$physical.pos}.}
+Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{is.size.in.bp}{Deprecated.}
 
@@ -82,7 +107,7 @@ parameter of \code{snp_clumping()}.
 \description{
 For a \code{bigSNP}:
 \itemize{
-\item \code{snp_pruning()}: LD pruning. Similar to "\code{--indep-pairwise (size+1) 1 thr.r2}"
+\item \code{snp_pruning()}: LD pruning. Similar to "\verb{--indep-pairwise (size+1) 1 thr.r2}"
 in \href{https://www.cog-genomics.org/plink/1.9/ld}{PLINK}
 (\code{step} is fixed to 1). \strong{This function is deprecated (see
 \href{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}{this article}).}

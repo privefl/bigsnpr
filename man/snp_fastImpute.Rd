@@ -4,16 +4,24 @@
 \alias{snp_fastImpute}
 \title{Fast imputation}
 \usage{
-snp_fastImpute(Gna, infos.chr, alpha = 1e-04, size = 200,
-  p.train = 0.8, n.cor = nrow(Gna), seed = NA, ncores = 1)
+snp_fastImpute(
+  Gna,
+  infos.chr,
+  alpha = 1e-04,
+  size = 200,
+  p.train = 0.8,
+  n.cor = nrow(Gna),
+  seed = NA,
+  ncores = 1
+)
 }
 \arguments{
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
-Typically \code{<bigSNP>$map$chromosome}.}
+Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{alpha}{Type-I error for testing correlations. Default is \code{1e-4}.}
 

@@ -5,15 +5,25 @@
 \alias{bed_pcadapt}
 \title{Outlier detection}
 \usage{
-snp_pcadapt(G, U.row, ind.row = rows_along(G), ind.col = cols_along(G),
-  ncores = 1)
+snp_pcadapt(
+  G,
+  U.row,
+  ind.row = rows_along(G),
+  ind.col = cols_along(G),
+  ncores = 1
+)
 
-bed_pcadapt(obj.bed, U.row, ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed), ncores = 1)
+bed_pcadapt(
+  obj.bed,
+  U.row,
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed),
+  ncores = 1
+)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 

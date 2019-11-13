@@ -4,12 +4,11 @@
 \alias{snp_MAX3}
 \title{MAX3 statistic}
 \usage{
-snp_MAX3(Gna, y01.train, ind.train = rows_along(Gna), val = c(0, 0.5,
-  1))
+snp_MAX3(Gna, y01.train, ind.train = rows_along(Gna), val = c(0, 0.5, 1))
 }
 \arguments{
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
 \item{y01.train}{Vector of responses, corresponding to \code{ind.train}.

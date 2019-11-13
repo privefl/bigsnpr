@@ -19,19 +19,19 @@ A reference class for storing a pointer to a mapped version of a bed file.
 \details{
 A \code{bed} object has many field:
 \itemize{
-\item \code{$address}: address of the external pointer containing the underlying
-C++ object, to be used internally as a \code{XPtr<bed>} in C++ code
-\item \code{$extptr}: use \code{$address} instead
-\item \code{$bedfile}: path to the bed file
-\item \code{$bimfile}: path to the corresponding bim file
-\item \code{$famfile}: path to the corresponding fam file
-\item \code{$prefix}: path without extension
-\item \code{$nrow}: number of samples in the bed file
-\item \code{$ncol}: number of variants in the bed file
-\item \code{$map}: data frame read from \code{$bimfile}
-\item \code{$fam}: data frame read from \code{$famfile}
-\item \code{$.map}: use \code{$map} instead
-\item \code{$.fam}: use \code{$fam} instead
+\item \verb{$address}: address of the external pointer containing the underlying
+C++ object, to be used internally as a \verb{XPtr<bed>} in C++ code
+\item \verb{$extptr}: use \verb{$address} instead
+\item \verb{$bedfile}: path to the bed file
+\item \verb{$bimfile}: path to the corresponding bim file
+\item \verb{$famfile}: path to the corresponding fam file
+\item \verb{$prefix}: path without extension
+\item \verb{$nrow}: number of samples in the bed file
+\item \verb{$ncol}: number of variants in the bed file
+\item \verb{$map}: data frame read from \verb{$bimfile}
+\item \verb{$fam}: data frame read from \verb{$famfile}
+\item \verb{$.map}: use \verb{$map} instead
+\item \verb{$.fam}: use \verb{$fam} instead
 }
 }
 

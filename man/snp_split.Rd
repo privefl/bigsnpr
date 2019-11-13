@@ -8,7 +8,7 @@ snp_split(infos.chr, FUN, combine, ncores = 1, ...)
 }
 \arguments{
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
-Typically \code{<bigSNP>$map$chromosome}.}
+Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{FUN}{The function to be applied. It must take a
 \link[=FBM.code256-class]{FBM.code256} as first argument and \code{ind.chr},

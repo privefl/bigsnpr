@@ -7,8 +7,12 @@
 \usage{
 snp_readBed(bedfile, backingfile = sub_bed(bedfile))
 
-snp_readBed2(bedfile, backingfile = sub_bed(bedfile),
-  ind.row = rows_along(obj.bed), ind.col = cols_along(obj.bed))
+snp_readBed2(
+  bedfile,
+  backingfile = sub_bed(bedfile),
+  ind.row = rows_along(obj.bed),
+  ind.col = cols_along(obj.bed)
+)
 }
 \arguments{
 \item{bedfile}{Path to file with extension ".bed" to read.

@@ -4,8 +4,16 @@
 \alias{snp_plinkRmSamples}
 \title{Remove samples}
 \usage{
-snp_plinkRmSamples(plink.path, bedfile.in, bedfile.out, df.or.files,
-  col.family.ID = 1, col.sample.ID = 2, ..., verbose = TRUE)
+snp_plinkRmSamples(
+  plink.path,
+  bedfile.in,
+  bedfile.out,
+  df.or.files,
+  col.family.ID = 1,
+  col.sample.ID = 2,
+  ...,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}

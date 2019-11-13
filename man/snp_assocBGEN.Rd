@@ -4,8 +4,14 @@
 \alias{snp_assocBGEN}
 \title{Compute quick association statistics from BGEN files}
 \usage{
-snp_assocBGEN(bgenfiles, list_snp_id, y_row, ind_row,
-  bgi_dir = dirname(bgenfiles), ncores = 1)
+snp_assocBGEN(
+  bgenfiles,
+  list_snp_id,
+  y_row,
+  ind_row,
+  bgi_dir = dirname(bgenfiles),
+  ncores = 1
+)
 }
 \arguments{
 \item{bgenfiles}{Character vector of paths to files with extension ".bgen".

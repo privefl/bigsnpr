@@ -7,32 +7,54 @@
 \alias{snp_grid_stacking}
 \title{Stacked C+T (SCT)}
 \usage{
-snp_grid_clumping(G, infos.chr, infos.pos, lpS, ind.row = rows_along(G),
+snp_grid_clumping(
+  G,
+  infos.chr,
+  infos.pos,
+  lpS,
+  ind.row = rows_along(G),
   grid.thr.r2 = c(0.01, 0.05, 0.1, 0.2, 0.5, 0.8, 0.95),
-  grid.base.size = c(50, 100, 200, 500), infos.imp = rep(1, ncol(G)),
-  grid.thr.imp = 1, groups = list(cols_along(G)), exclude = NULL,
-  ncores = 1)
+  grid.base.size = c(50, 100, 200, 500),
+  infos.imp = rep(1, ncol(G)),
+  grid.thr.imp = 1,
+  groups = list(cols_along(G)),
+  exclude = NULL,
+  ncores = 1
+)
 
-snp_grid_PRS(G, all_keep, betas, lpS, n_thr_lpS = 50,
-  grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS)), max(lpS),
-  n_thr_lpS), ind.row = rows_along(G), backingfile = tempfile(),
-  type = c("float", "double"), ncores = 1)
+snp_grid_PRS(
+  G,
+  all_keep,
+  betas,
+  lpS,
+  n_thr_lpS = 50,
+  grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS)), max(lpS), n_thr_lpS),
+  ind.row = rows_along(G),
+  backingfile = tempfile(),
+  type = c("float", "double"),
+  ncores = 1
+)
 
-snp_grid_stacking(multi_PRS, y.train, alphas = c(1, 0.01, 1e-04),
-  ncores = 1, ...)
+snp_grid_stacking(
+  multi_PRS,
+  y.train,
+  alphas = c(1, 0.01, 1e-04),
+  ncores = 1,
+  ...
+)
 }
 \arguments{
 \item{G}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
-Typically \code{<bigSNP>$map$chromosome}.}
+Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
-Typically \code{<bigSNP>$map$physical.pos}.}
+Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{lpS}{Numeric vector of \code{-log10(p-value)} associated with \code{betas}.}
 

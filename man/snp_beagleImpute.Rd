@@ -4,9 +4,17 @@
 \alias{snp_beagleImpute}
 \title{Imputation}
 \usage{
-snp_beagleImpute(beagle.path, plink.path, bedfile.in, bedfile.out = NULL,
-  memory.max = 3, ncores = 1, extra.options = "",
-  plink.options = "", verbose = TRUE)
+snp_beagleImpute(
+  beagle.path,
+  plink.path,
+  bedfile.in,
+  bedfile.out = NULL,
+  memory.max = 3,
+  ncores = 1,
+  extra.options = "",
+  plink.options = "",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{beagle.path}{Path to the executable of Beagle v4+.}

@@ -3,8 +3,8 @@
 #' Download 1000G
 #'
 #' Download 1000 genomes project (phase 3) data in PLINK bed/bim/fam format,
-#' including 2493 (mostly unrelated) individuals
-#' and ~1.4M SNPs in common with HapMap3.
+#' including 2490 (mostly unrelated) individuals
+#' and ~1.7M SNPs in common with either HapMap3 or the UK Biobank.
 #'
 #' @param dir The directory where to put the downloaded files.
 #' @param overwrite Whether to overwrite files when downloading and unzipping?

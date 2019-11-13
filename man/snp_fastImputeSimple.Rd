@@ -4,12 +4,15 @@
 \alias{snp_fastImputeSimple}
 \title{Fast imputation}
 \usage{
-snp_fastImputeSimple(Gna, method = c("mode", "mean0", "mean2", "random"),
-  ncores = 1)
+snp_fastImputeSimple(
+  Gna,
+  method = c("mode", "mean0", "mean2", "random"),
+  ncores = 1
+)
 }
 \arguments{
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
 \item{method}{Either \code{"random"} (sampling according to allele frequencies),

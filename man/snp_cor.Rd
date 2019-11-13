@@ -4,12 +4,19 @@
 \alias{snp_cor}
 \title{Correlation}
 \usage{
-snp_cor(Gna, ind.row = rows_along(Gna), ind.col = cols_along(Gna),
-  size = 500, alpha = 0.05, fill.diag = TRUE, infos.pos = NULL)
+snp_cor(
+  Gna,
+  ind.row = rows_along(Gna),
+  ind.col = cols_along(Gna),
+  size = 500,
+  alpha = 0.05,
+  fill.diag = TRUE,
+  infos.pos = NULL
+)
 }
 \arguments{
 \item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
-(typically \code{<bigSNP>$genotypes}).\cr
+(typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
@@ -31,7 +38,7 @@ or to keep it as 0s.}
 
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
-Typically \code{<bigSNP>$map$physical.pos}.}
+Typically \verb{<bigSNP>$map$physical.pos}.}
 }
 \value{
 The correlation matrix. This is a sparse symmetric matrix.

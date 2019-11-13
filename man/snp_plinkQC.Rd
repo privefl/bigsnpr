@@ -4,10 +4,19 @@
 \alias{snp_plinkQC}
 \title{Quality Control}
 \usage{
-snp_plinkQC(plink.path, prefix.in, file.type = "--bfile",
-  prefix.out = paste0(prefix.in, "_QC"), maf = 0.01, geno = 0.1,
-  mind = 0.1, hwe = 1e-50, autosome.only = FALSE,
-  extra.options = "", verbose = TRUE)
+snp_plinkQC(
+  plink.path,
+  prefix.in,
+  file.type = "--bfile",
+  prefix.out = paste0(prefix.in, "_QC"),
+  maf = 0.01,
+  geno = 0.1,
+  mind = 0.1,
+  hwe = 1e-50,
+  autosome.only = FALSE,
+  extra.options = "",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{plink.path}{Path to the executable of PLINK 1.9.}
@@ -49,7 +58,7 @@ The path of the newly created bedfile.
 }
 \description{
 Quality Control (QC) and possible conversion to \emph{bed}/\emph{bim}/\emph{fam} files
-using \href{http://www.cog-genomics.org/plink2}{PLINK 1.9}.
+using \href{http://www.cog-genomics.org/plink2}{\strong{PLINK 1.9}}.
 }
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")

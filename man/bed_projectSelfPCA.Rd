@@ -4,8 +4,13 @@
 \alias{bed_projectSelfPCA}
 \title{Projecting PCA}
 \usage{
-bed_projectSelfPCA(obj.svd, obj.bed, ind.row, ind.col = attr(obj.svd,
-  "subset"), ncores = 1)
+bed_projectSelfPCA(
+  obj.svd,
+  obj.bed,
+  ind.row,
+  ind.col = attr(obj.svd, "subset"),
+  ncores = 1
+)
 }
 \arguments{
 \item{obj.svd}{List with \code{v}, \code{d}, \code{center} and \code{scale}. Typically the an
@@ -22,14 +27,14 @@ used, then \code{attr(obj.svd, "subset")} is automatically used by default.
 Otherwise (e.g. if \link{bed_randomSVD} was used), you have to pass \code{ind.col}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \link[bigstatsr]{nb_cores}.}
 }
 \value{
 A list of 3 elements:
 \itemize{
-\item \code{$obj.svd.ref}: big_SVD object computed from reference data.
-\item \code{$simple_proj}: simple projection of new data into space of reference PCA.
-\item \code{$OADP_proj}: Online Augmentation, Decomposition, and Procrustes (OADP)
+\item \verb{$obj.svd.ref}: big_SVD object computed from reference data.
+\item \verb{$simple_proj}: simple projection of new data into space of reference PCA.
+\item \verb{$OADP_proj}: Online Augmentation, Decomposition, and Procrustes (OADP)
 projection of new data into space of reference PCA.
 }
 }
