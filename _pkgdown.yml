@@ -13,10 +13,12 @@ navbar:
         href: articles/demo.html
       - text: "Exercise"
         href: articles/exo.html
-      - text: "How to capture Population Structure with PCA"
-        href: articles/how-to-PCA.html
       - text: "Why clumping should be preferred over pruning"
         href: articles/pruning-vs-clumping.html
+      - text: "How to capture Population Structure with PCA (LD problem explained)"
+        href: articles/how-to-PCA.html
+      - text: "How to capture Population Structure with PCA (directly on PLINK bed files)"
+        href: articles/bedpca.html
       - text: "Computing polygenic scores using Stacked Clumping and Thresholding (SCT)"
         href: articles/SCT.html
   right:
@@ -30,19 +32,24 @@ reference:
   - title: "I/O"
     contents:
       - snp_readBed
+      - snp_readBed2
       - snp_writeBed
       - snp_readBGEN
       - snp_attach
       - snp_attachExtdata
-  - title: "External software"
+  - title: "QC / relatedness / imputation"
     contents:
       - download_plink
       - download_plink2
+      - download_1000G
       - snp_plinkQC
+      - snp_plinkKINGQC
       - snp_plinkIBDQC
       - snp_plinkRmSamples
       - download_beagle
       - snp_beagleImpute
+      - snp_fastImpute
+      - snp_fastImputeSimple
   - title: "Pruning / correlation"
     contents:
       - snp_pruning
@@ -51,7 +58,6 @@ reference:
       - snp_autoSVD
       - snp_PRS
       - snp_cor
-      - snp_fastImpute
   - title: "Stacked Clumping and Thresholding (SCT)"
     contents:
       - snp_match
@@ -67,10 +73,28 @@ reference:
       - snp_MAX3
   - title: "Utilities"
     contents:
-      - same_ref
+      - snp_match
+      - snp_modifyBuild
       - snp_split
       - snp_save
       - snp_getSampleInfos
       - snp_MAF
       - snp_scaleBinom
       - subset.bigSNP
+      - same_ref
+      - sub_bed
+  - title: "PLINK bed files"
+    contents:
+      - bed
+      - bed_MAF
+      - bed_autoSVD
+      - bed_clumping
+      - bed_counts
+      - bed_cprodVec
+      - bed_pcadapt
+      - bed_prodVec
+      - bed_projectPCA
+      - bed_projectSelfPCA
+      - bed_randomSVD
+      - bed_scaleBinom
+      - bed_tcrossprodSelf

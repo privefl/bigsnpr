@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Exercises using packages bigsnpr and bigstatsr • bigsnpr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Exercises using packages bigsnpr and bigstatsr">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -53,10 +54,13 @@
       <a href="../articles/exo.html">Exercise</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA (LD problem explained)</a>
+    </li>
+    <li>
+      <a href="../articles/bedpca.html">How to capture Population Structure with PCA (directly on PLINK bed files)</a>
     </li>
     <li>
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
@@ -87,6 +91,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -112,16 +117,16 @@
 <div id="read-from-the-plink-files" class="section level2">
 <h2 class="hasAnchor">
 <a href="#read-from-the-plink-files" class="anchor"></a>Read from the PLINK files</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load packages bigsnpr and bigstatsr</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(bigsnpr)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># Load packages bigsnpr and bigstatsr</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bigsnpr)</a></code></pre></div>
 <pre><code>## Loading required package: bigstatsr</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Read from bed/bim/fam, it will create new files.</span>
-<span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(<span class="st">"tmp-data/public-data.bed"</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Read from bed/bim/fam, it will create new files.</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(<span class="st">"tmp-data/public-data.bed"</span>)</a></code></pre></div>
 <pre><code>## [1] "/home/privef/Bureau/bigsnpr/tmp-data/public-data.rds"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Attach the "bigSNP" object in R session</span>
-obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="st">"tmp-data/public-data.rds"</span>)
-<span class="co"># See how it looks like</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(obj.bigSNP, <span class="dt">max.level =</span> <span class="dv">2</span>, <span class="dt">strict.width =</span> <span class="st">"cut"</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Attach the "bigSNP" object in R session</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="st">"tmp-data/public-data.rds"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># See how it looks like</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(obj.bigSNP, <span class="dt">max.level =</span> <span class="dv">2</span>, <span class="dt">strict.width =</span> <span class="st">"cut"</span>)</a></code></pre></div>
 <pre><code>## List of 3
 ##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 10 ..
 ##   ..and 24 methods, of which 10 are  possibly relevant:
@@ -142,16 +147,16 @@ obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 ##   ..$ allele1     : chr [1:131276] "T" "G" "G" "T" ...
 ##   ..$ allele2     : chr [1:131276] "C" "A" "C" "C" ...
 ##  - attr(*, "class")= chr "bigSNP"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get aliases for useful slots</span>
-G   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>genotypes
-CHR &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>chromosome
-POS &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>physical.pos
-y   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection <span class="op">-</span><span class="st"> </span><span class="dv">1</span>
-sex &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>sex
-pop &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>family.ID
-NCORES &lt;-<span class="st"> </span><span class="kw">nb_cores</span>()
-<span class="co"># Check some counts for the 10 first SNPs</span>
-<span class="kw">big_counts</span>(G, <span class="dt">ind.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Get aliases for useful slots</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">G   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>genotypes</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">CHR &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>chromosome</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">POS &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>physical.pos</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">y   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">sex &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>sex</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">pop &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>family.ID</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">NCORES &lt;-<span class="st"> </span><span class="kw">nb_cores</span>()</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co"># Check some counts for the 10 first SNPs</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="kw">big_counts</span>(G, <span class="dt">ind.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 ## 0     476  376  378  380  481  463  389  476  483   478
 ## 1      64  143  139  136   71   84  133   71   70    70
@@ -168,10 +173,10 @@ NCORES &lt;-<span class="st"> </span><span class="kw">nb_cores</span>()
 <li><p>Find the variables associated with the disease status (<code>y</code>)</p></li>
 <li>
 <p>Predict the disease status using the following indices as training/test sets:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Divide the indices in training/test sets</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">1</span>)
-ind.train &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(G), <span class="dv">400</span>)
-ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sets">setdiff</a></span>(<span class="kw">rows_along</span>(G), ind.train)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># Divide the indices in training/test sets</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">ind.train &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(G), <span class="dv">400</span>)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span>(<span class="kw">rows_along</span>(G), ind.train)</a></code></pre></div>
 </li>
 </ul>
 <p>For this, you can use whatever tools you want because the data is quite small. In the following section, I give some (scalable) solutions using using packages {bigstatsr} and {bigsnpr}.</p>
@@ -183,40 +188,40 @@ ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdo
 <h3 class="hasAnchor">
 <a href="#population-structure-principal-component-analysis" class="anchor"></a>Population structure: Principal Component Analysis</h3>
 <p>Let us compute first principal components of the scaled genotype matrix:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute partial SVD (10 PCs by default) using random projections</span>
-<span class="co"># big_scale() computes means and standard deviations for scaling</span>
-svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="kw">big_scale</span>(), <span class="dt">ncores =</span> NCORES)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Scree plot</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Compute partial SVD (10 PCs by default) using random projections</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co"># big_scale() computes means and standard deviations for scaling</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="kw">big_scale</span>(), <span class="dt">ncores =</span> NCORES)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># Scree plot</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(svd)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-6-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)
-<span class="co"># Scores plot + color for population</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co"># Scores plot + color for population</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">color =</span> pop)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-6-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>, <span class="dt">scores =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">4</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">color =</span> pop)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"scores"</span>, <span class="dt">scores =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">color =</span> pop)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-6-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Loadings (effects of each variable for each PC)</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"loadings"</span>, <span class="dt">loadings =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">coeff =</span> <span class="fl">0.4</span>)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># Loadings (effects of each variable for each PC)</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(svd, <span class="dt">type =</span> <span class="st">"loadings"</span>, <span class="dt">loadings =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">coeff =</span> <span class="fl">0.4</span>)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-7-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 <p>Looking at the loadings, we can see that the PCA captures some variation due to large correlation between variables. To learn more about this possible pitfall, please look at <a href="https://privefl.github.io/bigsnpr/articles/how-to-PCA.html">this vignette</a>.</p>
 </div>
 <div id="association-genome-wide-association-study-gwas" class="section level3">
 <h3 class="hasAnchor">
 <a href="#association-genome-wide-association-study-gwas" class="anchor"></a>Association: Genome-Wide Association Study (GWAS)</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Association of each variable of `G` with `y` (adjusting for 10 PCs)</span>
-gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, <span class="dt">covar.train =</span> svd<span class="op">$</span>u, <span class="dt">ncores =</span> NCORES)
-<span class="co"># Histogram of p-values</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># Association of each variable of `G` with `y` (adjusting for 10 PCs)</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, <span class="dt">covar.train =</span> svd<span class="op">$</span>u, <span class="dt">ncores =</span> NCORES)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co"># Histogram of p-values</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(gwas)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-8-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Q-Q plot</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(gwas, <span class="dt">type =</span> <span class="st">"Q-Q"</span>) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/lims">xlim</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>)  <span class="co"># snp_qq(gwas) + xlim(1, NA)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># Q-Q plot</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(gwas, <span class="dt">type =</span> <span class="st">"Q-Q"</span>) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>)  <span class="co"># snp_qq(gwas) + xlim(1, NA)</span></a></code></pre></div>
 <pre><code>## Warning: Removed 118148 rows containing missing values (geom_point).</code></pre>
 <p><img src="exo_files/figure-html/unnamed-chunk-8-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Manhattan plot</span>
-<span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(gwas, CHR, POS, <span class="dt">npoints =</span> <span class="fl">20e3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_abline">geom_hline</a></span>(<span class="dt">yintercept =</span> <span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log10</a></span>(<span class="fl">5e-8</span>), <span class="dt">color =</span> <span class="st">"red"</span>)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co"># Manhattan plot</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(gwas, CHR, POS, <span class="dt">npoints =</span> <span class="fl">20e3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="dt">yintercept =</span> <span class="op">-</span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(<span class="fl">5e-8</span>), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-8-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 </div>
 <div id="polygenic-risk-score-prs" class="section level3">
@@ -227,19 +232,19 @@ gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, y, 
 <a href="#with-clumping-and-thresholding-ct" class="anchor"></a>with Clumping and Thresholding (C+T)</h4>
 <p><span class="math display">\[\rm{PRS}_i = \sum_{\substack{j \in S_\text{clumping} \\ p_j~&lt;~p_T}} \hat\beta_j \cdot G_{i,j}~,\]</span></p>
 <p>where <span class="math inline">\(\hat\beta_j\)</span> (<span class="math inline">\(p_j\)</span>) are the effect sizes (p-values) estimated from the GWAS and <span class="math inline">\(G_{i,j}\)</span> is the allele count (genotype) for individual <span class="math inline">\(i\)</span> and SNP <span class="math inline">\(j\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sumstats &lt;-<span class="st"> </span>bigreadr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/bigreadr/topics/fread2">fread2</a></span>(<span class="st">"tmp-data/public-data-sumstats.txt"</span>)
-lpval &lt;-<span class="st"> </span><span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log10</a></span>(sumstats<span class="op">$</span>p)
-ind.keep &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(G, CHR, <span class="dt">ind.row =</span> ind.train, <span class="dt">S =</span> lpval, <span class="dt">infos.pos =</span> POS, <span class="dt">ncores =</span> <span class="dv">3</span>)
-THR &lt;-<span class="st"> </span><span class="kw"><a href="../reference/seq_log.html">seq_log</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dt">length.out =</span> <span class="dv">20</span>)
-prs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_PRS.html">snp_PRS</a></span>(G, sumstats<span class="op">$</span>beta[ind.keep], <span class="dt">ind.keep =</span> ind.keep, 
-               <span class="dt">lpS.keep =</span> lpval[ind.keep], <span class="dt">thr.list =</span> THR)
-<span class="co"># Learn the optimal threshold on the training set</span>
-aucs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(prs[ind.train, ], <span class="dv">2</span>, AUC, <span class="dt">target =</span> y[ind.train])
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(THR, aucs, <span class="dt">xlab =</span> <span class="st">"-log10(p-value)"</span>, <span class="dt">ylab =</span> <span class="st">"AUC"</span>, <span class="dt">pch =</span> <span class="dv">20</span>)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">sumstats &lt;-<span class="st"> </span>bigreadr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html">fread2</a></span>(<span class="st">"tmp-data/public-data-sumstats.txt"</span>)</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">lpval &lt;-<span class="st"> </span><span class="op">-</span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(sumstats<span class="op">$</span>p)</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">ind.keep &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(G, CHR, <span class="dt">ind.row =</span> ind.train, <span class="dt">S =</span> lpval, <span class="dt">infos.pos =</span> POS, <span class="dt">ncores =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">THR &lt;-<span class="st"> </span><span class="kw"><a href="../reference/seq_log.html">seq_log</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dt">length.out =</span> <span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">prs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_PRS.html">snp_PRS</a></span>(G, sumstats<span class="op">$</span>beta[ind.keep], <span class="dt">ind.keep =</span> ind.keep, </a>
+<a class="sourceLine" id="cb19-6" data-line-number="6">               <span class="dt">lpS.keep =</span> lpval[ind.keep], <span class="dt">thr.list =</span> THR)</a>
+<a class="sourceLine" id="cb19-7" data-line-number="7"><span class="co"># Learn the optimal threshold on the training set</span></a>
+<a class="sourceLine" id="cb19-8" data-line-number="8">aucs &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(prs[ind.train, ], <span class="dv">2</span>, AUC, <span class="dt">target =</span> y[ind.train])</a>
+<a class="sourceLine" id="cb19-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(THR, aucs, <span class="dt">xlab =</span> <span class="st">"-log10(p-value)"</span>, <span class="dt">ylab =</span> <span class="st">"AUC"</span>, <span class="dt">pch =</span> <span class="dv">20</span>)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-9-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Evaluate on the test set</span>
-<span class="kw">AUC</span>(prs[ind.test, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which.min">which.max</a></span>(aucs)], y[ind.test])</code></pre></div>
-<pre><code>## [1] 0.6386096</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co"># Evaluate on the test set</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw">AUC</span>(prs[ind.test, <span class="kw"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span>(aucs)], y[ind.test])</a></code></pre></div>
+<pre><code>## [1] 0.6890316</code></pre>
 <p>(TODO: ADD SCT)</p>
 </div>
 <div id="with-penalized-logistic-regression-plr" class="section level4">
@@ -257,34 +262,35 @@ aucs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
 <p><br></p>
 <p>If you want to learn more about our implementation of PLR, please look at <a href="https://doi.org/10.1101/403337">this paper</a>.</p>
 <p><br></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Penalized logistic regression for many alphas and lambdas</span>
-mod &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(G, y[ind.train], ind.train, <span class="dt">covar.train =</span> svd<span class="op">$</span>u[ind.train, ],
-                    <span class="dt">K =</span> <span class="dv">5</span>, <span class="dt">alphas =</span> <span class="dv">10</span><span class="op">^</span>(<span class="op">-</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>)), <span class="dt">ncores =</span> NCORES)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot regularization paths (from high lambda to low lambda) </span>
-<span class="co"># for each validation set (color) and each alpha (facet)</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mod)</code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co"># Penalized logistic regression for many alphas and lambdas</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(G, y[ind.train], ind.train, <span class="dt">covar.train =</span> svd<span class="op">$</span>u[ind.train, ],</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">                    <span class="dt">K =</span> <span class="dv">5</span>, <span class="dt">alphas =</span> <span class="dv">10</span><span class="op">^</span>(<span class="op">-</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>)), <span class="dt">ncores =</span> NCORES)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Plot regularization paths (from high lambda to low lambda) </span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co"># for each validation set (color) and each alpha (facet)</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(mod)</a></code></pre></div>
 <p><img src="exo_files/figure-html/unnamed-chunk-11-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get summaries of models</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mod)</code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co"># Get summaries of models</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(mod)</a></code></pre></div>
 <pre><code>## # A tibble: 5 x 6
 ##    alpha validation_loss intercept beta            nb_var message  
 ##    &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;           &lt;int&gt; &lt;list&gt;   
-## 1 0.0001           0.503     -1.68 &lt;dbl [131,286]&gt;  57052 &lt;chr [5]&gt;
-## 2 0.001            0.505     -2.26 &lt;dbl [131,286]&gt;  12968 &lt;chr [5]&gt;
-## 3 0.01             0.504     -2.76 &lt;dbl [131,286]&gt;   2765 &lt;chr [5]&gt;
-## 4 0.1              0.504     -2.98 &lt;dbl [131,286]&gt;    689 &lt;chr [5]&gt;
-## 5 1                0.502     -3.16 &lt;dbl [131,286]&gt;    369 &lt;chr [5]&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the predictions for the test set</span>
-pred &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(mod, G, ind.test, <span class="dt">covar.row =</span> svd<span class="op">$</span>u[ind.test, ])
-<span class="co"># Assess the Area Under the ROC Curve</span>
-<span class="kw">AUC</span>(pred, y[ind.test])</code></pre></div>
-<pre><code>## [1] 0.6614078</code></pre>
+## 1 0.0001           0.533     -1.53 &lt;dbl [131,286]&gt;  57528 &lt;chr [5]&gt;
+## 2 0.001            0.535     -1.82 &lt;dbl [131,286]&gt;  13438 &lt;chr [5]&gt;
+## 3 0.01             0.534     -1.97 &lt;dbl [131,286]&gt;   2615 &lt;chr [5]&gt;
+## 4 0.1              0.552     -2.06 &lt;dbl [131,286]&gt;    634 &lt;chr [5]&gt;
+## 5 1                0.564     -1.83 &lt;dbl [131,286]&gt;    283 &lt;chr [5]&gt;</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># Get the predictions for the test set</span></a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">pred &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(mod, G, ind.test, <span class="dt">covar.row =</span> svd<span class="op">$</span>u[ind.test, ])</a>
+<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="co"># Assess the Area Under the ROC Curve</span></a>
+<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="kw">AUC</span>(pred, y[ind.test])</a></code></pre></div>
+<pre><code>## [1] 0.7278656</code></pre>
 </div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -300,17 +306,20 @@ pred &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Florian Privé.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

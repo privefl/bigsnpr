@@ -8,21 +8,25 @@
 
 <title>Quality Control — snp_plinkQC • bigsnpr</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,11 +34,12 @@
 
 
 
-<meta property="og:title" content="Quality Control — snp_plinkQC" />
 
+<meta property="og:title" content="Quality Control — snp_plinkQC" />
 <meta property="og:description" content="Quality Control (QC) and possible conversion to bed/bim/fam files
 using PLINK 1.9." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -46,6 +51,7 @@ using PLINK 1.9." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -64,7 +70,7 @@ using PLINK 1.9." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -87,10 +93,13 @@ using PLINK 1.9." />
       <a href="../articles/exo.html">Exercise</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA (LD problem explained)</a>
+    </li>
+    <li>
+      <a href="../articles/bedpca.html">How to capture Population Structure with PCA (directly on PLINK bed files)</a>
     </li>
     <li>
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
@@ -98,7 +107,6 @@ using PLINK 1.9." />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://privefl.github.io/about.html">
@@ -120,6 +128,7 @@ using PLINK 1.9." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -131,17 +140,15 @@ using PLINK 1.9." />
     </div>
 
     <div class="ref-description">
-    
     <p>Quality Control (QC) and possible conversion to <em>bed</em>/<em>bim</em>/<em>fam</em> files
-using <a href='https://www.cog-genomics.org/plink2'>PLINK 1.9</a>.</p>
-    
+using <a href='http://www.cog-genomics.org/plink2'>PLINK 1.9</a>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>snp_plinkQC</span>(<span class='no'>plink.path</span>, <span class='no'>prefix.in</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"--bfile"</span>,
-  <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>prefix.in</span>, <span class='st'>"_QC"</span>), <span class='kw'>maf</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>geno</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>prefix.in</span>, <span class='st'>"_QC"</span>), <span class='kw'>maf</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>geno</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
   <span class='kw'>mind</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>hwe</span> <span class='kw'>=</span> <span class='fl'>1e-50</span>, <span class='kw'>autosome.only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
-    
+  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -158,7 +165,7 @@ using <a href='https://www.cog-genomics.org/plink2'>PLINK 1.9</a>.</p>
       <td><p>Type of the dataset to be QCed. Default is <code>"--bfile"</code> and
 corresponds to bed/bim/fam files. You can also use <code>"--file"</code> for ped/map
 files or <code>"--vcf"</code> for a VCF file. More information can be found at
-<a href='https://www.cog-genomics.org/plink/1.9/input'>https://www.cog-genomics.org/plink/1.9/input</a>.</p></td>
+<a href='http://www.cog-genomics.org/plink/1.9/input'>http://www.cog-genomics.org/plink/1.9/input</a>.</p></td>
     </tr>
     <tr>
       <th>prefix.out</th>
@@ -193,64 +200,59 @@ variants? Default is <code>FALSE</code>.</p></td>
     <tr>
       <th>extra.options</th>
       <td><p>Other options to be passed to PLINK as a string. More
-options can be found at <a href='https://www.cog-genomics.org/plink2/filter'>https://www.cog-genomics.org/plink2/filter</a>.</p></td>
+options can be found at <a href='http://www.cog-genomics.org/plink2/filter'>http://www.cog-genomics.org/plink2/filter</a>.
+If using PLINK 2.0, you could e.g. use <code>"--king-cutoff 0.0884"</code> to remove
+some related samples at the same time of quality controls.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Whether to show PLINK log? Default is <code>TRUE</code>.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The path of the newly created bedfile.</p>
-    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Purcell, Shaun, Benjamin Neale, Kathe Todd-Brown, Lori Thomas,
-Manuel A R Ferreira, David Bender, Julian Maller, et al. 2007.
-<em>PLINK: a tool set for whole-genome association and population-based linkage
-analyses.</em> American Journal of Human Genetics 81 (3). Elsevier: 559–75.
-<a href='http://dx.doi.org/10.1086/519795'>http://dx.doi.org/10.1086/519795</a>.</p>
-<p>Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
+    <p>Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 <em>Second-generation PLINK: rising to the challenge of larger and richer
 datasets.</em> GigaScience 4 (1): 7.
 <a href='http://dx.doi.org/10.1186/s13742-015-0047-8'>http://dx.doi.org/10.1186/s13742-015-0047-8</a>.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='download_plink.html'>download_plink</a> <a href='snp_plinkIBDQC.html'>snp_plinkIBDQC</a></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='no'>prefix</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/grep'>sub</a></span>(<span class='st'>"\\.bed$"</span>, <span class='st'>""</span>, <span class='no'>bedfile</span>)
+    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
+<span class='no'>prefix</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span>(<span class='no'>bedfile</span>)
 <span class='no'>plink</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='download_plink.html'>download_plink</a></span>()
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkQC</span>(<span class='kw'>plink.path</span> <span class='kw'>=</span> <span class='no'>plink</span>,
                     <span class='kw'>prefix.in</span> <span class='kw'>=</span> <span class='no'>prefix</span>,
-                    <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/tempfile'>tempfile</a></span>(),
+                    <span class='kw'>prefix.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(),
                     <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"--bfile"</span>,  <span class='co'># the default (for ".bed")</span>
                     <span class='kw'>maf</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
                     <span class='kw'>geno</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
                     <span class='kw'>mind</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
                     <span class='kw'>hwe</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
                     <span class='kw'>autosome.only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>test</span></div><div class='output co'>#&gt; [1] "/tmp/Rtmp3lBDK2/file77437c42504e.bed"</div><div class='input'>
+<span class='no'>test</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpHMIGXH/file272e2a96db7b.bed"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#references">References</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -258,13 +260,16 @@ datasets.</em> GigaScience 4 (1): 7.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

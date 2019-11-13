@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Why clumping should be preferred over pruning • bigsnpr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Why clumping should be preferred over pruning">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -53,10 +54,13 @@
       <a href="../articles/exo.html">Exercise</a>
     </li>
     <li>
-      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA</a>
+      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
     </li>
     <li>
-      <a href="../articles/pruning-vs-clumping.html">Why clumping should be preferred over pruning</a>
+      <a href="../articles/how-to-PCA.html">How to capture Population Structure with PCA (LD problem explained)</a>
+    </li>
+    <li>
+      <a href="../articles/bedpca.html">How to capture Population Structure with PCA (directly on PLINK bed files)</a>
     </li>
     <li>
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
@@ -87,6 +91,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -108,21 +113,164 @@
 <h2 class="hasAnchor">
 <a href="#simulation" class="anchor"></a>Simulation</h2>
 <p>I generate a (toy) SNP array with 500 individuals and 10 SNPs, where each SNP has a squared correlation &gt; 0.2 with their direct neighbors and only with them. Moreover, the SNPs have an increasing MAF.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gen &lt;-<span class="st"> </span><span class="cf">function</span>(n, m) {
-  I &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>m
-  p &lt;-<span class="st"> </span>I <span class="op">/</span><span class="st"> </span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>m <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">gen &lt;-<span class="st"> </span><span class="cf">function</span>(n, m) {</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  I &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>m</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">  p &lt;-<span class="st"> </span>I <span class="op">/</span><span class="st"> </span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>m <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">  mat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/outer.html">outer</a></span>(I, I, <span class="dt">FUN =</span> <span class="cf">function</span>(i, j) {</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(i <span class="op">-</span><span class="st"> </span>j) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">  })</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">  bindata<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/bindata/man/rmvbin.html">rmvbin</a></span>(n, p, <span class="dt">bincorr =</span> mat) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="st">    </span>bindata<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/bindata/man/rmvbin.html">rmvbin</a></span>(n, p, <span class="dt">bincorr =</span> mat)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">}</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500</span>, <span class="dv">10</span>)</a></code></pre></div>
+<pre><code>## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
 
-  mat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/outer">outer</a></span>(I, I, <span class="dt">FUN =</span> <span class="cf">function</span>(i, j) {
-    <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(i <span class="op">-</span><span class="st"> </span>j) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)
-  })
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
 
-  bindata<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/bindata/topics/rmvbin">rmvbin</a></span>(n, p, <span class="dt">bincorr =</span> mat) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span>bindata<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/bindata/topics/rmvbin">rmvbin</a></span>(n, p, <span class="dt">bincorr =</span> mat)
-}
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">1</span>)
-X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500</span>, <span class="dv">10</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(X, <span class="dv">20</span>))</code></pre></div>
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values
+
+## Warning in regularize.values(x, y, ties, missing(ties)): collapsing to
+## unique 'x' values</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(X, <span class="dv">20</span>))</a></code></pre></div>
 <pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 ##  [1,]    0    0    0    1    0    0    1    1    1     1
 ##  [2,]    0    0    0    0    0    0    1    1    1     1
@@ -144,7 +292,7 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 ## [18,]    1    1    2    1    1    2    2    2    2     2
 ## [19,]    0    1    0    0    0    1    2    1    1     0
 ## [20,]    0    0    0    0    0    0    1    1    0     0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/cor">cor</a></span>(X)<span class="op">^</span><span class="dv">2</span>, <span class="dv">2</span>)) <span class="co"># squared correlation between SNPs</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(X)<span class="op">^</span><span class="dv">2</span>, <span class="dv">2</span>)) <span class="co"># squared correlation between SNPs</span></a></code></pre></div>
 <pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 ##  [1,] 1.00 0.23 0.13 0.08 0.05 0.03 0.02 0.01 0.01  0.00
 ##  [2,] 0.23 1.00 0.21 0.09 0.05 0.05 0.01 0.01 0.01  0.01
@@ -156,25 +304,25 @@ X &lt;-<span class="st"> </span><span class="kw">gen</span>(<span class="dv">500
 ##  [8,] 0.01 0.01 0.06 0.07 0.10 0.17 0.23 1.00 0.28  0.14
 ##  [9,] 0.01 0.01 0.02 0.03 0.07 0.08 0.13 0.28 1.00  0.31
 ## [10,] 0.00 0.01 0.01 0.04 0.04 0.06 0.07 0.14 0.31  1.00</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(X) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="co"># MAF of SNPs</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(X) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="co"># MAF of SNPs</span></a></code></pre></div>
 <pre><code>##  [1] 0.043 0.091 0.154 0.177 0.234 0.283 0.338 0.372 0.436 0.450</code></pre>
 <p>Let’s convert this to our format <code>bigSNP</code> in order to write corresponding PLINK files.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(bigsnpr)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bigsnpr)</a></code></pre></div>
 <pre><code>## Loading required package: bigstatsr</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fake &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_fake.html">snp_fake</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(X), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(X))
-fake<span class="op">$</span>genotypes[] &lt;-<span class="st"> </span>X
-tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempfile</a></span>()
-<span class="kw"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span>(fake, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(tmp, <span class="st">".bed"</span>))</code></pre></div>
-<pre><code>## [1] "/tmp/RtmpUQIhOw/file131c713bfd4b.bed"</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">fake &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_fake.html">snp_fake</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(X), <span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(X))</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">fake<span class="op">$</span>genotypes[] &lt;-<span class="st"> </span>X</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span>(fake, <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(tmp, <span class="st">".bed"</span>))</a></code></pre></div>
+<pre><code>## [1] "/tmp/Rtmpayu31B/file2aec12df912a.bed"</code></pre>
 </div>
 <div id="pruning" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pruning" class="anchor"></a>Pruning</h2>
 <p>Pruning, as implemented in PLINK, sequentially scan the genomes for pairs of correlated SNPs, <strong>keeping only the one with the higher MAF</strong> (see <a href="https://github.com/chrchang/plink-ng/issues/27">this</a>). Let’s use PLINK pruning on this simulated toy dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(glue)
-plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/download_plink.html">download_plink</a></span>()
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system">system</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --indep-pairwise 50 1 0.2 --out {tmp}"</span>))</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.table</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{tmp}.prune.out"</span>))</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(glue)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/download_plink.html">download_plink</a></span>()</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/system.html">system</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --indep-pairwise 50 1 0.2 --out {tmp}"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(<span class="st">"{tmp}.prune.out"</span>))</a></code></pre></div>
 <pre><code>##      V1
 ## 1 snp_1
 ## 2 snp_2
@@ -185,12 +333,12 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 ## 7 snp_7
 ## 8 snp_8
 ## 9 snp_9</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.table</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{tmp}.prune.in"</span>))</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(<span class="st">"{tmp}.prune.in"</span>))</a></code></pre></div>
 <pre><code>##       V1
 ## 1 snp_10</code></pre>
 <p>The first SNP is pruned because of its correlation with the second. The second SNP is pruned because of its correlation with the third and so on. In the end, only the last SNP (10th) is kept with the LD pruning procedure of PLINK, which corresponds to less than 18% of the total variance.</p>
 <p>You can also do the pruning directly in R with <code><a href="../reference/snp_clumping.html">snp_pruning()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/snp_clumping.html">snp_pruning</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="../reference/snp_clumping.html">snp_pruning</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</a></code></pre></div>
 <pre><code>## Warning: Pruning is deprecated; using clumping (on MAF) instead..
 ## See why there: https://goo.gl/Td5YYv.</code></pre>
 <pre><code>## [1]  2  4  6  8 10</code></pre>
@@ -200,24 +348,24 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 <a href="#clumping" class="anchor"></a>Clumping</h2>
 <p>A clumping approach would consider the SNPs sorted (in a decreasing order) by a statistic. This statistic is often a test statistic computed from a GWAS of a given phenotype. Yet, for example, for Principal Components Analysis (PCA), the thinning procedure should remain unsupervised (phenotype mustn’t be used!). So, we propose to also use the MAF as a statistic of importance, so that SNPs are sorted by decreasing MAF.</p>
 <p>The benefit of the clumping procedure is that the index SNP is always the SNP that is kept (because it has the highest MAF). Let’s use PLINK again:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compute MAFs</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/write.table">write.table</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">SNP =</span> fake<span class="op">$</span>map<span class="op">$</span>marker.ID,
-                       <span class="dt">P =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw"><a href="../reference/snp_MAF.html">snp_MAF</a></span>(fake<span class="op">$</span>genotypes)),
-            <span class="dt">file =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(tmp, <span class="st">".frq"</span>), <span class="dt">row.names =</span> <span class="ot">FALSE</span>, <span class="dt">quote =</span> <span class="ot">FALSE</span>)
-<span class="co"># Clumping</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system">system</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --out {tmp}"</span>,
-              <span class="st">" --clump {tmp}.frq"</span>,
-              <span class="st">" --clump-p1 1 --clump-p2 1 --clump-r2 0.2"</span>))
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.table</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/glue/topics/glue">glue</a></span>(<span class="st">"{tmp}.clumped"</span>), <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>##   CHR F    SNP BP     P TOTAL NSIG S05 S01 S001 S0001      SP2
-## 1   1 1 snp_10  0 0.550     1    1   0   0    0     0 snp_9(1)
-## 2   1 1  snp_8  0 0.628     1    1   0   0    0     0 snp_7(1)
-## 3   1 1  snp_6  0 0.717     1    1   0   0    0     0 snp_5(1)
-## 4   1 1  snp_4  0 0.823     1    1   0   0    0     0 snp_3(1)
-## 5   1 1  snp_2  0 0.909     1    1   0   0    0     0 snp_1(1)</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co"># Compute MAFs</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">SNP =</span> fake<span class="op">$</span>map<span class="op">$</span>marker.ID,</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">                       <span class="dt">P =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw"><a href="../reference/snp_MAF.html">snp_MAF</a></span>(fake<span class="op">$</span>genotypes)),</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">            <span class="dt">file =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(tmp, <span class="st">".frq"</span>), <span class="dt">row.names =</span> <span class="ot">FALSE</span>, <span class="dt">quote =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="co"># Clumping</span></a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/base/system.html">system</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(<span class="st">"{plink} --bfile {tmp} --out {tmp}"</span>,</a>
+<a class="sourceLine" id="cb21-7" data-line-number="7">              <span class="st">" --clump {tmp}.frq"</span>,</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">              <span class="st">" --clump-p1 1 --clump-p2 1 --clump-r2 0.2"</span>))</a>
+<a class="sourceLine" id="cb21-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/glue/man/glue.html">glue</a></span>(<span class="st">"{tmp}.clumped"</span>), <span class="dt">header =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>##   CHR F    SNP    BP     P TOTAL NSIG S05 S01 S001 S0001      SP2
+## 1   1 1 snp_10 10000 0.550     1    1   0   0    0     0 snp_9(1)
+## 2   1 1  snp_8  8000 0.628     1    1   0   0    0     0 snp_7(1)
+## 3   1 1  snp_6  6000 0.717     1    1   0   0    0     0 snp_5(1)
+## 4   1 1  snp_4  4000 0.823     1    1   0   0    0     0 snp_3(1)
+## 5   1 1  snp_2  2000 0.909     1    1   0   0    0     0 snp_1(1)</code></pre>
 <p>So the last SNP (10th) would be considered first and the 9th SNP would be pruned. Then the 8th SNP would be considered and the 7th SNP would be pruned and so on. So, the even SNPs would be kept and the odd SNPs would be pruned, which corresponds to 56.7% of the total variance.</p>
 <p>You can also do the clumping (on MAF by default) directly in R with <code><a href="../reference/snp_clumping.html">snp_clumping()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(fake<span class="op">$</span>genotypes, <span class="dt">infos.chr =</span> fake<span class="op">$</span>map<span class="op">$</span>chromosome)</a></code></pre></div>
 <pre><code>## [1]  2  4  6  8 10</code></pre>
 </div>
 <div id="conclusion" class="section level2">
@@ -230,6 +378,7 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -245,17 +394,20 @@ plink &lt;-<span class="st"> </span><span class="kw"><a href="../reference/downl
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Florian Privé.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
