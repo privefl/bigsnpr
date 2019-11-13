@@ -1,0 +1,129 @@
+---
+title: "Principal Component Analysis"
+author: "Florian Privé"
+date: "November 13, 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
+```
+
+```{r}
+library(bigsnpr)
+library(ggplot2)
+```
+
+## Data
+
+Let us use a subsetted version of the 1000 Genomes project data we provide. Some quality control has already been done; otherwise, you can use `snp_plinkQC()`.
+
+```{r}
+bedfile <- download_1000G("data")
+```
+
+## Relatedness
+
+First, let us detect all pairs of related individuals.
+
+```{r}
+plink2 <- download_plink2("data")
+rel <- snp_plinkKINGQC(
+  plink2.path = plink2,
+  bedfile.in = bedfile,
+  thr.king = 2^-4.5,
+  make.bed = FALSE,
+  ncores = nb_cores()
+)
+str(rel)
+```
+
+## Principal Component Analysis (PCA)
+
+We then compute PCA without using the related individuals. Function `bed_autoSVD()` should take care of Linkage Disequilibrium (LD).
+
+```{r}
+(obj.bed <- bed(bedfile))
+ind.rel <- match(c(rel$ID1, rel$ID2), obj.bed$fam$sample.ID)
+ind.norel <- rows_along(obj.bed)[-ind.rel]
+
+obj.svd <- bed_autoSVD(obj.bed, ind.row = ind.norel, k = 20, 
+                       ncores = nb_cores())
+```
+
+## Outlier sample detection
+
+Then, we look at if there are individual outliers.
+
+```{r}
+prob <- bigutilsr::prob_dist(obj.svd$u, ncores = nb_cores())
+S <- prob$dist.self / sqrt(prob$dist.nn)
+
+ggplot() +
+  geom_histogram(aes(S), color = "#000000", fill = "#000000", alpha = 0.5) +
+  scale_x_continuous(breaks = 0:5 / 5, limits = c(0, NA)) +
+  scale_y_sqrt(breaks = c(10, 100, 500)) +
+  theme_bigstatsr() +
+  labs(x = "Statistic of outlierness", y = "Frequency (sqrt-scale)")
+
+plot_grid(plotlist = lapply(7:10, function(k) {
+  plot(obj.svd, type = "scores", scores = 2 * k - 1:0, coeff = 0.6) +
+    aes(color = S) +
+    scale_colour_viridis_c()
+}), scale = 0.95)
+
+plot_grid(plotlist = lapply(7:10, function(k) {
+  plot(obj.svd, type = "scores", scores = 2 * k - 1:0, coeff = 0.6) +
+    aes(color = S > 0.5) +  # threshold based on histogram
+    scale_colour_viridis_d()
+}), scale = 0.95)
+```
+
+## PCA without outlier
+
+We recompute PCA without outliers, starting with the previous set of variants kept (we can therefore skip the initial clumping step).
+
+```{r}
+ind.row <- ind.norel[S < 0.5]
+ind.col <- attr(obj.svd, "subset")
+obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row, 
+                        ind.col = ind.col, thr.r2 = NA,
+                        k = 20, ncores = nb_cores())
+```
+
+## Verification
+
+```{r}
+plot(obj.svd2)
+```
+
+
+```{r, out.width="95%"}
+plot(obj.svd2, type = "loadings", loadings = 1:20, coeff = 0.4)
+```
+
+
+```{r, out.width="80%"}
+plot(obj.svd2, type = "scores", scores = 1:20, coeff = 0.4)
+```
+
+## Project remaining individuals
+
+```{r}
+PCs <- matrix(NA, nrow(obj.bed), ncol(obj.svd2$u))
+PCs[ind.row, ] <- predict(obj.svd2)
+
+proj <- bed_projectSelfPCA(obj.svd2, obj.bed, 
+                           ind.row = rows_along(obj.bed)[-ind.row],
+                           ncores = 1) # useless -> too few individuals
+PCs[-ind.row, ] <- proj$OADP_proj
+```
+
+```{r}
+plot(PCs[ind.row, 7:8], pch = 20, xlab = "PC7", ylab = "PC8")
+points(PCs[-ind.row, 7:8], pch = 20, col = "blue")
+```
+
+## References
