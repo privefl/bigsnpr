@@ -2,6 +2,7 @@
 
 #include "bed-acc.h"
 #include <bigstatsr/prodMatVec.hpp>
+#include <bigstatsr/utils.h>
 
 /******************************************************************************/
 
@@ -47,6 +48,38 @@ List bed_stats(Environment obj_bed,
                       _["var"]  = var,
                       _["nb_nona_col"] = nb_nona_col,
                       _["nb_nona_row"] = nb_nona_row);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+List bed_corNA(Environment obj_bed,
+               const IntegerVector& ind_row,
+               const IntegerVector& ind_col,
+               const NumericMatrix& U) {
+
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAcc macc(xp_bed, ind_row, ind_col);
+  size_t n = macc.nrow();
+  size_t m = macc.ncol();
+  myassert_size(U.nrow(), ind_row.size());
+
+  size_t K = U.ncol();
+
+  NumericMatrix res(K, m);
+  IntegerVector nb_na(m);
+
+  for (size_t j = 0; j < m; j++) {
+    for (size_t i = 0; i < n; i++) {
+      if (macc(i, j) == 3) {
+        nb_na[j]++;
+        for (size_t k = 0; k < K; k++) res(k, j) += U(i, k);
+      }
+    }
+  }
+
+  return List::create(_["prod"]  = res,
+                      _["nb_na"] = nb_na);
 }
 
 /******************************************************************************/

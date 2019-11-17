@@ -47,6 +47,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bed_corNA
+List bed_corNA(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericMatrix& U);
+RcppExport SEXP _bigsnpr_bed_corNA(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP USEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type U(USEXP);
+    rcpp_result_gen = Rcpp::wrap(bed_corNA(obj_bed, ind_row, ind_col, U));
+    return rcpp_result_gen;
+END_RCPP
+}
 // bed_counts_cpp
 IntegerMatrix bed_counts_cpp(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col);
 RcppExport SEXP _bigsnpr_bed_counts_cpp(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP) {
@@ -311,6 +325,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
     {"_bigsnpr_bedXPtr", (DL_FUNC) &_bigsnpr_bedXPtr, 3},
     {"_bigsnpr_bed_stats", (DL_FUNC) &_bigsnpr_bed_stats, 3},
+    {"_bigsnpr_bed_corNA", (DL_FUNC) &_bigsnpr_bed_corNA, 4},
     {"_bigsnpr_bed_counts_cpp", (DL_FUNC) &_bigsnpr_bed_counts_cpp, 3},
     {"_bigsnpr_bed_pMatVec4", (DL_FUNC) &_bigsnpr_bed_pMatVec4, 6},
     {"_bigsnpr_bed_cpMatVec4", (DL_FUNC) &_bigsnpr_bed_cpMatVec4, 6},
