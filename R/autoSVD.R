@@ -101,9 +101,9 @@ snp_autoSVD <- function(G,
   }
 
   if (min.mac > 0) {
-    mac <- snp_MAF(G, ind.row, ind.keep, ncores = ncores) * (2 * length(ind.row))
-    assert_int(round(mac, 7))
-    mac.nok <- (mac < min.mac)
+    maf <- snp_MAF(G, ind.row, ind.keep, ncores = ncores)
+    min.maf <- min.mac / (2 * length(ind.row))
+    mac.nok <- (maf < min.maf)
     printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
             `if`(sum(mac.nok) > 1, "s", ""), min.mac)
     ind.keep <- ind.keep[!mac.nok]
