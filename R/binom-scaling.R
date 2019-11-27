@@ -120,6 +120,8 @@ bed_scaleBinom <- function(obj.bed,
 #' Counts the number of 0s, 1s, 2s and NAs by variants in the bed file.
 #'
 #' @inheritParams bigsnpr-package
+#' @param byrow Whether to count by individual rather than by variant?
+#'   Default is `FALSE` (count by variant).
 #'
 #' @return A matrix of with 4 rows and `length(ind.col)` columns.
 #'
@@ -131,14 +133,23 @@ bed_scaleBinom <- function(obj.bed,
 #'
 #' bed_counts(obj.bed, ind.col = 1:5)
 #'
+#' bed_counts(obj.bed, ind.row = 1:5, byrow = TRUE)
+#'
 bed_counts <- function(obj.bed,
                        ind.row = rows_along(obj.bed),
                        ind.col = cols_along(obj.bed),
+                       byrow = FALSE,
                        ncores = 1) {
 
-  res <- big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
-    bed_counts_cpp(obj.bed, ind.row, ind)
-  }, p.combine = "cbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
+  if (byrow) {
+    res <- big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
+      bed_row_counts_cpp(obj.bed, ind.row, ind)
+    }, p.combine = plus, ncores = ncores, ind = ind.col, ind.row = ind.row)
+  } else {
+    res <- big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
+      bed_counts_cpp(obj.bed, ind.row, ind)
+    }, p.combine = "cbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
+  }
 
   rownames(res) <- c(0:2, NA)
   res
@@ -172,7 +183,7 @@ bed_MAF <- function(obj.bed,
                     ind.col = cols_along(obj.bed),
                     ncores = 1) {
 
-  counts <- bed_counts(obj.bed, ind.row, ind.col, ncores)
+  counts <- bed_counts(obj.bed, ind.row, ind.col, byrow = FALSE, ncores = ncores)
   ac <- counts[2, ] + 2 * counts[3, ]
   nb_nona <- length(ind.row) - counts[4, ]
   af <- ac / (2 * nb_nona)

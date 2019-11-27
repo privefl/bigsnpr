@@ -8,6 +8,7 @@ bed_counts(
   obj.bed,
   ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed),
+  byrow = FALSE,
   ncores = 1
 )
 }
@@ -23,6 +24,9 @@ are used. If not specified, all rows are used.\cr
 If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
+\item{byrow}{Whether to count by individual rather than by variant?
+Default is \code{FALSE} (count by variant).}
+
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 }
@@ -37,5 +41,7 @@ bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
 obj.bed <- bed(bedfile)
 
 bed_counts(obj.bed, ind.col = 1:5)
+
+bed_counts(obj.bed, ind.row = 1:5, byrow = TRUE)
 
 }

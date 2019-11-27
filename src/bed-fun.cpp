@@ -103,6 +103,25 @@ IntegerMatrix bed_counts_cpp(Environment obj_bed,
   return res;
 }
 
+// [[Rcpp::export]]
+IntegerMatrix bed_row_counts_cpp(Environment obj_bed,
+                                 const IntegerVector& ind_row,
+                                 const IntegerVector& ind_col) {
+
+  XPtr<bed> xp_bed = obj_bed["address"];
+  bedAcc macc(xp_bed, ind_row, ind_col);
+  size_t n = macc.nrow();
+  size_t m = macc.ncol();
+
+  IntegerMatrix res(4, n);
+
+  for (size_t j = 0; j < m; j++)
+    for (size_t i = 0; i < n; i++)
+      (res(macc(i, j), i))++;
+
+  return res;
+}
+
 /******************************************************************************/
 
 // // [[Rcpp::export]]

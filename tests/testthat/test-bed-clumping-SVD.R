@@ -71,6 +71,10 @@ expect_identical(bed_counts(obj.bed2, ind.row, ind.col),
                  big_counts(G, ind.row, ind.col))
 expect_identical(bed_counts(obj.bed2, ind.row, ind.col, ncores = 2),
                  big_counts(G, ind.row, ind.col))
+expect_identical(bed_counts(obj.bed2, ind.row, ind.col, byrow = TRUE),
+                 big_counts(G, ind.row, ind.col, byrow = TRUE))
+expect_identical(bed_counts(obj.bed2, ind.row, ind.col, byrow = TRUE, ncores = 2),
+                 big_counts(G, ind.row, ind.col, byrow = TRUE))
 
 G_nona <- snp_attachExtdata()$genotypes
 expect_identical(bed_counts(obj.bed, ind.row, ind.col),

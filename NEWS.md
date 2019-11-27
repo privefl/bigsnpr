@@ -1,3 +1,7 @@
+## bigsnpr 1.0.1
+
+- Add option `byrow` to `bed_counts()`.
+
 ## bigsnpr 1.0.0
 
 - Add memory-mapping on PLINK (.bed) files with missing values + new functions:
