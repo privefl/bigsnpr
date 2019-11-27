@@ -17,6 +17,7 @@ bim
 biobank
 bioinformatics
 Biometrics
+bioRxiv
 Blum
 bp
 bty
@@ -79,7 +80,7 @@ PLINK
 plinkQC
 ploidy
 PLoS
-Polygenic
+polygenic
 polymorphism
 pos
 PRED
@@ -92,6 +93,7 @@ rds
 RDS
 README
 readRDS
+repo
 reproducibility
 Roeder
 rOpenSci

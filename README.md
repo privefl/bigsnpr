@@ -15,6 +15,9 @@
 
 **Note that most of the algorithms of this package don't handle missing values.** You can use `snp_fastImpute()` (taking a few hours for a chip of 15K x 300K) and `snp_fastImputeSimple()` (taking a few minutes) to impute missing values of *genotyped* variants.
 
+**New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
+
+
 ## Installation
 
 ```r
@@ -24,7 +27,7 @@ remotes::install_github("privefl/bigsnpr")
 
 ## Input formats
 
-This package reads *bed*/*bim*/*fam* files (PLINK preferred format) using function `snp_readBed()`. Before reading into this package's special format, quality control and conversion can be done using PLINK, which can be called directly from R using `snp_plinkQC` and `snp_plinkIBDQC`.
+This package reads *bed*/*bim*/*fam* files (PLINK preferred format) using function `snp_readBed()`. Before reading into this package's special format, quality control and conversion can be done using PLINK, which can be called directly from R using `snp_plinkQC` and `snp_plinkKINGQC`.
 
 This package now also reads **UK Biobank BGEN files** using function `snp_readBGEN()`.
 
@@ -34,12 +37,14 @@ This package uses a class called `bigSNP` for representing SNP data. A `bigSNP` 
 - `fam`: A `data.frame` containing some information on the SNPs.
 - `map`: A `data.frame` giving some information on the individuals.
 
+**New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
+
 
 ## Possible upcoming features
 
 - Multiple imputation for GWAS (https://doi.org/10.1371/journal.pgen.1006091).
 
-- More interactive (visual) QC by wrapping around PLINK.
+- More interactive (visual) QC.
 
 You can request some feature by opening an issue.
 
@@ -57,10 +62,12 @@ I will always redirect you to GitHub issues if you email me, so that others can 
 
 ## References
 
-- Privé, Florian, et al. "Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr." Bioinformatics 34.16 (2018): 2781-2787.
+- Privé, Florian, et al. ["Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr."](https://doi.org/10.1093/bioinformatics/bty185) Bioinformatics 34.16 (2018): 2781-2787.
 
-- Privé, Florian, Hugues Aschard, and Michael GB Blum. "Efficient implementation of penalized regression for genetic risk prediction." Genetics 212.1 (2019): 65-74.
+- Privé, Florian, et al. ["Efficient implementation of penalized regression for genetic risk prediction."](https://doi.org/10.1534/genetics.119.302019) Genetics 212.1 (2019): 65-74.
 
-- Privé, Florian, et al. "Making the most of Clumping and Thresholding for polygenic scores." bioRxiv (2019): 653204.
+- Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) Am J Hum Genet (2019).
+
+- Privé, Florian, et al. ["Efficient toolkit implementing best practices for principal component analysis of population genetic data."](https://doi.org/10.1101/841452) BioRxiv (2019): 841452.
 
 <br>
