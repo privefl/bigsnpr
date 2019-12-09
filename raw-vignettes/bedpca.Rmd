@@ -21,7 +21,7 @@ library(ggplot2)
 Let us use a subsetted version of the 1000 Genomes project data we provide. Some quality control has already been done; otherwise, you can use `snp_plinkQC()`.
 
 ```{r}
-bedfile <- download_1000G("data")
+bedfile <- download_1000G("tmp-data")
 ```
 
 ## Relatedness
@@ -29,7 +29,7 @@ bedfile <- download_1000G("data")
 First, let us detect all pairs of related individuals.
 
 ```{r}
-plink2 <- download_plink2("data")
+plink2 <- download_plink2("tmp-data")
 rel <- snp_plinkKINGQC(
   plink2.path = plink2,
   bedfile.in = bedfile,
