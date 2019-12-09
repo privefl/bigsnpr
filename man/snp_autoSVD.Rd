@@ -117,7 +117,7 @@ A named list (an S3 class "big_SVD") of
 }
 
 Note that to obtain the Principal Components, you must use
-\link[=predict.big_SVD]{predict} on the result. See examples.
+\link[bigstatsr:predict.big_SVD]{predict} on the result. See examples.
 }
 \description{
 Fast truncated SVD with initial pruning and that iteratively removes

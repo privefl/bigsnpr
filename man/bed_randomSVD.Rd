@@ -56,7 +56,7 @@ A named list (an S3 class "big_SVD") of
 }
 
 Note that to obtain the Principal Components, you must use
-\link[=predict.big_SVD]{predict} on the result. See examples.
+\link[bigstatsr:predict.big_SVD]{predict} on the result. See examples.
 }
 \description{
 Partial SVD (or PCA) of a genotype matrix stored as a PLINK (.bed) file.#'

@@ -31,7 +31,7 @@ If not specified, all columns are used. \strong{Don't use negative indices.}}
 Default uses \link[bigstatsr]{block_size}.}
 }
 \value{
-A temporary \link[=FBM-class]{FBM}, with the following two attributes:
+A temporary \link[bigstatsr:FBM-class]{FBM}, with the following two attributes:
 \itemize{
 \item a numeric vector \code{center} of column scaling,
 \item a numeric vector \code{scale} of column scaling.
