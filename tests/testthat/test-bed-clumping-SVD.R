@@ -4,6 +4,8 @@
 # library(testthat)
 context("BED_RANDOM_SVD")
 
+stopifnot(getOption("bigstatsr.check.parallel.blas") == FALSE)
+
 ################################################################################
 
 # No missing value -> with {bigstatsr}

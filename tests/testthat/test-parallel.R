@@ -2,6 +2,8 @@
 
 context("PARALLEL")
 
+stopifnot(getOption("bigstatsr.check.parallel.blas") == FALSE)
+
 ################################################################################
 
 test <- snp_attachExtdata()

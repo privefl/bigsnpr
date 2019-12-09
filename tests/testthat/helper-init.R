@@ -6,7 +6,7 @@ library(bigparallelr)
 
 ################################################################################
 
-opt.save <- options(bigstatsr.check.parallel.blas = FALSE)
+options(bigstatsr.check.parallel.blas = FALSE)
 
 ################################################################################
 
