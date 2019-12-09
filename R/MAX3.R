@@ -98,6 +98,7 @@ snp_MAX3 <- function(Gna, y01.train,
   fun.pred <- function(xtr) {
     stats::pchisq(xtr, df = 1, lower.tail = FALSE, log.p = TRUE) / log(10)
   }
+  environment(fun.pred) <- baseenv()
 
   structure(data.frame(score = apply(stats^2, 1, max)),
             class = c("mhtest", "data.frame"),

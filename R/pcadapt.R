@@ -17,6 +17,7 @@ pcadapt0 <- function(G, U.row, ind.row, ind.col, ncores) {
     "function(xtr) {
        stats::pchisq(xtr, df = %d, lower.tail = FALSE, log.p = TRUE) / log(10)
      }", K)))
+  environment(fun.pred) <- baseenv()
 
   snp_gc(
     structure(data.frame(score = dist),
