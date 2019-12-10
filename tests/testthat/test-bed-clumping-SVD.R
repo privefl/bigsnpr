@@ -48,12 +48,6 @@ expect_gt(mean(sqrt(colSums(cor(eig$vectors[, 1:10], obj.svd3$u)^2))), 0.999)
 
 ################################################################################
 
-# https://github.com/hadley/testthat/issues/567
-Sys.unsetenv("R_TESTS")
-
-not_cran <- identical(Sys.getenv("BIGSNPR_CRAN"), "false")
-NCORES <- `if`(not_cran, 2, 1)
-
 expect_identical(bed_clumping(obj.bed2, ncores = NCORES), ind.keep3)
 expect_equal(bed_randomSVD(obj.bed2, ind.col = ind.keep2, ncores = NCORES),
              obj.svd3)
