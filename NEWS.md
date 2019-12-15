@@ -1,3 +1,7 @@
+## bigsnpr 1.0.2
+
+- Add option `backingfile` to `subset.bigSNP()`.
+
 ## bigsnpr 1.0.1
 
 - Add option `byrow` to `bed_counts()`.

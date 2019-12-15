@@ -4,7 +4,13 @@
 \alias{subset.bigSNP}
 \title{Subset}
 \usage{
-\method{subset}{bigSNP}(x, ind.row = rows_along(G), ind.col = cols_along(G), ...)
+\method{subset}{bigSNP}(
+  x,
+  ind.row = rows_along(G),
+  ind.col = cols_along(G),
+  backingfile = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
@@ -17,13 +23,14 @@ Default: keep them all.}
 Negative indices \strong{can} be used to exclude column indices.
 Default: keep them all.}
 
+\item{backingfile}{Prefix of the two new files created (".bk" and ".rds").
+By defaut, it is automatically determined by appending "_sub" and a number
+to the prefix of the input bigSNP backing files.}
+
 \item{...}{Not used.}
 }
 \value{
-The path to the RDS file that stores the \code{bigSNP} object.\cr
-Note that this function creates two files whose names have been
-automatically chosen by appending "_sub" and a number to the prefix of the
-input bigSNP backing files.
+The path to the RDS file that stores the \code{bigSNP} object.
 }
 \description{
 A method to get a subset (copy) of a \code{bigSNP}.

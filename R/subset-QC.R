@@ -7,18 +7,19 @@
 #'
 #' @inheritParams bigsnpr-package
 #' @param ind.row Indices of the rows (individuals) to keep.
-#' Negative indices __can__ be used to exclude row indices.
-#' Default: keep them all.
+#'   Negative indices __can__ be used to exclude row indices.
+#'   Default: keep them all.
 #' @param ind.col Indices of the columns (SNPs) to keep.
-#' Negative indices __can__ be used to exclude column indices.
-#' Default: keep them all.
+#'   Negative indices __can__ be used to exclude column indices.
+#'   Default: keep them all.
+#' @param backingfile Prefix of the two new files created (".bk" and ".rds").
+#'   By defaut, it is automatically determined by appending "_sub" and a number
+#'   to the prefix of the input bigSNP backing files.
 #' @param ... Not used.
 #'
 #' @export
-#' @return The path to the RDS file that stores the `bigSNP` object.\cr
-#' Note that this function creates two files whose names have been
-#' automatically chosen by appending "_sub" and a number to the prefix of the
-#' input bigSNP backing files.
+#' @return The path to the RDS file that stores the `bigSNP` object.
+#'
 #' @seealso [bigSNP][bigSNP-class]
 #' @examples
 #' str(test <- snp_attachExtdata())
@@ -34,14 +35,18 @@
 subset.bigSNP <- function(x,
                           ind.row = rows_along(G),
                           ind.col = cols_along(G),
+                          backingfile = NULL,
                           ...) {
 
   G <- x$genotypes
+
   # Support for negative indices
   ind.row <- rows_along(G)[ind.row]
   ind.col <- cols_along(G)[ind.col]
 
   check_args()
+
+  if (is.null(backingfile)) backingfile <- getNewFile(x, "sub")
 
   # Create new FBM and fill it
   G2 <- FBM.code256(
@@ -49,7 +54,7 @@ subset.bigSNP <- function(x,
     ncol = length(ind.col),
     code = G$code256,
     init = NULL,
-    backingfile = getNewFile(x, "sub"),
+    backingfile = backingfile,
     create_bk = TRUE
   )
   replaceSNP(G2, G, rowInd = ind.row, colInd = ind.col)
