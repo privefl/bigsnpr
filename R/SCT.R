@@ -40,7 +40,7 @@ snp_grid_clumping <- function(
 ) {
 
   check_args()
-  assert_lengths(cols_along(G), infos.chr, infos.pos, infos.imp)
+  assert_lengths(cols_along(G), infos.chr, infos.pos, infos.imp, lpS)
   assert_class(groups, "list")
 
   THR_IMP        <- sort(unique(grid.thr.imp))
