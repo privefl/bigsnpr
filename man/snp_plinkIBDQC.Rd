@@ -56,6 +56,8 @@ Quality Control based on Identity-by-descent (IBD) computed by
 using its method-of-moments.
 }
 \examples{
+\dontrun{
+
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 plink <- download_plink()
 
@@ -73,6 +75,7 @@ qplot(y = PI_HAT, data = df_rel) +
 snp_plinkRmSamples(plink, bedfile,
                    bedfile.out = tempfile(fileext = ".bed"),
                    df.or.files = subset(df_rel, PI_HAT > 0.2))
+}
 
 }
 \references{

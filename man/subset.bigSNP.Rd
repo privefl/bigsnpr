@@ -24,7 +24,7 @@ Negative indices \strong{can} be used to exclude column indices.
 Default: keep them all.}
 
 \item{backingfile}{Prefix of the two new files created (".bk" and ".rds").
-By defaut, it is automatically determined by appending "_sub" and a number
+By default, it is automatically determined by appending "_sub" and a number
 to the prefix of the input bigSNP backing files.}
 
 \item{...}{Not used.}

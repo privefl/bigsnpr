@@ -54,11 +54,10 @@ Downloads and more information can be found at the following websites
 }
 }
 \references{
-B L Browning and S R Browning (2016).
-Genotype imputation with millions of reference samples.
-Am J Hum Genet 98:116-126.
-\url{dx.doi.org/doi:10.1016/j.ajhg.2015.11.020}
+Browning, Brian L., and Sharon R. Browning.
+"Genotype imputation with millions of reference samples."
+The American Journal of Human Genetics 98.1 (2016): 116-126.
 }
 \seealso{
-\link{download_plink}
+\link{download_plink} \link{download_beagle}
 }

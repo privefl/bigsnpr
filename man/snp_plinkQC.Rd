@@ -61,6 +61,8 @@ Quality Control (QC) and possible conversion to \emph{bed}/\emph{bim}/\emph{fam}
 using \href{http://www.cog-genomics.org/plink2}{\strong{PLINK 1.9}}.
 }
 \examples{
+\dontrun{
+
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 prefix  <- sub_bed(bedfile)
 plink <- download_plink()
@@ -74,6 +76,7 @@ test <- snp_plinkQC(plink.path = plink,
                     hwe = 1e-10,
                     autosome.only = TRUE)
 test
+}
 
 }
 \references{

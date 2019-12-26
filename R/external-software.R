@@ -200,6 +200,8 @@ download_beagle <- function(dir = tempdir()) {
 #' @seealso [download_plink] [snp_plinkIBDQC]
 #'
 #' @examples
+#' \dontrun{
+#'
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #' prefix  <- sub_bed(bedfile)
 #' plink <- download_plink()
@@ -213,6 +215,7 @@ download_beagle <- function(dir = tempdir()) {
 #'                     hwe = 1e-10,
 #'                     autosome.only = TRUE)
 #' test
+#' }
 #'
 snp_plinkQC <- function(plink.path,
                         prefix.in,
@@ -341,6 +344,8 @@ snp_plinkRmSamples <- function(plink.path,
 #' @seealso [download_plink] [snp_plinkQC] [snp_plinkKINGQC]
 #'
 #' @examples
+#' \dontrun{
+#'
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #' plink <- download_plink()
 #'
@@ -358,6 +363,7 @@ snp_plinkRmSamples <- function(plink.path,
 #' snp_plinkRmSamples(plink, bedfile,
 #'                    bedfile.out = tempfile(fileext = ".bed"),
 #'                    df.or.files = subset(df_rel, PI_HAT > 0.2))
+#' }
 #'
 snp_plinkIBDQC <- function(plink.path,
                            bedfile.in,
@@ -462,6 +468,8 @@ snp_plinkIBDQC <- function(plink.path,
 #' @seealso [download_plink2] [snp_plinkQC]
 #'
 #' @examples
+#' \dontrun{
+#'
 #' bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 #' plink2 <- download_plink2(AVX2 = FALSE)
 #'
@@ -471,6 +479,7 @@ snp_plinkIBDQC <- function(plink.path,
 #'
 #' df_rel <- snp_plinkKINGQC(plink2, bedfile, make.bed = FALSE, ncores = 2)
 #' str(df_rel)
+#' }
 #'
 snp_plinkKINGQC <- function(plink2.path,
                             bedfile.in,
@@ -557,15 +566,15 @@ snp_plinkKINGQC <- function(plink2.path,
 #' @param ncores Number of cores used. Default doesn't use parallelism.
 #'   You may use [nb_cores].
 #'
-#' @references B L Browning and S R Browning (2016).
-#' Genotype imputation with millions of reference samples.
-#' Am J Hum Genet 98:116-126.
-#' \url{dx.doi.org/doi:10.1016/j.ajhg.2015.11.020}
+#' @references Browning, Brian L., and Sharon R. Browning.
+#' "Genotype imputation with millions of reference samples."
+#' The American Journal of Human Genetics 98.1 (2016): 116-126.
 #'
-#' @seealso [download_plink]
+#' @seealso [download_plink] [download_beagle]
 #'
 #' @return The path of the new bedfile.
 #' @export
+#'
 snp_beagleImpute <- function(beagle.path,
                              plink.path,
                              bedfile.in,

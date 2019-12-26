@@ -50,6 +50,8 @@ Quality Control based on KING-robust kinship estimator. More information can
 be found at \url{http://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
 }
 \examples{
+\dontrun{
+
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 plink2 <- download_plink2(AVX2 = FALSE)
 
@@ -59,6 +61,7 @@ bedfile2 <- snp_plinkKINGQC(plink2, bedfile,
 
 df_rel <- snp_plinkKINGQC(plink2, bedfile, make.bed = FALSE, ncores = 2)
 str(df_rel)
+}
 
 }
 \references{

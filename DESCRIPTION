@@ -20,9 +20,13 @@ License: GPL-3
 LazyData: TRUE
 Language: en-US
 ByteCompile: TRUE
+SystemRequirements: Package 'bigsnpr' includes a few functions that wrap existing 
+    software such as 'PLINK' <www.cog-genomics.org/plink2>. Functions are provided
+    to download these software. Note that these external software might not work
+    for some operating systems (e.g. 'PLINK' might not work on Solaris).
 Depends:
     R (>= 3.3), 
-    bigstatsr (>= 1.0.0)
+    bigstatsr (>= 1.0.1)
 Imports:
     bigassertr (>= 0.1.1),
     bigparallelr (>= 0.1.2),
@@ -54,8 +58,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr
-RoxygenNote: 7.0.1
+RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
 BugReports: https://github.com/privefl/bigsnpr/issues

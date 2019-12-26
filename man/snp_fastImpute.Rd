@@ -51,6 +51,8 @@ An \link{FBM} with
 Fast imputation algorithm based on local XGBoost models.
 }
 \examples{
+\dontrun{
+
 fake <- snp_attachExtdata("example-missing.bed")
 G <- fake$genotypes
 CHR <- fake$map$chromosome
@@ -87,6 +89,7 @@ Reduce(function(p, i) {
   geom_point() +
   coord_cartesian(ylim = range(df$pError, na.rm = TRUE)) +
   theme_bw(15)
+}
 }
 \seealso{
 \code{\link[=snp_fastImputeSimple]{snp_fastImputeSimple()}}
