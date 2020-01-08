@@ -14,7 +14,7 @@ bool readbina(const char * filename,
               Environment BM,
               const arma::Mat<unsigned char>& tab) {
 
-  XPtr<FBM> xpBM = BM["address"];
+  XPtr<FBM_RW> xpBM = BM["address_rw"];
   unsigned char* ptr = static_cast<unsigned char*>(xpBM->matrix());
   const unsigned char* code_ptr;
   int n = xpBM->nrow();
@@ -64,8 +64,8 @@ void readbina2(Environment BM,
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAcc macc_bed(xp_bed, ind_row, ind_col);
 
-  XPtr<FBM> xpBM = BM["address"];
-  BMAcc<unsigned char> macc_fbm(xpBM);
+  XPtr<FBM_RW> xpBM = BM["address_rw"];
+  BMAcc_RW<unsigned char> macc_fbm(xpBM);
 
   size_t n = macc_bed.nrow();
   size_t m = macc_bed.ncol();
