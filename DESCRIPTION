@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.0.2
-Date: 2019-12-15
+Version: 1.1.0
+Date: 2020-01-08
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -26,10 +26,10 @@ SystemRequirements: Package 'bigsnpr' includes a few functions that wrap existin
     for some operating systems (e.g. 'PLINK' might not work on Solaris).
 Depends:
     R (>= 3.3), 
-    bigstatsr (>= 1.0.1)
+    bigstatsr (>= 1.1)
 Imports:
-    bigassertr (>= 0.1.1),
-    bigparallelr (>= 0.1.2),
+    bigassertr,
+    bigparallelr,
     bigreadr (>= 0.2),
     bigutilsr (>= 0.2.2),
     data.table,
@@ -58,6 +58,7 @@ Suggests:
     spelling, 
     testthat,
     xgboost
+Remotes: privefl/bigstatsr@readonly
 RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
