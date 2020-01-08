@@ -8,7 +8,7 @@
 #' save these modifications in the corresponding ".rds" backing file.
 #'
 #' @inheritParams bigsnpr-package
-#' @inheritParams saveRDS
+#' @inheritParams base::saveRDS
 #'
 #' @return The (saved) \code{bigSNP}.
 #'

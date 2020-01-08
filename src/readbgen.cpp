@@ -88,7 +88,7 @@ CharacterVector read_bgen(std::string filename,
                           RawVector decode,
                           bool dosage) {
 
-  XPtr<FBM> xpBM = BM["address"];
+  XPtr<FBM_RW> xpBM = BM["address_rw"];
   unsigned char* ptr_mat = static_cast<unsigned char*>(xpBM->matrix());
 
   std::size_t j, n = xpBM->nrow();
