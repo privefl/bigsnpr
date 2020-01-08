@@ -128,6 +128,7 @@ snp_readBed2 <- function(bedfile, backingfile = sub_bed(bedfile),
 #' @export
 snp_attach <- function(rdsfile) {
 
+  assert_exist(rdsfile)
   rdsfile <- normalizePath(rdsfile)
   assert_exist(bkfile <- sub("\\.rds$", ".bk", rdsfile))
 

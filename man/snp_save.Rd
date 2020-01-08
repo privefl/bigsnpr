@@ -4,7 +4,7 @@
 \alias{snp_save}
 \title{Save modifications}
 \usage{
-snp_save(x)
+snp_save(x, version = NULL)
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
