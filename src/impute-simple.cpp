@@ -12,8 +12,8 @@ void impute(Environment BM,
             const IntegerVector& colInd,
             int method) {
 
-  XPtr<FBM> xpBM = BM["address"];
-  SubBMAcc<unsigned char> macc(xpBM, rowInd - 1, colInd - 1);
+  XPtr<FBM_RW> xpBM = BM["address_rw"];
+  SubBMAcc_RW<unsigned char> macc(xpBM, rowInd - 1, colInd - 1);
 
   size_t n = macc.nrow();
   size_t m = macc.ncol();

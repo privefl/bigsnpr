@@ -85,6 +85,7 @@ bedfile <- snp_writeBed(obj.snp, tempfile(fileext = ".bed"))
 expect_error(snp_plinkKINGQC(plink, bedfile), "This requires PLINK v2")
 
 if (.Machine$sizeof.pointer == 8) {
+
   bedfile2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177, verbose = FALSE)
   expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
                    c("#FID\tIID", "POP1\tIND2"))
@@ -98,9 +99,9 @@ if (.Machine$sizeof.pointer == 8) {
                               verbose = FALSE)
   expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
   rel2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
-                          make.bed = FALSE, verbose = TRUE)
+                          make.bed = FALSE, verbose = FALSE)
   expect_equal(nrow(rel2), 0)
-  expect_equal(names(rel2)[1:4], c("FID1", "ID1", "FID2", "ID2"))
+  expect_equal(names(rel2)[1:4], c("FID1", "IID1", "FID2", "IID2"))
 }
 
 unlink(plink2)

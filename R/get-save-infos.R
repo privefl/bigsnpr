@@ -8,14 +8,15 @@
 #' save these modifications in the corresponding ".rds" backing file.
 #'
 #' @inheritParams bigsnpr-package
+#' @inheritParams base::saveRDS
 #'
 #' @return The (saved) \code{bigSNP}.
 #'
 #' @example examples/example-save.R
 #'
 #' @export
-snp_save <- function(x) {
-  saveRDS(x, sub_bk(x$genotypes$backingfile, ".rds"))
+snp_save <- function(x, version = NULL) {
+  saveRDS(x, file = x$genotypes$rds, version = version)
   x
 }
 

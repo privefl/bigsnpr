@@ -13,8 +13,8 @@ void replaceSNP(Environment BM,
                 const IntegerVector& rowInd,
                 const IntegerVector& colInd) {
 
-  XPtr<FBM> xpBM = BM["address"];
-  BMAcc<unsigned char> macc(xpBM);
+  XPtr<FBM_RW> xpBM = BM["address_rw"];
+  BMAcc_RW<unsigned char> macc(xpBM);
 
   XPtr<FBM> xpBM2 = BM2["address"];
   SubBMAcc<unsigned char> macc2(xpBM2, rowInd - 1, colInd - 1);
