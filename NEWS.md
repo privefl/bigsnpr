@@ -1,3 +1,7 @@
+## bigsnpr 1.1.0
+
+- Cope with new read-only option in {bigstatsr} version >= 1.1.
+
 ## bigsnpr 1.0.2
 
 - Add option `backingfile` to `subset.bigSNP()`.

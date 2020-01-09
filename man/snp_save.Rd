@@ -4,10 +4,14 @@
 \alias{snp_save}
 \title{Save modifications}
 \usage{
-snp_save(x)
+snp_save(x, version = NULL)
 }
 \arguments{
 \item{x}{A \link[=bigSNP-class]{bigSNP}.}
+
+\item{version}{the workspace format version to use.  \code{NULL}
+    specifies the current default version (3). The only other supported
+    value is 2, the default from \R 1.4.0 to \R 3.5.0.}
 }
 \value{
 The (saved) \code{bigSNP}.
