@@ -66,6 +66,8 @@ snp_readBed <- function(bedfile, backingfile = sub_bed(bedfile)) {
   rds
 }
 
+################################################################################
+
 #' @inheritParams bigsnpr-package
 #' @rdname snp_readBed
 #' @export
@@ -73,14 +75,14 @@ snp_readBed2 <- function(bedfile, backingfile = sub_bed(bedfile),
                          ind.row = rows_along(obj.bed),
                          ind.col = cols_along(obj.bed)) {
 
+  # Get mapping of bed
+  obj.bed <- bed(bedfile)
+
   check_args()
 
   # Check if backingfile already exists
   backingfile <- path.expand(backingfile)
   assert_noexist(paste0(backingfile, ".bk"))
-
-  # Get mapping of bed
-  obj.bed <- bed(bedfile)
 
   # Read map and family files
   fam <- obj.bed$fam[ind.row, ]; rownames(fam) <- rows_along(fam)

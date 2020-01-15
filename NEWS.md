@@ -1,3 +1,7 @@
+## bigsnpr 1.1.1
+
+- Fix error `object 'obj.bed' not found` in `snp_readBed2()`.
+
 ## bigsnpr 1.1.0
 
 - Cope with new read-only option in {bigstatsr} version >= 1.1.
