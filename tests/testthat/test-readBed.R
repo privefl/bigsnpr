@@ -46,7 +46,8 @@ test_that("Error: already exists", {
 ################################################################################
 
 test_that("same sign as PLINK (no switch 0 <-> 2)", {
-  plink <- download_plink()
+  skip_on_os("solaris"); skip_if_offline("www.cog-genomics.org")
+  plink <- download_plink(verbose = FALSE)
   prefix <- sub_bed(bedfile)
   tmp <- tempfile()
   system(glue::glue("{plink} --bfile {prefix} --assoc --allow-no-sex --out {tmp}"),

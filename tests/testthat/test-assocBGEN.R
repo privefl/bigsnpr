@@ -87,7 +87,10 @@ test_that("remove missing values", {
   test <- snp_assocBGEN(bgen_file, list(IDs), y2, ind2, ncores = ncores())[[1]]
   y2[sample(length(y2), 10)] <- NA
   ind2[sample(length(ind2), 10)] <- NA
-  test2 <- snp_assocBGEN(bgen_file, list(IDs), y2, ind2, ncores = ncores())[[1]]
+  test2 <- expect_output(
+    snp_assocBGEN(bgen_file, list(IDs), y2, ind2, ncores = ncores())[[1]],
+    "individuals removed due to missing values (out of 500).", fixed = TRUE
+  )
   expect_gt(cor(test2[-excl2], test[-excl2]), 0.8)
 })
 

@@ -2,10 +2,12 @@
 
 context("PLINK_QC")
 
+skip_on_os("solaris"); skip_if_offline("www.cog-genomics.org")
+
 ################################################################################
 
 # Get PLINK executable
-plink <- download_plink()
+plink <- download_plink(verbose = FALSE)
 expect_false(grepl("plink2", plink))
 
 # plink2 <- download_plink2(overwrite = TRUE)
@@ -13,7 +15,7 @@ expect_false(grepl("plink2", plink))
 # plink2.version <- system(paste(plink2, "--version"), intern = TRUE)
 # expect_true(grepl("AVX2", plink2.version))
 
-plink2 <- download_plink2(overwrite = TRUE, AVX2 = FALSE)
+plink2 <- download_plink2(overwrite = TRUE, AVX2 = FALSE, verbose = FALSE)
 expect_true(grepl("plink2", plink2))
 plink2.version <- system(paste(plink2, "--version"), intern = TRUE)
 expect_false(grepl("AVX2", plink2.version))

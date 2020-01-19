@@ -5,15 +5,22 @@
 \alias{download_plink2}
 \title{Download PLINK}
 \usage{
-download_plink(dir = tempdir(), overwrite = FALSE)
+download_plink(dir = tempdir(), overwrite = FALSE, verbose = TRUE)
 
-download_plink2(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE)
+download_plink2(
+  dir = tempdir(),
+  AVX2 = TRUE,
+  overwrite = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{dir}{The directory where to put the PLINK executable.
 Default is a temporary directory.}
 
 \item{overwrite}{Whether to overwrite file? Default is \code{FALSE}.}
+
+\item{verbose}{Whether to output details of downloading. Default is \code{TRUE}.}
 
 \item{AVX2}{Whether to download the AVX2 version?
 Default is \code{TRUE} and possible only for 64 bits architectures.}

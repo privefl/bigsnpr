@@ -43,12 +43,13 @@ get_pattern <- function(x, pattern) {
 #' @param dir The directory where to put the PLINK executable.
 #'   Default is a temporary directory.
 #' @param overwrite Whether to overwrite file? Default is `FALSE`.
+#' @param verbose Whether to output details of downloading. Default is `TRUE`.
 #'
 #' @return The path of the downloaded PLINK executable.
 #'
 #' @export
 #'
-download_plink <- function(dir = tempdir(), overwrite = FALSE) {
+download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
 
   myOS <- get_os()
   PLINK <- file.path(dir, `if`(myOS == "Windows", "plink.exe", "plink"))
@@ -69,7 +70,8 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE) {
   myArch <- 8 * .Machine$sizeof.pointer
   url <- subset(plink.builds, OS == myOS & arch == myArch)[["url"]]
 
-  utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
+  plink.zip <- tempfile(fileext = ".zip")
+  utils::download.file(url, destfile = plink.zip, quiet = !verbose)
   PLINK <- utils::unzip(plink.zip,
                         files = basename(PLINK),
                         exdir = dirname(PLINK))
@@ -91,7 +93,8 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE) {
 #'
 #' @rdname download_plink
 #'
-download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE) {
+download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE,
+                            verbose = TRUE) {
 
   myOS <- get_os()
   PLINK2 <- file.path(dir, `if`(myOS == "Windows", "plink2.exe", "plink2"))
@@ -114,7 +117,8 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, overwrite = FALSE) {
   if (myArch == 32) AVX2 <- FALSE
   url <- subset(plink.builds, OS == myOS & arch == myArch & avx2 == AVX2)[["url"]]
 
-  utils::download.file(url, destfile = (plink.zip <- tempfile(fileext = ".zip")))
+  plink.zip <- tempfile(fileext = ".zip")
+  utils::download.file(url, destfile = plink.zip, quiet = !verbose)
   PLINK2 <- utils::unzip(plink.zip,
                          files = basename(PLINK2),
                          exdir = dirname(PLINK2))

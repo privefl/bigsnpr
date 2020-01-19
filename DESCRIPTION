@@ -26,11 +26,11 @@ SystemRequirements: Package 'bigsnpr' includes a few functions that wrap existin
     for some operating systems (e.g. 'PLINK' might not work on Solaris).
 Depends:
     R (>= 3.3), 
-    bigstatsr (>= 1.1)
+    bigstatsr (>= 1.1.1)
 Imports:
     bigassertr,
     bigparallelr,
-    bigreadr (>= 0.2),
+    bigreadr,
     bigutilsr (>= 0.2.2),
     data.table,
     foreach, 

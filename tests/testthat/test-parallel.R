@@ -31,6 +31,9 @@ test_that("Sequential and Parallel", {
 ################################################################################
 
 test_that("Sequential and Parallel + seeds", {
+
+  skip_if_not_installed("xgboost")
+
   elemNA <- sample(length(G), size = 20)
 
   G2 <- big_copy(G); G2[elemNA] <- as.raw(3)  # NA
