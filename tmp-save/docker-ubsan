@@ -1,0 +1,16 @@
+docker run -v "/${PWD}":/home/bigsnpr --rm -ti --security-opt seccomp=unconfined bigstatsr-debug2
+
+RDcsan -e 'remotes::install_github("privefl/bigstatsr")'
+RDcsan -e 'remotes::install_deps("home/bigsnpr", dependencies = TRUE)'
+
+docker run -v "/${PWD}":/home/bigsnpr --rm -ti --security-opt seccomp=unconfined bigsnpr-debug
+
+RDcsan CMD INSTALL --preclean --install-tests home/bigsnpr
+
+RDcsan -e 'devtools::test("home/bigsnpr", reporter = testthat::LocationReporter)' &> /home/test.out
+grep UndefinedBehaviorSanitizer /home/test.out
+
+
+docker ps
+docker commit
+docker images
