@@ -14,6 +14,7 @@ expect_s4_class(G, "FBM.code256")
 test_that("Same as pcadapt", {
 
   # skip_on_cran()
+  skip_if_not_installed("pcadapt")
 
   ################################################################################
 

@@ -31,7 +31,7 @@ void impute(Environment BM,
     for (size_t i = 0; i < n; i++) {
       unsigned char geno = macc(i, j);
       if (geno == 0) {
-
+        // c0++:
       } else if (geno == 1) {
         c1++;
       } else if (geno == 2) {
@@ -75,17 +75,3 @@ void impute(Environment BM,
 }
 
 /******************************************************************************/
-
-/*** R
-bigsnp <- snp_attachExtdata("example-missing.bed")
-G <- bigsnp$genotypes
-G[, 2]  # some missing values
-impute(G, rows_along(G), 1:5, 3)
-G$copy(code = CODE_IMPUTE_PRED)[, 2]
-G$copy(code = CODE_DOSAGE)[, 2]
-G$copy(code = CODE_IMPUTE_PRED)[, 6]
-G2 <- snp_fastImputeSimple(G, ncores = 2)
-G2[, 2]  # no missing values
-G[, 2]  # imputed, but still missing values
-G$copy(code = CODE_IMPUTE_PRED)[, 2]  # need to decode imputed values
-*/

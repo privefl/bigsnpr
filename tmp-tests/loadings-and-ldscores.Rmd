@@ -1,0 +1,113 @@
+---
+title: "LD scores and 'loadings'"
+author: "Florian Privé"
+date: "January 15, 2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
+```
+
+```{r}
+library(bigsnpr)
+library(ggplot2)
+```
+
+## Data
+
+Let us use a subsetted version of the 1000 Genomes project data we provide. Some quality control has already been done; otherwise, you can use `snp_plinkQC()`.
+
+```{r}
+bedfile <- download_1000G("tmp-data")
+```
+
+## Relatedness
+
+First, let us detect all pairs of related individuals.
+
+```{r}
+plink2 <- download_plink2("tmp-data")
+rel <- snp_plinkKINGQC(
+  plink2.path = plink2,
+  bedfile.in = bedfile,
+  thr.king = 2^-4.5,
+  make.bed = FALSE,
+  ncores = nb_cores()
+)
+str(rel)
+```
+
+## Principal Component Analysis (PCA)
+
+We then compute PCA without using the related individuals. Function `bed_autoSVD()` should take care of Linkage Disequilibrium (LD). We have to compute the PCA while removing all variants from one chromosome. We can still precompute the pruning step to do it only once.
+
+```{r}
+(obj.bed <- bed(bedfile))
+fam2 <- bigreadr::fread2(sub_bed(bedfile, ".fam2"))
+ind.row <- which(!obj.bed$fam$sample.ID %in% rel$IID2 &
+                   fam2$`Super Population` == "EUR")
+
+ind.keep <- bed_clumping(obj.bed, ind.row = ind.row, ncores = nb_cores())
+```
+
+## Computing LD scores and "loadings"
+
+```{r}
+CHR <- obj.bed$map$chromosome
+POS <- obj.bed$map$physical.pos
+
+library(bigparallelr)
+registerDoParallel(cl <- makeCluster(nb_cores()))
+all_stats <- foreach(chr = 1:22, .combine = "rbind") %dopar% {
+  ## LD scores
+  ind.chr <- which(CHR == chr)
+  library(bigsnpr)
+  ## Should implement bed_cor() directly
+  G <- snp_attach(snp_readBed2(bedfile, tempfile(), ind.row, ind.chr))$genotypes
+  LD <- snp_cor(G, infos.pos = POS[ind.chr])  # more lenient alpha?
+  library(Matrix)
+  LD_scores <- colSums(LD ** 2)
+  ## PCA
+  obj.svd <- bed_autoSVD(
+    obj.bed, ind.row = ind.row, k = 10, thr.r2 = NA,
+    ind.col = ind.keep[CHR[ind.keep] != chr])
+  ## Z-scores (association with PC scores) ~ loadings
+  Z <- bigsnpr:::multLinReg(obj.bed, ind.row, ind.chr, U = obj.svd$u)
+  cbind(LD_scores, Z)
+}
+stopCluster(cl)
+saveRDS(all_stats, "tmp-data/ldscores-loadings.rds")
+```
+
+```{r}
+LD_scores <- all_stats[, 1]
+Z2 <- all_stats[, -1] ** 2
+cor(Z2, LD_scores, use = "pairwise.complete.obs")
+ #  0.066223166
+ #  0.058258742
+ # -0.002232321
+ #  0.024427324
+ # -0.029319222
+ # -0.007915754
+ # -0.012346952
+ # -0.018130519
+ # -0.010315609
+ #  0.001048635
+
+bin_plot <- function(x, N = 10) {
+  grp <- cut(x, quantile(x, seq_len(N) / N, na.rm = TRUE))
+  plot(by(LD_scores, grp, median), by(x, grp, mean))
+}
+bin_plot(Z2[, 1])
+bin_plot(Z2[, 2])
+bin_plot(Z2[, 3])
+bin_plot(Z2[, 4])
+bin_plot(Z2[, 5])
+bin_plot(Z2[, 6])
+bin_plot(Z2[, 7])
+bin_plot(Z2[, 8])
+```
+

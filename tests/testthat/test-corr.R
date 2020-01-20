@@ -49,9 +49,6 @@ test_that("Same correlations as PLINK", {
 
 ################################################################################
 
-# Correlations with significance levels
-suppressMessages(library(Hmisc))
-
 N <- 500
 M <- 100
 test <- snp_fake(N, M)
@@ -64,28 +61,30 @@ ind.row <- sample(N, N / 2)
 ind.col <- sample(M, M / 2)
 m <- length(ind.col)
 
-true <- Hmisc::rcorr(G[ind.row, ind.col])
-ind <- which(true$P < alpha)
+test_that("Same correlations as Hmisc (with significance levels)", {
 
-corr <- snp_cor(Gna = G,
-                ind.row = ind.row,
-                ind.col = ind.col,
-                alpha = alpha)
+  skip_if_not_installed("Hmisc")
+  suppressMessages(library(Hmisc))
 
-test_that("Same correlations as Hmisc", {
+  true <- Hmisc::rcorr(G[ind.row, ind.col])
+  ind <- which(true$P < alpha)
+
+  corr <- snp_cor(Gna = G,
+                  ind.row = ind.row,
+                  ind.col = ind.col,
+                  alpha = alpha)
+
   expect_equal(dim(corr), c(m, m))
   expect_equal(corr[ind], true$r[ind])
   expect_equal(2*(length(corr@i) - nrow(corr)), length(ind))
-})
 
-# without diagonal
-corr2 <- snp_cor(G = test$genotypes,
-                 ind.row = ind.row,
-                 ind.col = ind.col,
-                 alpha = alpha,
-                 fill.diag = FALSE)
+  # without diagonal
+  corr2 <- snp_cor(G = test$genotypes,
+                   ind.row = ind.row,
+                   ind.col = ind.col,
+                   alpha = alpha,
+                   fill.diag = FALSE)
 
-test_that("Same correlations (no diagonal) as Hmisc", {
   expect_equal(dim(corr2), c(m, m))
   expect_equal(corr2[ind], true$r[ind])
   expect_equal(2*length(corr2@i), length(ind))
@@ -93,23 +92,24 @@ test_that("Same correlations (no diagonal) as Hmisc", {
 
 ################################################################################
 
-corr3 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                 alpha = alpha, fill.diag = FALSE,
-                 size = 5)
+test_that("Information on position is used in snp_cor()", {
 
-corr4 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                 alpha = alpha, fill.diag = FALSE,
-                 size = 5e3, infos.pos = 1e6 * seq_along(ind.col))
+  corr3 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                   alpha = alpha, fill.diag = FALSE,
+                   size = 5)
 
-corr5 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                 alpha = alpha, fill.diag = FALSE,
-                 size = 5e-3, infos.pos = seq_along(ind.col))
+  corr4 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                   alpha = alpha, fill.diag = FALSE,
+                   size = 5e3, infos.pos = 1e6 * seq_along(ind.col))
 
-corr6 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                 alpha = alpha, fill.diag = FALSE,
-                 size = 5e-3, infos.pos = 1000 * seq_along(ind.col))
+  corr5 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                   alpha = alpha, fill.diag = FALSE,
+                   size = 5e-3, infos.pos = seq_along(ind.col))
 
-test_that("Information on position is used", {
+  corr6 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                   alpha = alpha, fill.diag = FALSE,
+                   size = 5e-3, infos.pos = 1000 * seq_along(ind.col))
+
   expect_equal(corr4, corr3)
   expect_equal(corr5, corr3)
   expect_length(corr6@x, 0)
