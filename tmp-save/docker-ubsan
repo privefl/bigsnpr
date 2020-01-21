@@ -8,7 +8,12 @@ docker run -v "/${PWD}":/home/bigsnpr --rm -ti --security-opt seccomp=unconfined
 RDcsan CMD INSTALL --preclean --install-tests home/bigsnpr
 
 RDcsan -e 'devtools::test("home/bigsnpr", reporter = testthat::LocationReporter)' &> /home/test.out
-grep UndefinedBehaviorSanitizer /home/test.out
+RDcsan -e 'devtools::test("home/bigsnpr", filter = "SCT", reporter = testthat::LocationReporter)' &> /home/test.out
+grep Sanitizer /home/test.out
+grep failure /home/test.out
+
+RDcsan -e 'devtools::run_examples("home/bigsnpr")' &> /home/ex.out
+grep Sanitizer /home/ex.out
 
 
 docker ps

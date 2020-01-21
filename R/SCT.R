@@ -79,7 +79,6 @@ snp_grid_clumping <- function(
       sumX.chr  <- sumX.chr[ind]
       denoX.chr <- denoX.chr[ind]
 
-      # TODO: test my mimicking infos.imp & with group with one value and with no value
       for (group in groups) {
 
         ind2 <- which(ind.chr %in% group)
@@ -90,7 +89,9 @@ snp_grid_clumping <- function(
 
             # TODO: make sure to use the right subsetting (with ordInd)
             res <- clumping_chr_cached(
-              G, spcor.chr, ind2 - 1L,
+              G,
+              spcor.chr,
+              spInd  = ind2 - 1L,
               rowInd = ind.row,
               colInd = ind.chr[ind2],
               ordInd = order(S.chr[ind2], decreasing = TRUE),

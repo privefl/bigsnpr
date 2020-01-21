@@ -24,20 +24,20 @@ LogicalVector clumping_chr(Environment BM,
   int m = macc.ncol();
 
   double xySum, num, r2;
-  int i, j, j0, k, l, pos_min, pos_max;
-  bool not_max, not_min;
+  int i, j;
 
   LogicalVector keep(m, false);
 
-  for (k = 0; k < m; k++) {
+  for (int k = 0; k < m; k++) {
 
-    j0 = ordInd[k] - 1;
+    int j0 = ordInd[k] - 1;
     keep[j0] = true;
-    not_max = not_min = true;
-    pos_min = pos[j0] - size;
-    pos_max = pos[j0] + size;
+    int pos_min = pos[j0] - size;
+    int pos_max = pos[j0] + size;
+    bool not_min = true;
+    bool not_max = true;
 
-    for (l = 1; not_max || not_min; l++) {
+    for (int l = 1; not_max || not_min; l++) {
 
       if (not_max) {
         j = j0 + l;
@@ -101,28 +101,27 @@ List clumping_chr_cached(Environment BM,
   myassert_size(spInd.size(), m);
 
   double xySum, num;
-  int i, j, j_sp, j0, j0_sp, k, l, pos_min, pos_max;
-  bool not_max, not_min;
+  int i, j, j_sp;
 
   LogicalVector keep(m, false);
 
-  for (k = 0; k < m; k++) {
+  for (int k = 0; k < m; k++) {
 
-    j0 = ordInd[k] - 1;
-    j0_sp = spInd[j0]; // -1 in R
+    int j0 = ordInd[k] - 1;
+    int j0_sp = spInd[j0]; // -1 in R
     keep[j0] = true;
-    not_max = not_min = true;
-    pos_min = pos[j0] - size;
-    pos_max = pos[j0] + size;
+    int pos_min = pos[j0] - size;
+    int pos_max = pos[j0] + size;
+    bool not_min = true;
+    bool not_max = true;
 
-    for (l = 1; not_max || not_min; l++) {
+    for (int l = 1; not_max || not_min; l++) {
 
       if (not_max) {
         j = j0 + l;
-        j_sp = spInd[j]; // -1 in R
         not_max = (j < m) && (pos[j] <= pos_max);  // within a window..
         if (not_max && keep[j]) {  // look only at already selected ones
-
+          j_sp = spInd[j]; // -1 in R
           if (sqcor(j_sp, j0_sp) == 0) {  // squared correlation not computed yet
             xySum = 0;
             for (i = 0; i < n; i++) {
@@ -141,10 +140,9 @@ List clumping_chr_cached(Environment BM,
 
       if (not_min) {
         j = j0 - l;
-        j_sp = spInd[j]; // -1 in R
         not_min = (j >= 0) && (pos[j] >= pos_min);  // within a window..
         if (not_min && keep[j]) {  // look only at already selected ones
-
+          j_sp = spInd[j]; // -1 in R
           if (sqcor(j_sp, j0_sp) == 0) {  // squared correlation not computed yet
             xySum = 0;
             for (i = 0; i < n; i++) {
