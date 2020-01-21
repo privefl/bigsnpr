@@ -2,6 +2,8 @@
 
 context("PRUNING")
 
+################################################################################
+
 test <- snp_attachExtdata()
 G <- test$genotypes
 ids <- test$map$marker.ID

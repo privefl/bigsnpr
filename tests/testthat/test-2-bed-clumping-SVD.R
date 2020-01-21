@@ -1,10 +1,8 @@
 ################################################################################
 
-# library(bigsnpr)
-# library(testthat)
 context("BED_RANDOM_SVD")
 
-stopifnot(getOption("bigstatsr.check.parallel.blas") == FALSE)
+options(bigstatsr.check.parallel.blas = FALSE)
 
 ################################################################################
 
