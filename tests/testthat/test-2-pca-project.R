@@ -6,14 +6,15 @@ context("PCA_PROJECT")
 
 obj.bed <- bed(system.file("extdata", "example-missing.bed", package = "bigsnpr"))
 ind.row <- sample(nrow(obj.bed), 100)
-obj.svd <- bed_randomSVD(obj.bed, ind.row = ind.row)
+ind.col <- which(bed_MAF(obj.bed, ind.row)$mac > 5)
+obj.svd <- bed_randomSVD(obj.bed, ind.row = ind.row, ind.col = ind.col)
 
 ind.test <- setdiff(rows_along(obj.bed), ind.row)
 expect_error(bed_projectSelfPCA(obj.svd, obj.bed, ind.row = ind.test),
              "Incompatibility between dimensions.")
 proj <- bed_projectSelfPCA(obj.svd, obj.bed,
                            ind.row = rows_along(obj.bed),
-                           ind.col = cols_along(obj.bed))
+                           ind.col = ind.col)
 expect_equal(proj$simple_proj[ind.row, ], predict(obj.svd), tolerance = 1e-4)
 
 proj2 <- bed_projectPCA(obj.bed, obj.bed,
