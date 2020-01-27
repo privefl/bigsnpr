@@ -496,7 +496,7 @@ snp_plinkKINGQC <- function(plink2.path,
 
   # check PLINK version
   v <- system(paste(plink2.path, "--version"), intern = TRUE)
-  if (!identical(substr(v, 1, 8), "PLINK v2"))
+  if (substr(v, 1, 8) != "PLINK v2")
     stop2("This requires PLINK v2; got '%s' instead.", v)
 
   # get file without extension
