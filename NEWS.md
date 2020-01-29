@@ -1,3 +1,7 @@
+## bigsnpr 1.2.0
+
+- Use the new implementation of robust OGK Mahalanobis distance in {bigutilsr}.
+
 ## bigsnpr 1.1.1
 
 - Fix error `object 'obj.bed' not found` in `snp_readBed2()`.

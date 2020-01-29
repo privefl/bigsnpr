@@ -128,7 +128,7 @@ snp_autoSVD <- function(G,
     }
 
     # check for outlier variants
-    S.col <- sqrt(bigutilsr::covRob(obj.svd$v, estim = "pairwiseGK")$dist)
+    S.col <- sqrt(bigutilsr::dist_ogk(obj.svd$v))
     # roll mean to get only consecutive outliers (by chromosome)
     ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
     S2.col <- double(length(S.col))
@@ -273,7 +273,7 @@ bed_autoSVD <- function(obj.bed,
     }
 
     # check for outlier variants
-    S.col <- sqrt(bigutilsr::covRob(obj.svd$v, estim = "pairwiseGK")$dist)
+    S.col <- sqrt(bigutilsr::dist_ogk(obj.svd$v))
     # roll mean to get only consecutive outliers (by chromosome)
     ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
     S2.col <- double(length(S.col))

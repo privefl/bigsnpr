@@ -11,7 +11,7 @@ pcadapt0 <- function(G, U.row, ind.row, ind.col, ncores) {
   }, p.combine = "rbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
 
   dist <- `if`(K == 1, (drop(tscores) - stats::median(tscores))^2,
-               bigutilsr::covRob(tscores, estim = "pairwiseGK")$dist)
+               bigutilsr::dist_ogk(tscores))
 
   fun.pred <- eval(parse(text = sprintf(
     "function(xtr) {

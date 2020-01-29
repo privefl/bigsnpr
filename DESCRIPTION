@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.1.1
-Date: 2020-01-15
+Version: 1.2.0
+Date: 2020-01-29
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -31,7 +31,7 @@ Imports:
     bigassertr,
     bigparallelr,
     bigreadr,
-    bigutilsr (>= 0.2.2),
+    bigutilsr (>= 0.3),
     data.table,
     foreach, 
     ggplot2,
@@ -53,12 +53,12 @@ Suggests:
     gaston,
     glue,
     Hmisc,
-    pcadapt (>= 4.1),
+    pcadapt (>= 4.3),
     RSQLite,
     spelling, 
     testthat,
     xgboost
-Remotes: privefl/bigstatsr
+Remotes: privefl/bigstatsr, bcm-uga/pcadapt
 RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr
