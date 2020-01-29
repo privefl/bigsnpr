@@ -151,12 +151,12 @@ snp_fastImpute <- function(Gna, infos.chr,
 
 #' Fast imputation
 #'
-#' Fast imputation via mode, mean or sampling according to allele frequencies.
+#' Fast imputation via mode, mean, sampling according to allele frequencies, or 0.
 #'
 #' @inheritParams bigsnpr-package
 #' @param method Either `"random"` (sampling according to allele frequencies),
 #'   `"mean0"` (rounded mean), `"mean2"` (rounded mean to 2 decimal places),
-#'   `"mode"` (most frequent call).
+#'   `"mode"` (most frequent call), `"zero"` (by 0).
 #'
 #' @return A new `FBM.code256` object (same file, but different code).
 #' @export
@@ -173,13 +173,13 @@ snp_fastImpute <- function(Gna, infos.chr,
 #' G$copy(code = CODE_IMPUTE_PRED)[, 2]  # need to decode imputed values
 #'
 snp_fastImputeSimple <- function(
-  Gna, method = c("mode", "mean0", "mean2", "random"), ncores = 1) {
+  Gna, method = c("mode", "mean0", "mean2", "random", "zero"), ncores = 1) {
 
   check_args()
 
   stopifnot(identical(Gna$code256, CODE_012))
 
-  method <- match(match.arg(method), c("mode", "mean0", "mean2", "random"))
+  method <- match(match.arg(method), c("mode", "mean0", "mean2", "random", "zero"))
   big_parallelize(Gna, function(X, ind, method) {
     impute(X, rows_along(X), ind, method)
   }, ncores = ncores, method = method)

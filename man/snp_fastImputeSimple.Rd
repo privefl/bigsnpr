@@ -6,7 +6,7 @@
 \usage{
 snp_fastImputeSimple(
   Gna,
-  method = c("mode", "mean0", "mean2", "random"),
+  method = c("mode", "mean0", "mean2", "random", "zero"),
   ncores = 1
 )
 }
@@ -17,7 +17,7 @@ You can have missing values in these data.}
 
 \item{method}{Either \code{"random"} (sampling according to allele frequencies),
 \code{"mean0"} (rounded mean), \code{"mean2"} (rounded mean to 2 decimal places),
-\code{"mode"} (most frequent call).}
+\code{"mode"} (most frequent call), \code{"zero"} (by 0).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
@@ -26,7 +26,7 @@ You may use \link{nb_cores}.}
 A new \code{FBM.code256} object (same file, but different code).
 }
 \description{
-Fast imputation via mode, mean or sampling according to allele frequencies.
+Fast imputation via mode, mean, sampling according to allele frequencies, or 0.
 }
 \examples{
 bigsnp <- snp_attachExtdata("example-missing.bed")
