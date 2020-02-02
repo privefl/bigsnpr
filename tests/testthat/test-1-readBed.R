@@ -19,11 +19,12 @@ test <- snp_attachExtdata()
 G <- test$genotypes
 
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
-test2 <- gaston::read.bed.matrix(bedfile, verbose = FALSE)
 
 ################################################################################
 
 test_that("same genotype matrix as gaston (reversed)", {
+  skip_if_not_installed("gaston")
+  test2 <- gaston::read.bed.matrix(bedfile, verbose = FALSE)
   expect_equivalent(G[], 2L - gaston::as.matrix(test2))
   expect_equivalent(test$fam, test2@ped[1:6])
   expect_equivalent(test$map, test2@snps[1:6])
@@ -50,7 +51,7 @@ test_that("same sign as PLINK (no switch 0 <-> 2)", {
   plink <- download_plink(verbose = FALSE)
   prefix <- sub_bed(bedfile)
   tmp <- tempfile()
-  system(glue::glue("{plink} --bfile {prefix} --assoc --allow-no-sex --out {tmp}"),
+  system(paste(plink, "--bfile", prefix, "--assoc --allow-no-sex --out", tmp),
          ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   gwas <- big_univLogReg(G, test$fam$affection - 1L)

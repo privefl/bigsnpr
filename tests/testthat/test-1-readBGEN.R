@@ -2,6 +2,10 @@
 
 context("READ_BGEN")
 
+skip_if_not_installed("dplyr")
+skip_if_not_installed("dbplyr")
+skip_if_not_installed("RSQLite")
+
 ################################################################################
 
 # need to write bgen/bgi files because can't have binary files..

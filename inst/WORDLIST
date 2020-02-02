@@ -13,6 +13,7 @@ bgen
 bgi
 bigSNP
 bigstatsr
+bigutilsr
 bim
 biobank
 bioinformatics
@@ -72,6 +73,7 @@ Mychaleckyj
 nb
 Neale
 OADP
+OGK
 parallelize
 parApply
 pcadapt

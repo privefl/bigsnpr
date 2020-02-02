@@ -64,7 +64,6 @@ m <- length(ind.col)
 test_that("Same correlations as Hmisc (with significance levels)", {
 
   skip_if_not_installed("Hmisc")
-  suppressMessages(library(Hmisc))
 
   true <- Hmisc::rcorr(G[ind.row, ind.col])
   ind <- which(true$P < alpha)
