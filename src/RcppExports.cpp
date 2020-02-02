@@ -21,16 +21,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// has_avx2
-bool has_avx2();
-RcppExport SEXP _bigsnpr_has_avx2() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(has_avx2());
-    return rcpp_result_gen;
-END_RCPP
-}
 // bedXPtr
 SEXP bedXPtr(std::string path, int n, int p);
 RcppExport SEXP _bigsnpr_bedXPtr(SEXP pathSEXP, SEXP nSEXP, SEXP pSEXP) {
@@ -346,7 +336,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
-    {"_bigsnpr_has_avx2", (DL_FUNC) &_bigsnpr_has_avx2, 0},
     {"_bigsnpr_bedXPtr", (DL_FUNC) &_bigsnpr_bedXPtr, 3},
     {"_bigsnpr_bed_stats", (DL_FUNC) &_bigsnpr_bed_stats, 3},
     {"_bigsnpr_bed_corNA", (DL_FUNC) &_bigsnpr_bed_corNA, 4},

@@ -87,13 +87,13 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
 #' Download PLINK 2.0 from \url{http://www.cog-genomics.org/plink/2.0/}.
 #'
 #' @param AVX2 Whether to download the AVX2 version? This is only available for
-#'   64 bits architectures. Default tries to detect if system supports AVX2.
+#'   64 bits architectures. Default is `TRUE`.
 #'
 #' @export
 #'
 #' @rdname download_plink
 #'
-download_plink2 <- function(dir = tempdir(), AVX2 = has_avx2(),
+download_plink2 <- function(dir = tempdir(), AVX2 = TRUE,
                             overwrite = FALSE, verbose = TRUE) {
 
   myOS <- get_os()

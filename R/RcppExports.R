@@ -5,10 +5,6 @@ r2_bgen <- function(filename, offsets, use_ind, decode, y) {
     .Call(`_bigsnpr_r2_bgen`, filename, offsets, use_ind, decode, y)
 }
 
-has_avx2 <- function() {
-    .Call(`_bigsnpr_has_avx2`)
-}
-
 bedXPtr <- function(path, n, p) {
     .Call(`_bigsnpr_bedXPtr`, path, n, p)
 }
