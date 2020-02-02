@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-
 // [[Rcpp::export]]
 bool has_avx2() {
   // https://stackoverflow.com/a/25833114/6103040

@@ -9,7 +9,7 @@ download_plink(dir = tempdir(), overwrite = FALSE, verbose = TRUE)
 
 download_plink2(
   dir = tempdir(),
-  AVX2 = TRUE,
+  AVX2 = has_avx2(),
   overwrite = FALSE,
   verbose = TRUE
 )
@@ -22,8 +22,8 @@ Default is a temporary directory.}
 
 \item{verbose}{Whether to output details of downloading. Default is \code{TRUE}.}
 
-\item{AVX2}{Whether to download the AVX2 version?
-Default is \code{TRUE} and possible only for 64 bits architectures.}
+\item{AVX2}{Whether to download the AVX2 version? This is only available for
+64 bits architectures. Default tries to detect if system supports AVX2.}
 }
 \value{
 The path of the downloaded PLINK executable.

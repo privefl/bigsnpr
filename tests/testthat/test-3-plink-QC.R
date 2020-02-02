@@ -10,11 +10,6 @@ skip_on_os("solaris"); skip_if_offline("www.cog-genomics.org")
 plink <- download_plink(verbose = FALSE)
 expect_false(grepl("plink2", plink))
 
-# plink2 <- download_plink2(overwrite = TRUE)
-# expect_true(grepl("plink2", plink2))
-# plink2.version <- system(paste(plink2, "--version"), intern = TRUE)
-# expect_true(grepl("AVX2", plink2.version))
-
 plink2 <- download_plink2(overwrite = TRUE, AVX2 = FALSE, verbose = FALSE)
 expect_true(grepl("plink2", plink2))
 plink2.version <- system(paste(plink2, "--version"), intern = TRUE)
