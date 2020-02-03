@@ -4,6 +4,9 @@ context("BED_RANDOM_SVD")
 
 options(bigstatsr.check.parallel.blas = FALSE)
 
+skip_if(is_cran)
+test_that("", NULL)
+
 ################################################################################
 
 # No missing value -> with {bigstatsr}

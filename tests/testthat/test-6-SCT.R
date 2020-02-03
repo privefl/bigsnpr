@@ -16,6 +16,8 @@ test_that("seq_log() works", {
 
 ################################################################################
 
+skip_if(is_cran)
+
 snp <- snp_attachExtdata()
 G <- snp$genotypes
 CHR <- rep(1:2, c(2542, 2000))

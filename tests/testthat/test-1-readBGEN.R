@@ -59,8 +59,7 @@ test_that("same as package {rbgen}", {
 setdiff2 <- function(x, y) x[!x %in% y]
 
 test_that("works with a subset of SNPs", {
-  ind_snp <- setdiff2(sample(length(IDs), 100, replace = TRUE), excl)
-  expect_gte(length(ind_snp), 85)
+  ind_snp <- setdiff2(sample(length(IDs), 50, replace = TRUE), excl)
   test2 <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]),
                                    ncores = ncores()))
   G2 <- test2$genotypes
@@ -83,7 +82,7 @@ test_that("works with a subset of individuals", {
 ################################################################################
 
 test_that("works with multiple files", {
-  ind_snp <- setdiff2(sample(length(IDs), 100, replace = TRUE), excl)
+  ind_snp <- setdiff2(sample(length(IDs), 50, replace = TRUE), excl)
   ind_row <- sample(500, 100, replace = TRUE)
   list_IDs <- split(IDs[ind_snp], sort(rep_len(1:3, length(ind_snp))))
   test4 <- snp_attach(
@@ -98,7 +97,7 @@ test_that("works with multiple files", {
 
 test_that("read as random hard calls", {
   G <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs)))$genotypes[]
-  all_G <- replicate(100, simplify = FALSE, {
+  all_G <- replicate(50, simplify = FALSE, {
     test <- snp_readBGEN(bgen_file, tempfile(), list(IDs), read_as = "random")
     snp_attach(test)$genotypes[]
   })
@@ -107,7 +106,7 @@ test_that("read as random hard calls", {
   # G[1:5, 1:5] - G_mean[1:5, 1:5]
   # plot(G_mean, G, pch = 20, col = scales::alpha("black", 0.1))
   expect_identical(G_mean[is.na(G)], rep(NA_real_, 2))
-  expect_equal(G_mean[!is.na(G)], G[!is.na(G)], tolerance = 0.1)
+  expect_equal(G_mean[!is.na(G)], G[!is.na(G)], tolerance = 0.2)
   lm_coef <- stats::lm(G_mean[!is.na(G)] ~ G[!is.na(G)])$coef
   expect_equal(unname(lm_coef), c(0, 1), tolerance = 1e-3)
 })

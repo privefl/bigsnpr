@@ -2,11 +2,14 @@
 
 context("FAST_IMPUTE")
 
+options(bigstatsr.check.parallel.blas = FALSE)
+
 ################################################################################
 
 test_that("fast imputation (xgboost) works", {
 
   skip_if_not_installed("xgboost")
+  skip_if(is_cran)
 
   suppressMessages({
     library(Matrix)
@@ -87,6 +90,17 @@ test_that("fast imputation (xgboost) works", {
   expect_true(all(nbNA[ind] > 0))
   expect_true(all(nbNA[-ind] == 0))
 
+  ################################################################################
+
+  G <- snp_attachExtdata()$genotypes
+  elemNA <- sample(length(G), size = 20)
+  G2 <- big_copy(G); G2[elemNA] <- as.raw(3)  # NA
+  G3 <- big_copy(G); G3[elemNA] <- as.raw(3)  # NA
+
+  expect_equal(snp_fastImpute(G2, CHR, seed = 2)[],
+               snp_fastImpute(G3, CHR, seed = 2, ncores = 2)[])
+  expect_equal(G2[], G3[])
+
 })
 
 ################################################################################
@@ -112,14 +126,18 @@ test_that("fast imputation (simple) works", {
   expect_equal(G4[c(4, 12), 1], rep(0, 2))
   expect_equal(G4[c(18, 72), 400], rep(1, 2))
 
-  imp_val <- replicate(1000, {
+  imp_val <- replicate(200, {
     G5 <- snp_fastImputeSimple(G, "random")
     G5[c(18, 72), 400]
   })
-  abs_val <- rbinom(2e5, size = 2, prob = mean(G[, 400], na.rm = TRUE) / 2)
-  prop <- table(imp_val) / (table(abs_val) / 100)
-  expect_equal(as.vector(prop), rep(1, 3), tolerance = 0.1)
+  abs_val <- rbinom(1e6, size = 2, prob = mean(G[, 400], na.rm = TRUE) / 2)
 
+  expect_equal(table(imp_val) / length(imp_val),
+               table(abs_val) / length(abs_val),
+               tolerance = 0.2, check.attributes = FALSE)
+
+  expect_equal(snp_fastImputeSimple(G, method = "mean2")[],
+               snp_fastImputeSimple(G, method = "mean2", ncores = 2)[])
 })
 
 ################################################################################
