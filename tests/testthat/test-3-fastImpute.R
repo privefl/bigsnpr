@@ -92,7 +92,10 @@ test_that("fast imputation (xgboost) works", {
 
   ################################################################################
 
-  G <- snp_attachExtdata()$genotypes
+  bigsnp <- snp_attachExtdata()
+  G <- bigsnp$genotypes
+  CHR <- bigsnp$map$chromosome
+
   elemNA <- sample(length(G), size = 20)
   G2 <- big_copy(G); G2[elemNA] <- as.raw(3)  # NA
   G3 <- big_copy(G); G3[elemNA] <- as.raw(3)  # NA
