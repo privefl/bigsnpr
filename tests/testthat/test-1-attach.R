@@ -28,7 +28,13 @@ expect_s4_class(test3$genotypes, "FBM.code256")
 
 ################################################################################
 
-rdsfile <- system.file("testdata", "before_readonly.rds", package = "bigsnpr")
+rds2bk <- function(rdsfile) sub("\\.rds$", ".bk", rdsfile)
+
+rdsfile0 <- system.file("testdata", "before_readonly.rds", package = "bigsnpr")
+rdsfile <- tempfile(fileext = ".rds")
+file.copy(from = rdsfile0, to = rdsfile)
+file.copy(from = rds2bk(rdsfile0), to = rds2bk(rdsfile))
+
 test <- readRDS(rdsfile)
 expect_false(exists("is_read_only", test$genotypes))
 
