@@ -122,14 +122,15 @@ snp_modifyBuild <- function(info_snp, liftOver, from = "hg18", to = "hg19") {
     stop2("Please use proper names for variables in 'info_snp'. Expected %s.",
           "'chr' and 'pos'")
 
+  # Make sure liftOver is executable
+  liftOver <- normalizePath(liftOver)
+  make_executable(liftOver)
+
   # Need BED UCSC file for liftOver
   BED <- tempfile(fileext = ".BED")
   info_BED <- with(info_snp, data.frame(
     paste0("chr", chr), pos0 = pos - 1L, pos, id = rows_along(info_snp)))
   bigreadr::fwrite2(info_BED, BED, col.names = FALSE, sep = " ")
-
-  # Make sure liftOver is executable
-  make_executable(liftOver)
 
   # Need chain file
   url <- paste0("ftp://hgdownload.cse.ucsc.edu/goldenPath/", from, "/liftOver/",
