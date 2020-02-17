@@ -51,6 +51,8 @@ get_pattern <- function(x, pattern) {
 #'
 download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
 
+  assert_dir(dir)
+
   myOS <- get_os()
   PLINK <- file.path(dir, `if`(myOS == "Windows", "plink.exe", "plink"))
   if (!overwrite && file.exists(PLINK)) return(PLINK)
@@ -95,6 +97,8 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
 #'
 download_plink2 <- function(dir = tempdir(), AVX2 = TRUE,
                             overwrite = FALSE, verbose = TRUE) {
+
+  assert_dir(dir)
 
   myOS <- get_os()
   PLINK2 <- file.path(dir, `if`(myOS == "Windows", "plink2.exe", "plink2"))
@@ -142,6 +146,8 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE,
 #' @export
 #'
 download_beagle <- function(dir = tempdir()) {
+
+  assert_dir(dir)
 
   url <- "https://faculty.washington.edu/browning/beagle/"
 

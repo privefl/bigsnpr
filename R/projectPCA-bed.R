@@ -20,7 +20,7 @@
 #'
 download_1000G <- function(dir, overwrite = FALSE, delete_zip = TRUE) {
 
-  dir <- sub("/$", "", dir)
+  assert_dir(dir <- sub("/$", "", dir))
   files_unzipped <- file.path(dir, paste0("1000G_phase3_common_norel",
                                           c(".bed", ".bim", ".fam", ".fam2")))
 
