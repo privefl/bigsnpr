@@ -46,7 +46,7 @@ We then compute PCA without using the related individuals. Function `bed_autoSVD
 
 ```{r}
 (obj.bed <- bed(bedfile))
-ind.rel <- match(c(rel$ID1, rel$ID2), obj.bed$fam$sample.ID)
+ind.rel <- match(c(rel$IID1, rel$IID2), obj.bed$fam$sample.ID)
 ind.norel <- rows_along(obj.bed)[-ind.rel]
 
 obj.svd <- bed_autoSVD(obj.bed, ind.row = ind.norel, k = 20, 
