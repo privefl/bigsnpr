@@ -1,5 +1,6 @@
 /******************************************************************************/
 
+#include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/BMCodeAcc.h>
 
 using namespace Rcpp;
@@ -19,7 +20,7 @@ LogicalVector clumping_chr(Environment BM,
                            double thr) {
 
   XPtr<FBM> xpBM = BM["address"];
-  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
+  SubBMCode256Acc macc(xpBM, rowInd, colInd, BM["code256"], 1);
   int n = macc.nrow();
   int m = macc.ncol();
 
@@ -95,7 +96,7 @@ List clumping_chr_cached(Environment BM,
                          double thr) {
 
   XPtr<FBM> xpBM = BM["address"];
-  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
+  SubBMCode256Acc macc(xpBM, rowInd, colInd, BM["code256"], 1);
   int n = macc.nrow();
   int m = macc.ncol();
   myassert_size(spInd.size(), m);

@@ -3,6 +3,11 @@
 
 /******************************************************************************/
 
+#ifndef STRICT_R_HEADERS
+#define STRICT_R_HEADERS
+#endif
+
+#include <mio/mmap.hpp>
 #include <bigstatsr/utils.h>
 
 using namespace Rcpp;
@@ -34,8 +39,8 @@ public:
 
   const unsigned char* matrix() const { return ro_ummap.data(); }
 
-  size_t ntot() const { return n; }
-  size_t mtot() const { return m; }
+  size_t ntot()  const { return n; }
+  size_t mtot()  const { return m; }
   size_t nbyte() const { return n_byte; }
 
 private:
@@ -51,32 +56,13 @@ public:
          const IntegerVector& ind_row,
          const IntegerVector& ind_col) {
 
-    size_t n = bedPtr->ntot();
-    size_t m = bedPtr->mtot();
-    n_byte = bedPtr->nbyte();
-    _pMat = 3 + bedPtr->matrix();
-    _lookup_byte = bedPtr->get_code();
+    n_byte = bedPtr->nbyte();           // n_samples / 4
+    _pMat = 3 + bedPtr->matrix();       // first 3 bytes are magic numbers
+    _lookup_byte = bedPtr->get_code();  // decode 1 byte into 4 genotypes
 
     // Indices of sub-view of bed file
-    size_t n_sub = ind_row.size();
-    std::vector<size_t> ind_row2(n_sub);
-    for (size_t i = 0; i < n_sub; i++) {
-      // 'ind_row' indices comes from R, so begins at 1
-      size_t ind = static_cast<size_t>(ind_row[i] - 1);
-      myassert(ind < n, ERROR_BOUNDS);
-      ind_row2[i] = ind;
-    }
-    _ind_row = ind_row2;
-
-    size_t m_sub = ind_col.size();
-    std::vector<size_t> ind_col2(m_sub);
-    for (size_t j = 0; j < m_sub; j++) {
-      // 'ind_col' indices comes from R, so begins at 1
-      size_t ind = static_cast<size_t>(ind_col[j] - 1);
-      myassert(ind < m, ERROR_BOUNDS);
-      ind_col2[j] = ind;
-    }
-    _ind_col = ind_col2;
+    _ind_row = vec_int_to_size(ind_row, bedPtr->ntot(), 1);
+    _ind_col = vec_int_to_size(ind_col, bedPtr->mtot(), 1);;
   }
 
   size_t nrow() const { return _ind_row.size(); }

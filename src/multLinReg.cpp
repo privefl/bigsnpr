@@ -63,7 +63,7 @@ NumericMatrix multLinReg(SEXP obj,
     XPtr<FBM> xpBM = obj2["address"];
     NumericVector code = clone(as<NumericVector>(obj2["code256"]));
     code[is_na(code)] = 3;
-    SubBMCode256Acc macc(xpBM, ind_row - 1, ind_col - 1, code);
+    SubBMCode256Acc macc(xpBM, ind_row, ind_col, code, 1);
     return multLinReg(macc, U);
   } else if (Rf_inherits(obj, "bed")) {
     XPtr<bed> xp_bed = as<Environment>(obj)["address"];

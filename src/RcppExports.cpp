@@ -283,14 +283,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // readbina
-bool readbina(const char * filename, Environment BM, const arma::Mat<unsigned char>& tab);
+bool readbina(const char * filename, Environment BM, const RawMatrix& tab);
 RcppExport SEXP _bigsnpr_readbina(SEXP filenameSEXP, SEXP BMSEXP, SEXP tabSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char * >::type filename(filenameSEXP);
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
-    Rcpp::traits::input_parameter< const arma::Mat<unsigned char>& >::type tab(tabSEXP);
+    Rcpp::traits::input_parameter< const RawMatrix& >::type tab(tabSEXP);
     rcpp_result_gen = Rcpp::wrap(readbina(filename, BM, tab));
     return rcpp_result_gen;
 END_RCPP

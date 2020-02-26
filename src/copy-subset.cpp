@@ -17,7 +17,7 @@ void replaceSNP(Environment BM,
   BMAcc_RW<unsigned char> macc(xpBM);
 
   XPtr<FBM> xpBM2 = BM2["address"];
-  SubBMAcc<unsigned char> macc2(xpBM2, rowInd - 1, colInd - 1);
+  SubBMAcc<unsigned char> macc2(xpBM2, rowInd, colInd, 1);
 
   myassert_size(macc.nrow(), macc2.nrow());
   myassert_size(macc.ncol(), macc2.ncol());

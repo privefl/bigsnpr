@@ -1,5 +1,6 @@
 /******************************************************************************/
 
+#include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/BMCodeAcc.h>
 
 using namespace Rcpp;
@@ -23,7 +24,7 @@ SEXP corMat(Environment BM,
   XPtr<FBM> xpBM = BM["address"];
   NumericVector code = clone(as<NumericVector>(BM["code256"]));
   code[is_na(code)] = 3;
-  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, code);
+  SubBMCode256Acc macc(xpBM, rowInd, colInd, code, 1);
 
   int n = macc.nrow();
   int m = macc.ncol();

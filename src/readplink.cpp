@@ -12,7 +12,7 @@ using namespace std;
 // [[Rcpp::export]]
 bool readbina(const char * filename,
               Environment BM,
-              const arma::Mat<unsigned char>& tab) {
+              const RawMatrix& tab) {
 
   XPtr<FBM_RW> xpBM = BM["address_rw"];
   unsigned char* ptr = static_cast<unsigned char*>(xpBM->matrix());
@@ -38,11 +38,11 @@ bool readbina(const char * filename,
     myFile.read((char*)buffer, lengthExtra);
 
     for (k = 0; k < length; k++) {
-      code_ptr = tab.colptr(buffer[k]);
+      code_ptr = &tab(0, buffer[k]);
       ptr = std::copy(code_ptr, code_ptr + 4, ptr);
     }
     if (extra) {
-      code_ptr = tab.colptr(buffer[k]);
+      code_ptr = &tab(0, buffer[k]);
       ptr = std::copy(code_ptr, code_ptr + extra, ptr);
     }
   }
@@ -85,7 +85,7 @@ void writebina(const char * filename,
                const IntegerVector& colInd) {
 
   XPtr<FBM> xpBM = BM["address"];
-  SubBMCode256Acc macc(xpBM, rowInd - 1, colInd - 1, BM["code256"]);
+  SubBMCode256Acc macc(xpBM, rowInd, colInd, BM["code256"], 1);
   int n = macc.nrow();
   int m = macc.ncol();
   int length = ceil((double)n / 4); // DO NOT USE INTEGERS WITH CEIL

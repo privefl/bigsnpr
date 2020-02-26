@@ -23,7 +23,7 @@ void impute(Environment BM,
             int method) {
 
   XPtr<FBM_RW> xpBM = BM["address_rw"];
-  SubBMAcc_RW<unsigned char> macc(xpBM, rowInd - 1, colInd - 1);
+  SubBMAcc_RW<unsigned char> macc(xpBM, rowInd, colInd, 1);
 
   if (method == 5) return impute_by_0(macc);
 
