@@ -30,6 +30,7 @@ check_args <- function(...) {
         ind.train   = "assert_int(ind.train); assert_pos(ind.train)",
         ind.col     = "assert_int(ind.col);   assert_pos(ind.col)",
         ind.keep    = "assert_int(ind.keep);  assert_pos(ind.keep)",
+        exclude     = "assert_int(exclude);   assert_pos(exclude)",
         fun.scaling = "assert_args(fun.scaling, c('ind.row', 'ind.col'))",
         gwas        = "assert_class(gwas, 'mhtest')",
         y01.train   = "assert_01(y01.train)"
