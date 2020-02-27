@@ -71,9 +71,9 @@ bed_RC <- methods::setRefClass(
     .map    = "data.frame",
 
     #### Active bindings
+    prefix  = function() sub_bed(.self$bedfile),
     bimfile = function() sub_bed(.self$bedfile, ".bim"),
     famfile = function() sub_bed(.self$bedfile, ".fam"),
-    prefix  = function() sub_bed(.self$bedfile),
 
     fam = function() {
       if (base::ncol(.self$.fam) == 0) {
@@ -90,9 +90,6 @@ bed_RC <- methods::setRefClass(
 
     nrow = function() base::nrow(.self$fam),
     ncol = function() base::nrow(.self$map),
-
-    # infos.chr = function() bigreadr::fread2(.self$bimfile, select = 1)[[1]],
-    # infos.pos = function() bigreadr::fread2(.self$bimfile, select = 4)[[1]],
 
     address = function() {
       if (identical(.self$extptr, new("externalptr"))) { # nil
