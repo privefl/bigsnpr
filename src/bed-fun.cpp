@@ -85,9 +85,9 @@ List bed_corNA(Environment obj_bed,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-IntegerMatrix bed_counts_cpp(Environment obj_bed,
-                             const IntegerVector& ind_row,
-                             const IntegerVector& ind_col) {
+IntegerMatrix bed_col_counts_cpp(Environment obj_bed,
+                                 const IntegerVector& ind_row,
+                                 const IntegerVector& ind_col) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAcc macc(xp_bed, ind_row, ind_col);

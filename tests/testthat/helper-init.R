@@ -2,7 +2,6 @@
 
 library(testthat)
 library(bigsnpr)
-library(bigparallelr)
 
 ################################################################################
 

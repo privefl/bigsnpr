@@ -26,16 +26,18 @@ system.time(test2 <- bed_clumping(obj.bed, exclude = ind.excl, ncores = 2)) # 14
 
 system.time(test  <- bed_autoSVD(obj.bed, ind.col = ind.keep)) # 3 sec
 system.time(test2 <- bed_autoSVD(obj.bed, ind.col = ind.keep, ncores = 2))
-# 35 sec -> 21 sec (but still have to register clusters many times)
+# 35 sec -> 21 sec -> 12 sec (but still have to register clusters many times)
 
 system.time(test  <- bed_counts(obj.bed, ind.col = ind.keep)) # 0 sec
 system.time(test2 <- bed_counts(obj.bed, ind.col = ind.keep, ncores = 2))
-# 10 sec
+# 10 sec -> 2 sec OK
 
 system.time(test  <- bed_MAF(obj.bed, ind.col = ind.keep)) # 0 sec
 system.time(test2 <- bed_MAF(obj.bed, ind.col = ind.keep, ncores = 2))
-# 10 sec
+# 10 sec -> 2 sec OK
 
-system.time(test  <- bed_MAF(obj.bed, ind.col = ind.keep)) # 0 sec
-system.time(test2 <- bed_MAF(obj.bed, ind.col = ind.keep, ncores = 2))
-# 10 sec
+mac <- bed_MAF(obj.bed, ind.col = ind.keep)$mac
+system.time(U <- bed_randomSVD(obj.bed, ind.col = ind.keep[mac > 5], ncores = 2)$u)
+system.time(test  <- bed_pcadapt(obj.bed, U.row = U, ind.col = ind.keep[-1469])) # 0 sec
+system.time(test2 <- bed_pcadapt(obj.bed, U.row = U, ind.col = ind.keep[-1469], ncores = 2))
+# 10 sec -> 2 sec OK

@@ -1,3 +1,7 @@
+## bigsnpr 1.2.4
+
+- Use new class `bed_light` internally to make parallel algorithms faster because they have to transfer less data to clusters. Also define differently functions used in `big_parallelize()` for the same reason.
+
 ## bigsnpr 1.2.0
 
 - Use the new implementation of robust OGK Mahalanobis distance in {bigutilsr}.

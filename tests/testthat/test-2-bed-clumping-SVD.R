@@ -5,9 +5,10 @@ context("BED_RANDOM_SVD")
 options(bigstatsr.check.parallel.blas = FALSE)
 
 skip_if(is_cran)
-test_that("", NULL)
 
 ################################################################################
+
+# test_that()
 
 # No missing value -> with {bigstatsr}
 bigSNP <- snp_attachExtdata()

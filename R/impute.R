@@ -149,6 +149,10 @@ snp_fastImpute <- function(Gna, infos.chr,
 
 ################################################################################
 
+part_impute <- function(X, ind, method) {
+  impute(X, rows_along(X), ind, method)
+}
+
 #' Fast imputation
 #'
 #' Fast imputation via mode, mean, sampling according to allele frequencies, or 0.
@@ -180,9 +184,7 @@ snp_fastImputeSimple <- function(
   stopifnot(identical(Gna$code256, CODE_012))
 
   method <- match(match.arg(method), c("mode", "mean0", "mean2", "random", "zero"))
-  big_parallelize(Gna, function(X, ind, method) {
-    impute(X, rows_along(X), ind, method)
-  }, ncores = ncores, method = method)
+  big_parallelize(Gna, p.FUN = part_impute, ncores = ncores, method = method)
 
   CODE <- `if`(method == 3, CODE_DOSAGE, CODE_IMPUTE_PRED)
   Gna$copy(code = CODE)
