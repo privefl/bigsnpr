@@ -142,12 +142,12 @@ bed_counts <- function(obj.bed,
                        ncores = 1) {
 
   if (byrow) {
-    res <- big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
-      bed_row_counts_cpp(obj.bed, ind.row, ind)
+    res <- big_parallelize(obj.bed$light, p.FUN = function(X, ind, ind.row) {
+      bed_row_counts_cpp(X, ind.row, ind)
     }, p.combine = plus, ncores = ncores, ind = ind.col, ind.row = ind.row)
   } else {
-    res <- big_parallelize(obj.bed, p.FUN = function(X, ind, ind.row) {
-      bed_counts_cpp(obj.bed, ind.row, ind)
+    res <- big_parallelize(obj.bed$light, p.FUN = function(X, ind, ind.row) {
+      bed_counts_cpp(X, ind.row, ind)
     }, p.combine = "cbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
   }
 

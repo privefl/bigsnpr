@@ -6,8 +6,8 @@ pcadapt0 <- function(G, U.row, ind.row, ind.col, ncores) {
   K <- ncol(U.row)
   assert_lengths(rows_along(U.row), ind.row)
 
-  tscores <- big_parallelize(G, p.FUN = function(G, ind, ind.row) {
-    multLinReg(G, ind_row = ind.row, ind_col = ind, U = U.row)
+  tscores <- big_parallelize(G, p.FUN = function(X, ind, ind.row) {
+    multLinReg(X, ind_row = ind.row, ind_col = ind, U = U.row)
   }, p.combine = "rbind", ncores = ncores, ind = ind.col, ind.row = ind.row)
 
   dist <- `if`(K == 1, (drop(tscores) - stats::median(tscores))^2,
@@ -76,7 +76,7 @@ bed_pcadapt <- function(obj.bed, U.row,
                         ind.col = cols_along(obj.bed),
                         ncores = 1) {
   check_args()
-  pcadapt0(obj.bed, U.row, ind.row, ind.col, ncores)
+  pcadapt0(obj.bed$light, U.row, ind.row, ind.col, ncores)
 }
 
 ################################################################################

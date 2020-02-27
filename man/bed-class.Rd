@@ -32,6 +32,8 @@ C++ object, to be used internally as a \verb{XPtr<bed>} in C++ code
 \item \verb{$fam}: data frame read from \verb{$famfile}
 \item \verb{$.map}: use \verb{$map} instead
 \item \verb{$.fam}: use \verb{$fam} instead
+\item \verb{$light}: get a lighter version of this object for parallel algorithms
+to not have to transfer e.g. \verb{$.map}.
 }
 }
 

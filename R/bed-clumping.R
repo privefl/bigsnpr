@@ -17,6 +17,7 @@ bed_clumping <- function(obj.bed,
 
   check_args()
 
+  obj.bed <- obj.bed$light
   args <- as.list(environment())
 
   if (!is.null(S)) assert_lengths(infos.chr, S)

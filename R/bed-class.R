@@ -52,6 +52,8 @@ sub_bed <- function(path, replacement = "", stop_if_not_ext = TRUE) {
 #'   - `$fam`: data frame read from `$famfile`
 #'   - `$.map`: use `$map` instead
 #'   - `$.fam`: use `$fam` instead
+#'   - `$light`: get a lighter version of this object for parallel algorithms
+#'     to not have to transfer e.g. `$.map`.
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
@@ -90,6 +92,13 @@ bed_RC <- methods::setRefClass(
 
     nrow = function() base::nrow(.self$fam),
     ncol = function() base::nrow(.self$map),
+
+    light = function() {
+      methods::new(Class   = "bed_light",
+                   bedfile = .self$bedfile,
+                   nrow    = .self$nrow,
+                   ncol    = .self$ncol)
+    },
 
     address = function() {
       if (identical(.self$extptr, new("externalptr"))) { # nil
@@ -155,5 +164,39 @@ setMethod("dim",    signature(x = "bed"), function(x) c(x$nrow, x$ncol))
 #' @rdname bed-methods
 #' @export
 setMethod("length", signature(x = "bed"), function(x) prod(dim(x) + 0))
+
+################################################################################
+
+# Used internally. Useful in parallel algorithms to not have to transfer `$map`.
+bed_light_RC <- methods::setRefClass(
+
+  "bed_light",
+
+  fields = list(
+    bedfile = "character",
+    nrow    = "integer",
+    ncol    = "integer",
+    extptr  = "externalptr",
+
+    #### Active bindings
+    address = function() {
+      if (identical(.self$extptr, new("externalptr"))) { # nil
+        .self$extptr <- bedXPtr(.self$bedfile, .self$nrow, .self$ncol)
+      }
+      .self$extptr
+    }
+  ),
+
+  methods = list(
+    initialize = function(bedfile, nrow, ncol) {
+
+      .self$bedfile <- path.expand(bedfile)
+      .self$nrow    <- nrow
+      .self$ncol    <- ncol
+
+      .self
+    }
+  )
+)
 
 ################################################################################

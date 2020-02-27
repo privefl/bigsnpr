@@ -65,7 +65,7 @@ NumericMatrix multLinReg(SEXP obj,
     code[is_na(code)] = 3;
     SubBMCode256Acc macc(xpBM, ind_row, ind_col, code, 1);
     return multLinReg(macc, U);
-  } else if (Rf_inherits(obj, "bed")) {
+  } else if (Rf_inherits(obj, "bed") || Rf_inherits(obj, "bed_light")) {
     XPtr<bed> xp_bed = as<Environment>(obj)["address"];
     bedAcc macc(xp_bed, ind_row, ind_col);
     return multLinReg(macc, U);

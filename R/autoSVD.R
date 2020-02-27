@@ -190,7 +190,8 @@ snp_autoSVD <- function(G,
 #' str(bed_randomSVD(obj.bed))
 #'
 bed_randomSVD <- function(
-  obj.bed, fun.scaling = bed_scaleBinom,
+  obj.bed,
+  fun.scaling = bed_scaleBinom,
   ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed),
   k = 10,
@@ -199,7 +200,8 @@ bed_randomSVD <- function(
   ncores = 1
 ) {
 
-  big_randomSVD(obj.bed, fun.scaling, ind.row, ind.col, k, tol, verbose, ncores,
+  big_randomSVD(obj.bed$light, fun.scaling, ind.row, ind.col,
+                k, tol, verbose, ncores,
                 bed_prodVec, bed_cprodVec)
 }
 

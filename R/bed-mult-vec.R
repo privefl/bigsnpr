@@ -21,7 +21,7 @@ bed_cprodVec <- function(obj.bed, y.row,
                          ind.row = rows_along(obj.bed),
                          ind.col = cols_along(obj.bed),
                          center = rep(0, length(ind.col)),
-                         scale = rep(1, length(ind.col))) {
+                         scale  = rep(1, length(ind.col))) {
 
   assert_lengths(y.row, ind.row)
 
