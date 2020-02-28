@@ -71,7 +71,7 @@ different parameters for clumping and thresholding." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -146,19 +146,41 @@ different parameters for clumping and thresholding." />
 different parameters for clumping and thresholding.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_grid_clumping</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='no'>lpS</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
+    <pre class="usage"><span class='fu'>snp_grid_clumping</span>(
+  <span class='no'>G</span>,
+  <span class='no'>infos.chr</span>,
+  <span class='no'>infos.pos</span>,
+  <span class='no'>lpS</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
   <span class='kw'>grid.thr.r2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.05</span>, <span class='fl'>0.1</span>, <span class='fl'>0.2</span>, <span class='fl'>0.5</span>, <span class='fl'>0.8</span>, <span class='fl'>0.95</span>),
-  <span class='kw'>grid.base.size</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>50</span>, <span class='fl'>100</span>, <span class='fl'>200</span>, <span class='fl'>500</span>), <span class='kw'>infos.imp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>G</span>)),
-  <span class='kw'>grid.thr.imp</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'>cols_along</span>(<span class='no'>G</span>)), <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+  <span class='kw'>grid.base.size</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>50</span>, <span class='fl'>100</span>, <span class='fl'>200</span>, <span class='fl'>500</span>),
+  <span class='kw'>infos.imp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>G</span>)),
+  <span class='kw'>grid.thr.imp</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>groups</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'>cols_along</span>(<span class='no'>G</span>)),
+  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)
 
-<span class='fu'>snp_grid_PRS</span>(<span class='no'>G</span>, <span class='no'>all_keep</span>, <span class='no'>betas</span>, <span class='no'>lpS</span>, <span class='kw'>n_thr_lpS</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>grid.lpS.thr</span> <span class='kw'>=</span> <span class='fl'>0.9999</span> * <span class='fu'><a href='seq_log.html'>seq_log</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='fl'>0.1</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>lpS</span>)), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>lpS</span>),
-  <span class='no'>n_thr_lpS</span>), <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(),
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"float"</span>, <span class='st'>"double"</span>), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'>snp_grid_PRS</span>(
+  <span class='no'>G</span>,
+  <span class='no'>all_keep</span>,
+  <span class='no'>betas</span>,
+  <span class='no'>lpS</span>,
+  <span class='kw'>n_thr_lpS</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>grid.lpS.thr</span> <span class='kw'>=</span> <span class='fl'>0.9999</span> * <span class='fu'><a href='seq_log.html'>seq_log</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='fl'>0.1</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>lpS</span>)), <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>lpS</span>), <span class='no'>n_thr_lpS</span>),
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
+  <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(),
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"float"</span>, <span class='st'>"double"</span>),
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)
 
-<span class='fu'>snp_grid_stacking</span>(<span class='no'>multi_PRS</span>, <span class='no'>y.train</span>, <span class='kw'>alphas</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>0.01</span>, <span class='fl'>1e-04</span>),
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>snp_grid_stacking</span>(
+  <span class='no'>multi_PRS</span>,
+  <span class='no'>y.train</span>,
+  <span class='kw'>alphas</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>0.01</span>, <span class='fl'>1e-04</span>),
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

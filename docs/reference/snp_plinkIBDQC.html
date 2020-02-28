@@ -71,7 +71,7 @@ using its method-of-moments." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -142,13 +142,21 @@ using its method-of-moments." />
 
     <div class="ref-description">
     <p>Quality Control based on Identity-by-descent (IBD) computed by
-<a href='http://www.cog-genomics.org/plink2'>PLINK 1.9</a>
+<a href='http://www.cog-genomics.org/plink2'><strong>PLINK 1.9</strong></a>
 using its method-of-moments.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_plinkIBDQC</span>(<span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>pi.hat</span> <span class='kw'>=</span> <span class='fl'>0.08</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>pruning.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>100</span>, <span class='fl'>0.2</span>),
-  <span class='kw'>do.blind.QC</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_plinkIBDQC</span>(
+  <span class='no'>plink.path</span>,
+  <span class='no'>bedfile.in</span>,
+  <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>pi.hat</span> <span class='kw'>=</span> <span class='fl'>0.08</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>pruning.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>100</span>, <span class='fl'>0.2</span>),
+  <span class='kw'>do.blind.QC</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -218,7 +226,9 @@ datasets.</em> GigaScience 4 (1): 7.
     <div class='dont-index'><p><a href='download_plink.html'>download_plink</a> <a href='snp_plinkQC.html'>snp_plinkQC</a> <a href='snp_plinkKINGQC.html'>snp_plinkKINGQC</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
 <span class='no'>plink</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='download_plink.html'>download_plink</a></span>()
 
 <span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkIBDQC</span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>,
@@ -226,27 +236,16 @@ datasets.</em> GigaScience 4 (1): 7.
                           <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 
 <span class='no'>df_rel</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkIBDQC</span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>, <span class='kw'>do.blind.QC</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>df_rel</span>)</div><div class='output co'>#&gt; 'data.frame':	9 obs. of  14 variables:
-#&gt;  $ FID1  : chr  "POP1" "POP1" "POP3" "POP4" ...
-#&gt;  $ IID1  : chr  "IND15" "IND28" "IND68" "IND81" ...
-#&gt;  $ FID2  : chr  "POP2" "POP4" "POP3" "POP4" ...
-#&gt;  $ IID2  : chr  "IND59" "IND81" "IND76" "IND96" ...
-#&gt;  $ RT    : chr  "UN" "UN" "OT" "OT" ...
-#&gt;  $ EZ    : int  NA NA 0 0 0 0 NA NA NA
-#&gt;  $ Z0    : num  0.835 0.827 0.85 0.831 0.836 ...
-#&gt;  $ Z1    : num  0.166 0.173 0.135 0.169 0.144 ...
-#&gt;  $ Z2    : num  0 0 0.0149 0 0.0201 0.0216 0 0.0291 0.0036
-#&gt;  $ PI_HAT: num  0.0827 0.0864 0.0825 0.0844 0.092 0.0831 0.0807 0.0814 0.0851
-#&gt;  $ PHE   : int  -1 -1 -1 -1 -1 -1 -1 -1 -1
-#&gt;  $ DST   : num  0.695 0.696 0.711 0.702 0.713 ...
-#&gt;  $ PPC   : num  0.921 0.5 0.815 0.589 0.815 ...
-#&gt;  $ RATIO : num  8 2 4 2.33 4 ...</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>df_rel</span>)
+
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span>(<span class='no'>Z0</span>, <span class='no'>Z1</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>df_rel</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>RT</span>)</div><div class='img'><img src='snp_plinkIBDQC-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>PI_HAT</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>df_rel</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_hline</a></span>(<span class='kw'>yintercept</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='snp_plinkIBDQC-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='snp_plinkRmSamples.html'>snp_plinkRmSamples</a></span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>,
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span>(<span class='no'>Z0</span>, <span class='no'>Z1</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>df_rel</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>RT</span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>PI_HAT</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>df_rel</span>) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_hline</a></span>(<span class='kw'>yintercept</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='fu'><a href='snp_plinkRmSamples.html'>snp_plinkRmSamples</a></span>(<span class='no'>plink</span>, <span class='no'>bedfile</span>,
                    <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>),
-                   <span class='kw'>df.or.files</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>df_rel</span>, <span class='no'>PI_HAT</span> <span class='kw'>&gt;</span> <span class='fl'>0.2</span>))</div><div class='output co'>#&gt; [1] "/tmp/RtmpHMIGXH/file272e2c2adc27.bed"</div><div class='input'>
-</div></pre>
+                   <span class='kw'>df.or.files</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>df_rel</span>, <span class='no'>PI_HAT</span> <span class='kw'>&gt;</span> <span class='fl'>0.2</span>))
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

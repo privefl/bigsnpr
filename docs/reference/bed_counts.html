@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -142,8 +142,13 @@
     <p>Counts the number of 0s, 1s, 2s and NAs by variants in the bed file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bed_counts</span>(<span class='no'>obj.bed</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>bed_counts</span>(
+  <span class='no'>obj.bed</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,6 +171,11 @@ If not specified, all columns are used.<br />
 <strong>Don't use negative indices.</strong></p></td>
     </tr>
     <tr>
+      <th>byrow</th>
+      <td><p>Whether to count by individual rather than by variant?
+Default is <code>FALSE</code> (count by variant).</p></td>
+    </tr>
+    <tr>
       <th>ncores</th>
       <td><p>Number of cores used. Default doesn't use parallelism.
 You may use nb_cores.</p></td>
@@ -185,6 +195,11 @@ You may use nb_cores.</p></td>
 #&gt; 1       8   16   21   26   39
 #&gt; 2       0    0    1    4    2
 #&gt; &lt;NA&gt;    9    7    8    5    4</div><div class='input'>
+<span class='fu'>bed_counts</span>(<span class='no'>obj.bed</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>5</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5]
+#&gt; 0     492  275  316  271  346
+#&gt; 1       0  211  157   94   98
+#&gt; 2       0    0   18  117   39
+#&gt; &lt;NA&gt;    8   14    9   18   17</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

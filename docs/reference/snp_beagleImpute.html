@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -142,9 +142,17 @@
     <p>Imputation using <strong>Beagle</strong> version 4.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_beagleImpute</span>(<span class='no'>beagle.path</span>, <span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>memory.max</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>plink.options</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_beagleImpute</span>(
+  <span class='no'>beagle.path</span>,
+  <span class='no'>plink.path</span>,
+  <span class='no'>bedfile.in</span>,
+  <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>memory.max</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>plink.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -204,13 +212,12 @@ options can be found at <a href='http://www.cog-genomics.org/plink2/filter'>http
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>B L Browning and S R Browning (2016).
-Genotype imputation with millions of reference samples.
-Am J Hum Genet 98:116-126.
-<a href='dx.doi.org/doi:10.1016/j.ajhg.2015.11.020'>dx.doi.org/doi:10.1016/j.ajhg.2015.11.020</a></p>
+    <p>Browning, Brian L., and Sharon R. Browning.
+"Genotype imputation with millions of reference samples."
+The American Journal of Human Genetics 98.1 (2016): 116-126.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='download_plink.html'>download_plink</a></p></div>
+    <div class='dont-index'><p><a href='download_plink.html'>download_plink</a> <a href='download_beagle.html'>download_beagle</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

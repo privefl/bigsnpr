@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -142,8 +142,16 @@
     <p>Fast imputation algorithm based on local XGBoost models.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_fastImpute</span>(<span class='no'>Gna</span>, <span class='no'>infos.chr</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>200</span>,
-  <span class='kw'>p.train</span> <span class='kw'>=</span> <span class='fl'>0.8</span>, <span class='kw'>n.cor</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>Gna</span>), <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_fastImpute</span>(
+  <span class='no'>Gna</span>,
+  <span class='no'>infos.chr</span>,
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>,
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>200</span>,
+  <span class='kw'>p.train</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
+  <span class='kw'>n.cor</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>Gna</span>),
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -202,47 +210,36 @@ You may use nb_cores.</p></td>
     <div class='dont-index'><p><code><a href='snp_fastImputeSimple.html'>snp_fastImputeSimple()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>(<span class='st'>"example-missing.bed"</span>)
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>(<span class='st'>"example-missing.bed"</span>)
 <span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>genotypes</span>
 <span class='no'>CHR</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>
 <span class='no'>G2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_fastImpute</span>(<span class='no'>G</span>, <span class='no'>CHR</span>)
-<span class='no'>G2</span>[, <span class='fl'>1</span>:<span class='fl'>5</span>]</div><div class='output co'>#&gt;            [,1]       [,2] [,3]       [,4] [,5]
-#&gt; [1,] 0.04500000 0.03500000 0.04 0.02500000 0.02
-#&gt; [2,] 0.02564103 0.02564103 0.00 0.05128205 0.00</div><div class='input'>
+<span class='no'>G2</span>[, <span class='fl'>1</span>:<span class='fl'>5</span>]
+
 <span class='co'># Still missing values</span>
-<span class='fu'>big_counts</span>(<span class='no'>G</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>)</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-#&gt; 0     183  177  170  165  155  154  141  141  151   138
-#&gt; 1       8   16   21   26   39   39   53   48   44    54
-#&gt; 2       0    0    1    4    2    2    3    6    5     7
-#&gt; &lt;NA&gt;    9    7    8    5    4    5    3    5    0     1</div><div class='input'><span class='co'># You need to change the code of G</span>
+<span class='fu'>big_counts</span>(<span class='no'>G</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>)
+<span class='co'># You need to change the code of G</span>
 <span class='co'># To make this permanent, you need to save (modify) the file on disk</span>
 <span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>code256</span> <span class='kw'>&lt;-</span> <span class='no'>CODE_IMPUTE_PRED</span>
 <span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_save.html'>snp_save</a></span>(<span class='no'>fake</span>)
-<span class='fu'>big_counts</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>)[<span class='fl'>4</span>, ]</div><div class='output co'>#&gt;   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt;  [38] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt;  [75] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [112] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [149] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [186] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [223] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [260] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [297] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [334] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [371] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [408] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [445] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [482] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</div><div class='input'>
+<span class='fu'>big_counts</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>)[<span class='fl'>4</span>, ]
+
 <span class='co'># Plot for post-checking</span>
 <span class='co'>## Here there is no SNP with more than 1% error (estimated)</span>
 <span class='no'>pvals</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.005</span>, <span class='fl'>0.002</span>, <span class='fl'>0.001</span>); <span class='no'>colvals</span> <span class='kw'>&lt;-</span> <span class='fl'>2</span>:<span class='fl'>5</span>
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>pNA</span> <span class='kw'>=</span> <span class='no'>G2</span>[<span class='fl'>1</span>, ], <span class='kw'>pError</span> <span class='kw'>=</span> <span class='no'>G2</span>[<span class='fl'>2</span>, ])
 
 <span class='co'># base R</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>df</span>, <span class='no'>pNA</span> <span class='kw'>&gt;</span> <span class='fl'>0.001</span>), <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>20</span>)</div><div class='input'><span class='no'>idc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>pvals</span>), <span class='kw'>function</span>(<span class='no'>i</span>) {
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>df</span>, <span class='no'>pNA</span> <span class='kw'>&gt;</span> <span class='fl'>0.001</span>), <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>20</span>)
+<span class='no'>idc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>pvals</span>), <span class='kw'>function</span>(<span class='no'>i</span>) {
   <span class='fu'><a href='https://rdrr.io/r/graphics/curve.html'>curve</a></span>(<span class='no'>pvals</span>[<span class='no'>i</span>] / <span class='no'>x</span>, <span class='kw'>from</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>,
         <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>colvals</span>[<span class='no'>i</span>], <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-})</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span>(<span class='st'>"topright"</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='no'>pvals</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"p(NA &amp; Error)"</span>,
-       <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>colvals</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='snp_fastImpute-1.png' alt='' width='700' height='433' /></div><div class='input'>
+})
+<span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span>(<span class='st'>"topright"</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='no'>pvals</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"p(NA &amp; Error)"</span>,
+       <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>colvals</span>, <span class='kw'>lty</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+
 <span class='co'># ggplot2</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/funprog.html'>Reduce</a></span>(<span class='kw'>function</span>(<span class='no'>p</span>, <span class='no'>i</span>) {
@@ -250,7 +247,8 @@ You may use nb_cores.</p></td>
 }, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>pvals</span>), <span class='kw'>init</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>pNA</span>, <span class='no'>pError</span>))) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>() +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_cartesian.html'>coord_cartesian</a></span>(<span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span>(<span class='no'>df</span>$<span class='no'>pError</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>(<span class='fl'>15</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 133 rows containing missing values (geom_point).</span></div><div class='img'><img src='snp_fastImpute-2.png' alt='' width='700' height='433' /></div></pre>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>(<span class='fl'>15</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

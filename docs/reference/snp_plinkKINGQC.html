@@ -70,7 +70,7 @@ be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -144,9 +144,16 @@ be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
 be found at <a href='http://www.cog-genomics.org/plink/2.0/distance#king_cutoff'>http://www.cog-genomics.org/plink/2.0/distance#king_cutoff</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2.path</span>, <span class='no'>bedfile.in</span>, <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.king</span> <span class='kw'>=</span> <span class='fl'>2</span>^-<span class='fl'>3.5</span>, <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_plinkKINGQC</span>(
+  <span class='no'>plink2.path</span>,
+  <span class='no'>bedfile.in</span>,
+  <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>thr.king</span> <span class='kw'>=</span> <span class='fl'>2</span>^-<span class='fl'>3.5</span>,
+  <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -208,7 +215,9 @@ association studies." Bioinformatics 26, no. 22 (2010): 2867-2873.</p>
     <div class='dont-index'><p><a href='download_plink.html'>download_plink2</a> <a href='snp_plinkQC.html'>snp_plinkQC</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
 <span class='no'>plink2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='download_plink.html'>download_plink2</a></span>(<span class='kw'>AVX2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='no'>bedfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>,
@@ -216,16 +225,8 @@ association studies." Bioinformatics 26, no. 22 (2010): 2867-2873.</p>
                             <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 
 <span class='no'>df_rel</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>, <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>df_rel</span>)</div><div class='output co'>#&gt; 'data.frame':	24 obs. of  8 variables:
-#&gt;  $ FID1   : chr  "POP1" "POP2" "POP2" "POP3" ...
-#&gt;  $ ID1    : chr  "IND23" "IND40" "IND51" "IND75" ...
-#&gt;  $ FID2   : chr  "POP1" "POP2" "POP2" "POP3" ...
-#&gt;  $ ID2    : chr  "IND12" "IND36" "IND44" "IND74" ...
-#&gt;  $ NSNP   : int  4542 4542 4542 4542 4542 4542 4542 4542 4542 4542 ...
-#&gt;  $ HETHET : num  0.188 0.183 0.191 0.186 0.169 ...
-#&gt;  $ IBS0   : num  0.0425 0.046 0.0348 0.0467 0.0396 ...
-#&gt;  $ KINSHIP: num  0.129 0.116 0.152 0.114 0.114 ...</div><div class='input'>
-</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>df_rel</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

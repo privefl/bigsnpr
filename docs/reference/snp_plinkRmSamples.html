@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -142,8 +142,16 @@
     <p>Create new <em>bed</em>/<em>bim</em>/<em>fam</em> files by removing samples with PLINK.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_plinkRmSamples</span>(<span class='no'>plink.path</span>, <span class='no'>bedfile.in</span>, <span class='no'>bedfile.out</span>, <span class='no'>df.or.files</span>,
-  <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_plinkRmSamples</span>(
+  <span class='no'>plink.path</span>,
+  <span class='no'>bedfile.in</span>,
+  <span class='no'>bedfile.out</span>,
+  <span class='no'>df.or.files</span>,
+  <span class='kw'>col.family.ID</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>col.sample.ID</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

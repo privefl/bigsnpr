@@ -70,7 +70,7 @@ long-range LD regions." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -144,17 +144,42 @@ long-range LD regions." />
 long-range LD regions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_autoSVD</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>), <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(),
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>alpha.tukey</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>min.mac</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="usage"><span class='fu'>snp_autoSVD</span>(
+  <span class='no'>G</span>,
+  <span class='no'>infos.chr</span>,
+  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
+  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
+  <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(),
+  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
+  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>,
+  <span class='kw'>alpha.tukey</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>min.mac</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
-<span class='fu'>bed_autoSVD</span>(<span class='no'>obj.bed</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>), <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='no'>bed_scaleBinom</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>alpha.tukey</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>min.mac</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='fu'>bed_autoSVD</span>(
+  <span class='no'>obj.bed</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='no'>bed_scaleBinom</span>,
+  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
+  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>,
+  <span class='kw'>alpha.tukey</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>min.mac</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>5</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -271,7 +296,7 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
 </ul>
 
 <p>Note that to obtain the Principal Components, you must use
-predict on the result. See examples.</p>
+<a href='https://rdrr.io/pkg/bigstatsr/man/predict.big_SVD.html'>predict</a> on the result. See examples.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If you don't have any information about SNPs, you can try using</p><ul>
@@ -299,8 +324,8 @@ predict on the result. See examples.</p>
 #&gt;  $ d     : num [1:10] 235.4 148 105.5 96.4 94.9 ...
 #&gt;  $ u     : num [1:517, 1:10] 0.0801 0.0798 0.0646 0.0781 0.0818 ...
 #&gt;  $ v     : num [1:4270, 1:10] -0.00174 0.03142 -0.01527 0.0132 0.0154 ...
-#&gt;  $ niter : int 10
-#&gt;  $ nops  : int 170
+#&gt;  $ niter : num 10
+#&gt;  $ nops  : num 170
 #&gt;  $ center: num [1:4270] 0.412 0.474 0.369 0.913 0.712 ...
 #&gt;  $ scale : num [1:4270] 0.572 0.601 0.549 0.704 0.677 ...
 #&gt;  - attr(*, "class")= chr "big_SVD"

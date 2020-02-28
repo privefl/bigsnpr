@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -142,13 +142,23 @@
     <p>Computing and projecting PCA of reference dataset to a target dataset.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bed_projectPCA</span>(<span class='no'>obj.bed.ref</span>, <span class='no'>obj.bed.new</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+    <pre class="usage"><span class='fu'>bed_projectPCA</span>(
+  <span class='no'>obj.bed.ref</span>,
+  <span class='no'>obj.bed.new</span>,
+  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>ind.row.new</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed.new</span>),
   <span class='kw'>ind.row.ref</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed.ref</span>),
-  <span class='kw'>ind.col.ref</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed.ref</span>), <span class='kw'>strand_flip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>join_by_pos</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>match.min.prop</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>build.new</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
-  <span class='kw'>build.ref</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>, <span class='kw'>liftOver</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+  <span class='kw'>ind.col.ref</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed.ref</span>),
+  <span class='kw'>strand_flip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>join_by_pos</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>match.min.prop</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>build.new</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
+  <span class='kw'>build.ref</span> <span class='kw'>=</span> <span class='st'>"hg19"</span>,
+  <span class='kw'>liftOver</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -212,28 +222,28 @@ and at <a href='https://bit.ly/2TbSaEI'>https://bit.ly/2TbSaEI</a> for Linux.</p
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code>bed_autoSVD</code></p><dl class='dl-horizontal'>
-  <dt>fun.scaling</dt><dd><p>A function that returns a named list of <code>mean</code> and <code>sd</code>
+      <td><p>Arguments passed on to <code><a href='snp_autoSVD.html'>bed_autoSVD</a></code></p><dl class='dl-horizontal'>
+    <dt><code>fun.scaling</code></dt><dd><p>A function that returns a named list of <code>mean</code> and <code>sd</code>
 for every column, to scale each of their elements such as followed:
 $$\frac{X_{i,j} - mean_j}{sd_j}.$$ Default is <code><a href='snp_scaleBinom.html'>snp_scaleBinom()</a></code>.</p></dd>
-  <dt>roll.size</dt><dd><p>Radius of rolling windows to smooth log-p-values.
+    <dt><code>roll.size</code></dt><dd><p>Radius of rolling windows to smooth log-p-values.
 Default is <code>50</code>.</p></dd>
-  <dt>int.min.size</dt><dd><p>Minimum number of consecutive outlier SNPs
+    <dt><code>int.min.size</code></dt><dd><p>Minimum number of consecutive outlier SNPs
 in order to be reported as long-range LD region. Default is <code>20</code>.</p></dd>
-  <dt>thr.r2</dt><dd><p>Threshold over the squared correlation between two SNPs.
+    <dt><code>thr.r2</code></dt><dd><p>Threshold over the squared correlation between two SNPs.
 Default is <code>0.2</code>. Use <code>NA</code> if you want to skip the clumping step.</p></dd>
-  <dt>alpha.tukey</dt><dd><p>Default is <code>0.1</code>. The type-I error rate in outlier
+    <dt><code>alpha.tukey</code></dt><dd><p>Default is <code>0.1</code>. The type-I error rate in outlier
 detection (that is further corrected for multiple testing).</p></dd>
-  <dt>min.mac</dt><dd><p>Minimum minor allele count (MAC) for variants to be included.
+    <dt><code>min.mac</code></dt><dd><p>Minimum minor allele count (MAC) for variants to be included.
 Default is <code>10</code>.</p></dd>
-  <dt>max.iter</dt><dd><p>Maximum number of iterations of outlier detection.
+    <dt><code>max.iter</code></dt><dd><p>Maximum number of iterations of outlier detection.
 Default is <code>5</code>.</p></dd>
-  <dt>size</dt><dd><p>For one SNP, window size around this SNP to compute correlations.
+    <dt><code>size</code></dt><dd><p>For one SNP, window size around this SNP to compute correlations.
 Default is <code>100 / thr.r2</code> for clumping (0.2 -&gt; 500; 0.1 -&gt; 1000; 0.5 -&gt; 200).
 If not providing <code>infos.pos</code> (<code>NULL</code>, the default), this is a window in
 number of SNPs, otherwise it is a window in kb (genetic distance).
 I recommend that you provide the positions if available.</p></dd>
-
+  
 </dl></td>
     </tr>
     <tr>

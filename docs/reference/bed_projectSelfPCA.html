@@ -70,7 +70,7 @@ to other individuals from the same dataset." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -144,8 +144,13 @@ to other individuals from the same dataset." />
 to other individuals from the same dataset.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bed_projectSelfPCA</span>(<span class='no'>obj.svd</span>, <span class='no'>obj.bed</span>, <span class='no'>ind.row</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>obj.svd</span>,
-  <span class='st'>"subset"</span>), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>bed_projectSelfPCA</span>(
+  <span class='no'>obj.svd</span>,
+  <span class='no'>obj.bed</span>,
+  <span class='no'>ind.row</span>,
+  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>obj.svd</span>, <span class='st'>"subset"</span>),
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,7 +179,7 @@ Otherwise (e.g. if <a href='bed_randomSVD.html'>bed_randomSVD</a> was used), you
     <tr>
       <th>ncores</th>
       <td><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></td>
+You may use <a href='https://rdrr.io/pkg/bigstatsr/man/reexports.html'>nb_cores</a>.</p></td>
     </tr>
     </table>
 

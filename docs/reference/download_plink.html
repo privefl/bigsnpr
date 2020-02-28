@@ -70,7 +70,7 @@ Download PLINK 2.0 from http://www.cog-genomics.org/plink/2.0/." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -144,9 +144,14 @@ Download PLINK 2.0 from http://www.cog-genomics.org/plink/2.0/." />
 <p>Download PLINK 2.0 from <a href='http://www.cog-genomics.org/plink/2.0/'>http://www.cog-genomics.org/plink/2.0/</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>download_plink</span>(<span class='kw'>dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>download_plink</span>(<span class='kw'>dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-<span class='fu'>download_plink2</span>(<span class='kw'>dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='kw'>AVX2</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>download_plink2</span>(
+  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(),
+  <span class='kw'>AVX2</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,9 +166,13 @@ Default is a temporary directory.</p></td>
       <td><p>Whether to overwrite file? Default is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
+      <th>verbose</th>
+      <td><p>Whether to output details of downloading. Default is <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
       <th>AVX2</th>
-      <td><p>Whether to download the AVX2 version?
-Default is <code>TRUE</code> and possible only for 64 bits architectures.</p></td>
+      <td><p>Whether to download the AVX2 version? This is only available for
+64 bits architectures. Default is <code>TRUE</code>.</p></td>
     </tr>
     </table>
 

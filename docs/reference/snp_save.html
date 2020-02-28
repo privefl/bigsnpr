@@ -72,7 +72,7 @@ save these modifications in the corresponding &quot;.rds&quot; backing file." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -148,7 +148,7 @@ to an object of this class, then use <code>snp_save</code> to
 save these modifications in the corresponding ".rds" backing file.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_save</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_save</span>(<span class='no'>x</span>, <span class='kw'>version</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,6 +156,12 @@ save these modifications in the corresponding ".rds" backing file.</p>
     <tr>
       <th>x</th>
       <td><p>A <a href='bigSNP-class.html'>bigSNP</a>.</p></td>
+    </tr>
+    <tr>
+      <th>version</th>
+      <td><p>the workspace format version to use.  <code>NULL</code>
+    specifies the current default version (3). The only other supported
+    value is 2, the default from <span style="R">R</span> 1.4.0 to <span style="R">R</span> 3.5.0.</p></td>
     </tr>
     </table>
 
@@ -203,12 +209,12 @@ save these modifications in the corresponding ".rds" backing file.</p>
 #&gt;  $ allele2     : chr  "T" "A" "A" "A" ...
 #&gt;  $ p-values    : num  0.266 0.372 0.573 0.908 0.202 ...</div><div class='input'>
 <span class='co'># The complicated code of this function</span>
-<span class='no'>snp_save</span></div><div class='output co'>#&gt; function (x) 
+<span class='no'>snp_save</span></div><div class='output co'>#&gt; function (x, version = NULL) 
 #&gt; {
-#&gt;     saveRDS(x, sub_bk(x$genotypes$backingfile, ".rds"))
+#&gt;     saveRDS(x, file = x$genotypes$rds, version = version)
 #&gt;     x
 #&gt; }
-#&gt; &lt;bytecode: 0x822fdb8&gt;
+#&gt; &lt;bytecode: 0x00000000301c7528&gt;
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

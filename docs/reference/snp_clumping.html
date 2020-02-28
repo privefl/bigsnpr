@@ -80,7 +80,7 @@ human genome.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -164,16 +164,41 @@ human genome.</p></li>
 
     </div>
 
-    <pre class="usage"><span class='fu'>bed_clumping</span>(<span class='no'>obj.bed</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>), <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+    <pre class="usage"><span class='fu'>bed_clumping</span>(
+  <span class='no'>obj.bed</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
+  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)
 
-<span class='fu'>snp_clumping</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'>snp_clumping</span>(
+  <span class='no'>G</span>,
+  <span class='no'>infos.chr</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
+  <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
+  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)
 
-<span class='fu'>snp_pruning</span>(<span class='no'>G</span>, <span class='no'>infos.chr</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>49</span>,
-  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'>snp_pruning</span>(
+  <span class='no'>G</span>,
+  <span class='no'>infos.chr</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
+  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>49</span>,
+  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)
 
 <span class='fu'>snp_indLRLDR</span>(<span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='kw'>LD.regions</span> <span class='kw'>=</span> <span class='no'>LD.wiki34</span>)</pre>
 

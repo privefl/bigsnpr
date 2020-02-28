@@ -71,7 +71,7 @@ strand flips and reverse reference alleles (opposite effects)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -146,8 +146,13 @@ Match by ("chr", "a0", "a1") and ("pos" or "rsid"), accounting for possible
 strand flips and reverse reference alleles (opposite effects).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_match</span>(<span class='no'>sumstats</span>, <span class='no'>info_snp</span>, <span class='kw'>strand_flip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>join_by_pos</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>match.min.prop</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_match</span>(
+  <span class='no'>sumstats</span>,
+  <span class='no'>info_snp</span>,
+  <span class='kw'>strand_flip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>join_by_pos</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>match.min.prop</span> <span class='kw'>=</span> <span class='fl'>0.5</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

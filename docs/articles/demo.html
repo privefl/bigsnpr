@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -110,30 +110,30 @@
 <div id="get-genotype-file" class="section level2">
 <h2 class="hasAnchor">
 <a href="#get-genotype-file" class="anchor"></a>Get genotype file</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># Get the example bedfile from package bigsnpr</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">bedfile &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, <span class="dt">package =</span> <span class="st">"bigsnpr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># Get the example bedfile from package bigsnpr</span></a>
+<a class="sourceLine" id="cb1-2" title="2">bedfile &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, <span class="dt">package =</span> <span class="st">"bigsnpr"</span>)</a></code></pre></div>
 </div>
 <div id="read-from-the-plink-files" class="section level2">
 <h2 class="hasAnchor">
 <a href="#read-from-the-plink-files" class="anchor"></a>Read from the PLINK files</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Load packages bigsnpr and bigstatsr</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bigsnpr)</a></code></pre></div>
-<pre><code>## Loading required package: bigstatsr</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Read from bed/bim/fam, it will create new files.</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># Let's put them in an temporary directory for this demo.</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">tmpfile &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(bedfile, <span class="dt">backingfile =</span> tmpfile)</a></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpWPzSQI/file28782a91750e.rds"</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Attach the "bigSNP" object in R session</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(tmpfile, <span class="st">".rds"</span>))</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co"># See how it looks like</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(obj.bigSNP, <span class="dt">max.level =</span> <span class="dv">2</span>, <span class="dt">strict.width =</span> <span class="st">"cut"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Load packages bigsnpr and bigstatsr</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bigsnpr)</a></code></pre></div>
+<pre><code>## Le chargement a nécessité le package : bigstatsr</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># Read from bed/bim/fam, it will create new files.</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co"># Let's put them in an temporary directory for this demo.</span></a>
+<a class="sourceLine" id="cb4-3" title="3">tmpfile &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()</a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="kw"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(bedfile, <span class="dt">backingfile =</span> tmpfile)</a></code></pre></div>
+<pre><code>## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpEL2E8h\\file359c7a86446b.rds"</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># Attach the "bigSNP" object in R session</span></a>
+<a class="sourceLine" id="cb6-2" title="2">obj.bigSNP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(tmpfile, <span class="st">".rds"</span>))</a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co"># See how it looks like</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(obj.bigSNP, <span class="dt">max.level =</span> <span class="dv">2</span>, <span class="dt">strict.width =</span> <span class="st">"cut"</span>)</a></code></pre></div>
 <pre><code>## List of 3
 ##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"..
-##   ..and 24 methods, of which 10 are  possibly relevant:
-##   ..  add_columns, as.FBM, bm, bm.desc, copy#envRefClass,
-##   ..  initialize, initialize#FBM, save, show#envRefClass,
-##   ..  show#FBM
+##   ..and 26 methods, of which 12 are  possibly relevant:
+##   ..  add_columns, as.FBM, bm, bm.desc, check_dimensions,
+##   ..  check_write_permissions, copy#envRefClass, initialize,
+##   ..  initialize#FBM, save, show#envRefClass, show#FBM
 ##  $ fam      :'data.frame':   517 obs. of  6 variables:
 ##   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...
 ##   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...
@@ -149,12 +149,12 @@
 ##   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
 ##   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
 ##  - attr(*, "class")= chr "bigSNP"</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Get aliases for useful slots</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">G   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>genotypes</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">CHR &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>chromosome</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">POS &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>physical.pos</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co"># Check some counts for the 10 first SNPs</span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw">big_counts</span>(G, <span class="dt">ind.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># Get aliases for useful slots</span></a>
+<a class="sourceLine" id="cb8-2" title="2">G   &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>genotypes</a>
+<a class="sourceLine" id="cb8-3" title="3">CHR &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>chromosome</a>
+<a class="sourceLine" id="cb8-4" title="4">POS &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>map<span class="op">$</span>physical.pos</a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co"># Check some counts for the 10 first SNPs</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="kw">big_counts</span>(G, <span class="dt">ind.col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 ## 0     226  325  309  346  158  215  395  134  143   159
 ## 1     228  171  171  151  246  236  112  269  250   235
@@ -164,75 +164,75 @@
 <div id="principal-component-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#principal-component-analysis" class="anchor"></a>Principal Component Analysis</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Half of the cores you have on your computer</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">NCORES &lt;-<span class="st"> </span><span class="kw">nb_cores</span>()</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co"># Exclude Long-Range Linkage Disequilibrium Regions of the human genome</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co"># based on an online table. </span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">ind.excl &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_clumping.html">snp_indLRLDR</a></span>(<span class="dt">infos.chr =</span> CHR, <span class="dt">infos.pos =</span> POS)</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co"># Use clumping (on the MAF) to keep SNPs weakly correlated with each other.</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co"># See https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html</span></a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co"># to know why I prefer using clumping than standard pruning.</span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">ind.keep &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(G, <span class="dt">infos.chr =</span> CHR,</a>
-<a class="sourceLine" id="cb10-10" data-line-number="10">                         <span class="dt">exclude =</span> ind.excl,</a>
-<a class="sourceLine" id="cb10-11" data-line-number="11">                         <span class="dt">ncores =</span> NCORES)</a>
-<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co"># Get the first 10 PCs, corresponding to pruned SNPs</span></a>
-<a class="sourceLine" id="cb10-13" data-line-number="13">obj.svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="dt">fun.scaling =</span> <span class="kw"><a href="../reference/snp_scaleBinom.html">snp_scaleBinom</a></span>(),</a>
-<a class="sourceLine" id="cb10-14" data-line-number="14">                         <span class="dt">ind.col =</span> ind.keep,</a>
-<a class="sourceLine" id="cb10-15" data-line-number="15">                         <span class="dt">ncores =</span> NCORES)</a>
-<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co"># As `obj.svd` has a class and a method `plot`.</span></a>
-<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co"># Scree plot by default</span></a>
-<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obj.svd)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co"># Half of the cores you have on your computer</span></a>
+<a class="sourceLine" id="cb10-2" title="2">NCORES &lt;-<span class="st"> </span><span class="kw">nb_cores</span>()</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="co"># Exclude Long-Range Linkage Disequilibrium Regions of the human genome</span></a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="co"># based on an online table. </span></a>
+<a class="sourceLine" id="cb10-5" title="5">ind.excl &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_clumping.html">snp_indLRLDR</a></span>(<span class="dt">infos.chr =</span> CHR, <span class="dt">infos.pos =</span> POS)</a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co"># Use clumping (on the MAF) to keep SNPs weakly correlated with each other.</span></a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="co"># See https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html</span></a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="co"># to know why I prefer using clumping than standard pruning.</span></a>
+<a class="sourceLine" id="cb10-9" title="9">ind.keep &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_clumping.html">snp_clumping</a></span>(G, <span class="dt">infos.chr =</span> CHR,</a>
+<a class="sourceLine" id="cb10-10" title="10">                         <span class="dt">exclude =</span> ind.excl,</a>
+<a class="sourceLine" id="cb10-11" title="11">                         <span class="dt">ncores =</span> NCORES)</a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="co"># Get the first 10 PCs, corresponding to pruned SNPs</span></a>
+<a class="sourceLine" id="cb10-13" title="13">obj.svd &lt;-<span class="st"> </span><span class="kw">big_randomSVD</span>(G, <span class="dt">fun.scaling =</span> <span class="kw"><a href="../reference/snp_scaleBinom.html">snp_scaleBinom</a></span>(),</a>
+<a class="sourceLine" id="cb10-14" title="14">                         <span class="dt">ind.col =</span> ind.keep,</a>
+<a class="sourceLine" id="cb10-15" title="15">                         <span class="dt">ncores =</span> NCORES)</a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="co"># As `obj.svd` has a class and a method `plot`.</span></a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="co"># Scree plot by default</span></a>
+<a class="sourceLine" id="cb10-18" title="18"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obj.svd)</a></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-3-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># Score (PCs) plot</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obj.svd, <span class="dt">type =</span> <span class="st">"scores"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co"># Score (PCs) plot</span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obj.svd, <span class="dt">type =</span> <span class="st">"scores"</span>)</a></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-3-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># As plot returns an ggplot2 object, you can easily modify it.</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co"># For example, you can add colors based on the population.</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obj.svd, <span class="dt">type =</span> <span class="st">"scores"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">color =</span> pop &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"POP1"</span>, <span class="st">"POP2"</span>, <span class="st">"POP3"</span>), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">143</span>, <span class="dv">167</span>, <span class="dv">207</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">color =</span> <span class="st">"Population"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co"># As plot returns an ggplot2 object, you can easily modify it.</span></a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="co"># For example, you can add colors based on the population.</span></a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obj.svd, <span class="dt">type =</span> <span class="st">"scores"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-5" title="5"><span class="st">  </span><span class="kw">aes</span>(<span class="dt">color =</span> pop &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"POP1"</span>, <span class="st">"POP2"</span>, <span class="st">"POP3"</span>), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">143</span>, <span class="dv">167</span>, <span class="dv">207</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb12-6" title="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">color =</span> <span class="st">"Population"</span>)</a></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-3-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 </div>
 <div id="genome-wide-association-study" class="section level2">
 <h2 class="hasAnchor">
 <a href="#genome-wide-association-study" class="anchor"></a>Genome-Wide Association Study</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># Fit a logistic model between the phenotype and each SNP separately</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co"># while adding PCs as covariates to each model</span></a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">y01 &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">obj.gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, <span class="dt">y01.train =</span> y01,</a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">                           <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u,</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">                           <span class="dt">ncores =</span> NCORES)</a>
-<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co"># Q-Q plot of the object</span></a>
-<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="kw"><a href="../reference/snp_qq.html">snp_qq</a></span>(obj.gwas)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co"># Fit a logistic model between the phenotype and each SNP separately</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="co"># while adding PCs as covariates to each model</span></a>
+<a class="sourceLine" id="cb13-3" title="3">y01 &lt;-<span class="st"> </span>obj.bigSNP<span class="op">$</span>fam<span class="op">$</span>affection <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb13-4" title="4">obj.gwas &lt;-<span class="st"> </span><span class="kw">big_univLogReg</span>(G, <span class="dt">y01.train =</span> y01,</a>
+<a class="sourceLine" id="cb13-5" title="5">                           <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u,</a>
+<a class="sourceLine" id="cb13-6" title="6">                           <span class="dt">ncores =</span> NCORES)</a>
+<a class="sourceLine" id="cb13-7" title="7"><span class="co"># Q-Q plot of the object</span></a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="kw"><a href="../reference/snp_qq.html">snp_qq</a></span>(obj.gwas)</a></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-4-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># You can easily apply genomic control to this object</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">obj.gwas.gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_gc.html">snp_gc</a></span>(obj.gwas)</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co"># Redo the Q-Q plot</span></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="kw"><a href="../reference/snp_qq.html">snp_qq</a></span>(obj.gwas.gc)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co"># You can easily apply genomic control to this object</span></a>
+<a class="sourceLine" id="cb14-2" title="2">obj.gwas.gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/snp_gc.html">snp_gc</a></span>(obj.gwas)</a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co"># Redo the Q-Q plot</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="kw"><a href="../reference/snp_qq.html">snp_qq</a></span>(obj.gwas.gc)</a></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-4-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># Manhattan plot, not quite sexy because there are only 1 chromosome here</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(obj.gwas.gc, <span class="dt">infos.chr =</span> CHR, <span class="dt">infos.pos =</span> POS)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># Manhattan plot, not quite sexy because there are only 1 chromosome here</span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="kw"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span>(obj.gwas.gc, <span class="dt">infos.chr =</span> CHR, <span class="dt">infos.pos =</span> POS)</a></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-4-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 </div>
 <div id="joint-prs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#joint-prs" class="anchor"></a>Joint PRS</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># Divide the indices in training/test sets</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">ind.train &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(G), <span class="dv">400</span>)</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span>(<span class="kw">rows_along</span>(G), ind.train)</a>
-<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co"># Train the model</span></a>
-<a class="sourceLine" id="cb16-5" data-line-number="5">cmsa.logit &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(<span class="dt">X =</span> G, <span class="dt">y01.train =</span> y01[ind.train], </a>
-<a class="sourceLine" id="cb16-6" data-line-number="6">                           <span class="dt">ind.train =</span> ind.train, </a>
-<a class="sourceLine" id="cb16-7" data-line-number="7">                           <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u[ind.train, ],</a>
-<a class="sourceLine" id="cb16-8" data-line-number="8">                           <span class="dt">alphas =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.001</span>),</a>
-<a class="sourceLine" id="cb16-9" data-line-number="9">                           <span class="dt">ncores =</span> NCORES)</a>
-<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="co"># Get predictions for the test set</span></a>
-<a class="sourceLine" id="cb16-11" data-line-number="11">preds &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(cmsa.logit, <span class="dt">X =</span> G, <span class="dt">ind.row =</span> ind.test, </a>
-<a class="sourceLine" id="cb16-12" data-line-number="12">                 <span class="dt">covar.row =</span> obj.svd<span class="op">$</span>u[ind.test, ])</a>
-<a class="sourceLine" id="cb16-13" data-line-number="13"><span class="co"># Check AUC</span></a>
-<a class="sourceLine" id="cb16-14" data-line-number="14"><span class="kw">AUC</span>(preds, y01[ind.test])</a></code></pre></div>
-<pre><code>## [1] 0.7861426</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co"># Divide the indices in training/test sets</span></a>
+<a class="sourceLine" id="cb16-2" title="2">ind.train &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(G), <span class="dv">400</span>)</a>
+<a class="sourceLine" id="cb16-3" title="3">ind.test &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span>(<span class="kw">rows_along</span>(G), ind.train)</a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="co"># Train the model</span></a>
+<a class="sourceLine" id="cb16-5" title="5">cmsa.logit &lt;-<span class="st"> </span><span class="kw">big_spLogReg</span>(<span class="dt">X =</span> G, <span class="dt">y01.train =</span> y01[ind.train], </a>
+<a class="sourceLine" id="cb16-6" title="6">                           <span class="dt">ind.train =</span> ind.train, </a>
+<a class="sourceLine" id="cb16-7" title="7">                           <span class="dt">covar.train =</span> obj.svd<span class="op">$</span>u[ind.train, ],</a>
+<a class="sourceLine" id="cb16-8" title="8">                           <span class="dt">alphas =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.001</span>),</a>
+<a class="sourceLine" id="cb16-9" title="9">                           <span class="dt">ncores =</span> NCORES)</a>
+<a class="sourceLine" id="cb16-10" title="10"><span class="co"># Get predictions for the test set</span></a>
+<a class="sourceLine" id="cb16-11" title="11">preds &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(cmsa.logit, <span class="dt">X =</span> G, <span class="dt">ind.row =</span> ind.test, </a>
+<a class="sourceLine" id="cb16-12" title="12">                 <span class="dt">covar.row =</span> obj.svd<span class="op">$</span>u[ind.test, ])</a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="co"># Check AUC</span></a>
+<a class="sourceLine" id="cb16-14" title="14"><span class="kw">AUC</span>(preds, y01[ind.test])</a></code></pre></div>
+<pre><code>## [1] 0.85631</code></pre>
 </div>
   </div>
 

@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -142,9 +142,16 @@
     <p>Partial SVD (or PCA) of a genotype matrix stored as a PLINK (.bed) file.#'</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bed_randomSVD</span>(<span class='no'>obj.bed</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='no'>bed_scaleBinom</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>bed_randomSVD</span>(
+  <span class='no'>obj.bed</span>,
+  <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='no'>bed_scaleBinom</span>,
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
+  <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,13 +170,15 @@ Default doesn't use any scaling.</p></td>
     </tr>
     <tr>
       <th>ind.row</th>
-      <td><p>An optional vector of the row indices that are used.
-If not specified, all rows are used. <strong>Don't use negative indices.</strong></p></td>
+      <td><p>An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.<br />
+<strong>Don't use negative indices.</strong></p></td>
     </tr>
     <tr>
       <th>ind.col</th>
-      <td><p>An optional vector of the column indices that are used.
-If not specified, all columns are used. <strong>Don't use negative indices.</strong></p></td>
+      <td><p>An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.<br />
+<strong>Don't use negative indices.</strong></p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -205,7 +214,7 @@ You may use nb_cores.</p></td>
 </ul>
 
 <p>Note that to obtain the Principal Components, you must use
-predict on the result. See examples.</p>
+<a href='https://rdrr.io/pkg/bigstatsr/man/predict.big_SVD.html'>predict</a> on the result. See examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
@@ -215,8 +224,8 @@ predict on the result. See examples.</p>
 #&gt;  $ d     : num [1:10] 245.4 153.1 108.9 99.9 97.9 ...
 #&gt;  $ u     : num [1:517, 1:10] 0.0788 0.0804 0.0644 0.0777 0.0838 ...
 #&gt;  $ v     : num [1:4542, 1:10] 0.0032 -0.00161 0.02988 -0.01486 0.01259 ...
-#&gt;  $ niter : int 11
-#&gt;  $ nops  : int 182
+#&gt;  $ niter : num 11
+#&gt;  $ nops  : num 182
 #&gt;  $ center: num [1:4542] 0.685 0.412 0.474 0.369 0.913 ...
 #&gt;  $ scale : num [1:4542] 0.671 0.572 0.601 0.549 0.704 ...
 #&gt;  - attr(*, "class")= chr "big_SVD"</div><div class='input'>

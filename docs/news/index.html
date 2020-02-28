@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -135,11 +135,61 @@
       
     </div>
 
-    <div id="bigsnpr-1-0-0" class="section level2">
+    <div id="bigsnpr-125" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-1-0-0" class="anchor"></a>bigsnpr 1.0.0</h2>
+<a href="#bigsnpr-125" class="anchor"></a>bigsnpr 1.2.5</h2>
 <ul>
-<li>Add memory-mapping on PLINK (.bed) files with missing values + new functions:
+<li>Add function <code><a href="../reference/snp_subset.html">snp_subset()</a></code> as alias of method <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> to subset <code>bigSNP</code> objects.</li>
+</ul>
+</div>
+    <div id="bigsnpr-124" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-124" class="anchor"></a>bigsnpr 1.2.4</h2>
+<ul>
+<li>Use new class <code>bed_light</code> internally to make parallel algorithms faster because they have to transfer less data to clusters. Also define differently functions used in <code>big_parallelize()</code> for the same reason.</li>
+</ul>
+</div>
+    <div id="bigsnpr-120" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-120" class="anchor"></a>bigsnpr 1.2.0</h2>
+<ul>
+<li>Use the new implementation of robust OGK Mahalanobis distance in {bigutilsr}.</li>
+</ul>
+</div>
+    <div id="bigsnpr-111" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-111" class="anchor"></a>bigsnpr 1.1.1</h2>
+<ul>
+<li>Fix error <code>object 'obj.bed' not found</code> in <code><a href="../reference/snp_readBed.html">snp_readBed2()</a></code>.</li>
+</ul>
+</div>
+    <div id="bigsnpr-110" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-110" class="anchor"></a>bigsnpr 1.1.0</h2>
+<ul>
+<li>Cope with new read-only option in {bigstatsr} version &gt;= 1.1.</li>
+</ul>
+</div>
+    <div id="bigsnpr-102" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-102" class="anchor"></a>bigsnpr 1.0.2</h2>
+<ul>
+<li>Add option <code>backingfile</code> to <code><a href="../reference/snp_subset.html">subset.bigSNP()</a></code>.</li>
+</ul>
+</div>
+    <div id="bigsnpr-101" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-101" class="anchor"></a>bigsnpr 1.0.1</h2>
+<ul>
+<li>Add option <code>byrow</code> to <code><a href="../reference/bed_counts.html">bed_counts()</a></code>.</li>
+</ul>
+</div>
+    <div id="bigsnpr-100" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-100" class="anchor"></a>bigsnpr 1.0.0</h2>
+<ul>
+<li>
+<p>Add memory-mapping on PLINK (.bed) files with missing values + new functions:</p>
 <ul>
 <li><code><a href="../reference/bed-class.html">bed()</a></code></li>
 <li><code><a href="../reference/bed_MAF.html">bed_MAF()</a></code></li>
@@ -166,134 +216,134 @@
 <li><p>Automatically apply <code><a href="../reference/snp_gc.html">snp_gc()</a></code> to <code>pcadapt</code>.</p></li>
 </ul>
 </div>
-    <div id="bigsnpr-0-12-0" class="section level2">
+    <div id="bigsnpr-0120" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-12-0" class="anchor"></a>bigsnpr 0.12.0</h2>
+<a href="#bigsnpr-0120" class="anchor"></a>bigsnpr 0.12.0</h2>
 <ul>
 <li>Add <code><a href="../reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code>: fast imputation via mode, mean or sampling according to allele frequencies.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-11-3" class="section level2">
+    <div id="bigsnpr-0113" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-11-3" class="anchor"></a>bigsnpr 0.11.3</h2>
+<a href="#bigsnpr-0113" class="anchor"></a>bigsnpr 0.11.3</h2>
 <ul>
 <li>Fix a bug in <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> that could not handle duplicated variants or individuals.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-11-1" class="section level2">
+    <div id="bigsnpr-0111" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-11-1" class="anchor"></a>bigsnpr 0.11.1</h2>
+<a href="#bigsnpr-0111" class="anchor"></a>bigsnpr 0.11.1</h2>
 <ul>
 <li>When using <code><a href="../reference/SCT.html">snp_grid_PRS()</a></code>, it now stores not only the FBM, but also the input parameters as attributes (the whole result basically).</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-11-0" class="section level2">
+    <div id="bigsnpr-0110" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-11-0" class="anchor"></a>bigsnpr 0.11.0</h2>
+<a href="#bigsnpr-0110" class="anchor"></a>bigsnpr 0.11.0</h2>
 <ul>
 <li><p>Add 3 SCT functions <code>snp_grid_*()</code> to improve from Clumping and Thresholding (preprint coming soon).</p></li>
 <li><p>Add <code><a href="../reference/snp_match.html">snp_match()</a></code> function to match between summary statistics and some SNP information.</p></li>
 </ul>
 </div>
-    <div id="bigsnpr-0-10-2" class="section level2">
+    <div id="bigsnpr-0102" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-10-2" class="anchor"></a>bigsnpr 0.10.2</h2>
+<a href="#bigsnpr-0102" class="anchor"></a>bigsnpr 0.10.2</h2>
 <ul>
 <li>Parameter <code>is.size.in.bp</code> is deprecated.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-10-1" class="section level2">
+    <div id="bigsnpr-0101" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-10-1" class="anchor"></a>bigsnpr 0.10.1</h2>
+<a href="#bigsnpr-0101" class="anchor"></a>bigsnpr 0.10.1</h2>
 <ul>
 <li>Add parameter <code>read_as</code> for <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code>. It is now possible to sample BGEN probabilities as random hard calls using <code>read_as = "random"</code>. Default remains reading probabilities as dosages.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-10-0" class="section level2">
+    <div id="bigsnpr-0100" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-10-0" class="anchor"></a>bigsnpr 0.10.0</h2>
+<a href="#bigsnpr-0100" class="anchor"></a>bigsnpr 0.10.0</h2>
 <ul>
 <li><p>For memory-mapping, now use <em>mio</em> instead of <em>boost</em>.</p></li>
 <li><p><code><a href="../reference/snp_clumping.html">snp_clumping()</a></code> (and <code><a href="../reference/snp_autoSVD.html">snp_autoSVD()</a></code>) now has a <code>size</code> that is inversely proportional to <code>thr.r2</code>.</p></li>
 <li><p><code><a href="../reference/snp_clumping.html">snp_pruning()</a></code> is deprecated (and will be removed someday); now always use <code><a href="../reference/snp_clumping.html">snp_clumping()</a></code>.</p></li>
 </ul>
 </div>
-    <div id="bigsnpr-0-9-0" class="section level2">
+    <div id="bigsnpr-090" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-9-0" class="anchor"></a>bigsnpr 0.9.0</h2>
+<a href="#bigsnpr-090" class="anchor"></a>bigsnpr 0.9.0</h2>
 <ul>
 <li>When reading bed files, switch reading of Os and 2s to be consistent with other software.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-8-2" class="section level2">
+    <div id="bigsnpr-082" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-8-2" class="anchor"></a>bigsnpr 0.8.2</h2>
+<a href="#bigsnpr-082" class="anchor"></a>bigsnpr 0.8.2</h2>
 <ul>
 <li>Add function <code><a href="../reference/snp_assocBGEN.html">snp_assocBGEN()</a></code> for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-8-1" class="section level2">
+    <div id="bigsnpr-081" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-8-1" class="anchor"></a>bigsnpr 0.8.1</h2>
+<a href="#bigsnpr-081" class="anchor"></a>bigsnpr 0.8.1</h2>
 <ul>
 <li>Change url to download PLINK 1.9.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-8-0" class="section level2">
+    <div id="bigsnpr-080" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-8-0" class="anchor"></a>bigsnpr 0.8.0</h2>
+<a href="#bigsnpr-080" class="anchor"></a>bigsnpr 0.8.0</h2>
 <ul>
 <li>Add function <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> to read UK Biobank BGEN files in <code>bigSNP</code> format.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-7-0" class="section level2">
+    <div id="bigsnpr-070" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-7-0" class="anchor"></a>bigsnpr 0.7.0</h2>
+<a href="#bigsnpr-070" class="anchor"></a>bigsnpr 0.7.0</h2>
 <ul>
 <li><p>Add parameter <code>is.size.in.bp</code> to <code><a href="../reference/snp_autoSVD.html">snp_autoSVD()</a></code> for the clumping part.</p></li>
 <li><p>Change the threshold of outlier detection in <code><a href="../reference/snp_autoSVD.html">snp_autoSVD()</a></code> (it now detects less outliers). See the documentation details if you don’t have any information about SNPs.</p></li>
 </ul>
 </div>
-    <div id="bigsnpr-0-6" class="section level2">
+    <div id="bigsnpr-06" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-6" class="anchor"></a>bigsnpr 0.6</h2>
+<a href="#bigsnpr-06" class="anchor"></a>bigsnpr 0.6</h2>
 <ul>
 <li>Keep up with {bigstatsr}.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-3-1" class="section level2">
+    <div id="bigsnpr-031" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-3-1" class="anchor"></a>bigsnpr 0.3.1</h2>
+<a href="#bigsnpr-031" class="anchor"></a>bigsnpr 0.3.1</h2>
 <ul>
 <li>Provide function <code>snp_gene</code> (as a gist) to get genes corresponding to ‘rs’ SNP IDs thanks to package {rsnps} from rOpenSci. See README.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-3-0" class="section level2">
+    <div id="bigsnpr-030" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-3-0" class="anchor"></a>bigsnpr 0.3.0</h2>
+<a href="#bigsnpr-030" class="anchor"></a>bigsnpr 0.3.0</h2>
 <ul>
 <li>
 <strong>Package {bigsnpr} is published in <a href="http://dx.doi.org/10.1093/bioinformatics/bty185">Bioinformatics</a></strong>.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-2-7" class="section level2">
+    <div id="bigsnpr-027" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-2-7" class="anchor"></a>bigsnpr 0.2.7</h2>
+<a href="#bigsnpr-027" class="anchor"></a>bigsnpr 0.2.7</h2>
 <ul>
 <li>Faster defaults + possibility to estimate correlations based on a subset of individuals for <code>snp_fastImpute</code>. Also store information in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the <em>Bioinformatics</em> paper were <code>alpha = 0.02</code> and <code>size = 500</code> (instead of <code>1e-4</code> and <code>200</code> now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-2-5" class="section level2">
+    <div id="bigsnpr-025" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-2-5" class="anchor"></a>bigsnpr 0.2.5</h2>
+<a href="#bigsnpr-025" class="anchor"></a>bigsnpr 0.2.5</h2>
 <ul>
 <li>
 <strong>This package won’t be on CRAN</strong>.</li>
 </ul>
 </div>
-    <div id="bigsnpr-0-2-4" class="section level2">
+    <div id="bigsnpr-024" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-0-2-4" class="anchor"></a>bigsnpr 0.2.4</h2>
+<a href="#bigsnpr-024" class="anchor"></a>bigsnpr 0.2.4</h2>
 <ul>
 <li>No longer download PLINK automatically (because it is a CRAN policy violation).</li>
 </ul>
@@ -304,25 +354,32 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#bigsnpr-1-0-0">1.0.0</a></li>
-        <li><a href="#bigsnpr-0-12-0">0.12.0</a></li>
-        <li><a href="#bigsnpr-0-11-3">0.11.3</a></li>
-        <li><a href="#bigsnpr-0-11-1">0.11.1</a></li>
-        <li><a href="#bigsnpr-0-11-0">0.11.0</a></li>
-        <li><a href="#bigsnpr-0-10-2">0.10.2</a></li>
-        <li><a href="#bigsnpr-0-10-1">0.10.1</a></li>
-        <li><a href="#bigsnpr-0-10-0">0.10.0</a></li>
-        <li><a href="#bigsnpr-0-9-0">0.9.0</a></li>
-        <li><a href="#bigsnpr-0-8-2">0.8.2</a></li>
-        <li><a href="#bigsnpr-0-8-1">0.8.1</a></li>
-        <li><a href="#bigsnpr-0-8-0">0.8.0</a></li>
-        <li><a href="#bigsnpr-0-7-0">0.7.0</a></li>
-        <li><a href="#bigsnpr-0-6">0.6</a></li>
-        <li><a href="#bigsnpr-0-3-1">0.3.1</a></li>
-        <li><a href="#bigsnpr-0-3-0">0.3.0</a></li>
-        <li><a href="#bigsnpr-0-2-7">0.2.7</a></li>
-        <li><a href="#bigsnpr-0-2-5">0.2.5</a></li>
-        <li><a href="#bigsnpr-0-2-4">0.2.4</a></li>
+        <li><a href="#bigsnpr-125">1.2.5</a></li>
+        <li><a href="#bigsnpr-124">1.2.4</a></li>
+        <li><a href="#bigsnpr-120">1.2.0</a></li>
+        <li><a href="#bigsnpr-111">1.1.1</a></li>
+        <li><a href="#bigsnpr-110">1.1.0</a></li>
+        <li><a href="#bigsnpr-102">1.0.2</a></li>
+        <li><a href="#bigsnpr-101">1.0.1</a></li>
+        <li><a href="#bigsnpr-100">1.0.0</a></li>
+        <li><a href="#bigsnpr-0120">0.12.0</a></li>
+        <li><a href="#bigsnpr-0113">0.11.3</a></li>
+        <li><a href="#bigsnpr-0111">0.11.1</a></li>
+        <li><a href="#bigsnpr-0110">0.11.0</a></li>
+        <li><a href="#bigsnpr-0102">0.10.2</a></li>
+        <li><a href="#bigsnpr-0101">0.10.1</a></li>
+        <li><a href="#bigsnpr-0100">0.10.0</a></li>
+        <li><a href="#bigsnpr-090">0.9.0</a></li>
+        <li><a href="#bigsnpr-082">0.8.2</a></li>
+        <li><a href="#bigsnpr-081">0.8.1</a></li>
+        <li><a href="#bigsnpr-080">0.8.0</a></li>
+        <li><a href="#bigsnpr-070">0.7.0</a></li>
+        <li><a href="#bigsnpr-06">0.6</a></li>
+        <li><a href="#bigsnpr-031">0.3.1</a></li>
+        <li><a href="#bigsnpr-030">0.3.0</a></li>
+        <li><a href="#bigsnpr-027">0.2.7</a></li>
+        <li><a href="#bigsnpr-025">0.2.5</a></li>
+        <li><a href="#bigsnpr-024">0.2.4</a></li>
       </ul>
     </div>
   </div>

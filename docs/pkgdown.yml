@@ -1,9 +1,9 @@
-pandoc: 2.3.1
+pandoc: 2.7.2
 pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
-  SCT: SCT.html
   demo: demo.html
   exo: exo.html
   pruning-vs-clumping: pruning-vs-clumping.html
+  SCT: SCT.html
 

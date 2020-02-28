@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -144,8 +144,12 @@
 
     <pre class="usage"><span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span>(<span class='no'>bedfile</span>))
 
-<span class='fu'>snp_readBed2</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span>(<span class='no'>bedfile</span>),
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>))</pre>
+<span class='fu'>snp_readBed2</span>(
+  <span class='no'>bedfile</span>,
+  <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span>(<span class='no'>bedfile</span>),
+  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
+  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>)
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -191,7 +195,7 @@ which require minimal space to store and are faster to read. For example,
 to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_plinkQC.html'>snp_plinkQC</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "/tmp/Rtmp6g6JP9/temp_libpath23c736204813/bigsnpr/extdata/example.bed"</div><div class='input'>
+    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "C:/Users/au639593/Documents/R/win-library/3.6/bigsnpr/extdata/example.bed"</div><div class='input'>
 <span class='co'># Reading the bedfile and storing the data in temporary directory</span>
 <span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
 
@@ -199,21 +203,27 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rds</span>)
 
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>test</span>)</div><div class='output co'>#&gt; List of 3
-#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 10 fields
-#&gt;   ..$ extptr     :&lt;externalptr&gt; 
-#&gt;   ..$ nrow       : int 517
-#&gt;   ..$ ncol       : int 4542
-#&gt;   ..$ type       : Named int 1
+#&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 15 fields
+#&gt;   ..$ extptr      :&lt;externalptr&gt; 
+#&gt;   ..$ extptr_rw   :&lt;externalptr&gt; 
+#&gt;   ..$ nrow        : int 517
+#&gt;   ..$ ncol        : int 4542
+#&gt;   ..$ type        : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile: chr "/tmp/RtmpHMIGXH/file272e33782b45.bk"
-#&gt;   ..$ address    :&lt;externalptr&gt; 
-#&gt;   ..$ bk         : chr "/tmp/RtmpHMIGXH/file272e33782b45.bk"
-#&gt;   ..$ rds        : chr "/tmp/RtmpHMIGXH/file272e33782b45.rds"
-#&gt;   ..$ is_saved   : logi TRUE
-#&gt;   ..$ code256    : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
-#&gt;   ..and 24 methods, of which 10 are  possibly relevant:
-#&gt;   ..  add_columns, as.FBM, bm, bm.desc, copy#envRefClass, initialize,
-#&gt;   ..  initialize#FBM, save, show#envRefClass, show#FBM
+#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpywXbMx\\file4aa83e4b1246.bk"
+#&gt;   ..$ is_read_only: logi FALSE
+#&gt;   ..$ address     :&lt;externalptr&gt; 
+#&gt;   ..$ address_rw  :&lt;externalptr&gt; 
+#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpywXbMx\\file4aa83e4b1246.bk"
+#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpywXbMx\\file4aa83e4b1246.rds"
+#&gt;   ..$ is_saved    : logi TRUE
+#&gt;   ..$ type_chr    : chr "unsigned char"
+#&gt;   ..$ type_size   : int 1
+#&gt;   ..$ code256     : num [1:256] 0 1 2 NA NA NA NA NA NA NA ...
+#&gt;   ..and 26 methods, of which 12 are  possibly relevant:
+#&gt;   ..  add_columns, as.FBM, bm, bm.desc, check_dimensions,
+#&gt;   ..  check_write_permissions, copy#envRefClass, initialize, initialize#FBM,
+#&gt;   ..  save, show#envRefClass, show#FBM
 #&gt;  $ fam      :'data.frame':	517 obs. of  6 variables:
 #&gt;   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...
 #&gt;   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...

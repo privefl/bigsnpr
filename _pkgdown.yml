@@ -29,6 +29,10 @@ navbar:
       href: https://github.com/privefl/bigsnpr
 
 reference:
+  - title: "Class bigSNP"
+    contents:
+      - bigSNP-class
+      - snp_subset
   - title: "I/O"
     contents:
       - snp_readBed
@@ -80,7 +84,6 @@ reference:
       - snp_getSampleInfos
       - snp_MAF
       - snp_scaleBinom
-      - subset.bigSNP
       - same_ref
       - sub_bed
   - title: "PLINK bed files"
