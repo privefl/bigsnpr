@@ -1,9 +1,8 @@
 ################################################################################
 
-#' Subset
+#' Subset a bigSNP
 #'
-#' A method to get a subset (copy) of a `bigSNP`.
-#' This new `bigSNP` will also be backed by files (in the same directory).
+#' Subset (copy) of a `bigSNP`, also stored on disk.
 #'
 #' @inheritParams bigsnpr-package
 #' @param ind.row Indices of the rows (individuals) to keep.
@@ -15,7 +14,6 @@
 #' @param backingfile Prefix of the two new files created (".bk" and ".rds").
 #'   By default, it is automatically determined by appending "_sub" and a number
 #'   to the prefix of the input bigSNP backing files.
-#' @param ... Not used.
 #'
 #' @export
 #' @return The path to the RDS file that stores the `bigSNP` object.
@@ -25,29 +23,28 @@
 #' str(test <- snp_attachExtdata())
 #'
 #' # keep only first 50 samples and SNPs
-#' rdsfile <- subset(test, ind.row = 1:50, ind.col = 1:50)
+#' rdsfile <- snp_subset(test, ind.row = 1:50, ind.col = 1:50)
 #' str(snp_attach(rdsfile))
 #'
 #' # remove only first 50 samples and SNPs
-#' rdsfile2 <- subset(test, ind.row = -(1:50), ind.col = -(1:50))
+#' rdsfile2 <- snp_subset(test, ind.row = -(1:50), ind.col = -(1:50))
 #' str(snp_attach(rdsfile2))
 #'
-subset.bigSNP <- function(x,
-                          ind.row = rows_along(G),
-                          ind.col = cols_along(G),
-                          backingfile = NULL,
-                          ...) {
+snp_subset <- function(x,
+                       ind.row = rows_along(x$fam),
+                       ind.col = rows_along(x$map),
+                       backingfile = NULL) {
 
-  G <- x$genotypes
 
   # Support for negative indices
-  ind.row <- rows_along(G)[ind.row]
-  ind.col <- cols_along(G)[ind.col]
+  ind.row <- rows_along(x$fam)[ind.row]
+  ind.col <- rows_along(x$map)[ind.col]
 
   check_args()
 
   if (is.null(backingfile)) backingfile <- getNewFile(x, "sub")
 
+  G <- x$genotypes
   # Create new FBM and fill it
   G2 <- FBM.code256(
     nrow = length(ind.row),
@@ -75,6 +72,20 @@ subset.bigSNP <- function(x,
   rds <- sub_bk(G2$backingfile, ".rds")
   saveRDS(snp.list, rds)
   rds
+}
+
+#' @export
+#' @rdname snp_subset
+#' @param ... Not used.
+subset.bigSNP <- function(x,
+                          ind.row = rows_along(x$fam),
+                          ind.col = rows_along(x$map),
+                          backingfile = NULL,
+                          ...) {
+
+  bigassertr::assert_nodots()
+
+  snp_subset(x, ind.row = ind.row, ind.col = ind.col, backingfile = backingfile)
 }
 
 ################################################################################
