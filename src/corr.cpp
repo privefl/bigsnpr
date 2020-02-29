@@ -17,9 +17,12 @@ inline bool isna(double x) {
 SEXP corMat(Environment BM,
             const IntegerVector& rowInd,
             const IntegerVector& colInd,
+            const IntegerVector& blockInd,
             double size,
             const NumericVector& thr,
             const NumericVector& pos) {
+
+  myassert_size(colInd.size(), pos.size());
 
   XPtr<FBM> xpBM = BM["address"];
   NumericVector code = clone(as<NumericVector>(BM["code256"]));
@@ -28,70 +31,58 @@ SEXP corMat(Environment BM,
 
   int n = macc.nrow();
   int m = macc.ncol();
+  int m2 = blockInd.size();
 
-  arma::sp_mat corr(m, m);
+  arma::sp_mat corr(m, m2);
 
-  int i, j, j0, N;
   double x, y;
-  double xSum, xxSum, deno_x;
-  double ySum, yySum, deno_y;
-  double pos_min, xySum, num, r;
 
-  NumericVector sumX(m), sumXX(m);
+  for (int k0 = 0; k0 < m2; k0++) {
 
-  for (j0 = 0; j0 < m; j0++) {
+    int j0 = blockInd[k0] - 1;
 
     // pre-computation
-    xSum = xxSum = 0;
-    for (i = 0; i < n; i++) {
+    double xSum0 = 0, xxSum0 = 0;
+    for (int i = 0; i < n; i++) {
       x = macc(i, j0);
       if (!isna(x)) {
-        xSum += x;
-        xxSum += x*x;
+        xSum0  += x;
+        xxSum0 += x * x;
       }
     }
-    sumX[j0] = xSum;
-    sumXX[j0] = xxSum;
 
     // main computation
-    pos_min = pos[j0] - size;
-    for (j = j0 - 1; (j >= 0) && (pos[j] >= pos_min); j--) {
+    double pos_min = pos[j0] - size;
+    for (int j = j0 - 1; (j >= 0) && (pos[j] >= pos_min); j--) {
 
-      N = n;
-      xySum = 0;
-      xSum = sumX[j];
-      ySum = sumX[j0];
-      xxSum = sumXX[j];
-      yySum = sumXX[j0];
-      for (i = 0; i < n; i++) {
-        x = macc(i, j);
-        y = macc(i, j0);
+      int nona = 0;
+      double xSum = xSum0, xxSum = xxSum0;
+      double ySum = 0, yySum = 0, xySum = 0;
+      for (int i = 0; i < n; i++) {
 
+        x = macc(i, j0);
+        if (isna(x)) continue;
+
+        y = macc(i, j);
         if (isna(y)) {
-          N--;
-          if (isna(x)) {       // both missing
-            // nothing to do
-          } else {             // y is missing, but not x
-            xSum -= x;
-            xxSum -= x*x;
-          }
+          // y is missing, but not x
+          xSum  -= x;
+          xxSum -= x * x;
         } else {
-          if (isna(x)) {       // x is missing, but not y
-            ySum -= y;
-            yySum -= y*y;
-            N--;
-          } else {             // none missing
-            xySum += x * y;
-          }
+          // none missing
+          nona++;
+          ySum  += y;
+          yySum += y * y;
+          xySum += x * y;
         }
       }
 
-      num = xySum - xSum * ySum / N;
-      deno_x = xxSum - xSum * xSum / N;
-      deno_y = yySum - ySum * ySum / N;
-      r = num / sqrt(deno_x * deno_y);
+      double num = xySum - xSum * ySum / nona;
+      double deno_x = xxSum - xSum * xSum / nona;
+      double deno_y = yySum - ySum * ySum / nona;
+      double r = num / ::sqrt(deno_x * deno_y);
 
-      if (std::abs(r) > thr[N-1]) corr(j, j0) = r;
+      if (std::abs(r) > thr[nona - 1]) corr(j, k0) = r;
     }
   }
 

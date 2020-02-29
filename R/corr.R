@@ -1,8 +1,20 @@
 ################################################################################
 
+part_corr <- function(ind, Gna, ind.row, ind.col, size, thr, pos) {
+  corMat(
+    BM = Gna,
+    rowInd = ind.row,
+    colInd = ind.col,
+    blockInd = ind,
+    size = size * 1000,
+    thr = thr,
+    pos = pos
+  )
+}
+
 #' Correlation
 #'
-#' Get significant correlations between nearby SNPs
+#' Get significant correlations between nearby SNPs of the same chromosome
 #' (p-values are computed using a two-sided t-test).
 #'
 #' @inheritParams bigsnpr-package
@@ -33,7 +45,8 @@ snp_cor <- function(Gna,
                     size = 500,
                     alpha = 0.05,
                     fill.diag = TRUE,
-                    infos.pos = NULL) {
+                    infos.pos = NULL,
+                    ncores = 1) {
 
   check_args()
 
@@ -49,15 +62,13 @@ snp_cor <- function(Gna,
   )
   THR <- q.alpha / sqrt(seq_along(ind.row) - 2 + q.alpha^2)
 
-  corr <- forceSymmetric(corMat(
-    BM = Gna,
-    rowInd = ind.row,
-    colInd = ind.col,
-    size = size * 1000,
-    thr = THR,
-    pos = infos.pos
-  ))
+  corr <- bigparallelr::split_parapply(
+    part_corr, .combine = "cbind", ncores = ncores,
+    ind = seq_along(ind.col), #.costs = pmin(seq_along(ind.col), size),
+    Gna = Gna, ind.row = ind.row, ind.col = ind.col,
+    size = size, thr = THR, pos = infos.pos)
 
+  corr <- forceSymmetric(corr)
   if (fill.diag) diag(corr) <- 1
 
   corr

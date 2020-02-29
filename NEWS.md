@@ -1,3 +1,7 @@
+## bigsnpr 1.2.6
+
+- Can now run `snp_cor()` in parallel.
+
 ## bigsnpr 1.2.5
 
 - Add function `snp_subset()` as alias of method `subset()` to subset `bigSNP` objects.

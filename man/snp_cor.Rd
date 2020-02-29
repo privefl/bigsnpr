@@ -11,7 +11,8 @@ snp_cor(
   size = 500,
   alpha = 0.05,
   fill.diag = TRUE,
-  infos.pos = NULL
+  infos.pos = NULL,
+  ncores = 1
 )
 }
 \arguments{
@@ -39,12 +40,15 @@ or to keep it as 0s.}
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
 Typically \verb{<bigSNP>$map$physical.pos}.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 The correlation matrix. This is a sparse symmetric matrix.
 }
 \description{
-Get significant correlations between nearby SNPs
+Get significant correlations between nearby SNPs of the same chromosome
 (p-values are computed using a two-sided t-test).
 }
 \examples{

@@ -21,6 +21,7 @@ expect_equal(r_again, r)
 corr <- bigsnpr:::corMat(BM = G,
                          rowInd = ind.row,
                          colInd = ind.col,
+                         blockInd = seq_along(ind.col),
                          size = size,
                          thr = rep(r, n),
                          pos = seq_along(ind.col))
@@ -94,23 +95,26 @@ test_that("Same correlations as Hmisc (with significance levels)", {
 test_that("Information on position is used in snp_cor()", {
 
   corr3 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                   alpha = alpha, fill.diag = FALSE,
-                   size = 5)
+                   alpha = alpha, fill.diag = FALSE, size = 5)
+
+  corr3.2 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+                    alpha = alpha, fill.diag = FALSE, size = 5,
+                    ncores = 2)
+  expect_equal(corr3.2, corr3)
 
   corr4 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                   alpha = alpha, fill.diag = FALSE,
-                   size = 5e3, infos.pos = 1e6 * seq_along(ind.col))
+                   alpha = alpha, fill.diag = FALSE, size = 5e3,
+                   infos.pos = 1e6 * seq_along(ind.col))
+  expect_equal(corr4, corr3)
 
   corr5 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                   alpha = alpha, fill.diag = FALSE,
-                   size = 5e-3, infos.pos = seq_along(ind.col))
+                   alpha = alpha, fill.diag = FALSE, size = 5e-3,
+                   infos.pos = seq_along(ind.col))
+  expect_equal(corr5, corr3)
 
   corr6 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
-                   alpha = alpha, fill.diag = FALSE,
-                   size = 5e-3, infos.pos = 1000 * seq_along(ind.col))
-
-  expect_equal(corr4, corr3)
-  expect_equal(corr5, corr3)
+                   alpha = alpha, fill.diag = FALSE, size = 5e-3,
+                   infos.pos = 1000 * seq_along(ind.col))
   expect_length(corr6@x, 0)
 })
 
