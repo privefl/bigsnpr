@@ -2,6 +2,8 @@
 
 - Can now run `snp_cor()` in parallel.
 
+- Parallelization of `snp_fastImpute()` has been modified. Before this version, chromosomes were imputed in parallel. Now, chromosomes are processed sequentially, but computation of correlation between variants and XGBoost models are performed using parallelization.
+
 ## bigsnpr 1.2.5
 
 - Add function `snp_subset()` as alias of method `subset()` to subset `bigSNP` objects.

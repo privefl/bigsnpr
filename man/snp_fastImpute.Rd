@@ -56,8 +56,8 @@ Fast imputation algorithm based on local XGBoost models.
 fake <- snp_attachExtdata("example-missing.bed")
 G <- fake$genotypes
 CHR <- fake$map$chromosome
-G2 <- snp_fastImpute(G, CHR)
-G2[, 1:5]
+infos <- snp_fastImpute(G, CHR)
+infos[, 1:5]
 
 # Still missing values
 big_counts(G, ind.col = 1:10)
@@ -65,12 +65,12 @@ big_counts(G, ind.col = 1:10)
 # To make this permanent, you need to save (modify) the file on disk
 fake$genotypes$code256 <- CODE_IMPUTE_PRED
 fake <- snp_save(fake)
-big_counts(fake$genotypes)[4, ]
+big_counts(fake$genotypes, ind.col = 1:10)
 
 # Plot for post-checking
 ## Here there is no SNP with more than 1\% error (estimated)
 pvals <- c(0.01, 0.005, 0.002, 0.001); colvals <- 2:5
-df <- data.frame(pNA = G2[1, ], pError = G2[2, ])
+df <- data.frame(pNA = infos[1, ], pError = infos[2, ])
 
 # base R
 plot(subset(df, pNA > 0.001), pch = 20)
@@ -88,7 +88,7 @@ Reduce(function(p, i) {
 }, x = seq_along(pvals), init = ggplot(df, aes(pNA, pError))) +
   geom_point() +
   coord_cartesian(ylim = range(df$pError, na.rm = TRUE)) +
-  theme_bw(15)
+  theme_bigstatsr()
 }
 }
 \seealso{
