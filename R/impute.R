@@ -27,7 +27,13 @@ FBM_infos <- function(Gna) {
 ################################################################################
 
 imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
-                      p.train, n.cor, ncores) {
+                      p.train, n.cor, seed, ncores) {
+
+  if (!is.na(seed)) {
+    old <- .Random.seed
+    on.exit(.Random.seed <<- old, add = TRUE)
+    set.seed(seed)
+  }
 
   # Do something only if there is still something to do
   if (any(is.na(infos.imp[1, ind.chr]))) {
@@ -140,12 +146,6 @@ snp_fastImpute <- function(Gna, infos.chr,
 
   check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
 
-  if (!is.na(seed)) {
-    old <- .Random.seed
-    on.exit( { .Random.seed <<- old } )
-    set.seed(seed)
-  }
-
   X  <- Gna$copy(code = CODE_IMPUTE_LABEL)
   X2 <- Gna$copy(code = CODE_IMPUTE_PRED)
 
@@ -153,7 +153,7 @@ snp_fastImpute <- function(Gna, infos.chr,
 
   ind.chrs <- split(seq_along(infos.chr), infos.chr)
   for (ind in ind.chrs) {
-    imputeChr(X, X2, infos.imp, ind, alpha, size, p.train, n.cor, ncores)
+    imputeChr(X, X2, infos.imp, ind, alpha, size, p.train, n.cor, seed, ncores)
   }
 
   infos.imp
