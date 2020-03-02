@@ -45,12 +45,12 @@ bed_clumping_chr <- function(obj_bed, ind_row, ind_col, center, scale, ordInd, p
     .Call(`_bigsnpr_bed_clumping_chr`, obj_bed, ind_row, ind_col, center, scale, ordInd, pos, size, thr)
 }
 
-clumping_chr <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping_chr`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
-}
-
 clumping_chr_cached <- function(BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
     .Call(`_bigsnpr_clumping_chr_cached`, BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
+}
+
+clumping_chr <- function(BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
+    .Call(`_bigsnpr_clumping_chr`, BM, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
 }
 
 replaceSNP <- function(BM, BM2, rowInd, colInd) {
