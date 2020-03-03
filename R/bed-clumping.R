@@ -16,21 +16,25 @@ bed_clumping <- function(obj.bed,
   infos.pos <- obj.bed$map$physical.pos
 
   check_args()
-
-  obj.bed <- obj.bed$light
-  args <- as.list(environment())
-
   if (!is.null(S)) assert_lengths(infos.chr, S)
 
-  do.call(what = snp_split, args = c(args, FUN = bedClumpingChr, combine = 'c'))
+  res <- list()
+  ind.chrs <- split(seq_along(infos.chr), infos.chr)
+  for (ic in seq_along(ind.chrs)) {
+    res[[ic]] <- bedClumpingChr(obj.bed, S, ind.chrs[[ic]], ind.row,
+                                size, infos.pos, thr.r2, exclude, ncores)
+  }
+
+  sort(unlist(res))
 }
 
 ################################################################################
 
 bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
-                           thr.r2, exclude) {
+                           thr.r2, exclude, ncores) {
 
   ind.chr <- setdiff(ind.chr, exclude)
+  if (length(ind.chr) == 0) return(integer(0))
 
   # cache some computations
   stats <- bed_stats(obj.bed, ind.row, ind.chr)
@@ -49,6 +53,7 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
   assert_sorted(pos.chr)
 
   # main algo
+  RcppParallel::setThreadOptions(ncores)
   keep <- bed_clumping_chr(
     obj_bed = obj.bed,
     ind_row = ind.row,
