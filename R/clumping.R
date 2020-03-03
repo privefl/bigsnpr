@@ -45,9 +45,19 @@
 #' - `snp_indLRLDR()`: SNP indices to be used as (part of) the '__`exclude`__'
 #'   parameter of `snp_clumping()`.
 #'
-#' @example examples/example-pruning.R
-#'
 #' @export
+#'
+#' @examples
+#' test <- snp_attachExtdata()
+#' G <- test$genotypes
+#'
+#' # clumping (prioritizing higher MAF)
+#' ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
+#'                          infos.pos = test$map$physical.pos,
+#'                          thr.r2 = 0.1)
+#'
+#' # keep most of them -> not much LD in this simulated dataset
+#' length(ind.keep) / ncol(G)
 #'
 snp_clumping <- function(G, infos.chr,
                          ind.row = rows_along(G),

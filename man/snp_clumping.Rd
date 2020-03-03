@@ -118,19 +118,17 @@ human genome.
 }
 }
 \examples{
-set.seed(1)
-
 test <- snp_attachExtdata()
 G <- test$genotypes
-n <- nrow(G)
-m <- ncol(G)
 
-# pruning / clumping with MAF
-ind.keep <- snp_pruning(G, infos.chr = test$map$chromosome, thr.r2 = 0.1)
+# clumping (prioritizing higher MAF)
+ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
+                         infos.pos = test$map$physical.pos,
+                         thr.r2 = 0.1)
+
 # keep most of them -> not much LD in this simulated dataset
-length(ind.keep) / m
+length(ind.keep) / ncol(G)
 
-ind.keep2 <- snp_clumping(G, infos.chr = test$map$chromosome, thr.r2 = 0.1)
 }
 \references{
 Price AL, Weale ME, Patterson N, et al.
