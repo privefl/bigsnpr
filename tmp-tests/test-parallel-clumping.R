@@ -82,10 +82,9 @@ clumpingChr <- function(G, S, ind.chr, ind.row,
                         size, infos.pos, thr.r2, exclude, ncores) {
 
   ind.chr <- setdiff(ind.chr, exclude)
-  if (length(ind.chr) == 0) return(integer(0))
 
   # cache some computations
-  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr, ncores = 1)
+  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr, ncores = ncores)
 
   # statistic to prioritize SNPs
   n <- length(ind.row)
@@ -98,10 +97,13 @@ clumpingChr <- function(G, S, ind.chr, ind.row,
   pos.chr <- `if`(is.null(infos.pos), 1000L * seq_along(ind.chr), infos.pos[ind.chr])
   assert_sorted(pos.chr)
 
+  remain <- FBM(1, length(ind.chr), type = "integer", init = 1L)
+
   # main algo
   RcppParallel::setThreadOptions(ncores)
   keep <- clumping_chr(
     G,
+    remain,
     rowInd = ind.row,
     colInd = ind.chr,
     ordInd = order(S.chr, decreasing = TRUE),

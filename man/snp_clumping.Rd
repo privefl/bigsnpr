@@ -58,7 +58,7 @@ of each SNP (the more important is the SNP, the greater should be
 the corresponding statistic).\cr
 For example, if \code{S} follows the standard normal distribution, and "important"
 means significantly different from 0, you must use \code{abs(S)} instead.\cr
-If not specified, the MAF is computed and used.}
+\strong{If not specified, MAFs are computed and used.}}
 
 \item{thr.r2}{Threshold over the squared correlation between two SNPs.
 Default is \code{0.2}.}
@@ -108,12 +108,11 @@ parameter of \code{snp_clumping()}.
 For a \code{bigSNP}:
 \itemize{
 \item \code{snp_pruning()}: LD pruning. Similar to "\verb{--indep-pairwise (size+1) 1 thr.r2}"
-in \href{https://www.cog-genomics.org/plink/1.9/ld}{PLINK}
-(\code{step} is fixed to 1). \strong{This function is deprecated (see
-\href{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}{this article}).}
-\item \code{snp_clumping()} (and \code{bed_clumping()}): LD clumping. If you do not provide any statistic to rank
-SNPs, it would use minor allele frequencies (MAFs), making clumping similar
-to pruning.
+in \href{https://www.cog-genomics.org/plink/1.9/ld}{PLINK}.
+\strong{This function is deprecated (see \href{http://bit.ly/2uKo3MN}{this article}).}
+\item \code{snp_clumping()} (and \code{bed_clumping()}): LD clumping. If you do not provide
+any statistic to rank SNPs, it would use minor allele frequencies (MAFs),
+making clumping similar to pruning.
 \item \code{snp_indLRLDR()}: Get SNP indices of long-range LD regions for the
 human genome.
 }

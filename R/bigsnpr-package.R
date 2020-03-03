@@ -3,6 +3,7 @@
 #' @import bigstatsr
 #' @useDynLib bigsnpr, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
+#' @importFrom RcppParallel RcppParallelLibs
 #'
 #' @param G A [FBM.code256][FBM.code256-class]
 #' (typically `<bigSNP>$genotypes`).\cr

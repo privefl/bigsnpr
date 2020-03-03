@@ -1,10 +1,8 @@
 /******************************************************************************/
 
-// [[Rcpp::depends(RcppParallel, rmio, bigstatsr)]]
 #include <bigstatsr/BMCodeAcc.h>
 #include <RcppParallel.h>
 
-using namespace Rcpp;
 using namespace RcppParallel;
 
 /******************************************************************************/
@@ -64,18 +62,18 @@ int which_pos_max(const NumericVector& pos, int j0, double size) {
 struct Prune : public Worker {
 
   SubBMCode256Acc macc;
+  BMAcc_RW<int> remain;
   size_t j0, n;
-  RVector<int> remain;
   RVector<double> sumX, denoX;
   double thr;
 
   // constructors
-  Prune(SubBMCode256Acc macc, LogicalVector& remain,
+  Prune(SubBMCode256Acc macc, BMAcc_RW<int> remain,
         const NumericVector& sumX, const NumericVector& denoX, double thr) :
-    macc(macc), j0(0), n(macc.nrow()), remain(remain),
+    macc(macc), remain(remain), j0(0), n(macc.nrow()),
     sumX(sumX), denoX(denoX), thr(thr) {}
   Prune(const Prune& prune, size_t j0) :
-    macc(prune.macc), j0(j0), n(prune.n), remain(prune.remain),
+    macc(prune.macc), remain(prune.remain), j0(j0), n(prune.n),
     sumX(prune.sumX), denoX(prune.denoX), thr(prune.thr) {}
 
   void operator()(size_t begin, size_t end) {
@@ -96,22 +94,25 @@ struct Prune : public Worker {
 
 // Clumping within a distance in number of SNPs
 // [[Rcpp::export]]
-LogicalVector clumping(Environment BM,
-                       const IntegerVector& rowInd,
-                       const IntegerVector& colInd,
-                       const IntegerVector& ordInd,
-                       const NumericVector& pos,
-                       LogicalVector& remain,
-                       const NumericVector& sumX,
-                       const NumericVector& denoX,
-                       double size,
-                       double thr) {
+LogicalVector clumping_chr(Environment BM,
+                           Environment BM2,
+                           const IntegerVector& rowInd,
+                           const IntegerVector& colInd,
+                           const IntegerVector& ordInd,
+                           const NumericVector& pos,
+                           const NumericVector& sumX,
+                           const NumericVector& denoX,
+                           double size,
+                           double thr) {
 
   XPtr<FBM> xpBM = BM["address"];
   SubBMCode256Acc macc(xpBM, rowInd, colInd, BM["code256"], 1);
   int m = macc.ncol();
 
-  LogicalVector keep(m); // init with all false
+  XPtr<FBM_RW> xpBM2 = BM2["address_rw"];
+  BMAcc_RW<int> remain(xpBM2);
+
+  LogicalVector keep(m, false);
 
   Prune prune_init(macc, remain, sumX, denoX, thr);
 
@@ -119,7 +120,8 @@ LogicalVector clumping(Environment BM,
 
   for (int k = 0; k < m; k++) {
     int j0 = ordInd[k] - 1;
-    if (remain[j0]) { // if already excluded, goto next
+    // if already excluded, goto next
+    if (remain[j0]) {
       remain[j0] = false;
       keep[j0] = true;
       Prune prune(prune_init, j0);
