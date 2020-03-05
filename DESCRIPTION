@@ -20,8 +20,7 @@ License: GPL-3
 LazyData: TRUE
 Language: en-US
 ByteCompile: TRUE
-SystemRequirements: GNU make for R package 'RcppParallel'. 
-    Package 'bigsnpr' also includes a few functions that wrap existing 
+SystemRequirements: Package 'bigsnpr' includes a few functions that wrap existing 
     software such as 'PLINK' <www.cog-genomics.org/plink2>. Functions are provided
     to download these software. Note that these external software might not work
     for some operating systems (e.g. 'PLINK' might not work on Solaris).
@@ -41,13 +40,11 @@ Imports:
     Matrix,
     methods,
     Rcpp,
-    RcppParallel,
     stats
 LinkingTo:
     bigstatsr,
     Rcpp,
     RcppArmadillo,
-    RcppParallel,
     rmio
 Suggests:
     bindata,

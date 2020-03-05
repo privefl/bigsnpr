@@ -105,24 +105,31 @@ clumpingChr <- function(G, S, ind.chr, ind.row,
   } else {
     S.chr <- S[ind.chr]
   }
-  pos.chr <- `if`(is.null(infos.pos), 1000L * seq_along(ind.chr), infos.pos[ind.chr])
+  pos.chr <- `if`(is.null(infos.pos), 1000 * seq_along(ind.chr), infos.pos[ind.chr])
   assert_sorted(pos.chr)
 
+  keep <- FBM(1, length(ind.chr), type = "integer", init = -1)
+  ord <- order(S.chr, decreasing = TRUE)
+
   # main algo
-  RcppParallel::setThreadOptions(ncores)
-  keep <- clumping_chr(
+  clumping_chr(
     G,
+    keep,
     rowInd = ind.row,
     colInd = ind.chr,
-    ordInd = order(S.chr, decreasing = TRUE),
+    ordInd = ord,
+    rankInd = match(seq_along(ord), ord),
     pos    = pos.chr,
     sumX   = stats$sum,
     denoX  = (n - 1) * stats$var,
     size   = size * 1000L, # in bp
-    thr    = thr.r2
+    thr    = thr.r2,
+    ncores = ncores
   )
 
-  ind.chr[keep]
+  stopifnot(all(keep[] %in% 0:1))
+
+  ind.chr[keep[] == 1]
 }
 
 ################################################################################

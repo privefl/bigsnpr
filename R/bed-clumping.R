@@ -52,21 +52,28 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
   pos.chr <- infos.pos[ind.chr]
   assert_sorted(pos.chr)
 
+  keep <- FBM(1, length(ind.chr), type = "integer", init = -1)
+  ord <- order(S.chr, decreasing = TRUE)
+
   # main algo
-  RcppParallel::setThreadOptions(ncores)
-  keep <- bed_clumping_chr(
-    obj_bed = obj.bed,
+  bed_clumping_chr(
+    obj.bed,
+    keep,
     ind_row = ind.row,
     ind_col = ind.chr,
     center  = center,
     scale   = scale,
-    ordInd  = order(S.chr, decreasing = TRUE),
+    ordInd  = ord,
+    rankInd = match(seq_along(ord), ord),
     pos     = pos.chr,
     size    = size * 1000L, # in bp
-    thr     = thr.r2
+    thr     = thr.r2,
+    ncores  = ncores
   )
 
-  ind.chr[keep]
+  stopifnot(all(keep[] %in% 0:1))
+
+  ind.chr[keep[] == 1]
 }
 
 ################################################################################

@@ -1,81 +1,93 @@
 /******************************************************************************/
 
 #include "bed-acc.h"
+#include <bigstatsr/FBM.h>
 #include "clumping-utils.h"
-
-/******************************************************************************/
-
-struct Prune : public Worker {
-
-  bedAccScaled macc;
-  size_t j0;
-  std::vector<int> ind_to_check;
-  RVector<int> keep;
-  double thr;
-
-  // constructors
-  Prune(bedAccScaled macc, LogicalVector& keep, double thr) :
-    macc(macc), keep(keep), thr(thr) {}
-
-  Prune(const Prune& prune, size_t j0, std::vector<int>& ind_to_check) :
-    macc(prune.macc), j0(j0), ind_to_check(ind_to_check), keep(prune.keep),
-    thr(prune.thr) {}
-
-  // parallel computations
-  void operator()(size_t begin, size_t end) {
-
-    size_t n = macc.nrow();
-    for (size_t k = begin; k < end; k++) {
-
-      if (!keep[j0]) break;
-      size_t j = ind_to_check[k];
-
-      double r = 0;
-      for (size_t i = 0; i < n; i++) {
-        r += macc(i, j) * macc(i, j0);
-      }
-      double r2 = r * r;
-
-      if (r2 > thr) keep[j0] = false;  // prune
-    }
-  }
-};
 
 /******************************************************************************/
 
 // Clumping within a distance (directly on a bed file)
 // [[Rcpp::export]]
-LogicalVector bed_clumping_chr(Environment obj_bed,
-                               const IntegerVector& ind_row,
-                               const IntegerVector& ind_col,
-                               const NumericVector& center,
-                               const NumericVector& scale,
-                               const IntegerVector& ordInd,
-                               const NumericVector& pos,
-                               double size,
-                               double thr) {
+void bed_clumping_chr(Environment obj_bed,
+                      Environment BM2,
+                      const IntegerVector& ind_row,
+                      const IntegerVector& ind_col,
+                      const NumericVector& center,
+                      const NumericVector& scale,
+                      const IntegerVector& ordInd,
+                      const IntegerVector& rankInd,
+                      const NumericVector& pos,
+                      double size,
+                      double thr,
+                      int ncores) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
 
-  int m = macc.ncol();
-  LogicalVector keep(m, false);
-  std::vector<int> ind_to_check; ind_to_check.reserve(m);
+  XPtr<FBM_RW> xpBM2 = BM2["address_rw"];
+  int * keep = static_cast<int *>(xpBM2->matrix());
 
-  Prune prune_init(macc, keep, thr);
+  size_t n = macc.nrow();
+  size_t m = macc.ncol();
+  // Rcout << ncores << std::endl;
 
-  for (int k = 0; k < m; k++) {
+  #pragma omp parallel num_threads(ncores)
+  {
+    std::vector<int> ind_to_check; ind_to_check.reserve(m);
 
-    size_t j0 = ordInd[k] - 1;
-    keep[j0] = true;
+    #pragma omp for schedule(dynamic, 1)
+    for (size_t k = 0; k < m; k++) {
 
-    ind_to_check = which_to_check(j0, keep, pos, size, ind_to_check);
+      // Rcout << k << std::endl;
+      size_t j0 = ordInd[k] - 1;
+      // Rcout << rankInd[j0] << " == " << k + 1 << std::endl;
 
-    Prune prune(prune_init, j0, ind_to_check);
-    parallelFor(0, ind_to_check.size(), prune);
+      // which to check
+      ind_to_check = which_to_check(j0, keep, rankInd, pos, size, ind_to_check);
+      int nb_check = ind_to_check.size();
+      // Rcout << nb_check << std::endl;
+
+      bool keep_j0 = true;
+      bool all_checked = false;
+      while (!all_checked) {
+
+        all_checked = true;
+        for (int k2 = 0; k2 < nb_check; k2++) {
+
+          int jk = ind_to_check[k2];
+
+          // check if already done with this index
+          if (jk != -1) {
+            if (keep[jk] == -1) {
+              // waiting for the thread checking 'j' to finish
+              all_checked = false;
+            } else if (keep[jk] == 0) {
+              // no need to check this one after all
+              ind_to_check[k2] = -1;
+            } else {
+              size_t j = jk;
+              double r = 0;
+              for (size_t i = 0; i < n; i++) {
+                r += macc(i, j) * macc(i, j0);
+              }
+              double r2 = r * r;
+
+              if (r2 > thr) {
+                keep_j0 = false;  // prune
+                all_checked = true;
+                break;
+              } else {
+                ind_to_check[k2] = -1;
+              }
+            }
+          }
+        }
+      }
+
+      #pragma omp atomic write
+      keep[j0] = keep_j0;  // can now be used by other threads
+    }
   }
-
-  return keep;
 }
 
 /******************************************************************************/

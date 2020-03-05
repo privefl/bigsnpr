@@ -1,6 +1,6 @@
 ## bigsnpr 1.3.0
 
-- Parallelization of clumping algorithms has been modified. Before, chromosomes were imputed in parallel. Now, chromosomes are processed sequentially, but computations within each chromosome are performed in parallel thanks to {RcppParallel}. Clumping algorithms may be a bit slower for moderate samples sizes but this would prevent major slowdowns for very large samples sizes (due to swapping).
+- Parallelization of clumping algorithms has been modified. Before, chromosomes were imputed in parallel. Now, chromosomes are processed sequentially, but computations within each chromosome are performed in parallel thanks to OpenMP. This should prevent major slowdowns for very large samples sizes (due to swapping).
 
 ## bigsnpr 1.2.6
 

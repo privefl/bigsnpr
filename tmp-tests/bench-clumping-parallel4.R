@@ -6,7 +6,7 @@ system.time(
   keep <- bed_clumping(obj.bed, ncores = 4)
 )
 # Before: 1 -> 62 sec // 4 -> 34 sec
-# After:  1 -> 67 sec // 4 -> 50-54 sec
+# After:  1 -> 65 sec // 4 -> 30 sec
 # 5 seconds are always taken by colstats
 length(keep)
 # Before: 94,777

@@ -5,80 +5,89 @@
 
 /******************************************************************************/
 
-struct Prune : public Worker {
-
-  SubBMCode256Acc macc;
-  size_t j0;
-  std::vector<int> ind_to_check;
-  RVector<int> keep;
-  RVector<double> sumX, denoX;
-  double thr;
-
-  // constructors
-  Prune(SubBMCode256Acc macc, LogicalVector& keep,
-        const NumericVector& sumX, const NumericVector& denoX, double thr) :
-    macc(macc), keep(keep), sumX(sumX), denoX(denoX), thr(thr) {}
-
-  Prune(const Prune& prune, size_t j0, std::vector<int>& ind_to_check) :
-    macc(prune.macc), j0(j0), ind_to_check(ind_to_check), keep(prune.keep),
-    sumX(prune.sumX), denoX(prune.denoX), thr(prune.thr) {}
-
-  // parallel computations
-  void operator()(size_t begin, size_t end) {
-
-    size_t n = macc.nrow();
-    for (size_t k = begin; k < end; k++) {
-
-      if (!keep[j0]) break;
-      size_t j = ind_to_check[k];
-
-      double xySum = 0;
-      for (size_t i = 0; i < n; i++) {
-        xySum += macc(i, j) * macc(i, j0);
-      }
-      double num = xySum - sumX[j] * sumX[j0] / n;
-      double r2 = num * num / (denoX[j] * denoX[j0]);
-
-      if (r2 > thr) keep[j0] = false;  // prune
-    }
-  }
-};
-
-/******************************************************************************/
-
 // Clumping within a distance
 // [[Rcpp::export]]
-LogicalVector clumping_chr(Environment BM,
-                           const IntegerVector& rowInd,
-                           const IntegerVector& colInd,
-                           const IntegerVector& ordInd,
-                           const NumericVector& pos,
-                           const NumericVector& sumX,
-                           const NumericVector& denoX,
-                           double size,
-                           double thr) {
+void clumping_chr(Environment BM,
+                  Environment BM2,
+                  const IntegerVector& rowInd,
+                  const IntegerVector& colInd,
+                  const IntegerVector& ordInd,
+                  const IntegerVector& rankInd,
+                  const NumericVector& pos,
+                  const NumericVector& sumX,
+                  const NumericVector& denoX,
+                  double size,
+                  double thr,
+                  int ncores) {
 
   XPtr<FBM> xpBM = BM["address"];
   SubBMCode256Acc macc(xpBM, rowInd, colInd, BM["code256"], 1);
 
-  int m = macc.ncol();
-  LogicalVector keep(m, false);
-  std::vector<int> ind_to_check; ind_to_check.reserve(m);
+  XPtr<FBM_RW> xpBM2 = BM2["address_rw"];
+  int * keep = static_cast<int *>(xpBM2->matrix());
 
-  Prune prune_init(macc, keep, sumX, denoX, thr);
+  size_t n = macc.nrow();
+  size_t m = macc.ncol();
+  // Rcout << ncores << std::endl;
 
-  for (int k = 0; k < m; k++) {
+  #pragma omp parallel num_threads(ncores)
+  {
+    std::vector<int> ind_to_check; ind_to_check.reserve(m);
 
-    size_t j0 = ordInd[k] - 1;
-    keep[j0] = true;
+    #pragma omp for schedule(dynamic, 1)
+    for (size_t k = 0; k < m; k++) {
 
-    ind_to_check = which_to_check(j0, keep, pos, size, ind_to_check);
+      // Rcout << k << std::endl;
+      size_t j0 = ordInd[k] - 1;
+      // Rcout << rankInd[j0] << " == " << k + 1 << std::endl;
 
-    Prune prune(prune_init, j0, ind_to_check);
-    parallelFor(0, ind_to_check.size(), prune);
+      // which to check
+      ind_to_check = which_to_check(j0, keep, rankInd, pos, size, ind_to_check);
+      int nb_check = ind_to_check.size();
+      // Rcout << nb_check << std::endl;
+
+      bool keep_j0 = true;
+      bool all_checked = false;
+      while (!all_checked) {
+
+        all_checked = true;
+        for (int k2 = 0; k2 < nb_check; k2++) {
+
+          int jk = ind_to_check[k2];
+
+          // check if already done with this index
+          if (jk != -1) {
+            if (keep[jk] == -1) {
+              // waiting for the thread checking 'j' to finish
+              all_checked = false;
+            } else if (keep[jk] == 0) {
+              // no need to check this one after all
+              ind_to_check[k2] = -1;
+            } else {
+              size_t j = jk;
+              double xySum = 0;
+              for (size_t i = 0; i < n; i++) {
+                xySum += macc(i, j) * macc(i, j0);
+              }
+              double num = xySum - sumX[j] * sumX[j0] / n;
+              double r2 = num * num / (denoX[j] * denoX[j0]);
+
+              if (r2 > thr) {
+                keep_j0 = false;  // prune
+                all_checked = true;
+                break;
+              } else {
+                ind_to_check[k2] = -1;
+              }
+            }
+          }
+        }
+      }
+
+      #pragma omp atomic write
+      keep[j0] = keep_j0;  // can now be used by other threads
+    }
   }
-
-  return keep;
 }
 
 /******************************************************************************/

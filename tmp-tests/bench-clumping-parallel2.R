@@ -5,12 +5,15 @@ G <- celiac$genotypes$copy(code = c(0, 1, 2, 0, rep(NA, 252)))
 CHR <- celiac$map$chromosome
 POS <- celiac$map$physical.pos
 
-RcppParallel::setThreadOptions(1)
+# S <- big_univLinReg(G, celiac$fam$affection, ncores = 4)$score
+
 system.time(
-  keep <- snp_clumping(G, infos.chr = CHR, infos.pos = POS, ncores = 4)
+  keep <- snp_clumping(G, infos.chr = CHR, infos.pos = POS,
+                       # S = abs(S),
+                       ncores = 4)
 )
 # Before: 1 -> 41 sec // 4 -> 20 sec
-# After:  1 -> 43 sec // 4 -> 28 sec
+# After:  1 -> 43 sec // 2 -> 25 sec // 3 -> 20 sec // 4 -> 18 sec
 # 3 seconds are always taken by colstats
 length(keep)
 # Before: 94,831
