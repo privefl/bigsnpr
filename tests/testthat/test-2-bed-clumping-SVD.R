@@ -13,6 +13,11 @@ skip_if(is_cran)
 # No missing value -> with {bigstatsr}
 bigSNP <- snp_attachExtdata()
 G <- bigSNP$genotypes
+CHR0 <- sort(rep_len(1:2, ncol(G)))
+ind.keep0 <- snp_clumping(G, infos.chr = CHR0, infos.pos = POS,
+                          exclude = which(CHR0 == 1))
+expect_true(all(CHR0[ind.keep0] == 2))
+
 CHR <- bigSNP$map$chromosome
 POS <- bigSNP$map$physical.pos
 ind.keep <- snp_clumping(G, infos.chr = CHR, infos.pos = POS)
@@ -23,6 +28,7 @@ obj.bed <- bed(system.file("extdata", "example.bed", package = "bigsnpr"))
 expect_error(bed_clumping(G))
 ind.keep2 <- bed_clumping(obj.bed)
 expect_identical(ind.keep2, ind.keep)
+expect_gt(min(bed_clumping(obj.bed, exclude = 1:100)), 100)
 expect_error(big_randomSVD(obj.bed, ind.col = ind.keep),
              "'X' is not of class 'FBM'.")
 obj.svd2 <- bed_randomSVD(obj.bed, ind.col = ind.keep)

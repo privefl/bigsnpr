@@ -79,7 +79,7 @@ snp_clumping <- function(G, infos.chr,
   ind.noexcl <- setdiff(seq_along(infos.chr), exclude)
 
   sort(unlist(
-    lapply(split(ind.noexcl, infos.chr), function(ind.chr) {
+    lapply(split(ind.noexcl, infos.chr[ind.noexcl]), function(ind.chr) {
       clumpingChr(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
     }),
     use.names = FALSE
