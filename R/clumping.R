@@ -76,26 +76,21 @@ snp_clumping <- function(G, infos.chr,
 
   if (!is.null(S)) assert_lengths(infos.chr, S)
 
-  res <- list()
-  ind.chrs <- split(seq_along(infos.chr), infos.chr)
-  for (ic in seq_along(ind.chrs)) {
-    res[[ic]] <- clumpingChr(G, S, ind.chrs[[ic]], ind.row,
-                             size, infos.pos, thr.r2, exclude, ncores)
-  }
+  ind.noexcl <- setdiff(seq_along(infos.chr), exclude)
 
-  sort(unlist(res))
+  sort(unlist(
+    lapply(split(ind.noexcl, infos.chr), function(ind.chr) {
+      clumpingChr(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
+    })
+  ))
 }
 
 ################################################################################
 
-clumpingChr <- function(G, S, ind.chr, ind.row,
-                        size, infos.pos, thr.r2, exclude, ncores) {
-
-  ind.chr <- setdiff(ind.chr, exclude)
-  if (length(ind.chr) == 0) return(integer(0))
+clumpingChr <- function(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores) {
 
   # cache some computations
-  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr, ncores = 1)
+  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr, ncores = ncores)
 
   # statistic to prioritize SNPs
   n <- length(ind.row)
@@ -105,11 +100,17 @@ clumpingChr <- function(G, S, ind.chr, ind.row,
   } else {
     S.chr <- S[ind.chr]
   }
-  pos.chr <- `if`(is.null(infos.pos), 1000 * seq_along(ind.chr), infos.pos[ind.chr])
-  assert_sorted(pos.chr)
+  ord <- order(S.chr, decreasing = TRUE)
+
+  if (is.null(infos.pos)) {
+    pos.chr <- seq_along(ind.chr)
+  } else {
+    size <- size * 1000  # kbp to bp
+    pos.chr <- infos.pos[ind.chr]
+    assert_sorted(pos.chr)
+  }
 
   keep <- FBM(1, length(ind.chr), type = "integer", init = -1)
-  ord <- order(S.chr, decreasing = TRUE)
 
   # main algo
   clumping_chr(
@@ -122,7 +123,7 @@ clumpingChr <- function(G, S, ind.chr, ind.row,
     pos    = pos.chr,
     sumX   = stats$sum,
     denoX  = (n - 1) * stats$var,
-    size   = size * 1000L, # in bp
+    size   = size,
     thr    = thr.r2,
     ncores = ncores
   )

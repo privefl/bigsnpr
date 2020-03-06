@@ -18,23 +18,19 @@ bed_clumping <- function(obj.bed,
   check_args()
   if (!is.null(S)) assert_lengths(infos.chr, S)
 
-  res <- list()
-  ind.chrs <- split(seq_along(infos.chr), infos.chr)
-  for (ic in seq_along(ind.chrs)) {
-    res[[ic]] <- bedClumpingChr(obj.bed, S, ind.chrs[[ic]], ind.row,
-                                size, infos.pos, thr.r2, exclude, ncores)
-  }
+  ind.noexcl <- setdiff(seq_along(infos.chr), exclude)
 
-  sort(unlist(res))
+  sort(unlist(
+    lapply(split(ind.noexcl, infos.chr), function(ind.chr) {
+      bedClumpingChr(obj.bed, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
+    })
+  ))
 }
 
 ################################################################################
 
-bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
-                           thr.r2, exclude, ncores) {
-
-  ind.chr <- setdiff(ind.chr, exclude)
-  if (length(ind.chr) == 0) return(integer(0))
+bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row,
+                           size, infos.pos, thr.r2, ncores) {
 
   # cache some computations
   stats <- bed_stats(obj.bed, ind.row, ind.chr)
@@ -48,12 +44,12 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
   } else {
     S.chr <- S[ind.chr]
   }
+  ord <- order(S.chr, decreasing = TRUE)
 
   pos.chr <- infos.pos[ind.chr]
   assert_sorted(pos.chr)
 
   keep <- FBM(1, length(ind.chr), type = "integer", init = -1)
-  ord <- order(S.chr, decreasing = TRUE)
 
   # main algo
   bed_clumping_chr(
@@ -66,7 +62,7 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
     ordInd  = ord,
     rankInd = match(seq_along(ord), ord),
     pos     = pos.chr,
-    size    = size * 1000L, # in bp
+    size    = size * 1000,  # kbp to bp
     thr     = thr.r2,
     ncores  = ncores
   )
