@@ -10,7 +10,8 @@ bed_cprodVec(
   ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed),
   center = rep(0, length(ind.col)),
-  scale = rep(1, length(ind.col))
+  scale = rep(1, length(ind.col)),
+  ncores = 1
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ of \code{X}.}
 
 \item{scale}{Vector of same length of \code{ind.col} to divide from columns
 of \code{X}.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link[bigstatsr]{nb_cores}.}
 }
 \value{
 \eqn{X^T \cdot y}.

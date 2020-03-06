@@ -109,9 +109,10 @@ snp_MAF <- function(G,
 #'
 bed_scaleBinom <- function(obj.bed,
                            ind.row = rows_along(obj.bed),
-                           ind.col = cols_along(obj.bed)) {
+                           ind.col = cols_along(obj.bed),
+                           ncores = 1) {
 
-  stats <- bed_stats(obj.bed, ind.row, ind.col)
+  stats <- bed_colstats(obj.bed, ind.row, ind.col, ncores)
   af <- stats$sum / (2 * stats$nb_nona_col)
 
   data.frame(center = 2 * af, scale = sqrt(2 * af * (1 - af)))

@@ -7,7 +7,8 @@
 bed_scaleBinom(
   obj.bed,
   ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed)
+  ind.col = cols_along(obj.bed),
+  ncores = 1
 )
 }
 \arguments{
@@ -21,6 +22,9 @@ are used. If not specified, all rows are used.\cr
 \item{ind.col}{An optional vector of the column indices (SNPs) that are used.
 If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 A data frame with \verb{$center} and \verb{$scale}.

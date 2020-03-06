@@ -21,7 +21,8 @@ bed_cprodVec <- function(obj.bed, y.row,
                          ind.row = rows_along(obj.bed),
                          ind.col = cols_along(obj.bed),
                          center = rep(0, length(ind.col)),
-                         scale  = rep(1, length(ind.col))) {
+                         scale  = rep(1, length(ind.col)),
+                         ncores = 1) {
 
   assert_lengths(y.row, ind.row)
 
@@ -31,7 +32,7 @@ bed_cprodVec <- function(obj.bed, y.row,
   scale <- as_vec(scale)
   assert_lengths(scale, ind.col)
 
-  bed_cpMatVec4(obj.bed, ind.row, ind.col, center, scale, y.row)
+  bed_cpMatVec4(obj.bed, ind.row, ind.col, center, scale, y.row, ncores)
 }
 
 ################################################################################
@@ -57,7 +58,8 @@ bed_prodVec <- function(obj.bed, y.col,
                         ind.row = rows_along(obj.bed),
                         ind.col = cols_along(obj.bed),
                         center = rep(0, length(ind.col)),
-                        scale = rep(1, length(ind.col))) {
+                        scale = rep(1, length(ind.col)),
+                        ncores = 1) {
 
   assert_lengths(y.col, ind.col)
 
@@ -67,7 +69,7 @@ bed_prodVec <- function(obj.bed, y.col,
   scale <- as_vec(scale)
   assert_lengths(scale, ind.col)
 
-  bed_pMatVec4(obj.bed, ind.row, ind.col, center, scale, y.col)
+  bed_pMatVec4(obj.bed, ind.row, ind.col, center, scale, y.col, ncores)
 }
 
 ################################################################################

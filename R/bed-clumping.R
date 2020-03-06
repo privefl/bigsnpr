@@ -23,7 +23,8 @@ bed_clumping <- function(obj.bed,
   sort(unlist(
     lapply(split(ind.noexcl, infos.chr), function(ind.chr) {
       bedClumpingChr(obj.bed, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
-    })
+    }),
+    use.names = FALSE
   ))
 }
 
@@ -33,7 +34,7 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row,
                            size, infos.pos, thr.r2, ncores) {
 
   # cache some computations
-  stats <- bed_stats(obj.bed, ind.row, ind.chr)
+  stats <- bed_colstats(obj.bed, ind.row, ind.chr, ncores)
   center <- stats$sum / stats$nb_nona_col
   scale <- sqrt(stats$var * (stats$nb_nona_col - 1))
 
