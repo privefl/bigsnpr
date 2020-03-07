@@ -17,10 +17,10 @@ inline bool isna(double x) {
 SEXP corMat(Environment BM,
             const IntegerVector& rowInd,
             const IntegerVector& colInd,
-            const IntegerVector& blockInd,
             double size,
             const NumericVector& thr,
-            const NumericVector& pos) {
+            const NumericVector& pos,
+            int ncores = 1) {
 
   myassert_size(colInd.size(), pos.size());
 
@@ -31,20 +31,16 @@ SEXP corMat(Environment BM,
 
   int n = macc.nrow();
   int m = macc.ncol();
-  int m2 = blockInd.size();
 
-  arma::sp_mat corr(m, m2);
+  arma::sp_mat corr(m, m);
 
-  double x, y;
-
-  for (int k0 = 0; k0 < m2; k0++) {
-
-    int j0 = blockInd[k0] - 1;
+  #pragma omp parallel for num_threads(ncores)
+  for (int j0 = 0; j0 < m; j0++) {
 
     // pre-computation
     double xSum0 = 0, xxSum0 = 0;
     for (int i = 0; i < n; i++) {
-      x = macc(i, j0);
+      double x = macc(i, j0);
       if (!isna(x)) {
         xSum0  += x;
         xxSum0 += x * x;
@@ -60,10 +56,10 @@ SEXP corMat(Environment BM,
       double ySum = 0, yySum = 0, xySum = 0;
       for (int i = 0; i < n; i++) {
 
-        x = macc(i, j0);
+        double x = macc(i, j0);
         if (isna(x)) continue;
 
-        y = macc(i, j);
+        double y = macc(i, j);
         if (isna(y)) {
           // y is missing, but not x
           xSum  -= x;
@@ -82,7 +78,10 @@ SEXP corMat(Environment BM,
       double deno_y = yySum - ySum * ySum / nona;
       double r = num / ::sqrt(deno_x * deno_y);
 
-      if (std::abs(r) > thr[nona - 1]) corr(j, k0) = r;
+      if (std::abs(r) > thr[nona - 1]) {
+        #pragma omp critical
+        corr(j, j0) = r;
+      }
     }
   }
 
