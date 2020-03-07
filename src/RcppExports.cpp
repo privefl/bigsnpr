@@ -307,15 +307,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // readbina2
-void readbina2(Environment BM, Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col);
-RcppExport SEXP _bigsnpr_readbina2(SEXP BMSEXP, SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP) {
+void readbina2(Environment BM, Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, int ncores);
+RcppExport SEXP _bigsnpr_readbina2(SEXP BMSEXP, SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
     Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    readbina2(BM, obj_bed, ind_row, ind_col);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    readbina2(BM, obj_bed, ind_row, ind_col, ncores);
     return R_NilValue;
 END_RCPP
 }
@@ -365,7 +366,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 4},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 7},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
-    {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 4},
+    {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},
     {NULL, NULL, 0}

@@ -2,7 +2,7 @@
 
 #' Read PLINK files into a "bigSNP"
 #'
-#' Function to read bed/bim/fam files into a [bigSNP][bigSNP-class].
+#' Functions to read bed/bim/fam files into a [bigSNP][bigSNP-class].
 #'
 #' For more information on these formats, please visit
 #' \href{https://www.cog-genomics.org/plink/1.9/formats#bed}{PLINK webpage}.
@@ -55,9 +55,7 @@ snp_readBed <- function(bedfile, backingfile = sub_bed(bedfile)) {
   if (!reach.eof) warning("EOF of bedfile has not been reached.")
 
   # Create the bigSNP object
-  snp.list <- structure(list(genotypes = bigGeno,
-                             fam = fam,
-                             map = bim),
+  snp.list <- structure(list(genotypes = bigGeno, fam = fam, map = bim),
                         class = "bigSNP")
 
   # save it and return the path of the saved object
@@ -73,7 +71,8 @@ snp_readBed <- function(bedfile, backingfile = sub_bed(bedfile)) {
 #' @export
 snp_readBed2 <- function(bedfile, backingfile = sub_bed(bedfile),
                          ind.row = rows_along(obj.bed),
-                         ind.col = cols_along(obj.bed)) {
+                         ind.col = cols_along(obj.bed),
+                         ncores = 1) {
 
   # Get mapping of bed
   obj.bed <- bed(bedfile)
@@ -99,12 +98,10 @@ snp_readBed2 <- function(bedfile, backingfile = sub_bed(bedfile),
   )
 
   # Fill the FBM from bedfile
-  readbina2(bigGeno, obj.bed, ind.row, ind.col)
+  readbina2(bigGeno, obj.bed, ind.row, ind.col, ncores)
 
   # Create the bigSNP object
-  snp.list <- structure(list(genotypes = bigGeno,
-                             fam = fam,
-                             map = bim),
+  snp.list <- structure(list(genotypes = bigGeno, fam = fam, map = bim),
                         class = "bigSNP")
 
   # save it and return the path of the saved object
