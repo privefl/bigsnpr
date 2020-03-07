@@ -42,7 +42,7 @@ the Filebacked Big Matrix.\cr
 \link{snp_attach} to load the "bigSNP" object in any R session from backing files.
 }
 \description{
-Function to read bed/bim/fam files into a \link[=bigSNP-class]{bigSNP}.
+Functions to read bed/bim/fam files into a \link[=bigSNP-class]{bigSNP}.
 }
 \details{
 For more information on these formats, please visit
