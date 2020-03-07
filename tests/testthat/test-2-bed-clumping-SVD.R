@@ -13,13 +13,13 @@ skip_if(is_cran)
 # No missing value -> with {bigstatsr}
 bigSNP <- snp_attachExtdata()
 G <- bigSNP$genotypes
+POS <- bigSNP$map$physical.pos
 CHR0 <- sort(rep_len(1:2, ncol(G)))
 ind.keep0 <- snp_clumping(G, infos.chr = CHR0, infos.pos = POS,
                           exclude = which(CHR0 == 1))
 expect_true(all(CHR0[ind.keep0] == 2))
 
 CHR <- bigSNP$map$chromosome
-POS <- bigSNP$map$physical.pos
 ind.keep <- snp_clumping(G, infos.chr = CHR, infos.pos = POS)
 obj.svd <- big_randomSVD(G, fun.scaling = snp_scaleBinom(), ind.col = ind.keep)
 
