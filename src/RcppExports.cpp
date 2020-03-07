@@ -175,23 +175,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // clumping_chr_cached
-List clumping_chr_cached(Environment BM, arma::sp_mat sqcor, const IntegerVector& spInd, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, const IntegerVector& pos, const NumericVector& sumX, const NumericVector& denoX, int size, double thr);
-RcppExport SEXP _bigsnpr_clumping_chr_cached(SEXP BMSEXP, SEXP sqcorSEXP, SEXP spIndSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP posSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP) {
+arma::sp_mat clumping_chr_cached(Environment BM, Environment BM2, arma::sp_mat sqcor, const IntegerVector& spInd, const IntegerVector& rowInd, const IntegerVector& colInd, const IntegerVector& ordInd, const IntegerVector& rankInd, const NumericVector& pos, const NumericVector& sumX, const NumericVector& denoX, double size, double thr, int ncores);
+RcppExport SEXP _bigsnpr_clumping_chr_cached(SEXP BMSEXP, SEXP BM2SEXP, SEXP sqcorSEXP, SEXP spIndSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ordIndSEXP, SEXP rankIndSEXP, SEXP posSEXP, SEXP sumXSEXP, SEXP denoXSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< Environment >::type BM2(BM2SEXP);
     Rcpp::traits::input_parameter< arma::sp_mat >::type sqcor(sqcorSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type spInd(spIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ordInd(ordIndSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type pos(posSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rankInd(rankIndSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type pos(posSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type sumX(sumXSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type denoX(denoXSEXP);
-    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
     Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
-    rcpp_result_gen = Rcpp::wrap(clumping_chr_cached(BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr));
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(clumping_chr_cached(BM, BM2, sqcor, spInd, rowInd, colInd, ordInd, rankInd, pos, sumX, denoX, size, thr, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -354,7 +357,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_read_bed_scaled", (DL_FUNC) &_bigsnpr_read_bed_scaled, 5},
     {"_bigsnpr_prod_and_rowSumsSq", (DL_FUNC) &_bigsnpr_prod_and_rowSumsSq, 6},
     {"_bigsnpr_bed_clumping_chr", (DL_FUNC) &_bigsnpr_bed_clumping_chr, 12},
-    {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 11},
+    {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 14},
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 12},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 7},

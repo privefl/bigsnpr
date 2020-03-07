@@ -45,8 +45,8 @@ bed_clumping_chr <- function(obj_bed, BM2, ind_row, ind_col, center, scale, ordI
     invisible(.Call(`_bigsnpr_bed_clumping_chr`, obj_bed, BM2, ind_row, ind_col, center, scale, ordInd, rankInd, pos, size, thr, ncores))
 }
 
-clumping_chr_cached <- function(BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr) {
-    .Call(`_bigsnpr_clumping_chr_cached`, BM, sqcor, spInd, rowInd, colInd, ordInd, pos, sumX, denoX, size, thr)
+clumping_chr_cached <- function(BM, BM2, sqcor, spInd, rowInd, colInd, ordInd, rankInd, pos, sumX, denoX, size, thr, ncores) {
+    .Call(`_bigsnpr_clumping_chr_cached`, BM, BM2, sqcor, spInd, rowInd, colInd, ordInd, rankInd, pos, sumX, denoX, size, thr, ncores)
 }
 
 clumping_chr <- function(BM, BM2, rowInd, colInd, ordInd, rankInd, pos, sumX, denoX, size, thr, ncores) {
