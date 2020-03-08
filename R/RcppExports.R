@@ -69,8 +69,8 @@ impute <- function(BM, rowInd, colInd, method) {
     invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
 }
 
-multLinReg <- function(obj, ind_row, ind_col, U) {
-    .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U)
+multLinReg <- function(obj, ind_row, ind_col, U, ncores) {
+    .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U, ncores)
 }
 
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage) {

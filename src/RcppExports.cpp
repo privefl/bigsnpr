@@ -278,8 +278,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // multLinReg
-NumericMatrix multLinReg(SEXP obj, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericMatrix& U);
-RcppExport SEXP _bigsnpr_multLinReg(SEXP objSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP USEXP) {
+NumericMatrix multLinReg(SEXP obj, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericMatrix& U, int ncores);
+RcppExport SEXP _bigsnpr_multLinReg(SEXP objSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP USEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -287,7 +287,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type U(USEXP);
-    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, ind_row, ind_col, U));
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(multLinReg(obj, ind_row, ind_col, U, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -379,7 +380,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 7},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 4},
-    {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 4},
+    {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 7},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},

@@ -28,7 +28,7 @@ test_that("Same as pcadapt", {
   ################################################################################
 
   obj.svd <- big_randomSVD(G, snp_scaleBinom())
-  test <- bigsnpr:::multLinReg(G, rows_along(G), cols_along(G), obj.svd$u)
+  test <- bigsnpr:::multLinReg(G, rows_along(G), cols_along(G), obj.svd$u, 1)
 
   expect_equal(obj.svd$center / 2, obj.pcadapt$af)
   expect_equal(obj.svd$d, obj.pcadapt$singular.values * sqrt((nrow(G) - 1) * ncol(G)))

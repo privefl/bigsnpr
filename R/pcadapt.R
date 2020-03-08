@@ -1,18 +1,13 @@
 ################################################################################
 
-part_mult_lin_reg <- function(X, ind, ind.row, U) {
-  multLinReg(X, ind_row = ind.row, ind_col = ind, U = U)
-}
-
 pcadapt0 <- function(G, U.row, ind.row, ind.col, ncores) {
 
   if (is.null(dim(U.row))) U.row <- as.matrix(U.row)  # vector
   K <- ncol(U.row)
   assert_lengths(rows_along(U.row), ind.row)
 
-  tscores <- big_parallelize(G, p.FUN = part_mult_lin_reg,
-                             p.combine = "rbind", ncores = ncores,
-                             ind = ind.col, ind.row = ind.row, U = U.row)
+  tscores <- multLinReg(G, ind_row = ind.row, ind_col = ind.col,
+                        U = U.row, ncores = ncores)
 
   dist <- `if`(K == 1, (drop(tscores) - stats::median(tscores))^2,
                bigutilsr::dist_ogk(tscores))
@@ -61,7 +56,7 @@ pcadapt0 <- function(G, U.row, ind.row, ind.col, ncores) {
 #' obj.svd <- big_SVD(G, fun.scaling = snp_scaleBinom(), k = 10)
 #' plot(obj.svd) # there seems to be 3 "significant" components
 #' pcadapt <- snp_pcadapt(G, obj.svd$u[, 1:3])
-#' snp_qq(snp_gc(pcadapt))
+#' snp_qq(pcadapt)
 #'
 snp_pcadapt <- function(G, U.row,
                         ind.row = rows_along(G),
