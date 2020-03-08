@@ -37,23 +37,17 @@ snp_scaleBinom <- function(nploidy = 2) {
 
   function(X,
            ind.row = rows_along(X),
-           ind.col = cols_along(X)) {
+           ind.col = cols_along(X),
+           ncores = 1) {
 
-    means <- big_colstats(X, ind.row = ind.row, ind.col = ind.col)$sum /
-      length(ind.row)
+    af <- snp_colstats(X, ind.row, ind.col, ncores)$sumX /
+      (length(ind.row) * nploidy)
 
-    p <- means / nploidy
-    sds <- sqrt(nploidy * p * (1 - p))
-
-    data.frame(center = means, scale = sds)
+    data.frame(center = nploidy * af, scale = sqrt(nploidy * af * (1 - af)))
   }
 }
 
 ################################################################################
-
-part_snp_MAF <- function(X, ind, ind.row) {
-  big_colstats(X, ind.row = ind.row, ind.col = ind)$sum
-}
 
 #' MAF
 #'
@@ -74,12 +68,10 @@ snp_MAF <- function(G,
                     nploidy = 2,
                     ncores = 1) {
 
-  ac <- big_parallelize(G, p.FUN = part_snp_MAF,
-                        p.combine = 'c', ncores = ncores,
-                        ind = ind.col, ind.row = ind.row)
+  af <- snp_colstats(G, ind.row, ind.col, ncores)$sumX /
+    (length(ind.row) * nploidy)
 
-  p <- ac / (nploidy * length(ind.row))
-  pmin(p, 1 - p)
+  pmin(af, 1 - af)
 }
 
 ################################################################################
@@ -113,7 +105,7 @@ bed_scaleBinom <- function(obj.bed,
                            ncores = 1) {
 
   stats <- bed_colstats(obj.bed, ind.row, ind.col, ncores)
-  af <- stats$sum / (2 * stats$nb_nona_col)
+  af <- stats$sumX / (2 * stats$nb_nona_col)
 
   data.frame(center = 2 * af, scale = sqrt(2 * af * (1 - af)))
 }
@@ -122,10 +114,6 @@ bed_scaleBinom <- function(obj.bed,
 
 part_bed_row_counts <- function(X, ind, ind.row) {
   bed_row_counts_cpp(obj_bed = X, ind_row = ind.row, ind_col = ind)
-}
-
-part_bed_col_counts <- function(X, ind, ind.row) {
-  bed_col_counts_cpp(obj_bed = X, ind_row = ind.row, ind_col = ind)
 }
 
 #' Counts
@@ -159,9 +147,7 @@ bed_counts <- function(obj.bed,
                            p.combine = plus, ncores = ncores,
                            ind = ind.col, ind.row = ind.row)
   } else {
-    res <- big_parallelize(obj.bed$light, p.FUN = part_bed_col_counts,
-                           p.combine = "cbind", ncores = ncores,
-                           ind = ind.col, ind.row = ind.row)
+    res <- bed_col_counts_cpp(obj.bed, ind.row, ind.col, ncores)
   }
 
   rownames(res) <- c(0:2, NA)
@@ -211,5 +197,3 @@ bed_MAF <- function(obj.bed,
 }
 
 ################################################################################
-
-

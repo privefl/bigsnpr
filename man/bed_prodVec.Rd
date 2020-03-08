@@ -19,11 +19,13 @@ bed_prodVec(
 
 \item{y.col}{A vector of same size as \code{ind.col}.}
 
-\item{ind.row}{An optional vector of the row indices that are used.
-If not specified, all rows are used. \strong{Don't use negative indices.}}
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
 
-\item{ind.col}{An optional vector of the column indices that are used.
-If not specified, all columns are used. \strong{Don't use negative indices.}}
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.\cr
+\strong{Don't use negative indices.}}
 
 \item{center}{Vector of same length of \code{ind.col} to subtract from columns
 of \code{X}.}
@@ -32,7 +34,7 @@ of \code{X}.}
 of \code{X}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link[bigstatsr]{nb_cores}.}
+You may use \link{nb_cores}.}
 }
 \value{
 \eqn{X \cdot y}.

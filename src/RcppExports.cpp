@@ -63,15 +63,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // bed_col_counts_cpp
-IntegerMatrix bed_col_counts_cpp(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col);
-RcppExport SEXP _bigsnpr_bed_col_counts_cpp(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP) {
+IntegerMatrix bed_col_counts_cpp(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, int ncores);
+RcppExport SEXP _bigsnpr_bed_col_counts_cpp(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    rcpp_result_gen = Rcpp::wrap(bed_col_counts_cpp(obj_bed, ind_row, ind_col));
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(bed_col_counts_cpp(obj_bed, ind_row, ind_col, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -85,6 +86,37 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
     rcpp_result_gen = Rcpp::wrap(bed_row_counts_cpp(obj_bed, ind_row, ind_col));
+    return rcpp_result_gen;
+END_RCPP
+}
+// read_bed_scaled
+NumericMatrix read_bed_scaled(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale);
+RcppExport SEXP _bigsnpr_read_bed_scaled(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_bed_scaled(obj_bed, ind_row, ind_col, center, scale));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prod_and_rowSumsSq
+List prod_and_rowSumsSq(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericMatrix& V);
+RcppExport SEXP _bigsnpr_prod_and_rowSumsSq(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP VSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type V(VSEXP);
+    rcpp_result_gen = Rcpp::wrap(prod_and_rowSumsSq(obj_bed, ind_row, ind_col, center, scale, V));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -119,37 +151,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
     rcpp_result_gen = Rcpp::wrap(bed_cpMatVec4(obj_bed, ind_row, ind_col, center, scale, x, ncores));
-    return rcpp_result_gen;
-END_RCPP
-}
-// read_bed_scaled
-NumericMatrix read_bed_scaled(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale);
-RcppExport SEXP _bigsnpr_read_bed_scaled(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
-    rcpp_result_gen = Rcpp::wrap(read_bed_scaled(obj_bed, ind_row, ind_col, center, scale));
-    return rcpp_result_gen;
-END_RCPP
-}
-// prod_and_rowSumsSq
-List prod_and_rowSumsSq(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericMatrix& V);
-RcppExport SEXP _bigsnpr_prod_and_rowSumsSq(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP VSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type V(VSEXP);
-    rcpp_result_gen = Rcpp::wrap(prod_and_rowSumsSq(obj_bed, ind_row, ind_col, center, scale, V));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -219,6 +220,20 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// snp_colstats
+ListOf<NumericVector> snp_colstats(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, int ncores);
+RcppExport SEXP _bigsnpr_snp_colstats(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(snp_colstats(BM, rowInd, colInd, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // replaceSNP
 void replaceSNP(Environment BM, Environment BM2, const IntegerVector& rowInd, const IntegerVector& colInd);
 RcppExport SEXP _bigsnpr_replaceSNP(SEXP BMSEXP, SEXP BM2SEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
@@ -233,7 +248,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // corMat
-SEXP corMat(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos, int ncores);
+arma::sp_mat corMat(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos, int ncores);
 RcppExport SEXP _bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP posSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -351,15 +366,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_bedXPtr", (DL_FUNC) &_bigsnpr_bedXPtr, 3},
     {"_bigsnpr_bed_colstats", (DL_FUNC) &_bigsnpr_bed_colstats, 4},
     {"_bigsnpr_bed_corNA", (DL_FUNC) &_bigsnpr_bed_corNA, 4},
-    {"_bigsnpr_bed_col_counts_cpp", (DL_FUNC) &_bigsnpr_bed_col_counts_cpp, 3},
+    {"_bigsnpr_bed_col_counts_cpp", (DL_FUNC) &_bigsnpr_bed_col_counts_cpp, 4},
     {"_bigsnpr_bed_row_counts_cpp", (DL_FUNC) &_bigsnpr_bed_row_counts_cpp, 3},
-    {"_bigsnpr_bed_pMatVec4", (DL_FUNC) &_bigsnpr_bed_pMatVec4, 7},
-    {"_bigsnpr_bed_cpMatVec4", (DL_FUNC) &_bigsnpr_bed_cpMatVec4, 7},
     {"_bigsnpr_read_bed_scaled", (DL_FUNC) &_bigsnpr_read_bed_scaled, 5},
     {"_bigsnpr_prod_and_rowSumsSq", (DL_FUNC) &_bigsnpr_prod_and_rowSumsSq, 6},
+    {"_bigsnpr_bed_pMatVec4", (DL_FUNC) &_bigsnpr_bed_pMatVec4, 7},
+    {"_bigsnpr_bed_cpMatVec4", (DL_FUNC) &_bigsnpr_bed_cpMatVec4, 7},
     {"_bigsnpr_bed_clumping_chr", (DL_FUNC) &_bigsnpr_bed_clumping_chr, 12},
     {"_bigsnpr_clumping_chr_cached", (DL_FUNC) &_bigsnpr_clumping_chr_cached, 14},
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 12},
+    {"_bigsnpr_snp_colstats", (DL_FUNC) &_bigsnpr_snp_colstats, 4},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 7},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 4},

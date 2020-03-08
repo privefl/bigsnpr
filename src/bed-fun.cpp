@@ -1,8 +1,6 @@
 /******************************************************************************/
 
 #include "bed-acc.h"
-#include <bigstatsr/prodMatVec.hpp>
-#include <bigstatsr/utils.h>
 
 /******************************************************************************/
 
@@ -10,14 +8,14 @@
 List bed_colstats(Environment obj_bed,
                   const IntegerVector& ind_row,
                   const IntegerVector& ind_col,
-                  int ncores = 1) {
+                  int ncores) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAcc macc(xp_bed, ind_row, ind_col);
   int n = macc.nrow();
   int m = macc.ncol();
 
-  NumericVector sum(m), var(m);
+  NumericVector sumX(m), denoX(m);
   IntegerVector nb_nona_col(m);
 
   #pragma omp parallel for num_threads(ncores)
@@ -33,16 +31,16 @@ List bed_colstats(Environment obj_bed,
         c--;
       }
     }
-    sum[j] = xSum;
-    var[j] = (xxSum - xSum * xSum / c) / (c - 1);
+    sumX[j]  = xSum;
+    denoX[j] = xxSum - xSum * xSum / c;
     nb_nona_col[j] = c;
   }
 
   int n_bad = Rcpp::sum(2 * nb_nona_col < n);
   if (n_bad > 0) Rcpp::warning("%d variants have >50%% missing values.", n_bad);
 
-  return List::create(_["sum"]  = sum,
-                      _["var"]  = var,
+  return List::create(_["sumX"]  = sumX,
+                      _["denoX"] = denoX,
                       _["nb_nona_col"] = nb_nona_col);
 }
 
@@ -83,7 +81,8 @@ List bed_corNA(Environment obj_bed,
 // [[Rcpp::export]]
 IntegerMatrix bed_col_counts_cpp(Environment obj_bed,
                                  const IntegerVector& ind_row,
-                                 const IntegerVector& ind_col) {
+                                 const IntegerVector& ind_col,
+                                 int ncores) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAcc macc(xp_bed, ind_row, ind_col);
@@ -92,6 +91,7 @@ IntegerMatrix bed_col_counts_cpp(Environment obj_bed,
 
   IntegerMatrix res(4, m);
 
+  #pragma omp parallel for num_threads(ncores)
   for (size_t j = 0; j < m; j++)
     for (size_t i = 0; i < n; i++)
       (res(macc(i, j), j))++;
@@ -155,38 +155,6 @@ IntegerMatrix bed_row_counts_cpp(Environment obj_bed,
 //
 //   return wmean;
 // }
-
-/******************************************************************************/
-
-// [[Rcpp::export]]
-NumericVector bed_pMatVec4(Environment obj_bed,
-                           const IntegerVector& ind_row,
-                           const IntegerVector& ind_col,
-                           const NumericVector& center,
-                           const NumericVector& scale,
-                           const NumericVector& x,
-                           int ncores = 1) {
-
-  XPtr<bed> xp_bed = obj_bed["address"];
-  bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
-
-  return bigstatsr::pMatVec4(macc, x, ncores);
-}
-
-// [[Rcpp::export]]
-NumericVector bed_cpMatVec4(Environment obj_bed,
-                            const IntegerVector& ind_row,
-                            const IntegerVector& ind_col,
-                            const NumericVector& center,
-                            const NumericVector& scale,
-                            const NumericVector& x,
-                            int ncores = 1) {
-
-  XPtr<bed> xp_bed = obj_bed["address"];
-  bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
-
-  return bigstatsr::cpMatVec4(macc, x, ncores);
-}
 
 /******************************************************************************/
 

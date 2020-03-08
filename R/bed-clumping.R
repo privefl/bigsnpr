@@ -35,13 +35,13 @@ bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row,
 
   # cache some computations
   stats <- bed_colstats(obj.bed, ind.row, ind.chr, ncores)
-  center <- stats$sum / stats$nb_nona_col
-  scale <- sqrt(stats$var * (stats$nb_nona_col - 1))
+  center <- stats$sumX / stats$nb_nona_col
+  scale <- sqrt(stats$denoX)
 
   # statistic to prioritize SNPs
   if (is.null(S)) {
     # use minor allele count (MAC) by default
-    S.chr <- pmin(stats$sum, 2 * stats$nb_nona_col - stats$sum)
+    S.chr <- pmin(stats$sumX, 2 * stats$nb_nona_col - stats$sumX)
   } else {
     S.chr <- S[ind.chr]
   }

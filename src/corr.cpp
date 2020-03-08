@@ -7,20 +7,14 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-// R_IsNA:  https://stackoverflow.com/a/26262984/6103040
-// Using 3: https://stackoverflow.com/q/46892399/6103040
-inline bool isna(double x) {
-  return(x == 3);
-}
-
 // [[Rcpp::export]]
-SEXP corMat(Environment BM,
-            const IntegerVector& rowInd,
-            const IntegerVector& colInd,
-            double size,
-            const NumericVector& thr,
-            const NumericVector& pos,
-            int ncores = 1) {
+arma::sp_mat corMat(Environment BM,
+                    const IntegerVector& rowInd,
+                    const IntegerVector& colInd,
+                    double size,
+                    const NumericVector& thr,
+                    const NumericVector& pos,
+                    int ncores) {
 
   myassert_size(colInd.size(), pos.size());
 
@@ -41,7 +35,7 @@ SEXP corMat(Environment BM,
     double xSum0 = 0, xxSum0 = 0;
     for (int i = 0; i < n; i++) {
       double x = macc(i, j0);
-      if (!isna(x)) {
+      if (x != 3) {
         xSum0  += x;
         xxSum0 += x * x;
       }
@@ -57,10 +51,10 @@ SEXP corMat(Environment BM,
       for (int i = 0; i < n; i++) {
 
         double x = macc(i, j0);
-        if (isna(x)) continue;
+        if (x == 3) continue;
 
         double y = macc(i, j);
-        if (isna(y)) {
+        if (y == 3) {
           // y is missing, but not x
           xSum  -= x;
           xxSum -= x * x;
@@ -85,7 +79,7 @@ SEXP corMat(Environment BM,
     }
   }
 
-  return wrap(corr);
+  return corr;
 }
 
 /******************************************************************************/

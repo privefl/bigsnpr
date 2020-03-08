@@ -9,7 +9,7 @@ bedXPtr <- function(path, n, p) {
     .Call(`_bigsnpr_bedXPtr`, path, n, p)
 }
 
-bed_colstats <- function(obj_bed, ind_row, ind_col, ncores = 1L) {
+bed_colstats <- function(obj_bed, ind_row, ind_col, ncores) {
     .Call(`_bigsnpr_bed_colstats`, obj_bed, ind_row, ind_col, ncores)
 }
 
@@ -17,20 +17,12 @@ bed_corNA <- function(obj_bed, ind_row, ind_col, U) {
     .Call(`_bigsnpr_bed_corNA`, obj_bed, ind_row, ind_col, U)
 }
 
-bed_col_counts_cpp <- function(obj_bed, ind_row, ind_col) {
-    .Call(`_bigsnpr_bed_col_counts_cpp`, obj_bed, ind_row, ind_col)
+bed_col_counts_cpp <- function(obj_bed, ind_row, ind_col, ncores) {
+    .Call(`_bigsnpr_bed_col_counts_cpp`, obj_bed, ind_row, ind_col, ncores)
 }
 
 bed_row_counts_cpp <- function(obj_bed, ind_row, ind_col) {
     .Call(`_bigsnpr_bed_row_counts_cpp`, obj_bed, ind_row, ind_col)
-}
-
-bed_pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x, ncores = 1L) {
-    .Call(`_bigsnpr_bed_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x, ncores)
-}
-
-bed_cpMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x, ncores = 1L) {
-    .Call(`_bigsnpr_bed_cpMatVec4`, obj_bed, ind_row, ind_col, center, scale, x, ncores)
 }
 
 read_bed_scaled <- function(obj_bed, ind_row, ind_col, center, scale) {
@@ -39,6 +31,14 @@ read_bed_scaled <- function(obj_bed, ind_row, ind_col, center, scale) {
 
 prod_and_rowSumsSq <- function(obj_bed, ind_row, ind_col, center, scale, V) {
     .Call(`_bigsnpr_prod_and_rowSumsSq`, obj_bed, ind_row, ind_col, center, scale, V)
+}
+
+bed_pMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x, ncores) {
+    .Call(`_bigsnpr_bed_pMatVec4`, obj_bed, ind_row, ind_col, center, scale, x, ncores)
+}
+
+bed_cpMatVec4 <- function(obj_bed, ind_row, ind_col, center, scale, x, ncores) {
+    .Call(`_bigsnpr_bed_cpMatVec4`, obj_bed, ind_row, ind_col, center, scale, x, ncores)
 }
 
 bed_clumping_chr <- function(obj_bed, BM2, ind_row, ind_col, center, scale, ordInd, rankInd, pos, size, thr, ncores) {
@@ -53,11 +53,15 @@ clumping_chr <- function(BM, BM2, rowInd, colInd, ordInd, rankInd, pos, sumX, de
     invisible(.Call(`_bigsnpr_clumping_chr`, BM, BM2, rowInd, colInd, ordInd, rankInd, pos, sumX, denoX, size, thr, ncores))
 }
 
+snp_colstats <- function(BM, rowInd, colInd, ncores) {
+    .Call(`_bigsnpr_snp_colstats`, BM, rowInd, colInd, ncores)
+}
+
 replaceSNP <- function(BM, BM2, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_replaceSNP`, BM, BM2, rowInd, colInd))
 }
 
-corMat <- function(BM, rowInd, colInd, size, thr, pos, ncores = 1L) {
+corMat <- function(BM, rowInd, colInd, size, thr, pos, ncores) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos, ncores)
 }
 

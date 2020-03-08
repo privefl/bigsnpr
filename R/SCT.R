@@ -67,9 +67,9 @@ snp_grid_clumping <- function(
     info.chr  <- infos.imp[ind.chr]
     S.chr     <- lpS[ind.chr]
     pos.chr   <- infos.pos[ind.chr]
-    stats     <- big_colstats(G, ind.row, ind.chr, ncores)
-    sumX.chr  <- stats$sum
-    denoX.chr <- (length(ind.row) - 1) * stats$var
+    stats     <- snp_colstats(G, ind.row, ind.chr, ncores)
+    sumX.chr  <- stats$sumX
+    denoX.chr <- stats$denoX
     spcor.chr <- sparseMatrix(i = integer(), j = integer(), x = double(),
                               dims = rep(length(ind.chr), 2))
     assert_sorted(pos.chr)

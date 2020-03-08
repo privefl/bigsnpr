@@ -6,6 +6,7 @@
 #'   had been imputed using parameter `center`.
 #'
 #' @param obj.bed A [bed] object.
+#' @inheritParams bigsnpr-package
 #' @inherit bigstatsr::big_cprodVec title params return
 #'
 #' @export
@@ -43,6 +44,7 @@ bed_cprodVec <- function(obj.bed, y.row,
 #'   had been imputed using parameter `center`.
 #'
 #' @param obj.bed A [bed] object.
+#' @inheritParams bigsnpr-package
 #' @inherit bigstatsr::big_prodVec title params return
 #'
 #' @export

@@ -91,12 +91,12 @@ snp_clumping <- function(G, infos.chr,
 clumpingChr <- function(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores) {
 
   # cache some computations
-  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr, ncores = ncores)
+  stats <- snp_colstats(G, ind.row, ind.chr, ncores)
 
   # statistic to prioritize SNPs
   n <- length(ind.row)
   if (is.null(S)) {
-    af <- stats$sum / (2 * n)
+    af <- stats$sumX / (2 * n)
     S.chr <- pmin(af, 1 - af)
   } else {
     S.chr <- S[ind.chr]
@@ -122,8 +122,8 @@ clumpingChr <- function(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
     ordInd = ord,
     rankInd = match(seq_along(ord), ord),
     pos    = pos.chr,
-    sumX   = stats$sum,
-    denoX  = (n - 1) * stats$var,
+    sumX   = stats$sumX,
+    denoX  = stats$denoX,
     size   = size,
     thr    = thr.r2,
     ncores = ncores
