@@ -196,7 +196,7 @@ snp_fastImputeSimple <- function(
   check_args()
   stopifnot(identical(Gna$code256, CODE_012))
 
-  if (method == "zero") {
+  if (identical(method, "zero")) {
     warning2("Using 'method = \"zero\"' is deprecated. Using $copy() instead..")
     Gna$copy(code = c(0, 1, 2, 0, rep(NA, 252)))
   } else {

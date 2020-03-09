@@ -113,6 +113,26 @@ test_that("parallel snp_clumping() works", {
 
 ################################################################################
 
+test_that("parallel snp_grid_clumping() works", {
+
+  G <- snp_attachExtdata()$genotypes
+  rows <- sample(nrow(G), replace = TRUE)
+  lpS <- runif(ncol(G))
+
+  test <- replicate(5, simplify = FALSE, {
+    snp_grid_clumping(G, ind.row = rows, lpS = lpS, ncores = 2,
+                      infos.chr = rep(1, ncol(G)), infos.pos = cols_along(G),
+                      grid.base.size = 0.1, grid.thr.r2 = c(0.05, 0.5))
+  })
+  true <- snp_grid_clumping(G, ind.row = rows, lpS = lpS, ncores = 1,
+                            infos.chr = rep(1, ncol(G)), infos.pos = cols_along(G),
+                            grid.base.size = 0.1, grid.thr.r2 = c(0.05, 0.5))
+
+  expect_true(all(sapply(test, identical, y = true)))
+})
+
+################################################################################
+
 test_that("parallel snp_readBed2() works", {
 
   bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
@@ -132,7 +152,7 @@ test_that("parallel snp_readBed2() works", {
 
 ################################################################################
 
-test_that("parallel snp_clumping() works", {
+test_that("parallel snp_cor() works", {
 
   G <- snp_attachExtdata()$genotypes
   rows <- sample(nrow(G), replace = TRUE)
@@ -144,6 +164,23 @@ test_that("parallel snp_clumping() works", {
   true <- snp_cor(G, rows, cols, ncores = 1)
 
   expect_true(all(sapply(test, all.equal, current = true)))
+})
+
+################################################################################
+
+test_that("parallel bed_counts() works", {
+
+  bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+  obj.bed <- bed(bedfile)
+  rows <- sample(nrow(obj.bed), replace = TRUE)
+  cols <- sample(ncol(obj.bed), replace = TRUE)
+
+  test <- replicate(20, simplify = FALSE, {
+    bed_counts(obj.bed, rows, cols, ncores = 2)
+  })
+  true <- bed_counts(obj.bed, rows, cols, ncores = 1)
+
+  expect_true(all(sapply(test, identical, y = true)))
 })
 
 ################################################################################
