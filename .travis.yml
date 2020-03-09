@@ -6,6 +6,7 @@ matrix:
   include:
   - r: release
     os: osx
+    osx_image: xcode8
     brew_packages: libgit2
     before_install: brew install gcc6 && CC=gcc-6 && CXX=g++-6
   - r: release

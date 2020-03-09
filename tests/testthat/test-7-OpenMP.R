@@ -3,6 +3,8 @@
 context("OPENMP")
 # Basically, test if any crash..
 
+skip_if(is_cran)
+
 ################################################################################
 
 test_that("parallel snp_colstats() works", {
