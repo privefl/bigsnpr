@@ -60,7 +60,7 @@ G <- test$genotypes
 obj.svd <- big_SVD(G, fun.scaling = snp_scaleBinom(), k = 10)
 plot(obj.svd) # there seems to be 3 "significant" components
 pcadapt <- snp_pcadapt(G, obj.svd$u[, 1:3])
-snp_qq(snp_gc(pcadapt))
+snp_qq(pcadapt)
 
 }
 \references{

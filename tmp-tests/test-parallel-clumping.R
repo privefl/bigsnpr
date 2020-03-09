@@ -45,19 +45,9 @@
 #' - `snp_indLRLDR()`: SNP indices to be used as (part of) the '__`exclude`__'
 #'   parameter of `snp_clumping()`.
 #'
+#' @example examples/example-pruning.R
+#'
 #' @export
-#'
-#' @examples
-#' test <- snp_attachExtdata()
-#' G <- test$genotypes
-#'
-#' # clumping (prioritizing higher MAF)
-#' ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
-#'                          infos.pos = test$map$physical.pos,
-#'                          thr.r2 = 0.1)
-#'
-#' # keep most of them -> not much LD in this simulated dataset
-#' length(ind.keep) / ncol(G)
 #'
 snp_clumping <- function(G, infos.chr,
                          ind.row = rows_along(G),
@@ -76,62 +66,55 @@ snp_clumping <- function(G, infos.chr,
 
   if (!is.null(S)) assert_lengths(infos.chr, S)
 
-  ind.noexcl <- setdiff(seq_along(infos.chr), exclude)
+  res <- list()
+  ind.chrs <- split(seq_along(infos.chr), infos.chr)
+  for (ic in seq_along(ind.chrs)) {
+    res[[ic]] <- clumpingChr(G, S, ind.chrs[[ic]], ind.row,
+                             size, infos.pos, thr.r2, exclude, ncores)
+  }
 
-  sort(unlist(
-    lapply(split(ind.noexcl, infos.chr[ind.noexcl]), function(ind.chr) {
-      clumpingChr(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
-    }),
-    use.names = FALSE
-  ))
+  sort(unlist(res))
 }
 
 ################################################################################
 
-clumpingChr <- function(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores) {
+clumpingChr <- function(G, S, ind.chr, ind.row,
+                        size, infos.pos, thr.r2, exclude, ncores) {
+
+  ind.chr <- setdiff(ind.chr, exclude)
 
   # cache some computations
-  stats <- snp_colstats(G, ind.row, ind.chr, ncores)
+  stats <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr, ncores = ncores)
 
   # statistic to prioritize SNPs
   n <- length(ind.row)
   if (is.null(S)) {
-    af <- stats$sumX / (2 * n)
+    af <- stats$sum / (2 * n)
     S.chr <- pmin(af, 1 - af)
   } else {
     S.chr <- S[ind.chr]
   }
-  ord <- order(S.chr, decreasing = TRUE)
+  pos.chr <- `if`(is.null(infos.pos), 1000L * seq_along(ind.chr), infos.pos[ind.chr])
+  assert_sorted(pos.chr)
 
-  if (is.null(infos.pos)) {
-    pos.chr <- seq_along(ind.chr)
-  } else {
-    size <- size * 1000  # kbp to bp
-    pos.chr <- infos.pos[ind.chr]
-    assert_sorted(pos.chr)
-  }
-
-  keep <- FBM(1, length(ind.chr), type = "integer", init = -1)
+  remain <- FBM(1, length(ind.chr), type = "integer", init = 1L)
 
   # main algo
-  clumping_chr(
+  RcppParallel::setThreadOptions(ncores)
+  keep <- clumping_chr(
     G,
-    keep,
+    remain,
     rowInd = ind.row,
     colInd = ind.chr,
-    ordInd = ord,
-    rankInd = match(seq_along(ord), ord),
+    ordInd = order(S.chr, decreasing = TRUE),
     pos    = pos.chr,
-    sumX   = stats$sumX,
-    denoX  = stats$denoX,
-    size   = size,
-    thr    = thr.r2,
-    ncores = ncores
+    sumX   = stats$sum,
+    denoX  = (n - 1) * stats$var,
+    size   = size * 1000L, # in bp
+    thr    = thr.r2
   )
 
-  stopifnot(all(keep[] %in% 0:1))
-
-  ind.chr[keep[] == 1]
+  ind.chr[keep]
 }
 
 ################################################################################

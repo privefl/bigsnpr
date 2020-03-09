@@ -1,53 +1,47 @@
 /******************************************************************************/
 
 #include "bed-acc.h"
-#include <bigstatsr/prodMatVec.hpp>
-#include <bigstatsr/utils.h>
 
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List bed_stats(Environment obj_bed,
-               const IntegerVector& ind_row,
-               const IntegerVector& ind_col) {
+List bed_colstats(Environment obj_bed,
+                  const IntegerVector& ind_row,
+                  const IntegerVector& ind_col,
+                  int ncores) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAcc macc(xp_bed, ind_row, ind_col);
-  size_t n = macc.nrow();
-  size_t m = macc.ncol();
+  int n = macc.nrow();
+  int m = macc.ncol();
 
-  NumericVector sum(m), var(m);
-  IntegerVector nb_nona_col(m), nb_nona_row(n, int(m));
-  double x, xSum, xxSum;
-  int c;
+  NumericVector sumX(m), denoX(m);
+  IntegerVector nb_nona_col(m);
 
-  for (size_t j = 0; j < m; j++) {
-    xSum = xxSum = 0;
-    c = n;
-    for (size_t i = 0; i < n; i++) {
-      x = macc(i, j);
+  #pragma omp parallel for num_threads(ncores)
+  for (int j = 0; j < m; j++) {
+    double xSum = 0, xxSum = 0;
+    int c = n;
+    for (int i = 0; i < n; i++) {
+      double x = macc(i, j);
       if (x != 3) {
-        xSum += x;
-        xxSum += x*x;
+        xSum  += x;
+        xxSum += x * x;
       } else {
         c--;
-        nb_nona_row[i]--;
       }
     }
-    sum[j] = xSum;
-    var[j] = (xxSum - xSum * xSum / c) / (c - 1);
+    sumX[j]  = xSum;
+    denoX[j] = xxSum - xSum * xSum / c;
     nb_nona_col[j] = c;
   }
 
   int n_bad = Rcpp::sum(2 * nb_nona_col < n);
   if (n_bad > 0) Rcpp::warning("%d variants have >50%% missing values.", n_bad);
-  n_bad = Rcpp::sum(2 * nb_nona_row < m);
-  if (n_bad > 0) Rcpp::warning("%d samples have >50%% missing values.", n_bad);
 
-  return List::create(_["sum"]  = sum,
-                      _["var"]  = var,
-                      _["nb_nona_col"] = nb_nona_col,
-                      _["nb_nona_row"] = nb_nona_row);
+  return List::create(_["sumX"]  = sumX,
+                      _["denoX"] = denoX,
+                      _["nb_nona_col"] = nb_nona_col);
 }
 
 /******************************************************************************/
@@ -87,7 +81,8 @@ List bed_corNA(Environment obj_bed,
 // [[Rcpp::export]]
 IntegerMatrix bed_col_counts_cpp(Environment obj_bed,
                                  const IntegerVector& ind_row,
-                                 const IntegerVector& ind_col) {
+                                 const IntegerVector& ind_col,
+                                 int ncores) {
 
   XPtr<bed> xp_bed = obj_bed["address"];
   bedAcc macc(xp_bed, ind_row, ind_col);
@@ -96,6 +91,7 @@ IntegerMatrix bed_col_counts_cpp(Environment obj_bed,
 
   IntegerMatrix res(4, m);
 
+  #pragma omp parallel for num_threads(ncores)
   for (size_t j = 0; j < m; j++)
     for (size_t i = 0; i < n; i++)
       (res(macc(i, j), j))++;
@@ -159,36 +155,6 @@ IntegerMatrix bed_row_counts_cpp(Environment obj_bed,
 //
 //   return wmean;
 // }
-
-/******************************************************************************/
-
-// [[Rcpp::export]]
-NumericVector bed_pMatVec4(Environment obj_bed,
-                           const IntegerVector& ind_row,
-                           const IntegerVector& ind_col,
-                           const NumericVector& center,
-                           const NumericVector& scale,
-                           const NumericVector& x) {
-
-  XPtr<bed> xp_bed = obj_bed["address"];
-  bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
-
-  return bigstatsr::pMatVec4(macc, x);
-}
-
-// [[Rcpp::export]]
-NumericVector bed_cpMatVec4(Environment obj_bed,
-                            const IntegerVector& ind_row,
-                            const IntegerVector& ind_col,
-                            const NumericVector& center,
-                            const NumericVector& scale,
-                            const NumericVector& x) {
-
-  XPtr<bed> xp_bed = obj_bed["address"];
-  bedAccScaled macc(xp_bed, ind_row, ind_col, center, scale);
-
-  return bigstatsr::cpMatVec4(macc, x);
-}
 
 /******************************************************************************/
 

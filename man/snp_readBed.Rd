@@ -11,7 +11,8 @@ snp_readBed2(
   bedfile,
   backingfile = sub_bed(bedfile),
   ind.row = rows_along(obj.bed),
-  ind.col = cols_along(obj.bed)
+  ind.col = cols_along(obj.bed),
+  ncores = 1
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ are used. If not specified, all rows are used.\cr
 \item{ind.col}{An optional vector of the column indices (SNPs) that are used.
 If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.
@@ -38,7 +42,7 @@ the Filebacked Big Matrix.\cr
 \link{snp_attach} to load the "bigSNP" object in any R session from backing files.
 }
 \description{
-Function to read bed/bim/fam files into a \link[=bigSNP-class]{bigSNP}.
+Functions to read bed/bim/fam files into a \link[=bigSNP-class]{bigSNP}.
 }
 \details{
 For more information on these formats, please visit

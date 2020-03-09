@@ -2,6 +2,8 @@
 
 context("ASSOC_BGEN")
 
+skip_if(is_cran)
+
 # need to write bgen/bgi files because can't have binary files..
 library(magrittr)
 bgen_file <- tempfile(fileext = ".bgen")

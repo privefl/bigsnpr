@@ -16,52 +16,61 @@ bed_clumping <- function(obj.bed,
   infos.pos <- obj.bed$map$physical.pos
 
   check_args()
-
-  obj.bed <- obj.bed$light
-  args <- as.list(environment())
-
   if (!is.null(S)) assert_lengths(infos.chr, S)
 
-  do.call(what = snp_split, args = c(args, FUN = bedClumpingChr, combine = 'c'))
+  ind.noexcl <- setdiff(seq_along(infos.chr), exclude)
+
+  sort(unlist(
+    lapply(split(ind.noexcl, infos.chr[ind.noexcl]), function(ind.chr) {
+      bedClumpingChr(obj.bed, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
+    }),
+    use.names = FALSE
+  ))
 }
 
 ################################################################################
 
-bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row, size, infos.pos,
-                           thr.r2, exclude) {
-
-  ind.chr <- setdiff(ind.chr, exclude)
+bedClumpingChr <- function(obj.bed, S, ind.chr, ind.row,
+                           size, infos.pos, thr.r2, ncores) {
 
   # cache some computations
-  stats <- bed_stats(obj.bed, ind.row, ind.chr)
-  center <- stats$sum / stats$nb_nona_col
-  scale <- sqrt(stats$var * (stats$nb_nona_col - 1))
+  stats <- bed_colstats(obj.bed, ind.row, ind.chr, ncores)
+  center <- stats$sumX / stats$nb_nona_col
+  scale <- sqrt(stats$denoX)
 
   # statistic to prioritize SNPs
   if (is.null(S)) {
     # use minor allele count (MAC) by default
-    S.chr <- pmin(stats$sum, 2 * stats$nb_nona_col - stats$sum)
+    S.chr <- pmin(stats$sumX, 2 * stats$nb_nona_col - stats$sumX)
   } else {
     S.chr <- S[ind.chr]
   }
+  ord <- order(S.chr, decreasing = TRUE)
 
   pos.chr <- infos.pos[ind.chr]
   assert_sorted(pos.chr)
 
+  keep <- FBM(1, length(ind.chr), type = "integer", init = -1)
+
   # main algo
-  keep <- bed_clumping_chr(
-    obj_bed = obj.bed,
+  bed_clumping_chr(
+    obj.bed,
+    keep,
     ind_row = ind.row,
     ind_col = ind.chr,
     center  = center,
     scale   = scale,
-    ordInd  = order(S.chr, decreasing = TRUE),
+    ordInd  = ord,
+    rankInd = match(seq_along(ord), ord),
     pos     = pos.chr,
-    size    = size * 1000L, # in bp
-    thr     = thr.r2
+    size    = size * 1000,  # kbp to bp
+    thr     = thr.r2,
+    ncores  = ncores
   )
 
-  ind.chr[keep]
+  stopifnot(all(keep[] %in% 0:1))
+
+  ind.chr[keep[] == 1]
 }
 
 ################################################################################

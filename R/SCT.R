@@ -25,6 +25,8 @@ NULL
 #'   annotations. Default just makes one group with all variants.
 #' @param exclude Vector of SNP indices to exclude anyway.
 #'
+#' @import Matrix
+#'
 #' @rdname SCT
 #' @export
 snp_grid_clumping <- function(
@@ -46,22 +48,28 @@ snp_grid_clumping <- function(
   THR_IMP        <- sort(unique(grid.thr.imp))
   THR_CLMP       <- sort(unique(grid.thr.r2))
   BASE_SIZE_CLMP <- sort(unique(grid.base.size))
-  ALL_CHR        <- sort(unique(infos.chr))
 
-  bigparallelr::register_parallel(ncores)
+  grid <- expand.grid(
+    size    = BASE_SIZE_CLMP,
+    thr.r2  = THR_CLMP,
+    grp.num = seq_along(groups),
+    thr.imp = THR_IMP
+  )
+  grid$size <- as.integer(grid$size / grid$thr.r2)
 
-  all_keep <- foreach(chr = ALL_CHR, .packages = "Matrix") %dopar% {
+  ind.noexcl <- setdiff(seq_along(infos.chr), exclude)
 
-    ind.keep <- list(); i <- 1
+  all_keep <- lapply(split(ind.noexcl, infos.chr[ind.noexcl]), function(ind.chr) {
+
+    ind.keep <- list()
 
     # Init chromosome
-    ind.chr   <- setdiff(which(infos.chr == chr), exclude)
     info.chr  <- infos.imp[ind.chr]
     S.chr     <- lpS[ind.chr]
     pos.chr   <- infos.pos[ind.chr]
-    stats     <- big_colstats(G, ind.row = ind.row, ind.col = ind.chr)
-    sumX.chr  <- stats$sum
-    denoX.chr <- (length(ind.row) - 1) * stats$var
+    stats     <- snp_colstats(G, ind.row, ind.chr, ncores)
+    sumX.chr  <- stats$sumX
+    denoX.chr <- stats$denoX
     spcor.chr <- sparseMatrix(i = integer(), j = integer(), x = double(),
                               dims = rep(length(ind.chr), 2))
     assert_sorted(pos.chr)
@@ -83,43 +91,61 @@ snp_grid_clumping <- function(
 
         ind2 <- which(ind.chr %in% group)
 
-        # Loop over parameters of clumping
-        for (thr.clmp in THR_CLMP) {
-          for (base.size.clmp in BASE_SIZE_CLMP) {
+        # TODO: get rid of empty groups? Would be harder to compute C+T and SCT
+        if (length(ind2) == 0) {
 
-            # TODO: make sure to use the right subsetting (with ordInd)
-            res <- clumping_chr_cached(
-              G,
-              spcor.chr,
-              spInd  = ind2 - 1L,
-              rowInd = ind.row,
-              colInd = ind.chr[ind2],
-              ordInd = order(S.chr[ind2], decreasing = TRUE),
-              pos    = pos.chr[ind2],
-              sumX   = sumX.chr[ind2],
-              denoX  = denoX.chr[ind2],
-              size   = 1000 * base.size.clmp / thr.clmp, # in bp
-              thr    = thr.clmp
-            )
+          for (thr.clmp in THR_CLMP) {
+            for (base.size.clmp in BASE_SIZE_CLMP) {
+              ind.keep[[length(ind.keep) + 1L]] <- integer()
+            }
+          }
 
-            ind.keep[[i]] <- ind.chr[ind2][res[[1]]]
-            i <- i + 1
-            spcor.chr <- res[[2]]
+        } else {
+
+          ind.sp.grp   <- ind2 - 1L
+          ind.chr.grp  <- ind.chr[ind2]
+          ord.chr.grp  <- order(S.chr[ind2], decreasing = TRUE)
+          rank.chr.grp <- match(seq_along(ord.chr.grp), ord.chr.grp)
+          pos.chr.grp  <- pos.chr[ind2]
+          sumX.chr.grp <- sumX.chr[ind2]
+          deno.chr.grp <- denoX.chr[ind2]
+
+          keep <- FBM(1, length(ind.chr.grp), type = "integer")
+
+          # Loop over parameters of clumping
+          for (thr.clmp in THR_CLMP) {
+            for (base.size.clmp in BASE_SIZE_CLMP) {
+
+              keep[] <- -1  # reinit to "do not know yet"
+
+              spcor.chr <- clumping_chr_cached(
+                G,
+                keep,
+                spcor.chr,
+                spInd   = ind.sp.grp,
+                rowInd  = ind.row,
+                colInd  = ind.chr.grp,
+                ordInd  = ord.chr.grp,
+                rankInd = rank.chr.grp,
+                pos     = pos.chr.grp,
+                sumX    = sumX.chr.grp,
+                denoX   = deno.chr.grp,
+                size    = 1000 * base.size.clmp / thr.clmp, # in bp
+                thr     = thr.clmp,
+                ncores  = ncores
+              )
+
+              stopifnot(all(keep[] %in% 0:1))
+
+              ind.keep[[length(ind.keep) + 1L]] <- ind.chr.grp[keep[] == 1]
+            }
           }
         }
       }
     }
 
     ind.keep
-  }
-
-  grid <- expand.grid(
-    size    = BASE_SIZE_CLMP,
-    thr.r2  = THR_CLMP,
-    grp.num = seq_along(groups),
-    thr.imp = THR_IMP
-  )
-  grid$size <- as.integer(grid$size / grid$thr.r2)
+  })
 
   structure(all_keep, grid = grid)
 }

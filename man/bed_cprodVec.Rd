@@ -10,7 +10,8 @@ bed_cprodVec(
   ind.row = rows_along(obj.bed),
   ind.col = cols_along(obj.bed),
   center = rep(0, length(ind.col)),
-  scale = rep(1, length(ind.col))
+  scale = rep(1, length(ind.col)),
+  ncores = 1
 )
 }
 \arguments{
@@ -18,17 +19,22 @@ bed_cprodVec(
 
 \item{y.row}{A vector of same size as \code{ind.row}.}
 
-\item{ind.row}{An optional vector of the row indices that are used.
-If not specified, all rows are used. \strong{Don't use negative indices.}}
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
 
-\item{ind.col}{An optional vector of the column indices that are used.
-If not specified, all columns are used. \strong{Don't use negative indices.}}
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.\cr
+\strong{Don't use negative indices.}}
 
 \item{center}{Vector of same length of \code{ind.col} to subtract from columns
 of \code{X}.}
 
 \item{scale}{Vector of same length of \code{ind.col} to divide from columns
 of \code{X}.}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 \eqn{X^T \cdot y}.

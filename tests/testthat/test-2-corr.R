@@ -21,10 +21,10 @@ expect_equal(r_again, r)
 corr <- bigsnpr:::corMat(BM = G,
                          rowInd = ind.row,
                          colInd = ind.col,
-                         blockInd = seq_along(ind.col),
                          size = size,
                          thr = rep(r, n),
-                         pos = seq_along(ind.col))
+                         pos = seq_along(ind.col),
+                         ncores = 2)
 corr2 <- corr^2
 
 ################################################################################

@@ -7,20 +7,14 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-// R_IsNA:  https://stackoverflow.com/a/26262984/6103040
-// Using 3: https://stackoverflow.com/q/46892399/6103040
-inline bool isna(double x) {
-  return(x == 3);
-}
-
 // [[Rcpp::export]]
-SEXP corMat(Environment BM,
-            const IntegerVector& rowInd,
-            const IntegerVector& colInd,
-            const IntegerVector& blockInd,
-            double size,
-            const NumericVector& thr,
-            const NumericVector& pos) {
+arma::sp_mat corMat(Environment BM,
+                    const IntegerVector& rowInd,
+                    const IntegerVector& colInd,
+                    double size,
+                    const NumericVector& thr,
+                    const NumericVector& pos,
+                    int ncores) {
 
   myassert_size(colInd.size(), pos.size());
 
@@ -31,21 +25,17 @@ SEXP corMat(Environment BM,
 
   int n = macc.nrow();
   int m = macc.ncol();
-  int m2 = blockInd.size();
 
-  arma::sp_mat corr(m, m2);
+  arma::sp_mat corr(m, m);
 
-  double x, y;
-
-  for (int k0 = 0; k0 < m2; k0++) {
-
-    int j0 = blockInd[k0] - 1;
+  #pragma omp parallel for num_threads(ncores)
+  for (int j0 = 0; j0 < m; j0++) {
 
     // pre-computation
     double xSum0 = 0, xxSum0 = 0;
     for (int i = 0; i < n; i++) {
-      x = macc(i, j0);
-      if (!isna(x)) {
+      double x = macc(i, j0);
+      if (x != 3) {
         xSum0  += x;
         xxSum0 += x * x;
       }
@@ -60,11 +50,11 @@ SEXP corMat(Environment BM,
       double ySum = 0, yySum = 0, xySum = 0;
       for (int i = 0; i < n; i++) {
 
-        x = macc(i, j0);
-        if (isna(x)) continue;
+        double x = macc(i, j0);
+        if (x == 3) continue;
 
-        y = macc(i, j);
-        if (isna(y)) {
+        double y = macc(i, j);
+        if (y == 3) {
           // y is missing, but not x
           xSum  -= x;
           xxSum -= x * x;
@@ -82,11 +72,14 @@ SEXP corMat(Environment BM,
       double deno_y = yySum - ySum * ySum / nona;
       double r = num / ::sqrt(deno_x * deno_y);
 
-      if (std::abs(r) > thr[nona - 1]) corr(j, k0) = r;
+      if (std::abs(r) > thr[nona - 1]) {
+        #pragma omp critical
+        corr(j, j0) = r;
+      }
     }
   }
 
-  return wrap(corr);
+  return corr;
 }
 
 /******************************************************************************/

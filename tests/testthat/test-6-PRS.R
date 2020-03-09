@@ -10,6 +10,8 @@ y01 <- test$fam$affection - 1
 
 ################################################################################
 
+# test_that()
+
 # PCA -> covariables
 obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome,
                        infos.pos = test$map$physical.pos, verbose = FALSE)

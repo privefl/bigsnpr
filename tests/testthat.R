@@ -1,6 +1,7 @@
 library(testthat)
 library(bigsnpr)
 
+test_check("bigsnpr", filter = "7-")
 test_check("bigsnpr", filter = "1-")
 test_check("bigsnpr", filter = "2-")
 test_check("bigsnpr", filter = "3-")

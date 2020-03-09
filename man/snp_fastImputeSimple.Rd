@@ -6,7 +6,7 @@
 \usage{
 snp_fastImputeSimple(
   Gna,
-  method = c("mode", "mean0", "mean2", "random", "zero"),
+  method = c("mode", "mean0", "mean2", "random"),
   ncores = 1
 )
 }
@@ -17,7 +17,7 @@ You can have missing values in these data.}
 
 \item{method}{Either \code{"random"} (sampling according to allele frequencies),
 \code{"mean0"} (rounded mean), \code{"mean2"} (rounded mean to 2 decimal places),
-\code{"mode"} (most frequent call), \code{"zero"} (by 0).}
+\code{"mode"} (most frequent call).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
@@ -36,6 +36,8 @@ G2 <- snp_fastImputeSimple(G)
 G2[, 2]  # no missing values anymore
 G[, 2]  # imputed, but still returning missing values
 G$copy(code = CODE_IMPUTE_PRED)[, 2]  # need to decode imputed values
+
+G$copy(code = c(0, 1, 2, rep(0, 253)))[, 2]  # "imputation" by 0
 
 }
 \seealso{

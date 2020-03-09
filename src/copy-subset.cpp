@@ -22,8 +22,12 @@ void replaceSNP(Environment BM,
   myassert_size(macc.nrow(), macc2.nrow());
   myassert_size(macc.ncol(), macc2.ncol());
 
-  for (size_t j = 0; j < macc.ncol(); j++)
-    for (size_t i = 0; i < macc.nrow(); i++)
+  size_t n = macc.nrow();
+  size_t m = macc.ncol();
+
+  // #pragma omp parallel for num_threads(ncores) -> does NOT improve
+  for (size_t j = 0; j < m; j++)
+    for (size_t i = 0; i < n; i++)
       macc(i, j) = macc2(i, j);
 }
 

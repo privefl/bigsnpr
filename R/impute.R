@@ -29,16 +29,15 @@ FBM_infos <- function(Gna) {
 imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
                       p.train, n.cor, seed, ncores) {
 
-  if (!is.na(seed)) {
-    old <- .Random.seed
-    on.exit(.Random.seed <<- old, add = TRUE)
-    set.seed(seed)
-  }
+  old <- .Random.seed
+  on.exit(.Random.seed <<- old, add = TRUE)
 
   # Do something only if there is still something to do
   if (any(is.na(infos.imp[1, ind.chr]))) {
 
     n <- nrow(X)
+
+    if (!is.na(seed)) set.seed(seed)
 
     # correlation between variants
     corr <- snp_cor(
@@ -53,6 +52,8 @@ imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
 
     # imputation
     for (i in seq_along(ind.chr)) {
+
+      if (!is.na(seed)) set.seed(seed + i)
 
       snp <- ind.chr[i]
       # Do something only if it wasn't done before
@@ -172,7 +173,7 @@ part_impute <- function(X, ind, method) {
 #' @inheritParams bigsnpr-package
 #' @param method Either `"random"` (sampling according to allele frequencies),
 #'   `"mean0"` (rounded mean), `"mean2"` (rounded mean to 2 decimal places),
-#'   `"mode"` (most frequent call), `"zero"` (by 0).
+#'   `"mode"` (most frequent call).
 #'
 #' @return A new `FBM.code256` object (same file, but different code).
 #' @export
@@ -188,16 +189,20 @@ part_impute <- function(X, ind, method) {
 #' G[, 2]  # imputed, but still returning missing values
 #' G$copy(code = CODE_IMPUTE_PRED)[, 2]  # need to decode imputed values
 #'
+#' G$copy(code = c(0, 1, 2, rep(0, 253)))[, 2]  # "imputation" by 0
+#'
 snp_fastImputeSimple <- function(
-  Gna, method = c("mode", "mean0", "mean2", "random", "zero"), ncores = 1) {
+  Gna, method = c("mode", "mean0", "mean2", "random"), ncores = 1) {
 
   check_args()
-
   stopifnot(identical(Gna$code256, CODE_012))
 
-  method <- match(match.arg(method), c("mode", "mean0", "mean2", "random", "zero"))
-  big_parallelize(Gna, p.FUN = part_impute, ncores = ncores, method = method)
-
-  CODE <- `if`(method == 3, CODE_DOSAGE, CODE_IMPUTE_PRED)
-  Gna$copy(code = CODE)
+  if (identical(method, "zero")) {
+    warning2("Using 'method = \"zero\"' is deprecated. Using $copy() instead..")
+    Gna$copy(code = c(0, 1, 2, 0, rep(NA, 252)))
+  } else {
+    method <- match(match.arg(method), c("mode", "mean0", "mean2", "random"))
+    big_parallelize(Gna, p.FUN = part_impute, ncores = ncores, method = method)
+    Gna$copy(code = `if`(method == 3, CODE_DOSAGE, CODE_IMPUTE_PRED))
+  }
 }
