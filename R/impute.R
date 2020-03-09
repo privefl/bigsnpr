@@ -29,16 +29,15 @@ FBM_infos <- function(Gna) {
 imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
                       p.train, n.cor, seed, ncores) {
 
-  if (!is.na(seed)) {
-    old <- .Random.seed
-    on.exit(.Random.seed <<- old, add = TRUE)
-    set.seed(seed)
-  }
+  old <- .Random.seed
+  on.exit(.Random.seed <<- old, add = TRUE)
 
   # Do something only if there is still something to do
   if (any(is.na(infos.imp[1, ind.chr]))) {
 
     n <- nrow(X)
+
+    if (!is.na(seed)) set.seed(seed)
 
     # correlation between variants
     corr <- snp_cor(
@@ -53,6 +52,8 @@ imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
 
     # imputation
     for (i in seq_along(ind.chr)) {
+
+      if (!is.na(seed)) set.seed(seed + i)
 
       snp <- ind.chr[i]
       # Do something only if it wasn't done before

@@ -7,6 +7,7 @@ matrix:
   - r: release
     os: osx
     brew_packages: libgit2
+    before_install: brew install gcc6 && CC=gcc-6 && CXX=g++-6
   - r: release
     os: linux
     #after_success: travis_wait 40 Rscript -e 'covr::codecov()'
