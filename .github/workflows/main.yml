@@ -54,7 +54,7 @@ jobs:
         run: Rscript -e "install.packages('remotes')" -e "remotes::install_local(dependencies = TRUE)"
 
       - name: Check
-        run: Rscript -e "rcmdcheck::rcmdcheck(args = '${{ matrix.config.args }}', error_on = 'warning', check_dir = 'check')"
+        run: Rscript -e "install.packages('rcmdcheck')" -e "rcmdcheck::rcmdcheck(args = '${{ matrix.config.args }}', error_on = 'warning', check_dir = 'check')"
 
       - name: Upload check results
         if: failure()
