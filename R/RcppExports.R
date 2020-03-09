@@ -69,7 +69,7 @@ impute <- function(BM, rowInd, colInd, method) {
     invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
 }
 
-multLinReg <- function(obj, ind_row, ind_col, U, ncores) {
+multLinReg <- function(obj, ind_row, ind_col, U, ncores = 1L) {
     .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U, ncores)
 }
 

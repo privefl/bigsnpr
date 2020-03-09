@@ -61,40 +61,40 @@ test_that("parallel bed_cprodVec() works", {
 
 ################################################################################
 
-test_that("parallel multLinReg()-bed works", {
-
-  bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
-  obj.bed <- bed(bedfile)
-  rows <- rows_along(obj.bed)
-  cols <- sample(ncol(obj.bed), replace = TRUE)
-
-  U <- bed_randomSVD(obj.bed, k = 3)$u
-
-  test <- replicate(20, simplify = FALSE, {
-    bigsnpr:::multLinReg(obj.bed, rows, cols, U, ncores = 2)
-  })
-  true <- bigsnpr:::multLinReg(obj.bed, rows, cols, U, ncores = 1)
-
-  expect_true(all(sapply(test, all.equal, current = true)))
-})
+# test_that("parallel multLinReg()-bed works", {
+#
+#   bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+#   obj.bed <- bed(bedfile)
+#   rows <- rows_along(obj.bed)
+#   cols <- sample(ncol(obj.bed), replace = TRUE)
+#
+#   U <- bed_randomSVD(obj.bed, k = 3)$u
+#
+#   test <- replicate(200, simplify = FALSE, {
+#     bigsnpr:::multLinReg(obj.bed, rows, cols, U, ncores = 2)
+#   })
+#   true <- bigsnpr:::multLinReg(obj.bed, rows, cols, U, ncores = 1)
+#
+#   expect_true(all(sapply(test, all.equal, current = true)))
+# })
 
 ################################################################################
 
-test_that("parallel multLinReg()-bigSNP works", {
-
-  G <- snp_attachExtdata()$genotypes
-  rows <- rows_along(G)
-  cols <- sample(ncol(G), replace = TRUE)
-
-  U <- big_SVD(G, fun.scaling = snp_scaleBinom(), k = 3)$u
-
-  test <- replicate(20, simplify = FALSE, {
-    bigsnpr:::multLinReg(G, rows, cols, U, ncores = 2)
-  })
-  true <- bigsnpr:::multLinReg(G, rows, cols, U, ncores = 1)
-
-  expect_true(all(sapply(test, all.equal, current = true)))
-})
+# test_that("parallel multLinReg()-bigSNP works", {
+#
+#   G <- snp_attachExtdata()$genotypes
+#   rows <- rows_along(G)
+#   cols <- sample(ncol(G), replace = TRUE)
+#
+#   U <- big_SVD(G, fun.scaling = snp_scaleBinom(), k = 3)$u
+#
+#   test <- replicate(200, simplify = FALSE, {
+#     bigsnpr:::multLinReg(G, rows, cols, U, ncores = 2)
+#   })
+#   true <- bigsnpr:::multLinReg(G, rows, cols, U, ncores = 1)
+#
+#   expect_true(all(sapply(test, all.equal, current = true)))
+# })
 
 ################################################################################
 

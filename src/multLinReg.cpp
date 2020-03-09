@@ -15,7 +15,7 @@ NumericMatrix multLinReg(C macc, const NumericMatrix& U, int ncores) {
 
   NumericMatrix res(K, m);
 
-  #pragma omp parallel num_threads(ncores)
+  // #pragma omp parallel num_threads(ncores) -> errors with stack imbalance on some OS
   {
     NumericVector xySum(K), ySum(K), yySum(K);
     double x, y, xSum, xxSum;
@@ -49,8 +49,10 @@ NumericMatrix multLinReg(C macc, const NumericMatrix& U, int ncores) {
         double num = xySum[k] - xSum * ySum[k] / nona;
         double deno_y = yySum[k] - ySum[k] * ySum[k] / nona;
         double deno = deno_x * deno_y - num * num;
-        res(k, j) = (deno == 0 || nona < 2) ? NA_REAL :
+        double tscore = (deno == 0 || nona < 2) ? NA_REAL :
           num * ::sqrt((nona - 2) / deno);
+        // #pragma omp atomic write
+        res(k, j) = tscore;
       }
     }
   }
@@ -66,7 +68,7 @@ NumericMatrix multLinReg(SEXP obj,
                          const IntegerVector& ind_row,
                          const IntegerVector& ind_col,
                          const NumericMatrix& U,
-                         int ncores) {
+                         int ncores = 1) {
 
   if (Rf_inherits(obj, "FBM.code256")) {
     Environment obj2 = obj;
