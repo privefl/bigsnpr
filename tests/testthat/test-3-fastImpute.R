@@ -114,7 +114,7 @@ test_that("fast imputation (simple) works", {
   # cbind(colMeans(G[]), colMeans(G[], na.rm = TRUE))
   expect_error(snp_fastImputeSimple(G, "mean"), "should be one of")
 
-  G1 <- snp_fastImputeSimple(G, "zero")
+  expect_warning(G1 <- snp_fastImputeSimple(G, "zero"), "deprecated")
   expect_equal(G[c(18, 72), 400], rep(NA_real_, 2))
   expect_equal(G1[c(18, 72), 400], rep(0, 2))
 

@@ -172,7 +172,7 @@ part_impute <- function(X, ind, method) {
 #' @inheritParams bigsnpr-package
 #' @param method Either `"random"` (sampling according to allele frequencies),
 #'   `"mean0"` (rounded mean), `"mean2"` (rounded mean to 2 decimal places),
-#'   `"mode"` (most frequent call), `"zero"` (by 0).
+#'   `"mode"` (most frequent call).
 #'
 #' @return A new `FBM.code256` object (same file, but different code).
 #' @export
@@ -188,16 +188,20 @@ part_impute <- function(X, ind, method) {
 #' G[, 2]  # imputed, but still returning missing values
 #' G$copy(code = CODE_IMPUTE_PRED)[, 2]  # need to decode imputed values
 #'
+#' G$copy(code = c(0, 1, 2, rep(0, 253)))[, 2]  # "imputation" by 0
+#'
 snp_fastImputeSimple <- function(
-  Gna, method = c("mode", "mean0", "mean2", "random", "zero"), ncores = 1) {
+  Gna, method = c("mode", "mean0", "mean2", "random"), ncores = 1) {
 
   check_args()
-
   stopifnot(identical(Gna$code256, CODE_012))
 
-  method <- match(match.arg(method), c("mode", "mean0", "mean2", "random", "zero"))
-  big_parallelize(Gna, p.FUN = part_impute, ncores = ncores, method = method)
-
-  CODE <- `if`(method == 3, CODE_DOSAGE, CODE_IMPUTE_PRED)
-  Gna$copy(code = CODE)
+  if (method == "zero") {
+    warning2("Using 'method = \"zero\"' is deprecated. Using $copy() instead..")
+    Gna$copy(code = c(0, 1, 2, 0, rep(NA, 252)))
+  } else {
+    method <- match(match.arg(method), c("mode", "mean0", "mean2", "random"))
+    big_parallelize(Gna, p.FUN = part_impute, ncores = ncores, method = method)
+    Gna$copy(code = `if`(method == 3, CODE_DOSAGE, CODE_IMPUTE_PRED))
+  }
 }
