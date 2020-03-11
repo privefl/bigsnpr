@@ -14,7 +14,7 @@ POS2 <- round(POS + 1)
 
 test_that("snp_autoSVD() works", {
 
-  expect_error(snp_autoSVD(G, CHR, POS), "only integers")
+  expect_error(snp_autoSVD(G, as.character(CHR), POS), "only integers")
   expect_error(snp_autoSVD(G, CHR[-1], POS2), bigstatsr:::GET_ERROR_DIM())
   expect_error(snp_autoSVD(G, CHR, POS2[-1]), bigstatsr:::GET_ERROR_DIM())
   expect_output(snp_autoSVD(G, CHR, POS2, thr.r2 = NA), "Skipping clumping.")
