@@ -24,7 +24,7 @@ check_args <- function(...) {
         Gna         = "assert_class(Gna, 'FBM.code256')",
         obj.bed     = "assert_class(obj.bed, 'bed')",
         infos.chr   = "assert_int(infos.chr); assert_pos(infos.chr)",
-        infos.pos   = "assert_pos(infos.pos)",
+        # infos.pos   = "assert_pos(infos.pos)",
         ncores      = "assert_cores(ncores)",
         ind.row     = "assert_int(ind.row);   assert_pos(ind.row)",
         ind.train   = "assert_int(ind.train); assert_pos(ind.train)",
