@@ -52,7 +52,6 @@ var(y) / var(y2)                             ## H2
 ind.gwas <- sample(nrow(G), 8e3)
 gwas <- big_univLinReg(G, y2[ind.gwas], ind.train = ind.gwas)
 beta_gwas <- gwas$estim
-chi2 <- qchisq(predict(gwas) * log(10), df = 1, lower.tail = FALSE, log.p = TRUE)
 
 ind.val <- setdiff(rows_along(G), ind.gwas)
 
@@ -72,24 +71,12 @@ corr_as_list <- split(data.frame(i = corr3@i + 1L, r = corr3@x),
                       factor(corr3@j, ordered = TRUE))
 object.size(corr_as_list) / 1024**2 # 372 Mb
 
+chi2 <- qchisq(predict(gwas) * log(10), df = 1, lower.tail = FALSE, log.p = TRUE)
+beta_hats <- sqrt(chi2) * sign(beta_gwas) / sqrt(N)
+
 sapply(setNames(nm = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3)), function(p) {
 
   print(p)
-
-  # fast as starting values
-  C1 <- (coeff + 1) / (coeff + p)
-  C2 <- coeff / (coeff + 1)
-  V_nc <- C2 / N * (1 - C2 * h2)
-  V_c <- C2 * h2 / (m * p) + V_nc
-  d_beta_ncaus <- dnorm(new_beta, sd = sqrt(V_nc))
-  d_beta_caus <- dnorm(new_beta, sd = sqrt(V_c))
-  d_caus_beta <- d_beta_caus * p / (d_beta_caus * p + d_beta_ncaus * (1 - p))
-
-  beta_hats <- sqrt(chi2) * sign(beta_gwas) / sqrt(N)
-  betas_blup <- as.vector(Matrix::solve(corr2, beta_hats))
-  fast_betas <- betas_blup * C1 * d_caus_beta
-  curr_betas <- fast_betas
-  print(crossprod(curr_betas))
 
   L <- coeff / p
   C1 <- (1 - p) / p * sqrt(1 + L)
@@ -97,14 +84,14 @@ sapply(setNames(nm = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3)), function(p) {
   C3 <- -N / 2 * C2
   C4 <- sqrt(C2 / N)
 
-  curr_post_means <- avg_betas <- rep(0, m)
+  curr_betas <- curr_post_means <- avg_betas <- rep(0, m)
   burn_in <- 10
   num_iter <- 60
 
   for (k in seq_len(num_iter)) {
 
     # print(k)
-    print(h2_est <- max(0.00001, crossprod(curr_betas)))
+    # print(h2_est <- max(0.00001, crossprod(curr_betas)))
     alpha <- 1 #min(0.99, 1 / h2_est, (h2 + 1 / sqrt(N)) / h2_est)
 
     for (i in seq_len(m)) {
