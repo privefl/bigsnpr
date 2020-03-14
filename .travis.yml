@@ -8,12 +8,17 @@ matrix:
     os: osx
     osx_image: xcode8
     brew_packages: libgit2
-    before_install: brew install gcc6 && CC=gcc-6 && CXX=g++-6
   - r: release
     os: linux
     #after_success: travis_wait 40 Rscript -e 'covr::codecov()'
   - r: devel
     os: linux
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install llvm &&
+    export PATH="/usr/local/opt/llvm/bin:$PATH" &&
+    export LDFLAGS="-L/usr/local/opt/llvm/lib" &&
+    export CFLAGS="-I/usr/local/opt/llvm/include"; fi
 
 sudo: false
 cache: packages
