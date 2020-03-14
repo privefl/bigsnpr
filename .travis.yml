@@ -6,7 +6,6 @@ matrix:
   include:
   - r: release
     os: osx
-    osx_image: xcode8
     brew_packages: libgit2
   - r: release
     os: linux
