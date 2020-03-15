@@ -13,10 +13,6 @@ bed_colstats <- function(obj_bed, ind_row, ind_col, ncores) {
     .Call(`_bigsnpr_bed_colstats`, obj_bed, ind_row, ind_col, ncores)
 }
 
-bed_corNA <- function(obj_bed, ind_row, ind_col, U) {
-    .Call(`_bigsnpr_bed_corNA`, obj_bed, ind_row, ind_col, U)
-}
-
 bed_col_counts_cpp <- function(obj_bed, ind_row, ind_col, ncores) {
     .Call(`_bigsnpr_bed_col_counts_cpp`, obj_bed, ind_row, ind_col, ncores)
 }

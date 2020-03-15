@@ -47,38 +47,6 @@ List bed_colstats(Environment obj_bed,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List bed_corNA(Environment obj_bed,
-               const IntegerVector& ind_row,
-               const IntegerVector& ind_col,
-               const NumericMatrix& U) {
-
-  XPtr<bed> xp_bed = obj_bed["address"];
-  bedAcc macc(xp_bed, ind_row, ind_col);
-  size_t n = macc.nrow();
-  size_t m = macc.ncol();
-  myassert_size(U.nrow(), ind_row.size());
-
-  size_t K = U.ncol();
-
-  NumericMatrix res(K, m);
-  IntegerVector nb_na(m);
-
-  for (size_t j = 0; j < m; j++) {
-    for (size_t i = 0; i < n; i++) {
-      if (macc(i, j) == 3) {
-        nb_na[j]++;
-        for (size_t k = 0; k < K; k++) res(k, j) += U(i, k);
-      }
-    }
-  }
-
-  return List::create(_["prod"]  = res,
-                      _["nb_na"] = nb_na);
-}
-
-/******************************************************************************/
-
-// [[Rcpp::export]]
 IntegerMatrix bed_col_counts_cpp(Environment obj_bed,
                                  const IntegerVector& ind_row,
                                  const IntegerVector& ind_col,
@@ -117,44 +85,6 @@ IntegerMatrix bed_row_counts_cpp(Environment obj_bed,
 
   return res;
 }
-
-/******************************************************************************/
-
-// // [[Rcpp::export]]
-// NumericVector bed_wmean(Environment obj_bed,
-//                         const IntegerVector& ind_row,
-//                         const IntegerVector& ind_col,
-//                         const NumericVector& w) {
-//
-//   myassert_size(w.size(), ind_row.size());
-//
-//   XPtr<bed> xp_bed = obj_bed["address"];
-//   bedAcc macc(xp_bed, ind_row, ind_col);
-//   size_t n = macc.nrow();
-//   size_t m = macc.ncol();
-//
-//   NumericVector wmean(m);
-//   double x, xwSum, wSum, wSum0 = Rcpp::sum(w);
-//   int c;
-//
-//   for (size_t j = 0; j < m; j++) {
-//     xwSum = 0;
-//     wSum = wSum0;
-//     c = n;
-//     for (size_t i = 0; i < n; i++) {
-//       x = macc(i, j);
-//       if (x != 3) {
-//         xwSum += x * w[i];
-//       } else {
-//         c--;
-//         wSum -= w[i];
-//       }
-//     }
-//     wmean[j] = xwSum / wSum;
-//   }
-//
-//   return wmean;
-// }
 
 /******************************************************************************/
 
@@ -214,5 +144,75 @@ List prod_and_rowSumsSq(Environment obj_bed,
 
   return List::create(XV, rowSumsSq);
 }
+
+/******************************************************************************/
+
+// // [[Rcpp::export]]
+// NumericVector bed_wmean(Environment obj_bed,
+//                         const IntegerVector& ind_row,
+//                         const IntegerVector& ind_col,
+//                         const NumericVector& w) {
+//
+//   myassert_size(w.size(), ind_row.size());
+//
+//   XPtr<bed> xp_bed = obj_bed["address"];
+//   bedAcc macc(xp_bed, ind_row, ind_col);
+//   size_t n = macc.nrow();
+//   size_t m = macc.ncol();
+//
+//   NumericVector wmean(m);
+//   double x, xwSum, wSum, wSum0 = Rcpp::sum(w);
+//   int c;
+//
+//   for (size_t j = 0; j < m; j++) {
+//     xwSum = 0;
+//     wSum = wSum0;
+//     c = n;
+//     for (size_t i = 0; i < n; i++) {
+//       x = macc(i, j);
+//       if (x != 3) {
+//         xwSum += x * w[i];
+//       } else {
+//         c--;
+//         wSum -= w[i];
+//       }
+//     }
+//     wmean[j] = xwSum / wSum;
+//   }
+//
+//   return wmean;
+// }
+
+/******************************************************************************/
+
+// // [[Rcpp::export]]
+// List bed_corNA(Environment obj_bed,
+//                const IntegerVector& ind_row,
+//                const IntegerVector& ind_col,
+//                const NumericMatrix& U) {
+//
+//   XPtr<bed> xp_bed = obj_bed["address"];
+//   bedAcc macc(xp_bed, ind_row, ind_col);
+//   size_t n = macc.nrow();
+//   size_t m = macc.ncol();
+//   myassert_size(U.nrow(), ind_row.size());
+//
+//   size_t K = U.ncol();
+//
+//   NumericMatrix res(K, m);
+//   IntegerVector nb_na(m);
+//
+//   for (size_t j = 0; j < m; j++) {
+//     for (size_t i = 0; i < n; i++) {
+//       if (macc(i, j) == 3) {
+//         nb_na[j]++;
+//         for (size_t k = 0; k < K; k++) res(k, j) += U(i, k);
+//       }
+//     }
+//   }
+//
+//   return List::create(_["prod"]  = res,
+//                       _["nb_na"] = nb_na);
+// }
 
 /******************************************************************************/
