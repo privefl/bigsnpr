@@ -15,22 +15,19 @@ inline unsigned char sample_from_prob(double p0, double p1) {
 
 /******************************************************************************/
 
-void read_variant(std::ifstream * ptr_stream,
-                  unsigned char * ptr_mat,
-                  const IntegerVector& ind_row,
-                  const RawVector& decode,
-                  std::vector<std::string>& ID,
-                  bool dosage) {
+std::string read_variant(std::ifstream * ptr_stream,
+                         unsigned char * ptr_mat,
+                         const IntegerVector& ind_row,
+                         const RawVector& decode,
+                         bool dosage) {
 
   std::string id   = read_string(ptr_stream);
-  ID.push_back(id);
   std::string rsid = read_string(ptr_stream);
-  // Rcout << rsid << std::endl;
   std::string chr  = read_string(ptr_stream);
   int pos = read_int(ptr_stream);
-  myassert(pos > 0, "Positions should be positive.");
   int K   = read_int(ptr_stream, 2);
-  myassert(K == 2, "Only 2 alleles allowed.");
+  myassert(pos > 0, "Positions should be positive.");
+  myassert(K == 2,  "Only 2 alleles allowed.");
   std::string a1 = read_string(ptr_stream, 4);
   std::string a2 = read_string(ptr_stream, 4);
 
@@ -75,6 +72,8 @@ void read_variant(std::ifstream * ptr_stream,
 
   delete[] buffer_in;
   delete[] buffer_out;
+
+  return id;
 }
 
 /******************************************************************************/
@@ -86,31 +85,38 @@ CharacterVector read_bgen(std::string filename,
                           IntegerVector ind_row,
                           IntegerVector ind_col,
                           RawVector decode,
-                          bool dosage) {
+                          bool dosage,
+                          int ncores) {
 
   XPtr<FBM_RW> xpBM = BM["address_rw"];
   unsigned char* ptr_mat = static_cast<unsigned char*>(xpBM->matrix());
+  std::size_t n = xpBM->nrow();
 
-  std::size_t j, n = xpBM->nrow();
   int K = offsets.size();
   myassert_size(ind_col.size(), K);
-  std::vector<std::string> ID; ID.reserve(K);
+  CharacterVector ID(K);
 
-  // connection to BGEN file
-  std::ifstream stream(filename.c_str(), std::ifstream::binary);
-  if (!stream) Rcpp::stop("Error while opening '%s'.", filename);
+  #pragma omp parallel num_threads(ncores)
+  {
+    // connection to BGEN file
+    std::ifstream stream(filename.c_str(), std::ifstream::binary);
+    if (!stream) Rcpp::stop("Error while opening '%s'.", filename);
 
-  // read variants one by one
-  for (int k = 0; k < K; k++) {
-    // if (k % 10000 == 0) Rcout << k << std::endl;
-    stream.seekg(offsets[k]);
-    j = ind_col[k] - 1;
-    read_variant(&stream, ptr_mat + n * j, ind_row, decode, ID, dosage);
+    // read variants one by one
+    #pragma omp for
+    for (int k = 0; k < K; k++) {
+      stream.seekg(offsets[k]);
+      std::size_t j = ind_col[k] - 1;
+      std::string id = read_variant(&stream, ptr_mat + n * j,
+                                    ind_row, decode, dosage);
+      #pragma omp critical
+      ID[k] = id;
+    }
+
+    stream.close();
   }
 
-  stream.close();
-
-  return wrap(ID);
+  return ID;
 }
 
 /******************************************************************************/

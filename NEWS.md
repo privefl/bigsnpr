@@ -1,6 +1,6 @@
 ## bigsnpr 1.3.1
 
-- Also use OpenMP for the parallelization of `snp_pcadapt()`, `bed_pcadapt()` and `snp_fastImputeSimple()`.
+- Also use OpenMP for the parallelization of `snp_pcadapt()`, `bed_pcadapt()`, `snp_readBGEN()` and `snp_fastImputeSimple()`.
 
 ## bigsnpr 1.3.0
 

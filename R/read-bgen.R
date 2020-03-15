@@ -136,13 +136,11 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     create_bk = TRUE
   )
 
-  bigparallelr::register_parallel(ncores)
-
   # cleanup if error
   snp.info <- tryCatch(error = function(e) { unlink(G$backingfile); stop(e) }, {
 
     # Fill the FBM from BGEN files (and get SNP info)
-    foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %dopar% {
+    foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %do% {
 
       snp_id <- format_snp_id(list_snp_id[[ic]])
       infos <- snp_readBGI(bgifiles[ic], snp_id)
@@ -156,7 +154,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
         ind_row = ind_row - 1L,
         ind_col = ind.col,
         decode = as.raw(207 - round(0:510 * 100 / 255)),
-        dosage = dosage
+        dosage = dosage,
+        ncores = ncores
       )
 
       # Return variant info
