@@ -1,5 +1,10 @@
+// [[Rcpp::plugins(cpp11)]]
+#define ARMA_64BIT_WORD
+
+// [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 using namespace Rcpp;
+
 
 // [[Rcpp::export]]
 NumericMatrix ldpred_gibbs(const arma::sp_mat& corr,

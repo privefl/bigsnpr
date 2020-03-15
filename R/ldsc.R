@@ -41,7 +41,7 @@ WEIGHT <- function(w, x) {
 snp_ldsc <- function(ld_div_size, chi2, sample_size, blocks = 200,
                      chi2_thr1 = 30, chi2_thr2 = Inf) {
 
-  assert_pos(chi2)
+  assert_pos(chi2, strict = FALSE)
   assert_lengths(chi2, ld_div_size)
   if (length(sample_size) != 1) assert_lengths(sample_size, chi2)
   if (length(blocks) == 1) blocks <- sort(rep_len(seq_len(blocks), length(chi2)))
