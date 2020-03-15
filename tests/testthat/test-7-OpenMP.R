@@ -186,3 +186,20 @@ test_that("parallel bed_counts() works", {
 })
 
 ################################################################################
+
+test_that("parallel snp_fastImputeSimple() works", {
+
+  G <- snp_attachExtdata()$genotypes
+
+  test <- replicate(20, simplify = FALSE, {
+    GNA <- big_copy(G)
+    ind <- sort(sample(length(GNA), length(GNA) / 100)); GNA[ind] <- 3
+    method <- sample(c("mode", "mean0", "mean2", "random"), 1)
+    G2 <- snp_fastImputeSimple(G, method = method, ncores = 2)
+    sum(big_counts(G2)[4, ])
+  })
+
+  expect_true(all(test == 0))
+})
+
+################################################################################

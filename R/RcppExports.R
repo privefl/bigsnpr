@@ -61,8 +61,8 @@ corMat <- function(BM, rowInd, colInd, size, thr, pos, ncores) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos, ncores)
 }
 
-impute <- function(BM, rowInd, colInd, method) {
-    invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
+impute <- function(BM, method, ncores) {
+    invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
 }
 
 multLinReg <- function(obj, ind_row, ind_col, U, ncores = 1L) {
