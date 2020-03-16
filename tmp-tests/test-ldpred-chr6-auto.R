@@ -41,9 +41,9 @@ abline(v = (q <- bigutilsr::tukey_mc_up(S)), col = "red")
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-h2 <- 0.1
-M <- 100; set <- sort(sample(ncol(G), size = M))
-M <- 1000; set <- sort(sample(ind.HLA, size = M))
+h2 <- 0.5
+M <- 1000; set <- sort(sample(ncol(G), size = M))
+M <- 100; set <- sort(sample(ind.HLA, size = M))
 effects <- rnorm(M, sd = sqrt(h2 / M))
 y <- drop(scale(G[, set]) %*% effects)       ## G
 y2 <- y + rnorm(nrow(G), sd = sqrt(1 - h2))  ## G + E
@@ -73,6 +73,7 @@ chi2 <- qchisq(predict(gwas) * log(10), df = 1, lower.tail = FALSE, log.p = TRUE
 snp_ldsc(ld / ncol(corr), chi2, N, blocks = 50)
 
 Rcpp::sourceCpp('tmp-tests/test-ldpred-cpp-postp3.cpp')
+burn_in <- 200
 betas_hat <- sqrt(chi2) * sign(beta_gwas) / sqrt(N)
 shrink <- ldpred_gibbs_auto3(
   corr      = corr,
@@ -80,9 +81,9 @@ shrink <- ldpred_gibbs_auto3(
   order     = order(betas_hat ** 2, decreasing = TRUE) - 1L,
   n_vec     = `if`(length(N) == 1, rep(N, m), N),
   h2_init   = 1,
-  p_init    = 0.5,
-  burn_in   = 200,
-  num_iter  = 1000,
+  p_init    = 1e-6,
+  burn_in   = burn_in,
+  num_iter  = 3 * burn_in,
   sparse    = FALSE,
   w         = rep(1, length(ld))
 ) # h2_init = 1 works well // sparse = TRUE does not work when h2 can vary
@@ -93,20 +94,13 @@ round(100 * drop(cor(pred7, y2[ind.val])**2), 2)
 round(100 * drop(cor(pred, y2[ind.val])**2), 2)
 
 plot(shrink$vec_p_est,  log = "y", pch = 20)
-abline(h = shrink$p_est,  col = "red", lwd = 2)
+abline(h = print(shrink$p_est),  col = "red", lwd = 2)
+abline(h = print(M / ncol(G)), col = "blue", lwd = 2)
+p_est <- tail(shrink$vec_p_est, -burn_in)
+abline(h = quantile(p_est, probs = c(0.025, 0.975)), col = "green", lwd = 2)
+
 plot(shrink$vec_h2_est, log = "y", pch = 20)
 abline(h = shrink$h2_est, col = "red", lwd = 2)
-
-h2_est <- tail(shrink$vec_h2_est, 1000)
-boot_h2_est <- replicate(10e3, {
-  mean(sample(h2_est, replace = TRUE))
-})
-mean(h2_est)
-# 0.4960173
-quantile(boot_h2_est, probs = c(0.025, 0.975))
-#      2.5%     97.5%
-# 0.4947999 0.4972172
-quantile(h2_est, probs = c(0.025, 0.975))
-#      2.5%     97.5%
-# 0.4580894 0.5360437
-var(y) / var(y2)
+abline(h = var(y) / var(y2), col = "blue", lwd = 2)
+h2_est <- tail(shrink$vec_h2_est, -burn_in)
+abline(h = quantile(h2_est, probs = c(0.025, 0.975)), col = "green", lwd = 2)

@@ -26,11 +26,12 @@ List ldpred_gibbs_auto3(const arma::sp_mat& corr,
   // std::copy(betas_hat.begin(), betas_hat.end(), curr_betas.begin());
 
   int num_iter_tot = burn_in + num_iter;
-  NumericVector p_est(num_iter_tot), h2_est(num_iter_tot);
+  NumericVector p_est(num_iter_tot, NA_REAL), h2_est(num_iter_tot, NA_REAL);
 
-  double p = p_init, h2 = h2_init, avg_p = 0, avg_h2 = 0;
+  double p = p_init, h2 = h2_init, h2_max = NA_REAL, avg_p = 0, avg_h2 = 0;
 
-  for (int k = 0; k < num_iter_tot; k++) {
+  int k = 0;
+  for (; k < num_iter_tot; k++) {
 
     // double p = sum(post_p * prop_w);
     // if (p < 1e-5) p = 1e-5;
@@ -59,7 +60,9 @@ List ldpred_gibbs_auto3(const arma::sp_mat& corr,
     }
 
     h2 = arma::dot(curr_betas, curr_betas);
+    if (k == burn_in) h2_max = 2 * h2;
     if (k >= burn_in) {
+      if (h2 > h2_max) break;  // diverge
       avg_betas += curr_post_means;
       avg_p += p;
       avg_h2 += h2;
@@ -69,12 +72,13 @@ List ldpred_gibbs_auto3(const arma::sp_mat& corr,
     h2_est[k] = h2;
   }
 
-  Rcout << (avg_p / num_iter) << " // " << (avg_h2 / num_iter) << std::endl;
+  Rcout << (avg_p / (k - burn_in)) << " // " <<
+    (avg_h2 / (k - burn_in)) << std::endl;
 
   return List::create(
-    _["shrink"] = (avg_betas / num_iter) / betas_hat,
-    _["p_est"]  = avg_p / num_iter,
-    _["h2_est"] = avg_h2 / num_iter,
+    _["shrink"] = (avg_betas / (k - burn_in)) / betas_hat,
+    _["p_est"]  = avg_p / (k - burn_in),
+    _["h2_est"] = avg_h2 / (k - burn_in),
     _["vec_p_est"]  = p_est,
     _["vec_h2_est"] = h2_est);
 }
