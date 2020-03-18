@@ -160,7 +160,7 @@ test_that("parallel snp_cor() works", {
   rows <- sample(nrow(G), replace = TRUE)
   cols <- sample(ncol(G), replace = TRUE)
 
-  test <- replicate(5, simplify = FALSE, {
+  test <- replicate(10, simplify = FALSE, {
     snp_cor(G, rows, cols, ncores = 2)
   })
   true <- snp_cor(G, rows, cols, ncores = 1)

@@ -18,14 +18,22 @@ t <- r * sqrt((length(ind.row) - 2) / (1 - r^2))
 r_again <- t / sqrt(length(ind.row) - 2 + t^2)
 expect_equal(r_again, r)
 
-corr <- bigsnpr:::corMat(BM = G,
-                         rowInd = ind.row,
-                         colInd = ind.col,
-                         size = size,
-                         thr = rep(r, n),
-                         pos = seq_along(ind.col),
-                         ncores = 2)
-corr2 <- corr^2
+ind_val <- bigsnpr:::corMat(BM = G,
+                            rowInd = ind.row,
+                            colInd = ind.col,
+                            size = size,
+                            thr = rep(r, n),
+                            pos = seq_along(ind.col),
+                            ncores = 2)
+
+list_i <- lapply(ind_val, function(.) .$i)
+m <- length(list_i)
+seq_ind <- seq_len(m)
+i <- unlist(list_i)
+j <- rep(seq_ind, lengths(list_i))
+x <- unlist(lapply(ind_val, function(.) .$x))
+
+corr2 <- Matrix::sparseMatrix(i = i, j = j, x = x ** 2, dims = c(m, m))
 
 ################################################################################
 

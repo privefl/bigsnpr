@@ -50,7 +50,7 @@ snp_cor <- function(Gna,
   )
   THR <- q.alpha / sqrt(seq_along(ind.row) - 2 + q.alpha^2)
 
-  corr <- corMat(
+  ind_val <- corMat(
     BM     = Gna,
     rowInd = ind.row,
     colInd = ind.col,
@@ -60,7 +60,14 @@ snp_cor <- function(Gna,
     ncores = ncores
   )
 
-  corr <- forceSymmetric(corr)
+  m <- length(ind.col)
+  corr <- Matrix::sparseMatrix(
+    i = unlist(lapply(ind_val, function(.) .$i)),
+    j = rep(1:m, times = sapply(ind_val, function(.) length(.$i))),
+    x = unlist(lapply(ind_val, function(.) .$x)),
+    dims = c(m, m),
+    symmetric = TRUE)
+
   if (fill.diag) diag(corr) <- 1
 
   corr
