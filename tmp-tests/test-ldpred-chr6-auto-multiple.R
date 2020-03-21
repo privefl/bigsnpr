@@ -41,9 +41,10 @@ abline(v = (q <- bigutilsr::tukey_mc_up(S)), col = "red")
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-h2 <- 0.5
-M <- 500; set <- sort(sample(ncol(G), size = M))
+h2 <- 0.02
+M <- 2000; set <- sort(sample(ncol(G), size = M))
 # M <- 10; set <- sort(sample(ind.HLA, size = M))
+# set <- ind.HLA[c(7, 8, 10, 12, 15)]; M <- 5
 effects <- rnorm(M, sd = sqrt(h2 / M))
 # effects <- rep(sqrt(h2 / M), M)
 y <- drop(scale(G[, set]) %*% effects)       ## G
@@ -65,7 +66,6 @@ m <- ncol(G)
 coeff <- N * h2 / m
 corr2 <- corr + Matrix::Diagonal(ncol(corr), 1 / coeff)
 sd <- big_scale()(G)$scale
-sd <- 1
 chi2 <- qchisq(predict(gwas) * log(10), df = 1, lower.tail = FALSE, log.p = TRUE)
 betas_hat <- sqrt(chi2) * sign(beta_gwas) / sqrt(N)
 beta_est <- as.vector(Matrix::solve(corr2, betas_hat))
@@ -79,44 +79,29 @@ cor(pred, y2[ind.val])**2  # 0.214 (2Mb) -> 0.256 (5Mb) -> 0.259 (5cM)
 snp_ldsc(ld / ncol(corr), chi2, N, blocks = 50)
 
 Rcpp::sourceCpp('src/ldpred2-auto.cpp')
-burn_in <- 300
-# betas_init <- as.vector(Matrix::solve(corr2, betas_hat))
+# burn_in <- 2000
+nrep <- 1
 all_ldpred <- ldpred2_gibbs_auto(
   corr      = corr,
   betas_hat = betas_hat,
-  order     = order(betas_hat ** 2, decreasing = TRUE) - 1L,
   n_vec     = `if`(length(N) == 1, rep(N, m), N),
-  h2_max    = rep(1, 12),
-  p_init    = 10^-runif(12, 0, 5),
-  burn_in   = burn_in,
-  num_iter  = 200,
-  ncores    = 4
-) # h2_init = 1 works well // sparse = TRUE does not work when h2 can vary
+  h2_init   = 0.4, #rep(0.9, nrep),
+  p_init    = 0.1, #seq_log(1e-4, 0.9, length.out = nrep),
+  burn_in   = 1000,
+  num_iter  = 500,
+  ncores    = min(6, nrep)
+)
+c(M / ncol(G), var(y) / var(y2))
 
-Rcpp::sourceCpp('src/ldpred2.cpp')
-all_ldpred2 <- ldpred2_gibbs(
-  corr      = corr,
-  betas_hat = betas_hat,
-  order     = order(betas_hat ** 2, decreasing = TRUE) - 1L,
-  n_vec     = `if`(length(N) == 1, rep(N, m), N),
-  h2        = sapply(all_ldpred, function(.) .$h2_est),
-  p         = sapply(all_ldpred, function(.) .$p_est),
-  burn_in   = burn_in,
-  num_iter  = 200,
-  sparse    = FALSE,
-  ncores    = 4
-) # h2_init = 1 works well // sparse = TRUE does not work when h2 can vary
 
-all_cor <- sapply(seq_along(all_ldpred), function(k) {
-  cor(all_ldpred[[k]]$beta_est, all_ldpred2[[k]])
-})
-
-ldpred <- all_ldpred[[which.max(all_cor)]]
-# largest p is the most stable, but not the best..
+ldpred <- all_ldpred[[1]]
 str(ldpred)
 
+# plot(ldpred$beta_est, betas_init, pch = 20); abline(0, 1, col = "red")
+
 new_beta2 <- sqrt(N) * gwas$std.err * ldpred$beta_est
-plot(new_beta, new_beta2, pch = 20)
+plot(beta_gwas, new_beta2, pch = 20); abline(0, 1, col = "red")
+# plot(new_beta, new_beta2, pch = 20)
 pred7 <- big_prodVec(G, new_beta2, ind.row = ind.val)
 plot(pred7, y2[ind.val], pch = 20); abline(0, 1, col = "red", lwd = 3)
 round(100 * drop(cor(pred7, y2[ind.val])**2), 2)
@@ -125,18 +110,13 @@ round(100 * drop(cor(pred, y2[ind.val])**2), 2)
 plot(ldpred$vec_p_est,  log = "y", pch = 20)
 abline(h = print(ldpred$p_est),  col = "red", lwd = 2)
 abline(h = print(M / ncol(G)), col = "blue", lwd = 2)
-p_est <- tail(ldpred$vec_p_est, -burn_in)
+p_est <- tail(ldpred$vec_p_est, -1000)
 abline(h = quantile(p_est, probs = c(0.025, 0.975)), col = "green", lwd = 2)
 
 plot(ldpred$vec_h2_est, log = "y", pch = 20)
 abline(h = print(ldpred$h2_est), col = "red", lwd = 2)
-abline(h = var(y) / var(y2), col = "blue", lwd = 2)
-h2_est <- tail(ldpred$vec_h2_est, -burn_in)
+abline(h = print(var(y) / var(y2)), col = "blue", lwd = 2)
+h2_est <- tail(ldpred$vec_h2_est, -1000)
 abline(h = quantile(h2_est, probs = c(0.025, 0.975)), col = "green", lwd = 2)
 snp_ldsc(ld / ncol(corr), chi2, N, blocks = 50)
 
-true_betas <- rep(0, m)
-true_betas[set] <- effects
-
-plot(true_betas, new_beta2); abline(0, 1, col = "red")
-cor(true_betas, new_beta2)
