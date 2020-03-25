@@ -85,10 +85,10 @@ all_ldpred <- ldpred2_gibbs_auto(
   corr      = corr,
   betas_hat = betas_hat,
   n_vec     = `if`(length(N) == 1, rep(N, m), N),
-  h2_init   = 0.4, #rep(0.9, nrep),
-  p_init    = 0.1, #seq_log(1e-4, 0.9, length.out = nrep),
-  burn_in   = 1000,
-  num_iter  = 500,
+  h2_init   = rep(0.1, nrep),
+  p_init    = seq_log(1e-4, 0.9, length.out = nrep),
+  burn_in   = 2000,
+  num_iter  = 1000,
   ncores    = min(6, nrep)
 )
 c(M / ncol(G), var(y) / var(y2))

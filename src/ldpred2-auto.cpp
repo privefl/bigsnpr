@@ -66,14 +66,9 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
       curr_post_means[j] = C3 * postp;
     }
 
-    // p = nb_causal / m;
     p = ::Rf_rbeta(1 + nb_causal, 1 + m - nb_causal);
-
-    h2 = cur_h2_est;
-    // h2 = p * m / ::Rf_rgamma(50 + nb_causal / 2, 0.4 + cur_h2_est / 2);
+    h2 = std::max(1e-4, cur_h2_est);
     alpha = std::min(0.9999, 0.95 / h2);
-
-    Rcout << h2 << " // " << arma::dot(curr_betas, corr * curr_betas) << std::endl;
 
     if (k >= burn_in) {
       c++;

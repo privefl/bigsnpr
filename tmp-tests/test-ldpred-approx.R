@@ -42,11 +42,9 @@ cor(pred, y2[ind.val])**2  # 0.376 -> 0.38
 
 
 # LDpred-fast
-corr2 <- as(corr, "dgTMatrix")
-corr_as_list <- split(data.frame(i = corr2@i + 1L, r = corr2@x),
-                      factor(corr2@j, ordered = TRUE))
 
-sapply(setNames(nm = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3)), function(p) {
+p_seq <- seq_log(1e-4, 0.9, length.out = 20)
+ldpred_approx <- sapply(setNames(nm = p_seq), function(p) {
 
   print(p)
 
@@ -64,4 +62,31 @@ sapply(setNames(nm = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3)), function(p) {
   plot(pred5, y2[ind.val], pch = 20); abline(0, 1, col = "red", lwd = 3)
   round(100 * cor(pred5, y2[ind.val])**2, 1)
 })
+
+
+
+chi2 <- qchisq(predict(gwas) * log(10), df = 1, lower.tail = FALSE, log.p = TRUE)
+betas_hat <- sqrt(chi2) * sign(beta_gwas) / sqrt(N)
+
+Rcpp::sourceCpp('src/ldpred2.cpp')
+all_ldpred2 <- ldpred2_gibbs(
+  corr      = corr,
+  betas_hat = betas_hat,
+  order     = order(betas_hat ** 2, decreasing = TRUE) - 1L,
+  n_vec     = `if`(length(N) == 1, rep(N, m), N),
+  h2        = rep(var(y) / var(y2), length(p_seq)),
+  p         = p_seq,
+  burn_in   = 100,
+  num_iter  = 200,
+  sparse    = FALSE,
+  ncores    = 4
+)
+
+pred6 <- big_prodMat(G, do.call("cbind", all_ldpred2), ind.row = ind.val)
+setNames(drop(round(100 * cor(pred6, y2[ind.val])**2, 1)),  p_seq)
+
+plot(p_seq, 100 * cor(pred6, y2[ind.val])**2, log = "x", pch = 20)
+abline(v = M / ncol(G), col = "red")
+
+points(p_seq, ldpred_approx, pch = 20, col = "blue")
 

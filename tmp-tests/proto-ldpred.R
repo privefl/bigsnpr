@@ -98,6 +98,7 @@ for (k in seq_len(num_iter)) {
 
   # print(k)
   print(all_h2_est[k] <- h2_est <- max(0.00001, crossprod(curr_betas)))
+  print(crossprod(curr_betas, corr %*% curr_betas))
   alpha <- 1 #min(0.99, 1 / h2_est, (h2 + 1 / sqrt(N)) / h2_est)
 
   for (i in seq_len(m)) {

@@ -77,7 +77,7 @@ cor(pred, y2[ind.val])**2  # 0.214 (2Mb) -> 0.256 (5Mb) -> 0.259 (5cM)
 snp_ldsc(ld / ncol(corr), chi2, N, blocks = 50)
 
 Rcpp::sourceCpp('tmp-tests/test-ldpred-cpp-postp3.cpp')
-burn_in <- 3000
+burn_in <- 300
 # betas_init <- as.vector(Matrix::solve(corr2, betas_hat))
 ldpred <- ldpred_gibbs_auto3(
   corr      = corr,
