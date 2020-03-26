@@ -22,7 +22,10 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
                             double h2_init,
                             double p_init,
                             int burn_in,
-                            int num_iter) {
+                            int num_iter,
+                            double h2_min = 1e-4,
+                            double h2_max = 1,
+                            double prob_jump_to_0 = 1e-4) {
 
   int m = betas_hat.size();
   std::vector<double> is_causal(m, p_init);
@@ -42,7 +45,6 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
   for (int k = 0; k < num_iter_tot; k++) {
 
-    // estimate beta
     for (const int& j : sample(m, m, false, R_NilValue, false)) { // order
 
       double dotprod = arma::dot(corr.col(j), curr_betas);
@@ -55,7 +57,7 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
       double nb_rm = is_causal[j];
       double postp = alpha /
-        (1 + (m - nb_causal) / nb_causal * ::sqrt(1 + C1) * ::exp(-0.5 * square(C3 / C4)));
+        (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-0.5 * square(C3 / C4)));
 
       is_causal[j] = postp > ::unif_rand();
       nb_causal += is_causal[j] - nb_rm;
@@ -67,8 +69,8 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
     }
 
     p = ::Rf_rbeta(1 + nb_causal, 1 + m - nb_causal);
-    h2 = std::max(1e-4, cur_h2_est);
-    alpha = std::min(0.9999, 0.95 / h2);
+    h2 = std::max(cur_h2_est, h2_min);
+    alpha = std::min(1 - prob_jump_to_0, h2_max / h2);
 
     if (k >= burn_in) {
       c++;
@@ -101,6 +103,9 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
                         const NumericVector& p_init,
                         int burn_in,
                         int num_iter,
+                        double h2_min = 1e-4,
+                        double h2_max = 1,
+                        double prob_jump_to_0 = 1e-4,
                         int ncores = 1) {
 
   myassert_size(h2_init.size(), p_init.size());
@@ -113,7 +118,8 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
   #pragma omp parallel for schedule(dynamic, 1) num_threads(ncores)
   for (int k = 0; k < K; k++) {
     List res_k = ldpred2_gibbs_auto_one(
-      corr, betas_hat, n_vec, h2_init[k], p_init[k], burn_in, num_iter);
+      corr, betas_hat, n_vec, h2_init[k], p_init[k], burn_in, num_iter,
+      h2_min, h2_max, prob_jump_to_0);
     #pragma omp critical
     res[k] = res_k;
   }

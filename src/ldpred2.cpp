@@ -12,13 +12,12 @@ using namespace Rcpp;
 
 arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
                             const NumericVector& betas_hat,
-                            const IntegerVector& order,
                             const NumericVector& n_vec,
                             double h2,
                             double p,
                             int burn_in,
                             int num_iter,
-                            double sparse) {
+                            bool sparse) {
 
   int m = betas_hat.size();
   arma::vec curr_betas(m, arma::fill::zeros);
@@ -28,7 +27,7 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
   int num_iter_tot = burn_in + num_iter;
   for (int k = 0; k < num_iter_tot; k++) {
 
-    for (const int& j : order) {
+    for (const int& j : sample(m, m, false, R_NilValue, false)) { // order
 
       curr_betas[j] = 0;
       double res_beta_hat_j = betas_hat[j] - arma::dot(corr.col(j), curr_betas);
@@ -57,31 +56,31 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List ldpred2_gibbs(const arma::sp_mat& corr,
-                   const NumericVector& betas_hat,
-                   const IntegerVector& order,
-                   const NumericVector& n_vec,
-                   const NumericVector& h2,
-                   const NumericVector& p,
-                   int burn_in,
-                   int num_iter,
-                   double sparse,
-                   int ncores) {
+arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
+                        const NumericVector& betas_hat,
+                        const NumericVector& n_vec,
+                        const NumericVector& h2,
+                        const NumericVector& p,
+                        int burn_in,
+                        int num_iter,
+                        bool sparse,
+                        int ncores) {
 
-  myassert_size(h2.size(), p.size());
-  myassert_size(corr.n_cols, betas_hat.size());
-  myassert_size(corr.n_cols, order.size());
-  myassert_size(corr.n_cols, n_vec.size());
+  int K = p.size();
+  myassert_size(h2.size(), K);
 
-  int K = h2.size();
-  List res(K);
+  int m = betas_hat.size();
+  myassert_size(corr.n_cols,  m);
+  myassert_size(n_vec.size(), m);
+
+  arma::mat res(m, K);
 
   #pragma omp parallel for schedule(dynamic, 1) num_threads(ncores)
   for (int k = 0; k < K; k++) {
     arma::vec res_k = ldpred2_gibbs_one(
-      corr, betas_hat, order, n_vec, h2[k], p[k], burn_in, num_iter, sparse);
+      corr, betas_hat, n_vec, h2[k], p[k], burn_in, num_iter, sparse);
     #pragma omp critical
-    res[k] = wrap(res_k);
+    res.col(k) = res_k;
   }
 
   return res;

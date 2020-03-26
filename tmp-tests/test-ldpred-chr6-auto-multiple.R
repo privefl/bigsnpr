@@ -16,7 +16,7 @@ library(bigsnpr)
 
 chr6 <- snp_attach("../Dubois2010_data/celiac_chr6.rds")
 G <- chr6$genotypes$copy(code = c(0, 1, 2, 0, rep(NA, 252)))
-dim(G)  # 11402  4945
+dim(G)
 big_counts(G, ind.col = 1:10)
 CHR <- chr6$map$chromosome
 POS <- chr6$map$physical.pos
@@ -41,7 +41,7 @@ abline(v = (q <- bigutilsr::tukey_mc_up(S)), col = "red")
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-h2 <- 0.02
+h2 <- 0.05
 M <- 2000; set <- sort(sample(ncol(G), size = M))
 # M <- 10; set <- sort(sample(ind.HLA, size = M))
 # set <- ind.HLA[c(7, 8, 10, 12, 15)]; M <- 5
@@ -76,7 +76,7 @@ cor(pred, y2[ind.val])**2  # 0.214 (2Mb) -> 0.256 (5Mb) -> 0.259 (5cM)
 
 # LDpred-gibbs
 
-snp_ldsc(ld / ncol(corr), chi2, N, blocks = 50)
+snp_ldsc(ld / ncol(corr), chi2, N, blocks = 20)
 
 Rcpp::sourceCpp('src/ldpred2-auto.cpp')
 # burn_in <- 2000

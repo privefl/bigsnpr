@@ -28,12 +28,14 @@ List corMat(Environment BM,
 
   List res(m);
 
+  int chunk_size = ceil(m / (10.0 * ncores));
+
   #pragma omp parallel num_threads(ncores)
   {
     std::vector<int>    ind; ind.reserve(m);
     std::vector<double> val; val.reserve(m);
 
-    #pragma omp for
+    #pragma omp for schedule(dynamic, chunk_size)
     for (int j0 = 0; j0 < m; j0++) {
 
       ind.clear();

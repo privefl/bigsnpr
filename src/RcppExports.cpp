@@ -262,6 +262,46 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// ldpred2_gibbs_auto
+List ldpred2_gibbs_auto(const arma::sp_mat& corr, const NumericVector& betas_hat, const NumericVector& n_vec, const NumericVector& h2_init, const NumericVector& p_init, int burn_in, int num_iter, double h2_min, double h2_max, double prob_jump_to_0, int ncores);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP betas_hatSEXP, SEXP n_vecSEXP, SEXP h2_initSEXP, SEXP p_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP h2_minSEXP, SEXP h2_maxSEXP, SEXP prob_jump_to_0SEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type corr(corrSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type betas_hat(betas_hatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type h2_init(h2_initSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type p_init(p_initSEXP);
+    Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
+    Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
+    Rcpp::traits::input_parameter< double >::type h2_min(h2_minSEXP);
+    Rcpp::traits::input_parameter< double >::type h2_max(h2_maxSEXP);
+    Rcpp::traits::input_parameter< double >::type prob_jump_to_0(prob_jump_to_0SEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_auto(corr, betas_hat, n_vec, h2_init, p_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ldpred2_gibbs
+arma::mat ldpred2_gibbs(const arma::sp_mat& corr, const NumericVector& betas_hat, const NumericVector& n_vec, const NumericVector& h2, const NumericVector& p, int burn_in, int num_iter, bool sparse, int ncores);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs(SEXP corrSEXP, SEXP betas_hatSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP sparseSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type corr(corrSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type betas_hat(betas_hatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type h2(h2SEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
+    Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
+    Rcpp::traits::input_parameter< bool >::type sparse(sparseSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs(corr, betas_hat, n_vec, h2, p, burn_in, num_iter, sparse, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // multLinReg
 NumericMatrix multLinReg(SEXP obj, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericMatrix& U, int ncores);
 RcppExport SEXP _bigsnpr_multLinReg(SEXP objSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP USEXP, SEXP ncoresSEXP) {
@@ -365,6 +405,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 7},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
+    {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 11},
+    {"_bigsnpr_ldpred2_gibbs", (DL_FUNC) &_bigsnpr_ldpred2_gibbs, 9},
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 8},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
