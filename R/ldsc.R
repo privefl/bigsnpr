@@ -43,83 +43,82 @@ snp_ldsc <- function(ld_div_size, chi2, sample_size, blocks = 200,
 
   assert_pos(chi2, strict = FALSE)
   assert_lengths(chi2, ld_div_size)
-  if (length(sample_size) != 1) assert_lengths(sample_size, chi2)
-  if (length(blocks) == 1) blocks <- sort(rep_len(seq_len(blocks), length(chi2)))
-
-  #### step 1 ####
-
-  ind_sub1 <- which(chi2 < chi2_thr1)
-  x1 <- (ld_div_size * sample_size)[ind_sub1]
-  y1 <- chi2[ind_sub1]
-  ind_blocks <- split(seq_along(ind_sub1), blocks[ind_sub1])
-  n_blocks <- length(ind_blocks)
-
-  pred0 <- y1
-  for (i in 1:100) {
-    w1 <- WEIGHTS(pred0, x1)
-    pred <- stats::lm(y1 ~ x1, weights = w1)$fitted.values
-    if (max(abs(pred - pred0)) < 1e-6) break
-    pred0 <- pred
+  if (length(sample_size) == 1) {
+    sample_size <- rep(sample_size, length(chi2))
+  } else {
+    assert_lengths(sample_size, chi2)
   }
-  xw1 <- WEIGHT(w1, cbind(x1, 1))
-  yw1 <- WEIGHT(w1, y1)
 
-  xtx_block_values <- xty_block_values <- list()
-  for (i in seq_along(ind_blocks)) {
-    ind_block_i <- ind_blocks[[i]]
-    X <- xw1[ind_block_i, , drop = FALSE]
-    xtx_block_values[[i]] <- crossprod(X)
-    xty_block_values[[i]] <- crossprod(X, yw1[ind_block_i])
+  if (is.null(blocks)) {
+
+    #### step 1 ####
+
+    ind_sub1 <- which(chi2 < chi2_thr1)
+    x1 <- (ld_div_size * sample_size)[ind_sub1]
+    y1 <- chi2[ind_sub1]
+
+    pred0 <- y1
+    for (i in 1:100) {
+      w1 <- WEIGHTS(pred0, x1)
+      pred <- stats::lm(y1 ~ x1, weights = w1)$fitted.values
+      if (max(abs(pred - pred0)) < 1e-6) break
+      pred0 <- pred
+    }
+    xw1 <- WEIGHT(w1, cbind(x1, 1))
+    yw1 <- WEIGHT(w1, y1)
+
+    xtx <- crossprod(xw1)
+    xty <- crossprod(xw1, yw1)
+    step1_int <- solve(xtx, xty)[2]
+
+
+    #### step 2 ####
+
+    ind_sub2 <- which(chi2 < chi2_thr2)
+    x <- (ld_div_size * sample_size)[ind_sub2]
+    y <- chi2[ind_sub2]
+    yp <- y - step1_int
+
+    pred0 <- y
+    for (i in 1:100) {
+      w2 <- WEIGHTS(pred0, x)
+      pred <- step1_int + stats::lm(yp ~ x + 0, weights = w2)$fitted.values
+      if (max(abs(pred - pred0)) < 1e-6) break
+      pred0 <- pred
+    }
+    xw2 <- WEIGHT(w2, x)
+    yw2 <- WEIGHT(w2, yp)
+
+    xtx <- crossprod(xw2)
+    xty <- crossprod(xw2, yw2)
+    step2_h2 <- solve(xtx, xty)[1]
+
+    c(int = step1_int, h2 = step2_h2)
+
+  } else {
+
+    est <- snp_ldsc(ld_div_size, chi2, sample_size, NULL,
+                    chi2_thr1, chi2_thr2)
+
+    if (length(blocks) == 1)
+      blocks <- sort(rep_len(seq_len(blocks), length(chi2)))
+
+    ind_blocks <- split(seq_along(blocks), blocks)
+    n_blocks <- length(ind_blocks)
+
+    delete_values <- sapply(1:n_blocks, function(k) {
+      ind <- unlist(ind_blocks[-k])
+      snp_ldsc(ld_div_size[ind], chi2[ind], sample_size[ind], NULL,
+               chi2_thr1, chi2_thr2)
+    })
+    pseudovalues <- n_blocks * est - (n_blocks - 1) * delete_values
+
+    c(int    = mean(pseudovalues[1, ]),
+      int_se = sd(pseudovalues[1, ]) / sqrt(n_blocks),
+      h2     = mean(pseudovalues[2, ]),
+      h2_se  = sd(pseudovalues[2, ]) / sqrt(n_blocks))
+
   }
-  xtx <- Reduce('+', xtx_block_values)
-  xty <- Reduce('+', xty_block_values)
-
-  delete_values <- sapply(seq_len(n_blocks), function(i) {
-    solve(xtx - xtx_block_values[[i]], xty - xty_block_values[[i]])[2]
-  })
-  pseudovalues <- n_blocks * solve(xtx, xty)[2] - (n_blocks - 1) * delete_values
-
-  step1_int    <- mean(pseudovalues)
-  step1_int_se <- sd(pseudovalues / n_blocks)
-
-  #### step 2 ####
-
-  ind_sub2 <- which(chi2 < chi2_thr2)
-  x <- (ld_div_size * sample_size)[ind_sub2]
-  y <- chi2[ind_sub2]
-  yp <- y - step1_int
-  ind_blocks <- split(seq_along(ind_sub2), blocks[ind_sub2])
-  n_blocks <- length(ind_blocks)
-
-  pred0 <- y
-  for (i in 1:100) {
-    w2 <- WEIGHTS(pred0, x)
-    pred <- step1_int + stats::lm(yp ~ x + 0, weights = w2)$fitted.values
-    if (max(abs(pred - pred0)) < 1e-6) break
-    pred0 <- pred
-  }
-  xw2 <- WEIGHT(w2, x)
-  yw2 <- WEIGHT(w2, yp)
-
-  xtx_block_values <- xty_block_values <- list()
-  for (i in seq_along(ind_blocks)) {
-    ind_block_i <- ind_blocks[[i]]
-    X <- xw2[ind_block_i]
-    xtx_block_values[[i]] <- crossprod(X)
-    xty_block_values[[i]] <- crossprod(X, yw2[ind_block_i])
-  }
-  xtx <- Reduce('+', xtx_block_values)
-  xty <- Reduce('+', xty_block_values)
-
-  delete_values <- sapply(seq_len(n_blocks), function(i) {
-    solve(xtx - xtx_block_values[[i]], xty - xty_block_values[[i]])
-  })
-  pseudovalues <- n_blocks * c(solve(xtx, xty)) - (n_blocks - 1) * delete_values
-
-  c(int    = step1_int,
-    int_se = step1_int_se,
-    h2     = mean(pseudovalues),
-    h2_se  = sd(pseudovalues / n_blocks))
 }
 
 ################################################################################
