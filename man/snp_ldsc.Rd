@@ -5,7 +5,8 @@
 \title{LD score regression}
 \usage{
 snp_ldsc(
-  ld_div_size,
+  ld_score,
+  ld_size,
   chi2,
   sample_size,
   blocks = 200,
@@ -14,8 +15,9 @@ snp_ldsc(
 )
 }
 \arguments{
-\item{ld_div_size}{Vector of LD scores, divided by the number of variants
-used to compute these LD scores.}
+\item{ld_score}{Vector of LD scores.}
+
+\item{ld_size}{Number of variants used to compute \code{ld_score}.}
 
 \item{chi2}{Vector of chi-squared statistics.}
 

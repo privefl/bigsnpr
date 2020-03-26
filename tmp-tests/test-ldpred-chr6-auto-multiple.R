@@ -28,7 +28,8 @@ POS2 <- map_chr6$V3[ind]
 plot(POS, POS2, pch = 20)
 
 corr <- snp_cor(chr6$genotypes, infos.pos = POS2, size = 3 / 1000,
-                ncores = 6, alpha = 1)
+                ncores = 6, alpha = 0.9)
+object.size(corr) / 1024**2  # 0.3 -> 51 Mb / 0.9 -> 79 / 1 -> 84
 str(corr)
 median(Matrix::colSums(corr != 0))
 
@@ -41,9 +42,9 @@ abline(v = (q <- bigutilsr::tukey_mc_up(S)), col = "red")
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-h2 <- 0.05
-M <- 2000; set <- sort(sample(ncol(G), size = M))
-# M <- 10; set <- sort(sample(ind.HLA, size = M))
+h2 <- 0.5
+# M <- 2000; set <- sort(sample(ncol(G), size = M))
+# M <- 1000; set <- sort(sample(ind.HLA, size = M))
 # set <- ind.HLA[c(7, 8, 10, 12, 15)]; M <- 5
 effects <- rnorm(M, sd = sqrt(h2 / M))
 # effects <- rep(sqrt(h2 / M), M)
@@ -76,7 +77,10 @@ cor(pred, y2[ind.val])**2  # 0.214 (2Mb) -> 0.256 (5Mb) -> 0.259 (5cM)
 
 # LDpred-gibbs
 
-snp_ldsc(ld / ncol(corr), chi2, N, blocks = 20)
+(ldsc <- snp_ldsc(ld, ncol(corr), chi2, N, blocks = 100))
+signif(ldsc[["h2"]] + -2:2 * ldsc[["h2_se"]], 2)
+signif(seq_log(1e-5, 1, length.out = 21), 2)
+# 5 x 21 = 105
 
 Rcpp::sourceCpp('src/ldpred2-auto.cpp')
 # burn_in <- 2000
@@ -118,5 +122,5 @@ abline(h = print(ldpred$h2_est), col = "red", lwd = 2)
 abline(h = print(var(y) / var(y2)), col = "blue", lwd = 2)
 h2_est <- tail(ldpred$vec_h2_est, -1000)
 abline(h = quantile(h2_est, probs = c(0.025, 0.975)), col = "green", lwd = 2)
-snp_ldsc(ld / ncol(corr), chi2, N, blocks = 50)
+snp_ldsc(ld / ncol(corr), chi2, N, blocks = 100)
 
