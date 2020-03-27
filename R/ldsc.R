@@ -46,6 +46,8 @@ wlm_no_int <- function(x, y, w) {
 #' @param blocks Either a simgle number specifying the number of blocks,
 #'   or a vector of integers specifying the block number of each `chi2` value.
 #'   Default is `200`, dividing into 200 blocks of approximately equal size.
+#'   You can also use `NULL` to skip estimating standard errors.
+#' @inheritParams bigsnpr-package
 #'
 #' @return Vector of 4 values:
 #'  1. LDSC regression intercept,
@@ -58,7 +60,7 @@ wlm_no_int <- function(x, y, w) {
 #' @export
 #'
 snp_ldsc <- function(ld_score, ld_size, chi2, sample_size, blocks = 200,
-                     chi2_thr1 = 30, chi2_thr2 = Inf) {
+                     chi2_thr1 = 30, chi2_thr2 = Inf, ncores = 1) {
 
   assert_pos(chi2, strict = FALSE)
   assert_lengths(chi2, ld_score)
@@ -78,7 +80,7 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size, blocks = 200,
     x1 <- (ld_score / ld_size * sample_size)[ind_sub1]
     y1 <- chi2[ind_sub1]
 
-    pred0 <- y1
+    pred0 <- y1 + 1e-8
     for (i in 1:100) {
       pred <- wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$pred
       if (max(abs(pred - pred0)) < 1e-6) break
@@ -106,20 +108,23 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size, blocks = 200,
 
   } else {
 
-    est <- snp_ldsc(ld_score, ld_size, chi2, sample_size,
-                    NULL, chi2_thr1, chi2_thr2)
-
-    if (length(blocks) == 1)
+    if (length(blocks) == 1) {
       blocks <- sort(rep_len(seq_len(blocks), length(chi2)))
-
+    } else {
+      assert_lengths(blocks, chi2)
+    }
     ind_blocks <- split(seq_along(blocks), blocks)
     n_blocks <- length(ind_blocks)
 
-    delete_values <- sapply(1:n_blocks, function(k) {
+    bigparallelr::register_parallel(ncores)
+
+    delete_values <- foreach(k = 1:n_blocks, .combine = "cbind") %dopar% {
       ind_rm <- ind_blocks[[k]]
       snp_ldsc(ld_score[-ind_rm], ld_size, chi2[-ind_rm], sample_size[-ind_rm],
                NULL, chi2_thr1, chi2_thr2)
-    })
+    }
+    est <- snp_ldsc(ld_score, ld_size, chi2, sample_size,
+                    NULL, chi2_thr1, chi2_thr2)
     pseudovalues <- n_blocks * est - (n_blocks - 1) * delete_values
 
     c(int    = mean(pseudovalues[1, ]),

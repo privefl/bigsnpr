@@ -11,7 +11,8 @@ snp_ldsc(
   sample_size,
   blocks = 200,
   chi2_thr1 = 30,
-  chi2_thr2 = Inf
+  chi2_thr2 = Inf,
+  ncores = 1
 )
 }
 \arguments{
@@ -26,11 +27,15 @@ Possibly a vector, or just a single value.}
 
 \item{blocks}{Either a simgle number specifying the number of blocks,
 or a vector of integers specifying the block number of each \code{chi2} value.
-Default is \code{200}, dividing into 200 blocks of approximately equal size.}
+Default is \code{200}, dividing into 200 blocks of approximately equal size.
+You can also use \code{NULL} to skip estimating standard errors.}
 
 \item{chi2_thr1}{Threshold on \code{chi2} in step 1. Default is \code{30}.}
 
 \item{chi2_thr2}{Threshold on \code{chi2} in step 2. Default is \code{Inf} (none).}
+
+\item{ncores}{Number of cores used. Default doesn't use parallelism.
+You may use \link{nb_cores}.}
 }
 \value{
 Vector of 4 values:

@@ -34,6 +34,7 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
   arma::vec curr_post_means(m, arma::fill::zeros);
   arma::vec avg_betas(m, arma::fill::zeros);
+  IntegerVector random_order(m);
 
   int num_iter_tot = burn_in + num_iter;
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
@@ -45,7 +46,10 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
   for (int k = 0; k < num_iter_tot; k++) {
 
-    for (const int& j : sample(m, m, false, R_NilValue, false)) { // order
+    #pragma omp critical
+    random_order = sample(m, m, false, R_NilValue, false);
+
+    for (const int& j : random_order) {
 
       double dotprod = arma::dot(corr.col(j), curr_betas);
       double res_beta_hat_j = betas_hat[j] + curr_betas[j] - dotprod;
@@ -108,11 +112,14 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
                         double prob_jump_to_0 = 1e-4,
                         int ncores = 1) {
 
-  myassert_size(h2_init.size(), p_init.size());
-  myassert_size(corr.n_cols, betas_hat.size());
-  myassert_size(corr.n_cols, n_vec.size());
+  int m = betas_hat.size();
+  myassert_size(corr.n_rows,  m);
+  myassert_size(corr.n_cols,  m);
+  myassert_size(n_vec.size(), m);
 
-  int K = h2_init.size();
+  int K = p_init.size();
+  myassert_size(h2_init.size(), K);
+
   List res(K);
 
   #pragma omp parallel for schedule(dynamic, 1) num_threads(ncores)

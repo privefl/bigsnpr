@@ -15,19 +15,23 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
                             const NumericVector& n_vec,
                             double h2,
                             double p,
+                            bool sparse,
                             int burn_in,
-                            int num_iter,
-                            bool sparse) {
+                            int num_iter) {
 
   int m = betas_hat.size();
   arma::vec curr_betas(m, arma::fill::zeros);
   arma::vec curr_post_means(m, arma::fill::zeros);
   arma::vec avg_betas(m, arma::fill::zeros);
+  IntegerVector random_order(m);
 
   int num_iter_tot = burn_in + num_iter;
   for (int k = 0; k < num_iter_tot; k++) {
 
-    for (const int& j : sample(m, m, false, R_NilValue, false)) { // order
+    #pragma omp critical
+    random_order = sample(m, m, false, R_NilValue, false);
+
+    for (const int& j : random_order) {
 
       curr_betas[j] = 0;
       double res_beta_hat_j = betas_hat[j] - arma::dot(corr.col(j), curr_betas);
@@ -55,30 +59,38 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
 
 /******************************************************************************/
 
+// [[Rcpp::plugins(openmp)]]
 // [[Rcpp::export]]
 arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
                         const NumericVector& betas_hat,
                         const NumericVector& n_vec,
                         const NumericVector& h2,
                         const NumericVector& p,
+                        const LogicalVector& sparse,
                         int burn_in,
                         int num_iter,
-                        bool sparse,
                         int ncores) {
 
-  int K = p.size();
-  myassert_size(h2.size(), K);
-
   int m = betas_hat.size();
+  myassert_size(corr.n_rows,  m);
   myassert_size(corr.n_cols,  m);
   myassert_size(n_vec.size(), m);
+
+  int K = p.size();
+  myassert_size(h2.size(),     K);
+  myassert_size(sparse.size(), K);
 
   arma::mat res(m, K);
 
   #pragma omp parallel for schedule(dynamic, 1) num_threads(ncores)
   for (int k = 0; k < K; k++) {
+
+    if (k % ncores == 0)
+      Rcout << "Starting with params " << k + 1 << " / " << K << std::endl;
+
     arma::vec res_k = ldpred2_gibbs_one(
-      corr, betas_hat, n_vec, h2[k], p[k], burn_in, num_iter, sparse);
+      corr, betas_hat, n_vec, h2[k], p[k], sparse[k], burn_in, num_iter);
+
     #pragma omp critical
     res.col(k) = res_k;
   }

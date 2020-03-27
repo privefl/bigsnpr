@@ -42,9 +42,9 @@ abline(v = (q <- bigutilsr::tukey_mc_up(S)), col = "red")
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-h2 <- 0.5
-M <- 200; set <- sort(sample(ncol(G), size = M))
-# M <- 1000; set <- sort(sample(ind.HLA, size = M))
+h2 <- 0.3
+# M <- 500; set <- sort(sample(ncol(G), size = M))
+M <- 100; set <- sort(sample(ind.HLA, size = M))
 # set <- ind.HLA[c(7, 8, 10, 12, 15)]; M <- 5
 effects <- rnorm(M, sd = sqrt(h2 / M))
 # effects <- rep(sqrt(h2 / M), M)
@@ -78,49 +78,46 @@ cor(pred, y2[ind.val])**2  # 0.214 (2Mb) -> 0.256 (5Mb) -> 0.259 (5cM)
 # LDpred-gibbs
 
 (ldsc <- snp_ldsc(ld, ncol(corr), chi2, N, blocks = 100))
-signif(ldsc[["h2"]] + -2:2 * ldsc[["h2_se"]], 2)
-signif(seq_log(1e-5, 1, length.out = 21), 2)
-# 5 x 21 = 105
+(h2_seq <- round(ldsc[["h2"]] + -2:2 * ldsc[["h2_se"]], 3))
+(p_seq <- signif(seq_log(1e-4, 1, length.out = 17), 2))
+# 5 x 21 = 85
 
-Rcpp::sourceCpp('src/ldpred2-auto.cpp')
-# burn_in <- 2000
-nrep <- 1
-all_ldpred <- ldpred2_gibbs_auto(
+(params <- expand.grid(h2 = h2_seq, p = p_seq, sparse = c(TRUE, FALSE)))
+
+
+Rcpp::sourceCpp('src/ldpred2.cpp')
+all_ldpred2 <- ldpred2_gibbs(
   corr      = corr,
   betas_hat = betas_hat,
   n_vec     = `if`(length(N) == 1, rep(N, m), N),
-  h2_init   = var(y) / var(y2), #ldsc[["h2"]] + 2 * ldsc[["h2_se"]], # rep(0.1, nrep),
-  p_init    = seq_log(1e-4, 0.9, length.out = nrep),
-  burn_in   = 2000,
-  num_iter  = 1000,
-  ncores    = min(6, nrep)
+  h2        = params$h2,
+  p         = params$p,
+  sparse    = params$sparse,
+  burn_in   = 200,
+  num_iter  = 200,
+  ncores    = 4
 )
-c(M / ncol(G), var(y) / var(y2))
 
-
-ldpred <- all_ldpred[[1]]
-str(ldpred)
-
-# plot(ldpred$beta_est, betas_init, pch = 20); abline(0, 1, col = "red")
-
-new_beta2 <- sqrt(N) * gwas$std.err * ldpred$beta_est
-plot(beta_gwas, new_beta2, pch = 20); abline(0, 1, col = "red")
-# plot(new_beta, new_beta2, pch = 20)
-pred7 <- big_prodVec(G, new_beta2, ind.row = ind.val)
-plot(pred7, y2[ind.val], pch = 20); abline(0, 1, col = "red", lwd = 3)
-round(100 * drop(cor(pred7, y2[ind.val])**2), 2)
+new_beta2 <- sweep(all_ldpred2, 1, sqrt(N) * gwas$std.err, '*')
+pred7 <- big_prodMat(G, new_beta2, ind.row = ind.val)
+params$r2 <- r2 <- drop(cor(pred7, y2[ind.val])**2)
+round(100 * r2, 2)
 round(100 * drop(cor(pred, y2[ind.val])**2), 2)
+plot(p_seq, drop(cor(pred7, y2[ind.val])**2), pch = 20, log = "x")
+abline(v = M / ncol(G), col = "red")
 
-plot(ldpred$vec_p_est,  log = "y", pch = 20)
-abline(h = print(ldpred$p_est),  col = "red", lwd = 2)
-abline(h = print(M / ncol(G)), col = "blue", lwd = 2)
-p_est <- tail(ldpred$vec_p_est, -1000)
-abline(h = quantile(p_est, probs = c(0.025, 0.975)), col = "green", lwd = 2)
+library(ggplot2)
+ggplot(params, aes(x = p, y = r2, color = factor(h2))) +
+  theme_bigstatsr() +
+  geom_point() +
+  geom_line() +
+  scale_x_log10(breaks = 10^(-5:0), minor_breaks = params$p) +
+  facet_wrap(~ sparse) +
+  geom_vline(xintercept = M / ncol(G), linetype = 3)
 
-plot(ldpred$vec_h2_est, log = "y", pch = 20)
-abline(h = print(ldpred$h2_est), col = "red", lwd = 2)
-abline(h = print(var(y) / var(y2)), col = "blue", lwd = 2)
-h2_est <- tail(ldpred$vec_h2_est, -1000)
-abline(h = quantile(h2_est, probs = c(0.025, 0.975)), col = "green", lwd = 2)
-snp_ldsc(ld, ncol(corr), chi2, N, blocks = 100)
-
+library(dplyr)
+params %>%
+  mutate(sparsity = colMeans(all_ldpred2 == 0)) %>%
+  arrange(desc(r2)) %>%
+  mutate_at(4:5, round, digits = 3) %>%
+  slice(1:20)
