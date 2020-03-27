@@ -56,6 +56,7 @@ Suggests:
     Hmisc,
     pcadapt (>= 4.1),
     RSQLite,
+    R.utils,
     spelling, 
     testthat,
     xgboost

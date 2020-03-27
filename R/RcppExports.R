@@ -69,8 +69,8 @@ ldpred2_gibbs_auto <- function(corr, betas_hat, n_vec, h2_init, p_init, burn_in,
     .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, betas_hat, n_vec, h2_init, p_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, ncores)
 }
 
-ldpred2_gibbs <- function(corr, betas_hat, n_vec, h2, p, burn_in, num_iter, sparse, ncores) {
-    .Call(`_bigsnpr_ldpred2_gibbs`, corr, betas_hat, n_vec, h2, p, burn_in, num_iter, sparse, ncores)
+ldpred2_gibbs <- function(corr, betas_hat, n_vec, h2, p, sparse, burn_in, num_iter, ncores) {
+    .Call(`_bigsnpr_ldpred2_gibbs`, corr, betas_hat, n_vec, h2, p, sparse, burn_in, num_iter, ncores)
 }
 
 multLinReg <- function(obj, ind_row, ind_col, U, ncores = 1L) {

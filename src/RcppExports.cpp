@@ -284,8 +284,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs
-arma::mat ldpred2_gibbs(const arma::sp_mat& corr, const NumericVector& betas_hat, const NumericVector& n_vec, const NumericVector& h2, const NumericVector& p, int burn_in, int num_iter, bool sparse, int ncores);
-RcppExport SEXP _bigsnpr_ldpred2_gibbs(SEXP corrSEXP, SEXP betas_hatSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP sparseSEXP, SEXP ncoresSEXP) {
+arma::mat ldpred2_gibbs(const arma::sp_mat& corr, const NumericVector& betas_hat, const NumericVector& n_vec, const NumericVector& h2, const NumericVector& p, const LogicalVector& sparse, int burn_in, int num_iter, int ncores);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs(SEXP corrSEXP, SEXP betas_hatSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -294,11 +294,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type h2(h2SEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector& >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
     Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
-    Rcpp::traits::input_parameter< bool >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs(corr, betas_hat, n_vec, h2, p, burn_in, num_iter, sparse, ncores));
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs(corr, betas_hat, n_vec, h2, p, sparse, burn_in, num_iter, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
