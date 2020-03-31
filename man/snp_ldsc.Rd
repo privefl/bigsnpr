@@ -10,6 +10,7 @@ snp_ldsc(
   chi2,
   sample_size,
   blocks = 200,
+  intercept = NULL,
   chi2_thr1 = 30,
   chi2_thr2 = Inf,
   ncores = 1

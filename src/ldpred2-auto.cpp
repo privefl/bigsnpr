@@ -1,8 +1,5 @@
 /******************************************************************************/
 
-// [[Rcpp::plugins(cpp11)]]
-#define ARMA_64BIT_WORD
-
 #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/utils.h>
 
@@ -14,10 +11,28 @@ inline double square(double x) {
   return x * x;
 }
 
+double dotprod_from_list(const List& list_ind_val,
+                         const arma::vec& beta) {
+
+  IntegerVector ind = list_ind_val[0];
+  NumericVector val = list_ind_val[1];
+  int K = ind.size();
+
+  double cp = 0;
+
+  for (int k = 0; k < K; k++) {
+    cp += val[k] * beta[ind[k]];
+  }
+
+  return cp;
+}
+
 /******************************************************************************/
 
-List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
+List ldpred2_gibbs_auto_one(const List& corr_as_list,
                             const NumericVector& betas_hat,
+                            const NumericVector& betas_init,
+                            const NumericVector& order,
                             const NumericVector& n_vec,
                             double h2_init,
                             double p_init,
@@ -29,12 +44,14 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
   int m = betas_hat.size();
   std::vector<double> is_causal(m, p_init);
-  arma::vec curr_betas(m); curr_betas.fill(::sqrt(h2_init / m));
-  double cur_h2_est = arma::dot(curr_betas, corr * curr_betas);
+  arma::vec curr_betas(betas_init.begin(), m);
+
+  // double cur_h2_est = arma::dot(curr_betas, corr * curr_betas);
+  // Rcout << cur_h2_est << " / " << h2_init << std::endl;
+  double cur_h2_est = h2_init;
 
   arma::vec curr_post_means(m, arma::fill::zeros);
   arma::vec avg_betas(m, arma::fill::zeros);
-  IntegerVector random_order(m);
 
   int num_iter_tot = burn_in + num_iter;
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
@@ -46,12 +63,9 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
   for (int k = 0; k < num_iter_tot; k++) {
 
-    #pragma omp critical
-    random_order = sample(m, m, false, R_NilValue, false);
+    for (const int& j : order) {
 
-    for (const int& j : random_order) {
-
-      double dotprod = arma::dot(corr.col(j), curr_betas);
+      double dotprod = dotprod_from_list(corr_as_list[j], curr_betas);
       double res_beta_hat_j = betas_hat[j] + curr_betas[j] - dotprod;
 
       double C1 = h2 * n_vec[j] / (m * p);
@@ -61,7 +75,7 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
       double nb_rm = is_causal[j];
       double postp = alpha /
-        (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-0.5 * square(C3 / C4)));
+        (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
 
       is_causal[j] = postp > ::unif_rand();
       nb_causal += is_causal[j] - nb_rm;
@@ -100,8 +114,10 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List ldpred2_gibbs_auto(const arma::sp_mat& corr,
+List ldpred2_gibbs_auto(const List& corr_as_list,
                         const NumericVector& betas_hat,
+                        const NumericVector& betas_init,
+                        const NumericVector& order,
                         const NumericVector& n_vec,
                         const NumericVector& h2_init,
                         const NumericVector& p_init,
@@ -113,8 +129,7 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
                         int ncores = 1) {
 
   int m = betas_hat.size();
-  myassert_size(corr.n_rows,  m);
-  myassert_size(corr.n_cols,  m);
+  myassert_size(corr_as_list.size(), m);
   myassert_size(n_vec.size(), m);
 
   int K = p_init.size();
@@ -124,9 +139,12 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
 
   #pragma omp parallel for schedule(dynamic, 1) num_threads(ncores)
   for (int k = 0; k < K; k++) {
+
     List res_k = ldpred2_gibbs_auto_one(
-      corr, betas_hat, n_vec, h2_init[k], p_init[k], burn_in, num_iter,
+      corr_as_list, betas_hat, betas_init, order, n_vec,
+      h2_init[k], p_init[k], burn_in, num_iter,
       h2_min, h2_max, prob_jump_to_0);
+
     #pragma omp critical
     res[k] = res_k;
   }

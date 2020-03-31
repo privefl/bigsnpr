@@ -47,6 +47,8 @@ wlm_no_int <- function(x, y, w) {
 #'   or a vector of integers specifying the block number of each `chi2` value.
 #'   Default is `200`, dividing into 200 blocks of approximately equal size.
 #'   You can also use `NULL` to skip estimating standard errors.
+#' @param intercept You can constrain the intercept to some value (e.g. 1).
+#'   Default is `NULL` (estimate the intercept).
 #' @inheritParams bigsnpr-package
 #'
 #' @return Vector of 4 values:
@@ -59,8 +61,12 @@ wlm_no_int <- function(x, y, w) {
 #'
 #' @export
 #'
-snp_ldsc <- function(ld_score, ld_size, chi2, sample_size, blocks = 200,
-                     chi2_thr1 = 30, chi2_thr2 = Inf, ncores = 1) {
+snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
+                     blocks = 200,
+                     intercept = NULL,
+                     chi2_thr1 = 30,
+                     chi2_thr2 = Inf,
+                     ncores = 1) {
 
   assert_pos(chi2, strict = FALSE)
   assert_lengths(chi2, ld_score)
@@ -75,18 +81,22 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size, blocks = 200,
 
     #### step 1 ####
 
-    ind_sub1 <- which(chi2 < chi2_thr1)
-    w_ld <- pmax(ld_score[ind_sub1], 1)
-    x1 <- (ld_score / ld_size * sample_size)[ind_sub1]
-    y1 <- chi2[ind_sub1]
+    step1_int <- if (is.null(intercept)) {
 
-    pred0 <- y1 + 1e-8
-    for (i in 1:100) {
-      pred <- wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$pred
-      if (max(abs(pred - pred0)) < 1e-6) break
-      pred0 <- pred
-    }
-    step1_int <- wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$intercept
+      ind_sub1 <- which(chi2 < chi2_thr1)
+      w_ld <- pmax(ld_score[ind_sub1], 1)
+      x1 <- (ld_score / ld_size * sample_size)[ind_sub1]
+      y1 <- chi2[ind_sub1]
+
+      pred0 <- y1 + 1e-8
+      for (i in 1:100) {
+        pred <- wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$pred
+        if (max(abs(pred - pred0)) < 1e-6) break
+        pred0 <- pred
+      }
+      wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$intercept
+
+    } else intercept
 
     #### step 2 ####
 
@@ -121,10 +131,10 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size, blocks = 200,
     delete_values <- foreach(k = 1:n_blocks, .combine = "cbind") %dopar% {
       ind_rm <- ind_blocks[[k]]
       snp_ldsc(ld_score[-ind_rm], ld_size, chi2[-ind_rm], sample_size[-ind_rm],
-               NULL, chi2_thr1, chi2_thr2)
+               NULL, intercept, chi2_thr1, chi2_thr2)
     }
     est <- snp_ldsc(ld_score, ld_size, chi2, sample_size,
-                    NULL, chi2_thr1, chi2_thr2)
+                    NULL, intercept, chi2_thr1, chi2_thr2)
     pseudovalues <- n_blocks * est - (n_blocks - 1) * delete_values
 
     c(int    = mean(pseudovalues[1, ]),
