@@ -9,7 +9,7 @@
 #' @param size For one SNP, window size around this SNP to compute correlations.
 #' Default is `500`. If not providing `infos.pos` (`NULL`, the default), this is
 #' a window in number of SNPs, otherwise it is a window in kb (genetic distance).
-#' @param alpha Type-I error for testing correlations.
+#' @param alpha Type-I error for testing correlations. Default is `0.9`.
 #' @param fill.diag Whether to fill the diagonal with 1s (the default)
 #' or to keep it as 0s.
 #'
@@ -31,7 +31,7 @@ snp_cor <- function(Gna,
                     ind.row = rows_along(Gna),
                     ind.col = cols_along(Gna),
                     size = 500,
-                    alpha = 0.05,
+                    alpha = 0.9,
                     fill.diag = TRUE,
                     infos.pos = NULL,
                     ncores = 1) {

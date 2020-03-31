@@ -146,3 +146,41 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 }
 
 ################################################################################
+
+#' @rdname snp_ldsc
+#'
+#' @param corr Sparse correlation matrix.
+#' @param df_beta A data frame with 3 columns:
+#'   - `$beta`: effect size estimates
+#'   - `$beta_se`: standard errors of effect size estimates
+#'   - `$n_eff`: sample size when estimating `beta`
+#'     (in the case of binary traits, this is `4 / (1 / n_control + 1 / n_case)`)
+#' @inheritDotParams snp_ldsc -ld_score -ld_size -chi2 -sample_size
+#'
+#' @export
+#'
+#' @examples
+#' bigsnp <- snp_attachExtdata()
+#' G <- bigsnp$genotypes
+#' y <- bigsnp$fam$affection - 1
+#' corr <- snp_cor(G)
+#'
+#' gwas <- big_univLogReg(G, y)
+#' snp_ldsc2(corr, data.frame(beta = gwas$estim, beta_se = gwas$std.err,
+#'                            n_eff = 4 / (1 / sum(y == 0) + 1 / sum(y == 1))))
+#'
+snp_ldsc2 <- function(corr, df_beta, ...) {
+
+  assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
+  stopifnot(all.equal(colnames(df_beta), c("beta", "beta_se", "n_eff")))
+
+  snp_ldsc(
+    ld_score    = Matrix::colSums(corr^2),
+    ld_size     = ncol(corr),
+    chi2        = (df_beta$beta / df_beta$beta_se)^2,
+    sample_size = df_beta$n_eff,
+    ...
+  )
+}
+
+################################################################################

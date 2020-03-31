@@ -2,6 +2,7 @@
 % Please edit documentation in R/ldsc.R
 \name{snp_ldsc}
 \alias{snp_ldsc}
+\alias{snp_ldsc2}
 \title{LD score regression}
 \usage{
 snp_ldsc(
@@ -15,6 +16,8 @@ snp_ldsc(
   chi2_thr2 = Inf,
   ncores = 1
 )
+
+snp_ldsc2(corr, df_beta, ...)
 }
 \arguments{
 \item{ld_score}{Vector of LD scores.}
@@ -31,12 +34,31 @@ or a vector of integers specifying the block number of each \code{chi2} value.
 Default is \code{200}, dividing into 200 blocks of approximately equal size.
 You can also use \code{NULL} to skip estimating standard errors.}
 
+\item{intercept}{You can constrain the intercept to some value (e.g. 1).
+Default is \code{NULL} (estimate the intercept).}
+
 \item{chi2_thr1}{Threshold on \code{chi2} in step 1. Default is \code{30}.}
 
 \item{chi2_thr2}{Threshold on \code{chi2} in step 2. Default is \code{Inf} (none).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
+
+\item{corr}{Sparse correlation matrix.}
+
+\item{df_beta}{A data frame with 3 columns:
+\itemize{
+\item \verb{$beta}: effect size estimates
+\item \verb{$beta_se}: standard errors of effect size estimates
+\item \verb{$n_eff}: sample size when estimating \code{beta}
+(in the case of binary traits, this is \code{4 / (1 / n_control + 1 / n_case)})
+}}
+
+\item{...}{
+  Arguments passed on to \code{\link[=snp_ldsc]{snp_ldsc}}
+  \describe{
+    \item{\code{}}{}
+  }}
 }
 \value{
 Vector of 4 values:
@@ -50,4 +72,15 @@ Vector of 4 values:
 \description{
 Implementation of LDSC regression in R, originally based on
 https://helda.helsinki.fi/bitstream/handle/10138/273501/MT_ldsc_hautakangas.pdf
+}
+\examples{
+bigsnp <- snp_attachExtdata()
+G <- bigsnp$genotypes
+y <- bigsnp$fam$affection - 1
+corr <- snp_cor(G)
+
+gwas <- big_univLogReg(G, y)
+snp_ldsc2(corr, data.frame(beta = gwas$estim, beta_se = gwas$std.err,
+                           n_eff = 4 / (1 / sum(y == 0) + 1 / sum(y == 1))))
+
 }

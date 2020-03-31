@@ -1,12 +1,7 @@
 /******************************************************************************/
 
-// [[Rcpp::plugins(cpp11)]]
-#define ARMA_64BIT_WORD
-
 #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/utils.h>
-
-using namespace Rcpp;
 
 /******************************************************************************/
 
@@ -17,8 +12,8 @@ inline double square(double x) {
 /******************************************************************************/
 
 arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
-                            const NumericVector& betas_hat,
-                            const NumericVector& betas_init,
+                            const NumericVector& beta_hat,
+                            const NumericVector& beta_init,
                             const NumericVector& order,
                             const NumericVector& n_vec,
                             double h2,
@@ -27,19 +22,18 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
                             int burn_in,
                             int num_iter) {
 
-  int m = betas_hat.size();
-  arma::vec curr_betas(betas_init.begin(), m);
-  arma::vec curr_post_means(m, arma::fill::zeros);
-  arma::vec avg_betas(m, arma::fill::zeros);
+  int m = beta_hat.size();
+  arma::vec curr_beta(beta_init.begin(), m);
+  arma::vec post_mean_beta(m);
+  arma::vec avg_beta(m, arma::fill::zeros);
 
   int num_iter_tot = burn_in + num_iter;
   for (int k = 0; k < num_iter_tot; k++) {
 
     for (const int& j : order) {
 
-      curr_betas[j] = 0;
-      double res_beta_hat_j = betas_hat[j] - arma::dot(corr.col(j), curr_betas);
-
+      curr_beta[j] = 0;
+      double res_beta_hat_j = beta_hat[j] - arma::dot(corr.col(j), curr_beta);
 
       double C1 = h2 * n_vec[j] / (m * p);
       double C2 = 1 / (1 + 1 / C1);
@@ -50,25 +44,25 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
         (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
 
       if (sparse && (post_p_j < p)) {
-        curr_betas[j] = curr_post_means[j] = 0;
+        curr_beta[j] = post_mean_beta[j] = 0;
       } else {
-        curr_post_means[j] = C2 * post_p_j * res_beta_hat_j;
-        curr_betas[j] = (post_p_j > ::unif_rand()) ? (C3 + ::norm_rand() * C4) : 0;
+        post_mean_beta[j] = C2 * post_p_j * res_beta_hat_j;
+        curr_beta[j] = (post_p_j > ::unif_rand()) ? (C3 + ::norm_rand() * C4) : 0;
       }
     }
 
-    if (k >= burn_in) avg_betas += curr_post_means;
+    if (k >= burn_in) avg_beta += post_mean_beta;
   }
 
-  return avg_betas / num_iter;
+  return avg_beta / num_iter;
 }
 
 /******************************************************************************/
 
 // [[Rcpp::export]]
 arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
-                        const NumericVector& betas_hat,
-                        const NumericVector& betas_init,
+                        const NumericVector& beta_hat,
+                        const NumericVector& beta_init,
                         const NumericVector& order,
                         const NumericVector& n_vec,
                         const NumericVector& h2,
@@ -78,10 +72,10 @@ arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
                         int num_iter,
                         int ncores) {
 
-  int m = betas_hat.size();
+  int m = beta_hat.size();
   myassert_size(corr.n_rows, m);
   myassert_size(corr.n_cols, m);
-  myassert_size(betas_init.size(), m);
+  myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
 
   int K = p.size();
@@ -97,7 +91,7 @@ arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
     //   Rcout << "Starting with params " << k + 1 << " / " << K << std::endl;
 
     arma::vec res_k = ldpred2_gibbs_one(
-      corr, betas_hat, betas_init, order, n_vec,
+      corr, beta_hat, beta_init, order, n_vec,
       h2[k], p[k], sparse[k], burn_in, num_iter);
 
     #pragma omp critical
