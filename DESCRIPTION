@@ -55,6 +55,7 @@ Suggests:
     glue,
     Hmisc,
     pcadapt (>= 4.1),
+    rmutil,
     RSQLite,
     R.utils,
     spelling, 
