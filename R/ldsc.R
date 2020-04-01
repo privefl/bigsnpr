@@ -42,6 +42,7 @@ wlm_no_int <- function(x, y, w) {
 #' @param sample_size Sample size of GWAS corresponding to chi-squared statistics.
 #'   Possibly a vector, or just a single value.
 #' @param chi2_thr1 Threshold on `chi2` in step 1. Default is `30`.
+#'   Equivalent to parameter `--two-step`.
 #' @param chi2_thr2 Threshold on `chi2` in step 2. Default is `Inf` (none).
 #' @param blocks Either a simgle number specifying the number of blocks,
 #'   or a vector of integers specifying the block number of each `chi2` value.
@@ -49,6 +50,7 @@ wlm_no_int <- function(x, y, w) {
 #'   You can also use `NULL` to skip estimating standard errors.
 #' @param intercept You can constrain the intercept to some value (e.g. 1).
 #'   Default is `NULL` (estimate the intercept).
+#'   Equivalent to parameter `--intercept-h2`.
 #' @inheritParams bigsnpr-package
 #'
 #' @return Vector of 4 values:
@@ -68,7 +70,8 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
                      chi2_thr2 = Inf,
                      ncores = 1) {
 
-  assert_pos(chi2, strict = FALSE)
+  chi2 <- chi2 + 1e-8
+  assert_pos(chi2, strict = TRUE)
   assert_lengths(chi2, ld_score)
   assert_one_int(ld_size)
   if (length(sample_size) == 1) {
@@ -88,7 +91,7 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
       x1 <- (ld_score / ld_size * sample_size)[ind_sub1]
       y1 <- chi2[ind_sub1]
 
-      pred0 <- y1 + 1e-8
+      pred0 <- y1
       for (i in 1:100) {
         pred <- wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$pred
         if (max(abs(pred - pred0)) < 1e-6) break

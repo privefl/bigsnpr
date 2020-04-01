@@ -35,9 +35,11 @@ Default is \code{200}, dividing into 200 blocks of approximately equal size.
 You can also use \code{NULL} to skip estimating standard errors.}
 
 \item{intercept}{You can constrain the intercept to some value (e.g. 1).
-Default is \code{NULL} (estimate the intercept).}
+Default is \code{NULL} (estimate the intercept).
+Equivalent to parameter \code{--intercept-h2}.}
 
-\item{chi2_thr1}{Threshold on \code{chi2} in step 1. Default is \code{30}.}
+\item{chi2_thr1}{Threshold on \code{chi2} in step 1. Default is \code{30}.
+Equivalent to parameter \code{--two-step}.}
 
 \item{chi2_thr2}{Threshold on \code{chi2} in step 2. Default is \code{Inf} (none).}
 

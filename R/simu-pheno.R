@@ -8,6 +8,12 @@ scaled_prod <- function(X, ind, ind.row, ind.col, beta) {
 
 #' Simulate phenotypes
 #'
+#' Simulate phenotypes using a linear model. When a prevalence is given, the
+#' liability threshold is used to convert liabilities to a binary outcome.
+#' The genetic and environmental liabilities are scaled such that the variance
+#' of the genetic liability is equality the requested heritability, and the
+#' variance of the total liability is 1.
+#'
 #' @inheritParams bigsnpr-package
 #' @param h2 Heritability.
 #' @param M Number of causal variants.
@@ -37,22 +43,28 @@ snp_simuPheno <- function(G, h2, M, K = NULL,
   }
 
   # simulate genetic liability
-  y.simu <- big_apply(G, scaled_prod,
-                      a.combine = bigparallelr::plus, ind = seq_along(set),
-                      ind.row = ind.row, ind.col = set, beta = effects,
-                      ncores = ncores)
+  gen_liab <- big_apply(G, scaled_prod,
+                        a.combine = bigparallelr::plus, ind = seq_along(set),
+                        ind.row = ind.row, ind.col = set, beta = effects,
+                        ncores = ncores)
 
   # make sure genetic liability has variance equal to heritability
-  y.simu <- y.simu / stats::sd(y.simu) * sqrt(h2)
-  stopifnot(all.equal(drop(stats::var(y.simu)), h2))
+  coeff1 <- sqrt(h2) / stats::sd(gen_liab)
+  gen_liab <- gen_liab * coeff1
+  stopifnot(all.equal(stats::var(gen_liab), h2))
 
-  # add environmental part
-  y.simu <- y.simu + stats::rnorm(length(y.simu), sd = sqrt(1 - h2))
+  # add environmental part + make sure that total variance is 1
+  env_liab <- stats::rnorm(length(gen_liab), sd = sqrt(1 - h2))
+  var_env <- stats::var(env_liab)
+  cov_env <- stats::cov(gen_liab, env_liab)
+  coeff2 <- (sqrt(cov_env^2 + (1 - h2) * var_env) - cov_env) / var_env
+  full_liab <- gen_liab + env_liab * coeff2
+  stopifnot(all.equal(stats::var(full_liab), 1))
 
   # make binary outcome using liability threshold model
-  if (!is.null(K)) y.simu <- as.integer(y.simu > stats::qnorm(1 - K))
+  pheno <- if (is.null(K)) full_liab else (full_liab > stats::qnorm(1 - K)) + 0L
 
-  list(pheno = y.simu, set = set, effects = effects)
+  list(pheno = pheno, set = set, effects = effects * coeff1)
 }
 
 ################################################################################
