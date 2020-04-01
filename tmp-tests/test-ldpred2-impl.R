@@ -29,15 +29,8 @@ corr <- snp_cor(chr6$genotypes, infos.pos = POS2, size = 3 / 1000, ncores = 6)
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-h2 <- 0.1
-M <- 500; set <- sort(sample(ncol(G), size = M))
-# M <- 1000; set <- sort(sample(ind.HLA, size = M))
-# set <- ind.HLA[c(7, 8, 10, 12, 15)]; M <- 5
-effects <- rnorm(M, sd = sqrt(h2 / M))
-# effects <- rep(sqrt(h2 / M), M)
-y <- drop(scale(G[, set]) %*% effects)       ## G
-y2 <- y + rnorm(nrow(G), sd = sqrt(1 - h2))  ## G + E
-var(y) / var(y2)                             ## H2
+y2 <- snp_simuPheno(G, h2 = 0.1, M = 500)$pheno
+y2 <- snp_simuPheno(G, h2 = 0.2, M = 1000, ind.possible = ind.HLA)$pheno
 
 
 # GWAS

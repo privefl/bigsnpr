@@ -2,8 +2,7 @@
 
 flip_strand <- function(allele) {
 
-  if (!requireNamespace("dplyr", quietly = TRUE))
-    stop2("Please install package 'dplyr'.")
+  assert_package("dplyr")
 
   dplyr::case_when(
     allele == "A" ~ "T",
@@ -242,9 +241,7 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #'
 snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1) {
 
-  if (!requireNamespace("R.utils", quietly = TRUE))
-    stop2("Please install package 'R.utils'.")
-
+  assert_package("R.utils")
   assert_lengths(infos.chr, infos.pos)
 
   snp_split(infos.chr, function(ind.chr, pos, dir) {

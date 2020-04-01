@@ -25,10 +25,8 @@ format_snp_id <- function(snp_id) {
 snp_readBGI <- function(bgifile, snp_id) {
 
   # check for packages
-  if (!requireNamespace("RSQLite", quietly = TRUE))
-    stop2("Please install package 'RSQLite'.")
-  if (!requireNamespace("dbplyr", quietly = TRUE))
-    stop2("Please install package 'dbplyr'.")
+  assert_package("RSQLite")
+  assert_package("dbplyr")
 
   # read variant information from index files
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)

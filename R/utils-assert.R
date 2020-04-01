@@ -4,7 +4,7 @@
 #' @importFrom bigassertr assert_int assert_pos assert_01 assert_nona
 #' @importFrom bigassertr assert_lengths assert_sorted assert_args
 #' @importFrom bigassertr assert_noexist assert_exist assert_dir assert_ext
-#' @importFrom bigassertr assert_type assert_class
+#' @importFrom bigassertr assert_type assert_class assert_package
 #' @importFrom bigparallelr assert_cores
 assert_noNA <- bigstatsr:::assert_noNA
 

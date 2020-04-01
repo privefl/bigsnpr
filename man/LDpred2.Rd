@@ -22,8 +22,8 @@ snp_ldpred2_auto(
   df_beta,
   vec_p_init = 0.1,
   h2_init = NULL,
-  burn_in = 1000,
-  num_iter = 200,
+  burn_in = 2000,
+  num_iter = 500,
   verbose = FALSE,
   ncores = 1
 )
