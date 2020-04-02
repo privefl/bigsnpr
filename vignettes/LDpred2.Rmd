@@ -1,0 +1,208 @@
+---
+title: "Computing polygenic scores using LDpred2"
+author: "Florian Privé"
+date: "April 2, 2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+In this document, we show how to compute polygenic risk scores using LDpred2.
+
+## Downloading genotype data and summary statistics
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 75)
+knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
+```
+
+You can download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files in R. We store those files in a directory called `"tmp-data"` here.
+
+```{r, echo=FALSE, eval=FALSE}
+unzip("data-raw/public-data.zip")
+```
+
+```{r, echo=FALSE}
+unlink(paste0("tmp-data/public-data", c(".bk", ".rds")))
+```
+
+You can see [there](https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R) how we generated these data from [the 1000 Genomes project](https://www.nature.com/articles/nature15393).
+
+First, you need to read genotype data from the PLINK files (or BGEN files) as well as the text file containing summary statistics.
+
+```{r}
+# Load packages bigsnpr and bigstatsr
+library(bigsnpr)
+# Read from bed/bim/fam, it generates .bk and .rds files.
+snp_readBed("tmp-data/public-data.bed")
+# Attach the "bigSNP" object in R session
+obj.bigSNP <- snp_attach("tmp-data/public-data.rds")
+# See how the file looks like
+str(obj.bigSNP, max.level = 2, strict.width = "cut")
+# Get aliases for useful slots
+G   <- obj.bigSNP$genotypes
+CHR <- obj.bigSNP$map$chromosome
+POS <- obj.bigSNP$map$physical.pos
+y   <- obj.bigSNP$fam$affection - 1
+NCORES <- nb_cores()
+# Read external summary statistics
+sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+str(sumstats)
+```
+
+We split genotype data using part of the data to learn parameters of stacking and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.
+
+```{r}
+set.seed(1)
+ind.val <- sample(nrow(G), 400)
+ind.test <- setdiff(rows_along(G), ind.val)
+```
+
+## Matching variants between genotype data and summary statistics 
+
+To match variants contained in genotype data and summary statistics, the variables `"chr"` (chromosome number), `"pos"` (genetic position), `"a0"` (reference allele) and `"a1"` (derived allele) should be available in the summary statistics and in the genotype data. These 4 variables are used to match variants between the two data frames.
+
+```{r}
+sumstats$n_eff <- 4 / (1 / sumstats$n_case + 1 / sumstats$n_control)
+sumstats$n_case <- sumstats$n_control <- NULL
+names(sumstats) <- c("chr", "rsid", "pos", "a0", "a1", "beta", "beta_se", "p", "n_eff")
+map <- obj.bigSNP$map[-(2:3)]
+names(map) <- c("chr", "pos", "a0", "a1")
+info_snp <- snp_match(sumstats, map)
+```
+
+If no or few variants are actually flipped, you might want to disable the strand flipping option. Here, these are simulated data so all variants use the same strand and the same reference.
+
+```{r}
+info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
+df_beta <- sumstats[c("beta", "beta_se", "n_eff")]
+```
+
+## Computing LDpred2 scores for one chromosome
+
+### Correlation
+
+First, you need to compute correlations between variants.
+We recommend to use a window size of 3 cM (see ref).
+
+```{r}
+POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = 3)
+```
+
+```{r, cache=TRUE}
+ind.chr <- which(info_snp$chr == 2)         ## indices in info_snp
+ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]    ## indices in G
+corr <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
+                infos.pos = POS2[ind.chr2], size = 3 / 1000)
+```
+
+### Infinitesimal model
+
+```{r, cache=TRUE}
+(ldsc <- snp_ldsc2(corr, df_beta[ind.chr, ], blocks = 20, intercept = 1))
+```
+
+
+```{r}
+beta_inf <- snp_ldpred2_inf(corr, df_beta[ind.chr, ], h2 = ldsc[["h2"]])
+```
+
+
+```{r}
+pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = ind.chr2)
+AUC(pred_inf, y[ind.test])
+```
+
+### Grid of models
+
+In practice, we recommend to test multiple values for h2 and p. 
+
+```{r}
+(h2_seq <- round(ldsc[["h2"]] + -2:2 * ldsc[["h2_se"]], 3))
+(p_seq <- signif(seq_log(1e-5, 1, length.out = 21), 2))
+```
+
+Because the data is so small here, heritability values are off; let us just use one (otherwise, you can use `h2_seq`).
+
+```{r}
+(params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE)))
+```
+
+```{r, cache=TRUE}
+beta_grid <- snp_ldpred2_grid(corr, df_beta[ind.chr, ], params, ncores = NCORES)
+```
+
+
+```{r}
+pred_grid <- big_prodMat(G, beta_grid, ind.col = ind.chr2)
+params$auc <- apply(pred_grid[ind.val, ], 2, AUC, target = y[ind.val])
+```
+
+```{r, out.width="90%", fig.asp=0.3}
+library(ggplot2)
+ggplot(params, aes(x = p, y = auc, color = as.factor(h2))) +
+  theme_bigstatsr() +
+  geom_point() +
+  geom_line() +
+  scale_x_log10(breaks = 10^(-5:0), minor_breaks = params$p) +
+  facet_wrap(~ sparse, labeller = label_both) +
+  labs(y = "AUC", color = "h2") +
+  theme(legend.position = "top")
+```
+
+```{r}
+library(dplyr)
+params %>%
+  mutate(sparsity = colMeans(beta_grid == 0)) %>%
+  arrange(desc(auc)) %>%
+  mutate_at(4:5, round, digits = 3) %>%
+  slice(1:10)
+```
+
+You can then choose the best one according to your preferred criterion (e.g. max AUC) and evaluate it in the test set.
+
+```{r}
+ind_max <- which.max(params$auc)
+best_beta <- beta_grid[, ind_max]
+best_pred <- pred_grid[ind.test, ind_max]
+AUC(best_pred, y[ind.test])
+```
+
+### Automatic model
+
+```{r, cache=TRUE}
+auto <- snp_ldpred2_auto(corr, df_beta[ind.chr, ], h2_init = ldsc[["h2"]])
+str(auto)
+```
+
+You should verify if the algorithm "converged".
+This is not the case here, which is probably because the data is so small.
+
+```{r}
+plot_grid(
+  qplot(y = auto[[1]]$path_p_est) + 
+    theme_bigstatsr() + 
+    geom_hline(yintercept = auto[[1]]$p_est, col = "blue") +
+    scale_y_log10() +
+    labs(y = "p"),
+  qplot(y = auto[[1]]$path_h2_est) + 
+    theme_bigstatsr() + 
+    geom_hline(yintercept = auto[[1]]$h2_est, col = "blue") +
+    labs(y = "h2"),
+  ncol = 1, align = "hv"
+)
+```
+
+```{r}
+beta_auto <- auto[[1]]$beta_est
+pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
+AUC(pred_auto, y[ind.test])
+```
+
+## Conclusion
+
+We have seen how to run 3 versions of LDpred2 ("-inf", "-grid" and "-auto") for one chromosome.
+You should do this for each chromosome and combine results.
+
+### Reference

@@ -50,7 +50,8 @@ NCORES <- nb_cores()
 # Check some counts for the 10 first variants
 big_counts(G, ind.col = 1:10)
 # Read external summary statistics
-sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt", 
+                             select = c(1:6, 10))
 str(sumstats)
 ```
 
@@ -185,3 +186,4 @@ For this example, the best C+T predictions provides an AUC of 63% whereas stacki
 
 ### Reference
 
+Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) Am J Hum Genet (2019).

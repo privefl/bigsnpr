@@ -58,12 +58,12 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
   stopifnot(all.equal(colnames(df_beta), c("beta", "beta_se", "n_eff")))
   stopifnot(all.equal(colnames(grid_param), c("p", "h2", "sparse")))
 
+  N <- df_beta$n_eff
   sd <- df_beta$beta_se * sqrt(N)
   beta_hat <- df_beta$beta / sd
-  N <- df_beta$n_eff
-  m <- ncol(corr)
 
   # compute one infinitesimal model, just for initialization
+  m <- ncol(corr)
   beta_inf <- as.vector(Matrix::solve(
     corr + Matrix::Diagonal(m, m / (median(grid_param$h2) * N)), beta_hat))
 
@@ -117,15 +117,15 @@ snp_ldpred2_auto <- function(corr, df_beta,
   stopifnot(all.equal(colnames(df_beta), c("beta", "beta_se", "n_eff")))
   stopifnot(!(verbose && (ncores > 1)))
 
+  N <- df_beta$n_eff
   sd <- df_beta$beta_se * sqrt(N)
   beta_hat <- df_beta$beta / sd
-  N <- df_beta$n_eff
-  m <- ncol(corr)
 
   if (is.null(h2_init))
     h2_init <- snp_ldsc2(corr, df_beta, intercept = 1, blocks = NULL)[["h2"]]
 
   # compute one infinitesimal model, just for initialization
+  m <- ncol(corr)
   beta_inf <- as.vector(Matrix::solve(
     corr + Matrix::Diagonal(m, m / (h2_init * N)), beta_hat))
   h2_init <- as.vector(crossprod(beta_inf, corr %*% beta_inf))
