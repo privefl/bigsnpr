@@ -75,6 +75,7 @@ arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
   int m = beta_hat.size();
   myassert_size(corr.n_rows, m);
   myassert_size(corr.n_cols, m);
+  myassert_size(order.size(), m);
   myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
 

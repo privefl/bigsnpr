@@ -12,8 +12,8 @@ snp_ldpred2_grid(
   corr,
   df_beta,
   grid_param,
-  burn_in = 50,
-  num_iter = 100,
+  burn_in = 100,
+  num_iter = 200,
   ncores = 1
 )
 

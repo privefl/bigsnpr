@@ -76,7 +76,7 @@ If no or few variants are actually flipped, you might want to disable the strand
 
 ```{r}
 info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
-df_beta <- sumstats[c("beta", "beta_se", "n_eff")]
+df_beta <- info_snp[c("beta", "beta_se", "n_eff")]
 ```
 
 ## Computing LDpred2 scores for one chromosome
@@ -148,10 +148,10 @@ ggplot(params, aes(x = p, y = auc, color = as.factor(h2))) +
   scale_x_log10(breaks = 10^(-5:0), minor_breaks = params$p) +
   facet_wrap(~ sparse, labeller = label_both) +
   labs(y = "AUC", color = "h2") +
-  theme(legend.position = "top")
+  theme(legend.position = "top", panel.spacing = unit(1, "lines"))
 ```
 
-```{r}
+```{r, message=FALSE}
 library(dplyr)
 params %>%
   mutate(sparsity = colMeans(beta_grid == 0)) %>%

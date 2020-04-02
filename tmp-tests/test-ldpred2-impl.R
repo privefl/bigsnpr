@@ -68,8 +68,7 @@ ggplot(params, aes(x = p, y = r2, color = factor(h2))) +
   geom_point() +
   geom_line() +
   scale_x_log10(breaks = 10^(-5:0), minor_breaks = params$p) +
-  facet_wrap(~ sparse) +
-  geom_vline(xintercept = M / ncol(G), linetype = 3)
+  facet_wrap(~ sparse, labeller = label_both)
 
 library(dplyr)
 params %>%
@@ -79,7 +78,6 @@ params %>%
   slice(1:10)
 
 # LDpred-auto
-ldpred_auto <- snp_ldpred2_auto(corr, df_beta, verbose = TRUE,
-                                burn_in = 2000, num_iter = 500)
+ldpred_auto <- snp_ldpred2_auto(corr, df_beta, verbose = TRUE)
 pred3 <- big_prodVec(G, ldpred_auto[[1]]$beta_est, ind.row = ind.val)
 round(100 * drop(cor(pred3, y2[ind.val])**2), 2)

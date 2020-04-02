@@ -9,13 +9,30 @@ inline double square(double x) {
   return x * x;
 }
 
+double dotprod_from_list(const List& list_ind_val,
+                         const arma::vec& beta) {
+
+  IntegerVector ind = list_ind_val[0];
+  NumericVector val = list_ind_val[1];
+  int K = ind.size();
+
+  double cp = 0;
+
+  for (int k = 0; k < K; k++) {
+    cp += val[k] * beta[ind[k]];
+  }
+
+  return cp;
+}
+
 /******************************************************************************/
 
-List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
+List ldpred2_gibbs_auto_one(const List& corr_as_list,
                             const NumericVector& beta_hat,
                             const NumericVector& beta_init,
                             const NumericVector& order,
                             const NumericVector& n_vec,
+                            double h2_init,
                             double p_init,
                             int burn_in,
                             int num_iter,
@@ -27,21 +44,26 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
   int m = beta_hat.size();
   std::vector<double> is_causal(m, p_init);
   arma::vec curr_beta(beta_init.begin(), m);
+
+  // double cur_h2_est = arma::dot(curr_beta, corr * curr_beta);
+  // Rcout << cur_h2_est << " / " << h2_init << std::endl;
+  double cur_h2_est = h2_init;
+
   arma::vec post_mean_beta(m);
   arma::vec avg_beta(m, arma::fill::zeros);
 
   int num_iter_tot = burn_in + num_iter;
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
 
+  double p = p_init, h2 = h2_init, alpha = 1;
   double nb_causal = m * p_init;
-  double cur_h2_est = arma::dot(curr_beta, corr * curr_beta);
-  double p = p_init, h2 = cur_h2_est, alpha = 1, avg_p = 0, avg_h2 = 0;
+  double avg_p = 0, avg_h2 = 0;
 
   for (int k = 0; k < num_iter_tot; k++) {
 
     for (const int& j : order) {
 
-      double dotprod = arma::dot(corr.col(j), curr_beta);
+      double dotprod = dotprod_from_list(corr_as_list[j], curr_beta);
       double res_beta_hat_j = beta_hat[j] + curr_beta[j] - dotprod;
 
       double C1 = h2 * n_vec[j] / (m * p);
@@ -49,18 +71,17 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
       double C3 = C2 * res_beta_hat_j ;
       double C4 = ::sqrt(C2 / n_vec[j]);
 
+      double nb_rm = is_causal[j];
       double postp = alpha /
         (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
-      post_mean_beta[j] = C3 * postp;
 
-      double nb_rm = is_causal[j];
       is_causal[j] = postp > ::unif_rand();
       nb_causal += is_causal[j] - nb_rm;
-
       double prev_beta = curr_beta[j];
       curr_beta[j] = is_causal[j] ? (C3 + ::norm_rand() * C4) : 0;
       double diff = curr_beta[j] - prev_beta;
       cur_h2_est += diff * (2 * dotprod + diff);
+      post_mean_beta[j] = C3 * postp;
     }
 
     p = ::Rf_rbeta(1 + nb_causal, 1 + m - nb_causal);
@@ -69,8 +90,8 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 
     if (k >= burn_in) {
       avg_beta += post_mean_beta;
-      avg_p    += p;
-      avg_h2   += h2;
+      avg_p     += p;
+      avg_h2    += h2;
     }
     p_est[k] = p;
     h2_est[k] = h2;
@@ -92,11 +113,12 @@ List ldpred2_gibbs_auto_one(const arma::sp_mat& corr,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List ldpred2_gibbs_auto(const arma::sp_mat& corr,
+List ldpred2_gibbs_auto(const List& corr_as_list,
                         const NumericVector& beta_hat,
                         const NumericVector& beta_init,
                         const NumericVector& order,
                         const NumericVector& n_vec,
+                        const NumericVector& h2_init,
                         const NumericVector& p_init,
                         int burn_in,
                         int num_iter,
@@ -107,20 +129,20 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
                         int ncores = 1) {
 
   int m = beta_hat.size();
-  myassert_size(corr.n_rows, m);
-  myassert_size(corr.n_cols, m);
-  myassert_size(order.size(), m);
-  myassert_size(beta_init.size(), m);
+  myassert_size(corr_as_list.size(), m);
   myassert_size(n_vec.size(), m);
 
   int K = p_init.size();
+  myassert_size(h2_init.size(), K);
+
   List res(K);
 
   #pragma omp parallel for schedule(dynamic, 1) num_threads(ncores)
   for (int k = 0; k < K; k++) {
 
     List res_k = ldpred2_gibbs_auto_one(
-      corr, beta_hat, beta_init, order, n_vec, p_init[k], burn_in, num_iter,
+      corr_as_list, beta_hat, beta_init, order, n_vec,
+      h2_init[k], p_init[k], burn_in, num_iter,
       h2_min, h2_max, prob_jump_to_0, verbose);
 
     #pragma omp critical

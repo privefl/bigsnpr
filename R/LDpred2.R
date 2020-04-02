@@ -50,8 +50,8 @@ snp_ldpred2_inf <- function(corr, df_beta, h2 = NULL) {
 #' @rdname LDpred2
 #'
 snp_ldpred2_grid <- function(corr, df_beta, grid_param,
-                             burn_in = 50,
-                             num_iter = 100,
+                             burn_in = 100,
+                             num_iter = 200,
                              ncores = 1) {
 
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
@@ -128,22 +128,18 @@ snp_ldpred2_auto <- function(corr, df_beta,
   m <- ncol(corr)
   beta_inf <- as.vector(Matrix::solve(
     corr + Matrix::Diagonal(m, m / (h2_init * N)), beta_hat))
-  h2_init <- as.vector(crossprod(beta_inf, corr %*% beta_inf))
-
-  corr <- dgTMatrix_to_list(as(corr, "dgTMatrix"))
 
   all_ldpred_auto <- ldpred2_gibbs_auto(
-    corr_as_list = corr,
-    beta_hat   = beta_hat,
-    beta_init  = beta_inf,
-    order      = order(beta_inf^2, decreasing = TRUE) - 1L,
-    n_vec      = N,
-    h2_init    = rep(h2_init, length(vec_p_init)),
-    p_init     = vec_p_init,
-    burn_in    = burn_in,
-    num_iter   = num_iter,
-    verbose    = verbose,
-    ncores     = ncores
+    corr      = corr,
+    beta_hat  = beta_hat,
+    beta_init = beta_inf,
+    order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+    n_vec     = N,
+    p_init    = vec_p_init,
+    burn_in   = burn_in,
+    num_iter  = num_iter,
+    verbose   = verbose,
+    ncores    = ncores
   )
 
   for (k in seq_along(all_ldpred_auto)) {

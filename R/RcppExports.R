@@ -61,16 +61,12 @@ corMat <- function(BM, rowInd, colInd, size, thr, pos, ncores) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos, ncores)
 }
 
-dgTMatrix_to_list <- function(mat, offset = 0L) {
-    .Call(`_bigsnpr_dgTMatrix_to_list`, mat, offset)
-}
-
 impute <- function(BM, method, ncores) {
     invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
 }
 
-ldpred2_gibbs_auto <- function(corr_as_list, beta_hat, beta_init, order, n_vec, h2_init, p_init, burn_in, num_iter, h2_min = 1e-4, h2_max = 1, prob_jump_to_0 = 1e-4, verbose = FALSE, ncores = 1L) {
-    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr_as_list, beta_hat, beta_init, order, n_vec, h2_init, p_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, verbose, ncores)
+ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, burn_in, num_iter, h2_min = 1e-4, h2_max = 1, prob_jump_to_0 = 1e-4, verbose = FALSE, ncores = 1L) {
+    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, verbose, ncores)
 }
 
 ldpred2_gibbs <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores) {
