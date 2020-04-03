@@ -14,8 +14,8 @@
 #'
 snp_ldpred2_inf <- function(corr, df_beta, h2 = NULL) {
 
+  assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
-  stopifnot(all.equal(colnames(df_beta), c("beta", "beta_se", "n_eff")))
 
   if (is.null(h2))
     h2 <- snp_ldsc2(corr, df_beta, intercept = 1, blocks = NULL)[["h2"]]
@@ -54,9 +54,10 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
                              num_iter = 200,
                              ncores = 1) {
 
+  assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
+  assert_df_with_names(grid_param, c("p", "h2", "sparse"))
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
-  stopifnot(all.equal(colnames(df_beta), c("beta", "beta_se", "n_eff")))
-  stopifnot(all.equal(colnames(grid_param), c("p", "h2", "sparse")))
+  assert_cores(ncores)
 
   N <- df_beta$n_eff
   sd <- df_beta$beta_se * sqrt(N)
@@ -86,13 +87,12 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 
 ################################################################################
 
-#' @param vec_p_init Vector of initial values for p. Default is `0.1`.
-#'   They can be run in parallel by changing `ncores`.
+#' @param p_init Initial value for p. Default is `0.1`.
 #' @param h2_init Heritability estimate for initialization.
 #'   Default is estimated using constrained LD score regression.
 #' @param verbose Whether to print "p // h2" estimates at each iteration.
 #'
-#' @return `snp_ldpred2_auto`: A list of `length(vec_p_init)` list(s) with
+#' @return `snp_ldpred2_auto`: A list with
 #'   - `$beta_est`: vector of effect sizes
 #'   - `$p_est`: estimate of p, the proportion of causal variants
 #'   - `$h2_est`: estimate of the (SNP) heritability
@@ -106,16 +106,14 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @rdname LDpred2
 #'
 snp_ldpred2_auto <- function(corr, df_beta,
-                             vec_p_init = 0.1,
+                             p_init = 0.1,
                              h2_init = NULL,
                              burn_in = 2000,
                              num_iter = 500,
-                             verbose = FALSE,
-                             ncores = 1) {
+                             verbose = FALSE) {
 
+  assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
-  stopifnot(all.equal(colnames(df_beta), c("beta", "beta_se", "n_eff")))
-  stopifnot(!(verbose && (ncores > 1)))
 
   N <- df_beta$n_eff
   sd <- df_beta$beta_se * sqrt(N)
@@ -129,23 +127,20 @@ snp_ldpred2_auto <- function(corr, df_beta,
   beta_inf <- as.vector(Matrix::solve(
     corr + Matrix::Diagonal(m, m / (h2_init * N)), beta_hat))
 
-  all_ldpred_auto <- ldpred2_gibbs_auto(
+  ldpred_auto <- ldpred2_gibbs_auto(
     corr      = corr,
     beta_hat  = beta_hat,
     beta_init = beta_inf,
     order     = order(beta_inf^2, decreasing = TRUE) - 1L,
     n_vec     = N,
-    p_init    = vec_p_init,
+    p_init    = p_init,
     burn_in   = burn_in,
     num_iter  = num_iter,
-    verbose   = verbose,
-    ncores    = ncores
+    verbose   = verbose
   )
+  ldpred_auto$beta_est <- drop(ldpred_auto$beta_est) * sd
 
-  for (k in seq_along(all_ldpred_auto)) {
-    all_ldpred_auto[[k]]$beta_est <- drop(all_ldpred_auto[[k]]$beta_est) * sd
-  }
-  all_ldpred_auto
+  ldpred_auto
 }
 
 ################################################################################

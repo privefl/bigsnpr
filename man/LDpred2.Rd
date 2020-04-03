@@ -20,12 +20,11 @@ snp_ldpred2_grid(
 snp_ldpred2_auto(
   corr,
   df_beta,
-  vec_p_init = 0.1,
+  p_init = 0.1,
   h2_init = NULL,
   burn_in = 2000,
   num_iter = 500,
-  verbose = FALSE,
-  ncores = 1
+  verbose = FALSE
 )
 }
 \arguments{
@@ -57,8 +56,7 @@ They can be run in parallel by changing \code{ncores}.
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
-\item{vec_p_init}{Vector of initial values for p. Default is \code{0.1}.
-They can be run in parallel by changing \code{ncores}.}
+\item{p_init}{Initial value for p. Default is \code{0.1}.}
 
 \item{h2_init}{Heritability estimate for initialization.
 Default is estimated using constrained LD score regression.}
@@ -71,7 +69,7 @@ Default is estimated using constrained LD score regression.}
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
 for each row of \code{grid_param}.
 
-\code{snp_ldpred2_auto}: A list of \code{length(vec_p_init)} list(s) with
+\code{snp_ldpred2_auto}: A list with
 \itemize{
 \item \verb{$beta_est}: vector of effect sizes
 \item \verb{$p_est}: estimate of p, the proportion of causal variants

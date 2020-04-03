@@ -181,21 +181,21 @@ This is not the case here, which is probably because the data is so small.
 
 ```{r}
 plot_grid(
-  qplot(y = auto[[1]]$path_p_est) + 
+  qplot(y = auto$path_p_est) + 
     theme_bigstatsr() + 
-    geom_hline(yintercept = auto[[1]]$p_est, col = "blue") +
+    geom_hline(yintercept = auto$p_est, col = "blue") +
     scale_y_log10() +
     labs(y = "p"),
-  qplot(y = auto[[1]]$path_h2_est) + 
+  qplot(y = auto$path_h2_est) + 
     theme_bigstatsr() + 
-    geom_hline(yintercept = auto[[1]]$h2_est, col = "blue") +
+    geom_hline(yintercept = auto$h2_est, col = "blue") +
     labs(y = "h2"),
   ncol = 1, align = "hv"
 )
 ```
 
 ```{r}
-beta_auto <- auto[[1]]$beta_est
+beta_auto <- auto$beta_est
 pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
 AUC(pred_auto, y[ind.test])
 ```

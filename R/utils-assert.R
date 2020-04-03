@@ -10,6 +10,21 @@ assert_noNA <- bigstatsr:::assert_noNA
 
 ################################################################################
 
+assert_df_with_names <- function(df, names) {
+
+  df_varname <- deparse(substitute(df))
+
+  if (!is.data.frame(df))
+    stop2("'%s' is not a data frame.", df_varname)
+
+  for (name in names) {
+    if (is.null(df[[name]]))
+      stop2("'%s' should have element '%s'.", df_varname, name)
+  }
+}
+
+################################################################################
+
 check_args <- function(...) {
 
   if (getOption("bigstatsr.check.args")) {
