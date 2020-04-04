@@ -33,31 +33,30 @@ wlm_no_int <- function(x, y, w) {
 
 #' LD score regression
 #'
-#' Implementation of LDSC regression in R, originally based on
-#' https://helda.helsinki.fi/bitstream/handle/10138/273501/MT_ldsc_hautakangas.pdf
-#'
 #' @param ld_score Vector of LD scores.
 #' @param ld_size Number of variants used to compute `ld_score`.
 #' @param chi2 Vector of chi-squared statistics.
 #' @param sample_size Sample size of GWAS corresponding to chi-squared statistics.
 #'   Possibly a vector, or just a single value.
 #' @param chi2_thr1 Threshold on `chi2` in step 1. Default is `30`.
-#'   Equivalent to parameter `--two-step`.
+#'   This is equivalent to parameter `--two-step`.
 #' @param chi2_thr2 Threshold on `chi2` in step 2. Default is `Inf` (none).
 #' @param blocks Either a simgle number specifying the number of blocks,
 #'   or a vector of integers specifying the block number of each `chi2` value.
-#'   Default is `200`, dividing into 200 blocks of approximately equal size.
-#'   You can also use `NULL` to skip estimating standard errors.
+#'   Default is `200` for `snp_ldsc()`, dividing into 200 blocks of approximately
+#'   equal size. `NULL` can also be used to skip estimating standard errors,
+#'   which is the default for `snp_ldsc2()`.
 #' @param intercept You can constrain the intercept to some value (e.g. 1).
-#'   Default is `NULL` (estimate the intercept).
-#'   Equivalent to parameter `--intercept-h2`.
+#'   Default is `NULL` in `snp_ldsc()` (the intercept is estimated)
+#'   and is `1` in `snp_ldsc2()` (the intercept is fixed to 1).
+#'   This is equivalent to parameter `--intercept-h2`.
 #' @inheritParams bigsnpr-package
 #'
-#' @return Vector of 4 values:
-#'  1. LDSC regression intercept,
-#'  2. SE of this intercept,
-#'  3. LDSC regression estimate of heritability,
-#'  4. SE of this heritability estimate.
+#' @return Vector of 4 values (or only the first 2 if `blocks = NULL`):
+#'  - `[["int"]]`: LDSC regression intercept,
+#'  - `[["int_se"]]`: SE of this intercept,
+#'  - `[["h2"]]`: LDSC regression estimate of heritability,
+#'  - `[["h2_se"]]`: SE of this heritability estimate.
 #'
 #' @importFrom bigassertr assert_one_int
 #'
@@ -158,7 +157,7 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 #'   - `$beta_se`: standard errors of effect size estimates
 #'   - `$n_eff`: sample size when estimating `beta`
 #'     (in the case of binary traits, this is `4 / (1 / n_control + 1 / n_case)`)
-#' @inheritDotParams snp_ldsc -ld_score -ld_size -chi2 -sample_size
+#' @inheritDotParams snp_ldsc chi2_thr1 chi2_thr2 ncores
 #'
 #' @export
 #'
@@ -166,13 +165,16 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 #' bigsnp <- snp_attachExtdata()
 #' G <- bigsnp$genotypes
 #' y <- bigsnp$fam$affection - 1
-#' corr <- snp_cor(G)
+#' corr <- snp_cor(G, ncores = 2)
 #'
 #' gwas <- big_univLogReg(G, y)
-#' snp_ldsc2(corr, data.frame(beta = gwas$estim, beta_se = gwas$std.err,
-#'                            n_eff = 4 / (1 / sum(y == 0) + 1 / sum(y == 1))))
+#' df_beta <- data.frame(beta = gwas$estim, beta_se = gwas$std.err,
+#'                       n_eff = 4 / (1 / sum(y == 0) + 1 / sum(y == 1)))
 #'
-snp_ldsc2 <- function(corr, df_beta, ...) {
+#' snp_ldsc2(corr, df_beta)
+#' snp_ldsc2(corr, df_beta, blocks = 20, intercept = NULL)
+#'
+snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
@@ -182,6 +184,8 @@ snp_ldsc2 <- function(corr, df_beta, ...) {
     ld_size     = ncol(corr),
     chi2        = (df_beta$beta / df_beta$beta_se)^2,
     sample_size = df_beta$n_eff,
+    blocks      = blocks,
+    intercept   = intercept,
     ...
   )
 }

@@ -17,7 +17,7 @@ snp_ldsc(
   ncores = 1
 )
 
-snp_ldsc2(corr, df_beta, ...)
+snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ...)
 }
 \arguments{
 \item{ld_score}{Vector of LD scores.}
@@ -31,15 +31,17 @@ Possibly a vector, or just a single value.}
 
 \item{blocks}{Either a simgle number specifying the number of blocks,
 or a vector of integers specifying the block number of each \code{chi2} value.
-Default is \code{200}, dividing into 200 blocks of approximately equal size.
-You can also use \code{NULL} to skip estimating standard errors.}
+Default is \code{200} for \code{snp_ldsc()}, dividing into 200 blocks of approximately
+equal size. \code{NULL} can also be used to skip estimating standard errors,
+which is the default for \code{snp_ldsc2()}.}
 
 \item{intercept}{You can constrain the intercept to some value (e.g. 1).
-Default is \code{NULL} (estimate the intercept).
-Equivalent to parameter \code{--intercept-h2}.}
+Default is \code{NULL} in \code{snp_ldsc()} (the intercept is estimated)
+and is \code{1} in \code{snp_ldsc2()} (the intercept is fixed to 1).
+This is equivalent to parameter \code{--intercept-h2}.}
 
 \item{chi2_thr1}{Threshold on \code{chi2} in step 1. Default is \code{30}.
-Equivalent to parameter \code{--two-step}.}
+This is equivalent to parameter \code{--two-step}.}
 
 \item{chi2_thr2}{Threshold on \code{chi2} in step 2. Default is \code{Inf} (none).}
 
@@ -63,26 +65,28 @@ You may use \link{nb_cores}.}
   }}
 }
 \value{
-Vector of 4 values:
-\enumerate{
-\item LDSC regression intercept,
-\item SE of this intercept,
-\item LDSC regression estimate of heritability,
-\item SE of this heritability estimate.
+Vector of 4 values (or only the first 2 if \code{blocks = NULL}):
+\itemize{
+\item \verb{[["int"]]}: LDSC regression intercept,
+\item \verb{[["int_se"]]}: SE of this intercept,
+\item \verb{[["h2"]]}: LDSC regression estimate of heritability,
+\item \verb{[["h2_se"]]}: SE of this heritability estimate.
 }
 }
 \description{
-Implementation of LDSC regression in R, originally based on
-https://helda.helsinki.fi/bitstream/handle/10138/273501/MT_ldsc_hautakangas.pdf
+LD score regression
 }
 \examples{
 bigsnp <- snp_attachExtdata()
 G <- bigsnp$genotypes
 y <- bigsnp$fam$affection - 1
-corr <- snp_cor(G)
+corr <- snp_cor(G, ncores = 2)
 
 gwas <- big_univLogReg(G, y)
-snp_ldsc2(corr, data.frame(beta = gwas$estim, beta_se = gwas$std.err,
-                           n_eff = 4 / (1 / sum(y == 0) + 1 / sum(y == 1))))
+df_beta <- data.frame(beta = gwas$estim, beta_se = gwas$std.err,
+                      n_eff = 4 / (1 / sum(y == 0) + 1 / sum(y == 1)))
+
+snp_ldsc2(corr, df_beta)
+snp_ldsc2(corr, df_beta, blocks = 20, intercept = NULL)
 
 }
