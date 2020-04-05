@@ -22,8 +22,8 @@ snp_ldpred2_auto(
   df_beta,
   p_init = 0.1,
   h2_init = NULL,
-  burn_in = 2000,
-  num_iter = 500,
+  burn_in = 1000,
+  num_iter = 1000,
   verbose = FALSE
 )
 }
@@ -67,7 +67,8 @@ Default is estimated using constrained LD score regression.}
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
 
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
-for each row of \code{grid_param}.
+for each row of \code{grid_param}. Missing values are returned when the
+algorithm diverged.
 
 \code{snp_ldpred2_auto}: A list with
 \itemize{

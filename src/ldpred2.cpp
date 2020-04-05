@@ -26,14 +26,15 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
   arma::vec curr_beta(beta_init.begin(), m);
   arma::vec post_mean_beta(m);
   arma::vec avg_beta(m, arma::fill::zeros);
+  double cur_h2_est = arma::dot(curr_beta, corr * curr_beta);
 
   int num_iter_tot = burn_in + num_iter;
   for (int k = 0; k < num_iter_tot; k++) {
 
     for (const int& j : order) {
 
-      curr_beta[j] = 0;
-      double res_beta_hat_j = beta_hat[j] - arma::dot(corr.col(j), curr_beta);
+      double dotprod = arma::dot(corr.col(j), curr_beta);
+      double res_beta_hat_j = beta_hat[j] + curr_beta[j] - dotprod;
 
       double C1 = h2 * n_vec[j] / (m * p);
       double C2 = 1 / (1 + 1 / C1);
@@ -43,12 +44,22 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
       double post_p_j = 1 /
         (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
 
+      double prev_beta = curr_beta[j];
       if (sparse && (post_p_j < p)) {
         curr_beta[j] = post_mean_beta[j] = 0;
       } else {
         post_mean_beta[j] = C2 * post_p_j * res_beta_hat_j;
         curr_beta[j] = (post_p_j > ::unif_rand()) ? (C3 + ::norm_rand() * C4) : 0;
       }
+      double diff = curr_beta[j] - prev_beta;
+      cur_h2_est += diff * (2 * dotprod + diff);
+    }
+
+    // Rcout << k + 1 << ": " << cur_h2_est << std::endl;
+    if (cur_h2_est < 0 || cur_h2_est > 2) {
+      // diverged -> return NAs
+      avg_beta.fill(NA_REAL);
+      return avg_beta;
     }
 
     if (k >= burn_in) avg_beta += post_mean_beta;

@@ -100,12 +100,13 @@ corr <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES,
 ### Infinitesimal model
 
 ```{r, cache=TRUE}
-(ldsc <- snp_ldsc2(corr, df_beta[ind.chr, ], blocks = 20, intercept = 1))
+(ldsc <- snp_ldsc2(corr, df_beta[ind.chr, ]))
+h2_est <- ldsc[["h2"]]
 ```
 
 
 ```{r}
-beta_inf <- snp_ldpred2_inf(corr, df_beta[ind.chr, ], h2 = ldsc[["h2"]])
+beta_inf <- snp_ldpred2_inf(corr, df_beta[ind.chr, ], h2 = h2_est)
 ```
 
 
@@ -119,13 +120,8 @@ AUC(pred_inf, y[ind.test])
 In practice, we recommend to test multiple values for h2 and p. 
 
 ```{r}
-(h2_seq <- round(ldsc[["h2"]] + -2:2 * ldsc[["h2_se"]], 3))
+(h2_seq <- round(seq_log(h2_est / 2, h2_est * 2, length.out = 5), 3))
 (p_seq <- signif(seq_log(1e-5, 1, length.out = 21), 2))
-```
-
-Because the data is so small here, heritability values are off; let us just use one (otherwise, you can use `h2_seq`).
-
-```{r}
 (params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE)))
 ```
 
@@ -154,7 +150,7 @@ ggplot(params, aes(x = p, y = auc, color = as.factor(h2))) +
 ```{r, message=FALSE}
 library(dplyr)
 params %>%
-  mutate(sparsity = colMeans(beta_grid == 0)) %>%
+  mutate(sparsity = colMeans(beta_grid == 0), id = row_number()) %>%
   arrange(desc(auc)) %>%
   mutate_at(4:5, round, digits = 3) %>%
   slice(1:10)
@@ -163,6 +159,7 @@ params %>%
 You can then choose the best one according to your preferred criterion (e.g. max AUC) and evaluate it in the test set.
 
 ```{r}
+# TODO: separare sparse and not sparse
 ind_max <- which.max(params$auc)
 best_beta <- beta_grid[, ind_max]
 best_pred <- pred_grid[ind.test, ind_max]
@@ -172,7 +169,7 @@ AUC(best_pred, y[ind.test])
 ### Automatic model
 
 ```{r, cache=TRUE}
-auto <- snp_ldpred2_auto(corr, df_beta[ind.chr, ], h2_init = ldsc[["h2"]])
+auto <- snp_ldpred2_auto(corr, df_beta[ind.chr, ], h2_init = h2_est)
 str(auto)
 ```
 
