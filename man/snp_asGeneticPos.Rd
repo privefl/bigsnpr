@@ -15,7 +15,7 @@ on a chromosome (in base pairs) of each SNP.\cr
 Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{dir}{Directory where to download and decompress files.
-Default is \code{tempdir()}.}
+Default is \code{tempdir()}. Use files there is already present.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
@@ -25,6 +25,6 @@ The new vector of genetic positions.
 }
 \description{
 Use genetic maps available at
-\link{https://github.com/joepickrell/1000-genomes-genetic-maps/}
+\url{https://github.com/joepickrell/1000-genomes-genetic-maps/}
 to interpolate physical positions (in bp) to genetic positions (in cM).
 }

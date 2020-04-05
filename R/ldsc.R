@@ -130,8 +130,8 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 
     bigparallelr::register_parallel(ncores)
 
-    delete_values <- foreach(k = 1:n_blocks, .combine = "cbind") %dopar% {
-      ind_rm <- ind_blocks[[k]]
+    delete_values <- foreach(ic = 1:n_blocks, .combine = "cbind") %dopar% {
+      ind_rm <- ind_blocks[[ic]]
       snp_ldsc(ld_score[-ind_rm], ld_size, chi2[-ind_rm], sample_size[-ind_rm],
                NULL, intercept, chi2_thr1, chi2_thr2)
     }
@@ -140,9 +140,9 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
     pseudovalues <- n_blocks * est - (n_blocks - 1) * delete_values
 
     c(int    = mean(pseudovalues[1, ]),
-      int_se = sd(pseudovalues[1, ]) / sqrt(n_blocks),
+      int_se = stats::sd(pseudovalues[1, ]) / sqrt(n_blocks),
       h2     = mean(pseudovalues[2, ]),
-      h2_se  = sd(pseudovalues[2, ]) / sqrt(n_blocks))
+      h2_se  = stats::sd(pseudovalues[2, ]) / sqrt(n_blocks))
 
   }
 }

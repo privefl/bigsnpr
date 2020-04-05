@@ -229,12 +229,12 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #' Interpolate to genetic positions
 #'
 #' Use genetic maps available at
-#' [https://github.com/joepickrell/1000-genomes-genetic-maps/]
+#' \url{https://github.com/joepickrell/1000-genomes-genetic-maps/}
 #' to interpolate physical positions (in bp) to genetic positions (in cM).
 #'
 #' @inheritParams bigsnpr-package
 #' @param dir Directory where to download and decompress files.
-#'   Default is `tempdir()`.
+#'   Default is `tempdir()`. Use files there is already present.
 #'
 #' @return The new vector of genetic positions.
 #' @export
@@ -252,7 +252,7 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1) 
       url <- paste0("https://github.com/joepickrell/1000-genomes-genetic-maps/",
                     "raw/master/interpolated_OMNI/", basename, ".gz")
       gzfile <- paste0(mapfile, ".gz")
-      download.file(url, destfile = gzfile, quiet = TRUE)
+      utils::download.file(url, destfile = gzfile, quiet = TRUE)
       R.utils::gunzip(gzfile)
     }
     map.chr <- bigreadr::fread2(mapfile, showProgress = FALSE)

@@ -66,8 +66,9 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 
   # compute one infinitesimal model, just for initialization
   m <- ncol(corr)
+  h2_init <- stats::median(grid_param$h2)
   beta_inf <- as.vector(Matrix::solve(
-    corr + Matrix::Diagonal(m, m / (median(grid_param$h2) * N)), beta_hat))
+    corr + Matrix::Diagonal(m, m / (h2_init * N)), beta_hat))
 
   beta_gibbs <- ldpred2_gibbs(
     corr      = corr,
