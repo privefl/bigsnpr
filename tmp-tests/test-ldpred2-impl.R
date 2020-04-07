@@ -51,7 +51,7 @@ cor(pred, y2[ind.val])**2
 
 # LDpred-grid
 (ldsc <- snp_ldsc2(corr, df_beta, intercept = 1))
-(h2_seq <- round(ldsc[["h2"]] + -2:2 * ldsc[["h2_se"]], 3))
+(h2_seq <- round(ldsc[["h2"]] * c(0.5, 1, 2), 3))
 (p_seq <- signif(seq_log(1e-5, 1, length.out = 21), 2))
 (params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE)))
 

@@ -53,7 +53,8 @@ snp_ldpred2_inf <- function(corr, df_beta, h2 = NULL) {
 snp_ldpred2_grid <- function(corr, df_beta, grid_param,
                              burn_in = 100,
                              num_iter = 200,
-                             ncores = 1) {
+                             ncores = 1,
+                             tmpdir = tempdir()) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_df_with_names(grid_param, c("p", "h2", "sparse"))
@@ -70,8 +71,10 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
   beta_inf <- as.vector(Matrix::solve(
     corr + Matrix::Diagonal(m, m / (h2_init * N)), beta_hat))
 
+  tmp <- tempfile(tmpdir = tmpdir)
+
   beta_gibbs <- ldpred2_gibbs(
-    corr      = corr,
+    corr      = bigsparser::as_SFBM(as(corr, "dgCMatrix"), backingfile = tmp),
     beta_hat  = beta_hat,
     beta_init = beta_inf,
     order     = order(beta_inf^2, decreasing = TRUE) - 1L,
@@ -83,6 +86,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
     num_iter  = num_iter,
     ncores    = ncores
   )
+
+  file.remove(paste0(tmp, ".sbk"))
 
   sweep(beta_gibbs, 1, sd, '*')
 }

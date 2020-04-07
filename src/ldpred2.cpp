@@ -2,6 +2,7 @@
 
 #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/utils.h>
+#include <bigsparser/SFBM.h>
 
 /******************************************************************************/
 
@@ -11,7 +12,7 @@ inline double square(double x) {
 
 /******************************************************************************/
 
-arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
+arma::vec ldpred2_gibbs_one(XPtr<SFBM> sfbm,
                             const NumericVector& beta_hat,
                             const NumericVector& beta_init,
                             const NumericVector& order,
@@ -26,14 +27,14 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
   arma::vec curr_beta(beta_init.begin(), m);
   arma::vec post_mean_beta(m);
   arma::vec avg_beta(m, arma::fill::zeros);
-  double cur_h2_est = arma::dot(curr_beta, corr * curr_beta);
+  double cur_h2_est = arma::dot(curr_beta, sfbm->prod(curr_beta));
 
   int num_iter_tot = burn_in + num_iter;
   for (int k = 0; k < num_iter_tot; k++) {
 
     for (const int& j : order) {
 
-      double dotprod = arma::dot(corr.col(j), curr_beta);
+      double dotprod = sfbm->dot_col(j, curr_beta);
       double res_beta_hat_j = beta_hat[j] + curr_beta[j] - dotprod;
 
       double C1 = h2 * n_vec[j] / (m * p);
@@ -71,7 +72,7 @@ arma::vec ldpred2_gibbs_one(const arma::sp_mat& corr,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
+arma::mat ldpred2_gibbs(Environment corr,
                         const NumericVector& beta_hat,
                         const NumericVector& beta_init,
                         const NumericVector& order,
@@ -83,9 +84,11 @@ arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
                         int num_iter,
                         int ncores) {
 
+  XPtr<SFBM> sfbm = corr["address"];
+
   int m = beta_hat.size();
-  myassert_size(corr.n_rows, m);
-  myassert_size(corr.n_cols, m);
+  // myassert_size(corr.n_rows, m);
+  // myassert_size(corr.n_cols, m);
   myassert_size(order.size(), m);
   myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
@@ -103,7 +106,7 @@ arma::mat ldpred2_gibbs(const arma::sp_mat& corr,
     //   Rcout << "Starting with params " << k + 1 << " / " << K << std::endl;
 
     arma::vec res_k = ldpred2_gibbs_one(
-      corr, beta_hat, beta_init, order, n_vec,
+      sfbm, beta_hat, beta_init, order, n_vec,
       h2[k], p[k], sparse[k], burn_in, num_iter);
 
     #pragma omp critical

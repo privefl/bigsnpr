@@ -34,18 +34,20 @@ Imports:
     bigreadr,
     bigutilsr (>= 0.3),
     data.table,
-    foreach, 
+    foreach,
     ggplot2,
     magrittr,
     Matrix,
     methods,
     Rcpp,
-    stats
+    stats,
+    bigsparser
 LinkingTo:
     bigstatsr,
     Rcpp,
     RcppArmadillo (>= 0.9.600),
-    rmio
+    rmio,
+    bigsparser
 Suggests:
     bindata,
     covr,

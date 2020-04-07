@@ -14,7 +14,8 @@ snp_ldpred2_grid(
   grid_param,
   burn_in = 100,
   num_iter = 200,
-  ncores = 1
+  ncores = 1,
+  tmpdir = tempdir()
 )
 
 snp_ldpred2_auto(
