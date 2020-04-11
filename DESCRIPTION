@@ -31,6 +31,7 @@ Depends:
 Imports:
     bigassertr (>= 0.1.3),
     bigparallelr,
+    bigsparser,
     bigreadr,
     bigutilsr (>= 0.3),
     data.table,
@@ -40,14 +41,13 @@ Imports:
     Matrix,
     methods,
     Rcpp,
-    stats,
-    bigsparser
+    stats
 LinkingTo:
+    bigsparser,
     bigstatsr,
     Rcpp,
     RcppArmadillo (>= 0.9.600),
-    rmio,
-    bigsparser
+    rmio
 Suggests:
     bindata,
     covr,

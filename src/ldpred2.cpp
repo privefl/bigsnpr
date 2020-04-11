@@ -58,8 +58,8 @@ arma::vec ldpred2_gibbs_one(XPtr<SFBM> sfbm,
 
     // Rcout << k + 1 << ": " << cur_h2_est << std::endl;
     if (cur_h2_est < 0 || cur_h2_est > 2) {
-      // diverged -> return NAs
-      avg_beta.fill(NA_REAL);
+      // diverged -> return 0s
+      avg_beta.fill(0);
       return avg_beta;
     }
 

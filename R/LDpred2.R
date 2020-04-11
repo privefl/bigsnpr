@@ -43,8 +43,7 @@ snp_ldpred2_inf <- function(corr, df_beta, h2 = NULL) {
 #' @inheritParams bigsnpr-package
 #'
 #' @return `snp_ldpred2_grid`: A matrix of effect sizes, one vector (column)
-#'   for each row of `grid_param`. Missing values are returned when the
-#'   algorithm diverged.
+#'   for each row of `grid_param`. When the algorithm diverges, 0s are returned.
 #'
 #' @export
 #'

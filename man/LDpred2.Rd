@@ -68,8 +68,7 @@ Default is estimated using constrained LD score regression.}
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
 
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
-for each row of \code{grid_param}. Missing values are returned when the
-algorithm diverged.
+for each row of \code{grid_param}. When the algorithm diverges, 0s are returned.
 
 \code{snp_ldpred2_auto}: A list with
 \itemize{
