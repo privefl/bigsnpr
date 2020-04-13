@@ -178,6 +178,7 @@ snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
+  assert_pos(df_beta$beta_se, strict = TRUE)
 
   snp_ldsc(
     ld_score    = Matrix::colSums(corr^2),
