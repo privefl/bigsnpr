@@ -29,7 +29,7 @@ snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ...)
 \item{sample_size}{Sample size of GWAS corresponding to chi-squared statistics.
 Possibly a vector, or just a single value.}
 
-\item{blocks}{Either a simgle number specifying the number of blocks,
+\item{blocks}{Either a single number specifying the number of blocks,
 or a vector of integers specifying the block number of each \code{chi2} value.
 Default is \code{200} for \code{snp_ldsc()}, dividing into 200 blocks of approximately
 equal size. \code{NULL} can also be used to skip estimating standard errors,

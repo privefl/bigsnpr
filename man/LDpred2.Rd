@@ -57,6 +57,9 @@ They can be run in parallel by changing \code{ncores}.
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
+\item{tmpdir}{Directory where to store the \link[=SFBM-class]{SFBM} resulting from
+the conversion of \code{corr}.}
+
 \item{p_init}{Initial value for p. Default is \code{0.1}.}
 
 \item{h2_init}{Heritability estimate for initialization.

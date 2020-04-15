@@ -42,9 +42,9 @@ You may use \link{nb_cores}.}
 \value{
 A list with 3 elements:
 \itemize{
-\item "pheno": vector of phenotypes,
-\item "set": indices of causal variants,
-\item "effects": effect sizes corresponding to \code{set}.
+\item \verb{$pheno}: vector of phenotypes,
+\item \verb{$set}: indices of causal variants,
+\item \verb{$effects}: effect sizes corresponding to \code{set}.
 }
 }
 \description{

@@ -41,7 +41,7 @@ wlm_no_int <- function(x, y, w) {
 #' @param chi2_thr1 Threshold on `chi2` in step 1. Default is `30`.
 #'   This is equivalent to parameter `--two-step`.
 #' @param chi2_thr2 Threshold on `chi2` in step 2. Default is `Inf` (none).
-#' @param blocks Either a simgle number specifying the number of blocks,
+#' @param blocks Either a single number specifying the number of blocks,
 #'   or a vector of integers specifying the block number of each `chi2` value.
 #'   Default is `200` for `snp_ldsc()`, dividing into 200 blocks of approximately
 #'   equal size. `NULL` can also be used to skip estimating standard errors,

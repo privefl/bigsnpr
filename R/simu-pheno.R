@@ -23,9 +23,9 @@ scaled_prod <- function(X, ind, ind.row, ind.col, beta) {
 #' @param K Prevalence. Default is `NULL`, giving a continuous trait.
 #'
 #' @return A list with 3 elements:
-#'   - "pheno": vector of phenotypes,
-#'   - "set": indices of causal variants,
-#'   - "effects": effect sizes corresponding to `set`.
+#'   - `$pheno`: vector of phenotypes,
+#'   - `$set`: indices of causal variants,
+#'   - `$effects`: effect sizes corresponding to `set`.
 #' @export
 #'
 snp_simuPheno <- function(G, h2, M, K = NULL,

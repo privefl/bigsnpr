@@ -42,12 +42,16 @@ snp_ldpred2_inf <- function(corr, df_beta, h2 = NULL) {
 #'   They can be run in parallel by changing `ncores`.
 #' @param burn_in Number of burn-in iterations.
 #' @param num_iter Number of iterations after burn-in.
+#' @param tmpdir Directory where to store the [SFBM][SFBM-class] resulting from
+#'   the conversion of `corr`.
 #' @inheritParams bigsnpr-package
 #'
 #' @return `snp_ldpred2_grid`: A matrix of effect sizes, one vector (column)
 #'   for each row of `grid_param`. When the algorithm diverges, 0s are returned.
 #'
 #' @export
+#'
+#' @importFrom methods as
 #'
 #' @rdname LDpred2
 #'
@@ -90,6 +94,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
     ncores    = ncores
   )
 
+  gc()
   file.remove(paste0(tmp, ".sbk"))
 
   sweep(beta_gibbs, 1, sd, '*')

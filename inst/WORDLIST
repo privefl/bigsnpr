@@ -25,6 +25,7 @@ bp
 bty
 cbind
 chr
+cM
 Daly
 Devlin
 diploidy
@@ -46,6 +47,7 @@ ggplot
 GigaScience
 GWAS
 HapMap
+heritability
 Hinrichs
 Hugues
 IBD
@@ -55,6 +57,8 @@ Josyf
 Kathe
 kb
 LD
+LDpred
+LDSC
 liftOver
 loadings
 LOF
