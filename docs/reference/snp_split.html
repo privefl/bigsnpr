@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -38,7 +42,6 @@
 <meta property="og:title" content="Split-parApply-Combine — snp_split" />
 <meta property="og:description" content="A Split-Apply-Combine strategy to parallelize the evaluation of a function
 on each SNP, independently." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -56,7 +59,7 @@ on each SNP, independently." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -70,7 +73,7 @@ on each SNP, independently." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -104,6 +107,9 @@ on each SNP, independently." />
     <li>
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
+    <li>
+      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -135,7 +141,7 @@ on each SNP, independently." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Split-parApply-Combine</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/apply-parallelize.R'><code>R/apply-parallelize.R</code></a></small>
     <div class="hidden name"><code>snp_split.Rd</code></div>
     </div>
 
@@ -192,60 +198,78 @@ to each part (chromosome) and finally combine the results.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># parallelize over chromosomes made easy</span>
 <span class='co'># examples of functions from this package</span>
-<span class='no'>snp_pruning</span></div><div class='output co'>#&gt; function (G, infos.chr, ind.row = rows_along(G), size = 49, is.size.in.bp = FALSE, 
-#&gt;     infos.pos = NULL, thr.r2 = 0.2, exclude = NULL, nploidy = 2, 
-#&gt;     ncores = 1) 
-#&gt; {
-#&gt;     check_args()
-#&gt;     warning2("Pruning is deprecated; using clumping (on MAF) instead..\n%s", 
-#&gt;         "See why there: https://goo.gl/Td5YYv.")
-#&gt;     args &lt;- c(as.list(environment()), list(S = NULL))
-#&gt;     args[["nploidy"]] &lt;- NULL
-#&gt;     do.call(what = snp_split, args = c(args, FUN = clumpingChr, 
-#&gt;         combine = "c"))
+<span class='no'>snp_pruning</span></div><div class='output co'>#&gt; function(G, infos.chr,
+#&gt;                         ind.row = rows_along(G),
+#&gt;                         size = 49,
+#&gt;                         is.size.in.bp = FALSE,
+#&gt;                         infos.pos = NULL,
+#&gt;                         thr.r2 = 0.2,
+#&gt;                         exclude = NULL,
+#&gt;                         nploidy = 2,
+#&gt;                         ncores = 1) {
+#&gt; 
+#&gt;   stop2("Pruning is deprecated; please use clumping (on MAF) instead..\n%s",
+#&gt;         "See why at http://bit.ly/2uKo3MN.")
 #&gt; }
-#&gt; &lt;bytecode: 0x000000002b5ad278&gt;
-#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_clumping</span></div><div class='output co'>#&gt; function (G, infos.chr, ind.row = rows_along(G), S = NULL, thr.r2 = 0.2, 
-#&gt;     size = 100/thr.r2, infos.pos = NULL, is.size.in.bp = NULL, 
-#&gt;     exclude = NULL, ncores = 1) 
-#&gt; {
-#&gt;     check_args()
-#&gt;     if (!missing(is.size.in.bp)) 
-#&gt;         warning2("Parameter 'is.size.in.bp' is deprecated.")
-#&gt;     args &lt;- as.list(environment())
-#&gt;     if (!is.null(S)) 
-#&gt;         assert_lengths(infos.chr, S)
-#&gt;     do.call(what = snp_split, args = c(args, FUN = clumpingChr, 
-#&gt;         combine = "c"))
+#&gt; &lt;bytecode: 0x000000002e8ff8c8&gt;
+#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_clumping</span></div><div class='output co'>#&gt; function(G, infos.chr,
+#&gt;                          ind.row = rows_along(G),
+#&gt;                          S = NULL,
+#&gt;                          thr.r2 = 0.2,
+#&gt;                          size = 100 / thr.r2,
+#&gt;                          infos.pos = NULL,
+#&gt;                          is.size.in.bp = NULL,
+#&gt;                          exclude = NULL,
+#&gt;                          ncores = 1) {
+#&gt; 
+#&gt;   check_args()
+#&gt; 
+#&gt;   if (!missing(is.size.in.bp))
+#&gt;     warning2("Parameter 'is.size.in.bp' is deprecated.")
+#&gt; 
+#&gt;   if (!is.null(S)) assert_lengths(infos.chr, S)
+#&gt; 
+#&gt;   ind.noexcl &lt;- setdiff(seq_along(infos.chr), exclude)
+#&gt; 
+#&gt;   sort(unlist(
+#&gt;     lapply(split(ind.noexcl, infos.chr[ind.noexcl]), function(ind.chr) {
+#&gt;       clumpingChr(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
+#&gt;     }),
+#&gt;     use.names = FALSE
+#&gt;   ))
 #&gt; }
-#&gt; &lt;bytecode: 0x00000000247aecc8&gt;
-#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_fastImpute</span></div><div class='output co'>#&gt; function (Gna, infos.chr, alpha = 1e-04, size = 200, p.train = 0.8, 
-#&gt;     n.cor = nrow(Gna), seed = NA, ncores = 1) 
-#&gt; {
-#&gt;     if (!requireNamespace("xgboost", quietly = TRUE)) 
-#&gt;         stop2("Please install package 'xgboost'.")
-#&gt;     check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
-#&gt;     infos.imp &lt;- FBM_infos(Gna)
-#&gt;     if (!is.na(seed)) 
-#&gt;         seed &lt;- seq_len(max(infos.chr)) + seed
-#&gt;     args &lt;- as.list(environment())
-#&gt;     do.call(what = snp_split, args = c(args, FUN = imputeChr, 
-#&gt;         combine = "c"))
-#&gt;     infos.imp
+#&gt; &lt;bytecode: 0x000000002a534f70&gt;
+#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_fastImpute</span></div><div class='output co'>#&gt; function(Gna, infos.chr,
+#&gt;                            alpha = 1e-4,
+#&gt;                            size = 200,
+#&gt;                            p.train = 0.8,
+#&gt;                            n.cor = nrow(Gna),
+#&gt;                            seed = NA,
+#&gt;                            ncores = 1) {
+#&gt; 
+#&gt;   check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
+#&gt;   assert_package("xgboost")
+#&gt; 
+#&gt;   X  &lt;- Gna$copy(code = CODE_IMPUTE_LABEL)
+#&gt;   X2 &lt;- Gna$copy(code = CODE_IMPUTE_PRED)
+#&gt; 
+#&gt;   infos.imp &lt;- FBM_infos(Gna)
+#&gt; 
+#&gt;   ind.chrs &lt;- split(seq_along(infos.chr), infos.chr)
+#&gt;   for (ind in ind.chrs) {
+#&gt;     imputeChr(X, X2, infos.imp, ind, alpha, size, p.train, n.cor, seed, ncores)
+#&gt;   }
+#&gt; 
+#&gt;   infos.imp
 #&gt; }
-#&gt; &lt;bytecode: 0x000000002dd164f0&gt;
+#&gt; &lt;bytecode: 0x000000002d9a9e80&gt;
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -256,7 +280,7 @@ to each part (chromosome) and finally combine the results.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

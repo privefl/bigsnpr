@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Relationship-based pruning — snp_plinkKINGQC • bigsnpr</title>
+<title>LD score regression — snp_ldsc • bigsnpr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Relationship-based pruning — snp_plinkKINGQC" />
-<meta property="og:description" content="Quality Control based on KING-robust kinship estimator. More information can
-be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
+<meta property="og:title" content="LD score regression — snp_ldsc" />
+<meta property="og:description" content="LD score regression" />
 
 
 
@@ -140,58 +139,72 @@ be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Relationship-based pruning</h1>
-    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/external-software.R'><code>R/external-software.R</code></a></small>
-    <div class="hidden name"><code>snp_plinkKINGQC.Rd</code></div>
+    <h1>LD score regression</h1>
+    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/ldsc.R'><code>R/ldsc.R</code></a></small>
+    <div class="hidden name"><code>snp_ldsc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Quality Control based on KING-robust kinship estimator. More information can
-be found at <a href='http://www.cog-genomics.org/plink/2.0/distance#king_cutoff'>http://www.cog-genomics.org/plink/2.0/distance#king_cutoff</a>.</p>
+    <p>LD score regression</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_plinkKINGQC</span>(
-  <span class='no'>plink2.path</span>,
-  <span class='no'>bedfile.in</span>,
-  <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.king</span> <span class='kw'>=</span> <span class='fl'>2</span>^-<span class='fl'>3.5</span>,
-  <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>snp_ldsc</span>(
+  <span class='no'>ld_score</span>,
+  <span class='no'>ld_size</span>,
+  <span class='no'>chi2</span>,
+  <span class='no'>sample_size</span>,
+  <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>200</span>,
+  <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>chi2_thr1</span> <span class='kw'>=</span> <span class='fl'>30</span>,
+  <span class='kw'>chi2_thr2</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+)
+
+<span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>plink2.path</th>
-      <td><p>Path to the executable of PLINK 2.</p></td>
+      <th>ld_score</th>
+      <td><p>Vector of LD scores.</p></td>
     </tr>
     <tr>
-      <th>bedfile.in</th>
-      <td><p>Path to the input bedfile.</p></td>
+      <th>ld_size</th>
+      <td><p>Number of variants used to compute <code>ld_score</code>.</p></td>
     </tr>
     <tr>
-      <th>bedfile.out</th>
-      <td><p>Path to the output bedfile. Default is created by
-appending <code>"_norel"</code> to <code>prefix.in</code> (<code>bedfile.in</code> without extension).</p></td>
+      <th>chi2</th>
+      <td><p>Vector of chi-squared statistics.</p></td>
     </tr>
     <tr>
-      <th>thr.king</th>
-      <td><p>Note that KING kinship coefficients are scaled such that
-duplicate samples have kinship 0.5, not 1. First-degree relations
-(parent-child, full siblings) correspond to ~0.25, second-degree relations
-correspond to ~0.125, etc. It is conventional to use a cutoff of ~0.354
-(2^-1.5, the geometric mean of 0.5 and 0.25) to screen for monozygotic
-twins and duplicate samples, ~0.177 (2^-2.5) to remove first-degree
-relations as well, and ~0.0884 (2^-3.5, <strong>default</strong>) to remove
-second-degree relations as well, etc.</p></td>
+      <th>sample_size</th>
+      <td><p>Sample size of GWAS corresponding to chi-squared statistics.
+Possibly a vector, or just a single value.</p></td>
     </tr>
     <tr>
-      <th>make.bed</th>
-      <td><p>Whether to create new bed/bim/fam files (default).
-Otherwise, returns a table with coefficients of related pairs.</p></td>
+      <th>blocks</th>
+      <td><p>Either a single number specifying the number of blocks,
+or a vector of integers specifying the block number of each <code>chi2</code> value.
+Default is <code>200</code> for <code>snp_ldsc()</code>, dividing into 200 blocks of approximately
+equal size. <code>NULL</code> can also be used to skip estimating standard errors,
+which is the default for <code>snp_ldsc2()</code>.</p></td>
+    </tr>
+    <tr>
+      <th>intercept</th>
+      <td><p>You can constrain the intercept to some value (e.g. 1).
+Default is <code>NULL</code> in <code>snp_ldsc()</code> (the intercept is estimated)
+and is <code>1</code> in <code>snp_ldsc2()</code> (the intercept is fixed to 1).
+This is equivalent to parameter <code>--intercept-h2</code>.</p></td>
+    </tr>
+    <tr>
+      <th>chi2_thr1</th>
+      <td><p>Threshold on <code>chi2</code> in step 1. Default is <code>30</code>.
+This is equivalent to parameter <code>--two-step</code>.</p></td>
+    </tr>
+    <tr>
+      <th>chi2_thr2</th>
+      <td><p>Threshold on <code>chi2</code> in step 2. Default is <code>Inf</code> (none).</p></td>
     </tr>
     <tr>
       <th>ncores</th>
@@ -199,40 +212,51 @@ Otherwise, returns a table with coefficients of related pairs.</p></td>
 You may use nb_cores.</p></td>
     </tr>
     <tr>
-      <th>extra.options</th>
-      <td><p>Other options to be passed to PLINK2 as a string.</p></td>
+      <th>corr</th>
+      <td><p>Sparse correlation matrix.</p></td>
     </tr>
     <tr>
-      <th>verbose</th>
-      <td><p>Whether to show PLINK log? Default is <code>TRUE</code>.</p></td>
+      <th>df_beta</th>
+      <td><p>A data frame with 3 columns:</p><ul>
+<li><p><code>$beta</code>: effect size estimates</p></li>
+<li><p><code>$beta_se</code>: standard errors of effect size estimates</p></li>
+<li><p><code>$n_eff</code>: sample size when estimating <code>beta</code>
+(in the case of binary traits, this is <code>4 / (1 / n_control + 1 / n_case)</code>)</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code>snp_ldsc</code></p><dl'>
+    <dt><code></code></dt><dd><p></p></dd>
+  
+</dl></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>See parameter <code>make-bed</code>.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+    <p>Vector of 4 values (or only the first 2 if <code>blocks = NULL</code>):</p><ul>
+<li><p><code>[["int"]]</code>: LDSC regression intercept,</p></li>
+<li><p><code>[["int_se"]]</code>: SE of this intercept,</p></li>
+<li><p><code>[["h2"]]</code>: LDSC regression estimate of heritability,</p></li>
+<li><p><code>[["h2_se"]]</code>: SE of this heritability estimate.</p></li>
+</ul>
 
-    <p>Manichaikul, Ani, Josyf C. Mychaleckyj, Stephen S. Rich, Kathy Daly,
-Michele Sale, and Wei-Min Chen. "Robust relationship inference in genome-wide
-association studies." Bioinformatics 26, no. 22 (2010): 2867-2873.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><a href='download_plink.html'>download_plink2</a> <a href='snp_plinkQC.html'>snp_plinkQC</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='no'>bigsnp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
+<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>bigsnp</span>$<span class='no'>genotypes</span>
+<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='no'>bigsnp</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
+<span class='no'>corr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_cor.html'>snp_cor</a></span>(<span class='no'>G</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
-<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='no'>plink2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='download_plink.html'>download_plink2</a></span>(<span class='kw'>AVX2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>gwas</span> <span class='kw'>&lt;-</span> <span class='fu'>big_univLogReg</span>(<span class='no'>G</span>, <span class='no'>y</span>)
+<span class='no'>df_beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>beta</span> <span class='kw'>=</span> <span class='no'>gwas</span>$<span class='no'>estim</span>, <span class='kw'>beta_se</span> <span class='kw'>=</span> <span class='no'>gwas</span>$<span class='no'>std.err</span>,
+                      <span class='kw'>n_eff</span> <span class='kw'>=</span> <span class='fl'>4</span> / (<span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>0</span>) + <span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>1</span>)))
 
-<span class='no'>bedfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>,
-                            <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>),
-                            <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-
-<span class='no'>df_rel</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>, <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>df_rel</span>)
-}</div></pre>
+<span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>)</div><div class='output co'>#&gt;       int        h2 
+#&gt; 1.0000000 0.8606687 </div><div class='input'><span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</div><div class='output co'>#&gt;       int    int_se        h2     h2_se 
+#&gt; 0.3837600 0.1809905 2.7097906 0.4807206 </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

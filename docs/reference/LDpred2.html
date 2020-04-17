@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Relationship-based pruning — snp_plinkKINGQC • bigsnpr</title>
+<title>LDpred2 — snp_ldpred2_inf • bigsnpr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Relationship-based pruning — snp_plinkKINGQC" />
-<meta property="og:description" content="Quality Control based on KING-robust kinship estimator. More information can
-be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
+<meta property="og:title" content="LDpred2 — snp_ldpred2_inf" />
+<meta property="og:description" content="LDpred2" />
 
 
 
@@ -140,58 +139,74 @@ be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Relationship-based pruning</h1>
-    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/external-software.R'><code>R/external-software.R</code></a></small>
-    <div class="hidden name"><code>snp_plinkKINGQC.Rd</code></div>
+    <h1>LDpred2</h1>
+    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/LDpred2.R'><code>R/LDpred2.R</code></a></small>
+    <div class="hidden name"><code>LDpred2.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Quality Control based on KING-robust kinship estimator. More information can
-be found at <a href='http://www.cog-genomics.org/plink/2.0/distance#king_cutoff'>http://www.cog-genomics.org/plink/2.0/distance#king_cutoff</a>.</p>
+    <p>LDpred2</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_plinkKINGQC</span>(
-  <span class='no'>plink2.path</span>,
-  <span class='no'>bedfile.in</span>,
-  <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.king</span> <span class='kw'>=</span> <span class='fl'>2</span>^-<span class='fl'>3.5</span>,
-  <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <pre class="usage"><span class='fu'>snp_ldpred2_inf</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>h2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+
+<span class='fu'>snp_ldpred2_grid</span>(
+  <span class='no'>corr</span>,
+  <span class='no'>df_beta</span>,
+  <span class='no'>grid_param</span>,
+  <span class='kw'>burn_in</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>200</span>,
   <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>tmpdir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
+)
+
+<span class='fu'>snp_ldpred2_auto</span>(
+  <span class='no'>corr</span>,
+  <span class='no'>df_beta</span>,
+  <span class='kw'>p_init</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>h2_init</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>burn_in</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>plink2.path</th>
-      <td><p>Path to the executable of PLINK 2.</p></td>
+      <th>corr</th>
+      <td><p>Sparse correlation matrix.</p></td>
     </tr>
     <tr>
-      <th>bedfile.in</th>
-      <td><p>Path to the input bedfile.</p></td>
+      <th>df_beta</th>
+      <td><p>A data frame with 3 columns:</p><ul>
+<li><p><code>$beta</code>: effect size estimates</p></li>
+<li><p><code>$beta_se</code>: standard errors of effect size estimates</p></li>
+<li><p><code>$n_eff</code>: sample size when estimating <code>beta</code>
+(in the case of binary traits, this is <code>4 / (1 / n_control + 1 / n_case)</code>)</p></li>
+</ul></td>
     </tr>
     <tr>
-      <th>bedfile.out</th>
-      <td><p>Path to the output bedfile. Default is created by
-appending <code>"_norel"</code> to <code>prefix.in</code> (<code>bedfile.in</code> without extension).</p></td>
+      <th>h2</th>
+      <td><p>Heritability estimate.
+Default is estimated using constrained LD score regression.</p></td>
     </tr>
     <tr>
-      <th>thr.king</th>
-      <td><p>Note that KING kinship coefficients are scaled such that
-duplicate samples have kinship 0.5, not 1. First-degree relations
-(parent-child, full siblings) correspond to ~0.25, second-degree relations
-correspond to ~0.125, etc. It is conventional to use a cutoff of ~0.354
-(2^-1.5, the geometric mean of 0.5 and 0.25) to screen for monozygotic
-twins and duplicate samples, ~0.177 (2^-2.5) to remove first-degree
-relations as well, and ~0.0884 (2^-3.5, <strong>default</strong>) to remove
-second-degree relations as well, etc.</p></td>
+      <th>grid_param</th>
+      <td><p>A data frame with 3 columns as a grid of hyper-parameters:</p><ul>
+<li><p><code>$p</code>: proportion of causal variants</p></li>
+<li><p><code>$h2</code>: heritability (captured by the variants used)</p></li>
+<li><p><code>$sparse</code>: boolean, whether a sparse model is sought
+They can be run in parallel by changing <code>ncores</code>.</p></li>
+</ul></td>
     </tr>
     <tr>
-      <th>make.bed</th>
-      <td><p>Whether to create new bed/bim/fam files (default).
-Otherwise, returns a table with coefficients of related pairs.</p></td>
+      <th>burn_in</th>
+      <td><p>Number of burn-in iterations.</p></td>
+    </tr>
+    <tr>
+      <th>num_iter</th>
+      <td><p>Number of iterations after burn-in.</p></td>
     </tr>
     <tr>
       <th>ncores</th>
@@ -199,40 +214,41 @@ Otherwise, returns a table with coefficients of related pairs.</p></td>
 You may use nb_cores.</p></td>
     </tr>
     <tr>
-      <th>extra.options</th>
-      <td><p>Other options to be passed to PLINK2 as a string.</p></td>
+      <th>tmpdir</th>
+      <td><p>Directory where to store the SFBM resulting from
+the conversion of <code>corr</code>.</p></td>
+    </tr>
+    <tr>
+      <th>p_init</th>
+      <td><p>Initial value for p. Default is <code>0.1</code>.</p></td>
+    </tr>
+    <tr>
+      <th>h2_init</th>
+      <td><p>Heritability estimate for initialization.
+Default is estimated using constrained LD score regression.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>Whether to show PLINK log? Default is <code>TRUE</code>.</p></td>
+      <td><p>Whether to print "p // h2" estimates at each iteration.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>See parameter <code>make-bed</code>.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+    <p><code>snp_ldpred2_inf</code>: A vector of effects, assuming an infinitesimal model.</p>
+<p><code>snp_ldpred2_grid</code>: A matrix of effect sizes, one vector (column)
+for each row of <code>grid_param</code>. When the algorithm diverges, 0s are returned.</p>
+<p><code>snp_ldpred2_auto</code>: A list with</p><ul>
+<li><p><code>$beta_est</code>: vector of effect sizes</p></li>
+<li><p><code>$p_est</code>: estimate of p, the proportion of causal variants</p></li>
+<li><p><code>$h2_est</code>: estimate of the (SNP) heritability</p></li>
+<li><p><code>$path_p_est</code>: full path of p estimates (including burn-in);
+useful to check convergence of the iterative algorithm</p></li>
+<li><p><code>$path_h2_est</code>: full path of h2 estimates (including burn-in);
+useful to check convergence of the iterative algorithm</p></li>
+</ul>
 
-    <p>Manichaikul, Ani, Josyf C. Mychaleckyj, Stephen S. Rich, Kathy Daly,
-Michele Sale, and Wei-Min Chen. "Robust relationship inference in genome-wide
-association studies." Bioinformatics 26, no. 22 (2010): 2867-2873.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='download_plink.html'>download_plink2</a> <a href='snp_plinkQC.html'>snp_plinkQC</a></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='no'>plink2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='download_plink.html'>download_plink2</a></span>(<span class='kw'>AVX2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='no'>bedfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>,
-                            <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>),
-                            <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-
-<span class='no'>df_rel</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>, <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>df_rel</span>)
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

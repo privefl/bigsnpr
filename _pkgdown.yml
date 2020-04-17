@@ -21,6 +21,8 @@ navbar:
         href: articles/bedpca.html
       - text: "Computing polygenic scores using Stacked Clumping and Thresholding (SCT)"
         href: articles/SCT.html
+      - text: "Computing polygenic scores using LDpred2"
+        href: articles/LDpred2.html
   right:
     - text: "About"
       icon: fa-user
@@ -62,12 +64,16 @@ reference:
       - snp_autoSVD
       - snp_PRS
       - snp_cor
-  - title: "Stacked Clumping and Thresholding (SCT)"
+      - snp_ldsc
+  - title: "Stacked Clumping and Thresholding (SCT) // LDpred2"
     contents:
       - snp_match
       - snp_grid_clumping
       - snp_grid_PRS
       - snp_grid_stacking
+      - snp_ldpred2_inf
+      - snp_ldpred2_grid
+      - snp_ldpred2_auto
   - title: "Multiple testing - plots"
     contents:
       - snp_gc
@@ -78,6 +84,8 @@ reference:
   - title: "Utilities"
     contents:
       - snp_match
+      - snp_asGeneticPos
+      - snp_simuPheno
       - snp_modifyBuild
       - snp_split
       - snp_save
@@ -86,6 +94,7 @@ reference:
       - snp_scaleBinom
       - same_ref
       - sub_bed
+      - seq_log
   - title: "PLINK bed files"
     contents:
       - bed

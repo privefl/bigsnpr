@@ -125,7 +125,12 @@ In practice, we recommend to test multiple values for h2 and p.
 (params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE, TRUE)))
 ```
 
-```{r, cache=TRUE}
+```{r, cache=TRUE, include=FALSE}
+beta_grid <- snp_ldpred2_grid(corr, df_beta[ind.chr, ], params, ncores = NCORES,
+                              burn_in = 20, num_iter = 50)
+```
+```{r, eval=FALSE}
+# takes several minutes if you do not have many cores
 beta_grid <- snp_ldpred2_grid(corr, df_beta[ind.chr, ], params, ncores = NCORES)
 ```
 
@@ -137,7 +142,8 @@ params$auc <- apply(pred_grid[ind.val, ], 2, AUC, target = y[ind.val])
 
 ```{r, out.width="90%", fig.asp=0.3}
 library(ggplot2)
-ggplot(params, aes(x = p, y = auc, color = as.factor(h2))) +
+ggplot(subset(params, auc > 0.5), 
+       aes(x = p, y = auc, color = as.factor(h2))) +
   theme_bigstatsr() +
   geom_point() +
   geom_line() +
@@ -168,6 +174,7 @@ best_grid_nosp <- params %>%
   beta_grid[, .]
 
 AUC(big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2),
+    y[ind.test])
 ```
 
 
@@ -187,6 +194,7 @@ AUC(big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2),
 ### Automatic model
 
 ```{r, cache=TRUE}
+# takes a few minutes
 auto <- snp_ldpred2_auto(corr, df_beta[ind.chr, ], h2_init = h2_est)
 str(auto)
 ```
@@ -221,3 +229,6 @@ We have seen how to run 3 versions of LDpred2 ("-inf", "-grid" and "-auto") for 
 You should do this for each chromosome and combine results.
 
 ### Reference
+
+Coming soon on bioRxiv.
+

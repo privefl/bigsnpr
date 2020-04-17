@@ -157,8 +157,8 @@ Instead of stacking, an alternative is to choose the best C+T score based on the
 ```{r, message=FALSE}
 library(tidyverse)
 grid2 <- attr(all_keep, "grid") %>%
-  mutate(thr.lp = list(attr(multi_PRS, "grid.lpS.thr")), num = row_number()) %>%
-  unnest()
+  mutate(thr.lp = list(attr(multi_PRS, "grid.lpS.thr")), id = row_number()) %>%
+  unnest(cols = "thr.lp")
 s <- nrow(grid2)
 grid2$auc <- big_apply(multi_PRS, a.FUN = function(X, ind, s, y.train) {
   # Sum over all chromosomes, for the same C+T parameters
@@ -173,7 +173,7 @@ max_prs <- grid2 %>% arrange(desc(auc)) %>% slice(1:10) %>% print() %>% slice(1)
 ```
 
 ```{r}
-ind.keep <- unlist(map(all_keep, max_prs$num))
+ind.keep <- unlist(map(all_keep, max_prs$id))
 sum(lpval[ind.keep] > max_prs$thr.lp)
 AUCBoot(
   snp_PRS(G, beta[ind.keep], ind.test = ind.test, ind.keep = ind.keep,
@@ -182,7 +182,7 @@ AUCBoot(
 )
 ```
 
-For this example, the best C+T predictions provides an AUC of 63% whereas stacking, which should be preferred, provides an AUC of 68%.
+For this example, the best C+T predictions provides an AUC of 67% whereas stacking, which should be preferred, provides an AUC of 68.5%.
 
 ### Reference
 

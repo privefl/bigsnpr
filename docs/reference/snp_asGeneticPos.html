@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Relationship-based pruning — snp_plinkKINGQC • bigsnpr</title>
+<title>Interpolate to genetic positions — snp_asGeneticPos • bigsnpr</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,10 @@
 
 
 
-<meta property="og:title" content="Relationship-based pruning — snp_plinkKINGQC" />
-<meta property="og:description" content="Quality Control based on KING-robust kinship estimator. More information can
-be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
+<meta property="og:title" content="Interpolate to genetic positions — snp_asGeneticPos" />
+<meta property="og:description" content="Use genetic maps available at
+https://github.com/joepickrell/1000-genomes-genetic-maps/
+to interpolate physical positions (in bp) to genetic positions (in cM)." />
 
 
 
@@ -140,99 +141,49 @@ be found at http://www.cog-genomics.org/plink/2.0/distance#king_cutoff." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Relationship-based pruning</h1>
-    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/external-software.R'><code>R/external-software.R</code></a></small>
-    <div class="hidden name"><code>snp_plinkKINGQC.Rd</code></div>
+    <h1>Interpolate to genetic positions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/match-alleles.R'><code>R/match-alleles.R</code></a></small>
+    <div class="hidden name"><code>snp_asGeneticPos.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Quality Control based on KING-robust kinship estimator. More information can
-be found at <a href='http://www.cog-genomics.org/plink/2.0/distance#king_cutoff'>http://www.cog-genomics.org/plink/2.0/distance#king_cutoff</a>.</p>
+    <p>Use genetic maps available at
+<a href='https://github.com/joepickrell/1000-genomes-genetic-maps/'>https://github.com/joepickrell/1000-genomes-genetic-maps/</a>
+to interpolate physical positions (in bp) to genetic positions (in cM).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_plinkKINGQC</span>(
-  <span class='no'>plink2.path</span>,
-  <span class='no'>bedfile.in</span>,
-  <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.king</span> <span class='kw'>=</span> <span class='fl'>2</span>^-<span class='fl'>3.5</span>,
-  <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>extra.options</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>snp_asGeneticPos</span>(<span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='kw'>dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>plink2.path</th>
-      <td><p>Path to the executable of PLINK 2.</p></td>
+      <th>infos.chr</th>
+      <td><p>Vector of integers specifying each SNP's chromosome.<br />
+Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></td>
     </tr>
     <tr>
-      <th>bedfile.in</th>
-      <td><p>Path to the input bedfile.</p></td>
+      <th>infos.pos</th>
+      <td><p>Vector of integers specifying the physical position
+on a chromosome (in base pairs) of each SNP.<br />
+Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
     </tr>
     <tr>
-      <th>bedfile.out</th>
-      <td><p>Path to the output bedfile. Default is created by
-appending <code>"_norel"</code> to <code>prefix.in</code> (<code>bedfile.in</code> without extension).</p></td>
-    </tr>
-    <tr>
-      <th>thr.king</th>
-      <td><p>Note that KING kinship coefficients are scaled such that
-duplicate samples have kinship 0.5, not 1. First-degree relations
-(parent-child, full siblings) correspond to ~0.25, second-degree relations
-correspond to ~0.125, etc. It is conventional to use a cutoff of ~0.354
-(2^-1.5, the geometric mean of 0.5 and 0.25) to screen for monozygotic
-twins and duplicate samples, ~0.177 (2^-2.5) to remove first-degree
-relations as well, and ~0.0884 (2^-3.5, <strong>default</strong>) to remove
-second-degree relations as well, etc.</p></td>
-    </tr>
-    <tr>
-      <th>make.bed</th>
-      <td><p>Whether to create new bed/bim/fam files (default).
-Otherwise, returns a table with coefficients of related pairs.</p></td>
+      <th>dir</th>
+      <td><p>Directory where to download and decompress files.
+Default is <code><a href='https://rdrr.io/r/base/tempfile.html'>tempdir()</a></code>. Directly use files there if already present.</p></td>
     </tr>
     <tr>
       <th>ncores</th>
       <td><p>Number of cores used. Default doesn't use parallelism.
 You may use nb_cores.</p></td>
     </tr>
-    <tr>
-      <th>extra.options</th>
-      <td><p>Other options to be passed to PLINK2 as a string.</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Whether to show PLINK log? Default is <code>TRUE</code>.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>See parameter <code>make-bed</code>.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+    <p>The new vector of genetic positions.</p>
 
-    <p>Manichaikul, Ani, Josyf C. Mychaleckyj, Stephen S. Rich, Kathy Daly,
-Michele Sale, and Wei-Min Chen. "Robust relationship inference in genome-wide
-association studies." Bioinformatics 26, no. 22 (2010): 2867-2873.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><a href='download_plink.html'>download_plink2</a> <a href='snp_plinkQC.html'>snp_plinkQC</a></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='no'>plink2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='download_plink.html'>download_plink2</a></span>(<span class='kw'>AVX2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='no'>bedfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>,
-                            <span class='kw'>bedfile.out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>),
-                            <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-
-<span class='no'>df_rel</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_plinkKINGQC</span>(<span class='no'>plink2</span>, <span class='no'>bedfile</span>, <span class='kw'>make.bed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>df_rel</span>)
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
