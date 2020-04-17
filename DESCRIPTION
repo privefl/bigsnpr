@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.3.1
-Date: 2020-03-15
+Version: 1.4.0
+Date: 2020-04-15
 Authors@R: c(
     person("Florian", "Privé", 
            email = "florian.prive.21@gmail.com", 
@@ -24,7 +24,6 @@ SystemRequirements: Package 'bigsnpr' includes a few functions that wrap existin
     software such as 'PLINK' <www.cog-genomics.org/plink2>. Functions are provided
     to download these software. Note that these external software might not work
     for some operating systems (e.g. 'PLINK' might not work on Solaris).
-Remotes: privefl/bigstatsr
 Depends:
     R (>= 3.3), 
     bigstatsr (>= 1.2.2)

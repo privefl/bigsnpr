@@ -120,9 +120,9 @@ AUC(pred_inf, y[ind.test])
 In practice, we recommend to test multiple values for h2 and p. 
 
 ```{r}
-(h2_seq <- round(seq_log(h2_est / 2, h2_est * 2, length.out = 5), 3))
-(p_seq <- signif(seq_log(1e-5, 1, length.out = 21), 2))
-(params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE)))
+(h2_seq <- round(h2_est * c(0.7, 1, 1.4), 4))
+(p_seq <- signif(seq_log(1e-4, 1, length.out = 17), 2))
+(params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE, TRUE)))
 ```
 
 ```{r, cache=TRUE}
@@ -159,11 +159,29 @@ params %>%
 You can then choose the best one according to your preferred criterion (e.g. max AUC) and evaluate it in the test set.
 
 ```{r}
-# TODO: separare sparse and not sparse
-ind_max <- which.max(params$auc)
-best_beta <- beta_grid[, ind_max]
-best_pred <- pred_grid[ind.test, ind_max]
-AUC(best_pred, y[ind.test])
+best_grid_nosp <- params %>%
+  mutate(id = row_number()) %>%
+  filter(!sparse) %>% 
+  arrange(desc(auc)) %>%
+  slice(1) %>%
+  pull(id) %>%
+  beta_grid[, .]
+
+AUC(big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2),
+```
+
+
+```{r}
+best_grid_sp <- params %>%
+  mutate(id = row_number()) %>%
+  filter(sparse) %>% 
+  arrange(desc(auc)) %>%
+  slice(1) %>%
+  pull(id) %>%
+  beta_grid[, .]
+
+AUC(big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2), 
+    y[ind.test])
 ```
 
 ### Automatic model

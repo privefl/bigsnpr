@@ -15,7 +15,7 @@ on a chromosome (in base pairs) of each SNP.\cr
 Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{dir}{Directory where to download and decompress files.
-Default is \code{tempdir()}. Use files there is already present.}
+Default is \code{tempdir()}. Directly use files there if already present.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

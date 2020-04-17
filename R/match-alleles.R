@@ -234,7 +234,7 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #'
 #' @inheritParams bigsnpr-package
 #' @param dir Directory where to download and decompress files.
-#'   Default is `tempdir()`. Use files there is already present.
+#'   Default is `tempdir()`. Directly use files there if already present.
 #'
 #' @return The new vector of genetic positions.
 #' @export

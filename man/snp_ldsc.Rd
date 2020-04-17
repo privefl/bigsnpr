@@ -80,7 +80,7 @@ LD score regression
 bigsnp <- snp_attachExtdata()
 G <- bigsnp$genotypes
 y <- bigsnp$fam$affection - 1
-corr <- snp_cor(G, ncores = 2)
+corr <- snp_cor(G, ncores = 1)
 
 gwas <- big_univLogReg(G, y)
 df_beta <- data.frame(beta = gwas$estim, beta_se = gwas$std.err,
