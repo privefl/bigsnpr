@@ -6,9 +6,6 @@ context("LDPRED2")
 
 test_that("LDpred2 works", {
 
-  library(bigsnpr)
-  library(testthat)
-
   skip_if(is_cran)
   skip_if_offline("dropbox.com")
 
@@ -28,8 +25,9 @@ test_that("LDpred2 works", {
   params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE))
   expect_equal(dim(params), c(14, 3))
   beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
-  expect_gt(max(cor(beta_grid, true_beta), na.rm = TRUE), 0.4)
-  expect_gt(min(cor(beta_grid, true_beta), na.rm = TRUE), 0.2)
+  beta_cor <- expect_warning(cor(beta_grid, true_beta))
+  expect_gt(max(beta_cor, na.rm = TRUE), 0.4)
+  expect_gt(min(beta_cor, na.rm = TRUE), 0.2)
 
   # LDpred2-auto
   beta_auto <- snp_ldpred2_auto(corr, df_beta, burn_in = 500, num_iter = 200)

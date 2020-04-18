@@ -58,16 +58,45 @@ plot(gwas, type = "Manhattan")
 
 ind.val <- setdiff(rows_along(G), ind.gwas)
 
+
+
 # LDpred-inf
 N <- length(ind.gwas)
 m <- ncol(G)
-coeff <- N * h2 / m
-corr2 <- corr + Matrix::Diagonal(ncol(corr), 1 / coeff)
-sd <- big_scale()(G)$scale
 chi2 <- qchisq(predict(gwas) * log(10), df = 1, lower.tail = FALSE, log.p = TRUE)
 betas_hat <- sqrt(chi2) * sign(beta_gwas) / sqrt(N)
-betas_inf <- as.vector(Matrix::solve(corr2, betas_hat))
-crossprod(betas_hat, betas_inf)
+
+h2_seq <- c(0.001, 0.003, seq(0.01, 0.1, by = 0.01), 0.3)
+h2_est <- function(h2) {
+  betas_inf <- as.vector(
+    Matrix::solve(corr + Matrix::Diagonal(ncol(corr), m / (N * h2)), betas_hat))
+  drop(crossprod(betas_hat, betas_inf))
+}
+h2_est_seq <- sapply(h2_seq, h2_est)
+plot(h2_seq, h2_est_seq, log = "xy"); abline(0, 1, col = "red")
+
+h2_max <- 1
+h2_min <- 1e-4
+while ((h2_max - h2_min) > 1e-4) {
+
+  (h2_mid <- sqrt(h2_min * h2_max))
+  (h2_mid_est <- h2_est(h2_mid))
+  print(c(h2_mid, h2_mid_est))
+
+  if (h2_mid_est > h2_mid) {
+    h2_min <- h2_mid
+  } else {
+    h2_max <- h2_mid
+  }
+}
+snp_ldsc2(corr, df_beta = data.frame(beta = gwas$estim, beta_se = gwas$std.err, n_eff = N))
+
+
+obj.svd <- RSpectra::eigs(corr, k = 500)
+vec <- crossprod(obj.svd$vectors, betas_hat) / sqrt(obj.svd$values)
+plot(cumsum(vec^2))
+
+
 
 new_beta <- sqrt(N) * gwas$std.err * betas_inf
 pred <- big_prodVec(G, new_beta, ind.row = ind.val)

@@ -115,6 +115,7 @@ final_mod <- snp_grid_stacking(multi_PRS, y[ind.train], ncores = NCORES, K = 4)
 summary(final_mod$mod)
 ```
 
+Here, I use `K = 4` folds because this example data is very small; the default is to use `10`.
 For options for fitting penalized regressions, see [this vignette](https://privefl.github.io/bigstatsr/articles/penalized-regressions.html).
 
 From stacking C+T scores, we can derive a unique vector of weights and compare effects resulting from stacking to the initial regression coefficients provided as summary statistics.

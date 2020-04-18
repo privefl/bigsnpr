@@ -260,7 +260,7 @@
 ## 1 0.0001           0.565     -1.04 &lt;dbl [4,060]&gt;   4024 &lt;chr [4]&gt; TRUE    
 ## 2 0.01             0.566     -1.05 &lt;dbl [4,060]&gt;    757 &lt;chr [4]&gt; TRUE    
 ## 3 1                0.569     -1.08 &lt;dbl [4,060]&gt;    118 &lt;chr [4]&gt; TRUE</code></pre>
-<p>For options for fitting penalized regressions, see <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html">this vignette</a>.</p>
+<p>Here, I use <code>K = 4</code> folds because this example data is very small; the default is to use <code>10</code>. For options for fitting penalized regressions, see <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html">this vignette</a>.</p>
 <p>From stacking C+T scores, we can derive a unique vector of weights and compare effects resulting from stacking to the initial regression coefficients provided as summary statistics.</p>
 <div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">new_beta</span> <span class="kw">&lt;-</span> <span class="no">final_mod</span>$<span class="no">beta.G</span>
 <span class="no">ind</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="no">new_beta</span> <span class="kw">!=</span> <span class="fl">0</span>)</pre></body></html></div>
