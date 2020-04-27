@@ -21,8 +21,8 @@ snp_ldpred2_grid(
 snp_ldpred2_auto(
   corr,
   df_beta,
-  p_init = 0.1,
   h2_init = NULL,
+  p_init = 0.1,
   burn_in = 1000,
   num_iter = 1000,
   verbose = FALSE
@@ -60,10 +60,10 @@ You may use \link{nb_cores}.}
 \item{tmpdir}{Directory where to store the \link[=SFBM-class]{SFBM} resulting from
 the conversion of \code{corr}.}
 
-\item{p_init}{Initial value for p. Default is \code{0.1}.}
-
 \item{h2_init}{Heritability estimate for initialization.
 Default is estimated using constrained LD score regression.}
+
+\item{p_init}{Initial value for p. Default is \code{0.1}.}
 
 \item{verbose}{Whether to print "p // h2" estimates at each iteration.}
 }

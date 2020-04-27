@@ -18,6 +18,7 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
                         const NumericVector& order,
                         const NumericVector& n_vec,
                         double p_init,
+                        double h2_init,
                         int burn_in,
                         int num_iter,
                         double h2_min = 1e-4,
@@ -42,7 +43,7 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
 
   double nb_causal = m * p_init;
   double cur_h2_est = arma::dot(curr_beta, corr * curr_beta);
-  double p = p_init, h2 = cur_h2_est, alpha = 1, avg_p = 0, avg_h2 = 0;
+  double p = p_init, h2 = h2_init, alpha = 1, avg_p = 0, avg_h2 = 0;
 
   for (int k = 0; k < num_iter_tot; k++) {
 

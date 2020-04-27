@@ -121,8 +121,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @rdname LDpred2
 #'
 snp_ldpred2_auto <- function(corr, df_beta,
-                             p_init = 0.1,
                              h2_init = NULL,
+                             p_init = 0.1,
                              burn_in = 1000,
                              num_iter = 1000,
                              verbose = FALSE) {
@@ -151,6 +151,7 @@ snp_ldpred2_auto <- function(corr, df_beta,
     order     = order(beta_inf^2, decreasing = TRUE) - 1L,
     n_vec     = N,
     p_init    = p_init,
+    h2_init   = h2_init,
     burn_in   = burn_in,
     num_iter  = num_iter,
     verbose   = verbose

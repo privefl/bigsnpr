@@ -65,8 +65,8 @@ impute <- function(BM, method, ncores) {
     invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
 }
 
-ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, burn_in, num_iter, h2_min = 1e-4, h2_max = 1, prob_jump_to_0 = 1e-4, verbose = FALSE) {
-    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, verbose)
+ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, h2_min = 1e-4, h2_max = 1, prob_jump_to_0 = 1e-4, verbose = FALSE) {
+    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, verbose)
 }
 
 ldpred2_gibbs <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores) {

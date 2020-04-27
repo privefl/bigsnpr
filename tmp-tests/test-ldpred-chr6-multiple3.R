@@ -39,9 +39,9 @@ abline(v = (q <- bigutilsr::tukey_mc_up(S)), col = "red")
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-h2 <- 0.03
-# M <- 500; set <- sort(sample(ncol(G), size = M))
-M <- 1000; set <- sort(sample(ind.HLA, size = M))
+h2 <- 0.1
+M <- ncol(G); set <- sort(sample(ncol(G), size = M))
+# M <- 1000; set <- sort(sample(ind.HLA, size = M))
 # set <- ind.HLA[c(7, 8, 10, 12, 15)]; M <- 5
 effects <- rnorm(M, sd = sqrt(h2 / M))
 # effects <- rep(sqrt(h2 / M), M)
@@ -58,6 +58,9 @@ plot(gwas, type = "Manhattan")
 
 ind.val <- setdiff(rows_along(G), ind.gwas)
 
+sd <- big_scale()(G, ind.row = ind.gwas)$scale
+plot(big_cprodVec(G, y2[ind.gwas], ind.row = ind.gwas) / (sd^2 * N), gwas$estim)
+
 
 
 # LDpred-inf
@@ -66,48 +69,23 @@ m <- ncol(G)
 chi2 <- qchisq(predict(gwas) * log(10), df = 1, lower.tail = FALSE, log.p = TRUE)
 betas_hat <- sqrt(chi2) * sign(beta_gwas) / sqrt(N)
 
-h2_seq <- c(0.001, 0.003, seq(0.01, 0.1, by = 0.01), 0.3)
-h2_est <- function(h2) {
-  betas_inf <- as.vector(
-    Matrix::solve(corr + Matrix::Diagonal(ncol(corr), m / (N * h2)), betas_hat))
-  drop(crossprod(betas_hat, betas_inf))
-}
-h2_est_seq <- sapply(h2_seq, h2_est)
-plot(h2_seq, h2_est_seq, log = "xy"); abline(0, 1, col = "red")
-
-h2_max <- 1
-h2_min <- 1e-4
-while ((h2_max - h2_min) > 1e-4) {
-
-  (h2_mid <- sqrt(h2_min * h2_max))
-  (h2_mid_est <- h2_est(h2_mid))
-  print(c(h2_mid, h2_mid_est))
-
-  if (h2_mid_est > h2_mid) {
-    h2_min <- h2_mid
-  } else {
-    h2_max <- h2_mid
-  }
-}
-sqrt(h2_min * h2_max)
-snp_ldsc2(corr, df_beta = data.frame(beta = gwas$estim, beta_se = gwas$std.err, n_eff = N))
-
-
-obj.svd <- RSpectra::eigs(corr, k = 500)
-vec <- crossprod(obj.svd$vectors, betas_hat) / sqrt(obj.svd$values)
-plot((cumsum(vec^2) - 1:500 / N) / (1 - 1:500 / N))
-
-
+plot(sd, 1 / (gwas$std.err * sqrt(N))); abline(0, 1, col = "red", lwd = 2)
+betas_inf <- as.vector(
+  Matrix::solve(corr + Matrix::Diagonal(ncol(corr), m / (N * h2)), betas_hat))
+drop(crossprod(betas_hat, betas_inf))
 
 new_beta <- sqrt(N) * gwas$std.err * betas_inf
 pred <- big_prodVec(G, new_beta, ind.row = ind.val)
 plot(pred, y2[ind.val], pch = 20); abline(0, 1, col = "red", lwd = 3)
 cor(pred, y2[ind.val])**2  # 0.214 (2Mb) -> 0.256 (5Mb) -> 0.259 (5cM)
 
+true_beta <- rep(0, ncol(G)); true_beta[set] <- effects
+plot(new_beta, true_beta, pch = 20); abline(0, 1, col = "red", lwd = 2)
+
 # LDpred-gibbs
 
-(ldsc <- snp_ldsc(ld, ncol(corr), chi2, N, blocks = 100))
-(h2_seq <- round(ldsc[["h2"]] + -1:3 * ldsc[["h2_se"]], 3))
+(ldsc <- snp_ldsc(ld, ncol(corr), chi2, N, blocks = NULL, intercept = 1))
+(h2_seq <- round(ldsc[["h2"]] * c(0.7, 1, 1.4), 3))
 (p_seq <- signif(seq_log(1e-4, 1, length.out = 17), 2))
 # 5 x 21 = 85
 
