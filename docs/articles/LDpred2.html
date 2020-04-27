@@ -334,54 +334,59 @@
 <div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="co"># takes several minutes if you do not have many cores</span>
 <span class="no">beta_grid</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_grid</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>[<span class="no">ind.chr</span>, ], <span class="no">params</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>)</pre></body></html></div>
 <div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="no">pred_grid</span> <span class="kw">&lt;-</span> <span class="fu">big_prodMat</span>(<span class="no">G</span>, <span class="no">beta_grid</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
-<span class="no">params</span>$<span class="no">auc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">pred_grid</span>[<span class="no">ind.val</span>, ], <span class="fl">2</span>, <span class="no">AUC</span>, <span class="kw">target</span> <span class="kw">=</span> <span class="no">y</span>[<span class="no">ind.val</span>])</pre></body></html></div>
-<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">params</span>, <span class="no">auc</span> <span class="kw">&gt;</span> <span class="fl">0.5</span>),
-       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">p</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">auc</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span>(<span class="no">h2</span>))) +
+<span class="no">params</span>$<span class="no">mad</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">pred_grid</span>[<span class="no">ind.val</span>, ], <span class="fl">2</span>, <span class="no">mad</span>)
+<span class="no">params</span>$<span class="no">coef</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">pred_grid</span>[<span class="no">ind.val</span>, ], <span class="fl">2</span>, <span class="kw">function</span>(<span class="no">x</span>) {
+  <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="no">y</span>[<span class="no">ind.val</span>] ~ <span class="no">x</span>, <span class="kw">family</span> <span class="kw">=</span> <span class="st">"binomial"</span>)$<span class="no">coef</span>[<span class="fl">2</span>]
+})
+<span class="no">params</span>$<span class="no">auc_val</span>  <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">pred_grid</span>[<span class="no">ind.val</span>, ],  <span class="fl">2</span>, <span class="no">AUC</span>, <span class="kw">target</span> <span class="kw">=</span> <span class="no">y</span>[<span class="no">ind.val</span>])
+<span class="no">params</span>$<span class="no">auc_test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">pred_grid</span>[<span class="no">ind.test</span>, ], <span class="fl">2</span>, <span class="no">AUC</span>, <span class="kw">target</span> <span class="kw">=</span> <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
+<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)</pre></body></html></div>
+<pre><code>## Warning: package 'ggplot2' was built under R version 3.6.3</code></pre>
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">params</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">p</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">coef</span> * <span class="no">mad</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span>(<span class="no">h2</span>))) +
   <span class="fu">theme_bigstatsr</span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_log10</a></span>(<span class="kw">breaks</span> <span class="kw">=</span> <span class="fl">10</span>^(-<span class="fl">5</span>:<span class="fl">0</span>), <span class="kw">minor_breaks</span> <span class="kw">=</span> <span class="no">params</span>$<span class="no">p</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~ <span class="no">sparse</span>, <span class="kw">labeller</span> <span class="kw">=</span> <span class="no">label_both</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">"AUC"</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"h2"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">"Coef GLM"</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"h2"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">"top"</span>, <span class="kw">panel.spacing</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">unit</a></span>(<span class="fl">1</span>, <span class="st">"lines"</span>))</pre></body></html></div>
+<pre><code>## Warning: Removed 4 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 1 row(s) containing missing values (geom_path).</code></pre>
 <p><img src="LDpred2_files/figure-html/unnamed-chunk-16-1.png" width="90%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">sparsity</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(<span class="no">beta_grid</span> <span class="kw">==</span> <span class="fl">0</span>), <span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">auc</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_at</a></span>(<span class="fl">4</span>:<span class="fl">5</span>, <span class="no">round</span>, <span class="kw">digits</span> <span class="kw">=</span> <span class="fl">3</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">coef</span> * <span class="no">mad</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_at</a></span>(<span class="fl">4</span>:<span class="fl">8</span>, <span class="no">signif</span>, <span class="kw">digits</span> <span class="kw">=</span> <span class="fl">3</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>:<span class="fl">10</span>)</pre></body></html></div>
-<pre><code>##          p     h2 sparse   auc sparsity id
-## 1  0.00056 0.0807  FALSE 0.655    0.000  4
-## 2  0.00100 0.1152  FALSE 0.654    0.000 22
-## 3  0.00100 0.1613  FALSE 0.654    0.000 39
-## 4  0.00100 0.0807   TRUE 0.654    0.622 56
-## 5  0.00320 0.1613  FALSE 0.654    0.000 41
-## 6  0.00180 0.1613   TRUE 0.654    0.599 91
-## 7  0.00100 0.1152   TRUE 0.654    0.624 73
-## 8  0.00180 0.1152   TRUE 0.653    0.604 74
-## 9  0.00056 0.0807   TRUE 0.653    0.654 55
-## 10 0.00560 0.1613  FALSE 0.653    0.000 42</code></pre>
-<p>You can then choose the best one according to your preferred criterion (e.g. max AUC) and evaluate it in the test set.</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="no">best_grid_nosp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
+<pre><code>##          p     h2 sparse   mad coef auc_val auc_test sparsity id
+## 1  0.00560 0.1613  FALSE 0.329 1.67   0.653    0.667    0.000 42
+## 2  0.00320 0.1613  FALSE 0.328 1.66   0.654    0.669    0.000 41
+## 3  0.00056 0.0807  FALSE 0.167 3.25   0.655    0.667    0.000  4
+## 4  0.00100 0.1613  FALSE 0.321 1.68   0.654    0.667    0.000 39
+## 5  0.00100 0.0807   TRUE 0.144 3.75   0.654    0.674    0.622 56
+## 6  0.00100 0.1152   TRUE 0.209 2.58   0.654    0.672    0.624 73
+## 7  0.00056 0.1152  FALSE 0.232 2.32   0.652    0.667    0.000 21
+## 8  0.00100 0.0807  FALSE 0.166 3.23   0.652    0.671    0.000  5
+## 9  0.01000 0.1613  FALSE 0.326 1.64   0.650    0.665    0.000 43
+## 10 0.00056 0.0807   TRUE 0.147 3.63   0.653    0.669    0.654 55</code></pre>
+<p>You can then choose the best model according to your preferred criterion (e.g. max AUC) and evaluate this particular model in the test set afterwards. Here, we use the (scaled) coefficient from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. We also scale the effect sizes by this coefficient.</p>
+<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="no">best_grid_nosp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="no">sparse</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">auc</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">coef</span> * <span class="no">mad</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">id</span>) <span class="kw">%&gt;%</span>
-  <span class="no">beta_grid</span>[, <span class="no">.</span>]
+  { <span class="no">beta_grid</span>[, <span class="no">.</span>$<span class="no">id</span>] * <span class="no">.</span>$<span class="no">coef</span> }
 
 <span class="fu">AUC</span>(<span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_nosp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>),
     <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>## [1] 0.6667949</code></pre>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">best_grid_sp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
+<pre><code>## [1] 0.6669873</code></pre>
+<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="no">best_grid_sp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">sparse</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">auc</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">coef</span> * <span class="no">mad</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="no">id</span>) <span class="kw">%&gt;%</span>
-  <span class="no">beta_grid</span>[, <span class="no">.</span>]
+  { <span class="no">beta_grid</span>[, <span class="no">.</span>$<span class="no">id</span>] * <span class="no">.</span>$<span class="no">coef</span> }
 
 <span class="fu">AUC</span>(<span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_sp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>),
     <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
@@ -390,7 +395,7 @@
 <div id="automatic-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#automatic-model" class="anchor"></a>Automatic model</h3>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="co"># takes a few minutes</span>
+<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co"># takes a few minutes</span>
 <span class="no">auto</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_auto</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>[<span class="no">ind.chr</span>, ], <span class="kw">h2_init</span> <span class="kw">=</span> <span class="no">h2_est</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">auto</span>)</pre></body></html></div>
 <pre><code>## List of 5
@@ -400,7 +405,7 @@
 ##  $ path_p_est : num [1:2000] 0.1001 0.1016 0.0992 0.0988 0.0965 ...
 ##  $ path_h2_est: num [1:2000] 0.00135 0.00128 0.00125 0.00121 0.00119 ...</code></pre>
 <p>You should verify if the algorithm “converged”. This is not the case here, which is probably because the data is so small.</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="fu">plot_grid</span>(
+<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="fu">plot_grid</span>(
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html">qplot</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">auto</span>$<span class="no">path_p_est</span>) +
     <span class="fu">theme_bigstatsr</span>() +
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="no">auto</span>$<span class="no">p_est</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">"blue"</span>) +
@@ -413,8 +418,11 @@
   <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>
 )</pre></body></html></div>
 <p><img src="LDpred2_files/figure-html/unnamed-chunk-21-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="no">beta_auto</span> <span class="kw">&lt;-</span> <span class="no">auto</span>$<span class="no">beta_est</span>
+<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="no">beta_auto</span> <span class="kw">&lt;-</span> <span class="no">auto</span>$<span class="no">beta_est</span>
 <span class="no">pred_auto</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">beta_auto</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
+<span class="co"># Make sure it is on some appropriate scaling (the same as LDpred2-inf)</span>
+<span class="co"># to safely merge predictions from multiple chromosomes</span>
+<span class="no">pred_auto</span> <span class="kw">&lt;-</span> <span class="no">pred_auto</span> * <span class="fu"><a href="https://rdrr.io/r/stats/mad.html">mad</a></span>(<span class="no">pred_inf</span>) / <span class="fu"><a href="https://rdrr.io/r/stats/mad.html">mad</a></span>(<span class="no">pred_auto</span>)
 <span class="fu">AUC</span>(<span class="no">pred_auto</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
 <pre><code>## [1] 0.6631397</code></pre>
 </div>

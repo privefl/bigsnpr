@@ -137,19 +137,23 @@ beta_grid <- snp_ldpred2_grid(corr, df_beta[ind.chr, ], params, ncores = NCORES)
 
 ```{r}
 pred_grid <- big_prodMat(G, beta_grid, ind.col = ind.chr2)
-params$auc <- apply(pred_grid[ind.val, ], 2, AUC, target = y[ind.val])
+params$mad <- apply(pred_grid[ind.val, ], 2, mad)
+params$coef <- apply(pred_grid[ind.val, ], 2, function(x) {
+  glm(y[ind.val] ~ x, family = "binomial")$coef[2]
+})
+params$auc_val  <- apply(pred_grid[ind.val, ],  2, AUC, target = y[ind.val])
+params$auc_test <- apply(pred_grid[ind.test, ], 2, AUC, target = y[ind.test])
 ```
 
 ```{r, out.width="90%", fig.asp=0.3}
 library(ggplot2)
-ggplot(subset(params, auc > 0.5), 
-       aes(x = p, y = auc, color = as.factor(h2))) +
+ggplot(params, aes(x = p, y = coef * mad, color = as.factor(h2))) +
   theme_bigstatsr() +
   geom_point() +
   geom_line() +
   scale_x_log10(breaks = 10^(-5:0), minor_breaks = params$p) +
   facet_wrap(~ sparse, labeller = label_both) +
-  labs(y = "AUC", color = "h2") +
+  labs(y = "Coef GLM", color = "h2") +
   theme(legend.position = "top", panel.spacing = unit(1, "lines"))
 ```
 
@@ -157,21 +161,20 @@ ggplot(subset(params, auc > 0.5),
 library(dplyr)
 params %>%
   mutate(sparsity = colMeans(beta_grid == 0), id = row_number()) %>%
-  arrange(desc(auc)) %>%
-  mutate_at(4:5, round, digits = 3) %>%
+  arrange(desc(coef * mad)) %>%
+  mutate_at(4:8, signif, digits = 3) %>%
   slice(1:10)
 ```
 
-You can then choose the best one according to your preferred criterion (e.g. max AUC) and evaluate it in the test set.
+You can then choose the best model according to your preferred criterion (e.g. max AUC) and evaluate this particular model in the test set afterwards. Here, we use the (scaled) coefficient from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. We also scale the effect sizes by this coefficient.
 
 ```{r}
 best_grid_nosp <- params %>%
   mutate(id = row_number()) %>%
   filter(!sparse) %>% 
-  arrange(desc(auc)) %>%
+  arrange(desc(coef * mad)) %>%
   slice(1) %>%
-  pull(id) %>%
-  beta_grid[, .]
+  { beta_grid[, .$id] * .$coef }
 
 AUC(big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2),
     y[ind.test])
@@ -182,10 +185,9 @@ AUC(big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2),
 best_grid_sp <- params %>%
   mutate(id = row_number()) %>%
   filter(sparse) %>% 
-  arrange(desc(auc)) %>%
+  arrange(desc(coef * mad)) %>%
   slice(1) %>%
-  pull(id) %>%
-  beta_grid[, .]
+  { beta_grid[, .$id] * .$coef }
 
 AUC(big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2), 
     y[ind.test])
@@ -220,6 +222,9 @@ plot_grid(
 ```{r}
 beta_auto <- auto$beta_est
 pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
+# Make sure it is on some appropriate scaling (the same as LDpred2-inf)
+# to safely merge predictions from multiple chromosomes
+pred_auto <- pred_auto * mad(pred_inf) / mad(pred_auto)
 AUC(pred_auto, y[ind.test])
 ```
 
