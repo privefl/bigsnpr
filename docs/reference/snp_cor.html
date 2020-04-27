@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -36,9 +40,8 @@
 
 
 <meta property="og:title" content="Correlation — snp_cor" />
-<meta property="og:description" content="Get significant correlations between nearby SNPs
+<meta property="og:description" content="Get significant correlations between nearby SNPs of the same chromosome
 (p-values are computed using a two-sided t-test)." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -56,7 +59,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -70,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -104,6 +107,9 @@
     <li>
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
+    <li>
+      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -135,12 +141,12 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Correlation</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/corr.R'><code>R/corr.R</code></a></small>
     <div class="hidden name"><code>snp_cor.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get significant correlations between nearby SNPs
+    <p>Get significant correlations between nearby SNPs of the same chromosome
 (p-values are computed using a two-sided t-test).</p>
     </div>
 
@@ -149,9 +155,10 @@
   <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>Gna</span>),
   <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>Gna</span>),
   <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
   <span class='kw'>fill.diag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -183,7 +190,7 @@ a window in number of SNPs, otherwise it is a window in kb (genetic distance).</
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Type-I error for testing correlations.</p></td>
+      <td><p>Type-I error for testing correlations. Default is <code>0.9</code>.</p></td>
     </tr>
     <tr>
       <th>fill.diag</th>
@@ -195,6 +202,11 @@ or to keep it as 0s.</p></td>
       <td><p>Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.<br />
 Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
+    </tr>
+    <tr>
+      <th>ncores</th>
+      <td><p>Number of cores used. Default doesn't use parallelism.
+You may use nb_cores.</p></td>
     </tr>
     </table>
 
@@ -208,39 +220,35 @@ Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
 <span class='no'>corr</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_cor</span>(<span class='no'>test</span>$<span class='no'>genotypes</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>1000</span>)
 <span class='no'>corr</span>[<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='fl'>1</span>:<span class='fl'>10</span>]</div><div class='output co'>#&gt; 10 x 10 sparse Matrix of class "dsCMatrix"
 #&gt;                                                                      
-#&gt;  [1,] 1.0000000 .  .           .          . . .  .          0.1113498
-#&gt;  [2,] .         1  .           .          . . .  .          .        
-#&gt;  [3,] .         .  1.00000000 -0.10260676 . . . -0.08716539 .        
-#&gt;  [4,] .         . -0.10260676  1.00000000 . . .  .          .        
-#&gt;  [5,] .         .  .           .          1 . .  .          .        
-#&gt;  [6,] .         .  .           .          . 1 .  .          .        
-#&gt;  [7,] .         .  .           .          . . 1  .          .        
-#&gt;  [8,] .         . -0.08716539  .          . . .  1.00000000 .        
-#&gt;  [9,] 0.1113498 .  .           .          . . .  .          1.0000000
-#&gt; [10,] .         .  .          -0.09303201 . . .  .          .        
-#&gt;                  
-#&gt;  [1,]  .         
-#&gt;  [2,]  .         
-#&gt;  [3,]  .         
-#&gt;  [4,] -0.09303201
-#&gt;  [5,]  .         
-#&gt;  [6,]  .         
-#&gt;  [7,]  .         
-#&gt;  [8,]  .         
-#&gt;  [9,]  .         
-#&gt; [10,]  1.00000000</div><div class='input'>
+#&gt;  [1,]  1.000000000 -0.059420393  0.005664354 -0.024489153  0.07467733
+#&gt;  [2,] -0.059420393  1.000000000  0.011193114  0.069041892  0.01201638
+#&gt;  [3,]  0.005664354  0.011193114  1.000000000 -0.102606763  0.03146612
+#&gt;  [4,] -0.024489153  0.069041892 -0.102606763  1.000000000  0.06581927
+#&gt;  [5,]  0.074677326  0.012016376  0.031466118  0.065819274  1.00000000
+#&gt;  [6,] -0.016720892  0.006950400  0.075573785 -0.009996247  0.01995194
+#&gt;  [7,]  .           -0.073816948  0.015793311  0.067027181  0.03088233
+#&gt;  [8,] -0.017764606 -0.033245425 -0.087165386  0.052163271 -0.04179906
+#&gt;  [9,]  0.111349765  0.008661176 -0.060211948  0.062986807 -0.03244854
+#&gt; [10,] -0.051804449 -0.065532091  0.017048961 -0.093032007 -0.01146874
+#&gt;                                                                      
+#&gt;  [1,] -0.016720892  .           -0.01776461  0.111349765 -0.051804449
+#&gt;  [2,]  0.006950400 -0.073816948 -0.03324542  0.008661176 -0.065532091
+#&gt;  [3,]  0.075573785  0.015793311 -0.08716539 -0.060211948  0.017048961
+#&gt;  [4,] -0.009996247  0.067027181  0.05216327  0.062986807 -0.093032007
+#&gt;  [5,]  0.019951940  0.030882334 -0.04179906 -0.032448541 -0.011468736
+#&gt;  [6,]  1.000000000  0.053884169 -0.04024761 -0.045578013  0.052820407
+#&gt;  [7,]  0.053884169  1.000000000 -0.06369954 -0.012107321  0.006552636
+#&gt;  [8,] -0.040247606 -0.063699540  1.00000000 -0.022351147 -0.058557214
+#&gt;  [9,] -0.045578013 -0.012107321 -0.02235115  1.000000000 -0.041503959
+#&gt; [10,]  0.052820407  0.006552636 -0.05855721 -0.041503959  1.000000000</div><div class='input'>
 <span class='co'># Sparsity</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>@<span class='kw'>x</span>) / <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>)</div><div class='output co'>#&gt; [1] 0.034402</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>@<span class='kw'>x</span>) / <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>)</div><div class='output co'>#&gt; [1] 0.342595</div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -251,7 +259,7 @@ Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

@@ -48,20 +48,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// bed_corNA
-List bed_corNA(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericMatrix& U);
-RcppExport SEXP _bigsnpr_bed_corNA(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP USEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type U(USEXP);
-    rcpp_result_gen = Rcpp::wrap(bed_corNA(obj_bed, ind_row, ind_col, U));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bed_col_counts_cpp
 IntegerMatrix bed_col_counts_cpp(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, int ncores);
 RcppExport SEXP _bigsnpr_bed_col_counts_cpp(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP ncoresSEXP) {
@@ -248,7 +234,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // corMat
-arma::sp_mat corMat(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos, int ncores);
+List corMat(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos, int ncores);
 RcppExport SEXP _bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP posSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -265,16 +251,59 @@ BEGIN_RCPP
 END_RCPP
 }
 // impute
-void impute(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, int method);
-RcppExport SEXP _bigsnpr_impute(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP methodSEXP) {
+void impute(Environment BM, int method, int ncores);
+RcppExport SEXP _bigsnpr_impute(SEXP BMSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< int >::type method(methodSEXP);
-    impute(BM, rowInd, colInd, method);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    impute(BM, method, ncores);
     return R_NilValue;
+END_RCPP
+}
+// ldpred2_gibbs_auto
+List ldpred2_gibbs_auto(const arma::sp_mat& corr, const NumericVector& beta_hat, const NumericVector& beta_init, const NumericVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, double h2_min, double h2_max, double prob_jump_to_0, bool verbose);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP h2_minSEXP, SEXP h2_maxSEXP, SEXP prob_jump_to_0SEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type corr(corrSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type order(orderSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
+    Rcpp::traits::input_parameter< double >::type p_init(p_initSEXP);
+    Rcpp::traits::input_parameter< double >::type h2_init(h2_initSEXP);
+    Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
+    Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
+    Rcpp::traits::input_parameter< double >::type h2_min(h2_minSEXP);
+    Rcpp::traits::input_parameter< double >::type h2_max(h2_maxSEXP);
+    Rcpp::traits::input_parameter< double >::type prob_jump_to_0(prob_jump_to_0SEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_auto(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ldpred2_gibbs
+arma::mat ldpred2_gibbs(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const NumericVector& order, const NumericVector& n_vec, const NumericVector& h2, const NumericVector& p, const LogicalVector& sparse, int burn_in, int num_iter, int ncores);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type order(orderSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type h2(h2SEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const LogicalVector& >::type sparse(sparseSEXP);
+    Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
+    Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores));
+    return rcpp_result_gen;
 END_RCPP
 }
 // multLinReg
@@ -293,8 +322,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // read_bgen
-CharacterVector read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode, bool dosage);
-RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP, SEXP dosageSEXP) {
+CharacterVector read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode, bool dosage, int ncores);
+RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP, SEXP dosageSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -305,7 +334,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type ind_col(ind_colSEXP);
     Rcpp::traits::input_parameter< RawVector >::type decode(decodeSEXP);
     Rcpp::traits::input_parameter< bool >::type dosage(dosageSEXP);
-    rcpp_result_gen = Rcpp::wrap(read_bgen(filename, offsets, BM, ind_row, ind_col, decode, dosage));
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_bgen(filename, offsets, BM, ind_row, ind_col, decode, dosage, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -366,7 +396,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
     {"_bigsnpr_bedXPtr", (DL_FUNC) &_bigsnpr_bedXPtr, 3},
     {"_bigsnpr_bed_colstats", (DL_FUNC) &_bigsnpr_bed_colstats, 4},
-    {"_bigsnpr_bed_corNA", (DL_FUNC) &_bigsnpr_bed_corNA, 4},
     {"_bigsnpr_bed_col_counts_cpp", (DL_FUNC) &_bigsnpr_bed_col_counts_cpp, 4},
     {"_bigsnpr_bed_row_counts_cpp", (DL_FUNC) &_bigsnpr_bed_row_counts_cpp, 3},
     {"_bigsnpr_read_bed_scaled", (DL_FUNC) &_bigsnpr_read_bed_scaled, 5},
@@ -379,9 +408,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_snp_colstats", (DL_FUNC) &_bigsnpr_snp_colstats, 4},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 7},
-    {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 4},
+    {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
+    {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 13},
+    {"_bigsnpr_ldpred2_gibbs", (DL_FUNC) &_bigsnpr_ldpred2_gibbs, 11},
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},
-    {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 7},
+    {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 8},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},

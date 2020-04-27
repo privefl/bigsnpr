@@ -9,7 +9,7 @@
 #' @param size For one SNP, window size around this SNP to compute correlations.
 #' Default is `500`. If not providing `infos.pos` (`NULL`, the default), this is
 #' a window in number of SNPs, otherwise it is a window in kb (genetic distance).
-#' @param alpha Type-I error for testing correlations.
+#' @param alpha Type-I error for testing correlations. Default is `0.9`.
 #' @param fill.diag Whether to fill the diagonal with 1s (the default)
 #' or to keep it as 0s.
 #'
@@ -31,7 +31,7 @@ snp_cor <- function(Gna,
                     ind.row = rows_along(Gna),
                     ind.col = cols_along(Gna),
                     size = 500,
-                    alpha = 0.05,
+                    alpha = 0.9,
                     fill.diag = TRUE,
                     infos.pos = NULL,
                     ncores = 1) {
@@ -50,7 +50,7 @@ snp_cor <- function(Gna,
   )
   THR <- q.alpha / sqrt(seq_along(ind.row) - 2 + q.alpha^2)
 
-  corr <- corMat(
+  ind_val <- corMat(
     BM     = Gna,
     rowInd = ind.row,
     colInd = ind.col,
@@ -60,7 +60,14 @@ snp_cor <- function(Gna,
     ncores = ncores
   )
 
-  corr <- forceSymmetric(corr)
+  m <- length(ind.col)
+  corr <- Matrix::sparseMatrix(
+    i = unlist(lapply(ind_val, function(.) .$i)),
+    j = rep(1:m, times = sapply(ind_val, function(.) length(.$i))),
+    x = unlist(lapply(ind_val, function(.) .$x)),
+    dims = c(m, m),
+    symmetric = TRUE)
+
   if (fill.diag) diag(corr) <- 1
 
   corr

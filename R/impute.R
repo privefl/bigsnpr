@@ -142,10 +142,8 @@ snp_fastImpute <- function(Gna, infos.chr,
                            seed = NA,
                            ncores = 1) {
 
-  if (!requireNamespace("xgboost", quietly = TRUE))
-    stop2("Please install package 'xgboost'.")
-
   check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
+  assert_package("xgboost")
 
   X  <- Gna$copy(code = CODE_IMPUTE_LABEL)
   X2 <- Gna$copy(code = CODE_IMPUTE_PRED)
@@ -161,10 +159,6 @@ snp_fastImpute <- function(Gna, infos.chr,
 }
 
 ################################################################################
-
-part_impute <- function(X, ind, method) {
-  impute(X, rows_along(X), ind, method)
-}
 
 #' Fast imputation
 #'
@@ -202,7 +196,7 @@ snp_fastImputeSimple <- function(
     Gna$copy(code = c(0, 1, 2, 0, rep(NA, 252)))
   } else {
     method <- match(match.arg(method), c("mode", "mean0", "mean2", "random"))
-    big_parallelize(Gna, p.FUN = part_impute, ncores = ncores, method = method)
+    impute(Gna, method, ncores)
     Gna$copy(code = `if`(method == 3, CODE_DOSAGE, CODE_IMPUTE_PRED))
   }
 }

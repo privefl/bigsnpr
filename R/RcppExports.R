@@ -13,10 +13,6 @@ bed_colstats <- function(obj_bed, ind_row, ind_col, ncores) {
     .Call(`_bigsnpr_bed_colstats`, obj_bed, ind_row, ind_col, ncores)
 }
 
-bed_corNA <- function(obj_bed, ind_row, ind_col, U) {
-    .Call(`_bigsnpr_bed_corNA`, obj_bed, ind_row, ind_col, U)
-}
-
 bed_col_counts_cpp <- function(obj_bed, ind_row, ind_col, ncores) {
     .Call(`_bigsnpr_bed_col_counts_cpp`, obj_bed, ind_row, ind_col, ncores)
 }
@@ -65,16 +61,24 @@ corMat <- function(BM, rowInd, colInd, size, thr, pos, ncores) {
     .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos, ncores)
 }
 
-impute <- function(BM, rowInd, colInd, method) {
-    invisible(.Call(`_bigsnpr_impute`, BM, rowInd, colInd, method))
+impute <- function(BM, method, ncores) {
+    invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
+}
+
+ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, h2_min = 1e-4, h2_max = 1, prob_jump_to_0 = 1e-4, verbose = FALSE) {
+    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, h2_min, h2_max, prob_jump_to_0, verbose)
+}
+
+ldpred2_gibbs <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores) {
+    .Call(`_bigsnpr_ldpred2_gibbs`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores)
 }
 
 multLinReg <- function(obj, ind_row, ind_col, U, ncores = 1L) {
     .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U, ncores)
 }
 
-read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage) {
-    .Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_row, ind_col, decode, dosage)
+read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage, ncores) {
+    .Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_row, ind_col, decode, dosage, ncores)
 }
 
 readbina <- function(filename, BM, tab) {

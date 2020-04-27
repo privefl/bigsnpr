@@ -25,10 +25,8 @@ format_snp_id <- function(snp_id) {
 snp_readBGI <- function(bgifile, snp_id) {
 
   # check for packages
-  if (!requireNamespace("RSQLite", quietly = TRUE))
-    stop2("Please install package 'RSQLite'.")
-  if (!requireNamespace("dbplyr", quietly = TRUE))
-    stop2("Please install package 'dbplyr'.")
+  assert_package("RSQLite")
+  assert_package("dbplyr")
 
   # read variant information from index files
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
@@ -136,13 +134,11 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     create_bk = TRUE
   )
 
-  bigparallelr::register_parallel(ncores)
-
   # cleanup if error
   snp.info <- tryCatch(error = function(e) { unlink(G$backingfile); stop(e) }, {
 
     # Fill the FBM from BGEN files (and get SNP info)
-    foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %dopar% {
+    foreach(ic = seq_along(bgenfiles), .combine = 'rbind') %do% {
 
       snp_id <- format_snp_id(list_snp_id[[ic]])
       infos <- snp_readBGI(bgifiles[ic], snp_id)
@@ -156,7 +152,8 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
         ind_row = ind_row - 1L,
         ind_col = ind.col,
         decode = as.raw(207 - round(0:510 * 100 / 255)),
-        dosage = dosage
+        dosage = dosage,
+        ncores = ncores
       )
 
       # Return variant info

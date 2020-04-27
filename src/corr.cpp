@@ -1,6 +1,6 @@
 /******************************************************************************/
 
-#include <bigstatsr/arma-strict-R-headers.h>
+// #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/BMCodeAcc.h>
 
 using namespace Rcpp;
@@ -8,13 +8,13 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-arma::sp_mat corMat(Environment BM,
-                    const IntegerVector& rowInd,
-                    const IntegerVector& colInd,
-                    double size,
-                    const NumericVector& thr,
-                    const NumericVector& pos,
-                    int ncores) {
+List corMat(Environment BM,
+            const IntegerVector& rowInd,
+            const IntegerVector& colInd,
+            double size,
+            const NumericVector& thr,
+            const NumericVector& pos,
+            int ncores) {
 
   myassert_size(colInd.size(), pos.size());
 
@@ -26,60 +26,75 @@ arma::sp_mat corMat(Environment BM,
   int n = macc.nrow();
   int m = macc.ncol();
 
-  arma::sp_mat corr(m, m);
+  List res(m);
 
-  #pragma omp parallel for num_threads(ncores)
-  for (int j0 = 0; j0 < m; j0++) {
+  int chunk_size = ceil(m / (10.0 * ncores));
 
-    // pre-computation
-    double xSum0 = 0, xxSum0 = 0;
-    for (int i = 0; i < n; i++) {
-      double x = macc(i, j0);
-      if (x != 3) {
-        xSum0  += x;
-        xxSum0 += x * x;
-      }
-    }
+  #pragma omp parallel num_threads(ncores)
+  {
+    std::vector<int>    ind; ind.reserve(m);
+    std::vector<double> val; val.reserve(m);
 
-    // main computation
-    double pos_min = pos[j0] - size;
-    for (int j = j0 - 1; (j >= 0) && (pos[j] >= pos_min); j--) {
+    #pragma omp for schedule(dynamic, chunk_size)
+    for (int j0 = 0; j0 < m; j0++) {
 
-      int nona = 0;
-      double xSum = xSum0, xxSum = xxSum0;
-      double ySum = 0, yySum = 0, xySum = 0;
+      ind.clear();
+      val.clear();
+
+      // pre-computation
+      double xSum0 = 0, xxSum0 = 0;
       for (int i = 0; i < n; i++) {
-
         double x = macc(i, j0);
-        if (x == 3) continue;
-
-        double y = macc(i, j);
-        if (y == 3) {
-          // y is missing, but not x
-          xSum  -= x;
-          xxSum -= x * x;
-        } else {
-          // none missing
-          nona++;
-          ySum  += y;
-          yySum += y * y;
-          xySum += x * y;
+        if (x != 3) {
+          xSum0  += x;
+          xxSum0 += x * x;
         }
       }
 
-      double num = xySum - xSum * ySum / nona;
-      double deno_x = xxSum - xSum * xSum / nona;
-      double deno_y = yySum - ySum * ySum / nona;
-      double r = num / ::sqrt(deno_x * deno_y);
+      // main computation
+      double pos_min = pos[j0] - size;
+      for (int j = j0 - 1; (j >= 0) && (pos[j] >= pos_min); j--) {
 
-      if (std::abs(r) > thr[nona - 1]) {
-        #pragma omp critical
-        corr(j, j0) = r;
+        int nona = 0;
+        double xSum = xSum0, xxSum = xxSum0;
+        double ySum = 0, yySum = 0, xySum = 0;
+        for (int i = 0; i < n; i++) {
+
+          double x = macc(i, j0);
+          if (x == 3) continue;
+
+          double y = macc(i, j);
+          if (y == 3) {
+            // y is missing, but not x
+            xSum  -= x;
+            xxSum -= x * x;
+          } else {
+            // none missing
+            nona++;
+            ySum  += y;
+            yySum += y * y;
+            xySum += x * y;
+          }
+        }
+
+        double num = xySum - xSum * ySum / nona;
+        double deno_x = xxSum - xSum * xSum / nona;
+        double deno_y = yySum - ySum * ySum / nona;
+        double r = num / ::sqrt(deno_x * deno_y);
+
+        if (std::abs(r) > thr[nona - 1]) {
+          ind.push_back(j + 1);
+          val.push_back(r);
+        }
       }
+
+      #pragma omp critical
+      res[j0] = List::create(_["i"] = wrap(ind), _["x"] = wrap(val));
     }
   }
 
-  return corr;
+
+  return res;
 }
 
 /******************************************************************************/

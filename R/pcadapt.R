@@ -1,18 +1,13 @@
 ################################################################################
 
-part_mult_lin_reg <- function(X, ind, ind.row, U) {
-  multLinReg(X, ind_row = ind.row, ind_col = ind, U = U)
-}
-
 pcadapt0 <- function(G, U.row, ind.row, ind.col, ncores) {
 
   if (is.null(dim(U.row))) U.row <- as.matrix(U.row)  # vector
   K <- ncol(U.row)
   assert_lengths(rows_along(U.row), ind.row)
 
-  tscores <- big_parallelize(G, p.FUN = part_mult_lin_reg,
-                             p.combine = "rbind", ncores = ncores,
-                             ind = ind.col, ind.row = ind.row, U = U.row)
+  tscores <- multLinReg(G, ind_row = ind.row, ind_col = ind.col,
+                        U = U.row, ncores = ncores)
 
   dist <- `if`(K == 1, (drop(tscores) - stats::median(tscores))^2,
                bigutilsr::dist_ogk(tscores))
@@ -80,7 +75,7 @@ bed_pcadapt <- function(obj.bed, U.row,
                         ind.col = cols_along(obj.bed),
                         ncores = 1) {
   check_args()
-  pcadapt0(obj.bed$light, U.row, ind.row, ind.col, ncores)
+  pcadapt0(obj.bed, U.row, ind.row, ind.col, ncores)
 }
 
 ################################################################################

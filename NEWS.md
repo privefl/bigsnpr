@@ -1,3 +1,19 @@
+## bigsnpr 1.4.0
+
+- Add functions `snp_ldpred2_inf()`, `snp_ldpred2_grid()` and `snp_ldpred2_auto()` for running the new LDpred2-inf, LDpred2-grid and LDpred2-auto.
+
+- Add functions `snp_ldsc()` and `snp_ldsc2()` for performing LD score regression.
+
+- Add function `snp_asGeneticPos()` for transforming physical positions to genetic positions.
+
+- Add function `snp_simuPheno()` for simulating phenotypes.
+
+- Change default of parameter `alpha` of function `snp_cor()` to `0.9`.
+
+## bigsnpr 1.3.1
+
+- Also use OpenMP for the parallelization of `snp_pcadapt()`, `bed_pcadapt()`, `snp_readBGEN()` and `snp_fastImputeSimple()`.
+
 ## bigsnpr 1.3.0
 
 - Parallelization of clumping algorithms has been modified. Before, chromosomes were imputed in parallel. Now, chromosomes are processed sequentially, but computations within each chromosome are performed in parallel thanks to OpenMP. This should prevent major slowdowns for very large samples sizes (due to swapping).

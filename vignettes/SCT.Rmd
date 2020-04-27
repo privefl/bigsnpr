@@ -50,7 +50,8 @@ NCORES <- nb_cores()
 # Check some counts for the 10 first variants
 big_counts(G, ind.col = 1:10)
 # Read external summary statistics
-sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt", 
+                             select = c(1:6, 10))
 str(sumstats)
 ```
 
@@ -114,6 +115,7 @@ final_mod <- snp_grid_stacking(multi_PRS, y[ind.train], ncores = NCORES, K = 4)
 summary(final_mod$mod)
 ```
 
+Here, I use `K = 4` folds because this example data is very small; the default is to use `10`.
 For options for fitting penalized regressions, see [this vignette](https://privefl.github.io/bigstatsr/articles/penalized-regressions.html).
 
 From stacking C+T scores, we can derive a unique vector of weights and compare effects resulting from stacking to the initial regression coefficients provided as summary statistics.
@@ -156,8 +158,8 @@ Instead of stacking, an alternative is to choose the best C+T score based on the
 ```{r, message=FALSE}
 library(tidyverse)
 grid2 <- attr(all_keep, "grid") %>%
-  mutate(thr.lp = list(attr(multi_PRS, "grid.lpS.thr")), num = row_number()) %>%
-  unnest()
+  mutate(thr.lp = list(attr(multi_PRS, "grid.lpS.thr")), id = row_number()) %>%
+  unnest(cols = "thr.lp")
 s <- nrow(grid2)
 grid2$auc <- big_apply(multi_PRS, a.FUN = function(X, ind, s, y.train) {
   # Sum over all chromosomes, for the same C+T parameters
@@ -172,7 +174,7 @@ max_prs <- grid2 %>% arrange(desc(auc)) %>% slice(1:10) %>% print() %>% slice(1)
 ```
 
 ```{r}
-ind.keep <- unlist(map(all_keep, max_prs$num))
+ind.keep <- unlist(map(all_keep, max_prs$id))
 sum(lpval[ind.keep] > max_prs$thr.lp)
 AUCBoot(
   snp_PRS(G, beta[ind.keep], ind.test = ind.test, ind.keep = ind.keep,
@@ -181,7 +183,8 @@ AUCBoot(
 )
 ```
 
-For this example, the best C+T predictions provides an AUC of 63% whereas stacking, which should be preferred, provides an AUC of 68%.
+For this example, the best C+T predictions provides an AUC of 67% whereas stacking, which should be preferred, provides an AUC of 68.5%.
 
 ### Reference
 
+Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) Am J Hum Genet (2019).

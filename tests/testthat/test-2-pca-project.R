@@ -2,6 +2,8 @@
 
 context("PCA_PROJECT")
 
+# test_that()
+
 ################################################################################
 
 obj.bed <- bed(system.file("extdata", "example-missing.bed", package = "bigsnpr"))

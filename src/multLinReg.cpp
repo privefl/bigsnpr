@@ -15,26 +15,25 @@ NumericMatrix multLinReg(C macc, const NumericMatrix& U, int ncores) {
 
   NumericMatrix res(K, m);
 
-  // #pragma omp parallel num_threads(ncores) -> errors with stack imbalance on some OS
+  #pragma omp parallel num_threads(ncores)
   {
-    NumericVector xySum(K), ySum(K), yySum(K);
-    double x, y, xSum, xxSum;
+    std::vector<double> xySum(K), ySum(K), yySum(K);  // safer than NumericVector
 
     #pragma omp for
     for (int j = 0; j < m; j++) {
 
       int nona = n;
-      xSum = xxSum = 0;
+      double xSum = 0, xxSum = 0;
       for (int k = 0; k < K; k++)
         xySum[k] = ySum[k] = yySum[k] = 0;
 
       for (int i = 0; i < n; i++) {
-        x = macc(i, j);
+        double x = macc(i, j);
         if (x != 3) { // not missing
           xSum  += x;
           xxSum += x * x;
           for (int k = 0; k < K; k++) {
-            y = U(i, k);
+            double y = U(i, k);
             xySum[k] += x * y;
             ySum[k]  += y;
             yySum[k] += y * y;
@@ -51,7 +50,7 @@ NumericMatrix multLinReg(C macc, const NumericMatrix& U, int ncores) {
         double deno = deno_x * deno_y - num * num;
         double tscore = (deno == 0 || nona < 2) ? NA_REAL :
           num * ::sqrt((nona - 2) / deno);
-        // #pragma omp atomic write
+        #pragma omp atomic write
         res(k, j) = tscore;
       }
     }
@@ -77,7 +76,7 @@ NumericMatrix multLinReg(SEXP obj,
     code[is_na(code)] = 3;
     SubBMCode256Acc macc(xpBM, ind_row, ind_col, code, 1);
     return multLinReg(macc, U, ncores);
-  } else if (Rf_inherits(obj, "bed") || Rf_inherits(obj, "bed_light")) {
+  } else if (Rf_inherits(obj, "bed")) {
     XPtr<bed> xp_bed = as<Environment>(obj)["address"];
     bedAcc macc(xp_bed, ind_row, ind_col);
     return multLinReg(macc, U, ncores);

@@ -1,10 +1,5 @@
 library(testthat)
 library(bigsnpr)
 
-test_check("bigsnpr", filter = "7-")
-test_check("bigsnpr", filter = "1-")
-test_check("bigsnpr", filter = "2-")
-test_check("bigsnpr", filter = "3-")
-test_check("bigsnpr", filter = "4-")
-test_check("bigsnpr", filter = "5-")
-test_check("bigsnpr", filter = "6-")
+for (k in 1:9)
+  test_check("bigsnpr", filter = paste0(k, '-'))

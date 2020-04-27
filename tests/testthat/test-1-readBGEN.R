@@ -47,11 +47,13 @@ test_that("format_snp_id() works as expected", {
 ################################################################################
 
 test_that("same as package {rbgen}", {
-  test <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs), ncores = ncores()))
-  G <- test$genotypes
-  expect_identical(test$map[-excl, ], variants[-excl, ])
-  expect_identical(G[, -excl][501], NA_real_)
-  expect_equal(G[, -excl], round(dosages[, -excl], 2))
+  replicate(20, {
+    test <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs), ncores = ncores()))
+    G <- test$genotypes
+    expect_identical(test$map[-excl, ], variants[-excl, ])
+    expect_identical(G[, -excl][501], NA_real_)
+    expect_equal(G[, -excl], round(dosages[, -excl], 2))
+  })
 })
 
 ################################################################################

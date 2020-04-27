@@ -4,9 +4,24 @@
 #' @importFrom bigassertr assert_int assert_pos assert_01 assert_nona
 #' @importFrom bigassertr assert_lengths assert_sorted assert_args
 #' @importFrom bigassertr assert_noexist assert_exist assert_dir assert_ext
-#' @importFrom bigassertr assert_type assert_class
+#' @importFrom bigassertr assert_type assert_class assert_package
 #' @importFrom bigparallelr assert_cores
 assert_noNA <- bigstatsr:::assert_noNA
+
+################################################################################
+
+assert_df_with_names <- function(df, names) {
+
+  df_varname <- deparse(substitute(df))
+
+  if (!is.data.frame(df))
+    stop2("'%s' is not a data frame.", df_varname)
+
+  for (name in names) {
+    if (is.null(df[[name]]))
+      stop2("'%s' should have element '%s'.", df_varname, name)
+  }
+}
 
 ################################################################################
 
@@ -24,7 +39,7 @@ check_args <- function(...) {
         Gna         = "assert_class(Gna, 'FBM.code256')",
         obj.bed     = "assert_class(obj.bed, 'bed')",
         infos.chr   = "assert_int(infos.chr); assert_pos(infos.chr)",
-        infos.pos   = "assert_int(infos.pos); assert_pos(infos.pos)",
+        # infos.pos   = "assert_pos(infos.pos)",
         ncores      = "assert_cores(ncores)",
         ind.row     = "assert_int(ind.row);   assert_pos(ind.row)",
         ind.train   = "assert_int(ind.train); assert_pos(ind.train)",

@@ -1,9 +1,9 @@
-# download.file("https://www.dropbox.com/s/k9ptc4kep9hmvz5/1kg_phase1_all.tar.gz?dl=1",
-#               destfile = "tmp-data/1kg_phase1_all.tar.gz")
-# untar("tmp-data/1kg_phase1_all.tar.gz", exdir = "tmp-data/")
+# download.file("https://www.dropbox.com/s/k9ptc4kep9hmvz5/1kg_phase1_all.tar.gz?raw=1",
+#               destfile = "tmp-data/1kg_phase1_all.tar.gz", mode = "wb")
+# untar("tmp-data/1kg_phase1_all.tar.gz", exdir = "tmp-data")
 
 library(bigsnpr)
-plink <- download_plink("tmp-data/")
+plink <- download_plink("tmp-data")
 bed <- snp_plinkQC(plink, prefix.in = "tmp-data/1kg_phase1_all",
                    geno = 0, maf = 0.05, hwe = 1e-10,
                    extra.options = " --chr 2,6,8 --thin 0.1")
@@ -47,7 +47,13 @@ plot(gwas)
 snp_manhattan(gwas, CHR, POS)
 y_hat <- mean(pheno$pheno)
 plot(pheno$effects, gwas$estim[pheno$set] * y_hat * (1 - y_hat), pch = 20); abline(0, 1, col = "red")
-sumstats <- cbind.data.frame(snp$map[-3], beta = gwas$estim, p = predict(gwas, log10 = FALSE))
+sumstats <- cbind.data.frame(
+  snp$map[-3],
+  beta = gwas$estim,
+  beta_se = gwas$std.err,
+  n_case = sum(pheno$pheno == 1),
+  n_control = sum(pheno$pheno == 0),
+  p = predict(gwas, log10 = FALSE))
 
 snp_writeBed(snp, "tmp-data/public-data.bed")
 saveRDS(pheno, file = "tmp-data/public-data-pheno.rds")

@@ -30,3 +30,10 @@ system.time(
 # 1 -> 253 sec / 4 -> 138 sec / 6 -> 138 sec
 
 # 1350 / 26 -> 1350 / 13
+
+
+GNA <- big_copy(G)
+set.seed(1); ind <- sort(sample(length(GNA), length(GNA) / 100)); GNA[ind] <- 3
+system.time(
+  snp_fastImputeSimple(GNA, ncores = 4)
+)
