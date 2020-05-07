@@ -1,7 +1,7 @@
 ---
 title: "Computing polygenic scores using LDpred2"
 author: "Florian Privé"
-date: "April 2, 2020"
+date: "May 7, 2020"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -76,7 +76,6 @@ If no or few variants are actually flipped, you might want to disable the strand
 
 ```{r}
 info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
-df_beta <- info_snp[c("beta", "beta_se", "n_eff")]
 ```
 
 ## Computing LDpred2 scores for one chromosome
@@ -90,9 +89,15 @@ We recommend to use a window size of 3 cM (see ref).
 POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = 3)
 ```
 
+```{r}
+## indices in info_snp
+ind.chr <- which(info_snp$chr == 2)         
+df_beta <- info_snp[ind.chr, c("beta", "beta_se", "n_eff")]
+```
+
 ```{r, cache=TRUE}
-ind.chr <- which(info_snp$chr == 2)         ## indices in info_snp
-ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]    ## indices in G
+## indices in G
+ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]    
 corr <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
                 infos.pos = POS2[ind.chr2], size = 3 / 1000)
 ```
@@ -100,13 +105,13 @@ corr <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES,
 ### Infinitesimal model
 
 ```{r, cache=TRUE}
-(ldsc <- snp_ldsc2(corr, df_beta[ind.chr, ]))
+(ldsc <- snp_ldsc2(corr, df_beta))
 h2_est <- ldsc[["h2"]]
 ```
 
 
 ```{r}
-beta_inf <- snp_ldpred2_inf(corr, df_beta[ind.chr, ], h2 = h2_est)
+beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
 ```
 
 
@@ -126,34 +131,32 @@ In practice, we recommend to test multiple values for h2 and p.
 ```
 
 ```{r, cache=TRUE, include=FALSE}
-beta_grid <- snp_ldpred2_grid(corr, df_beta[ind.chr, ], params, ncores = NCORES,
+beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES,
                               burn_in = 20, num_iter = 50)
 ```
 ```{r, eval=FALSE}
 # takes several minutes if you do not have many cores
-beta_grid <- snp_ldpred2_grid(corr, df_beta[ind.chr, ], params, ncores = NCORES)
+beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 ```
 
 
 ```{r}
 pred_grid <- big_prodMat(G, beta_grid, ind.col = ind.chr2)
-params$mad <- apply(pred_grid[ind.val, ], 2, mad)
-params$coef <- apply(pred_grid[ind.val, ], 2, function(x) {
-  glm(y[ind.val] ~ x, family = "binomial")$coef[2]
-})
+params[c("coef", "score")] <- 
+  big_univLogReg(as_FBM(pred_grid[ind.val, ]), y[ind.val])[c("estim", "score")]
 params$auc_val  <- apply(pred_grid[ind.val, ],  2, AUC, target = y[ind.val])
 params$auc_test <- apply(pred_grid[ind.test, ], 2, AUC, target = y[ind.test])
 ```
 
-```{r, out.width="90%", fig.asp=0.3}
+```{r, out.width="90%", fig.asp=0.5}
 library(ggplot2)
-ggplot(params, aes(x = p, y = coef * mad, color = as.factor(h2))) +
+ggplot(params, aes(x = p, y = score, color = as.factor(h2))) +
   theme_bigstatsr() +
   geom_point() +
   geom_line() +
   scale_x_log10(breaks = 10^(-5:0), minor_breaks = params$p) +
   facet_wrap(~ sparse, labeller = label_both) +
-  labs(y = "Coef GLM", color = "h2") +
+  labs(y = "GLM Z-Score", color = "h2") +
   theme(legend.position = "top", panel.spacing = unit(1, "lines"))
 ```
 
@@ -161,18 +164,18 @@ ggplot(params, aes(x = p, y = coef * mad, color = as.factor(h2))) +
 library(dplyr)
 params %>%
   mutate(sparsity = colMeans(beta_grid == 0), id = row_number()) %>%
-  arrange(desc(coef * mad)) %>%
+  arrange(desc(score)) %>%
   mutate_at(4:8, signif, digits = 3) %>%
   slice(1:10)
 ```
 
-You can then choose the best model according to your preferred criterion (e.g. max AUC) and evaluate this particular model in the test set afterwards. Here, we use the (scaled) coefficient from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. We also scale the effect sizes by this coefficient.
+You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. We also scale the effect sizes by the regresion coefficient to be on a proper scaling when adding it to other chromosomes' scores.
 
 ```{r}
 best_grid_nosp <- params %>%
   mutate(id = row_number()) %>%
   filter(!sparse) %>% 
-  arrange(desc(coef * mad)) %>%
+  arrange(desc(score)) %>%
   slice(1) %>%
   { beta_grid[, .$id] * .$coef }
 
@@ -185,7 +188,7 @@ AUC(big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2),
 best_grid_sp <- params %>%
   mutate(id = row_number()) %>%
   filter(sparse) %>% 
-  arrange(desc(coef * mad)) %>%
+  arrange(desc(score)) %>%
   slice(1) %>%
   { beta_grid[, .$id] * .$coef }
 
@@ -197,7 +200,7 @@ AUC(big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2),
 
 ```{r, cache=TRUE}
 # takes a few minutes
-auto <- snp_ldpred2_auto(corr, df_beta[ind.chr, ], h2_init = h2_est)
+auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est)
 str(auto)
 ```
 
@@ -222,9 +225,16 @@ plot_grid(
 ```{r}
 beta_auto <- auto$beta_est
 pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
-# Make sure it is on some appropriate scaling (the same as LDpred2-inf)
+```
+
+```{r}
+# Make sure it is on some appropriate scaling 
+# (the same as LDpred2-inf or a bit larger if the prediction is better)
 # to safely merge predictions from multiple chromosomes
-pred_auto <- pred_auto * mad(pred_inf) / mad(pred_auto)
+c(mad(pred_inf), mad(pred_auto))
+```
+
+```{r}
 AUC(pred_auto, y[ind.test])
 ```
 
@@ -235,5 +245,4 @@ You should do this for each chromosome and combine results.
 
 ### Reference
 
-Coming soon on bioRxiv.
-
+Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger.](https://doi.org/10.1101/2020.04.28.066720) BioRxiv.
