@@ -43,7 +43,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Vignettes
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -75,14 +75,14 @@
 <li>
   <a href="https://privefl.github.io/about.html">
     <span class="fa fa-user"></span>
-
+     
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
@@ -93,23 +93,23 @@
 </div>
 <!--/.navbar -->
 
-
+      
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Computing polygenic scores using LDpred2</h1>
                         <h4 class="author">Florian Privé</h4>
-
+            
             <h4 class="date">May 7, 2020</h4>
-
+      
       <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/master/vignettes/LDpred2.Rmd"><code>vignettes/LDpred2.Rmd</code></a></small>
       <div class="hidden name"><code>LDpred2.Rmd</code></div>
 
     </div>
 
-
-
+    
+    
 <p>In this document, we show how to compute polygenic risk scores using LDpred2.</p>
 <div id="downloading-genotype-data-and-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
@@ -211,13 +211,14 @@
 <h3 class="hasAnchor">
 <a href="#infinitesimal-model" class="anchor"></a>Infinitesimal model</h3>
 <div class="sourceCode" id="cb20"><html><body><pre class="r">(<span class="no">ldsc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_ldsc.html">snp_ldsc2</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>))</pre></body></html></div>
-<pre><code>##       int        h2
+<pre><code>##       int        h2 
 ## 1.0000000 0.1152197</code></pre>
 <div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">h2_est</span> <span class="kw">&lt;-</span> <span class="no">ldsc</span><span class="kw">[[</span><span class="st">"h2"</span>]]</pre></body></html></div>
 <div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">beta_inf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_inf</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>, <span class="kw">h2</span> <span class="kw">=</span> <span class="no">h2_est</span>)</pre></body></html></div>
 <div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">pred_inf</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">beta_inf</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
-<span class="fu">AUC</span>(<span class="no">pred_inf</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>## [1] 0.6639092</code></pre>
+<span class="fu">AUCBoot</span>(<span class="no">pred_inf</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
+<pre><code>##       Mean       2.5%      97.5%         Sd 
+## 0.66347145 0.56739110 0.75341191 0.04784474</code></pre>
 </div>
 <div id="grid-of-models" class="section level3">
 <h3 class="hasAnchor">
@@ -372,7 +373,7 @@
 ## 8  0.0018 0.1152  FALSE 2.30  4.35   0.653    0.670    0.000  23
 ## 9  0.3200 0.1613   TRUE 2.06  4.35   0.650    0.666    0.572 100
 ## 10 0.0018 0.1152   TRUE 2.67  4.35   0.654    0.673    0.603  74</code></pre>
-<p>You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. We also scale the effect sizes by the regresion coefficient to be on a proper scaling when adding it to other chromosomes’ scores.</p>
+<p>You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step. We also scale the effect sizes by the regresion coefficient to be on a proper scaling when adding it to other chromosomes’ scores.</p>
 <div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="no">best_grid_nosp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="no">sparse</span>) <span class="kw">%&gt;%</span>
@@ -380,9 +381,10 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>) <span class="kw">%&gt;%</span>
   { <span class="no">beta_grid</span>[, <span class="no">.</span>$<span class="no">id</span>] * <span class="no">.</span>$<span class="no">coef</span> }
 
-<span class="fu">AUC</span>(<span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_nosp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>),
-    <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>## [1] 0.6696806</code></pre>
+<span class="no">pred_nosp</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_nosp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
+<span class="fu">AUCBoot</span>(<span class="no">pred_nosp</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
+<pre><code>##       Mean       2.5%      97.5%         Sd 
+## 0.67019170 0.57172945 0.76130563 0.04881019</code></pre>
 <div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="no">best_grid_sp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">sparse</span>) <span class="kw">%&gt;%</span>
@@ -390,9 +392,10 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>) <span class="kw">%&gt;%</span>
   { <span class="no">beta_grid</span>[, <span class="no">.</span>$<span class="no">id</span>] * <span class="no">.</span>$<span class="no">coef</span> }
 
-<span class="fu">AUC</span>(<span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_sp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>),
-    <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>## [1] 0.6687187</code></pre>
+<span class="no">pred_sp</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_sp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
+<span class="fu">AUCBoot</span>(<span class="no">pred_sp</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
+<pre><code>##       Mean       2.5%      97.5%         Sd 
+## 0.66861458 0.56906355 0.76220700 0.04894343</code></pre>
 </div>
 <div id="automatic-model" class="section level3">
 <h3 class="hasAnchor">
@@ -427,19 +430,20 @@
 <span class="co"># to safely merge predictions from multiple chromosomes</span>
 <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/mad.html">mad</a></span>(<span class="no">pred_inf</span>), <span class="fu"><a href="https://rdrr.io/r/stats/mad.html">mad</a></span>(<span class="no">pred_auto</span>))</pre></body></html></div>
 <pre><code>## [1] 0.21731469 0.01080653</code></pre>
-<div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="fu">AUC</span>(<span class="no">pred_auto</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>## [1] 0.6637168</code></pre>
+<div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="fu">AUCBoot</span>(<span class="no">pred_auto</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
+<pre><code>##       Mean       2.5%      97.5%         Sd 
+## 0.66406058 0.56785167 0.75483193 0.04833385</code></pre>
 </div>
 </div>
 <div id="conclusion" class="section level2">
 <h2 class="hasAnchor">
 <a href="#conclusion" class="anchor"></a>Conclusion</h2>
 <p>We have seen how to run 3 versions of LDpred2 (“-inf”, “-grid” and “-auto”) for one chromosome. You should do this for each chromosome and combine results.</p>
-<div id="reference" class="section level3">
-<h3 class="hasAnchor">
-<a href="#reference" class="anchor"></a>Reference</h3>
-<p>Privé, F., Arbel, J., &amp; Vilhjálmsson, B. J. (2020). <a href="https://doi.org/10.1101/2020.04.28.066720">LDpred2: better, faster, stronger.</a> BioRxiv.</p>
 </div>
+<div id="reference" class="section level2">
+<h2 class="hasAnchor">
+<a href="#reference" class="anchor"></a>Reference</h2>
+<p>Privé, F., Arbel, J., &amp; Vilhjálmsson, B. J. (2020). <a href="https://doi.org/10.1101/2020.04.28.066720">LDpred2: better, faster, stronger.</a> BioRxiv.</p>
 </div>
   </div>
 
@@ -464,7 +468,7 @@
       </footer>
 </div>
 
-
+  
 
 
   </body>

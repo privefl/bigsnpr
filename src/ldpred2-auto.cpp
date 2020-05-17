@@ -2,6 +2,7 @@
 
 #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/utils.h>
+#include <bigsparser/SFBM.h>
 
 /******************************************************************************/
 
@@ -12,7 +13,7 @@ inline double square(double x) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List ldpred2_gibbs_auto(const arma::sp_mat& corr,
+List ldpred2_gibbs_auto(Environment corr,
                         const NumericVector& beta_hat,
                         const NumericVector& beta_init,
                         const NumericVector& order,
@@ -26,9 +27,11 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
                         double prob_jump_to_0 = 1e-4,
                         bool verbose = false) {
 
+  XPtr<SFBM> sfbm = corr["address"];
+
   int m = beta_hat.size();
-  myassert_size(corr.n_rows, m);
-  myassert_size(corr.n_cols, m);
+  myassert_size(sfbm->nrow(), m);
+  myassert_size(sfbm->ncol(), m);
   myassert_size(order.size(), m);
   myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
@@ -42,14 +45,14 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
 
   double nb_causal = m * p_init;
-  double cur_h2_est = arma::dot(curr_beta, corr * curr_beta);
+  double cur_h2_est = arma::dot(curr_beta, sfbm->prod(curr_beta));
   double p = p_init, h2 = h2_init, alpha = 1, avg_p = 0, avg_h2 = 0;
 
   for (int k = 0; k < num_iter_tot; k++) {
 
     for (const int& j : order) {
 
-      double dotprod = arma::dot(corr.col(j), curr_beta);
+      double dotprod = sfbm->dot_col(j, curr_beta);
       double res_beta_hat_j = beta_hat[j] + curr_beta[j] - dotprod;
 
       double C1 = h2 * n_vec[j] / (m * p);

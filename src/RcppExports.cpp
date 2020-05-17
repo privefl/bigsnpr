@@ -263,12 +263,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs_auto
-List ldpred2_gibbs_auto(const arma::sp_mat& corr, const NumericVector& beta_hat, const NumericVector& beta_init, const NumericVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, double h2_min, double h2_max, double prob_jump_to_0, bool verbose);
+List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const NumericVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, double h2_min, double h2_max, double prob_jump_to_0, bool verbose);
 RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP h2_minSEXP, SEXP h2_maxSEXP, SEXP prob_jump_to_0SEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::sp_mat& >::type corr(corrSEXP);
+    Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type order(orderSEXP);

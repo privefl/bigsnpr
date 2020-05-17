@@ -6,14 +6,14 @@
 \alias{snp_ldpred2_auto}
 \title{LDpred2}
 \usage{
-snp_ldpred2_inf(corr, df_beta, h2 = NULL)
+snp_ldpred2_inf(corr, df_beta, h2)
 
 snp_ldpred2_grid(
   corr,
   df_beta,
   grid_param,
-  burn_in = 100,
-  num_iter = 200,
+  burn_in = 50,
+  num_iter = 100,
   ncores = 1,
   tmpdir = tempdir()
 )
@@ -21,15 +21,16 @@ snp_ldpred2_grid(
 snp_ldpred2_auto(
   corr,
   df_beta,
-  h2_init = NULL,
+  h2_init,
   p_init = 0.1,
   burn_in = 1000,
-  num_iter = 1000,
+  num_iter = 500,
   verbose = FALSE
 )
 }
 \arguments{
-\item{corr}{Sparse correlation matrix.}
+\item{corr}{Sparse correlation matrix as an \link[=SFBM-class]{SFBM}. If \code{corr} is
+a dgSMatrix, you can use \code{bigsparser::as_SFBM(as(corr, "dgCMatrix"))}.}
 
 \item{df_beta}{A data frame with 3 columns:
 \itemize{
@@ -39,8 +40,7 @@ snp_ldpred2_auto(
 (in the case of binary traits, this is \code{4 / (1 / n_control + 1 / n_case)})
 }}
 
-\item{h2}{Heritability estimate.
-Default is estimated using constrained LD score regression.}
+\item{h2}{Heritability estimate.}
 
 \item{grid_param}{A data frame with 3 columns as a grid of hyper-parameters:
 \itemize{
@@ -57,11 +57,7 @@ They can be run in parallel by changing \code{ncores}.
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
-\item{tmpdir}{Directory where to store the \link[=SFBM-class]{SFBM} resulting from
-the conversion of \code{corr}.}
-
-\item{h2_init}{Heritability estimate for initialization.
-Default is estimated using constrained LD score regression.}
+\item{h2_init}{Heritability estimate for initialization.}
 
 \item{p_init}{Initial value for p. Default is \code{0.1}.}
 
@@ -85,5 +81,5 @@ useful to check convergence of the iterative algorithm
 }
 }
 \description{
-LDpred2
+LDpred2. Tutorial at \url{https://bit.ly/ldpred2}.
 }

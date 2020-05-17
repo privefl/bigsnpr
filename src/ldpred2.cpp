@@ -87,8 +87,8 @@ arma::mat ldpred2_gibbs(Environment corr,
   XPtr<SFBM> sfbm = corr["address"];
 
   int m = beta_hat.size();
-  // myassert_size(corr.n_rows, m);
-  // myassert_size(corr.n_cols, m);
+  myassert_size(sfbm->nrow(), m);
+  myassert_size(sfbm->ncol(), m);
   myassert_size(order.size(), m);
   myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);

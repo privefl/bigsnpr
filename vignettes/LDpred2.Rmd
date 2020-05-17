@@ -117,7 +117,7 @@ beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
 
 ```{r}
 pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = ind.chr2)
-AUC(pred_inf, y[ind.test])
+AUCBoot(pred_inf, y[ind.test])
 ```
 
 ### Grid of models
@@ -169,7 +169,7 @@ params %>%
   slice(1:10)
 ```
 
-You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. We also scale the effect sizes by the regresion coefficient to be on a proper scaling when adding it to other chromosomes' scores.
+You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step. We also scale the effect sizes by the regresion coefficient to be on a proper scaling when adding it to other chromosomes' scores.
 
 ```{r}
 best_grid_nosp <- params %>%
@@ -179,8 +179,8 @@ best_grid_nosp <- params %>%
   slice(1) %>%
   { beta_grid[, .$id] * .$coef }
 
-AUC(big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2),
-    y[ind.test])
+pred_nosp <- big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2)
+AUCBoot(pred_nosp, y[ind.test])
 ```
 
 
@@ -192,8 +192,8 @@ best_grid_sp <- params %>%
   slice(1) %>%
   { beta_grid[, .$id] * .$coef }
 
-AUC(big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2), 
-    y[ind.test])
+pred_sp <- big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2)
+AUCBoot(pred_sp, y[ind.test])
 ```
 
 ### Automatic model
@@ -235,7 +235,7 @@ c(mad(pred_inf), mad(pred_auto))
 ```
 
 ```{r}
-AUC(pred_auto, y[ind.test])
+AUCBoot(pred_auto, y[ind.test])
 ```
 
 ## Conclusion
@@ -243,6 +243,6 @@ AUC(pred_auto, y[ind.test])
 We have seen how to run 3 versions of LDpred2 ("-inf", "-grid" and "-auto") for one chromosome.
 You should do this for each chromosome and combine results.
 
-### Reference
+## Reference
 
 Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger.](https://doi.org/10.1101/2020.04.28.066720) BioRxiv.
