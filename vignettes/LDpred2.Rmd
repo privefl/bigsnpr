@@ -1,7 +1,7 @@
 ---
 title: "Computing polygenic scores using LDpred2"
 author: "Florian Privé"
-date: "May 7, 2020"
+date: "May 25, 2020"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -80,6 +80,8 @@ info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
 
 ## Computing LDpred2 scores for one chromosome
 
+**Some quality control on summary statistics is highly recommended (see paper).**
+
 ### Correlation
 
 First, you need to compute correlations between variants.
@@ -98,17 +100,20 @@ df_beta <- info_snp[ind.chr, c("beta", "beta_se", "n_eff")]
 ```{r, cache=TRUE}
 ## indices in G
 ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]    
-corr <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
-                infos.pos = POS2[ind.chr2], size = 3 / 1000)
+corr0 <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
+                 infos.pos = POS2[ind.chr2], size = 3 / 1000)
+```
+
+```{r}
+corr <- bigsparser::as_SFBM(as(corr0, "dgCMatrix"))
 ```
 
 ### Infinitesimal model
 
 ```{r, cache=TRUE}
-(ldsc <- snp_ldsc2(corr, df_beta))
+(ldsc <- snp_ldsc2(corr0, df_beta))
 h2_est <- ldsc[["h2"]]
 ```
-
 
 ```{r}
 beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
@@ -130,22 +135,15 @@ In practice, we recommend to test multiple values for h2 and p.
 (params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE, TRUE)))
 ```
 
-```{r, cache=TRUE, include=FALSE}
-beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES,
-                              burn_in = 20, num_iter = 50)
-```
-```{r, eval=FALSE}
+```{r, cache=TRUE}
 # takes several minutes if you do not have many cores
 beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 ```
-
 
 ```{r}
 pred_grid <- big_prodMat(G, beta_grid, ind.col = ind.chr2)
 params[c("coef", "score")] <- 
   big_univLogReg(as_FBM(pred_grid[ind.val, ]), y[ind.val])[c("estim", "score")]
-params$auc_val  <- apply(pred_grid[ind.val, ],  2, AUC, target = y[ind.val])
-params$auc_test <- apply(pred_grid[ind.test, ], 2, AUC, target = y[ind.test])
 ```
 
 ```{r, out.width="90%", fig.asp=0.5}
@@ -165,7 +163,7 @@ library(dplyr)
 params %>%
   mutate(sparsity = colMeans(beta_grid == 0), id = row_number()) %>%
   arrange(desc(score)) %>%
-  mutate_at(4:8, signif, digits = 3) %>%
+  mutate_at(c("coef", "score", "sparsity"), round, digits = 3) %>%
   slice(1:10)
 ```
 
