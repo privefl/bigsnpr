@@ -1,3 +1,7 @@
+## bigsnpr 1.4.1
+
+- Change default of parameter `alpha` of function `snp_cor()` to `0.9`.
+
 ## bigsnpr 1.4.0
 
 - Add functions `snp_ldpred2_inf()`, `snp_ldpred2_grid()` and `snp_ldpred2_auto()` for running the new LDpred2-inf, LDpred2-grid and LDpred2-auto.

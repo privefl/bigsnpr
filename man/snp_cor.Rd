@@ -9,7 +9,7 @@ snp_cor(
   ind.row = rows_along(Gna),
   ind.col = cols_along(Gna),
   size = 500,
-  alpha = 0.9,
+  alpha = 1,
   fill.diag = TRUE,
   infos.pos = NULL,
   ncores = 1
@@ -32,7 +32,8 @@ If not specified, all columns are used.\cr
 Default is \code{500}. If not providing \code{infos.pos} (\code{NULL}, the default), this is
 a window in number of SNPs, otherwise it is a window in kb (genetic distance).}
 
-\item{alpha}{Type-I error for testing correlations. Default is \code{0.9}.}
+\item{alpha}{Type-I error for testing correlations.
+Default is \code{1} (no threshold is applied).}
 
 \item{fill.diag}{Whether to fill the diagonal with 1s (the default)
 or to keep it as 0s.}
