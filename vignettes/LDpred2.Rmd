@@ -196,16 +196,21 @@ AUCBoot(pred_sp, y[ind.test])
 
 ### Automatic model
 
+Actually, you can run many of them in parallel with different initial values for `p`.
+
 ```{r, cache=TRUE}
 # takes a few minutes
-auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est)
-str(auto)
+multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
+                               vec_p_init = seq_log(1e-4, 0.9, length.out = NCORES),
+                               ncores = NCORES)
+str(multi_auto)
 ```
 
-You should verify if the algorithm "converged".
+You should verify if the chains "converged".
 This is not the case here, which is probably because the data is so small.
 
 ```{r}
+auto <- multi_auto[[1]]
 plot_grid(
   qplot(y = auto$path_p_est) + 
     theme_bigstatsr() + 
@@ -221,19 +226,19 @@ plot_grid(
 ```
 
 ```{r}
-beta_auto <- auto$beta_est
-pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
+beta_auto <- sapply(multi_auto, function(auto) auto$beta_est)
+pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
 ```
 
 ```{r}
-# Make sure it is on some appropriate scaling 
-# (the same as LDpred2-inf or a bit larger if the prediction is better)
-# to safely merge predictions from multiple chromosomes
-c(mad(pred_inf), mad(pred_auto))
+# Make sure the scale is okay (by comparing to LDpred2-inf and others auto)
+c(mad(pred_inf), apply(pred_auto, 2, mad))
+# and could keep only the ones that looks good..
+final_pred_auto <- rowMeans(pred_auto)
 ```
 
 ```{r}
-AUCBoot(pred_auto, y[ind.test])
+AUCBoot(final_pred_auto, y[ind.test])
 ```
 
 ## Conclusion

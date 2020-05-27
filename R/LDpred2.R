@@ -90,11 +90,11 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 
 ################################################################################
 
-#' @param p_init Initial value for p. Default is `0.1`.
+#' @param vec_p_init Vector of initial values for p. Default is `0.1`.
 #' @param h2_init Heritability estimate for initialization.
 #' @param verbose Whether to print "p // h2" estimates at each iteration.
 #'
-#' @return `snp_ldpred2_auto`: A list with
+#' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes
 #'   - `$p_est`: estimate of p, the proportion of causal variants
 #'   - `$h2_est`: estimate of the (SNP) heritability (also see [coef_to_liab])
@@ -103,15 +103,18 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   - `$path_h2_est`: full path of h2 estimates (including burn-in);
 #'     useful to check convergence of the iterative algorithm
 #'
+#' @import foreach
+#'
 #' @export
 #'
 #' @rdname LDpred2
 #'
 snp_ldpred2_auto <- function(corr, df_beta, h2_init,
-                             p_init = 0.1,
+                             vec_p_init = 0.1,
                              burn_in = 1000,
                              num_iter = 500,
-                             verbose = FALSE) {
+                             verbose = FALSE,
+                             ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
@@ -126,21 +129,26 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   beta_inf <- bigsparser::sp_solve_sym(
     corr, beta_hat, add_to_diag = ncol(corr) / (h2_init * N))
 
-  ldpred_auto <- ldpred2_gibbs_auto(
-    corr      = corr,
-    beta_hat  = beta_hat,
-    beta_init = beta_inf,
-    order     = order(beta_inf^2, decreasing = TRUE) - 1L,
-    n_vec     = N,
-    p_init    = p_init,
-    h2_init   = h2_init,
-    burn_in   = burn_in,
-    num_iter  = num_iter,
-    verbose   = verbose
-  )
-  ldpred_auto$beta_est <- drop(ldpred_auto$beta_est) * scale
+  bigparallelr::register_parallel(ncores)
 
-  ldpred_auto
+  foreach(p_init = vec_p_init) %dopar% {
+
+    ldpred_auto <- ldpred2_gibbs_auto(
+      corr      = corr,
+      beta_hat  = beta_hat,
+      beta_init = beta_inf,
+      order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+      n_vec     = N,
+      p_init    = p_init,
+      h2_init   = h2_init,
+      burn_in   = burn_in,
+      num_iter  = num_iter,
+      verbose   = verbose
+    )
+    ldpred_auto$beta_est <- drop(ldpred_auto$beta_est) * scale
+
+    ldpred_auto
+  }
 }
 
 ################################################################################

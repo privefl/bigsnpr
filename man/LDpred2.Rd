@@ -21,10 +21,11 @@ snp_ldpred2_auto(
   corr,
   df_beta,
   h2_init,
-  p_init = 0.1,
+  vec_p_init = 0.1,
   burn_in = 1000,
   num_iter = 500,
-  verbose = FALSE
+  verbose = FALSE,
+  ncores = 1
 )
 }
 \arguments{
@@ -58,7 +59,7 @@ You may use \link{nb_cores}.}
 
 \item{h2_init}{Heritability estimate for initialization.}
 
-\item{p_init}{Initial value for p. Default is \code{0.1}.}
+\item{vec_p_init}{Vector of initial values for p. Default is \code{0.1}.}
 
 \item{verbose}{Whether to print "p // h2" estimates at each iteration.}
 }
@@ -68,7 +69,7 @@ You may use \link{nb_cores}.}
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
 for each row of \code{grid_param}.
 
-\code{snp_ldpred2_auto}: A list with
+\code{snp_ldpred2_auto}: A list (over \code{vec_p_init}) of lists with
 \itemize{
 \item \verb{$beta_est}: vector of effect sizes
 \item \verb{$p_est}: estimate of p, the proportion of causal variants
