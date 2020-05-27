@@ -14,8 +14,7 @@ snp_ldpred2_grid(
   grid_param,
   burn_in = 50,
   num_iter = 100,
-  ncores = 1,
-  tmpdir = tempdir()
+  ncores = 1
 )
 
 snp_ldpred2_auto(
@@ -67,13 +66,13 @@ You may use \link{nb_cores}.}
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
 
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
-for each row of \code{grid_param}. When the algorithm diverges, 0s are returned.
+for each row of \code{grid_param}.
 
 \code{snp_ldpred2_auto}: A list with
 \itemize{
 \item \verb{$beta_est}: vector of effect sizes
 \item \verb{$p_est}: estimate of p, the proportion of causal variants
-\item \verb{$h2_est}: estimate of the (SNP) heritability
+\item \verb{$h2_est}: estimate of the (SNP) heritability (also see \link{coef_to_liab})
 \item \verb{$path_p_est}: full path of p estimates (including burn-in);
 useful to check convergence of the iterative algorithm
 \item \verb{$path_h2_est}: full path of h2 estimates (including burn-in);

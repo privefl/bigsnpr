@@ -20,7 +20,10 @@
 
 ## Installation
 
+In R, run
+
 ```r
+# install.packages("remotes")
 remotes::install_github("privefl/bigsnpr")
 ```
 

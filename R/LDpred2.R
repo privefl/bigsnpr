@@ -23,13 +23,13 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
   assert_pos(h2, strict = TRUE)
 
   N <- df_beta$n_eff
-  sd <- df_beta$beta_se * sqrt(N)
-  beta_hat <- df_beta$beta / sd
+  scale <- df_beta$beta_se * sqrt(N)
+  beta_hat <- df_beta$beta / scale
 
   beta_inf <- bigsparser::sp_solve_sym(
     corr, beta_hat, add_to_diag = ncol(corr) / (h2 * N))
 
-  beta_inf * sd
+  beta_inf * scale
 }
 
 ################################################################################
@@ -44,19 +44,16 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
 #' @inheritParams bigsnpr-package
 #'
 #' @return `snp_ldpred2_grid`: A matrix of effect sizes, one vector (column)
-#'   for each row of `grid_param`. When the algorithm diverges, 0s are returned.
+#'   for each row of `grid_param`.
 #'
 #' @export
-#'
-#' @importFrom methods as
 #'
 #' @rdname LDpred2
 #'
 snp_ldpred2_grid <- function(corr, df_beta, grid_param,
                              burn_in = 50,
                              num_iter = 100,
-                             ncores = 1,
-                             tmpdir = tempdir()) {
+                             ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_df_with_names(grid_param, c("p", "h2", "sparse"))
@@ -66,8 +63,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
   assert_cores(ncores)
 
   N <- df_beta$n_eff
-  sd <- df_beta$beta_se * sqrt(N)
-  beta_hat <- df_beta$beta / sd
+  scale <- df_beta$beta_se * sqrt(N)
+  beta_hat <- df_beta$beta / scale
 
   # compute one infinitesimal model, just for initialization
   med_h2 <- stats::median(grid_param$h2)
@@ -88,7 +85,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
     ncores    = ncores
   )
 
-  sweep(beta_gibbs, 1, sd, '*')
+  sweep(beta_gibbs, 1, scale, '*')
 }
 
 ################################################################################
@@ -100,7 +97,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @return `snp_ldpred2_auto`: A list with
 #'   - `$beta_est`: vector of effect sizes
 #'   - `$p_est`: estimate of p, the proportion of causal variants
-#'   - `$h2_est`: estimate of the (SNP) heritability
+#'   - `$h2_est`: estimate of the (SNP) heritability (also see [coef_to_liab])
 #'   - `$path_p_est`: full path of p estimates (including burn-in);
 #'     useful to check convergence of the iterative algorithm
 #'   - `$path_h2_est`: full path of h2 estimates (including burn-in);
@@ -122,8 +119,8 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   assert_pos(h2_init, strict = TRUE)
 
   N <- df_beta$n_eff
-  sd <- df_beta$beta_se * sqrt(N)
-  beta_hat <- df_beta$beta / sd
+  scale <- df_beta$beta_se * sqrt(N)
+  beta_hat <- df_beta$beta / scale
 
   # compute one infinitesimal model, just for initialization
   beta_inf <- bigsparser::sp_solve_sym(
@@ -141,7 +138,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
     num_iter  = num_iter,
     verbose   = verbose
   )
-  ldpred_auto$beta_est <- drop(ldpred_auto$beta_est) * sd
+  ldpred_auto$beta_est <- drop(ldpred_auto$beta_est) * scale
 
   ldpred_auto
 }

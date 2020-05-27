@@ -1,3 +1,7 @@
+## bigsnpr 1.4.2
+
+- Add function `coef_to_liab()` to e.g. convert heritability to the liability scale.
+
 ## bigsnpr 1.4.1
 
 - Change default of parameter `alpha` of function `snp_cor()` to `0.9`.

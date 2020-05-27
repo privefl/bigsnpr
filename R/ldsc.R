@@ -55,7 +55,8 @@ wlm_no_int <- function(x, y, w) {
 #' @return Vector of 4 values (or only the first 2 if `blocks = NULL`):
 #'  - `[["int"]]`: LDSC regression intercept,
 #'  - `[["int_se"]]`: SE of this intercept,
-#'  - `[["h2"]]`: LDSC regression estimate of heritability,
+#'  - `[["h2"]]`: LDSC regression estimate of (SNP) heritability (also see
+#'    [coef_to_liab]),
 #'  - `[["h2_se"]]`: SE of this heritability estimate.
 #'
 #' @importFrom bigassertr assert_one_int
@@ -189,6 +190,29 @@ snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
     intercept   = intercept,
     ...
   )
+}
+
+################################################################################
+
+#' Liability scale
+#'
+#' Coefficient to convert to the liability scale. E.g. h2_liab = coef * h2_obs.
+#'
+#' @param K_pop Prevalence in the population.
+#' @param K_gwas Prevalence in the GWAS. You should provide this if you used
+#'   (`n_case + n_control`) as sample size. If using the effective sample size
+#'   `4 / (1 / n_case + 1 / n_control)` instead, you should keep the default
+#'   value of `K_gwas = 0.5` as the GWAS case-control ascertainment is already
+#'   accounted for in the effective sample size.
+#'
+#' @return Scaling coefficient to convert e.g. heritability to the liability scale.
+#' @export
+#'
+#' @examples
+#' h2 <- 0.2
+#' h2 * coef_to_liab(0.02)
+coef_to_liab <- function(K_pop, K_gwas = 0.5) {
+  (K_pop * (1 - K_pop) / dnorm(qnorm(1 - K_pop)))^2 / K_gwas / (1 - K_gwas)
 }
 
 ################################################################################
