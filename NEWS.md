@@ -8,7 +8,7 @@
 
 ## bigsnpr 1.4.1
 
-- Change default of parameter `alpha` of function `snp_cor()` to `0.9`.
+- Change default of parameter `alpha` of function `snp_cor()` to `1`.
 
 ## bigsnpr 1.4.0
 
@@ -19,8 +19,6 @@
 - Add function `snp_asGeneticPos()` for transforming physical positions to genetic positions.
 
 - Add function `snp_simuPheno()` for simulating phenotypes.
-
-- Change default of parameter `alpha` of function `snp_cor()` to `0.9`.
 
 ## bigsnpr 1.3.1
 
