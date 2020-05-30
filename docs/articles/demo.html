@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@
 <span class="co"># Let's put them in an temporary directory for this demo.</span>
 <span class="no">tmpfile</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()
 <span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(<span class="no">bedfile</span>, <span class="kw">backingfile</span> <span class="kw">=</span> <span class="no">tmpfile</span>)</pre></body></html></div>
-<pre><code>## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmpqidaes\\file6a4c2d03726f.rds"</code></pre>
+<pre><code>## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp8eEz1e\\file12345dbe2ad6.rds"</code></pre>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="co"># Attach the "bigSNP" object in R session</span>
 <span class="no">obj.bigSNP</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">tmpfile</span>, <span class="st">".rds"</span>))
 <span class="co"># See how it looks like</span>
@@ -236,7 +236,7 @@
                  <span class="kw">covar.row</span> <span class="kw">=</span> <span class="no">obj.svd</span>$<span class="no">u</span>[<span class="no">ind.test</span>, ])
 <span class="co"># Check AUC</span>
 <span class="fu">AUC</span>(<span class="no">preds</span>, <span class="no">y01</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>## [1] 0.8311688</code></pre>
+<pre><code>## [1] 0.7113997</code></pre>
 </div>
   </div>
 

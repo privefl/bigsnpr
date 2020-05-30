@@ -69,7 +69,8 @@ Vector of 4 values (or only the first 2 if \code{blocks = NULL}):
 \itemize{
 \item \verb{[["int"]]}: LDSC regression intercept,
 \item \verb{[["int_se"]]}: SE of this intercept,
-\item \verb{[["h2"]]}: LDSC regression estimate of heritability,
+\item \verb{[["h2"]]}: LDSC regression estimate of (SNP) heritability (also see
+\link{coef_to_liab}),
 \item \verb{[["h2_se"]]}: SE of this heritability estimate.
 }
 }

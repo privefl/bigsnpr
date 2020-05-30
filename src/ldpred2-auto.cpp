@@ -2,6 +2,7 @@
 
 #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/utils.h>
+#include <bigsparser/SFBM.h>
 
 /******************************************************************************/
 
@@ -12,7 +13,7 @@ inline double square(double x) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List ldpred2_gibbs_auto(const arma::sp_mat& corr,
+List ldpred2_gibbs_auto(Environment corr,
                         const NumericVector& beta_hat,
                         const NumericVector& beta_init,
                         const NumericVector& order,
@@ -21,14 +22,13 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
                         double h2_init,
                         int burn_in,
                         int num_iter,
-                        double h2_min = 1e-4,
-                        double h2_max = 1,
-                        double prob_jump_to_0 = 1e-4,
                         bool verbose = false) {
 
+  XPtr<SFBM> sfbm = corr["address"];
+
   int m = beta_hat.size();
-  myassert_size(corr.n_rows, m);
-  myassert_size(corr.n_cols, m);
+  myassert_size(sfbm->nrow(), m);
+  myassert_size(sfbm->ncol(), m);
   myassert_size(order.size(), m);
   myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
@@ -42,14 +42,14 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
 
   double nb_causal = m * p_init;
-  double cur_h2_est = arma::dot(curr_beta, corr * curr_beta);
-  double p = p_init, h2 = h2_init, alpha = 1, avg_p = 0, avg_h2 = 0;
+  double cur_h2_est = arma::dot(curr_beta, sfbm->prod(curr_beta));
+  double p = p_init, h2 = h2_init, avg_p = 0, avg_h2 = 0;
 
   for (int k = 0; k < num_iter_tot; k++) {
 
     for (const int& j : order) {
 
-      double dotprod = arma::dot(corr.col(j), curr_beta);
+      double dotprod = sfbm->dot_col(j, curr_beta);
       double res_beta_hat_j = beta_hat[j] + curr_beta[j] - dotprod;
 
       double C1 = h2 * n_vec[j] / (m * p);
@@ -57,7 +57,7 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
       double C3 = C2 * res_beta_hat_j ;
       double C4 = ::sqrt(C2 / n_vec[j]);
 
-      double postp = alpha /
+      double postp = 1 /
         (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
       post_mean_beta[j] = C3 * postp;
 
@@ -72,17 +72,16 @@ List ldpred2_gibbs_auto(const arma::sp_mat& corr,
     }
 
     p = ::Rf_rbeta(1 + nb_causal, 1 + m - nb_causal);
-    h2 = std::max(cur_h2_est, h2_min);
-    alpha = std::min(1 - prob_jump_to_0, h2_max / h2);
+    h2 = std::max(cur_h2_est, 1e-4);
+    if (verbose) Rcout << k + 1 << ": " << p << " // " << h2 << std::endl;
 
     if (k >= burn_in) {
       avg_beta += post_mean_beta;
       avg_p    += p;
       avg_h2   += h2;
     }
-    p_est[k] = p;
+    p_est[k]  = p;
     h2_est[k] = h2;
-    if (verbose) Rcout << k + 1 << ": " << p << " // " << h2 << std::endl;
   }
 
   double est_p  = avg_p  / num_iter;

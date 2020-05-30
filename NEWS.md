@@ -1,3 +1,15 @@
+## bigsnpr 1.4.2
+
+- All 3 LDpred2 functions now use an SFBM as input format for the correlation matrix.
+
+- Allow for multiple initial values for p in `snp_ldpred2_auto()`.
+
+- Add function `coef_to_liab()` to e.g. convert heritability to the liability scale.
+
+## bigsnpr 1.4.1
+
+- Change default of parameter `alpha` of function `snp_cor()` to `0.9`.
+
 ## bigsnpr 1.4.0
 
 - Add functions `snp_ldpred2_inf()`, `snp_ldpred2_grid()` and `snp_ldpred2_auto()` for running the new LDpred2-inf, LDpred2-grid and LDpred2-auto.

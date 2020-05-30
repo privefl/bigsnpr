@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -238,7 +238,8 @@ You may use nb_cores.</p></td>
     <p>Vector of 4 values (or only the first 2 if <code>blocks = NULL</code>):</p><ul>
 <li><p><code>[["int"]]</code>: LDSC regression intercept,</p></li>
 <li><p><code>[["int_se"]]</code>: SE of this intercept,</p></li>
-<li><p><code>[["h2"]]</code>: LDSC regression estimate of heritability,</p></li>
+<li><p><code>[["h2"]]</code>: LDSC regression estimate of (SNP) heritability (also see
+<a href='coef_to_liab.html'>coef_to_liab</a>),</p></li>
 <li><p><code>[["h2_se"]]</code>: SE of this heritability estimate.</p></li>
 </ul>
 
@@ -254,8 +255,8 @@ You may use nb_cores.</p></td>
                       <span class='kw'>n_eff</span> <span class='kw'>=</span> <span class='fl'>4</span> / (<span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>0</span>) + <span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>1</span>)))
 
 <span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>)</div><div class='output co'>#&gt;       int        h2 
-#&gt; 1.0000000 0.8606687 </div><div class='input'><span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</div><div class='output co'>#&gt;       int    int_se        h2     h2_se 
-#&gt; 0.3837600 0.1809905 2.7097906 0.4807206 </div><div class='input'>
+#&gt; 1.0000000 0.8604764 </div><div class='input'><span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</div><div class='output co'>#&gt;       int    int_se        h2     h2_se 
+#&gt; 0.3837152 0.1810912 2.7092661 0.4808824 </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

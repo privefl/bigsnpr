@@ -1,13 +1,14 @@
 ---
 title: "Computing polygenic scores using LDpred2"
 author: "Florian Privé"
-date: "May 7, 2020"
+date: "May 25, 2020"
 output: html_document
 editor_options: 
   chunk_output_type: console
 ---
 
 In this document, we show how to compute polygenic risk scores using LDpred2.
+You should also look at the code of the paper.
 
 ## Downloading genotype data and summary statistics
 
@@ -80,6 +81,8 @@ info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
 
 ## Computing LDpred2 scores for one chromosome
 
+**Some quality control on summary statistics is highly recommended (see paper).**
+
 ### Correlation
 
 First, you need to compute correlations between variants.
@@ -98,17 +101,20 @@ df_beta <- info_snp[ind.chr, c("beta", "beta_se", "n_eff")]
 ```{r, cache=TRUE}
 ## indices in G
 ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]    
-corr <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
-                infos.pos = POS2[ind.chr2], size = 3 / 1000)
+corr0 <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
+                 infos.pos = POS2[ind.chr2], size = 3 / 1000)
+```
+
+```{r}
+corr <- bigsparser::as_SFBM(as(corr0, "dgCMatrix"))
 ```
 
 ### Infinitesimal model
 
 ```{r, cache=TRUE}
-(ldsc <- snp_ldsc2(corr, df_beta))
+(ldsc <- snp_ldsc2(corr0, df_beta))
 h2_est <- ldsc[["h2"]]
 ```
-
 
 ```{r}
 beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
@@ -117,7 +123,7 @@ beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
 
 ```{r}
 pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = ind.chr2)
-AUC(pred_inf, y[ind.test])
+AUCBoot(pred_inf, y[ind.test])
 ```
 
 ### Grid of models
@@ -130,22 +136,14 @@ In practice, we recommend to test multiple values for h2 and p.
 (params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE, TRUE)))
 ```
 
-```{r, cache=TRUE, include=FALSE}
-beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES,
-                              burn_in = 20, num_iter = 50)
-```
-```{r, eval=FALSE}
+```{r, cache=TRUE}
 # takes several minutes if you do not have many cores
 beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 ```
 
-
 ```{r}
 pred_grid <- big_prodMat(G, beta_grid, ind.col = ind.chr2)
-params[c("coef", "score")] <- 
-  big_univLogReg(as_FBM(pred_grid[ind.val, ]), y[ind.val])[c("estim", "score")]
-params$auc_val  <- apply(pred_grid[ind.val, ],  2, AUC, target = y[ind.val])
-params$auc_test <- apply(pred_grid[ind.test, ], 2, AUC, target = y[ind.test])
+params$score <- big_univLogReg(as_FBM(pred_grid[ind.val, ]), y[ind.val])$score
 ```
 
 ```{r, out.width="90%", fig.asp=0.5}
@@ -165,11 +163,11 @@ library(dplyr)
 params %>%
   mutate(sparsity = colMeans(beta_grid == 0), id = row_number()) %>%
   arrange(desc(score)) %>%
-  mutate_at(4:8, signif, digits = 3) %>%
+  mutate_at(c("score", "sparsity"), round, digits = 3) %>%
   slice(1:10)
 ```
 
-You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. We also scale the effect sizes by the regresion coefficient to be on a proper scaling when adding it to other chromosomes' scores.
+You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step.
 
 ```{r}
 best_grid_nosp <- params %>%
@@ -177,10 +175,11 @@ best_grid_nosp <- params %>%
   filter(!sparse) %>% 
   arrange(desc(score)) %>%
   slice(1) %>%
-  { beta_grid[, .$id] * .$coef }
+  pull(id) %>% 
+  beta_grid[, .]
 
-AUC(big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2),
-    y[ind.test])
+pred_nosp <- big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2)
+AUCBoot(pred_nosp, y[ind.test])
 ```
 
 
@@ -190,24 +189,30 @@ best_grid_sp <- params %>%
   filter(sparse) %>% 
   arrange(desc(score)) %>%
   slice(1) %>%
-  { beta_grid[, .$id] * .$coef }
+  pull(id) %>% 
+  beta_grid[, .]
 
-AUC(big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2), 
-    y[ind.test])
+pred_sp <- big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2)
+AUCBoot(pred_sp, y[ind.test])
 ```
 
 ### Automatic model
 
+Actually, you can run many of them in parallel with different initial values for `p`.
+
 ```{r, cache=TRUE}
 # takes a few minutes
-auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est)
-str(auto)
+multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
+                               vec_p_init = seq_log(1e-4, 0.9, length.out = NCORES),
+                               ncores = NCORES)
+str(multi_auto)
 ```
 
-You should verify if the algorithm "converged".
+You should verify if the chains "converged".
 This is not the case here, which is probably because the data is so small.
 
 ```{r}
+auto <- multi_auto[[1]]
 plot_grid(
   qplot(y = auto$path_p_est) + 
     theme_bigstatsr() + 
@@ -223,19 +228,19 @@ plot_grid(
 ```
 
 ```{r}
-beta_auto <- auto$beta_est
-pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
+beta_auto <- sapply(multi_auto, function(auto) auto$beta_est)
+pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
 ```
 
 ```{r}
-# Make sure it is on some appropriate scaling 
-# (the same as LDpred2-inf or a bit larger if the prediction is better)
-# to safely merge predictions from multiple chromosomes
-c(mad(pred_inf), mad(pred_auto))
+# Make sure the scale is okay (by comparing to LDpred2-inf and others auto)
+c(mad(pred_inf), apply(pred_auto, 2, mad))
+# and could keep only the ones that looks good.. (e.g. see code of paper)
+final_pred_auto <- rowMeans(pred_auto)
 ```
 
 ```{r}
-AUC(pred_auto, y[ind.test])
+AUCBoot(final_pred_auto, y[ind.test])
 ```
 
 ## Conclusion
@@ -243,6 +248,6 @@ AUC(pred_auto, y[ind.test])
 We have seen how to run 3 versions of LDpred2 ("-inf", "-grid" and "-auto") for one chromosome.
 You should do this for each chromosome and combine results.
 
-### Reference
+## Reference
 
 Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger.](https://doi.org/10.1101/2020.04.28.066720) BioRxiv.

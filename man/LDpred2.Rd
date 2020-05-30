@@ -6,30 +6,31 @@
 \alias{snp_ldpred2_auto}
 \title{LDpred2}
 \usage{
-snp_ldpred2_inf(corr, df_beta, h2 = NULL)
+snp_ldpred2_inf(corr, df_beta, h2)
 
 snp_ldpred2_grid(
   corr,
   df_beta,
   grid_param,
-  burn_in = 100,
-  num_iter = 200,
-  ncores = 1,
-  tmpdir = tempdir()
+  burn_in = 50,
+  num_iter = 100,
+  ncores = 1
 )
 
 snp_ldpred2_auto(
   corr,
   df_beta,
-  h2_init = NULL,
-  p_init = 0.1,
+  h2_init,
+  vec_p_init = 0.1,
   burn_in = 1000,
-  num_iter = 1000,
-  verbose = FALSE
+  num_iter = 500,
+  verbose = FALSE,
+  ncores = 1
 )
 }
 \arguments{
-\item{corr}{Sparse correlation matrix.}
+\item{corr}{Sparse correlation matrix as an \link[=SFBM-class]{SFBM}. If \code{corr} is
+a dgSMatrix, you can use \code{bigsparser::as_SFBM(as(corr, "dgCMatrix"))}.}
 
 \item{df_beta}{A data frame with 3 columns:
 \itemize{
@@ -39,8 +40,7 @@ snp_ldpred2_auto(
 (in the case of binary traits, this is \code{4 / (1 / n_control + 1 / n_case)})
 }}
 
-\item{h2}{Heritability estimate.
-Default is estimated using constrained LD score regression.}
+\item{h2}{Heritability estimate.}
 
 \item{grid_param}{A data frame with 3 columns as a grid of hyper-parameters:
 \itemize{
@@ -57,13 +57,9 @@ They can be run in parallel by changing \code{ncores}.
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
-\item{tmpdir}{Directory where to store the \link[=SFBM-class]{SFBM} resulting from
-the conversion of \code{corr}.}
+\item{h2_init}{Heritability estimate for initialization.}
 
-\item{h2_init}{Heritability estimate for initialization.
-Default is estimated using constrained LD score regression.}
-
-\item{p_init}{Initial value for p. Default is \code{0.1}.}
+\item{vec_p_init}{Vector of initial values for p. Default is \code{0.1}.}
 
 \item{verbose}{Whether to print "p // h2" estimates at each iteration.}
 }
@@ -71,13 +67,13 @@ Default is estimated using constrained LD score regression.}
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
 
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
-for each row of \code{grid_param}. When the algorithm diverges, 0s are returned.
+for each row of \code{grid_param}.
 
-\code{snp_ldpred2_auto}: A list with
+\code{snp_ldpred2_auto}: A list (over \code{vec_p_init}) of lists with
 \itemize{
 \item \verb{$beta_est}: vector of effect sizes
 \item \verb{$p_est}: estimate of p, the proportion of causal variants
-\item \verb{$h2_est}: estimate of the (SNP) heritability
+\item \verb{$h2_est}: estimate of the (SNP) heritability (also see \link{coef_to_liab})
 \item \verb{$path_p_est}: full path of p estimates (including burn-in);
 useful to check convergence of the iterative algorithm
 \item \verb{$path_h2_est}: full path of h2 estimates (including burn-in);
@@ -85,5 +81,5 @@ useful to check convergence of the iterative algorithm
 }
 }
 \description{
-LDpred2
+LDpred2. Tutorial at \url{https://bit.ly/ldpred2}.
 }

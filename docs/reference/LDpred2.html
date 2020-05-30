@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="LDpred2 — snp_ldpred2_inf" />
-<meta property="og:description" content="LDpred2" />
+<meta property="og:description" content="LDpred2. Tutorial at https://bit.ly/ldpred2." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -145,29 +145,29 @@
     </div>
 
     <div class="ref-description">
-    <p>LDpred2</p>
+    <p>LDpred2. Tutorial at <a href='https://bit.ly/ldpred2'>https://bit.ly/ldpred2</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_ldpred2_inf</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>h2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+    <pre class="usage"><span class='fu'>snp_ldpred2_inf</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='no'>h2</span>)
 
 <span class='fu'>snp_ldpred2_grid</span>(
   <span class='no'>corr</span>,
   <span class='no'>df_beta</span>,
   <span class='no'>grid_param</span>,
-  <span class='kw'>burn_in</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>200</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>tmpdir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
+  <span class='kw'>burn_in</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )
 
 <span class='fu'>snp_ldpred2_auto</span>(
   <span class='no'>corr</span>,
   <span class='no'>df_beta</span>,
-  <span class='kw'>p_init</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>h2_init</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>h2_init</span>,
+  <span class='kw'>vec_p_init</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
   <span class='kw'>burn_in</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-  <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>500</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -175,7 +175,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>corr</th>
-      <td><p>Sparse correlation matrix.</p></td>
+      <td><p>Sparse correlation matrix as an SFBM. If <code>corr</code> is
+a dgSMatrix, you can use <code><a href='https://rdrr.io/pkg/bigsparser/man/SFBM-class.html'>bigsparser::as_SFBM(as(corr, "dgCMatrix"))</a></code>.</p></td>
     </tr>
     <tr>
       <th>df_beta</th>
@@ -188,8 +189,7 @@
     </tr>
     <tr>
       <th>h2</th>
-      <td><p>Heritability estimate.
-Default is estimated using constrained LD score regression.</p></td>
+      <td><p>Heritability estimate.</p></td>
     </tr>
     <tr>
       <th>grid_param</th>
@@ -214,18 +214,12 @@ They can be run in parallel by changing <code>ncores</code>.</p></li>
 You may use nb_cores.</p></td>
     </tr>
     <tr>
-      <th>tmpdir</th>
-      <td><p>Directory where to store the SFBM resulting from
-the conversion of <code>corr</code>.</p></td>
-    </tr>
-    <tr>
-      <th>p_init</th>
-      <td><p>Initial value for p. Default is <code>0.1</code>.</p></td>
-    </tr>
-    <tr>
       <th>h2_init</th>
-      <td><p>Heritability estimate for initialization.
-Default is estimated using constrained LD score regression.</p></td>
+      <td><p>Heritability estimate for initialization.</p></td>
+    </tr>
+    <tr>
+      <th>vec_p_init</th>
+      <td><p>Vector of initial values for p. Default is <code>0.1</code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -237,11 +231,11 @@ Default is estimated using constrained LD score regression.</p></td>
 
     <p><code>snp_ldpred2_inf</code>: A vector of effects, assuming an infinitesimal model.</p>
 <p><code>snp_ldpred2_grid</code>: A matrix of effect sizes, one vector (column)
-for each row of <code>grid_param</code>. When the algorithm diverges, 0s are returned.</p>
-<p><code>snp_ldpred2_auto</code>: A list with</p><ul>
+for each row of <code>grid_param</code>.</p>
+<p><code>snp_ldpred2_auto</code>: A list (over <code>vec_p_init</code>) of lists with</p><ul>
 <li><p><code>$beta_est</code>: vector of effect sizes</p></li>
 <li><p><code>$p_est</code>: estimate of p, the proportion of causal variants</p></li>
-<li><p><code>$h2_est</code>: estimate of the (SNP) heritability</p></li>
+<li><p><code>$h2_est</code>: estimate of the (SNP) heritability (also see <a href='coef_to_liab.html'>coef_to_liab</a>)</p></li>
 <li><p><code>$path_p_est</code>: full path of p estimates (including burn-in);
 useful to check convergence of the iterative algorithm</p></li>
 <li><p><code>$path_h2_est</code>: full path of h2 estimates (including burn-in);

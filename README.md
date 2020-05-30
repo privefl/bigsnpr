@@ -20,7 +20,10 @@
 
 ## Installation
 
+In R, run
+
 ```r
+# install.packages("remotes")
 remotes::install_github("privefl/bigsnpr")
 ```
 
@@ -38,6 +41,16 @@ This package uses a class called `bigSNP` for representing SNP data. A `bigSNP` 
 - `map`: A `data.frame` giving some information on the individuals.
 
 **New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
+
+## Polygenic scores
+
+Polygenic scores are one of the main focus of this package. There are 3 main methods currently available:
+
+- Penalized regressions with individual-level data (see [paper](https://doi.org/10.1534/genetics.119.302019) and [tutorial](https://privefl.github.io/bigstatsr/articles/penalized-regressions.html))
+
+- Clumping and Thresholding (C+T) and Stacked C+T (SCT) with summary statistics and individual level data (see [paper](https://doi.org/10.1016/j.ajhg.2019.11.001) and [tutorial](https://privefl.github.io/bigsnpr/articles/SCT.html)).
+
+- LDpred2 with summary statistics (see [preprint](https://doi.org/10.1101/2020.04.28.066720) and [tutorial](https://privefl.github.io/bigsnpr/articles/LDpred2.html))
 
 
 ## Possible upcoming features
@@ -66,8 +79,10 @@ I will always redirect you to GitHub issues if you email me, so that others can 
 
 - Privé, Florian, et al. ["Efficient implementation of penalized regression for genetic risk prediction."](https://doi.org/10.1534/genetics.119.302019) Genetics 212.1 (2019): 65-74.
 
-- Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) Am J Hum Genet (2019).
+- Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) The American Journal of Human Genetics 105.6 (2019): 1213-1221.
 
-- Privé, Florian, et al. ["Efficient toolkit implementing best practices for principal component analysis of population genetic data."](https://doi.org/10.1101/841452) BioRxiv (2019): 841452.
+- Privé, Florian, et al. ["Efficient toolkit implementing best practices for principal component analysis of population genetic data."](https://doi.org/10.1093/bioinformatics/btaa520) Bioinformatics (2020).
+
+- Privé, Florian, et al. ["LDpred2: better, faster, stronger."](https://doi.org/10.1101/2020.04.28.066720) BioRxiv (2020).
 
 <br>
