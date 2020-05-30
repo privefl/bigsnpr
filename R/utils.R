@@ -10,7 +10,7 @@ as_vec    <- bigstatsr:::as_vec
 # global variable definitions due to non standard evaluations
 utils::globalVariables(c("ic", "f", "lp", "LD.wiki34", "OS", "arch", "avx2",
                          "chromosome", "position", "allele1", "allele2",
-                         "myid", "marker.ID", "rsid", "chr", "pos"))
+                         "myid", "marker.ID", "rsid", "chr", "pos", "p_init"))
 
 ################################################################################
 

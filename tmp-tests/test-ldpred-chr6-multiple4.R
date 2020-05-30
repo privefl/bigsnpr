@@ -25,7 +25,10 @@ POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data/")
 plot(POS, POS2, pch = 20)
 
 corr <- snp_cor(chr6$genotypes, infos.pos = POS2, size = 3 / 1000,
-                ncores = 6, alpha = 0.9)
+                ncores = 6, alpha = 1)
+
+# system.time(test <- Matrix::Cholesky(corr))
+
 object.size(corr) / 1024**2  # 0.3 -> 51 Mb / 0.9 -> 79 / 1 -> 84
 str(corr)
 median(Matrix::colSums(corr != 0))

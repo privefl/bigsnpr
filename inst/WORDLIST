@@ -26,8 +26,10 @@ bty
 cbind
 chr
 cM
+coef_to_liab
 Daly
 Devlin
+dgSMatrix
 diploidy
 doi
 Eigenanalysis
@@ -112,6 +114,7 @@ rsnps
 RSpectra
 scalable
 SCT
+SFBM
 Shashaank
 snp
 SNP's

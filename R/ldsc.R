@@ -212,7 +212,8 @@ snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
 #' h2 <- 0.2
 #' h2 * coef_to_liab(0.02)
 coef_to_liab <- function(K_pop, K_gwas = 0.5) {
-  (K_pop * (1 - K_pop) / dnorm(qnorm(1 - K_pop)))^2 / K_gwas / (1 - K_gwas)
+  (K_pop * (1 - K_pop) / stats::dnorm(stats::qnorm(1 - K_pop)))^2 /
+    (K_gwas * (1 - K_gwas))
 }
 
 ################################################################################
