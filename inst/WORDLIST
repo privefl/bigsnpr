@@ -26,7 +26,7 @@ bty
 cbind
 chr
 cM
-coef_to_liab
+coef
 Daly
 Devlin
 dgSMatrix
@@ -61,6 +61,7 @@ kb
 LD
 LDpred
 LDSC
+liab
 liftOver
 loadings
 LOF
