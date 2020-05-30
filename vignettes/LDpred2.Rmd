@@ -8,6 +8,7 @@ editor_options:
 ---
 
 In this document, we show how to compute polygenic risk scores using LDpred2.
+You should also look at the code of the paper.
 
 ## Downloading genotype data and summary statistics
 
@@ -142,8 +143,7 @@ beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 
 ```{r}
 pred_grid <- big_prodMat(G, beta_grid, ind.col = ind.chr2)
-params[c("coef", "score")] <- 
-  big_univLogReg(as_FBM(pred_grid[ind.val, ]), y[ind.val])[c("estim", "score")]
+params$score <- big_univLogReg(as_FBM(pred_grid[ind.val, ]), y[ind.val])$score
 ```
 
 ```{r, out.width="90%", fig.asp=0.5}
@@ -163,11 +163,11 @@ library(dplyr)
 params %>%
   mutate(sparsity = colMeans(beta_grid == 0), id = row_number()) %>%
   arrange(desc(score)) %>%
-  mutate_at(c("coef", "score", "sparsity"), round, digits = 3) %>%
+  mutate_at(c("score", "sparsity"), round, digits = 3) %>%
   slice(1:10)
 ```
 
-You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step. We also scale the effect sizes by the regresion coefficient to be on a proper scaling when adding it to other chromosomes' scores.
+You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step.
 
 ```{r}
 best_grid_nosp <- params %>%
@@ -175,7 +175,8 @@ best_grid_nosp <- params %>%
   filter(!sparse) %>% 
   arrange(desc(score)) %>%
   slice(1) %>%
-  { beta_grid[, .$id] * .$coef }
+  pull(id) %>% 
+  beta_grid[, .]
 
 pred_nosp <- big_prodVec(G, best_grid_nosp, ind.row = ind.test, ind.col = ind.chr2)
 AUCBoot(pred_nosp, y[ind.test])
@@ -188,7 +189,8 @@ best_grid_sp <- params %>%
   filter(sparse) %>% 
   arrange(desc(score)) %>%
   slice(1) %>%
-  { beta_grid[, .$id] * .$coef }
+  pull(id) %>% 
+  beta_grid[, .]
 
 pred_sp <- big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2)
 AUCBoot(pred_sp, y[ind.test])
@@ -233,7 +235,7 @@ pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
 ```{r}
 # Make sure the scale is okay (by comparing to LDpred2-inf and others auto)
 c(mad(pred_inf), apply(pred_auto, 2, mad))
-# and could keep only the ones that looks good..
+# and could keep only the ones that looks good.. (e.g. see code of paper)
 final_pred_auto <- rowMeans(pred_auto)
 ```
 

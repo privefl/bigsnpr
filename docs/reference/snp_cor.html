@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -155,7 +155,7 @@
   <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>Gna</span>),
   <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>Gna</span>),
   <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>500</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>fill.diag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
@@ -190,7 +190,8 @@ a window in number of SNPs, otherwise it is a window in kb (genetic distance).</
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>Type-I error for testing correlations. Default is <code>0.9</code>.</p></td>
+      <td><p>Type-I error for testing correlations.
+Default is <code>1</code> (no threshold is applied).</p></td>
     </tr>
     <tr>
       <th>fill.diag</th>
@@ -226,12 +227,12 @@ You may use nb_cores.</p></td>
 #&gt;  [4,] -0.024489153  0.069041892 -0.102606763  1.000000000  0.06581927
 #&gt;  [5,]  0.074677326  0.012016376  0.031466118  0.065819274  1.00000000
 #&gt;  [6,] -0.016720892  0.006950400  0.075573785 -0.009996247  0.01995194
-#&gt;  [7,]  .           -0.073816948  0.015793311  0.067027181  0.03088233
+#&gt;  [7,]  0.003680272 -0.073816948  0.015793311  0.067027181  0.03088233
 #&gt;  [8,] -0.017764606 -0.033245425 -0.087165386  0.052163271 -0.04179906
 #&gt;  [9,]  0.111349765  0.008661176 -0.060211948  0.062986807 -0.03244854
 #&gt; [10,] -0.051804449 -0.065532091  0.017048961 -0.093032007 -0.01146874
 #&gt;                                                                      
-#&gt;  [1,] -0.016720892  .           -0.01776461  0.111349765 -0.051804449
+#&gt;  [1,] -0.016720892  0.003680272 -0.01776461  0.111349765 -0.051804449
 #&gt;  [2,]  0.006950400 -0.073816948 -0.03324542  0.008661176 -0.065532091
 #&gt;  [3,]  0.075573785  0.015793311 -0.08716539 -0.060211948  0.017048961
 #&gt;  [4,] -0.009996247  0.067027181  0.05216327  0.062986807 -0.093032007
@@ -242,7 +243,7 @@ You may use nb_cores.</p></td>
 #&gt;  [9,] -0.045578013 -0.012107321 -0.02235115  1.000000000 -0.041503959
 #&gt; [10,]  0.052820407  0.006552636 -0.05855721 -0.041503959  1.000000000</div><div class='input'>
 <span class='co'># Sparsity</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>@<span class='kw'>x</span>) / <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>)</div><div class='output co'>#&gt; [1] 0.342595</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>@<span class='kw'>x</span>) / <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>corr</span>)</div><div class='output co'>#&gt; [1] 0.375676</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

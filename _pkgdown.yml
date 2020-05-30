@@ -95,6 +95,7 @@ reference:
       - same_ref
       - sub_bed
       - seq_log
+      - coef_to_liab
   - title: "PLINK bed files"
     contents:
       - bed

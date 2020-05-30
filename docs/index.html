@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
       </span>
     </div>
 
@@ -111,7 +111,9 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"privefl/bigsnpr"</span>)</pre></div>
+<p>In R, run</p>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("remotes")</span>
+<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"privefl/bigsnpr"</span>)</pre></div>
 </div>
 <div id="input-formats" class="section level2">
 <h2 class="hasAnchor">
@@ -128,6 +130,16 @@
 <code>map</code>: A <code>data.frame</code> giving some information on the individuals.</li>
 </ul>
 <p><strong>New!</strong> Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper “Efficient toolkit implementing..”.</p>
+</div>
+<div id="polygenic-scores" class="section level2">
+<h2 class="hasAnchor">
+<a href="#polygenic-scores" class="anchor"></a>Polygenic scores</h2>
+<p>Polygenic scores are one of the main focus of this package. There are 3 main methods currently available:</p>
+<ul>
+<li><p>Penalized regressions with individual-level data (see <a href="https://doi.org/10.1534/genetics.119.302019">paper</a> and <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html">tutorial</a>)</p></li>
+<li><p>Clumping and Thresholding (C+T) and Stacked C+T (SCT) with summary statistics and individual level data (see <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">paper</a> and <a href="https://privefl.github.io/bigsnpr/articles/SCT.html">tutorial</a>).</p></li>
+<li><p>LDpred2 with summary statistics (see <a href="https://doi.org/10.1101/2020.04.28.066720">preprint</a> and <a href="https://privefl.github.io/bigsnpr/articles/LDpred2.html">tutorial</a>)</p></li>
+</ul>
 </div>
 <div id="possible-upcoming-features" class="section level2">
 <h2 class="hasAnchor">
@@ -152,8 +164,9 @@
 <ul>
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/bty185">“Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr.”</a> Bioinformatics 34.16 (2018): 2781-2787.</p></li>
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1534/genetics.119.302019">“Efficient implementation of penalized regression for genetic risk prediction.”</a> Genetics 212.1 (2019): 65-74.</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">“Making the most of Clumping and Thresholding for polygenic scores.”</a> Am J Hum Genet (2019).</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1101/841452">“Efficient toolkit implementing best practices for principal component analysis of population genetic data.”</a> BioRxiv (2019): 841452.</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">“Making the most of Clumping and Thresholding for polygenic scores.”</a> The American Journal of Human Genetics 105.6 (2019): 1213-1221.</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa520">“Efficient toolkit implementing best practices for principal component analysis of population genetic data.”</a> Bioinformatics (2020).</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1101/2020.04.28.066720">“LDpred2: better, faster, stronger.”</a> BioRxiv (2020).</p></li>
 </ul>
 <p><br></p>
 </div>
