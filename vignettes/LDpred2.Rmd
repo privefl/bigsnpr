@@ -8,7 +8,7 @@ editor_options:
 ---
 
 In this document, we show how to compute polygenic risk scores using LDpred2.
-You should also look at the code of the paper.
+You should also look at the code of the paper, and at [the supplementary note on quality control of summary statistics](https://github.com/privefl/paper-ldpred2/blob/master/paper/paper-ldpred2-supp.pdf).
 
 ## Downloading genotype data and summary statistics
 
