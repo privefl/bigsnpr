@@ -16,7 +16,7 @@ inline double square(double x) {
 List ldpred2_gibbs_auto(Environment corr,
                         const NumericVector& beta_hat,
                         const NumericVector& beta_init,
-                        const NumericVector& order,
+                        const IntegerVector& order,
                         const NumericVector& n_vec,
                         double p_init,
                         double h2_init,

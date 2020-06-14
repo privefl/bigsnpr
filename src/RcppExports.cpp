@@ -263,7 +263,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs_auto
-List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const NumericVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, bool verbose);
+List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, bool verbose);
 RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -271,7 +271,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type order(orderSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type order(orderSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
     Rcpp::traits::input_parameter< double >::type p_init(p_initSEXP);
     Rcpp::traits::input_parameter< double >::type h2_init(h2_initSEXP);
@@ -283,7 +283,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs
-arma::mat ldpred2_gibbs(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const NumericVector& order, const NumericVector& n_vec, const NumericVector& h2, const NumericVector& p, const LogicalVector& sparse, int burn_in, int num_iter, int ncores);
+arma::mat ldpred2_gibbs(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, const NumericVector& h2, const NumericVector& p, const LogicalVector& sparse, int burn_in, int num_iter, int ncores);
 RcppExport SEXP _bigsnpr_ldpred2_gibbs(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -291,7 +291,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type order(orderSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type order(orderSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type h2(h2SEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
