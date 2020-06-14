@@ -30,7 +30,7 @@ Depends:
 Imports:
     bigassertr (>= 0.1.3),
     bigparallelr,
-    bigsparser (>= 0.2),
+    bigsparser (== 0.2),
     bigreadr,
     bigutilsr (>= 0.3),
     data.table,
