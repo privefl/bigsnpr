@@ -246,7 +246,16 @@ AUCBoot(final_pred_auto, y[ind.test])
 ## Conclusion
 
 We have seen how to run 3 versions of LDpred2 ("-inf", "-grid" and "-auto") for one chromosome.
-You should do this for each chromosome and combine results.
+You need to do this for each chromosome and combine results.
+Normally, you can just sum the resulting scores, or equivalently, append the effect sizes.
+
+In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers.
+Information about these variants can be retrieved with
+
+```{r}
+info <- readRDS(url("https://github.com/privefl/bigsnpr/raw/master/data-raw/hm3_variants.rds"))
+str(info)
+```
 
 ## Reference
 
