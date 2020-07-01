@@ -177,19 +177,34 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 #'
 snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
 
-  assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
-  assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
-  assert_pos(df_beta$beta_se, strict = TRUE)
+  if(all(c("beta", "beta_se", "n_eff") %in% colnames(df))){
+    assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
+    assert_pos(df_beta$beta_se, strict = TRUE)
 
-  snp_ldsc(
-    ld_score    = Matrix::colSums(corr^2),
-    ld_size     = ncol(corr),
-    chi2        = (df_beta$beta / df_beta$beta_se)^2,
-    sample_size = df_beta$n_eff,
-    blocks      = blocks,
-    intercept   = intercept,
-    ...
-  )
+    snp_ldsc(
+      ld_score    = Matrix::colSums(corr^2),
+      ld_size     = ncol(corr),
+      chi2        = (df_beta$beta / df_beta$beta_se)^2,
+      sample_size = df_beta$n_eff,
+      blocks      = blocks,
+      intercept   = intercept,
+      ...
+    )
+  }else if(all(c("p", "n_eff") %in% colnames(df))){
+    assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
+    assert_pos(df_beta$p, strict = TRUE)
+
+    snp_ldsc(
+      ld_score    = Matrix::colSums(corr^2),
+      ld_size     = ncol(corr),
+      chi2        = qnorm(df_beta$p)^2,
+      sample_size = df_beta$n_eff,
+      blocks      = blocks,
+      intercept   = intercept,
+      ...
+    )
+  }
+
 }
 
 ################################################################################
