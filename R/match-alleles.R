@@ -88,7 +88,7 @@ snp_match <- function(sumstats, info_snp,
            format(sum(matched$`_FLIP_`), big.mark = ","),
            format(sum(matched$`_REV_`),  big.mark = ","))
 
-  if (nrow(matched) < (match.min.prop * min(ncol(sumstats), ncol(info_snp))))
+  if (nrow(matched) < (match.min.prop * min(nrow(sumstats), nrow(info_snp))))
     stop2("Not enough variants have been matched.")
 
   as.data.frame(matched[, c("_FLIP_", "_REV_") := NULL][order(chr, pos)])
