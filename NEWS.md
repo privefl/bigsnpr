@@ -1,3 +1,7 @@
+## bigsnpr 1.4.3
+
+- Fix a bug when using very large correlation matrices in LDpred2 (although we do not recommend to do so).
+
 ## bigsnpr 1.4.2
 
 - All 3 LDpred2 functions now use an SFBM as input format for the correlation matrix.
