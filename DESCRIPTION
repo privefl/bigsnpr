@@ -57,6 +57,7 @@ Suggests:
     Hmisc,
     pcadapt (>= 4.1),
     rmutil,
+    RSpectra,
     RSQLite,
     R.utils,
     spelling, 
