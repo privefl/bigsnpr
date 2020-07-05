@@ -1,8 +1,8 @@
 ################################################################################
 
-#' Correlation
+#' Correlation matrix
 #'
-#' Get significant correlations between nearby SNPs of the same chromosome
+#' Get significant (Pearson) correlations between nearby SNPs of the same chromosome
 #' (p-values are computed using a two-sided t-test).
 #'
 #' @inheritParams bigsnpr-package
@@ -14,7 +14,7 @@
 #' @param fill.diag Whether to fill the diagonal with 1s (the default)
 #' or to keep it as 0s.
 #'
-#' @return The correlation matrix. This is a sparse symmetric matrix.
+#' @return The (Pearson) correlation matrix. This is a sparse symmetric matrix.
 #'
 #' @import Matrix
 #'
