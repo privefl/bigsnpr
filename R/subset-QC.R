@@ -42,6 +42,12 @@ snp_subset <- function(x,
 
   check_args()
 
+  # http://stackoverflow.com/q/19565621/6103040
+  new_fam <- x$fam[ind.row, , drop = FALSE]
+  rownames(new_fam) <- rows_along(new_fam)
+  new_map <- x$map[ind.col, , drop = FALSE]
+  rownames(new_map) <- rows_along(new_map)
+
   if (is.null(backingfile)) backingfile <- getNewFile(x, "sub")
 
   G <- x$genotypes
@@ -56,16 +62,10 @@ snp_subset <- function(x,
   )
   replaceSNP(G2, G, rowInd = ind.row, colInd = ind.col)
 
-  # http://stackoverflow.com/q/19565621/6103040
-  newfam <- x$fam[ind.row, , drop = FALSE]
-  rownames(newfam) <- rows_along(newfam)
-  newmap <- x$map[ind.col, , drop = FALSE]
-  rownames(newmap) <- rows_along(newmap)
-
   # Create the bigSNP object
   snp.list <- structure(list(genotypes = G2,
-                             fam = newfam,
-                             map = newmap),
+                             fam = new_fam,
+                             map = new_map),
                         class = "bigSNP")
 
   # save it and return the path of the saved object
