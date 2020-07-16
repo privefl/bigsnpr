@@ -1,3 +1,7 @@
+## bigsnpr 1.4.6
+
+- Fasten `snp_match()`. Also now remove duplicates by default.
+
 ## bigsnpr 1.4.3
 
 - Fix a bug when using very large correlation matrices in LDpred2 (although we do not recommend to do so).

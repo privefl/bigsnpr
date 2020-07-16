@@ -9,6 +9,7 @@ snp_match(
   info_snp,
   strand_flip = TRUE,
   join_by_pos = TRUE,
+  remove_dups = TRUE,
   match.min.prop = 0.5
 )
 }
@@ -22,6 +23,9 @@ If so, ambiguous alleles A/T and C/G are removed.}
 
 \item{join_by_pos}{Whether to join by chromosome and position (default),
 or instead by rsid.}
+
+\item{remove_dups}{Whether to remove duplicates (same physical position)?
+Default is \code{TRUE}.}
 
 \item{match.min.prop}{Minimum proportion of variants in the smallest data
 to be matched, otherwise stops with an error. Default is \verb{50\%}.}
