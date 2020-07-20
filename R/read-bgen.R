@@ -32,8 +32,8 @@ snp_readBGI <- function(bgifile, snp_id) {
   infos <- dplyr::collect(dplyr::tbl(db_con, "Variant"))
 
   # check
-  id_infos <- with(infos, paste(chromosome, position, allele1, allele2, sep = "_"))
-  ind <- match(snp_id, format_snp_id(id_infos))
+  infos$myid <- with(infos, paste(chromosome, position, allele1, allele2, sep = "_"))
+  ind <- match(snp_id, format_snp_id(infos$myid))
   if (anyNA(ind)) {
     saveRDS(snp_id[is.na(ind)],
             tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifile))
