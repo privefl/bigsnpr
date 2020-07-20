@@ -1,3 +1,7 @@
+## bigsnpr 1.4.7
+
+- Allow for format `01` or `1` for chromosomes in BGI files.
+
 ## bigsnpr 1.4.6
 
 - Fasten `snp_match()`. Also now remove duplicates by default.

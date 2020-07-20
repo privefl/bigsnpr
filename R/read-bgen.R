@@ -19,8 +19,6 @@ format_snp_id <- function(snp_id) {
 #'
 #' @return A data frame containing variant information.
 #'
-#' @importFrom magrittr %>%
-#'
 #' @export
 snp_readBGI <- function(bgifile, snp_id) {
 
@@ -31,14 +29,11 @@ snp_readBGI <- function(bgifile, snp_id) {
   # read variant information from index files
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
   on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
-  infos <- dplyr::tbl(db_con, "Variant") %>%
-    dplyr::mutate(
-      myid = paste(chromosome, position, allele1, allele2, sep = "_")) %>%
-    dplyr::filter(myid %in% snp_id) %>%
-    dplyr::collect()
+  infos <- dplyr::collect(dplyr::tbl(db_con, "Variant"))
 
   # check
-  ind <- match(snp_id, infos$myid)
+  id_infos <- with(infos, paste(chromosome, position, allele1, allele2, sep = "_"))
+  ind <- match(snp_id, format_snp_id(id_infos))
   if (anyNA(ind)) {
     saveRDS(snp_id[is.na(ind)],
             tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifile))
