@@ -64,6 +64,11 @@ snp_match <- function(sumstats, info_snp,
   # first filter to fasten
   sumstats <- sumstats[vctrs::vec_in(sumstats[, join_by[1:2]],
                                      info_snp[, join_by[1:2]]), ]
+  # Convert a0 and a1 to upper case in both matrix to make sure they are correct
+  sumstats$a0 <- toupper(sumstats$a0)
+  sumstats$a1 <- toupper(sumstats$a1)
+  info_snp$a0 <- toupper(info_snp$a0)
+  info_snp$a1 <- toupper(info_snp$a1)
   if (nrow(sumstats) == 0)
     stop2("No variant has been matched.")
 
