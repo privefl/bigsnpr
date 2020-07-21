@@ -78,14 +78,14 @@ imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
             objective  = "binary:logistic",
             max_depth  = 4,
             base_score = min(max(1e-7, mean(X.label[ind.train])), 1 - 1e-7),
-            verbose    = 0,
             nthread    = ncores
           )
 
           bst <- xgboost::xgb.train(
             data    = data.train,
             params  = bst.params,
-            nrounds = 10
+            nrounds = 10,
+            verbose = 0
           )
 
           # error of validation
