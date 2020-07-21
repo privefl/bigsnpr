@@ -25,6 +25,8 @@ flip_strand <- function(allele) {
 #'   If so, ambiguous alleles A/T and C/G are removed.
 #' @param join_by_pos Whether to join by chromosome and position (default),
 #'   or instead by rsid.
+#' @param remove_dups Whether to remove duplicates (same physical position)?
+#'   Default is `TRUE`.
 #' @param match.min.prop Minimum proportion of variants in the smallest data
 #'   to be matched, otherwise stops with an error. Default is `50%`.
 #'
@@ -39,10 +41,13 @@ flip_strand <- function(allele) {
 snp_match <- function(sumstats, info_snp,
                       strand_flip = TRUE,
                       join_by_pos = TRUE,
+                      remove_dups = TRUE,
                       match.min.prop = 0.5) {
 
   sumstats$`_NUM_ID_` <- rows_along(sumstats)
   info_snp$`_NUM_ID_` <- rows_along(info_snp)
+
+  min_match <- match.min.prop * min(nrow(sumstats), nrow(info_snp))
 
   join_by <- c("chr", NA, "a0", "a1")
   join_by[2] <- `if`(join_by_pos, "pos", "rsid")
@@ -55,6 +60,12 @@ snp_match <- function(sumstats, info_snp,
           paste(unique(c(join_by, "pos")), collapse = ", "))
 
   message2("%s variants to be matched.", format(nrow(sumstats), big.mark = ","))
+
+  # first filter to fasten
+  sumstats <- sumstats[vctrs::vec_in(sumstats[, join_by[1:2]],
+                                     info_snp[, join_by[1:2]]), ]
+  if (nrow(sumstats) == 0)
+    stop2("No variant has been matched.")
 
   # augment dataset to match reverse alleles
   if (strand_flip) {
@@ -83,12 +94,21 @@ snp_match <- function(sumstats, info_snp,
 
   matched <- merge(as.data.table(sumstats4), as.data.table(info_snp),
                    by = join_by, all = FALSE, suffixes = c(".ss", ""))
+
+  if (remove_dups) {
+    dups <- vctrs::vec_duplicate_detect(matched[, c("chr", "pos")])
+    if (any(dups)) {
+      matched <- matched[!dups, ]
+      message2("Some duplicates were removed.")
+    }
+  }
+
   message2("%s variants have been matched; %s were flipped and %s were reversed.",
            format(nrow(matched),         big.mark = ","),
            format(sum(matched$`_FLIP_`), big.mark = ","),
            format(sum(matched$`_REV_`),  big.mark = ","))
 
-  if (nrow(matched) < (match.min.prop * min(ncol(sumstats), ncol(info_snp))))
+  if (nrow(matched) < min_match)
     stop2("Not enough variants have been matched.")
 
   as.data.frame(matched[, c("_FLIP_", "_REV_") := NULL][order(chr, pos)])

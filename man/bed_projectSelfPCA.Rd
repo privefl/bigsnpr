@@ -27,7 +27,7 @@ used, then \code{attr(obj.svd, "subset")} is automatically used by default.
 Otherwise (e.g. if \link{bed_randomSVD} was used), you have to pass \code{ind.col}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link[bigstatsr]{nb_cores}.}
+You may use \link{nb_cores}.}
 }
 \value{
 A list of 3 elements:

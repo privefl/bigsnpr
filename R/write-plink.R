@@ -29,15 +29,16 @@ snp_writeBed <- function(x, bedfile,
   # create directory if doesn't exist
   assert_dir(dirname(bedfile))
 
-  # write map and family files
-  write.table2(x$fam[ind.row, NAMES.FAM], file = famfile, na = 0)
-  write.table2(x$map[ind.col, NAMES.MAP], file = bimfile, na = 0)
-
-  ## write bed file
+  # prepare subsets
+  new_fam <- x$fam[ind.row, NAMES.FAM]
+  new_map <- x$map[ind.col, NAMES.MAP]
   G.round <- G$copy(code = replace(round(G$code256), is.na(G$code256), 3))
   stopifnot(all(G.round$code256 %in% 0:3))
 
+  ## write files
   writebina(bedfile, G.round, getInverseCode(), ind.row, ind.col)
+  write.table2(new_fam, file = famfile, na = 0)
+  write.table2(new_map, file = bimfile, na = 0)
 
   bedfile
 }

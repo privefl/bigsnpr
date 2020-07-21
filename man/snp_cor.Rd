@@ -2,7 +2,7 @@
 % Please edit documentation in R/corr.R
 \name{snp_cor}
 \alias{snp_cor}
-\title{Correlation}
+\title{Correlation matrix}
 \usage{
 snp_cor(
   Gna,
@@ -46,10 +46,10 @@ Typically \verb{<bigSNP>$map$physical.pos}.}
 You may use \link{nb_cores}.}
 }
 \value{
-The correlation matrix. This is a sparse symmetric matrix.
+The (Pearson) correlation matrix. This is a sparse symmetric matrix.
 }
 \description{
-Get significant correlations between nearby SNPs of the same chromosome
+Get significant (Pearson) correlations between nearby SNPs of the same chromosome
 (p-values are computed using a two-sided t-test).
 }
 \examples{
