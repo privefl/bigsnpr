@@ -1,3 +1,7 @@
+## bigsparser 0.3.0
+
+- Faster `bigsparser::as_SFBM()`.
+
 ## bigsnpr 1.4.7
 
 - Allow for format `01` or `1` for chromosomes in BGI files.
