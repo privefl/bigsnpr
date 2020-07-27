@@ -43,7 +43,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Vignettes
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -75,14 +75,14 @@
 <li>
   <a href="https://privefl.github.io/about.html">
     <span class="fa fa-user"></span>
-     
+
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -93,29 +93,29 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</h1>
                         <h4 class="author">Florian Privé and Michael Blum</h4>
-            
+
             <h4 class="date">May 23, 2019</h4>
-      
+
       <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/master/vignettes/SCT.Rmd"><code>vignettes/SCT.Rmd</code></a></small>
       <div class="hidden name"><code>SCT.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <p>In this document, we show how to compute polygenic risk scores using Stacked Clumping and Thresholding (SCT).</p>
 <div id="downloading-genotype-data-and-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#downloading-genotype-data-and-summary-statistics" class="anchor"></a>Downloading genotype data and summary statistics</h2>
 <p>You can download <a href="https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip">data</a> and unzip files in R. We store those files in a directory called <code>"tmp-data"</code> here.</p>
-<p>You can see <a href="https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R">there</a> how we generated these data from <a href="https://www.nature.com/articles/nature15393">the 1000 Genomes project</a>.</p>
+<p>You can see <a href="https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R">there</a> how we generated these data from <a href="https://www.nature.com/articles/nature15393">the 1000 Genomes project</a>. Note that these data are for educational purposes only, not for use as a reference panel.</p>
 <p>First, you need to read genotype data from the PLINK files (or BGEN files) as well as the text file containing summary statistics.</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># Load packages bigsnpr and bigstatsr</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">bigsnpr</span>)</pre></body></html></div>
@@ -256,9 +256,9 @@
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">final_mod</span>$<span class="no">mod</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 3 x 7
 ##    alpha validation_loss intercept beta          nb_var message   all_conv
-##    &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;         &lt;int&gt; &lt;list&gt;    &lt;lgl&gt;   
-## 1 0.0001           0.565     -1.04 &lt;dbl [4,060]&gt;   4024 &lt;chr [4]&gt; TRUE    
-## 2 0.01             0.566     -1.05 &lt;dbl [4,060]&gt;    757 &lt;chr [4]&gt; TRUE    
+##    &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;         &lt;int&gt; &lt;list&gt;    &lt;lgl&gt;
+## 1 0.0001           0.565     -1.04 &lt;dbl [4,060]&gt;   4024 &lt;chr [4]&gt; TRUE
+## 2 0.01             0.566     -1.05 &lt;dbl [4,060]&gt;    757 &lt;chr [4]&gt; TRUE
 ## 3 1                0.569     -1.08 &lt;dbl [4,060]&gt;    118 &lt;chr [4]&gt; TRUE</code></pre>
 <p>Here, I use <code>K = 4</code> folds because this example data is very small; the default is to use <code>10</code>. For options for fitting penalized regressions, see <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html">this vignette</a>.</p>
 <p>From stacking C+T scores, we can derive a unique vector of weights and compare effects resulting from stacking to the initial regression coefficients provided as summary statistics.</p>
@@ -277,7 +277,7 @@
 <div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">pred</span> <span class="kw">&lt;-</span> <span class="no">final_mod</span>$<span class="no">intercept</span> +
   <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">new_beta</span>[<span class="no">ind</span>], <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind</span>)
 <span class="fu">AUCBoot</span>(<span class="no">pred</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd 
+<pre><code>##       Mean       2.5%      97.5%         Sd
 ## 0.68476801 0.58440363 0.77687993 0.04867468</code></pre>
 <div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
   <span class="kw">Phenotype</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">y</span>[<span class="no">ind.test</span>], <span class="kw">levels</span> <span class="kw">=</span> <span class="fl">0</span>:<span class="fl">1</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Control"</span>, <span class="st">"Case"</span>)),
@@ -324,7 +324,7 @@
           <span class="kw">lpS.keep</span> <span class="kw">=</span> <span class="no">lpval</span>[<span class="no">ind.keep</span>], <span class="kw">thr.list</span> <span class="kw">=</span> <span class="no">max_prs</span>$<span class="no">thr.lp</span>),
   <span class="no">y</span>[<span class="no">ind.test</span>]
 )</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd 
+<pre><code>##       Mean       2.5%      97.5%         Sd
 ## 0.67043835 0.57621832 0.75998783 0.04662065</code></pre>
 <p>For this example, the best C+T predictions provides an AUC of 67% whereas stacking, which should be preferred, provides an AUC of 68.5%.</p>
 <div id="reference" class="section level3">
@@ -356,7 +356,7 @@
       </footer>
 </div>
 
-  
+
 
 
   </body>

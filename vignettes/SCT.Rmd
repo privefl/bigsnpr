@@ -29,6 +29,7 @@ unlink(paste0("tmp-data/public-data-scores", c(".bk", ".rds")))
 ```
 
 You can see [there](https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R) how we generated these data from [the 1000 Genomes project](https://www.nature.com/articles/nature15393).
+Note that these data are for educational purposes only, not for use as a reference panel.
 
 First, you need to read genotype data from the PLINK files (or BGEN files) as well as the text file containing summary statistics.
 
