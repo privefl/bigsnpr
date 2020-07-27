@@ -236,6 +236,7 @@ pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
 # Make sure the scale is okay (by comparing to LDpred2-inf and others auto)
 c(mad(pred_inf), apply(pred_auto, 2, mad))
 # and could keep only the ones that looks good.. (e.g. see code of paper)
+# https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2.R#L101-L108
 final_pred_auto <- rowMeans(pred_auto)
 ```
 
