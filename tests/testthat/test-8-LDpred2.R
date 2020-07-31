@@ -32,9 +32,12 @@ test_that("LDpred2 works", {
 
   # LDpred2-auto
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
-                                burn_in = 200, num_iter = 200)
+                                burn_in = 200, num_iter = 200, sparse = TRUE)
   expect_length(beta_auto, 1)
   expect_gt(cor(beta_auto[[1]]$beta_est, true_beta), 0.4)
+  expect_gt(cor(beta_auto[[1]]$beta_est_sparse, true_beta), 0.4)
+  expect_lt(mean(beta_auto[[1]]$beta_est == 0), 0.001)
+  expect_gt(mean(beta_auto[[1]]$beta_est_sparse == 0), 0.1)
 
   # Errors
   expect_error(snp_ldpred2_inf(corr, df_beta[-1]),
@@ -48,6 +51,12 @@ test_that("LDpred2 works", {
   all_beta <- replicate(
     n = 10, simplify = FALSE,
     snp_ldpred2_grid(corr, df_beta, params[c(1, 8), ], ncores = 2))
+  all_beta <- replicate(
+    n = 5, simplify = FALSE,
+    snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
+                     vec_p_init = seq_log(1e-4, 0.9, 6),
+                     burn_in = 100, num_iter = 100,
+                     sparse = TRUE, ncores = 2))
 })
 
 ################################################################################

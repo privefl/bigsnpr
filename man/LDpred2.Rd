@@ -24,6 +24,7 @@ snp_ldpred2_auto(
   vec_p_init = 0.1,
   burn_in = 1000,
   num_iter = 500,
+  sparse = FALSE,
   verbose = FALSE,
   ncores = 1
 )
@@ -60,6 +61,10 @@ You may use \link{nb_cores}.}
 \item{h2_init}{Heritability estimate for initialization.}
 
 \item{vec_p_init}{Vector of initial values for p. Default is \code{0.1}.}
+
+\item{sparse}{In LDpred2-auto, whether to also report a sparse solution by
+running LDpred2-grid with the estimates of p and h2 from LDpred2-auto, and
+sparsity enabled. Default is \code{FALSE}.}
 
 \item{verbose}{Whether to print "p // h2" estimates at each iteration.}
 }

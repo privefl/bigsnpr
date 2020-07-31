@@ -1,3 +1,7 @@
+## bigsnpr 1.4.8
+
+- Add option `sparse` to enable getting also a sparse solution in LDpred2-auto.
+
 ## bigsparser 0.3.0
 
 - Faster `bigsparser::as_SFBM()`.
