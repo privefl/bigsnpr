@@ -30,7 +30,8 @@ flip_strand <- function(allele) {
 #' @param match.min.prop Minimum proportion of variants in the smallest data
 #'   to be matched, otherwise stops with an error. Default is `50%`.
 #'
-#' @return A single data frame with matched variants.
+#' @return A single data frame with matched variants. Values in column `$beta`
+#'   are multiplied by -1 for variants with alleles reversed.
 #' @export
 #'
 #' @seealso [snp_modifyBuild]

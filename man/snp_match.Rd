@@ -31,7 +31,8 @@ Default is \code{TRUE}.}
 to be matched, otherwise stops with an error. Default is \verb{50\%}.}
 }
 \value{
-A single data frame with matched variants.
+A single data frame with matched variants. Values in column \verb{$beta}
+are multiplied by -1 for variants with alleles reversed.
 }
 \description{
 Match alleles between summary statistics and SNP information.
