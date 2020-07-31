@@ -198,7 +198,8 @@ seq_log <- function(from, to, length.out) {
 snp_grid_PRS <- function(
   G, all_keep, betas, lpS,
   n_thr_lpS = 50,
-  grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS)), max(lpS), n_thr_lpS),
+  grid.lpS.thr = 0.9999 * seq_log(max(0.1, min(lpS, na.rm = TRUE)),
+                                  max(lpS, na.rm = TRUE), n_thr_lpS),
   ind.row = rows_along(G),
   backingfile = tempfile(),
   type = c("float", "double"),

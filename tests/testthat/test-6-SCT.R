@@ -120,3 +120,11 @@ expect_equal(
   check.attributes = FALSE, tolerance = 1e-6)
 
 ################################################################################
+
+lpval2 <- lpval; lpval2[1:100] <- NA
+for (k in seq_along(all_keep$`1`)) {
+  all_keep$`1`[[k]] <- setdiff(all_keep$`1`[[k]], 1:100)
+}
+expect_s4_class(snp_grid_PRS(G, all_keep, betas, lpval2), "FBM")
+
+################################################################################
