@@ -6,7 +6,13 @@
 \alias{CODE_DOSAGE}
 \alias{CODE_IMPUTE_PRED}
 \title{CODE_012: code genotype calls (3) and missing values.}
-\format{An object of class \code{numeric} of length 256.}
+\format{
+An object of class \code{numeric} of length 256.
+
+An object of class \code{numeric} of length 256.
+
+An object of class \code{numeric} of length 256.
+}
 \usage{
 CODE_012
 

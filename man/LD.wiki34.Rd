@@ -4,13 +4,15 @@
 \name{LD.wiki34}
 \alias{LD.wiki34}
 \title{Long-range LD regions}
-\format{A data frame with 34 rows (regions) and 4 variables:
+\format{
+A data frame with 34 rows (regions) and 4 variables:
 \itemize{
 \item \code{Chr}: region's chromosome
 \item \code{Start}: starting position of the region (in bp)
 \item \code{Stop}: stopping position of the region (in bp)
 \item \code{ID}: some ID of the region.
-}}
+}
+}
 \usage{
 LD.wiki34
 }
