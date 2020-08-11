@@ -1,12 +1,18 @@
 ################################################################################
 
+#' @importFrom bigsparser as_SFBM
+#' @export
+bigsparser::as_SFBM
+
+################################################################################
+
 #' LDpred2
 #'
 #' LDpred2. Tutorial at \url{https://bit.ly/ldpred2}.
 #'
 #' @inheritParams snp_ldsc2
-#' @param corr Sparse correlation matrix as an [SFBM][SFBM-class]. If `corr` is
-#'   a dgSMatrix, you can use `bigsparser::as_SFBM(as(corr, "dgCMatrix"))`.
+#' @param corr Sparse correlation matrix as an [SFBM][SFBM-class].
+#'   If `corr` is a dsCMatrix or a dgCMatrix, you can use `as_SFBM(corr)`.
 #' @param h2 Heritability estimate.
 #'
 #' @return `snp_ldpred2_inf`: A vector of effects, assuming an infinitesimal model.

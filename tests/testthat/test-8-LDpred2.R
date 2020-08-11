@@ -13,7 +13,7 @@ test_that("LDpred2 works", {
 
   # LD score regression
   ldsc <- snp_ldsc2(corr, df_beta)
-  corr <- bigsparser::as_SFBM(as(corr, "dgCMatrix"))
+  corr <- as_SFBM(corr)
 
   # LDpred2-inf
   beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = ldsc[["h2"]])

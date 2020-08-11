@@ -1,3 +1,7 @@
+## bigsnpr 1.4.9 & bigsparser 0.4.0
+
+- Can now directly do `as_SFBM(corr0)` instead of `bigsparser::as_SFBM(as(corr0, "dgCMatrix"))`. This should also use less memory and be faster.
+
 ## bigsnpr 1.4.8
 
 - Add option `sparse` to enable getting also a sparse solution in LDpred2-auto.
