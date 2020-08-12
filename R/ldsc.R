@@ -181,8 +181,14 @@ snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
   assert_pos(df_beta$beta_se, strict = TRUE)
 
+  ld2 <- if (inherits(corr, "dsCMatrix")) {
+    sp_colSumsSq_sym(corr@p, corr@i, corr@x)
+  } else {
+    Matrix::colSums(corr^2)
+  }
+
   snp_ldsc(
-    ld_score    = Matrix::colSums(corr^2),
+    ld_score    = ld2,
     ld_size     = ncol(corr),
     chi2        = (df_beta$beta / df_beta$beta_se)^2,
     sample_size = df_beta$n_eff,

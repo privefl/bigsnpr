@@ -4,6 +4,20 @@ context("LDPRED2")
 
 ################################################################################
 
+test_that("sp_colSumsSq_sym() works", {
+
+  replicate(100, {
+
+    N <- 300
+    spmat <- Matrix::rsparsematrix(N, N, 0.1, symmetric = TRUE)
+    expect_identical(sp_colSumsSq_sym(spmat@p, spmat@i, spmat@x),
+                     Matrix::colSums(spmat^2))
+  })
+
+})
+
+################################################################################
+
 test_that("LDpred2 works", {
 
   skip_if(is_cran)

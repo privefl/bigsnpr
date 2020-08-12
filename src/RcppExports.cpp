@@ -363,6 +363,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// sp_colSumsSq_sym
+NumericVector sp_colSumsSq_sym(std::vector<size_t> p, const IntegerVector& i, const NumericVector& x);
+RcppExport SEXP _bigsnpr_sp_colSumsSq_sym(SEXP pSEXP, SEXP iSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<size_t> >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type i(iSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sp_colSumsSq_sym(p, i, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // writebina
 void writebina(const char * filename, Environment BM, const RawVector& tab, const IntegerVector& rowInd, const IntegerVector& colInd);
 RcppExport SEXP _bigsnpr_writebina(SEXP filenameSEXP, SEXP BMSEXP, SEXP tabSEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
@@ -412,6 +425,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 8},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
+    {"_bigsnpr_sp_colSumsSq_sym", (DL_FUNC) &_bigsnpr_sp_colSumsSq_sym, 3},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},
     {NULL, NULL, 0}

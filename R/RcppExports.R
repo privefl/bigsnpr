@@ -89,6 +89,10 @@ readbina2 <- function(BM, obj_bed, ind_row, ind_col, ncores) {
     invisible(.Call(`_bigsnpr_readbina2`, BM, obj_bed, ind_row, ind_col, ncores))
 }
 
+sp_colSumsSq_sym <- function(p, i, x) {
+    .Call(`_bigsnpr_sp_colSumsSq_sym`, p, i, x)
+}
+
 writebina <- function(filename, BM, tab, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_writebina`, filename, BM, tab, rowInd, colInd))
 }
