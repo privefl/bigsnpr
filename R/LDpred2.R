@@ -141,7 +141,8 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
 
   bigparallelr::register_parallel(ncores)
 
-  foreach(p_init = vec_p_init) %dopar% {
+  foreach(p_init = vec_p_init,
+          .export = c("ldpred2_gibbs_auto", "ldpred2_gibbs")) %dopar% {
 
     ldpred_auto <- ldpred2_gibbs_auto(
       corr      = corr,

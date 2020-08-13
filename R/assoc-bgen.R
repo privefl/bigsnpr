@@ -48,7 +48,8 @@ snp_assocBGEN <- function(bgenfiles, list_snp_id, y_row, ind_row,
 
   bigparallelr::register_parallel(ncores)
 
-  r2 <- foreach(ic = seq_along(bgenfiles)) %dopar% {
+  r2 <- foreach(ic = seq_along(bgenfiles),
+                .export = c("format_snp_id", "r2_bgen")) %dopar% {
 
     snp_id <- format_snp_id(list_snp_id[[ic]])
     infos <- snp_readBGI(bgifiles[ic], snp_id)
