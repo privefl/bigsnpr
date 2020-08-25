@@ -417,24 +417,24 @@ str(rel)</code></pre>
 <p>We then compute PCA without using the related individuals. Function <code>bed_autoSVD()</code> should take care of Linkage Disequilibrium (LD).</p>
 <pre class="r"><code>(obj.bed &lt;- bed(bedfile))</code></pre>
 <pre><code>## A 'bed' object with 2490 samples and 1664852 variants.</code></pre>
-<pre class="r"><code>ind.rel &lt;- match(c(rel$ID1, rel$ID2), obj.bed$fam$sample.ID)
+<pre class="r"><code>ind.rel &lt;- match(c(rel$IID1, rel$IID2), obj.bed$fam$sample.ID)  # /!\ use $ID1 instead with old PLINK
 ind.norel &lt;- rows_along(obj.bed)[-ind.rel]
 
-obj.svd &lt;- bed_autoSVD(obj.bed, ind.row = ind.norel, k = 20, 
+obj.svd &lt;- bed_autoSVD(obj.bed, ind.row = ind.norel, k = 20,
                        ncores = nb_cores())</code></pre>
-<pre><code>## 
+<pre><code>##
 ## Phase of clumping (on MAC) at r^2 &gt; 0.2.. keep 392665 variants.
 ## Discarding 0 variant with MAC &lt; 10.
-## 
+##
 ## Iteration 1:
 ## Computing SVD..
 ## 679 outlier variants detected..
 ## 7 long-range LD regions detected..
-## 
+##
 ## Iteration 2:
 ## Computing SVD..
 ## 0 outlier variant detected..
-## 
+##
 ## Converged!</code></pre>
 </div>
 <div id="outlier-sample-detection" class="section level2">
@@ -470,22 +470,22 @@ ggplot() +
 <p>We recompute PCA without outliers, starting with the previous set of variants kept (we can therefore skip the initial clumping step).</p>
 <pre class="r"><code>ind.row &lt;- ind.norel[S &lt; 0.5]
 ind.col &lt;- attr(obj.svd, &quot;subset&quot;)
-obj.svd2 &lt;- bed_autoSVD(obj.bed, ind.row = ind.row, 
+obj.svd2 &lt;- bed_autoSVD(obj.bed, ind.row = ind.row,
                         ind.col = ind.col, thr.r2 = NA,
                         k = 20, ncores = nb_cores())</code></pre>
-<pre><code>## 
+<pre><code>##
 ## Skipping clumping.
 ## Discarding 0 variant with MAC &lt; 10.
-## 
+##
 ## Iteration 1:
 ## Computing SVD..
 ## 22 outlier variants detected..
 ## 1 long-range LD region detected..
-## 
+##
 ## Iteration 2:
 ## Computing SVD..
 ## 0 outlier variant detected..
-## 
+##
 ## Converged!</code></pre>
 </div>
 <div id="verification" class="section level2">
@@ -502,7 +502,7 @@ obj.svd2 &lt;- bed_autoSVD(obj.bed, ind.row = ind.row,
 <pre class="r"><code>PCs &lt;- matrix(NA, nrow(obj.bed), ncol(obj.svd2$u))
 PCs[ind.row, ] &lt;- predict(obj.svd2)
 
-proj &lt;- bed_projectSelfPCA(obj.svd2, obj.bed, 
+proj &lt;- bed_projectSelfPCA(obj.svd2, obj.bed,
                            ind.row = rows_along(obj.bed)[-ind.row],
                            ncores = 1) # useless -&gt; too few individuals
 PCs[-ind.row, ] &lt;- proj$OADP_proj</code></pre>
