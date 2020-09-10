@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Vignettes
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -75,14 +75,14 @@
 <li>
   <a href="https://privefl.github.io/about.html">
     <span class="fa fa-user"></span>
-
+     
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
     <span class="fa fa-github"></span>
-
+     
   </a>
 </li>
       </ul>
@@ -93,23 +93,23 @@
 </div>
 <!--/.navbar -->
 
-
+      
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Computing polygenic scores using LDpred2</h1>
                         <h4 class="author">Florian Privé</h4>
-
+            
             <h4 class="date">May 25, 2020</h4>
-
+      
       <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/master/vignettes/LDpred2.Rmd"><code>vignettes/LDpred2.Rmd</code></a></small>
       <div class="hidden name"><code>LDpred2.Rmd</code></div>
 
     </div>
 
-
-
+    
+    
 <p>In this document, we show how to compute polygenic risk scores using LDpred2. You should also look at the code of the paper, and at <a href="https://github.com/privefl/paper-ldpred2/blob/master/paper/paper-ldpred2-supp.pdf">the supplementary note on quality control of summary statistics</a>.</p>
 <div id="downloading-genotype-data-and-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
@@ -168,7 +168,7 @@
 ##  $ n_case      : int  157 157 157 157 157 157 157 157 157 157 ...
 ##  $ n_control   : int  402 402 402 402 402 402 402 402 402 402 ...
 ##  $ p           : num  0.7925 0.8593 0.0846 0.028 0.0439 ...</code></pre>
-<p>We split genotype data using part of the data to learn parameters of stacking and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.</p>
+<p>We split genotype data using part of the data to choose hyper-parameters and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
 <span class="no">ind.val</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">G</span>), <span class="fl">400</span>)
 <span class="no">ind.test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span>(<span class="fu">rows_along</span>(<span class="no">G</span>), <span class="no">ind.val</span>)</pre></body></html></div>
@@ -185,11 +185,13 @@
 <span class="no">info_snp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span>(<span class="no">sumstats</span>, <span class="no">map</span>)</pre></body></html></div>
 <pre><code>## 130,816 variants to be matched.</code></pre>
 <pre><code>## 18,932 ambiguous SNPs have been removed.</code></pre>
-<pre><code>## 111,884 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
+<pre><code>## Some duplicates were removed.</code></pre>
+<pre><code>## 111,866 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
 <p>If no or few variants are actually flipped, you might want to disable the strand flipping option. Here, these are simulated data so all variants use the same strand and the same reference.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">info_snp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span>(<span class="no">sumstats</span>, <span class="no">map</span>, <span class="kw">strand_flip</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">info_snp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span>(<span class="no">sumstats</span>, <span class="no">map</span>, <span class="kw">strand_flip</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## 130,816 variants to be matched.</code></pre>
-<pre><code>## 130,816 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
+<pre><code>## Some duplicates were removed.</code></pre>
+<pre><code>## 130,792 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
 </div>
 <div id="computing-ldpred2-scores-for-one-chromosome" class="section level2">
 <h2 class="hasAnchor">
@@ -199,148 +201,154 @@
 <h3 class="hasAnchor">
 <a href="#correlation" class="anchor"></a>Correlation</h3>
 <p>First, you need to compute correlations between variants. We recommend to use a window size of 3 cM (see ref).</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">POS2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_asGeneticPos.html">snp_asGeneticPos</a></span>(<span class="no">CHR</span>, <span class="no">POS</span>, <span class="kw">dir</span> <span class="kw">=</span> <span class="st">"tmp-data"</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="fl">3</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="co">## indices in info_snp</span>
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">POS2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_asGeneticPos.html">snp_asGeneticPos</a></span>(<span class="no">CHR</span>, <span class="no">POS</span>, <span class="kw">dir</span> <span class="kw">=</span> <span class="st">"tmp-data"</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="co">## indices in info_snp</span>
 <span class="no">ind.chr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="no">info_snp</span>$<span class="no">chr</span> <span class="kw">==</span> <span class="fl">2</span>)
 <span class="no">df_beta</span> <span class="kw">&lt;-</span> <span class="no">info_snp</span>[<span class="no">ind.chr</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"beta"</span>, <span class="st">"beta_se"</span>, <span class="st">"n_eff"</span>)]</pre></body></html></div>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="co">## indices in G</span>
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co">## indices in G</span>
 <span class="no">ind.chr2</span> <span class="kw">&lt;-</span> <span class="no">info_snp</span>$<span class="no">`_NUM_ID_`</span>[<span class="no">ind.chr</span>]
 <span class="no">corr0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_cor.html">snp_cor</a></span>(<span class="no">G</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>,
                  <span class="kw">infos.pos</span> <span class="kw">=</span> <span class="no">POS2</span>[<span class="no">ind.chr2</span>], <span class="kw">size</span> <span class="kw">=</span> <span class="fl">3</span> / <span class="fl">1000</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">corr</span> <span class="kw">&lt;-</span> <span class="kw pkg">bigsparser</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html">as_SFBM</a></span>(<span class="fu">as</span>(<span class="no">corr0</span>, <span class="st">"dgCMatrix"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">tmp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(<span class="kw">tmpdir</span> <span class="kw">=</span> <span class="st">"tmp-data"</span>)
+<span class="kw">if</span> (<span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"bigsnpr"</span>) <span class="kw">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric_version.html">package_version</a></span>(<span class="st">"1.4.9"</span>) <span class="kw">&amp;&amp;</span>
+    <span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html">packageVersion</a></span>(<span class="st">"bigsparser"</span>) <span class="kw">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric_version.html">package_version</a></span>(<span class="st">"0.4.0"</span>)) {
+  <span class="no">corr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html">as_SFBM</a></span>(<span class="no">corr0</span>, <span class="no">tmp</span>)
+} <span class="kw">else</span> {
+  <span class="no">corr</span> <span class="kw">&lt;-</span> <span class="kw pkg">bigsparser</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html">as_SFBM</a></span>(<span class="fu">as</span>(<span class="no">corr0</span>, <span class="st">"dgCMatrix"</span>), <span class="no">tmp</span>)
+}</pre></body></html></div>
 </div>
 <div id="infinitesimal-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#infinitesimal-model" class="anchor"></a>Infinitesimal model</h3>
-<div class="sourceCode" id="cb21"><html><body><pre class="r">(<span class="no">ldsc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_ldsc.html">snp_ldsc2</a></span>(<span class="no">corr0</span>, <span class="no">df_beta</span>))</pre></body></html></div>
-<pre><code>##       int        h2
-## 1.0000000 0.1152166</code></pre>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">h2_est</span> <span class="kw">&lt;-</span> <span class="no">ldsc</span><span class="kw">[[</span><span class="st">"h2"</span>]]</pre></body></html></div>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">beta_inf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_inf</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>, <span class="kw">h2</span> <span class="kw">=</span> <span class="no">h2_est</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">pred_inf</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">beta_inf</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
+<div class="sourceCode" id="cb23"><html><body><pre class="r">(<span class="no">ldsc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_ldsc.html">snp_ldsc2</a></span>(<span class="no">corr0</span>, <span class="no">df_beta</span>))</pre></body></html></div>
+<pre><code>##       int        h2 
+## 1.0000000 0.1146349</code></pre>
+<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">h2_est</span> <span class="kw">&lt;-</span> <span class="no">ldsc</span><span class="kw">[[</span><span class="st">"h2"</span>]]</pre></body></html></div>
+<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">beta_inf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_inf</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>, <span class="kw">h2</span> <span class="kw">=</span> <span class="no">h2_est</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">pred_inf</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">beta_inf</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
 <span class="fu">AUCBoot</span>(<span class="no">pred_inf</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd
+<pre><code>##       Mean       2.5%      97.5%         Sd 
 ## 0.66347145 0.56739110 0.75341191 0.04784474</code></pre>
 </div>
 <div id="grid-of-models" class="section level3">
 <h3 class="hasAnchor">
 <a href="#grid-of-models" class="anchor"></a>Grid of models</h3>
 <p>In practice, we recommend to test multiple values for h2 and p. </p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r">(<span class="no">h2_seq</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">h2_est</span> * <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.7</span>, <span class="fl">1</span>, <span class="fl">1.4</span>), <span class="fl">4</span>))</pre></body></html></div>
-<pre><code>## [1] 0.0807 0.1152 0.1613</code></pre>
-<div class="sourceCode" id="cb29"><html><body><pre class="r">(<span class="no">p_seq</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">signif</a></span>(<span class="fu"><a href="../reference/seq_log.html">seq_log</a></span>(<span class="fl">1e-4</span>, <span class="fl">1</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">17</span>), <span class="fl">2</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb29"><html><body><pre class="r">(<span class="no">h2_seq</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">h2_est</span> * <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.7</span>, <span class="fl">1</span>, <span class="fl">1.4</span>), <span class="fl">4</span>))</pre></body></html></div>
+<pre><code>## [1] 0.0802 0.1146 0.1605</code></pre>
+<div class="sourceCode" id="cb31"><html><body><pre class="r">(<span class="no">p_seq</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">signif</a></span>(<span class="fu"><a href="../reference/seq_log.html">seq_log</a></span>(<span class="fl">1e-4</span>, <span class="fl">1</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="fl">17</span>), <span class="fl">2</span>))</pre></body></html></div>
 <pre><code>##  [1] 0.00010 0.00018 0.00032 0.00056 0.00100 0.00180 0.00320 0.00560
 ##  [9] 0.01000 0.01800 0.03200 0.05600 0.10000 0.18000 0.32000 0.56000
 ## [17] 1.00000</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r">(<span class="no">params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span>(<span class="kw">p</span> <span class="kw">=</span> <span class="no">p_seq</span>, <span class="kw">h2</span> <span class="kw">=</span> <span class="no">h2_seq</span>, <span class="kw">sparse</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">FALSE</span>, <span class="fl">TRUE</span>)))</pre></body></html></div>
+<div class="sourceCode" id="cb33"><html><body><pre class="r">(<span class="no">params</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span>(<span class="kw">p</span> <span class="kw">=</span> <span class="no">p_seq</span>, <span class="kw">h2</span> <span class="kw">=</span> <span class="no">h2_seq</span>, <span class="kw">sparse</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">FALSE</span>, <span class="fl">TRUE</span>)))</pre></body></html></div>
 <pre><code>##           p     h2 sparse
-## 1   0.00010 0.0807  FALSE
-## 2   0.00018 0.0807  FALSE
-## 3   0.00032 0.0807  FALSE
-## 4   0.00056 0.0807  FALSE
-## 5   0.00100 0.0807  FALSE
-## 6   0.00180 0.0807  FALSE
-## 7   0.00320 0.0807  FALSE
-## 8   0.00560 0.0807  FALSE
-## 9   0.01000 0.0807  FALSE
-## 10  0.01800 0.0807  FALSE
-## 11  0.03200 0.0807  FALSE
-## 12  0.05600 0.0807  FALSE
-## 13  0.10000 0.0807  FALSE
-## 14  0.18000 0.0807  FALSE
-## 15  0.32000 0.0807  FALSE
-## 16  0.56000 0.0807  FALSE
-## 17  1.00000 0.0807  FALSE
-## 18  0.00010 0.1152  FALSE
-## 19  0.00018 0.1152  FALSE
-## 20  0.00032 0.1152  FALSE
-## 21  0.00056 0.1152  FALSE
-## 22  0.00100 0.1152  FALSE
-## 23  0.00180 0.1152  FALSE
-## 24  0.00320 0.1152  FALSE
-## 25  0.00560 0.1152  FALSE
-## 26  0.01000 0.1152  FALSE
-## 27  0.01800 0.1152  FALSE
-## 28  0.03200 0.1152  FALSE
-## 29  0.05600 0.1152  FALSE
-## 30  0.10000 0.1152  FALSE
-## 31  0.18000 0.1152  FALSE
-## 32  0.32000 0.1152  FALSE
-## 33  0.56000 0.1152  FALSE
-## 34  1.00000 0.1152  FALSE
-## 35  0.00010 0.1613  FALSE
-## 36  0.00018 0.1613  FALSE
-## 37  0.00032 0.1613  FALSE
-## 38  0.00056 0.1613  FALSE
-## 39  0.00100 0.1613  FALSE
-## 40  0.00180 0.1613  FALSE
-## 41  0.00320 0.1613  FALSE
-## 42  0.00560 0.1613  FALSE
-## 43  0.01000 0.1613  FALSE
-## 44  0.01800 0.1613  FALSE
-## 45  0.03200 0.1613  FALSE
-## 46  0.05600 0.1613  FALSE
-## 47  0.10000 0.1613  FALSE
-## 48  0.18000 0.1613  FALSE
-## 49  0.32000 0.1613  FALSE
-## 50  0.56000 0.1613  FALSE
-## 51  1.00000 0.1613  FALSE
-## 52  0.00010 0.0807   TRUE
-## 53  0.00018 0.0807   TRUE
-## 54  0.00032 0.0807   TRUE
-## 55  0.00056 0.0807   TRUE
-## 56  0.00100 0.0807   TRUE
-## 57  0.00180 0.0807   TRUE
-## 58  0.00320 0.0807   TRUE
-## 59  0.00560 0.0807   TRUE
-## 60  0.01000 0.0807   TRUE
-## 61  0.01800 0.0807   TRUE
-## 62  0.03200 0.0807   TRUE
-## 63  0.05600 0.0807   TRUE
-## 64  0.10000 0.0807   TRUE
-## 65  0.18000 0.0807   TRUE
-## 66  0.32000 0.0807   TRUE
-## 67  0.56000 0.0807   TRUE
-## 68  1.00000 0.0807   TRUE
-## 69  0.00010 0.1152   TRUE
-## 70  0.00018 0.1152   TRUE
-## 71  0.00032 0.1152   TRUE
-## 72  0.00056 0.1152   TRUE
-## 73  0.00100 0.1152   TRUE
-## 74  0.00180 0.1152   TRUE
-## 75  0.00320 0.1152   TRUE
-## 76  0.00560 0.1152   TRUE
-## 77  0.01000 0.1152   TRUE
-## 78  0.01800 0.1152   TRUE
-## 79  0.03200 0.1152   TRUE
-## 80  0.05600 0.1152   TRUE
-## 81  0.10000 0.1152   TRUE
-## 82  0.18000 0.1152   TRUE
-## 83  0.32000 0.1152   TRUE
-## 84  0.56000 0.1152   TRUE
-## 85  1.00000 0.1152   TRUE
-## 86  0.00010 0.1613   TRUE
-## 87  0.00018 0.1613   TRUE
-## 88  0.00032 0.1613   TRUE
-## 89  0.00056 0.1613   TRUE
-## 90  0.00100 0.1613   TRUE
-## 91  0.00180 0.1613   TRUE
-## 92  0.00320 0.1613   TRUE
-## 93  0.00560 0.1613   TRUE
-## 94  0.01000 0.1613   TRUE
-## 95  0.01800 0.1613   TRUE
-## 96  0.03200 0.1613   TRUE
-## 97  0.05600 0.1613   TRUE
-## 98  0.10000 0.1613   TRUE
-## 99  0.18000 0.1613   TRUE
-## 100 0.32000 0.1613   TRUE
-## 101 0.56000 0.1613   TRUE
-## 102 1.00000 0.1613   TRUE</code></pre>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="co"># takes several minutes if you do not have many cores</span>
+## 1   0.00010 0.0802  FALSE
+## 2   0.00018 0.0802  FALSE
+## 3   0.00032 0.0802  FALSE
+## 4   0.00056 0.0802  FALSE
+## 5   0.00100 0.0802  FALSE
+## 6   0.00180 0.0802  FALSE
+## 7   0.00320 0.0802  FALSE
+## 8   0.00560 0.0802  FALSE
+## 9   0.01000 0.0802  FALSE
+## 10  0.01800 0.0802  FALSE
+## 11  0.03200 0.0802  FALSE
+## 12  0.05600 0.0802  FALSE
+## 13  0.10000 0.0802  FALSE
+## 14  0.18000 0.0802  FALSE
+## 15  0.32000 0.0802  FALSE
+## 16  0.56000 0.0802  FALSE
+## 17  1.00000 0.0802  FALSE
+## 18  0.00010 0.1146  FALSE
+## 19  0.00018 0.1146  FALSE
+## 20  0.00032 0.1146  FALSE
+## 21  0.00056 0.1146  FALSE
+## 22  0.00100 0.1146  FALSE
+## 23  0.00180 0.1146  FALSE
+## 24  0.00320 0.1146  FALSE
+## 25  0.00560 0.1146  FALSE
+## 26  0.01000 0.1146  FALSE
+## 27  0.01800 0.1146  FALSE
+## 28  0.03200 0.1146  FALSE
+## 29  0.05600 0.1146  FALSE
+## 30  0.10000 0.1146  FALSE
+## 31  0.18000 0.1146  FALSE
+## 32  0.32000 0.1146  FALSE
+## 33  0.56000 0.1146  FALSE
+## 34  1.00000 0.1146  FALSE
+## 35  0.00010 0.1605  FALSE
+## 36  0.00018 0.1605  FALSE
+## 37  0.00032 0.1605  FALSE
+## 38  0.00056 0.1605  FALSE
+## 39  0.00100 0.1605  FALSE
+## 40  0.00180 0.1605  FALSE
+## 41  0.00320 0.1605  FALSE
+## 42  0.00560 0.1605  FALSE
+## 43  0.01000 0.1605  FALSE
+## 44  0.01800 0.1605  FALSE
+## 45  0.03200 0.1605  FALSE
+## 46  0.05600 0.1605  FALSE
+## 47  0.10000 0.1605  FALSE
+## 48  0.18000 0.1605  FALSE
+## 49  0.32000 0.1605  FALSE
+## 50  0.56000 0.1605  FALSE
+## 51  1.00000 0.1605  FALSE
+## 52  0.00010 0.0802   TRUE
+## 53  0.00018 0.0802   TRUE
+## 54  0.00032 0.0802   TRUE
+## 55  0.00056 0.0802   TRUE
+## 56  0.00100 0.0802   TRUE
+## 57  0.00180 0.0802   TRUE
+## 58  0.00320 0.0802   TRUE
+## 59  0.00560 0.0802   TRUE
+## 60  0.01000 0.0802   TRUE
+## 61  0.01800 0.0802   TRUE
+## 62  0.03200 0.0802   TRUE
+## 63  0.05600 0.0802   TRUE
+## 64  0.10000 0.0802   TRUE
+## 65  0.18000 0.0802   TRUE
+## 66  0.32000 0.0802   TRUE
+## 67  0.56000 0.0802   TRUE
+## 68  1.00000 0.0802   TRUE
+## 69  0.00010 0.1146   TRUE
+## 70  0.00018 0.1146   TRUE
+## 71  0.00032 0.1146   TRUE
+## 72  0.00056 0.1146   TRUE
+## 73  0.00100 0.1146   TRUE
+## 74  0.00180 0.1146   TRUE
+## 75  0.00320 0.1146   TRUE
+## 76  0.00560 0.1146   TRUE
+## 77  0.01000 0.1146   TRUE
+## 78  0.01800 0.1146   TRUE
+## 79  0.03200 0.1146   TRUE
+## 80  0.05600 0.1146   TRUE
+## 81  0.10000 0.1146   TRUE
+## 82  0.18000 0.1146   TRUE
+## 83  0.32000 0.1146   TRUE
+## 84  0.56000 0.1146   TRUE
+## 85  1.00000 0.1146   TRUE
+## 86  0.00010 0.1605   TRUE
+## 87  0.00018 0.1605   TRUE
+## 88  0.00032 0.1605   TRUE
+## 89  0.00056 0.1605   TRUE
+## 90  0.00100 0.1605   TRUE
+## 91  0.00180 0.1605   TRUE
+## 92  0.00320 0.1605   TRUE
+## 93  0.00560 0.1605   TRUE
+## 94  0.01000 0.1605   TRUE
+## 95  0.01800 0.1605   TRUE
+## 96  0.03200 0.1605   TRUE
+## 97  0.05600 0.1605   TRUE
+## 98  0.10000 0.1605   TRUE
+## 99  0.18000 0.1605   TRUE
+## 100 0.32000 0.1605   TRUE
+## 101 0.56000 0.1605   TRUE
+## 102 1.00000 0.1605   TRUE</code></pre>
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co"># takes several minutes if you do not have many cores</span>
 <span class="no">beta_grid</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_grid</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>, <span class="no">params</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="no">pred_grid</span> <span class="kw">&lt;-</span> <span class="fu">big_prodMat</span>(<span class="no">G</span>, <span class="no">beta_grid</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="no">pred_grid</span> <span class="kw">&lt;-</span> <span class="fu">big_prodMat</span>(<span class="no">G</span>, <span class="no">beta_grid</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
 <span class="no">params</span>$<span class="no">score</span> <span class="kw">&lt;-</span> <span class="fu">big_univLogReg</span>(<span class="fu">as_FBM</span>(<span class="no">pred_grid</span>[<span class="no">ind.val</span>, ]), <span class="no">y</span>[<span class="no">ind.val</span>])$<span class="no">score</span></pre></body></html></div>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="no">params</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">p</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">score</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span>(<span class="no">h2</span>))) +
   <span class="fu">theme_bigstatsr</span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
@@ -350,25 +358,25 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="st">"GLM Z-Score"</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"h2"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">"top"</span>, <span class="kw">panel.spacing</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">unit</a></span>(<span class="fl">1</span>, <span class="st">"lines"</span>))</pre></body></html></div>
 <p><img src="LDpred2_files/figure-html/unnamed-chunk-17-1.png" width="90%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">sparsity</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(<span class="no">beta_grid</span> <span class="kw">==</span> <span class="fl">0</span>), <span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">score</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_at</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"score"</span>, <span class="st">"sparsity"</span>), <span class="no">round</span>, <span class="kw">digits</span> <span class="kw">=</span> <span class="fl">3</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>:<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>##         p     h2 sparse score sparsity id
-## 1  0.0056 0.1152   TRUE 4.381    0.567 76
-## 2  0.0018 0.1152   TRUE 4.362    0.568 74
-## 3  0.0032 0.1613   TRUE 4.362    0.550 92
-## 4  0.0320 0.1613   TRUE 4.360    0.550 96
-## 5  0.0320 0.0807   TRUE 4.360    0.582 62
-## 6  0.0032 0.1152   TRUE 4.358    0.568 75
-## 7  0.0018 0.1613   TRUE 4.358    0.563 91
-## 8  0.0032 0.0807   TRUE 4.355    0.583 58
-## 9  0.0560 0.0807   TRUE 4.355    0.585 63
-## 10 0.0010 0.0807   TRUE 4.354    0.597 56</code></pre>
+## 1  0.0032 0.1605   TRUE 4.379    0.551 92
+## 2  0.0056 0.1146   TRUE 4.373    0.563 76
+## 3  0.0032 0.1146   TRUE 4.368    0.568 75
+## 4  0.0018 0.0802   TRUE 4.366    0.587 57
+## 5  0.0010 0.0802   TRUE 4.365    0.592 56
+## 6  0.0018 0.1605   TRUE 4.364    0.564 91
+## 7  0.1000 0.1146   TRUE 4.363    0.570 81
+## 8  0.0018 0.1605  FALSE 4.360    0.000 40
+## 9  0.0320 0.1146   TRUE 4.360    0.567 79
+## 10 0.0180 0.0802   TRUE 4.359    0.581 61</code></pre>
 <p>You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step.</p>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">best_grid_nosp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="no">best_grid_nosp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="no">sparse</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">score</span>)) <span class="kw">%&gt;%</span>
@@ -378,9 +386,9 @@
 
 <span class="no">pred_nosp</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_nosp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
 <span class="fu">AUCBoot</span>(<span class="no">pred_nosp</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##      Mean      2.5%     97.5%        Sd
-## 0.6704479 0.5698157 0.7647398 0.0496414</code></pre>
-<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="no">best_grid_sp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
+<pre><code>##       Mean       2.5%      97.5%         Sd 
+## 0.67572283 0.57633615 0.77080690 0.04980692</code></pre>
+<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="no">best_grid_sp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">sparse</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span>(<span class="no">score</span>)) <span class="kw">%&gt;%</span>
@@ -390,45 +398,45 @@
 
 <span class="no">pred_sp</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_sp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
 <span class="fu">AUCBoot</span>(<span class="no">pred_sp</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd
-## 0.67072610 0.57171647 0.76128541 0.04835828</code></pre>
+<pre><code>##      Mean      2.5%     97.5%        Sd 
+## 0.6740258 0.5746580 0.7665196 0.0492377</code></pre>
 </div>
 <div id="automatic-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#automatic-model" class="anchor"></a>Automatic model</h3>
 <p>Actually, you can run many of them in parallel with different initial values for <code>p</code>.</p>
-<div class="sourceCode" id="cb42"><html><body><pre class="r"><span class="co"># takes a few minutes</span>
+<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="co"># takes a few minutes</span>
 <span class="no">multi_auto</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_auto</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>, <span class="kw">h2_init</span> <span class="kw">=</span> <span class="no">h2_est</span>,
                                <span class="kw">vec_p_init</span> <span class="kw">=</span> <span class="fu"><a href="../reference/seq_log.html">seq_log</a></span>(<span class="fl">1e-4</span>, <span class="fl">0.9</span>, <span class="kw">length.out</span> <span class="kw">=</span> <span class="no">NCORES</span>),
                                <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">multi_auto</span>)</pre></body></html></div>
 <pre><code>## List of 4
 ##  $ :List of 5
-##   ..$ beta_est   : num [1:52556] -9.23e-07 5.57e-07 -4.21e-06 -6.89e-06 -6.18e-06 ...
-##   ..$ p_est      : num 0.0635
-##   ..$ h2_est     : num 0.00147
-##   ..$ path_p_est : num [1:1500] 4.75e-05 6.37e-05 6.06e-05 6.56e-05 1.77e-04 ...
-##   ..$ path_h2_est: num [1:1500] 0.006599 0.00147 0.000645 0.0001 0.000115 ...
+##   ..$ beta_est   : num [1:52546] -7.96e-07 4.79e-07 -3.63e-06 -5.95e-06 -5.33e-06 ...
+##   ..$ p_est      : num 0.0461
+##   ..$ h2_est     : num 0.00127
+##   ..$ path_p_est : num [1:1500] 0.000112 0.000139 0.000196 0.000236 0.000359 ...
+##   ..$ path_h2_est: num [1:1500] 0.0201 0.0341 0.0625 0.0579 0.1142 ...
 ##  $ :List of 5
-##   ..$ beta_est   : num [1:52556] -7.81e-07 4.73e-07 -3.57e-06 -5.85e-06 -5.24e-06 ...
-##   ..$ p_est      : num 0.0114
-##   ..$ h2_est     : num 0.00124
-##   ..$ path_p_est : num [1:1500] 0.00247 0.00327 0.00314 0.00332 0.00348 ...
-##   ..$ path_h2_est: num [1:1500] 0.147 0.159 0.202 0.238 0.234 ...
+##   ..$ beta_est   : num [1:52546] -4.06e-07 2.46e-07 -1.85e-06 -3.04e-06 -2.72e-06 ...
+##   ..$ p_est      : num 0.01
+##   ..$ h2_est     : num 0.000649
+##   ..$ path_p_est : num [1:1500] 0.00212 0.0023 0.00215 0.00242 0.00229 ...
+##   ..$ path_h2_est: num [1:1500] 0.131 0.122 0.111 0.107 0.126 ...
 ##  $ :List of 5
-##   ..$ beta_est   : num [1:52556] -4.90e-07 2.94e-07 -2.23e-06 -3.65e-06 -3.27e-06 ...
-##   ..$ p_est      : num 0.0291
-##   ..$ h2_est     : num 0.000781
-##   ..$ path_p_est : num [1:1500] 0.0434 0.0419 0.0418 0.0429 0.0438 ...
-##   ..$ path_h2_est: num [1:1500] 0.1114 0.1042 0.1045 0.0999 0.0931 ...
+##   ..$ beta_est   : num [1:52546] -2.14e-06 1.27e-06 -9.79e-06 -1.61e-05 -1.44e-05 ...
+##   ..$ p_est      : num 0.0172
+##   ..$ h2_est     : num 0.00342
+##   ..$ path_p_est : num [1:1500] 0.0462 0.0464 0.0477 0.0469 0.0471 ...
+##   ..$ path_h2_est: num [1:1500] 0.114 0.11 0.113 0.11 0.111 ...
 ##  $ :List of 5
-##   ..$ beta_est   : num [1:52556] -3.17e-06 1.92e-06 -1.44e-05 -2.37e-05 -2.12e-05 ...
-##   ..$ p_est      : num 0.901
-##   ..$ h2_est     : num 0.00506
-##   ..$ path_p_est : num [1:1500] 0.899 0.9 0.897 0.897 0.897 ...
-##   ..$ path_h2_est: num [1:1500] 0.12 0.121 0.117 0.111 0.109 ...</code></pre>
+##   ..$ beta_est   : num [1:52546] -1.10e-06 6.72e-07 -5.03e-06 -8.24e-06 -7.39e-06 ...
+##   ..$ p_est      : num 0.801
+##   ..$ h2_est     : num 0.00177
+##   ..$ path_p_est : num [1:1500] 0.896 0.896 0.898 0.897 0.894 ...
+##   ..$ path_h2_est: num [1:1500] 0.116 0.114 0.115 0.118 0.12 ...</code></pre>
 <p>You should verify if the chains “converged”. This is not the case here, which is probably because the data is so small.</p>
-<div class="sourceCode" id="cb44"><html><body><pre class="r"><span class="no">auto</span> <span class="kw">&lt;-</span> <span class="no">multi_auto</span><span class="kw">[[</span><span class="fl">1</span>]]
+<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="no">auto</span> <span class="kw">&lt;-</span> <span class="no">multi_auto</span><span class="kw">[[</span><span class="fl">1</span>]]
 <span class="fu">plot_grid</span>(
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html">qplot</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">auto</span>$<span class="no">path_p_est</span>) +
     <span class="fu">theme_bigstatsr</span>() +
@@ -442,16 +450,22 @@
   <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">align</span> <span class="kw">=</span> <span class="st">"hv"</span>
 )</pre></body></html></div>
 <p><img src="LDpred2_files/figure-html/unnamed-chunk-22-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="no">beta_auto</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(<span class="no">multi_auto</span>, <span class="kw">function</span>(<span class="no">auto</span>) <span class="no">auto</span>$<span class="no">beta_est</span>)
+<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="no">beta_auto</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(<span class="no">multi_auto</span>, <span class="kw">function</span>(<span class="no">auto</span>) <span class="no">auto</span>$<span class="no">beta_est</span>)
 <span class="no">pred_auto</span> <span class="kw">&lt;-</span> <span class="fu">big_prodMat</span>(<span class="no">G</span>, <span class="no">beta_auto</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb46"><html><body><pre class="r"><span class="co"># Make sure the scale is okay (by comparing to LDpred2-inf and others auto)</span>
+<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="co"># Make sure the scale is okay (by comparing to LDpred2-inf and others auto)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/mad.html">mad</a></span>(<span class="no">pred_inf</span>), <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="no">pred_auto</span>, <span class="fl">2</span>, <span class="no">mad</span>))</pre></body></html></div>
-<pre><code>## [1] 0.217309958 0.002750820 0.002335504 0.001460205 0.009433448</code></pre>
-<div class="sourceCode" id="cb48"><html><body><pre class="r"><span class="co"># and could keep only the ones that looks good.. (e.g. see code of paper)<br># https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2.R#L101-L108</span>
+<pre><code>## [1] 0.215269228 0.002379594 0.001214702 0.006411406 0.003297449</code></pre>
+<div class="sourceCode" id="cb50"><html><body><pre class="r"><span class="co"># and could keep only the ones that looks good.. (e.g. see code of paper)</span>
+<span class="co"># https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2.R#L101-L108</span>
 <span class="no">final_pred_auto</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span>(<span class="no">pred_auto</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="fu">AUCBoot</span>(<span class="no">final_pred_auto</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##      Mean      2.5%     97.5%        Sd
-## 0.6638091 0.5668773 0.7550718 0.0480581</code></pre>
+<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="fu">AUCBoot</span>(<span class="no">final_pred_auto</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
+<pre><code>##       Mean       2.5%      97.5%         Sd 
+## 0.66305843 0.56596424 0.75284954 0.04779062</code></pre>
+<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="no">corr</span>); <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span>(); <span class="fu"><a href="https://rdrr.io/r/base/files.html">file.remove</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">tmp</span>, <span class="st">".sbk"</span>))</pre></body></html></div>
+<pre><code>##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
+## Ncells  2306400 123.2    4006381  214.0   4006381  214.0
+## Vcells 70980132 541.6  186853485 1425.6 172920711 1319.3</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 </div>
 </div>
 <div id="conclusion" class="section level2">
@@ -459,7 +473,7 @@
 <a href="#conclusion" class="anchor"></a>Conclusion</h2>
 <p>We have seen how to run 3 versions of LDpred2 (“-inf”, “-grid” and “-auto”) for one chromosome. You need to do this for each chromosome and combine results. Normally, you can just sum the resulting scores, or equivalently, append the effect sizes.</p>
 <p>In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers. Information about these variants can be retrieved with</p>
-<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="no">info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">url</a></span>(<span class="st">"https://github.com/privefl/bigsnpr/raw/master/data-raw/hm3_variants.rds"</span>))
+<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="no">info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">url</a></span>(<span class="st">"https://github.com/privefl/bigsnpr/raw/master/data-raw/hm3_variants.rds"</span>))
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">info</span>)</pre></body></html></div>
 <pre><code>## 'data.frame':    1120696 obs. of  8 variables:
 ##  $ chr     : int  1 1 1 1 1 1 1 1 1 1 ...
@@ -499,7 +513,7 @@
       </footer>
 </div>
 
-
+  
 
 
   </body>

@@ -53,7 +53,7 @@ sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
 str(sumstats)
 ```
 
-We split genotype data using part of the data to learn parameters of stacking and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.
+We split genotype data using part of the data to choose hyper-parameters and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.
 
 ```{r}
 set.seed(1)
@@ -90,7 +90,7 @@ First, you need to compute correlations between variants.
 We recommend to use a window size of 3 cM (see ref).
 
 ```{r}
-POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = 3)
+POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = NCORES)
 ```
 
 ```{r}
@@ -107,7 +107,13 @@ corr0 <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES,
 ```
 
 ```{r}
-corr <- bigsparser::as_SFBM(as(corr0, "dgCMatrix"))
+tmp <- tempfile(tmpdir = "tmp-data")
+if (packageVersion("bigsnpr") >= package_version("1.4.9") &&
+    packageVersion("bigsparser") >= package_version("0.4.0")) {
+  corr <- as_SFBM(corr0, tmp)
+} else {
+  corr <- bigsparser::as_SFBM(as(corr0, "dgCMatrix"), tmp)
+}
 ```
 
 ### Infinitesimal model
@@ -244,6 +250,11 @@ final_pred_auto <- rowMeans(pred_auto)
 ```{r}
 AUCBoot(final_pred_auto, y[ind.test])
 ```
+
+```{r}
+rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
+```
+
 
 ## Conclusion
 
