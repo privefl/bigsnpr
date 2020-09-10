@@ -72,6 +72,9 @@ test_that("works with a subset of SNPs", {
 
 test_that("works with a subset of individuals", {
   ind_snp <- setdiff2(sample(length(IDs), 100, replace = TRUE), excl)
+  expect_error(
+    snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]), c(1, 501), ncores = ncores()),
+    "all(ind_row >= 1 & ind_row <= N) is not TRUE", fixed = TRUE)
   ind_row <- sample(500, 100, replace = TRUE)
   test3 <- snp_attach(
     snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]), ind_row, ncores = ncores()))
