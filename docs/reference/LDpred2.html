@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -166,6 +166,7 @@
   <span class='kw'>vec_p_init</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
   <span class='kw'>burn_in</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
   <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>500</span>,
+  <span class='kw'>sparse</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )</pre>
@@ -175,8 +176,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>corr</th>
-      <td><p>Sparse correlation matrix as an SFBM. If <code>corr</code> is
-a dgSMatrix, you can use <code><a href='https://rdrr.io/pkg/bigsparser/man/SFBM-class.html'>bigsparser::as_SFBM(as(corr, "dgCMatrix"))</a></code>.</p></td>
+      <td><p>Sparse correlation matrix as an SFBM.
+If <code>corr</code> is a dsCMatrix or a dgCMatrix, you can use <code><a href='https://rdrr.io/pkg/bigsparser/man/SFBM-class.html'>as_SFBM(corr)</a></code>.</p></td>
     </tr>
     <tr>
       <th>df_beta</th>
@@ -220,6 +221,12 @@ You may use nb_cores.</p></td>
     <tr>
       <th>vec_p_init</th>
       <td><p>Vector of initial values for p. Default is <code>0.1</code>.</p></td>
+    </tr>
+    <tr>
+      <th>sparse</th>
+      <td><p>In LDpred2-auto, whether to also report a sparse solution by
+running LDpred2-grid with the estimates of p and h2 from LDpred2-auto, and
+sparsity enabled. Default is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>

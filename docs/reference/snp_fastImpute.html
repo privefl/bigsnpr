@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -249,7 +249,7 @@ You may use nb_cores.</p></td>
 <span class='co'># ggplot2</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/funprog.html'>Reduce</a></span>(<span class='kw'>function</span>(<span class='no'>p</span>, <span class='no'>i</span>) {
-  <span class='no'>p</span> + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/stat_function.html'>stat_function</a></span>(<span class='kw'>fun</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>pvals</span>[<span class='no'>i</span>] / <span class='no'>x</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>colvals</span>[<span class='no'>i</span>])
+  <span class='no'>p</span> + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_function.html'>stat_function</a></span>(<span class='kw'>fun</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>pvals</span>[<span class='no'>i</span>] / <span class='no'>x</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>colvals</span>[<span class='no'>i</span>])
 }, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>pvals</span>), <span class='kw'>init</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>pNA</span>, <span class='no'>pError</span>))) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>() +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_cartesian.html'>coord_cartesian</a></span>(<span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span>(<span class='no'>df</span>$<span class='no'>pError</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) +

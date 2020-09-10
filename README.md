@@ -13,7 +13,7 @@
 
 [**LIST OF FEATURES**](https://privefl.github.io/bigsnpr/reference/index.html)
 
-**Note that most of the algorithms of this package don't handle missing values.** You can use `snp_fastImpute()` (taking a few hours for a chip of 15K x 300K) and `snp_fastImputeSimple()` (taking a few minutes) to impute missing values of *genotyped* variants.
+**Note that most of the algorithms of this package don't handle missing values.** You can use `snp_fastImpute()` (taking a few hours for a chip of 15K x 300K) and `snp_fastImputeSimple()` (taking a few minutes only) to impute missing values of *genotyped* variants.
 
 **New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
 
@@ -27,20 +27,27 @@ In R, run
 remotes::install_github("privefl/bigsnpr")
 ```
 
+or for the CRAN version
+
+```r
+install.packages("bigsnpr")
+```
+
 
 ## Input formats
 
-This package reads *bed*/*bim*/*fam* files (PLINK preferred format) using function `snp_readBed()`. Before reading into this package's special format, quality control and conversion can be done using PLINK, which can be called directly from R using `snp_plinkQC` and `snp_plinkKINGQC`.
+This package reads *bed*/*bim*/*fam* files (PLINK preferred format) using functions `snp_readBed()` and `snp_readBed2()`. Before reading into this package's special format, quality control and conversion can be done using PLINK, which can be called directly from R using `snp_plinkQC()` and `snp_plinkKINGQC()`.
 
-This package now also reads **UK Biobank BGEN files** using function `snp_readBGEN()`.
+This package can also read **UK Biobank BGEN files** using function `snp_readBGEN()`. This function takes around 40 minutes to read 1M variants for 400K individuals using 15 cores.
 
-This package uses a class called `bigSNP` for representing SNP data. A `bigSNP` object is just a list with some elements:
+This package uses a class called `bigSNP` for representing SNP data. A `bigSNP` object is a list with some elements:
 
-- `genotypes`: A [`FBM.code256`](https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html). Rows are samples and columns are SNPs. This stores genotypes calls or dosages (rounded to 2 decimal places).
-- `fam`: A `data.frame` containing some information on the SNPs.
-- `map`: A `data.frame` giving some information on the individuals.
+- `genotypes`: A [`FBM.code256`](https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html). Rows are samples and columns are SNPs. This stores genotype calls or **dosages** (rounded to 2 decimal places).
+- `fam`: A `data.frame` with some information on the SNPs.
+- `map`: A `data.frame` with some information on the individuals.
 
 **New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
+
 
 ## Polygenic scores
 

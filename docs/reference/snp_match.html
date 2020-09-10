@@ -74,7 +74,7 @@ strand flips and reverse reference alleles (opposite effects)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -157,6 +157,7 @@ strand flips and reverse reference alleles (opposite effects).</p>
   <span class='no'>info_snp</span>,
   <span class='kw'>strand_flip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>join_by_pos</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>remove_dups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>match.min.prop</span> <span class='kw'>=</span> <span class='fl'>0.5</span>
 )</pre>
 
@@ -182,6 +183,11 @@ If so, ambiguous alleles A/T and C/G are removed.</p></td>
 or instead by rsid.</p></td>
     </tr>
     <tr>
+      <th>remove_dups</th>
+      <td><p>Whether to remove duplicates (same physical position)?
+Default is <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
       <th>match.min.prop</th>
       <td><p>Minimum proportion of variants in the smallest data
 to be matched, otherwise stops with an error. Default is <code>50%</code>.</p></td>
@@ -190,7 +196,8 @@ to be matched, otherwise stops with an error. Default is <code>50%</code>.</p></
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A single data frame with matched variants.</p>
+    <p>A single data frame with matched variants. Values in column <code>$beta</code>
+are multiplied by -1 for variants with alleles reversed.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='snp_modifyBuild.html'>snp_modifyBuild</a></p></div>

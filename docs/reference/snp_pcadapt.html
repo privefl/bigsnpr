@@ -75,7 +75,7 @@ on mahalanobis distance, as implemented in package pcadapt." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -227,7 +227,8 @@ Molecular ecology resources, 17(1), 67-77.</p>
     <pre class="examples"><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
 <span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
 <span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>G</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>obj.svd</span>) <span class='co'># there seems to be 3 "significant" components</span></div><div class='img'><img src='snp_pcadapt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>pcadapt</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>obj.svd</span>$<span class='no'>u</span>[, <span class='fl'>1</span>:<span class='fl'>3</span>])
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>obj.svd</span>) <span class='co'># there seems to be 3 "significant" components</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Continuous limits supplied to discrete scale.</span>
+#&gt; <span class='warning'>Did you mean `limits = factor(...)` or `scale_*_continuous()`?</span></div><div class='img'><img src='snp_pcadapt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>pcadapt</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>obj.svd</span>$<span class='no'>u</span>[, <span class='fl'>1</span>:<span class='fl'>3</span>])
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>pcadapt</span>)</div><div class='img'><img src='snp_pcadapt-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

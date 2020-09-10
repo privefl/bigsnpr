@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -222,9 +222,7 @@ Robust Procedures. Analysis Of Genetic Association Studies, 151-206.
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>))</div><div class='output co'>#&gt; Classes 'mhtest' and 'data.frame':	1200 obs. of  1 variable:
 #&gt;  $ score: num  1.7124 0.0178 2.7611 0.1309 0.4396 ...
 #&gt;  - attr(*, "transfo")=function (x)  
-#&gt;  - attr(*, "predict")=function (xtr)  
-#&gt;   ..- attr(*, "srcref")= 'srcref' int  98 15 100 3 15 3 255 257
-#&gt;   .. ..- attr(*, "srcfile")=Classes 'srcfilealias', 'srcfile' &lt;environment: 0x000000002d94ad50&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
+#&gt;  - attr(*, "predict")=function (xtr)  </div><div class='input'><span class='co'># p-values are not well calibrated</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><div class='img'><img src='snp_MAX3-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
 <span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><div class='img'><img src='snp_MAX3-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Armitage trend test (well calibrated because only one test)</span>

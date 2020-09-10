@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -248,15 +248,15 @@ You may use nb_cores.</p></td>
     <pre class="examples"><div class='input'><span class='no'>bigsnp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
 <span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>bigsnp</span>$<span class='no'>genotypes</span>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='no'>bigsnp</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
-<span class='no'>corr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_cor.html'>snp_cor</a></span>(<span class='no'>G</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='no'>corr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_cor.html'>snp_cor</a></span>(<span class='no'>G</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>1000</span>)
 
-<span class='no'>gwas</span> <span class='kw'>&lt;-</span> <span class='fu'>big_univLogReg</span>(<span class='no'>G</span>, <span class='no'>y</span>)
+<span class='no'>gwas</span> <span class='kw'>&lt;-</span> <span class='fu'>big_univLogReg</span>(<span class='no'>G</span>, <span class='no'>y</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>1000</span>)
 <span class='no'>df_beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>beta</span> <span class='kw'>=</span> <span class='no'>gwas</span>$<span class='no'>estim</span>, <span class='kw'>beta_se</span> <span class='kw'>=</span> <span class='no'>gwas</span>$<span class='no'>std.err</span>,
                       <span class='kw'>n_eff</span> <span class='kw'>=</span> <span class='fl'>4</span> / (<span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>0</span>) + <span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>1</span>)))
 
 <span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>)</div><div class='output co'>#&gt;       int        h2 
-#&gt; 1.0000000 0.8604764 </div><div class='input'><span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</div><div class='output co'>#&gt;       int    int_se        h2     h2_se 
-#&gt; 0.3837152 0.1810912 2.7092661 0.4808824 </div><div class='input'>
+#&gt; 1.0000000 0.2335429 </div><div class='input'><span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</div><div class='output co'>#&gt;       int    int_se        h2     h2_se 
+#&gt; 0.4986445 0.2526338 0.6195226 0.1818980 </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

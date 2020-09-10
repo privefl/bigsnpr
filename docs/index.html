@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
       </span>
     </div>
 
@@ -106,28 +106,30 @@
 <p>{bigsnpr} is an R package for the analysis of massive SNP arrays, primarily designed for human genetics. It enhances the features of <a href="https://privefl.github.io/bigstatsr">package {bigstatsr}</a> for the purpose of analyzing genotype data.</p>
 <p><a href="https://privefl.github.io/bigsnpr/articles/demo.html">Quick demo</a></p>
 <p><a href="https://privefl.github.io/bigsnpr/reference/index.html"><strong>LIST OF FEATURES</strong></a></p>
-<p><strong>Note that most of the algorithms of this package don’t handle missing values.</strong> You can use <code><a href="reference/snp_fastImpute.html">snp_fastImpute()</a></code> (taking a few hours for a chip of 15K x 300K) and <code><a href="reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code> (taking a few minutes) to impute missing values of <em>genotyped</em> variants.</p>
+<p><strong>Note that most of the algorithms of this package don’t handle missing values.</strong> You can use <code><a href="reference/snp_fastImpute.html">snp_fastImpute()</a></code> (taking a few hours for a chip of 15K x 300K) and <code><a href="reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code> (taking a few minutes only) to impute missing values of <em>genotyped</em> variants.</p>
 <p><strong>New!</strong> Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper “Efficient toolkit implementing..”.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>In R, run</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("remotes")</span>
-<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"privefl/bigsnpr"</span>)</pre></div>
+<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"privefl/bigsnpr"</span>)</pre></div>
+<p>or for the CRAN version</p>
+<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"bigsnpr"</span>)</pre></div>
 </div>
 <div id="input-formats" class="section level2">
 <h2 class="hasAnchor">
 <a href="#input-formats" class="anchor"></a>Input formats</h2>
-<p>This package reads <em>bed</em>/<em>bim</em>/<em>fam</em> files (PLINK preferred format) using function <code><a href="reference/snp_readBed.html">snp_readBed()</a></code>. Before reading into this package’s special format, quality control and conversion can be done using PLINK, which can be called directly from R using <code>snp_plinkQC</code> and <code>snp_plinkKINGQC</code>.</p>
-<p>This package now also reads <strong>UK Biobank BGEN files</strong> using function <code><a href="reference/snp_readBGEN.html">snp_readBGEN()</a></code>.</p>
-<p>This package uses a class called <code>bigSNP</code> for representing SNP data. A <code>bigSNP</code> object is just a list with some elements:</p>
+<p>This package reads <em>bed</em>/<em>bim</em>/<em>fam</em> files (PLINK preferred format) using functions <code><a href="reference/snp_readBed.html">snp_readBed()</a></code> and <code><a href="reference/snp_readBed.html">snp_readBed2()</a></code>. Before reading into this package’s special format, quality control and conversion can be done using PLINK, which can be called directly from R using <code><a href="reference/snp_plinkQC.html">snp_plinkQC()</a></code> and <code><a href="reference/snp_plinkKINGQC.html">snp_plinkKINGQC()</a></code>.</p>
+<p>This package can also read <strong>UK Biobank BGEN files</strong> using function <code><a href="reference/snp_readBGEN.html">snp_readBGEN()</a></code>. This function takes around 40 minutes to read 1M variants for 400K individuals using 15 cores.</p>
+<p>This package uses a class called <code>bigSNP</code> for representing SNP data. A <code>bigSNP</code> object is a list with some elements:</p>
 <ul>
 <li>
-<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are SNPs. This stores genotypes calls or dosages (rounded to 2 decimal places).</li>
+<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are SNPs. This stores genotype calls or <strong>dosages</strong> (rounded to 2 decimal places).</li>
 <li>
-<code>fam</code>: A <code>data.frame</code> containing some information on the SNPs.</li>
+<code>fam</code>: A <code>data.frame</code> with some information on the SNPs.</li>
 <li>
-<code>map</code>: A <code>data.frame</code> giving some information on the individuals.</li>
+<code>map</code>: A <code>data.frame</code> with some information on the individuals.</li>
 </ul>
 <p><strong>New!</strong> Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper “Efficient toolkit implementing..”.</p>
 </div>
