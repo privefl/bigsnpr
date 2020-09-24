@@ -1,3 +1,7 @@
+## bigsnpr 1.5.0
+
+- Add function `snp_fst()` for computing Fst. 
+
 ## bigsnpr 1.4.11
 
 - Workaround for error `could not find function "ldpred2_gibbs_auto"`.
@@ -32,7 +36,7 @@
 
 - Allow for multiple initial values for p in `snp_ldpred2_auto()`.
 
-- Add function `coef_to_liab()` to e.g. convert heritability to the liability scale.
+- Add function `coef_to_liab()` for e.g. converting heritability to the liability scale.
 
 ## bigsnpr 1.4.1
 
@@ -66,7 +70,7 @@
 
 ## bigsnpr 1.2.5
 
-- Add function `snp_subset()` as alias of method `subset()` to subset `bigSNP` objects.
+- Add function `snp_subset()` as alias of method `subset()` for subsetting `bigSNP` objects.
 
 ## bigsnpr 1.2.4
 
