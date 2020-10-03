@@ -1,14 +1,30 @@
 ---
 title: "Computing polygenic scores using LDpred2"
 author: "Florian Privé"
-date: "May 25, 2020"
+date: "October 3, 2020"
 output: html_document
 editor_options: 
   chunk_output_type: console
 ---
 
-In this document, we show how to compute polygenic risk scores using LDpred2.
-You should also look at the code of the paper, and at [the supplementary note on quality control of summary statistics](https://github.com/privefl/paper-ldpred2/blob/master/paper/paper-ldpred2-supp.pdf).
+Here we show how to compute polygenic risk scores using [LDpred2](https://doi.org/10.1101/2020.04.28.066720).
+
+This tutorial only uses fake data for educational purposes.
+You should also probably look at [the code of the paper](https://github.com/privefl/paper-ldpred2/tree/master/code), particularly at [the code to prepare summary statistics (including performing the quality control presented in the Methods section "Quality control of summary statistics" of the paper)](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R), at [the code to read BGEN files into the data format used by bigsnpr](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62), at [the code to prepare LD matrices](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26) and at [the code to run LDpred2 (genome-wide)](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L34-L118).
+
+In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers.
+Information about these variants can be retrieved with
+
+```{r}
+info <- readRDS(url("https://github.com/privefl/bigsnpr/raw/master/data-raw/hm3_variants.rds"))
+str(info)
+```
+
+Alternatively, we also provide an LD reference to be used direcly, along with an example script on how to use it at https://doi.org/10.6084/m9.figshare.13034123.
+
+Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was shown in the first versions of this tutorial. The only difference it makes is when building the SFBM (the sparse LD matrix on disk), you need to build it so that it contains all variants genome-wide (see e.g. [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L39-L64)).
+
+
 
 ## Downloading genotype data and summary statistics
 
@@ -53,7 +69,7 @@ sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
 str(sumstats)
 ```
 
-We split genotype data using part of the data to choose hyper-parameters and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.
+We split genotype data using part of the data to choose hyper-parameters and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals to be used as validation set to tune hyper-parameters for LDpred2-grid. The other 159 individuals are used as test set to evaluate the final models.
 
 ```{r}
 set.seed(1)
@@ -116,6 +132,8 @@ if (packageVersion("bigsnpr") >= package_version("1.4.9") &&
 }
 ```
 
+Here, we have built the LD matrix using variants from one chromosome only. In practice, you need to build it for variants from all chromosomes. Please look at the code linked at the beginning.
+
 ### Infinitesimal model
 
 ```{r, cache=TRUE}
@@ -176,6 +194,8 @@ params %>%
 
 You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step.
 
+Also note that we separate both sparse and non-sparse models here (and in the paper) to show that their predictive performance are similar. In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models.
+
 ```{r}
 best_grid_nosp <- params %>%
   mutate(id = row_number()) %>%
@@ -205,7 +225,7 @@ AUCBoot(pred_sp, y[ind.test])
 
 ### Automatic model
 
-Actually, you can run many of them in parallel with different initial values for `p`.
+We recommend to run many of them in parallel with different initial values for `p` (e.g. `length.out = 30`).
 
 ```{r, cache=TRUE}
 # takes a few minutes
@@ -215,7 +235,9 @@ multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
 str(multi_auto)
 ```
 
-You should verify if the chains "converged".
+You should verify if the chains "converged". You can look at the path of the chains, as shown below.
+In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112), reproduced below).
+
 This is not the case here, which is probably because the data is so small.
 
 ```{r}
@@ -240,11 +262,10 @@ pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
 ```
 
 ```{r}
-# Make sure the scale is okay (by comparing to LDpred2-inf and others auto)
-c(mad(pred_inf), apply(pred_auto, 2, mad))
-# and could keep only the ones that looks good.. (e.g. see code of paper)
-# https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2.R#L101-L108
-final_pred_auto <- rowMeans(pred_auto)
+sc <- apply(pred_auto, 2, sd)
+keep <- abs(sc - median(sc)) < 3 * mad(sc)
+final_beta_auto <- rowMeans(beta_auto[, keep])
+final_pred_auto <- rowMeans(pred_auto[, keep])
 ```
 
 ```{r}
@@ -252,6 +273,7 @@ AUCBoot(final_pred_auto, y[ind.test])
 ```
 
 ```{r}
+# Some cleaning
 rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 ```
 
@@ -259,16 +281,8 @@ rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 ## Conclusion
 
 We have seen how to run 3 versions of LDpred2 ("-inf", "-grid" and "-auto") for one chromosome.
-You need to do this for each chromosome and combine results.
-Normally, you can just sum the resulting scores, or equivalently, append the effect sizes.
 
-In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers.
-Information about these variants can be retrieved with
-
-```{r}
-info <- readRDS(url("https://github.com/privefl/bigsnpr/raw/master/data-raw/hm3_variants.rds"))
-str(info)
-```
+Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was shown in the first versions of this tutorial. The only difference it makes is when building the SFBM (the sparse LD matrix on disk), you need to build it so that it contains all variants genome-wide (see e.g. [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L39-L64)).
 
 ## Reference
 
