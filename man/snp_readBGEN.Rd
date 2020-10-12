@@ -58,7 +58,9 @@ For more information on this format, please visit
 
 This function is designed to read UK Biobank imputation files. This assumes
 that variants have been compressed with zlib, that there are only 2 possible
-alleles, and that each probability is stored on 8 bits.
+alleles, and that each probability is stored on 8 bits. For example, if you
+use \emph{qctool} to generate your own BGEN files, please make sure you are using
+options '\verb{-ofiletype bgen_v1.2 -bgen-bits 8}'.
 
 You can look at some example code from my papers on how to use this function:
 \itemize{

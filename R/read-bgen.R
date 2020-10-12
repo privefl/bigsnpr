@@ -54,7 +54,9 @@ snp_readBGI <- function(bgifile, snp_id) {
 #'
 #' This function is designed to read UK Biobank imputation files. This assumes
 #' that variants have been compressed with zlib, that there are only 2 possible
-#' alleles, and that each probability is stored on 8 bits.
+#' alleles, and that each probability is stored on 8 bits. For example, if you
+#' use *qctool* to generate your own BGEN files, please make sure you are using
+#' options '`-ofiletype bgen_v1.2 -bgen-bits 8`'.
 #'
 #' You can look at some example code from my papers on how to use this function:
 #' - https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62
