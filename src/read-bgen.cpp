@@ -19,7 +19,8 @@ std::string read_variant(std::ifstream * ptr_stream,
                          unsigned char * ptr_mat,
                          const IntegerVector& ind_row,
                          const RawVector& decode,
-                         bool dosage) {
+                         bool dosage,
+                         int N) {
 
   std::string id   = read_string(ptr_stream);
   std::string rsid = read_string(ptr_stream);
@@ -33,6 +34,7 @@ std::string read_variant(std::ifstream * ptr_stream,
 
   int C = read_int(ptr_stream) - 4;
   int D = read_int(ptr_stream);
+  myassert(D == (10 + 3 * N), "Probabilities should be stored using 8 bits.");
 
   // decompress variant data
   unsigned char *buffer_in = new unsigned char[C];
@@ -54,7 +56,6 @@ std::string read_variant(std::ifstream * ptr_stream,
   inflateEnd(&infstream);
 
   // read decompress "probabilities" and store them as rounded dosages or hard calls
-  int N = (D - 10) / 3;
   int n = ind_row.size();
   for (int i = 0; i < n; i++) {
     int i_G = ind_row[i];
@@ -86,6 +87,7 @@ CharacterVector read_bgen(std::string filename,
                           IntegerVector ind_col,
                           RawVector decode,
                           bool dosage,
+                          int N,
                           int ncores) {
 
   XPtr<FBM_RW> xpBM = BM["address_rw"];
@@ -108,7 +110,7 @@ CharacterVector read_bgen(std::string filename,
       stream.seekg(offsets[k]);
       std::size_t j = ind_col[k] - 1;
       std::string id = read_variant(&stream, ptr_mat + n * j,
-                                    ind_row, decode, dosage);
+                                    ind_row, decode, dosage, N);
       #pragma omp critical
       ID[k] = id;
     }

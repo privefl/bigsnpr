@@ -115,8 +115,20 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   assert_lengths(list_snp_id, bgenfiles)
   sizes <- lengths(list_snp_id)
 
+  # Check format
+  header <- readBin(bgenfiles[1], what = integer(), size = 4, n = 5)
+  bgen_int <- readBin(charToRaw("bgen"), what = integer(), size = 4)
+  if (!identical(header[5], bgen_int))
+    stop2("'%s' is not a BGEN file.", bgenfiles[1])
+  header_raw <- readBin(bgenfiles[1], what = raw(), n = 4 + header[2])
+  flags <- rawToBits(tail(header_raw, 4))
+  if (!identical(flags[1:2], rawToBits(as.raw(1))[1:2]))
+    stop2("'%s' is not compressed with zlib.", bgenfiles[1])
+  if (!identical(flags[3:6], rawToBits(as.raw(2))[1:4]))
+    stop2("'%s' is not using Layout 2.", bgenfiles[1])
+
   # Samples
-  N <- readBin(bgenfiles[1], what = 1L, size = 4, n = 4)[4]
+  N <- header[4]
   if (is.null(ind_row)) ind_row <- seq_len(N)
   assert_nona(ind_row)
   stopifnot(all(ind_row >= 1 & ind_row <= N))
@@ -144,13 +156,14 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
       ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
       ID <- read_bgen(
         filename = bgenfiles[ic],
-        offsets = as.double(infos$file_start_position),
-        BM = G,
-        ind_row = ind_row - 1L,
-        ind_col = ind.col,
-        decode = as.raw(207 - round(0:510 * 100 / 255)),
-        dosage = dosage,
-        ncores = ncores
+        offsets  = as.double(infos$file_start_position),
+        BM       = G,
+        ind_row  = ind_row - 1L,
+        ind_col  = ind.col,
+        decode   = as.raw(207 - round(0:510 * 100 / 255)),
+        dosage   = dosage,
+        N        = N,
+        ncores   = ncores
       )
 
       # Return variant info

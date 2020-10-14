@@ -1,3 +1,7 @@
+## bigsnpr 1.5.1
+
+- Add multiple checks in `snp_readBGEN()` to make sure of the expected format.
+
 ## bigsnpr 1.5.0
 
 - Add function `snp_fst()` for computing Fst. 
