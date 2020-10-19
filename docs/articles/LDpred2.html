@@ -43,7 +43,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Vignettes
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -75,14 +75,14 @@
 <li>
   <a href="https://privefl.github.io/about.html">
     <span class="fa fa-user"></span>
-     
+
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
     <span class="fa fa-github"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -93,23 +93,23 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Computing polygenic scores using LDpred2</h1>
                         <h4 class="author">Florian Privé</h4>
-            
+
             <h4 class="date">October 3, 2020</h4>
-      
+
       <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/master/vignettes/LDpred2.Rmd"><code>vignettes/LDpred2.Rmd</code></a></small>
       <div class="hidden name"><code>LDpred2.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <p>Here we show how to compute polygenic risk scores using <a href="https://doi.org/10.1101/2020.04.28.066720">LDpred2</a>.</p>
 <p>This tutorial only uses fake data for educational purposes. You should also probably look at <a href="https://github.com/privefl/paper-ldpred2/tree/master/code">the code of the paper</a>, particularly at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R">the code to prepare summary statistics (including performing the quality control presented in the Methods section “Quality control of summary statistics” of the paper)</a>, at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62">the code to read BGEN files into the data format used by bigsnpr</a>, at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26">the code to prepare LD matrices</a> and at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L34-L118">the code to run LDpred2 (genome-wide)</a>.</p>
 <p>In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers. Information about these variants can be retrieved with</p>
@@ -239,13 +239,13 @@
 <h3 class="hasAnchor">
 <a href="#infinitesimal-model" class="anchor"></a>Infinitesimal model</h3>
 <div class="sourceCode" id="cb26"><html><body><pre class="r">(<span class="no">ldsc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_ldsc.html">snp_ldsc2</a></span>(<span class="no">corr0</span>, <span class="no">df_beta</span>))</pre></body></html></div>
-<pre><code>##       int        h2 
+<pre><code>##       int        h2
 ## 1.0000000 0.1146349</code></pre>
 <div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">h2_est</span> <span class="kw">&lt;-</span> <span class="no">ldsc</span><span class="kw">[[</span><span class="st">"h2"</span>]]</pre></body></html></div>
 <div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="no">beta_inf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_inf</a></span>(<span class="no">corr</span>, <span class="no">df_beta</span>, <span class="kw">h2</span> <span class="kw">=</span> <span class="no">h2_est</span>)</pre></body></html></div>
 <div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">pred_inf</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">beta_inf</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
 <span class="fu">AUCBoot</span>(<span class="no">pred_inf</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd 
+<pre><code>##       Mean       2.5%      97.5%         Sd
 ## 0.66347145 0.56739110 0.75341191 0.04784474</code></pre>
 </div>
 <div id="grid-of-models" class="section level3">
@@ -393,7 +393,7 @@
 ## 8  0.0018 0.1146  FALSE 4.357    0.000 23
 ## 9  0.0056 0.0802   TRUE 4.357    0.578 59
 ## 10 0.0180 0.0802   TRUE 4.353    0.582 61</code></pre>
-<p>You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step.</p>
+<p>You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step (using parameter <code>covar.train</code> in <code>big_univLogReg()</code> or <code>big_univLinReg()</code>).</p>
 <p>Also note that we separate both sparse and non-sparse models here (and in the paper) to show that their predictive performance are similar. In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models.</p>
 <div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="no">best_grid_nosp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
@@ -405,7 +405,7 @@
 
 <span class="no">pred_nosp</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_nosp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
 <span class="fu">AUCBoot</span>(<span class="no">pred_nosp</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd 
+<pre><code>##       Mean       2.5%      97.5%         Sd
 ## 0.66926124 0.57291055 0.76355229 0.04861706</code></pre>
 <div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="no">best_grid_sp</span> <span class="kw">&lt;-</span> <span class="no">params</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span>()) <span class="kw">%&gt;%</span>
@@ -417,7 +417,7 @@
 
 <span class="no">pred_sp</span> <span class="kw">&lt;-</span> <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">best_grid_sp</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind.chr2</span>)
 <span class="fu">AUCBoot</span>(<span class="no">pred_sp</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd 
+<pre><code>##       Mean       2.5%      97.5%         Sd
 ## 0.66839182 0.56919716 0.76002580 0.04851766</code></pre>
 </div>
 <div id="automatic-model" class="section level3">
@@ -477,7 +477,7 @@
 <span class="no">final_beta_auto</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span>(<span class="no">beta_auto</span>[, <span class="no">keep</span>])
 <span class="no">final_pred_auto</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span>(<span class="no">pred_auto</span>[, <span class="no">keep</span>])</pre></body></html></div>
 <div class="sourceCode" id="cb52"><html><body><pre class="r"><span class="fu">AUCBoot</span>(<span class="no">final_pred_auto</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd 
+<pre><code>##       Mean       2.5%      97.5%         Sd
 ## 0.66237927 0.56728105 0.75282774 0.04728923</code></pre>
 <div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="co"># Some cleaning</span>
 <span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="no">corr</span>); <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span>(); <span class="fu"><a href="https://rdrr.io/r/base/files.html">file.remove</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">tmp</span>, <span class="st">".sbk"</span>))</pre></body></html></div>
@@ -521,7 +521,7 @@
       </footer>
 </div>
 
-  
+
 
 
   </body>
