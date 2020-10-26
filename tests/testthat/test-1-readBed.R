@@ -47,7 +47,11 @@ test_that("Error: already exists", {
 ################################################################################
 
 test_that("same sign as PLINK (no switch 0 <-> 2)", {
-  skip_on_os("solaris"); skip_if_offline("www.cog-genomics.org")
+
+  skip_on_os("solaris")
+  skip_if_offline("www.cog-genomics.org")
+  skip_if_offline("s3.amazonaws.com")
+
   plink <- download_plink(verbose = FALSE)
   prefix <- sub_bed(bedfile)
   tmp <- tempfile()

@@ -2,7 +2,9 @@
 
 context("FST")
 
-skip_on_os("solaris"); skip_if_offline("www.cog-genomics.org")
+skip_on_os("solaris")
+skip_if_offline("www.cog-genomics.org")
+skip_if_offline("s3.amazonaws.com")
 
 plink <- download_plink(verbose = FALSE)
 tmp <- tempfile()
