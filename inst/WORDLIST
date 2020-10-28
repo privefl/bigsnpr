@@ -9,6 +9,7 @@ backingfile
 Bazin
 bedfile
 bedfiles
+bedpca
 bgen
 bgi
 bigSNP
@@ -27,6 +28,7 @@ bty
 cbind
 chr
 cM
+Cockerham
 coef
 Daly
 Devlin
@@ -46,13 +48,16 @@ Filebacked
 Florian
 foreach
 fread
+Fst
 gc
 ggplot
 GigaScience
+github
 GWAS
 HapMap
 heritability
 Hinrichs
+https
 Hugues
 IBD
 iteratively
@@ -61,7 +66,7 @@ Josyf
 Kathe
 kb
 LD
-LDpred
+ldpred
 LDSC
 liab
 liftOver
@@ -77,6 +82,7 @@ MAXL
 Mbp
 Mei
 mio
+mnomorphic
 monozygotic
 Mychaleckyj
 nb
@@ -100,8 +106,10 @@ pos
 PRED
 preprint
 Privé
+privefl
 PRS
 QCed
+qctool
 Qiu
 RcppParallel
 rds
@@ -127,6 +135,8 @@ Tellier
 th
 tmp
 UCSC
+UKBB
+UKBiobank
 univLinReg
 univLogReg
 Vattikuti

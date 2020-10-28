@@ -10,8 +10,8 @@ test_that("sp_colSumsSq_sym() works", {
 
     N <- 300
     spmat <- Matrix::rsparsematrix(N, N, 0.1, symmetric = TRUE)
-    expect_identical(sp_colSumsSq_sym(spmat@p, spmat@i, spmat@x),
-                     Matrix::colSums(spmat^2))
+    expect_equal(sp_colSumsSq_sym(spmat@p, spmat@i, spmat@x),
+                 Matrix::colSums(spmat^2))
   })
 
 })
