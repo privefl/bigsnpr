@@ -45,6 +45,9 @@ snp_match <- function(sumstats, info_snp,
                       remove_dups = TRUE,
                       match.min.prop = 0.5) {
 
+  sumstats <- as.data.frame(sumstats)
+  info_snp <- as.data.frame(info_snp)
+
   sumstats$`_NUM_ID_` <- rows_along(sumstats)
   info_snp$`_NUM_ID_` <- rows_along(info_snp)
 

@@ -31,6 +31,10 @@ expect_message(matched2 <- snp_match(sumstats, info_snp, strand_flip = FALSE),
                "4 variants have been matched; 0 were flipped and 1 were reversed.")
 expect_equal(dim(matched2), c(4, 9))
 expect_equal(matched2$beta, sumstats$beta[c(1:2, 4:5)] * c(1, -1, 1, 1))
+expect_message(snp_match(data.table::as.data.table(sumstats), info_snp),
+               "4 variants have been matched; 1 were flipped and 1 were reversed.")
+expect_message(snp_match(sumstats, data.table::as.data.table(info_snp)),
+               "4 variants have been matched; 1 were flipped and 1 were reversed.")
 
 
 sumstats2 <- data.frame(
