@@ -129,15 +129,13 @@ test_that("fast imputation (simple) works", {
   expect_equal(G4[c(4, 12), 1], rep(0, 2))
   expect_equal(G4[c(18, 72), 400], rep(1, 2))
 
-  imp_val <- replicate(200, {
+  imp_val <- replicate(500, {
     G5 <- snp_fastImputeSimple(G, "random")
     G5[c(18, 72), 400]
   })
-  abs_val <- rbinom(1e6, size = 2, prob = mean(G[, 400], na.rm = TRUE) / 2)
-
-  expect_equal(table(imp_val) / length(imp_val),
-               table(abs_val) / length(abs_val),
-               tolerance = 0.2, check.attributes = FALSE)
+  p <- mean(G[, 400], na.rm = TRUE) / 2
+  prob <- c((1 - p)^2, 2 * p * (1 - p), p^2)
+  expect_gt(stats::chisq.test(table(imp_val), p = prob)$p.value, 1e-4)
 
   expect_equal(snp_fastImputeSimple(G, method = "mean2")[],
                snp_fastImputeSimple(G, method = "mean2", ncores = 2)[])
