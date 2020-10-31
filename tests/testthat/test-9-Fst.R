@@ -8,6 +8,7 @@ skip_if_offline("s3.amazonaws.com")
 
 plink <- download_plink(verbose = FALSE)
 tmp <- tempfile()
+file.create(paste0(tmp, c(".fst", ".log")))
 regex <- "Weighted Fst estimate: (.*)"
 
 ################################################################################

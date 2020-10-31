@@ -18,7 +18,8 @@ test_that("sub_bed() works", {
 test <- snp_attachExtdata()
 G <- test$genotypes
 
-bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+bedfile <- snp_writeBed(test, tempfile(fileext = ".bed"))
+# bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 
 ################################################################################
 
@@ -55,11 +56,12 @@ test_that("same sign as PLINK (no switch 0 <-> 2)", {
   plink <- download_plink(verbose = FALSE)
   prefix <- sub_bed(bedfile)
   tmp <- tempfile()
+  file.create(assoc_file <- paste0(tmp, ".assoc"))
   system(paste(plink, "--bfile", prefix, "--assoc --allow-no-sex --out", tmp),
          ignore.stdout = TRUE, ignore.stderr = TRUE)
+  sumstats <- bigreadr::fread2(assoc_file)
 
   gwas <- big_univLogReg(G, test$fam$affection - 1L)
-  sumstats <- bigreadr::fread2(paste0(tmp, ".assoc"))
   expect_gt(cor(gwas$estim, log(sumstats$OR)), 0.99)
 })
 

@@ -305,6 +305,7 @@ snp_plinkRmSamples <- function(plink.path,
   tmpfile <- tempfile()
   write.table2(data.infos[, c(col.family.ID, col.sample.ID)], tmpfile)
   # Make new bed with extraction
+  file.create(paste0(sub_bed(bedfile.out), c(".bed", ".bim", ".fam")))
   system_verbose(
     paste(
       plink.path,
@@ -411,6 +412,9 @@ snp_plinkIBDQC <- function(plink.path,
     opt.pruning <- ""
   }
 
+  genome_file <- paste0(tmpfile, ".genome")
+  file.create(genome_file)  # protect from being deleted?
+
   # compute IBD
   system_verbose(
     paste(
@@ -427,7 +431,7 @@ snp_plinkIBDQC <- function(plink.path,
   )
 
   # get genomefile as a data.frame
-  tmp <- bigreadr::fread2(paste0(tmpfile, ".genome"))
+  tmp <- bigreadr::fread2(genome_file)
   if (nrow(tmp) > 0) { # if there are samples to filter
 
     if (do.blind.QC) {
