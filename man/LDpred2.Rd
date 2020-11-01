@@ -86,5 +86,5 @@ useful to check convergence of the iterative algorithm
 }
 }
 \description{
-LDpred2. Tutorial at \url{https://bit.ly/ldpred2}.
+LDpred2. Tutorial at \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}.
 }

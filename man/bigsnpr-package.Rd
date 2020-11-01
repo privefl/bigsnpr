@@ -50,7 +50,7 @@ Easy-to-use, efficient, flexible and scalable tools
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://privefl.github.io/bigsnpr}
+  \item \url{https://privefl.github.io/bigsnpr/}
   \item Report bugs at \url{https://github.com/privefl/bigsnpr/issues}
 }
 

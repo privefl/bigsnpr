@@ -53,7 +53,7 @@ giving the indices of the kept points.}
 \value{
 A \code{ggplot2} object. You can plot it using the \code{print} method.
 You can modify it as you wish by adding layers. You might want to read
-\href{http://r4ds.had.co.nz/data-visualisation.html}{this chapter}
+\href{https://r4ds.had.co.nz/data-visualisation.html}{this chapter}
 to get more familiar with the package \strong{ggplot2}.
 }
 \description{

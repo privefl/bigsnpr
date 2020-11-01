@@ -66,5 +66,5 @@ Suggests:
     xgboost
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
-URL: https://privefl.github.io/bigsnpr
+URL: https://privefl.github.io/bigsnpr/
 BugReports: https://github.com/privefl/bigsnpr/issues

@@ -28,7 +28,7 @@
 #'
 #' @return A `ggplot2` object. You can plot it using the `print` method.
 #' You can modify it as you wish by adding layers. You might want to read
-#' [this chapter](http://r4ds.had.co.nz/data-visualisation.html)
+#' [this chapter](https://r4ds.had.co.nz/data-visualisation.html)
 #' to get more familiar with the package **ggplot2**.
 #' @export
 #' @import ggplot2 foreach

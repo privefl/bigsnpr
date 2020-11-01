@@ -52,9 +52,10 @@ to be matched, otherwise stops with an error. Default is \verb{50\%}.}
 
 \item{build.ref}{Genome build of the reference data. Default is \code{hg19}.}
 
-\item{liftOver}{Path to liftOver executable.
-Binaries can be downloaded at \url{https://bit.ly/2KvHugi} for Mac
-and at \url{https://bit.ly/2TbSaEI} for Linux.}
+\item{liftOver}{Path to liftOver executable. Binaries can be downloaded at
+\url{http://hgdownload.cse.ucsc.edu/admin/exe/macOSX.x86_64/liftOver} for Mac
+and at \url{http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver}
+for Linux.}
 
 \item{...}{
   Arguments passed on to \code{\link[=bed_autoSVD]{bed_autoSVD}}

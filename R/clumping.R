@@ -5,7 +5,8 @@
 #' For a `bigSNP`:
 #' - `snp_pruning()`: LD pruning. Similar to "`--indep-pairwise (size+1) 1 thr.r2`"
 #'   in [PLINK](https://www.cog-genomics.org/plink/1.9/ld).
-#'   **This function is deprecated (see [this article](http://bit.ly/2uKo3MN)).**
+#'   **This function is deprecated (see
+#'   [this article](https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html)).**
 #' - `snp_clumping()` (and `bed_clumping()`): LD clumping. If you do not provide
 #'   any statistic to rank SNPs, it would use minor allele frequencies (MAFs),
 #'   making clumping similar to pruning.

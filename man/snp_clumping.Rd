@@ -109,7 +109,8 @@ For a \code{bigSNP}:
 \itemize{
 \item \code{snp_pruning()}: LD pruning. Similar to "\verb{--indep-pairwise (size+1) 1 thr.r2}"
 in \href{https://www.cog-genomics.org/plink/1.9/ld}{PLINK}.
-\strong{This function is deprecated (see \href{http://bit.ly/2uKo3MN}{this article}).}
+\strong{This function is deprecated (see
+\href{https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html}{this article}).}
 \item \code{snp_clumping()} (and \code{bed_clumping()}): LD clumping. If you do not provide
 any statistic to rank SNPs, it would use minor allele frequencies (MAFs),
 making clumping similar to pruning.

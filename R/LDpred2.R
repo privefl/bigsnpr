@@ -8,7 +8,7 @@ bigsparser::as_SFBM
 
 #' LDpred2
 #'
-#' LDpred2. Tutorial at \url{https://bit.ly/ldpred2}.
+#' LDpred2. Tutorial at \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}.
 #'
 #' @inheritParams snp_ldsc2
 #' @param corr Sparse correlation matrix as an [SFBM][SFBM-class].
