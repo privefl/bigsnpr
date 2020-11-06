@@ -29,7 +29,7 @@ Default is a temporary directory.}
 The path of the downloaded PLINK executable.
 }
 \description{
-Download PLINK 1.9 from \url{http://www.cog-genomics.org/plink2}.
+Download PLINK 1.9 from \url{https://www.cog-genomics.org/plink2}.
 
-Download PLINK 2.0 from \url{http://www.cog-genomics.org/plink/2.0/}.
+Download PLINK 2.0 from \url{https://www.cog-genomics.org/plink/2.0/}.
 }

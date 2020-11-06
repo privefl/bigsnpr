@@ -38,7 +38,7 @@ get_pattern <- function(x, pattern) {
 
 #' Download PLINK
 #'
-#' Download PLINK 1.9 from \url{http://www.cog-genomics.org/plink2}.
+#' Download PLINK 1.9 from \url{https://www.cog-genomics.org/plink2}.
 #'
 #' @param dir The directory where to put the PLINK executable.
 #'   Default is a temporary directory.
@@ -58,12 +58,12 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
   if (!overwrite && file.exists(PLINK)) return(PLINK)
 
   plink.names <- get_pattern(
-    x = readLines("http://www.cog-genomics.org/plink2"),
+    x = readLines("https://www.cog-genomics.org/plink2"),
     # http://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20190304.zip
-    pattern = ".*(http://s3.amazonaws.com/plink1-assets/plink_.+?\\.zip).*"
+    pattern = ".*(http[s]*://s3.amazonaws.com/plink1-assets/plink_.+?\\.zip).*"
   )
   plink.builds <- data.frame(
-    url = plink.names,
+    url = sub("^http://", "https://", plink.names),
     OS = c(rep("Unix", 2), "Mac", rep("Windows", 2)),
     arch = c(64, 32, 64, 64, 32),
     stringsAsFactors = FALSE
@@ -86,7 +86,7 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
 
 #' Download PLINK
 #'
-#' Download PLINK 2.0 from \url{http://www.cog-genomics.org/plink/2.0/}.
+#' Download PLINK 2.0 from \url{https://www.cog-genomics.org/plink/2.0/}.
 #'
 #' @param AVX2 Whether to download the AVX2 version? This is only available for
 #'   64 bits architectures. Default is `TRUE`.
@@ -105,12 +105,12 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE,
   if (!overwrite && file.exists(PLINK2)) return(PLINK2)
 
   plink.names <- get_pattern(
-    x = readLines("http://www.cog-genomics.org/plink/2.0/"),
+    x = readLines("https://www.cog-genomics.org/plink/2.0/"),
     # http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20190527.zip
-    pattern = ".*(http://s3.amazonaws.com/plink2-assets/plink2_.+?\\.zip).*"
+    pattern = ".*(http[s]*://s3.amazonaws.com/plink2-assets/plink2_.+?\\.zip).*"
   )
   plink.builds <- data.frame(
-    url  = plink.names,
+    url  = sub("^http://", "https://", plink.names),
     OS   = c(rep("Unix", 3),      rep("Mac", 2),  rep("Windows", 3)),
     arch = c(64, 64, 32,          64, 64,         64, 64, 32),
     avx2 = c(TRUE, FALSE, FALSE,  TRUE, FALSE,    TRUE, FALSE, FALSE),
@@ -170,14 +170,14 @@ download_beagle <- function(dir = tempdir()) {
 #' Quality Control
 #'
 #' Quality Control (QC) and possible conversion to *bed*/*bim*/*fam* files
-#' using [**PLINK 1.9**](http://www.cog-genomics.org/plink2).
+#' using [**PLINK 1.9**](https://www.cog-genomics.org/plink2).
 #'
 #' @param plink.path Path to the executable of PLINK 1.9.
 #' @param prefix.in Prefix (path without extension) of the dataset to be QCed.
 #' @param file.type Type of the dataset to be QCed. Default is `"--bfile"` and
 #'   corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map
 #'   files or `"--vcf"` for a VCF file. More information can be found at
-#'   \url{http://www.cog-genomics.org/plink/1.9/input}.
+#'   \url{https://www.cog-genomics.org/plink/1.9/input}.
 #' @param prefix.out Prefix (path without extension) of the bed/bim/fam dataset
 #'   to be created. Default is created by appending `"_QC"` to `prefix.in`.
 #' @param maf Minimum Minor Allele Frequency (MAF) for a SNP to be kept.
@@ -191,7 +191,7 @@ download_beagle <- function(dir = tempdir()) {
 #' @param autosome.only Whether to exclude all unplaced and non-autosomal
 #'   variants? Default is `FALSE`.
 #' @param extra.options Other options to be passed to PLINK as a string. More
-#'   options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
+#'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
 #'   If using PLINK 2.0, you could e.g. use `"--king-cutoff 0.0884"` to remove
 #'   some related samples at the same time of quality controls.
 #' @param verbose Whether to show PLINK log? Default is `TRUE`.
@@ -205,7 +205,7 @@ download_beagle <- function(dir = tempdir()) {
 #' Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 #' *Second-generation PLINK: rising to the challenge of larger and richer
 #' datasets.* GigaScience 4 (1): 7.
-#' \url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
+#' \url{https://dx.doi.org/10.1186/s13742-015-0047-8}.
 #'
 #' @seealso [download_plink] [snp_plinkIBDQC]
 #'
@@ -325,7 +325,7 @@ snp_plinkRmSamples <- function(plink.path,
 #' Identity-by-descent
 #'
 #' Quality Control based on Identity-by-descent (IBD) computed by
-#' [**PLINK 1.9**](http://www.cog-genomics.org/plink2)
+#' [**PLINK 1.9**](https://www.cog-genomics.org/plink2)
 #' using its method-of-moments.
 #'
 #' @inheritParams snp_plinkRmSamples
@@ -339,7 +339,7 @@ snp_plinkRmSamples <- function(plink.path,
 #'   (the step size is fixed to 1). Default is `c(100, 0.2)`.
 #' @param extra.options Other options to be passed to PLINK as a string
 #'   (for the IBD part). More options can be found at
-#'   \url{http://www.cog-genomics.org/plink/1.9/ibd}.
+#'   \url{https://www.cog-genomics.org/plink/1.9/ibd}.
 #' @param do.blind.QC Whether to do QC with `pi.hat` without visual inspection.
 #'   Default is `TRUE`. If `FALSE`, return the `data.frame` of the corresponding
 #'   ".genome" file without doing QC. One could use
@@ -454,7 +454,7 @@ snp_plinkIBDQC <- function(plink.path,
 #' Relationship-based pruning
 #'
 #' Quality Control based on KING-robust kinship estimator. More information can
-#' be found at \url{http://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
+#' be found at \url{https://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
 #'
 #' @param plink2.path Path to the executable of PLINK 2.
 #' @inheritParams snp_plinkIBDQC
@@ -564,7 +564,7 @@ snp_plinkKINGQC <- function(plink2.path,
 #' Imputation using **Beagle** version 4.
 #'
 #' Downloads and more information can be found at the following websites
-#' - [PLINK](http://www.cog-genomics.org/plink2),
+#' - [PLINK](https://www.cog-genomics.org/plink2),
 #' - [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html).
 #'
 #' @param beagle.path Path to the executable of Beagle v4+.
@@ -576,7 +576,7 @@ snp_plinkKINGQC <- function(plink2.path,
 #' @param extra.options Other options to be passed to Beagle as a string. More
 #'   options can be found at Beagle's website.
 #' @param plink.options Other options to be passed to PLINK as a string. More
-#'   options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
+#'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
 #' @param ncores Number of cores used. Default doesn't use parallelism.
 #'   You may use [nb_cores].
 #'

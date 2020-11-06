@@ -42,7 +42,7 @@ snp_subset <- function(x,
 
   check_args()
 
-  # http://stackoverflow.com/q/19565621/6103040
+  # https://stackoverflow.com/q/19565621/6103040
   new_fam <- x$fam[ind.row, , drop = FALSE]
   rownames(new_fam) <- rows_along(new_fam)
   new_map <- x$map[ind.col, , drop = FALSE]

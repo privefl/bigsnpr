@@ -36,7 +36,7 @@ You may use \link{nb_cores}.}
 options can be found at Beagle's website.}
 
 \item{plink.options}{Other options to be passed to PLINK as a string. More
-options can be found at \url{http://www.cog-genomics.org/plink2/filter}.}
+options can be found at \url{https://www.cog-genomics.org/plink2/filter}.}
 
 \item{verbose}{Whether to show PLINK log? Default is \code{TRUE}.}
 }
@@ -49,7 +49,7 @@ Imputation using \strong{Beagle} version 4.
 \details{
 Downloads and more information can be found at the following websites
 \itemize{
-\item \href{http://www.cog-genomics.org/plink2}{PLINK},
+\item \href{https://www.cog-genomics.org/plink2}{PLINK},
 \item \href{https://faculty.washington.edu/browning/beagle/beagle.html}{Beagle}.
 }
 }

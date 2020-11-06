@@ -47,7 +47,7 @@ See parameter \code{make-bed}.
 }
 \description{
 Quality Control based on KING-robust kinship estimator. More information can
-be found at \url{http://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
+be found at \url{https://www.cog-genomics.org/plink/2.0/distance#king_cutoff}.
 }
 \examples{
 \dontrun{

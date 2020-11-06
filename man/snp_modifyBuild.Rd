@@ -10,8 +10,8 @@ snp_modifyBuild(info_snp, liftOver, from = "hg18", to = "hg19")
 \item{info_snp}{A data frame with columns "chr" and "pos".}
 
 \item{liftOver}{Path to liftOver executable. Binaries can be downloaded at
-\url{http://hgdownload.cse.ucsc.edu/admin/exe/macOSX.x86_64/liftOver} for Mac
-and at \url{http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver}
+\url{https://hgdownload.cse.ucsc.edu/admin/exe/macOSX.x86_64/liftOver} for Mac
+and at \url{https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver}
 for Linux.}
 
 \item{from}{Genome build to convert from. Default is \code{hg18}.}

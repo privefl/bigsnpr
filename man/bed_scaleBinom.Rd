@@ -50,5 +50,5 @@ This scaling is widely used for SNP arrays.
 Patterson N, Price AL, Reich D (2006).
 Population Structure and Eigenanalysis.
 PLoS Genet 2(12): e190.
-\url{http://dx.doi.org/10.1371/journal.pgen.0020190}.
+\url{https://dx.doi.org/10.1371/journal.pgen.0020190}.
 }

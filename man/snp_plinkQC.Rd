@@ -26,7 +26,7 @@ snp_plinkQC(
 \item{file.type}{Type of the dataset to be QCed. Default is \code{"--bfile"} and
 corresponds to bed/bim/fam files. You can also use \code{"--file"} for ped/map
 files or \code{"--vcf"} for a VCF file. More information can be found at
-\url{http://www.cog-genomics.org/plink/1.9/input}.}
+\url{https://www.cog-genomics.org/plink/1.9/input}.}
 
 \item{prefix.out}{Prefix (path without extension) of the bed/bim/fam dataset
 to be created. Default is created by appending \code{"_QC"} to \code{prefix.in}.}
@@ -47,7 +47,7 @@ exact test p-value below the provided threshold. Default is \code{1e-50}.}
 variants? Default is \code{FALSE}.}
 
 \item{extra.options}{Other options to be passed to PLINK as a string. More
-options can be found at \url{http://www.cog-genomics.org/plink2/filter}.
+options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
 If using PLINK 2.0, you could e.g. use \code{"--king-cutoff 0.0884"} to remove
 some related samples at the same time of quality controls.}
 
@@ -58,7 +58,7 @@ The path of the newly created bedfile.
 }
 \description{
 Quality Control (QC) and possible conversion to \emph{bed}/\emph{bim}/\emph{fam} files
-using \href{http://www.cog-genomics.org/plink2}{\strong{PLINK 1.9}}.
+using \href{https://www.cog-genomics.org/plink2}{\strong{PLINK 1.9}}.
 }
 \examples{
 \dontrun{
@@ -84,7 +84,7 @@ Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 \emph{Second-generation PLINK: rising to the challenge of larger and richer
 datasets.} GigaScience 4 (1): 7.
-\url{http://dx.doi.org/10.1186/s13742-015-0047-8}.
+\url{https://dx.doi.org/10.1186/s13742-015-0047-8}.
 }
 \seealso{
 \link{download_plink} \link{snp_plinkIBDQC}

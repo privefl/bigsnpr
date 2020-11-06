@@ -127,8 +127,8 @@ snp_match <- function(sumstats, info_snp,
 #'
 #' @param info_snp A data frame with columns "chr" and "pos".
 #' @param liftOver Path to liftOver executable. Binaries can be downloaded at
-#'   \url{http://hgdownload.cse.ucsc.edu/admin/exe/macOSX.x86_64/liftOver} for Mac
-#'   and at \url{http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver}
+#'   \url{https://hgdownload.cse.ucsc.edu/admin/exe/macOSX.x86_64/liftOver} for Mac
+#'   and at \url{https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver}
 #'   for Linux.
 #' @param from Genome build to convert from. Default is `hg18`.
 #' @param to Genome build to convert to. Default is `hg19`.

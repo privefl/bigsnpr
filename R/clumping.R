@@ -39,7 +39,7 @@
 #' @references Price AL, Weale ME, Patterson N, et al.
 #' Long-Range LD Can Confound Genome Scans in Admixed Populations.
 #' Am J Hum Genet. 2008;83(1):132-135.
-#' \url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}
+#' \url{https://dx.doi.org/10.1016/j.ajhg.2008.06.005}
 #'
 #' @return
 #' - `snp_clumping()` (and `bed_clumping()`): SNP indices that are __kept__.
@@ -150,7 +150,7 @@ snp_pruning <- function(G, infos.chr,
                         ncores = 1) {
 
   stop2("Pruning is deprecated; please use clumping (on MAF) instead..\n%s",
-        "See why at http://bit.ly/2uKo3MN.")
+        "See why at https://bit.ly/2uKo3MN.")
 }
 
 ################################################################################

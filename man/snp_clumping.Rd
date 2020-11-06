@@ -135,5 +135,5 @@ length(ind.keep) / ncol(G)
 Price AL, Weale ME, Patterson N, et al.
 Long-Range LD Can Confound Genome Scans in Admixed Populations.
 Am J Hum Genet. 2008;83(1):132-135.
-\url{http://dx.doi.org/10.1016/j.ajhg.2008.06.005}
+\url{https://dx.doi.org/10.1016/j.ajhg.2008.06.005}
 }

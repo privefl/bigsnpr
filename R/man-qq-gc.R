@@ -146,7 +146,7 @@ snp_gc <- function(gwas) {
 
   force(lamGC <- getLambdaGC(gwas))
 
-  # http://stackoverflow.com/a/42938212/6103040
+  # https://stackoverflow.com/a/42938212/6103040
   gcf <- function(f, lamGC) {
     transfo <- f
     function(x) transfo(x) / lamGC
