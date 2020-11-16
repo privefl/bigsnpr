@@ -112,7 +112,7 @@
     
 <p>Here we show how to compute polygenic risk scores using <a href="https://doi.org/10.1101/2020.04.28.066720">LDpred2</a>.</p>
 <p>This tutorial only uses fake data for educational purposes. You should also probably look at <a href="https://github.com/privefl/paper-ldpred2/tree/master/code">the code of the paper</a>, particularly at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R">the code to prepare summary statistics (including performing the quality control presented in the Methods section “Quality control of summary statistics” of the paper)</a>, at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62">the code to read BGEN files into the data format used by bigsnpr</a>, at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26">the code to prepare LD matrices</a> and at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L34-L118">the code to run LDpred2 (genome-wide)</a>.</p>
-<p>In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers. If you do not have enough data to use as LD reference, we provide an LD reference to be used directly, along with an example script on how to use it at <a href="https://doi.org/10.6084/m9.figshare.13034123" class="uri">https://doi.org/10.6084/m9.figshare.13034123</a>. Information about these variants can be retrieved with</p>
+<p>In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers. If you do not have enough data to use as LD reference, we provide an LD reference to be used directly, along with an example script on how to use it at <a href="https://doi.org/10.6084/m9.figshare.13034123" class="uri">https://doi.org/10.6084/m9.figshare.13034123</a>. <strong>Note that before Nov. 16, 2020, there was an error in the conversion of positions between genome builds.</strong> Information about these variants can be retrieved with</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># $pos is in build GRCh37 / hg19, but we provide positions in 3 other builds </span>
 <span class="no">info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/connections.html">url</a></span>(<span class="st">"https://ndownloader.figshare.com/files/25503788"</span>))
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">info</span>)</pre></body></html></div>
@@ -484,8 +484,8 @@
 <div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="co"># Some cleaning</span>
 <span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="no">corr</span>); <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span>(); <span class="fu"><a href="https://rdrr.io/r/base/files.html">file.remove</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">tmp</span>, <span class="st">".sbk"</span>))</pre></body></html></div>
 <pre><code>##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  3370185 180.0    5682001  303.5   5682001  303.5
-## Vcells 81574292 622.4  199492306 1522.1 183453062 1399.7</code></pre>
+## Ncells  3370186 180.0    5682002  303.5   5682002  303.5
+## Vcells 81574325 622.4  199492346 1522.1 183453095 1399.7</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 </div>

@@ -14,6 +14,7 @@ You should also probably look at [the code of the paper](https://github.com/priv
 
 In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers.
 If you do not have enough data to use as LD reference, we provide an LD reference to be used directly, along with an example script on how to use it at https://doi.org/10.6084/m9.figshare.13034123.
+**Note that before Nov. 16, 2020, there was an error in the conversion of positions between genome builds.**
 Information about these variants can be retrieved with
 
 ```{r}
