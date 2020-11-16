@@ -19,3 +19,6 @@ grep Sanitizer /home/ex.out
 docker ps
 docker commit
 docker images
+
+docker run -v "/${PWD}":/home/bigsnpr -ti bigsnpr_1_2_3
+setwd("home/bigsnpr/tmp-data")

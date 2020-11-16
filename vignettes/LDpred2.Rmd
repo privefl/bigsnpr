@@ -13,14 +13,14 @@ This tutorial only uses fake data for educational purposes.
 You should also probably look at [the code of the paper](https://github.com/privefl/paper-ldpred2/tree/master/code), particularly at [the code to prepare summary statistics (including performing the quality control presented in the Methods section "Quality control of summary statistics" of the paper)](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R), at [the code to read BGEN files into the data format used by bigsnpr](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62), at [the code to prepare LD matrices](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26) and at [the code to run LDpred2 (genome-wide)](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L34-L118).
 
 In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers.
+If you do not have enough data to use as LD reference, we provide an LD reference to be used directly, along with an example script on how to use it at https://doi.org/10.6084/m9.figshare.13034123.
 Information about these variants can be retrieved with
 
 ```{r}
-info <- readRDS(url("https://github.com/privefl/bigsnpr/raw/master/data-raw/hm3_variants.rds"))
+# $pos is in build GRCh37 / hg19, but we provide positions in 3 other builds 
+info <- readRDS(url("https://ndownloader.figshare.com/files/25503788"))
 str(info)
 ```
-
-Alternatively, we also provide an LD reference to be used direcly, along with an example script on how to use it at https://doi.org/10.6084/m9.figshare.13034123.
 
 Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was shown in the first versions of this tutorial. The only difference it makes is when building the SFBM (the sparse LD matrix on disk), you need to build it so that it contains all variants genome-wide (see e.g. [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L39-L64)).
 
