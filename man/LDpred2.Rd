@@ -77,12 +77,15 @@ for each row of \code{grid_param}.
 \code{snp_ldpred2_auto}: A list (over \code{vec_p_init}) of lists with
 \itemize{
 \item \verb{$beta_est}: vector of effect sizes
+\item \verb{$beta_est_sparse} (only when \code{sparse = TRUE}): sparse vector of effect sizes
+\item \verb{$postp_est}: vector of posterior probabilities of being causal
 \item \verb{$p_est}: estimate of p, the proportion of causal variants
 \item \verb{$h2_est}: estimate of the (SNP) heritability (also see \link{coef_to_liab})
 \item \verb{$path_p_est}: full path of p estimates (including burn-in);
 useful to check convergence of the iterative algorithm
 \item \verb{$path_h2_est}: full path of h2 estimates (including burn-in);
 useful to check convergence of the iterative algorithm
+\item \verb{$h2_init} and \verb{$p_init}
 }
 }
 \description{

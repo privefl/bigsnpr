@@ -48,10 +48,19 @@ test_that("LDpred2 works", {
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
                                 burn_in = 200, num_iter = 200, sparse = TRUE)
   expect_length(beta_auto, 1)
-  expect_gt(cor(beta_auto[[1]]$beta_est, true_beta), 0.4)
-  expect_gt(cor(beta_auto[[1]]$beta_est_sparse, true_beta), 0.4)
-  expect_lt(mean(beta_auto[[1]]$beta_est == 0), 0.001)
-  expect_gt(mean(beta_auto[[1]]$beta_est_sparse == 0), 0.1)
+  mod <- beta_auto[[1]]
+  expect_null(dim(mod$beta_est))
+  expect_gt(cor(mod$beta_est, true_beta), 0.4)
+  expect_gt(cor(mod$beta_est_sparse, true_beta), 0.4)
+  expect_lt(mean(mod$beta_est == 0), 0.001)
+  expect_gt(mean(mod$beta_est_sparse == 0), 0.1)
+  expect_equal(mod$h2_init, ldsc[["h2"]])
+  expect_equal(mod$p_init, 0.1)
+  expect_equal(mod$h2_est, mean(tail(mod$path_h2_est, 200)))
+  expect_equal(mod$p_est,  mean(tail(mod$path_p_est,  200)))
+  expect_length(mod$postp_est, length(mod$beta_est))
+  expect_null(dim(mod$postp_est))
+  expect_equal(mean(mod$postp_est), mod$p_est, tolerance = 0.01)
 
   # Errors
   expect_error(snp_ldpred2_inf(corr, df_beta[-1]),

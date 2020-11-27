@@ -105,12 +105,15 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes
+#'   - `$beta_est_sparse` (only when `sparse = TRUE`): sparse vector of effect sizes
+#'   - `$postp_est`: vector of posterior probabilities of being causal
 #'   - `$p_est`: estimate of p, the proportion of causal variants
 #'   - `$h2_est`: estimate of the (SNP) heritability (also see [coef_to_liab])
 #'   - `$path_p_est`: full path of p estimates (including burn-in);
 #'     useful to check convergence of the iterative algorithm
 #'   - `$path_h2_est`: full path of h2 estimates (including burn-in);
 #'     useful to check convergence of the iterative algorithm
+#'   - `$h2_init` and `$p_init`
 #'
 #' @import foreach
 #'
@@ -156,7 +159,10 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       num_iter  = num_iter,
       verbose   = verbose
     )
-    ldpred_auto$beta_est <- drop(ldpred_auto$beta_est) * scale
+    ldpred_auto$beta_est  <- drop(ldpred_auto$beta_est) * scale
+    ldpred_auto$postp_est <- drop(ldpred_auto$postp_est)
+    ldpred_auto$h2_init <- h2_init
+    ldpred_auto$p_init  <- p_init
 
     if (sparse) {
       beta_gibbs <- ldpred2_gibbs(

@@ -1,3 +1,7 @@
+## bigsnpr 1.5.4
+
+- Also return `$postp_est`, `$h2_init` and `$p_init` in LDpred2-auto.
+
 ## bigsnpr 1.5.1
 
 - Add multiple checks in `snp_readBGEN()` to make sure of the expected format.

@@ -35,8 +35,7 @@ List ldpred2_gibbs_auto(Environment corr,
 
   std::vector<double> is_causal(m, p_init);
   arma::vec curr_beta(beta_init.begin(), m);
-  arma::vec post_mean_beta(m);
-  arma::vec avg_beta(m, arma::fill::zeros);
+  arma::vec avg_beta(m, arma::fill::zeros), avg_postp(m, arma::fill::zeros);
 
   int num_iter_tot = burn_in + num_iter;
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
@@ -59,7 +58,11 @@ List ldpred2_gibbs_auto(Environment corr,
 
       double postp = 1 /
         (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
-      post_mean_beta[j] = C3 * postp;
+
+      if (k >= burn_in) {
+        avg_postp[j] += postp;
+        avg_beta[j]  += C3 * postp;
+      }
 
       double nb_rm = is_causal[j];
       is_causal[j] = postp > ::unif_rand();
@@ -76,9 +79,8 @@ List ldpred2_gibbs_auto(Environment corr,
     if (verbose) Rcout << k + 1 << ": " << p << " // " << h2 << std::endl;
 
     if (k >= burn_in) {
-      avg_beta += post_mean_beta;
-      avg_p    += p;
-      avg_h2   += h2;
+      avg_p  += p;
+      avg_h2 += h2;
     }
     p_est[k]  = p;
     h2_est[k] = h2;
@@ -89,7 +91,8 @@ List ldpred2_gibbs_auto(Environment corr,
   if (verbose) Rcout << "Overall: " << est_p << " // " << est_h2 << std::endl;
 
   return List::create(
-    _["beta_est"]    = avg_beta / num_iter,
+    _["beta_est"]    = avg_beta  / num_iter,
+    _["postp_est"]   = avg_postp / num_iter,
     _["p_est"]       = est_p,
     _["h2_est"]      = est_h2,
     _["path_p_est"]  = p_est,
