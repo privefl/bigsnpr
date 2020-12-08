@@ -14,7 +14,8 @@ snp_ldpred2_grid(
   grid_param,
   burn_in = 50,
   num_iter = 100,
-  ncores = 1
+  ncores = 1,
+  return_sampling_betas = FALSE
 )
 
 snp_ldpred2_auto(
@@ -58,6 +59,12 @@ They can be run in parallel by changing \code{ncores}.
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
+\item{return_sampling_betas}{Whether to return all sampling betas (after
+burn-in)? This is useful for assessing the uncertainty of the PRS at the
+individual level (see https://doi.org/10.1101/2020.11.30.403188).
+Default is \code{FALSE} (only returns the averaged final vectors of betas).
+If \code{TRUE}, only one set of parameters is allowed.}
+
 \item{h2_init}{Heritability estimate for initialization.}
 
 \item{vec_p_init}{Vector of initial values for p. Default is \code{0.1}.}
@@ -72,7 +79,8 @@ sparsity enabled. Default is \code{FALSE}.}
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
 
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
-for each row of \code{grid_param}.
+for each row of \code{grid_param}. If using \code{return_sampling_betas}, each
+column corresponds to one iteration instead (after burn-in).
 
 \code{snp_ldpred2_auto}: A list (over \code{vec_p_init}) of lists with
 \itemize{
