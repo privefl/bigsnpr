@@ -1,3 +1,7 @@
+## bigsparser 0.4.1
+
+- Faster cross-product with SFBM, which should make all LDpred2 models faster.
+
 ## bigsnpr 1.5.4
 
 - Also return `$postp_est`, `$h2_init` and `$p_init` in LDpred2-auto.
