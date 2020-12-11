@@ -1,3 +1,7 @@
+## bigsnpr 1.5.5
+
+- Add option `return_sampling_betas` in `snp_ldpred2_grid()` to return all sampling betas (after burn-in), which is useful for assessing the uncertainty of the PRS at the individual level (see https://doi.org/10.1101/2020.11.30.403188).
+
 ## bigsparser 0.4.1
 
 - Faster cross-product with SFBM, which should make all LDpred2 models faster.
