@@ -69,6 +69,10 @@ ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, 
     .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, verbose)
 }
 
+ldpred2_gibbs_one_sampling <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter) {
+    .Call(`_bigsnpr_ldpred2_gibbs_one_sampling`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter)
+}
+
 ldpred2_gibbs <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores) {
     .Call(`_bigsnpr_ldpred2_gibbs`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores)
 }

@@ -48,9 +48,15 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
 #' @param burn_in Number of burn-in iterations.
 #' @param num_iter Number of iterations after burn-in.
 #' @inheritParams bigsnpr-package
+#' @param return_sampling_betas Whether to return all sampling betas (after
+#'   burn-in)? This is useful for assessing the uncertainty of the PRS at the
+#'   individual level (see https://doi.org/10.1101/2020.11.30.403188).
+#'   Default is `FALSE` (only returns the averaged final vectors of betas).
+#'   If `TRUE`, only one set of parameters is allowed.
 #'
 #' @return `snp_ldpred2_grid`: A matrix of effect sizes, one vector (column)
-#'   for each row of `grid_param`.
+#'   for each row of `grid_param`. If using `return_sampling_betas`, each
+#'   column corresponds to one iteration instead (after burn-in).
 #'
 #' @export
 #'
@@ -59,7 +65,8 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
 snp_ldpred2_grid <- function(corr, df_beta, grid_param,
                              burn_in = 50,
                              num_iter = 100,
-                             ncores = 1) {
+                             ncores = 1,
+                             return_sampling_betas = FALSE) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_df_with_names(grid_param, c("p", "h2", "sparse"))
@@ -77,19 +84,43 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
   beta_inf <- bigsparser::sp_solve_sym(
     corr, beta_hat, add_to_diag = ncol(corr) / (med_h2 * N))
 
-  beta_gibbs <- ldpred2_gibbs(
-    corr      = corr,
-    beta_hat  = beta_hat,
-    beta_init = beta_inf,
-    order     = order(beta_inf^2, decreasing = TRUE) - 1L,
-    n_vec     = N,
-    h2        = grid_param$h2,
-    p         = grid_param$p,
-    sparse    = grid_param$sparse,
-    burn_in   = burn_in,
-    num_iter  = num_iter,
-    ncores    = ncores
-  )
+  if (!return_sampling_betas) {
+
+    # LDpred2-grid models
+    beta_gibbs <- ldpred2_gibbs(
+      corr      = corr,
+      beta_hat  = beta_hat,
+      beta_init = beta_inf,
+      order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+      n_vec     = N,
+      h2        = grid_param$h2,
+      p         = grid_param$p,
+      sparse    = grid_param$sparse,
+      burn_in   = burn_in,
+      num_iter  = num_iter,
+      ncores    = ncores
+    )
+
+  } else {
+
+    if (nrow(grid_param) != 1)
+      stop2("Only one set of parameters is allowed when using 'return_sampling_betas'.")
+
+    # All sampling betas for one LDpred2 model (useful for uncertainty assessment)
+    beta_gibbs <- ldpred2_gibbs_one_sampling(
+      corr      = corr,
+      beta_hat  = beta_hat,
+      beta_init = beta_inf,
+      order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+      n_vec     = N,
+      h2        = grid_param$h2,
+      p         = grid_param$p,
+      sparse    = grid_param$sparse,
+      burn_in   = burn_in,
+      num_iter  = num_iter
+    )
+
+  }
 
   sweep(beta_gibbs, 1, scale, '*')
 }

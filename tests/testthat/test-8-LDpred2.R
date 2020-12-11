@@ -44,6 +44,18 @@ test_that("LDpred2 works", {
   beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
   expect_gt(max(cor(beta_grid, true_beta)), 0.4)
 
+  # LDpred2-uncertainty
+  expect_error(snp_ldpred2_grid(corr, df_beta, params, return_sampling_betas = TRUE),
+               "Only one set of parameters is allowed")
+  beta_sample <- snp_ldpred2_grid(corr, df_beta, params[2, ], num_iter = 200,
+                                  return_sampling_betas = TRUE)
+  expect_equal(dim(beta_sample), c(nrow(df_beta), 200))
+  if (sd(rowMeans(beta_sample)) < 1) {
+    # not exactly the same, but should be close:
+    expect_gt(cor(rowMeans(beta_sample), beta_grid[, 2]), 0.7)
+    expect_true(which.max(cor(rowMeans(beta_sample), beta_grid[, 1:7])) %in% 1:3)
+  }
+
   # LDpred2-auto
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
                                 burn_in = 200, num_iter = 200, sparse = TRUE)
