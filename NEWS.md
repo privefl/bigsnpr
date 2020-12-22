@@ -1,3 +1,9 @@
+## bigsnpr 1.5.6
+
+- Use a better formula for the scale in LDpred2, useful when there are some variants with very large effects (e.g. explaining more than 10% phenotypic variance).
+
+- Simplify LDpred2; there was not really any need for initialization and ordering of the Gibbs sampler.
+
 ## bigsnpr 1.5.5
 
 - Add option `return_sampling_betas` in `snp_ldpred2_grid()` to return all sampling betas (after burn-in), which is useful for assessing the uncertainty of the PRS at the individual level (see https://doi.org/10.1101/2020.11.30.403188).

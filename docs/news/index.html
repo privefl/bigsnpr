@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.6</span>
       </span>
     </div>
 
@@ -142,6 +142,21 @@
       <small>Source: <a href='https://github.com/privefl/bigsnpr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="bigsnpr-156" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-156" class="anchor"></a>bigsnpr 1.5.6</h2>
+<ul>
+<li><p>Use a better formula for the scale in LDpred2, useful when there are some variants with very large effects (e.g. explaining more than 10% phenotypic variance).</p></li>
+<li><p>Simplify LDpred2; there was not really any need for initialization and ordering of the Gibbs sampler.</p></li>
+</ul>
+</div>
+    <div id="bigsnpr-155" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-155" class="anchor"></a>bigsnpr 1.5.5</h2>
+<ul>
+<li>Add option <code>return_sampling_betas</code> in <code><a href="../reference/LDpred2.html">snp_ldpred2_grid()</a></code> to return all sampling betas (after burn-in), which is useful for assessing the uncertainty of the PRS at the individual level (see <a href="https://doi.org/10.1101/2020.11.30.403188" class="uri">https://doi.org/10.1101/2020.11.30.403188</a>).</li>
+</ul>
+</div>
     <div id="bigsparser-041" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsparser-041" class="anchor"></a>bigsparser 0.4.1</h2>

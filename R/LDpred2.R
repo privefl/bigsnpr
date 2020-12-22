@@ -79,19 +79,14 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
   scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
-  # compute one infinitesimal model, just for initialization
-  med_h2 <- stats::median(grid_param$h2)
-  beta_inf <- bigsparser::sp_solve_sym(
-    corr, beta_hat, add_to_diag = ncol(corr) / (med_h2 * N))
-
   if (!return_sampling_betas) {
 
     # LDpred2-grid models
     beta_gibbs <- ldpred2_gibbs(
       corr      = corr,
       beta_hat  = beta_hat,
-      beta_init = beta_inf,
-      order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+      beta_init = rep(0, length(beta_hat)),
+      order     = seq_along(beta_hat) - 1L,
       n_vec     = N,
       h2        = grid_param$h2,
       p         = grid_param$p,
@@ -110,8 +105,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
     beta_gibbs <- ldpred2_gibbs_one_sampling(
       corr      = corr,
       beta_hat  = beta_hat,
-      beta_init = beta_inf,
-      order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+      beta_init = rep(0, length(beta_hat)),
+      order     = seq_along(beta_hat) - 1L,
       n_vec     = N,
       h2        = grid_param$h2,
       p         = grid_param$p,
@@ -169,10 +164,6 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
-  # compute one infinitesimal model, just for initialization
-  beta_inf <- bigsparser::sp_solve_sym(
-    corr, beta_hat, add_to_diag = ncol(corr) / (h2_init * N))
-
   bigparallelr::register_parallel(ncores)
 
   foreach(p_init = vec_p_init,
@@ -181,8 +172,8 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
     ldpred_auto <- ldpred2_gibbs_auto(
       corr      = corr,
       beta_hat  = beta_hat,
-      beta_init = beta_inf,
-      order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+      beta_init = rep(0, length(beta_hat)),
+      order     = seq_along(beta_hat) - 1L,
       n_vec     = N,
       p_init    = p_init,
       h2_init   = h2_init,
@@ -199,8 +190,8 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       beta_gibbs <- ldpred2_gibbs(
         corr      = corr,
         beta_hat  = beta_hat,
-        beta_init = beta_inf,
-        order     = order(beta_inf^2, decreasing = TRUE) - 1L,
+        beta_init = rep(0, length(beta_hat)),
+        order     = seq_along(beta_hat) - 1L,
         n_vec     = N,
         h2        = ldpred_auto$h2_est,
         p         = ldpred_auto$p_est,
