@@ -32,7 +32,8 @@ corr <- runonce::save_run(
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-y2 <- snp_simuPheno(G, h2 = 0.5, M = 1000, ind.possible = ind.HLA)$pheno
+simu <- snp_simuPheno(G, h2 = 0.5, M = 1000, ind.possible = ind.HLA)
+y2 <- simu$pheno
 # y2 <- snp_simuPheno(G, h2 = 0.02, M = 5000)$pheno
 
 
@@ -50,12 +51,22 @@ h2_est <- ldsc[["h2"]]
 
 corr2 <- bigsparser::as_SFBM(as(corr, "dgCMatrix"))
 
+beta_inf <- snp_ldpred2_inf(corr2, df_beta, h2_est)
+plot(beta_inf, df_beta$beta)
+
 # LDpred-auto
 auto <- snp_ldpred2_auto(corr2, df_beta, h2_init = h2_est,
                          burn_in = 200, num_iter = 200, sparse = TRUE)
 with(auto[[1]], plot(beta_est, beta_est_sparse, pch = 20)); abline(0, 1, col = "red")
 mean(auto[[1]]$beta_est_sp == 0)  # 85%
 auto[[1]]$p_est
+
+library(ggplot2)
+postp <- auto[[1]]$postp_est
+qplot(postp, geom = "density", fill = seq_along(postp) %in% simu$set, alpha = I(0.4)) +
+  theme_bigstatsr() +
+  scale_x_log10() +
+  labs(fill = "Causal?")
 
 pred_auto <- big_prodVec(G, auto[[1]]$beta_est, ind.row = ind.val)
 pred_auto_sp <- big_prodVec(G, auto[[1]]$beta_est_sp, ind.row = ind.val)
