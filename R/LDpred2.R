@@ -29,7 +29,7 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
   assert_pos(h2, strict = TRUE)
 
   N <- df_beta$n_eff
-  scale <- df_beta$beta_se * sqrt(N)
+  scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
   beta_inf <- bigsparser::sp_solve_sym(
@@ -76,7 +76,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
   assert_cores(ncores)
 
   N <- df_beta$n_eff
-  scale <- df_beta$beta_se * sqrt(N)
+  scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
   # compute one infinitesimal model, just for initialization
@@ -166,7 +166,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   assert_pos(h2_init, strict = TRUE)
 
   N <- df_beta$n_eff
-  scale <- df_beta$beta_se * sqrt(N)
+  scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
   # compute one infinitesimal model, just for initialization
