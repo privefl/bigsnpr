@@ -1,3 +1,7 @@
+## bigsnpr 1.5.7
+
+- Add function `snp_thr_correct()` for correcting for winner's curse in summary statistics when using p-value thresholding.
+
 ## bigsnpr 1.5.6
 
 - Use a better formula for the scale in LDpred2, useful when there are some variants with very large effects (e.g. explaining more than 10% phenotypic variance).

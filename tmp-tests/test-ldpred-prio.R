@@ -33,7 +33,7 @@ corr <- runonce::save_run(
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
 # simu <- snp_simuPheno(G, h2 = 0.5, M = 1000, ind.possible = ind.HLA)
-simu <- snp_simuPheno(G, h2 = 0.2, M = 1000)
+simu <- snp_simuPheno(G, h2 = 0.2, M = 200)
 y2 <- simu$pheno
 
 
@@ -50,17 +50,19 @@ df_beta <- data.frame(beta = gwas$estim, beta_se = gwas$std.err, n_eff = length(
 (ldsc <- snp_ldsc2(corr, df_beta))
 h2_est <- ldsc[["h2"]]
 
-THR <- 0.1
+THR <- 5e-8
+mean(lpval > -log10(THR))
+# 29.0 with 0.2 / 17.6 with 0.1 / 4.0 with 0.01
 ind <- which(lpval > -log10(THR))
 df_beta2 <- df_beta[ind, ]
 z <- df_beta2$beta / df_beta2$beta_se
 
-Z <- seq(0, 2 * max(abs(z)), length.out = 1e6)
+Z <- seq(0, 10 * max(abs(z)), length.out = 1e6)
 thr <- sqrt(qchisq(THR, df = 1, lower.tail = FALSE))
 Z2 <- Z + (dnorm(Z - thr) - dnorm(-Z - thr)) / (pnorm(Z - thr) + pnorm(-Z - thr))
 
 df_beta3 <- df_beta2
-knn <- nabor::knn(Z2, abs(z), k = 1)
+knn <- bigutilsr::knn_parallel(Z2, as.matrix(abs(z)), k = 1, ncores = 1)
 new_z <- Z[drop(knn$nn.idx)] * sign(z)
 plot(new_z, z); abline(0, 1, col = "red")
 df_beta3$beta <- new_z * df_beta3$beta_se
@@ -82,6 +84,7 @@ beta_grid <- snp_ldpred2_grid(corr2, df_beta3, params, ncores = 4)
 pred_grid <- big_prodMat(G, beta_grid, ind.col = ind)
 params$score <- big_univLinReg(as_FBM(pred_grid[ind.val, ]), y2[ind.val])$score
 max(params$score)
+# 15.3 / 14.95 / 14.5 / 11.9
 
 library(ggplot2)
 ggplot(params, aes(x = p, y = score, color = as.factor(h2))) +
@@ -95,21 +98,15 @@ ggplot(params, aes(x = p, y = score, color = as.factor(h2))) +
 
 # LDpred2-auto
 auto <- snp_ldpred2_auto(corr2, df_beta3, h2_init = h2_est,
-                         burn_in = 500, num_iter = 200, verbose = TRUE)
-# with(auto[[1]], plot(beta_est, beta_est_sparse, pch = 20)); abline(0, 1, col = "red")
-# mean(auto[[1]]$beta_est_sp == 0)  # 85%
-# auto[[1]]$p_est
-
+                         burn_in = 1000, num_iter = 500, verbose = TRUE)
+pred_auto <- big_prodVec(G, auto[[1]]$beta_est, ind.col = ind)
+summary(lm(y2[ind.val] ~ pred_auto[ind.val]))
+## 15.1 / 14.5 / 14.1 / 11.7
 
 
 library(ggplot2)
 postp <- auto[[1]]$postp_est
-qplot(postp, geom = "density", fill = seq_along(postp) %in% simu$set, alpha = I(0.4)) +
+qplot(postp, geom = "density", fill = ind %in% simu$set, alpha = I(0.4)) +
   theme_bigstatsr() +
   scale_x_log10() +
   labs(fill = "Causal?")
-
-1 /mean(1 / c(0.3, 0.3, 0.1))
-1 /mean(1 / c(0.1, 0.1, 0.9))
-log(mean(exp(c(0.3, 0.3, 0.1))))
-log(mean(exp(c(0.1, 0.1, 0.9))))

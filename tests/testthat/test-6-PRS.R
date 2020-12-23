@@ -70,3 +70,33 @@ expect_message(snp_PRS(G, betas.keep = gwas$estim[ind.keep],
                "Thresholding disabled.")
 
 ################################################################################
+
+test_that("snp_thr_correct() works", {
+
+  beta <- rnorm(1000)
+  beta_se <- runif(1000, min = 0.3, max = 0.5)
+  lpval <- -log10(pchisq((beta / beta_se)^2, df = 1, lower.tail = FALSE))
+
+  THR <- runif(1, 0, 2)
+  new_beta <- snp_thr_correct(beta, beta_se = beta_se, thr_lpS = THR)
+  new_beta2 <- snp_thr_correct(beta, lpS = lpval, thr_lpS = THR)
+  expect_equal(new_beta2, new_beta)
+  expect_error(snp_thr_correct(beta, thr_lpS = THR), "cannot be both missing")
+
+  is_signif <- (lpval >= THR)
+  expect_true(all(new_beta2[is_signif] != 0))
+  expect_true(all(new_beta2[!is_signif] == 0))
+
+  is_high_signif <- (lpval > 10)
+  expect_equal(new_beta2[is_high_signif], beta[is_high_signif], tolerance = 1e-4)
+
+  expect_gt(cor((new_beta2 / beta_se)[is_signif], (beta / beta_se)[is_signif],
+                method = "spearman"), 0.999)
+  expect_gt(cor((new_beta / beta)[is_signif], abs(beta / beta_se)[is_signif],
+                method = "spearman"), 0.999)
+  expect_true(all(sign(new_beta[is_signif]) == sign(beta[is_signif])))
+  expect_true(all(abs(new_beta / beta_se) <= abs(beta / beta_se)))
+})
+
+
+################################################################################

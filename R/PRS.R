@@ -76,3 +76,58 @@ snp_PRS <- function(G, betas.keep,
 }
 
 ################################################################################
+
+#' Thresholding and correction
+#'
+#' P-value thresholding and correction of summary statistics for winner's curse.
+#'
+#' @param beta Vector of effect sizes.
+#' @param beta_se Vector of standard errors for `beta`.
+#'   Either `beta_se` or `lpS` must be provided.
+#' @param lpS Vector of -log10(p-value) associated with `beta`.
+#'   Either `beta_se` or `lpS` must be provided.
+#' @param thr_lpS Threshold on `lpS` (-log10(p-value) at which variants are
+#'   excluded if they  not significant enough.
+#'
+#' @return `beta` after p-value thresholding and shrinkage.
+#' @export
+#'
+#' @examples
+#' beta <- rnorm(1000)
+#' beta_se <- runif(1000, min = 0.3, max = 0.5)
+#' new_beta <- snp_thr_correct(beta, beta_se = beta_se, thr_lpS = 1)
+#' plot(beta / beta_se, new_beta / beta_se, pch = 20); abline(0, 1, col = "red")
+#' plot(beta, new_beta, pch = 20); abline(0, 1, col = "red")
+#'
+#' # Can provide -log10(p-values) instead of standard errors
+#' lpval <- -log10(pchisq((beta / beta_se)^2, df = 1, lower.tail = FALSE))
+#' new_beta2 <- snp_thr_correct(beta, lpS = lpval, thr_lpS = 1)
+#' all.equal(new_beta2, new_beta)
+#'
+snp_thr_correct <- function(beta, beta_se, lpS, thr_lpS) {
+
+  if (thr_lpS < 0) stop2("'thr_lpS' must be positive (or 0).")
+  if (thr_lpS == 0) return(beta)
+
+  if (!missing(beta_se)) {
+    bigassertr::assert_lengths(beta, beta_se)
+    z <- abs(beta / beta_se)
+  } else if (!missing(lpS)) {
+    bigassertr::assert_lengths(beta, lpS)
+    z <- sqrt(stats::qchisq(-lpS / log10(exp(1)), log.p = TRUE,
+                            df = 1, lower.tail = FALSE))
+  } else {
+    stop2("'beta_se' and 'lpS' cannot be both missing.")
+  }
+
+  thr_Z <- sqrt(stats::qchisq(10^-thr_lpS, df = 1, lower.tail = FALSE))
+  Z <- seq(0, 10 * max(z), length.out = 1e6)
+  Z2 <- Z + (stats::dnorm(Z - thr_Z) - stats::dnorm(-Z - thr_Z)) /
+    (stats::pnorm(Z - thr_Z) + stats::pnorm(-Z - thr_Z))
+  knn <- bigutilsr::knn_parallel(Z2, as.matrix(z), k = 1, ncores = 1)
+  new_z <- Z[drop(knn$nn.idx)]
+
+  ifelse(z >= thr_Z, beta * pmin(new_z / z, 1), 0)
+}
+
+################################################################################
