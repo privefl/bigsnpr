@@ -37,3 +37,8 @@ new_beta2 <- snp_thr_correct(beta, lpS = lpval, thr_lpS = 1)
 all.equal(new_beta2, new_beta)
 
 }
+\references{
+Zhong, H., & Prentice, R. L. (2008). Bias-reduced estimators and confidence
+intervals for odds ratios in genome-wide association studies.
+Biostatistics, 9(4), 621-634.
+}

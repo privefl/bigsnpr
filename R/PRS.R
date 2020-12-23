@@ -92,6 +92,11 @@ snp_PRS <- function(G, betas.keep,
 #' @return `beta` after p-value thresholding and shrinkage.
 #' @export
 #'
+#' @references
+#' Zhong, H., & Prentice, R. L. (2008). Bias-reduced estimators and confidence
+#' intervals for odds ratios in genome-wide association studies.
+#' Biostatistics, 9(4), 621-634.
+#'
 #' @examples
 #' beta <- rnorm(1000)
 #' beta_se <- runif(1000, min = 0.3, max = 0.5)
