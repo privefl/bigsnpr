@@ -194,6 +194,9 @@ bed_light_RC <- methods::setRefClass(
       .self$nrow    <- nrow
       .self$ncol    <- ncol
 
+      # Connect once
+      .self$address
+
       .self
     }
   )
