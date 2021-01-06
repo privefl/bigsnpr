@@ -143,7 +143,8 @@ bed_counts <- function(obj.bed,
                        ncores = 1) {
 
   if (byrow) {
-    res <- big_parallelize(obj.bed$light, p.FUN = part_bed_row_counts,
+    obj.bed.light <- obj.bed$light
+    res <- big_parallelize(obj.bed.light, p.FUN = part_bed_row_counts,
                            p.combine = plus, ncores = ncores,
                            ind = ind.col, ind.row = ind.row)
   } else {
