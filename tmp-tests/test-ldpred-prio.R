@@ -32,7 +32,7 @@ corr <- runonce::save_run(
 # Simu phenotype
 ind.HLA <- snp_indLRLDR(CHR, POS, LD.wiki34[12, ])
 set.seed(1)
-# simu <- snp_simuPheno(G, h2 = 0.5, M = 1000, ind.possible = ind.HLA)
+simu <- snp_simuPheno(G, h2 = 0.5, M = 1000, ind.possible = ind.HLA)
 simu <- snp_simuPheno(G, h2 = 0.2, M = 200)
 y2 <- simu$pheno
 
@@ -47,10 +47,12 @@ ind.val <- setdiff(rows_along(G), ind.gwas)
 
 # LDSc reg
 df_beta <- data.frame(beta = gwas$estim, beta_se = gwas$std.err, n_eff = length(ind.gwas))
+snp_ldsc2(corr, df_beta, intercept = NULL)
 (ldsc <- snp_ldsc2(corr, df_beta))
 h2_est <- ldsc[["h2"]]
 
 THR <- 5e-8
+THR <- 0.1
 mean(lpval > -log10(THR))
 # 29.0 with 0.2 / 17.6 with 0.1 / 4.0 with 0.01
 ind <- which(lpval > -log10(THR))
@@ -76,6 +78,9 @@ corr2 <- bigsparser::as_SFBM(as(corr[ind, ind], "dgCMatrix"))
 # LDpred2-inf
 beta_inf <- snp_ldpred2_inf(corr2, df_beta3, h2_est)
 plot(beta_inf, df_beta$beta[ind])
+pred_inf <- big_prodVec(G, beta_inf, ind.col = ind)
+summary(lm(y2[ind.val] ~ pred_inf[ind.val]))
+
 
 # LDpred2-grid
 (p_seq <- signif(seq_log(1e-4, 1, length.out = 17), 2))
@@ -102,6 +107,15 @@ auto <- snp_ldpred2_auto(corr2, df_beta3, h2_init = h2_est,
 pred_auto <- big_prodVec(G, auto[[1]]$beta_est, ind.col = ind)
 summary(lm(y2[ind.val] ~ pred_auto[ind.val]))
 ## 15.1 / 14.5 / 14.1 / 11.7
+
+predict_r2 <- function(h2, N, M_c) {
+  uniroot(function(r2) r2 - h2 / (1 + (1 - r2) * M_c / (N * h2)),
+          interval = c(0, h2))$root
+}
+predict_r2(h2 = auto[[1]]$h2_est, N = length(ind.gwas),
+           M_c = length(ind) * auto[[1]]$p_est)
+predict_r2(h2 = auto[[1]]$h2_est, N = length(ind.gwas),
+           M_c = length(ind) * auto[[1]]$p_est^0.68)
 
 
 library(ggplot2)

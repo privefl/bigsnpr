@@ -46,7 +46,7 @@ stopifnot(all(snps.ind[, 1] < snps.ind[, 2]))
 ind.size <- which((snps.ind[, 2] - snps.ind[, 1]) <= size)
 
 library(Matrix)
-corr.true <- Matrix(0, m, m, sparse = TRUE)
+corr.true <- Matrix(0, m, m, sparse = TRUE, doDiag = FALSE)
 corr.true[snps.ind[ind.size, , drop = FALSE]] <- true$R2[ind.size]
 
 test_that("Same correlations as PLINK", {
