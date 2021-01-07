@@ -91,9 +91,9 @@ test_that("snp_thr_correct() works", {
   expect_equal(new_beta2[is_high_signif], beta[is_high_signif], tolerance = 1e-4)
 
   expect_gt(cor((new_beta2 / beta_se)[is_signif], (beta / beta_se)[is_signif],
-                method = "spearman"), 0.999)
+                method = "spearman"), 0.99)
   expect_gt(cor((new_beta / beta)[is_signif], abs(beta / beta_se)[is_signif],
-                method = "spearman"), 0.999)
+                method = "spearman"), 0.99)
   expect_true(all(sign(new_beta[is_signif]) == sign(beta[is_signif])))
   expect_true(all(abs(new_beta / beta_se) <= abs(beta / beta_se)))
 })

@@ -112,10 +112,6 @@ bed_scaleBinom <- function(obj.bed,
 
 ################################################################################
 
-part_bed_row_counts <- function(X, ind, ind.row) {
-  bed_row_counts_cpp(obj_bed = X, ind_row = ind.row, ind_col = ind)
-}
-
 #' Counts
 #'
 #' Counts the number of 0s, 1s, 2s and NAs by variants in the bed file.
@@ -142,14 +138,8 @@ bed_counts <- function(obj.bed,
                        byrow = FALSE,
                        ncores = 1) {
 
-  if (byrow) {
-    res <- big_parallelize(obj.bed$light, p.FUN = part_bed_row_counts,
-                           p.combine = plus, ncores = ncores,
-                           ind = ind.col, ind.row = ind.row)
-  } else {
-    res <- bed_col_counts_cpp(obj.bed, ind.row, ind.col, ncores)
-  }
-
+  FUN <- if (byrow) bed_row_counts_cpp else bed_col_counts_cpp
+  res <- FUN(obj.bed, ind.row, ind.col, ncores)
   rownames(res) <- c(0:2, NA)
   res
 }

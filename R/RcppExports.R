@@ -17,8 +17,8 @@ bed_col_counts_cpp <- function(obj_bed, ind_row, ind_col, ncores) {
     .Call(`_bigsnpr_bed_col_counts_cpp`, obj_bed, ind_row, ind_col, ncores)
 }
 
-bed_row_counts_cpp <- function(obj_bed, ind_row, ind_col) {
-    .Call(`_bigsnpr_bed_row_counts_cpp`, obj_bed, ind_row, ind_col)
+bed_row_counts_cpp <- function(obj_bed, ind_row, ind_col, ncores) {
+    .Call(`_bigsnpr_bed_row_counts_cpp`, obj_bed, ind_row, ind_col, ncores)
 }
 
 read_bed_scaled <- function(obj_bed, ind_row, ind_col, center, scale) {

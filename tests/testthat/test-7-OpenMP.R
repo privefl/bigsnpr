@@ -177,10 +177,19 @@ test_that("parallel bed_counts() works", {
   rows <- sample(nrow(obj.bed), replace = TRUE)
   cols <- sample(ncol(obj.bed), replace = TRUE)
 
+  # counting by column
   test <- replicate(20, simplify = FALSE, {
     bed_counts(obj.bed, rows, cols, ncores = 2)
   })
   true <- bed_counts(obj.bed, rows, cols, ncores = 1)
+
+  expect_true(all(sapply(test, identical, y = true)))
+
+  # counting by rows
+  test <- replicate(20, simplify = FALSE, {
+    bed_counts(obj.bed, rows, cols, ncores = 2, byrow = TRUE)
+  })
+  true <- bed_counts(obj.bed, rows, cols, ncores = 1, byrow = TRUE)
 
   expect_true(all(sapply(test, identical, y = true)))
 })
