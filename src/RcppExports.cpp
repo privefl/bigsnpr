@@ -6,21 +6,6 @@
 
 using namespace Rcpp;
 
-// r2_bgen
-NumericVector r2_bgen(std::string filename, NumericVector offsets, LogicalVector use_ind, NumericVector decode, NumericVector y);
-RcppExport SEXP _bigsnpr_r2_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP use_indSEXP, SEXP decodeSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type offsets(offsetsSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type use_ind(use_indSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type decode(decodeSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(r2_bgen(filename, offsets, use_ind, decode, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bedXPtr
 SEXP bedXPtr(std::string path, int n, int p);
 RcppExport SEXP _bigsnpr_bedXPtr(SEXP pathSEXP, SEXP nSEXP, SEXP pSEXP) {
@@ -425,7 +410,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_bigsnpr_r2_bgen", (DL_FUNC) &_bigsnpr_r2_bgen, 5},
     {"_bigsnpr_bedXPtr", (DL_FUNC) &_bigsnpr_bedXPtr, 3},
     {"_bigsnpr_bed_colstats", (DL_FUNC) &_bigsnpr_bed_colstats, 4},
     {"_bigsnpr_bed_col_counts_cpp", (DL_FUNC) &_bigsnpr_bed_col_counts_cpp, 4},

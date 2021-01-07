@@ -1,3 +1,7 @@
+## bigsnpr 1.6.0
+
+- Finally remove function `snp_assocBGEN()`; prefer reading small parts with `snp_readBGEN()` as a temporary `bigSNP` object and do the association test with e.g. `big_univLinReg()`.
+
 ## bigsnpr 1.5.7
 
 - Add function `snp_thr_correct()` for correcting for winner's curse in summary statistics when using p-value thresholding.

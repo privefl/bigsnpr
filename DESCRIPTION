@@ -2,7 +2,7 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.5.8
+Version: 1.6.0
 Date: 2021-01-07
 Authors@R: c(
     person("Florian", "Privé", 
