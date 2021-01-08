@@ -176,7 +176,8 @@ download_beagle <- function(dir = tempdir()) {
 #' @param prefix.in Prefix (path without extension) of the dataset to be QCed.
 #' @param file.type Type of the dataset to be QCed. Default is `"--bfile"` and
 #'   corresponds to bed/bim/fam files. You can also use `"--file"` for ped/map
-#'   files or `"--vcf"` for a VCF file. More information can be found at
+#'   files, `"--vcf"` for a VCF file, or `"--gzvcf"` for a gzipped VCF.
+#'   More information can be found at
 #'   \url{https://www.cog-genomics.org/plink/1.9/input}.
 #' @param prefix.out Prefix (path without extension) of the bed/bim/fam dataset
 #'   to be created. Default is created by appending `"_QC"` to `prefix.in`.
@@ -245,6 +246,11 @@ snp_plinkQC <- function(plink.path,
 
   # --vcf expects a complete filename
   if (file.type == "--vcf") prefix.in <- paste0(prefix.in, ".vcf")
+  # --gzvcf is just --vcf but expecting a filename that ends in .vcf.gz
+  if (file.type == "--gzvcf") {
+    prefix.in <- paste0(prefix.in, ".vcf.gz")
+    file.type <- "--vcf"
+  }
 
   # call PLINK 1.9
   system_verbose(
