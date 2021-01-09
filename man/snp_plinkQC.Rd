@@ -25,7 +25,8 @@ snp_plinkQC(
 
 \item{file.type}{Type of the dataset to be QCed. Default is \code{"--bfile"} and
 corresponds to bed/bim/fam files. You can also use \code{"--file"} for ped/map
-files or \code{"--vcf"} for a VCF file. More information can be found at
+files, \code{"--vcf"} for a VCF file, or \code{"--gzvcf"} for a gzipped VCF.
+More information can be found at
 \url{https://www.cog-genomics.org/plink/1.9/input}.}
 
 \item{prefix.out}{Prefix (path without extension) of the bed/bim/fam dataset

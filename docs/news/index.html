@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.1</span>
       </span>
     </div>
 
@@ -142,6 +142,20 @@
       <small>Source: <a href='https://github.com/privefl/bigsnpr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="bigsnpr-161" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-161" class="anchor"></a>bigsnpr 1.6.1</h2>
+<ul>
+<li>Add option <code>file.type = "--gzvcf"</code> for using gzipped VCF in <code><a href="../reference/snp_plinkQC.html">snp_plinkQC()</a></code>.</li>
+</ul>
+</div>
+    <div id="bigsnpr-160" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-160" class="anchor"></a>bigsnpr 1.6.0</h2>
+<ul>
+<li>Finally remove function <code>snp_assocBGEN()</code>; prefer reading small parts with <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> as a temporary <code>bigSNP</code> object and do the association test with e.g. <code>big_univLinReg()</code>.</li>
+</ul>
+</div>
     <div id="bigsnpr-157" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsnpr-157" class="anchor"></a>bigsnpr 1.5.7</h2>
@@ -434,7 +448,7 @@
 <h2 class="hasAnchor">
 <a href="#bigsnpr-082" class="anchor"></a>bigsnpr 0.8.2</h2>
 <ul>
-<li>Add function <code><a href="../reference/snp_assocBGEN.html">snp_assocBGEN()</a></code> for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.</li>
+<li>Add function <code>snp_assocBGEN()</code> for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.</li>
 </ul>
 </div>
     <div id="bigsnpr-081" class="section level2">

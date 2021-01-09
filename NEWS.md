@@ -1,3 +1,7 @@
+## bigsnpr 1.6.1
+
+- Add option `file.type = "--gzvcf"` for using gzipped VCF in `snp_plinkQC()`.
+
 ## bigsnpr 1.6.0
 
 - Finally remove function `snp_assocBGEN()`; prefer reading small parts with `snp_readBGEN()` as a temporary `bigSNP` object and do the association test with e.g. `big_univLinReg()`.
