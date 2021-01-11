@@ -82,8 +82,7 @@ snp_plinkRmSamples(plink, bedfile,
 Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 \emph{Second-generation PLINK: rising to the challenge of larger and richer
-datasets.} GigaScience 4 (1): 7.
-\url{https://dx.doi.org/10.1186/s13742-015-0047-8}.
+datasets.} GigaScience 4 (1): 7. \doi{10.1186/s13742-015-0047-8}.
 }
 \seealso{
 \link{download_plink} \link{snp_plinkQC} \link{snp_plinkKINGQC}

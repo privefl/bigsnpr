@@ -50,7 +50,7 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
 #' @inheritParams bigsnpr-package
 #' @param return_sampling_betas Whether to return all sampling betas (after
 #'   burn-in)? This is useful for assessing the uncertainty of the PRS at the
-#'   individual level (see https://doi.org/10.1101/2020.11.30.403188).
+#'   individual level (see \doi{10.1101/2020.11.30.403188}).
 #'   Default is `FALSE` (only returns the averaged final vectors of betas).
 #'   If `TRUE`, only one set of parameters is allowed.
 #'

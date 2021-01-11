@@ -61,7 +61,7 @@ You may use \link{nb_cores}.}
 
 \item{return_sampling_betas}{Whether to return all sampling betas (after
 burn-in)? This is useful for assessing the uncertainty of the PRS at the
-individual level (see https://doi.org/10.1101/2020.11.30.403188).
+individual level (see \doi{10.1101/2020.11.30.403188}).
 Default is \code{FALSE} (only returns the averaged final vectors of betas).
 If \code{TRUE}, only one set of parameters is allowed.}
 

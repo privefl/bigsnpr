@@ -25,6 +25,8 @@ test_that("PLINK downloaded version is okay", {
 
 ################################################################################
 
+skip_if_not(.Machine$sizeof.pointer == 8)
+
 test_that("QC on MAF", {
 
   # Filter on MAF
@@ -93,25 +95,22 @@ test_that("relatedness QC (KING)", {
 
   expect_error(snp_plinkKINGQC(plink, bedfile), "This requires PLINK v2")
 
-  if (.Machine$sizeof.pointer == 8) {
+  bedfile2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177, verbose = FALSE)
+  expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
+                   c("#FID\tIID", "POP1\tIND2"))
+  rel <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177,
+                         make.bed = FALSE, verbose = FALSE)
+  expect_equal(nrow(rel), 1)
+  expect_gt(rel$KINSHIP, 0.177)
 
-    bedfile2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177, verbose = FALSE)
-    expect_identical(readLines(sub_bed(bedfile2, ".king.cutoff.out.id")),
-                     c("#FID\tIID", "POP1\tIND2"))
-    rel <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.177,
-                           make.bed = FALSE, verbose = FALSE)
-    expect_equal(nrow(rel), 1)
-    expect_gt(rel$KINSHIP, 0.177)
-
-    bedfile3 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
-                                bedfile.out = tempfile(fileext = ".bed"),
-                                verbose = FALSE)
-    expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
-    rel2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
-                            make.bed = FALSE, verbose = FALSE)
-    expect_equal(nrow(rel2), 0)
-    expect_equal(names(rel2)[1:4], c("FID1", "IID1", "FID2", "IID2"))
-  }
+  bedfile3 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
+                              bedfile.out = tempfile(fileext = ".bed"),
+                              verbose = FALSE)
+  expect_identical(readLines(sub_bed(bedfile3, ".king.cutoff.out.id")), "#FID\tIID")
+  rel2 <- snp_plinkKINGQC(plink2, bedfile, thr.king = 0.3,
+                          make.bed = FALSE, verbose = FALSE)
+  expect_equal(nrow(rel2), 0)
+  expect_equal(names(rel2)[1:4], c("FID1", "IID1", "FID2", "IID2"))
 })
 
 ################################################################################
