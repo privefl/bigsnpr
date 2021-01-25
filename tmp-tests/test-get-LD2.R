@@ -37,11 +37,11 @@ Rcpp::sourceCpp('tmp-tests/test-getL.cpp')
 
 library(magrittr)
 E <- corr %>%
-  Matrix::tril(-1) %>%  # corr2
+  Matrix::tril() %>%
   { get_L(.@p, .@i, sq_thr(.@x)) } %>%  # res
   { Matrix::sparseMatrix(i = .[[1]], j = .[[2]], x = .[[3]], dims = c(m, m),
                          triangular = FALSE, index1 = FALSE) } %>%  # L
-  { get_E(.@p, .@i, .@x) } %>%
+  get_E(min_row = min_row(corr@p, corr@i)) %>%
   subset((j - i) > MIN_M) %>%  # res2
   { split(.[c("j", "x")], factor(1:m)[.$i]) }
 

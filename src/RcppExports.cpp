@@ -383,6 +383,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// min_row
+IntegerVector min_row(std::vector<size_t> p, IntegerVector i);
+RcppExport SEXP _bigsnpr_min_row(SEXP pSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<size_t> >::type p(pSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(min_row(p, i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_L
+DataFrame get_L(std::vector<size_t> p, IntegerVector i, NumericVector x);
+RcppExport SEXP _bigsnpr_get_L(SEXP pSEXP, SEXP iSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<size_t> >::type p(pSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_L(p, i, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_E
+DataFrame get_E(const arma::sp_mat& L, IntegerVector min_row);
+RcppExport SEXP _bigsnpr_get_E(SEXP LSEXP, SEXP min_rowSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type L(LSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type min_row(min_rowSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_E(L, min_row));
+    return rcpp_result_gen;
+END_RCPP
+}
 // writebina
 void writebina(const char * filename, Environment BM, const RawVector& tab, const IntegerVector& rowInd, const IntegerVector& colInd);
 RcppExport SEXP _bigsnpr_writebina(SEXP filenameSEXP, SEXP BMSEXP, SEXP tabSEXP, SEXP rowIndSEXP, SEXP colIndSEXP) {
@@ -433,6 +470,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
     {"_bigsnpr_sp_colSumsSq_sym", (DL_FUNC) &_bigsnpr_sp_colSumsSq_sym, 3},
+    {"_bigsnpr_min_row", (DL_FUNC) &_bigsnpr_min_row, 2},
+    {"_bigsnpr_get_L", (DL_FUNC) &_bigsnpr_get_L, 3},
+    {"_bigsnpr_get_E", (DL_FUNC) &_bigsnpr_get_E, 2},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},
     {NULL, NULL, 0}
