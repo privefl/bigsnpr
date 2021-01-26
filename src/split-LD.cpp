@@ -20,10 +20,11 @@ IntegerVector min_row(std::vector<size_t> p, IntegerVector i) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-DataFrame get_L(std::vector<size_t> p, IntegerVector i, NumericVector x) {
+DataFrame get_L(std::vector<size_t> p, IntegerVector i, NumericVector x,
+                double thr_r2) {
 
-  std::vector<int> res_i;
-  std::vector<int> res_j;
+  std::vector<int>    res_i;
+  std::vector<int>    res_j;
   std::vector<double> res_x;
 
   int m = p.size() - 1;
@@ -36,13 +37,16 @@ DataFrame get_L(std::vector<size_t> p, IntegerVector i, NumericVector x) {
     for (int row = i[k]; row > col; row--) {
 
       if (row == i[k]) {
-        l += x[k] * x[k];
+        double r2 = x[k] * x[k];
+        if (r2 >= thr_r2) l += r2;
         k--;
       }
 
-      res_i.push_back(col);
-      res_j.push_back(row);
-      res_x.push_back(l);
+      if (l > 0) {
+        res_i.push_back(col);
+        res_j.push_back(row);
+        res_x.push_back(l);
+      }
     }
   }
 
