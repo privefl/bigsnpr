@@ -93,16 +93,12 @@ sp_colSumsSq_sym <- function(p, i, x) {
     .Call(`_bigsnpr_sp_colSumsSq_sym`, p, i, x)
 }
 
-min_row <- function(p, i) {
-    .Call(`_bigsnpr_min_row`, p, i)
+get_L <- function(p, i, x, thr_r2) {
+    .Call(`_bigsnpr_get_L`, p, i, x, thr_r2)
 }
 
-get_L <- function(p, i, x) {
-    .Call(`_bigsnpr_get_L`, p, i, x)
-}
-
-get_E <- function(L, min_row) {
-    .Call(`_bigsnpr_get_E`, L, min_row)
+get_C <- function(L, min_size, max_size, lambda) {
+    .Call(`_bigsnpr_get_C`, L, min_size, max_size, lambda)
 }
 
 writebina <- function(filename, BM, tab, rowInd, colInd) {

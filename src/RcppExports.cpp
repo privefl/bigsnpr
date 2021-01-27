@@ -383,40 +383,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// min_row
-IntegerVector min_row(std::vector<size_t> p, IntegerVector i);
-RcppExport SEXP _bigsnpr_min_row(SEXP pSEXP, SEXP iSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::vector<size_t> >::type p(pSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
-    rcpp_result_gen = Rcpp::wrap(min_row(p, i));
-    return rcpp_result_gen;
-END_RCPP
-}
 // get_L
-DataFrame get_L(std::vector<size_t> p, IntegerVector i, NumericVector x);
-RcppExport SEXP _bigsnpr_get_L(SEXP pSEXP, SEXP iSEXP, SEXP xSEXP) {
+DataFrame get_L(std::vector<size_t> p, IntegerVector i, NumericVector x, double thr_r2);
+RcppExport SEXP _bigsnpr_get_L(SEXP pSEXP, SEXP iSEXP, SEXP xSEXP, SEXP thr_r2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::vector<size_t> >::type p(pSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type i(iSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_L(p, i, x));
+    Rcpp::traits::input_parameter< double >::type thr_r2(thr_r2SEXP);
+    rcpp_result_gen = Rcpp::wrap(get_L(p, i, x, thr_r2));
     return rcpp_result_gen;
 END_RCPP
 }
-// get_E
-DataFrame get_E(const arma::sp_mat& L, IntegerVector min_row);
-RcppExport SEXP _bigsnpr_get_E(SEXP LSEXP, SEXP min_rowSEXP) {
+// get_C
+List get_C(const arma::sp_mat& L, int min_size, int max_size, double lambda);
+RcppExport SEXP _bigsnpr_get_C(SEXP LSEXP, SEXP min_sizeSEXP, SEXP max_sizeSEXP, SEXP lambdaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type L(LSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type min_row(min_rowSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_E(L, min_row));
+    Rcpp::traits::input_parameter< int >::type min_size(min_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type max_size(max_sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_C(L, min_size, max_size, lambda));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -470,9 +461,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
     {"_bigsnpr_sp_colSumsSq_sym", (DL_FUNC) &_bigsnpr_sp_colSumsSq_sym, 3},
-    {"_bigsnpr_min_row", (DL_FUNC) &_bigsnpr_min_row, 2},
-    {"_bigsnpr_get_L", (DL_FUNC) &_bigsnpr_get_L, 3},
-    {"_bigsnpr_get_E", (DL_FUNC) &_bigsnpr_get_E, 2},
+    {"_bigsnpr_get_L", (DL_FUNC) &_bigsnpr_get_L, 4},
+    {"_bigsnpr_get_C", (DL_FUNC) &_bigsnpr_get_C, 4},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},
     {NULL, NULL, 0}

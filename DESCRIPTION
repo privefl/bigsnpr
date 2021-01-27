@@ -63,6 +63,7 @@ Suggests:
     R.utils,
     spelling, 
     testthat,
+    tibble,
     xgboost
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)

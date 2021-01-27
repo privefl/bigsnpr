@@ -17,29 +17,8 @@ POS2 <- snp_asGeneticPos(rep(chr, length(POS)), POS, dir = "tmp-data")
 corr <- snp_cor(G, infos.pos = POS2, size = 4 / 1000, ncores = 6)
 corr[1:5, 1:5]
 
-library(dplyr)
-corrT <- as(corr, "dgTMatrix")
-upper <- (corrT@i <= corrT@j)
-m <- ncol(corr)
-all_ind <- data.frame(
-  i = factor(1:m)[corrT@i[upper] + 1L],
-  j = corrT@j[upper] + 1L,
-  r2 = corrT@x[upper] ** 2
-) %>%
-  filter(r2 > 0.1) %>%
-  group_by(i) %>%
-  summarize(max_j = max(j)) %>%
-  mutate(cum_max_j = cummax(max_j)) %>%
-  filter(i == cum_max_j) %>%
-  pull(i) %>%
-  print()
-
-MIN_M <- 1000
-MAX_M <- 5000
-
-# lower_ld <- Matrix::colSums(Matrix::tril(corr, -1) ** 2)
-# lower_ld_smooth <- bigutilsr::rollmean(lower_ld, 10)
-# plot(lower_ld_smooth, pch = 20, cex = 0.5)
+MIN_M <- 500
+MAX_M <- 2000
 
 library(Matrix)
 
@@ -48,17 +27,17 @@ m <- ncol(corr)
 Rcpp::sourceCpp('src/split-LD.cpp')
 
 library(magrittr)
-E <- corr %>%
+L <- corr %>%
   Matrix::tril() %>%
   { get_L(.@p, .@i, .@x, thr_r2 = 0.02) } %>%  # res
   { Matrix::sparseMatrix(i = .$i, j = .$j, x = .$x, dims = c(m, m),
-                         triangular = FALSE, index1 = FALSE) } %>%  # L
-  # get_E(min_row = pmin(min_row(corr@p, corr@i), pmax(1:m - MAX_M, 0)), MIN_M) %>%
-  # subset((j - i + 1) >= MIN_M) %>%  # res2
-  # { split(.[c("j", "x")], factor(1:m)[.$i]) }
-  get_E2(min_row = pmin(min_row(corr@p, corr@i), pmax(1:m - MAX_M, 0)), MIN_M)
+                         triangular = FALSE, index1 = FALSE) }
+E <- get_E2(L, min_row = pmax(1:m - MAX_M, 0), min_size = MIN_M)
+all(E[[50]]$j == (50 + MIN_M:MAX_M - 1))
 
-str(E)
+cost_path <- get_E3(L, min_size = MIN_M, max_size = MAX_M, lambda = 0)
+
+# str(E)
 sum(sapply(E, function(e) sum(e$x > 50))) / sum(sapply(E, function(e) length(e$x)))
 
 LAMBDA <- 0 #1e-3
@@ -77,6 +56,10 @@ for (i in m:1) {
 }
 plot(C)
 
+plot(C, cost_path$C)
+head(cbind(C, cost_path$C))
+tail(cbind(C, cost_path$C))
+
 # reconstruct path
 all_ind <- list()
 j <- 0
@@ -88,6 +71,16 @@ repeat {
 }
 all_ind <- unlist(all_ind)
 # all_ind <- all_ind[(m - all_ind) > MIN_M]
+
+all_ind <- list()
+j <- 0
+repeat {
+  j <- cost_path$best_ind[j + 1L]
+  print(j)
+  if (is.na(j)) break
+  all_ind[[length(all_ind) + 1L]] <- j
+}
+all_ind <- unlist(all_ind)
 
 
 # PLOT
@@ -135,3 +128,14 @@ ggplot(mutate(df, cut = cut(z, breaks))) +
 c(C[1], length(all_ind), MIN_M, MAX_M, LAMBDA)
 # 24 / 18 / 1000 / 5000 / 1e-3
 # 19 / 11 / 1000 / 5000 / 0
+
+corr2 <- Matrix::tril(corr)
+corr2T <- as(corr2, "dgTMatrix")
+
+all_ind[1] <- 4497
+all_ind[2] <- 9463
+all_ind[3] <- 12570
+all_ind[4] <- 17141
+block_num <- rowSums(outer(cols_along(corr), all_ind, ">")) + 1L
+r2_out <- corr2T@x[block_num[corr2T@i + 1L] != block_num[corr2T@j + 1L]]^2
+c(sum(r2_out[r2_out >= 0.02]), C[1], cost_path$C[1])
