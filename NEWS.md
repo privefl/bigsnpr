@@ -1,3 +1,7 @@
+## bigsnpr 1.6.2
+
+- Add function `snp_ldsplit()` for optimally splitting variants in nearly independent blocks of LD. 
+
 ## bigsnpr 1.6.1
 
 - Add option `file.type = "--gzvcf"` for using gzipped VCF in `snp_plinkQC()`.

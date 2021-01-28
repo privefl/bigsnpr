@@ -31,16 +31,17 @@ verif_cost <- function(cost_to_verif, block_num, corr.tril, thr_r2) {
 #'
 #' @importFrom magrittr %>%
 #'
-#' @return Input `grid_param` as tibble with five extra columns:
-#'   - `$all_cost`: Internal costs computed.
-#'   - `$cost`: The first cost, `C[1]`, represents the sum of squared
-#'     correlations outside the blocks.
+#' @return Input `grid_param` as tibble with six extra columns:
+#'   - `$n_block`: Number of blocks.
+#'   - `$cost`: The sum of squared correlations outside the blocks.
+#'   - `$block_num`: Resulting block numbers for each variant.
 #'   - `$all_last`: Last index of each block.
 #'   - `$all_size`: Sizes of the blocks.
-#'   - `$n_block`: Number of blocks.
+#'   - `$all_cost`: Internal costs computed.
 #' @export
 #'
-#' @examples
+#' @example examples/example-split-LD.R
+#'
 snp_ldsplit <- function(corr, thr_r2, grid_param) {
 
   assert_df_with_names(grid_param, c("min_size", "max_size", "lambda"))
