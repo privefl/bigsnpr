@@ -73,7 +73,7 @@ using PLINK 1.9." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
       </span>
     </div>
 
@@ -116,14 +116,14 @@ using PLINK 1.9." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://privefl.github.io/about.html">
-    <span class="fa fa-user"></span>
+    <span class="fas fa-user"></span>
      
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -147,7 +147,7 @@ using PLINK 1.9." />
 
     <div class="ref-description">
     <p>Quality Control (QC) and possible conversion to <em>bed</em>/<em>bim</em>/<em>fam</em> files
-using <a href='http://www.cog-genomics.org/plink2'><strong>PLINK 1.9</strong></a>.</p>
+using <a href='https://www.cog-genomics.org/plink2'><strong>PLINK 1.9</strong></a>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>snp_plinkQC</span>(
@@ -179,8 +179,9 @@ using <a href='http://www.cog-genomics.org/plink2'><strong>PLINK 1.9</strong></a
       <th>file.type</th>
       <td><p>Type of the dataset to be QCed. Default is <code>"--bfile"</code> and
 corresponds to bed/bim/fam files. You can also use <code>"--file"</code> for ped/map
-files or <code>"--vcf"</code> for a VCF file. More information can be found at
-<a href='http://www.cog-genomics.org/plink/1.9/input'>http://www.cog-genomics.org/plink/1.9/input</a>.</p></td>
+files, <code>"--vcf"</code> for a VCF file, or <code>"--gzvcf"</code> for a gzipped VCF.
+More information can be found at
+<a href='https://www.cog-genomics.org/plink/1.9/input'>https://www.cog-genomics.org/plink/1.9/input</a>.</p></td>
     </tr>
     <tr>
       <th>prefix.out</th>
@@ -215,7 +216,7 @@ variants? Default is <code>FALSE</code>.</p></td>
     <tr>
       <th>extra.options</th>
       <td><p>Other options to be passed to PLINK as a string. More
-options can be found at <a href='http://www.cog-genomics.org/plink2/filter'>http://www.cog-genomics.org/plink2/filter</a>.
+options can be found at <a href='https://www.cog-genomics.org/plink2/filter'>https://www.cog-genomics.org/plink2/filter</a>.
 If using PLINK 2.0, you could e.g. use <code>"--king-cutoff 0.0884"</code> to remove
 some related samples at the same time of quality controls.</p></td>
     </tr>
@@ -233,8 +234,8 @@ some related samples at the same time of quality controls.</p></td>
     <p>Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 <em>Second-generation PLINK: rising to the challenge of larger and richer
-datasets.</em> GigaScience 4 (1): 7.
-<a href='http://dx.doi.org/10.1186/s13742-015-0047-8'>http://dx.doi.org/10.1186/s13742-015-0047-8</a>.</p>
+datasets.</em> GigaScience 4 (1): 7. doi: <a href='https://doi.org/10.1186/s13742-015-0047-8'>10.1186/s13742-015-0047-8</a>
+.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='download_plink.html'>download_plink</a> <a href='snp_plinkIBDQC.html'>snp_plinkIBDQC</a></p></div>

@@ -73,7 +73,7 @@ on each SNP, independently." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
       </span>
     </div>
 
@@ -116,14 +116,14 @@ on each SNP, independently." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://privefl.github.io/about.html">
-    <span class="fa fa-user"></span>
+    <span class="fas fa-user"></span>
      
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -198,47 +198,71 @@ to each part (chromosome) and finally combine the results.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># parallelize over chromosomes made easy</span>
 <span class='co'># examples of functions from this package</span>
-<span class='no'>snp_pruning</span></div><div class='output co'>#&gt; function (G, infos.chr, ind.row = rows_along(G), size = 49, is.size.in.bp = FALSE, 
-#&gt;     infos.pos = NULL, thr.r2 = 0.2, exclude = NULL, nploidy = 2, 
-#&gt;     ncores = 1) 
-#&gt; {
-#&gt;     stop2("Pruning is deprecated; please use clumping (on MAF) instead..\n%s", 
-#&gt;         "See why at http://bit.ly/2uKo3MN.")
+<span class='no'>snp_pruning</span></div><div class='output co'>#&gt; function(G, infos.chr,
+#&gt;                         ind.row = rows_along(G),
+#&gt;                         size = 49,
+#&gt;                         is.size.in.bp = FALSE,
+#&gt;                         infos.pos = NULL,
+#&gt;                         thr.r2 = 0.2,
+#&gt;                         exclude = NULL,
+#&gt;                         nploidy = 2,
+#&gt;                         ncores = 1) {
+#&gt; 
+#&gt;   stop2("Pruning is deprecated; please use clumping (on MAF) instead..\n%s",
+#&gt;         "See why at https://bit.ly/2uKo3MN.")
 #&gt; }
-#&gt; &lt;bytecode: 0x000000002dc3cdb0&gt;
-#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_clumping</span></div><div class='output co'>#&gt; function (G, infos.chr, ind.row = rows_along(G), S = NULL, thr.r2 = 0.2, 
-#&gt;     size = 100/thr.r2, infos.pos = NULL, is.size.in.bp = NULL, 
-#&gt;     exclude = NULL, ncores = 1) 
-#&gt; {
-#&gt;     check_args()
-#&gt;     if (!missing(is.size.in.bp)) 
-#&gt;         warning2("Parameter 'is.size.in.bp' is deprecated.")
-#&gt;     if (!is.null(S)) 
-#&gt;         assert_lengths(infos.chr, S)
-#&gt;     ind.noexcl &lt;- setdiff(seq_along(infos.chr), exclude)
-#&gt;     sort(unlist(lapply(split(ind.noexcl, infos.chr[ind.noexcl]), 
-#&gt;         function(ind.chr) {
-#&gt;             clumpingChr(G, S, ind.chr, ind.row, size, infos.pos, 
-#&gt;                 thr.r2, ncores)
-#&gt;         }), use.names = FALSE))
+#&gt; &lt;bytecode: 0x000000002b932588&gt;
+#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_clumping</span></div><div class='output co'>#&gt; function(G, infos.chr,
+#&gt;                          ind.row = rows_along(G),
+#&gt;                          S = NULL,
+#&gt;                          thr.r2 = 0.2,
+#&gt;                          size = 100 / thr.r2,
+#&gt;                          infos.pos = NULL,
+#&gt;                          is.size.in.bp = NULL,
+#&gt;                          exclude = NULL,
+#&gt;                          ncores = 1) {
+#&gt; 
+#&gt;   check_args()
+#&gt; 
+#&gt;   if (!missing(is.size.in.bp))
+#&gt;     warning2("Parameter 'is.size.in.bp' is deprecated.")
+#&gt; 
+#&gt;   if (!is.null(S)) assert_lengths(infos.chr, S)
+#&gt; 
+#&gt;   ind.noexcl &lt;- setdiff(seq_along(infos.chr), exclude)
+#&gt; 
+#&gt;   sort(unlist(
+#&gt;     lapply(split(ind.noexcl, infos.chr[ind.noexcl]), function(ind.chr) {
+#&gt;       clumpingChr(G, S, ind.chr, ind.row, size, infos.pos, thr.r2, ncores)
+#&gt;     }),
+#&gt;     use.names = FALSE
+#&gt;   ))
 #&gt; }
-#&gt; &lt;bytecode: 0x000000001f8cbba8&gt;
-#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_fastImpute</span></div><div class='output co'>#&gt; function (Gna, infos.chr, alpha = 1e-04, size = 200, p.train = 0.8, 
-#&gt;     n.cor = nrow(Gna), seed = NA, ncores = 1) 
-#&gt; {
-#&gt;     check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
-#&gt;     assert_package("xgboost")
-#&gt;     X &lt;- Gna$copy(code = CODE_IMPUTE_LABEL)
-#&gt;     X2 &lt;- Gna$copy(code = CODE_IMPUTE_PRED)
-#&gt;     infos.imp &lt;- FBM_infos(Gna)
-#&gt;     ind.chrs &lt;- split(seq_along(infos.chr), infos.chr)
-#&gt;     for (ind in ind.chrs) {
-#&gt;         imputeChr(X, X2, infos.imp, ind, alpha, size, p.train, 
-#&gt;             n.cor, seed, ncores)
-#&gt;     }
-#&gt;     infos.imp
+#&gt; &lt;bytecode: 0x000000002f526e78&gt;
+#&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'><span class='no'>snp_fastImpute</span></div><div class='output co'>#&gt; function(Gna, infos.chr,
+#&gt;                            alpha = 1e-4,
+#&gt;                            size = 200,
+#&gt;                            p.train = 0.8,
+#&gt;                            n.cor = nrow(Gna),
+#&gt;                            seed = NA,
+#&gt;                            ncores = 1) {
+#&gt; 
+#&gt;   check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
+#&gt;   assert_package("xgboost")
+#&gt; 
+#&gt;   X  &lt;- Gna$copy(code = CODE_IMPUTE_LABEL)
+#&gt;   X2 &lt;- Gna$copy(code = CODE_IMPUTE_PRED)
+#&gt; 
+#&gt;   infos.imp &lt;- FBM_infos(Gna)
+#&gt; 
+#&gt;   ind.chrs &lt;- split(seq_along(infos.chr), infos.chr)
+#&gt;   for (ind in ind.chrs) {
+#&gt;     imputeChr(X, X2, infos.imp, ind, alpha, size, p.train, n.cor, seed, ncores)
+#&gt;   }
+#&gt; 
+#&gt;   infos.imp
 #&gt; }
-#&gt; &lt;bytecode: 0x000000002fe7e748&gt;
+#&gt; &lt;bytecode: 0x000000002aacedc0&gt;
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div><div class='input'>
 </div></pre>
   </div>

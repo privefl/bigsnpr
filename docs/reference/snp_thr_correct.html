@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Binomial(n, p) scaling — snp_scaleBinom • bigsnpr</title>
+<title>Thresholding and correction — snp_thr_correct • bigsnpr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Binomial(n, p) scaling — snp_scaleBinom" />
-<meta property="og:description" content="Binomial(n, p) scaling where n is fixed and p is estimated." />
+<meta property="og:title" content="Thresholding and correction — snp_thr_correct" />
+<meta property="og:description" content="P-value thresholding and correction of summary statistics for winner's curse." />
 
 
 
@@ -139,57 +139,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Binomial(n, p) scaling</h1>
-    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/binom-scaling.R'><code>R/binom-scaling.R</code></a></small>
-    <div class="hidden name"><code>snp_scaleBinom.Rd</code></div>
+    <h1>Thresholding and correction</h1>
+    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/PRS.R'><code>R/PRS.R</code></a></small>
+    <div class="hidden name"><code>snp_thr_correct.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Binomial(n, p) scaling where <code>n</code> is fixed and <code>p</code> is estimated.</p>
+    <p>P-value thresholding and correction of summary statistics for winner's curse.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_scaleBinom</span>(<span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_thr_correct</span>(<span class='no'>beta</span>, <span class='no'>beta_se</span>, <span class='no'>lpS</span>, <span class='no'>thr_lpS</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>nploidy</th>
-      <td><p>Number of trials, parameter of the binomial distribution.
-Default is <code>2</code>, which corresponds to diploidy, such as for the human genome.</p></td>
+      <th>beta</th>
+      <td><p>Vector of effect sizes.</p></td>
+    </tr>
+    <tr>
+      <th>beta_se</th>
+      <td><p>Vector of standard errors for <code>beta</code>.
+Either <code>beta_se</code> or <code>lpS</code> must be provided.</p></td>
+    </tr>
+    <tr>
+      <th>lpS</th>
+      <td><p>Vector of -log10(p-value) associated with <code>beta</code>.
+Either <code>beta_se</code> or <code>lpS</code> must be provided.</p></td>
+    </tr>
+    <tr>
+      <th>thr_lpS</th>
+      <td><p>Threshold on <code>lpS</code> (-log10(p-value) at which variants are
+excluded if they  not significant enough.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A new <strong>function</strong> that returns a data.frame of two vectors
-"center" and "scale" which are of the length of <code>ind.col</code>.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>You will probably not use this function as is but as the
-<code>fun.scaling</code> parameter of other functions of package <code>bigstatsr</code>.</p>
+    <p><code>beta</code> after p-value thresholding and shrinkage.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>This scaling is widely used for SNP arrays.
-Patterson N, Price AL, Reich D (2006). Population Structure and Eigenanalysis.
-PLoS Genet 2(12): e190. doi: <a href='https://doi.org/10.1371/journal.pgen.0020190'>10.1371/journal.pgen.0020190</a>
-.</p>
+    <p>Zhong, H., &amp; Prentice, R. L. (2008). Bias-reduced estimators and confidence
+intervals for odds ratios in genome-wide association studies.
+Biostatistics, 9(4), 621-634.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>1</span>)
-
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>0</span>, <span class='fl'>93</span>, <span class='fl'>170</span>)
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>0.2</span>
-<span class='no'>a</span>[] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>a</span>), <span class='fl'>2</span>, <span class='no'>p</span>)
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>add_code256</span>(<span class='fu'>big_copy</span>(<span class='no'>a</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"raw"</span>), <span class='kw'>code</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>NA</span>, <span class='fl'>253</span>)))
-<span class='no'>X.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>X</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'>snp_scaleBinom</span>())
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>X.svd</span>)</div><div class='output co'>#&gt; List of 5
-#&gt;  $ d     : num [1:10] 22.2 21.6 21.5 21.2 20.8 ...
-#&gt;  $ u     : num [1:93, 1:10] 0.0732 -0.0378 -0.0762 0.0364 0.0444 ...
-#&gt;  $ v     : num [1:170, 1:10] 0.1075 -0.0331 0.0592 -0.0504 0.1216 ...
-#&gt;  $ center: num [1:170] 0.419 0.387 0.301 0.43 0.419 ...
-#&gt;  $ scale : num [1:170] 0.576 0.559 0.506 0.581 0.576 ...
-#&gt;  - attr(*, "class")= chr "big_SVD"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>X.svd</span>$<span class='no'>center</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>2</span> * <span class='no'>p</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>X.svd</span>$<span class='no'>scale</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(<span class='kw'>h</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='fl'>2</span> * <span class='no'>p</span> * (<span class='fl'>1</span> - <span class='no'>p</span>)), <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_scaleBinom-2.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'><span class='no'>beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>1000</span>)
+<span class='no'>beta_se</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='fl'>1000</span>, <span class='kw'>min</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>max</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+<span class='no'>new_beta</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_thr_correct</span>(<span class='no'>beta</span>, <span class='kw'>beta_se</span> <span class='kw'>=</span> <span class='no'>beta_se</span>, <span class='kw'>thr_lpS</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>beta</span> / <span class='no'>beta_se</span>, <span class='no'>new_beta</span> / <span class='no'>beta_se</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>20</span>); <span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_thr_correct-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>beta</span>, <span class='no'>new_beta</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>20</span>); <span class='fu'><a href='https://rdrr.io/r/graphics/abline.html'>abline</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='snp_thr_correct-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># Can provide -log10(p-values) instead of standard errors</span>
+<span class='no'>lpval</span> <span class='kw'>&lt;-</span> -<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log10</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Chisquare.html'>pchisq</a></span>((<span class='no'>beta</span> / <span class='no'>beta_se</span>)^<span class='fl'>2</span>, <span class='kw'>df</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>lower.tail</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))
+<span class='no'>new_beta2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_thr_correct</span>(<span class='no'>beta</span>, <span class='kw'>lpS</span> <span class='kw'>=</span> <span class='no'>lpval</span>, <span class='kw'>thr_lpS</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span>(<span class='no'>new_beta2</span>, <span class='no'>new_beta</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

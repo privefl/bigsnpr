@@ -65,6 +65,7 @@ reference:
       - snp_PRS
       - snp_cor
       - snp_ldsc
+      - snp_ldsplit
   - title: "Stacked Clumping and Thresholding (SCT) // LDpred2"
     contents:
       - snp_match
@@ -74,6 +75,7 @@ reference:
       - snp_ldpred2_inf
       - snp_ldpred2_grid
       - snp_ldpred2_auto
+      - snp_thr_correct
   - title: "Multiple testing - plots"
     contents:
       - snp_gc
@@ -81,6 +83,7 @@ reference:
       - snp_manhattan
       - snp_pcadapt
       - snp_MAX3
+      - snp_fst
   - title: "Utilities"
     contents:
       - snp_match

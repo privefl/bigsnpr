@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="LDpred2 — snp_ldpred2_inf" />
-<meta property="og:description" content="LDpred2. Tutorial at https://bit.ly/ldpred2." />
+<meta property="og:description" content="LDpred2. Tutorial at https://privefl.github.io/bigsnpr/articles/LDpred2.html." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
       </span>
     </div>
 
@@ -115,14 +115,14 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://privefl.github.io/about.html">
-    <span class="fa fa-user"></span>
+    <span class="fas fa-user"></span>
      
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -145,7 +145,7 @@
     </div>
 
     <div class="ref-description">
-    <p>LDpred2. Tutorial at <a href='https://bit.ly/ldpred2'>https://bit.ly/ldpred2</a>.</p>
+    <p>LDpred2. Tutorial at <a href='https://privefl.github.io/bigsnpr/articles/LDpred2.html'>https://privefl.github.io/bigsnpr/articles/LDpred2.html</a>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>snp_ldpred2_inf</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='no'>h2</span>)
@@ -156,7 +156,8 @@
   <span class='no'>grid_param</span>,
   <span class='kw'>burn_in</span> <span class='kw'>=</span> <span class='fl'>50</span>,
   <span class='kw'>num_iter</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>return_sampling_betas</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )
 
 <span class='fu'>snp_ldpred2_auto</span>(
@@ -215,6 +216,15 @@ They can be run in parallel by changing <code>ncores</code>.</p></li>
 You may use nb_cores.</p></td>
     </tr>
     <tr>
+      <th>return_sampling_betas</th>
+      <td><p>Whether to return all sampling betas (after
+burn-in)? This is useful for assessing the uncertainty of the PRS at the
+individual level (see doi: <a href='https://doi.org/10.1101/2020.11.30.403188'>10.1101/2020.11.30.403188</a>
+).
+Default is <code>FALSE</code> (only returns the averaged final vectors of betas).
+If <code>TRUE</code>, only one set of parameters is allowed.</p></td>
+    </tr>
+    <tr>
       <th>h2_init</th>
       <td><p>Heritability estimate for initialization.</p></td>
     </tr>
@@ -238,15 +248,19 @@ sparsity enabled. Default is <code>FALSE</code>.</p></td>
 
     <p><code>snp_ldpred2_inf</code>: A vector of effects, assuming an infinitesimal model.</p>
 <p><code>snp_ldpred2_grid</code>: A matrix of effect sizes, one vector (column)
-for each row of <code>grid_param</code>.</p>
+for each row of <code>grid_param</code>. If using <code>return_sampling_betas</code>, each
+column corresponds to one iteration instead (after burn-in).</p>
 <p><code>snp_ldpred2_auto</code>: A list (over <code>vec_p_init</code>) of lists with</p><ul>
 <li><p><code>$beta_est</code>: vector of effect sizes</p></li>
+<li><p><code>$beta_est_sparse</code> (only when <code>sparse = TRUE</code>): sparse vector of effect sizes</p></li>
+<li><p><code>$postp_est</code>: vector of posterior probabilities of being causal</p></li>
 <li><p><code>$p_est</code>: estimate of p, the proportion of causal variants</p></li>
 <li><p><code>$h2_est</code>: estimate of the (SNP) heritability (also see <a href='coef_to_liab.html'>coef_to_liab</a>)</p></li>
 <li><p><code>$path_p_est</code>: full path of p estimates (including burn-in);
 useful to check convergence of the iterative algorithm</p></li>
 <li><p><code>$path_h2_est</code>: full path of h2 estimates (including burn-in);
 useful to check convergence of the iterative algorithm</p></li>
+<li><p><code>$h2_init</code> and <code>$p_init</code></p></li>
 </ul>
 
 
