@@ -11,17 +11,17 @@ snp_ldsplit(corr, thr_r2, grid_param)
 
 \item{thr_r2}{Threshold under which squared correlations are ignored.}
 
-\item{grid_param}{Grid of parameters to consider, a data frame with
+\item{grid_param}{Grid of parameters to consider, a data frame with columns
 \itemize{
 \item \verb{$min_size}: Minimum number of variants in each block.
 \item \verb{$max_size}: Maximum number of variants in each block.
 \item \verb{$lambda}: Penalty coefficient to apply on the size of the blocks.
-Using \code{0} would disable this, while using \code{1e-3} could be a good value
-to get more smaller blocks.
+Using \code{0} would disable this. You can try multiple values, e.g.
+\code{c(0, 0.001, 0.01, 0.1)}.
 }}
 }
 \value{
-Input \code{grid_param} as tibble with six extra columns:
+Input \code{grid_param} as an ordered tibble with six extra columns:
 \itemize{
 \item \verb{$n_block}: Number of blocks.
 \item \verb{$cost}: The sum of squared correlations outside the blocks.
@@ -29,6 +29,7 @@ Input \code{grid_param} as tibble with six extra columns:
 \item \verb{$all_last}: Last index of each block.
 \item \verb{$all_size}: Sizes of the blocks.
 \item \verb{$all_cost}: Internal costs computed.
+This is ordered by minimum cost and maximum number of blocks.
 }
 }
 \description{

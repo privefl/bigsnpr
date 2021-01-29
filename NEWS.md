@@ -1,3 +1,7 @@
+## bigsnpr 1.6.3
+
+- Penalization in `snp_ldsplit()` now makes more sense. Also fix a small bug that prevented splitting the last block in some cases.
+
 ## bigsnpr 1.6.2
 
 - Add function `snp_ldsplit()` for optimally splitting variants in nearly independent blocks of LD. 

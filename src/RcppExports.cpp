@@ -384,7 +384,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_L
-DataFrame get_L(std::vector<size_t> p, IntegerVector i, NumericVector x, double thr_r2);
+List get_L(std::vector<size_t> p, IntegerVector i, NumericVector x, double thr_r2);
 RcppExport SEXP _bigsnpr_get_L(SEXP pSEXP, SEXP iSEXP, SEXP xSEXP, SEXP thr_r2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
