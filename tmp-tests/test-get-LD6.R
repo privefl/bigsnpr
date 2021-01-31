@@ -1,14 +1,15 @@
-# computed with snp_cor() (do not hesitate to be stringent on alpha)
-corr <- readRDS(url("https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"))
+library(dplyr)
+library(ggplot2)
 
-grid_param <- expand.grid(min_size = c(8, 10, 20),
-                          max_size = c(30, 40, 50, 60),
-                          lambda = c(0, 0.001, 0.003, 0.01))
+corr <- readRDS(runonce::download_file(
+  "https://ndownloader.figshare.com/files/24928052", dir = "tmp-data"))
 
-# grid_param <- expand.grid(min_size = c(10, 15, 20, 25),
-#                           max_size = c(30, 35, 40, 45, 50),
-#                           lambda = 0)
+## Transform sparse representation into (i,j,x) triplets
+corrT <- as(corr, "dgTMatrix")
 
+grid_param <- expand.grid(min_size = c(200),
+                          max_size = c(2000, 3000, 4000),
+                          lambda = c(0, 0.001, 0.003, 0.01, 0.03))
 THR_R2 <- 0.005
 
 # debugonce(bigsnpr::snp_ldsplit)
@@ -16,44 +17,17 @@ system.time(
   res <- bigsnpr::snp_ldsplit(corr, grid_param, thr_r2 = THR_R2)
 )
 print(res[1:5], n = 30)
-#
 
-#   min_size max_size lambda n_block    cost
-# 1       10       30  0          18  8.74
-# 2       20       30  0          15 10.2
-# 3       10       40  0          15  3.14
-# 4       20       40  0          14  3.14
-# 5       10       50  0          13  0.0777
-# 6       20       50  0          12  0.0777
+qplot(n_block, cost, data = res) + theme_bw(16)
 
-# 7       10       30  0.001      18  8.74
-# 8       20       30  0.001      15 10.2
-# 9       10       40  0.001      15  3.14
-# 10       20       40  0.001      14  3.14
-# 11       10       50  0.001      13  0.0777
-# 12       20       50  0.001      12  0.0777
-
-# 13       10       30  0.01       20  8.79
-# 14       20       30  0.01       15 10.3
-# 15       10       40  0.01       19  3.39
-# 16       20       40  0.01       14  3.14
-# 17       10       50  0.01       17  0.240
-# 18       20       50  0.01       13  0.127
-
-best_res <- res[1, ]
+best_res <- res[13, ]
 all_ind <- head(best_res$all_last[[1]], -1)
 block_num <- best_res$block_num[[1]]
-
-library(dplyr)
-library(ggplot2)
-
-## Transform sparse representation into (i,j,x) triplets
-corrT <- as(corr, "dgTMatrix")
 
 ind_group <- split(seq_along(block_num), block_num)
 ind_two <- lapply(seq(0, length(ind_group) - 2L), function(add) 1:2 + add)
 
-STEP <- 20
+STEP <- 500
 
 all_plots <- lapply(ind_two, function(ind2) {
 

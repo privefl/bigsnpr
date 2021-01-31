@@ -38,50 +38,49 @@ compute_cost <- function(block_num, corr.tril, thr_r2) {
 #'
 #' @example examples/example-split-LD.R
 #'
-snp_ldsplit <- function(corr, thr_r2, grid_param) {
-
-  assert_df_with_names(grid_param, c("min_size", "max_size", "lambda"))
+snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K) {
 
   m <- ncol(corr)
   corr <- Matrix::tril(corr)
 
-  for (ic in rows_along(grid_param)) {
+  # Precomputing L, E and computing all cost paths
+  cost_path <- corr %>%
+    { get_L(.@p, .@i, .@x, thr_r2 = thr_r2) } %>%
+    # L now has an extra column with all 0s for convenience
+    { Matrix::sparseMatrix(i = .$i, j = .$j, x = .$x, dims = c(m, m + 1),
+                           triangular = FALSE, index1 = FALSE) } %>%
+    get_C(min_size = min_size, max_size = max_size, K = max_K)
 
-    MIN_M  <- grid_param$min_size[ic]
-    MAX_M  <- grid_param$max_size[ic]
-    LAMBDA <- grid_param$lambda[ic]
+  # Reconstructing paths
+  do.call("rbind", lapply(1:max_K, function(k) {
 
-    # Precomputing L, E and computing all cost paths
-    cost_path <- corr %>%
-      { get_L(.@p, .@i, .@x, thr_r2 = thr_r2) } %>%
-      # L now has an extra column with all 0s for convenience
-      { Matrix::sparseMatrix(i = .$i, j = .$j, x = .$x, dims = c(m, m + 1),
-                             triangular = FALSE, index1 = FALSE) } %>%
-      get_C(min_size = MIN_M, max_size = MAX_M, lambda = LAMBDA)
-
-    # Reconstruct path
+    best_ind <- cost_path$best_ind[, k]
+    if (is.na(best_ind[1])) return(NULL)
     all_last <- list()
     j <- 0
     repeat {
-      j <- cost_path$best_ind[j + 1L]
+      j <- best_ind[j + 1L]
       if (is.na(j)) break
       all_last[[length(all_last) + 1L]] <- j
     }
 
     all_last <- unlist(all_last)
-    block_num <- rowSums(outer(cols_along(corr), all_last, ">")) + 1L
+    stopifnot(length(all_last) == k)
+
     all_size <- diff(c(0, all_last))
-    stopifnot(all(all_size >= MIN_M & all_size <= MAX_M))
+    stopifnot(all(all_size >= min_size & all_size <= max_size))
 
-    grid_param$n_block[ic]   <- length(all_last)
-    grid_param$cost[ic]      <- compute_cost(block_num, corr, thr_r2)
-    grid_param$block_num[ic] <- list(block_num)
-    grid_param$all_last[ic]  <- list(all_last)
-    grid_param$all_size[ic]  <- list(all_size)
-    grid_param$all_cost[ic]  <- list(cost_path$C)
-  }
+    block_num <- rowSums(outer(1:m, all_last, ">")) + 1L
 
-  tibble::as_tibble(grid_param[order(grid_param$cost, -grid_param$n_block), ])
+    tibble::tibble(
+      n_block   = length(all_last),
+      cost      = compute_cost(block_num, corr, thr_r2),
+      block_num = list(block_num),
+      all_last  = list(all_last),
+      all_size  = list(all_size),
+      all_cost  = list(cost_path$C[, k])
+    )
+  }))
 }
 
 ################################################################################

@@ -43,7 +43,7 @@ List get_L(std::vector<size_t> p, IntegerVector i, NumericVector x,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List get_C(const arma::sp_mat& L, int min_size, int max_size, double lambda) {
+List get_C(const arma::sp_mat& L, int min_size, int max_size, int K) {
 
   int m = L.n_rows;  // L now has an extra column with all 0s for convenience
   std::vector< std::vector<float> > res_E(m);
@@ -67,32 +67,35 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, double lambda) {
     }
   }
 
-  // Precomputing penalization costs
-  NumericVector pena_cost(m);
-  for (int diff = 0; diff < m; diff++)
-    pena_cost[diff] = lambda * std::max(0, diff + 1 - min_size);
+  // Computing all minimum costs and corresponding indices
+  IntegerMatrix best_ind(m, K); best_ind.fill(NA_INTEGER);
+  NumericMatrix C(m + 1, K); C.fill(NA_REAL);
+  // Adding one value at the end for convenience
+  for (int k = 0; k < K; k++) C(m, k) = 0;
+  // Only a few indices allow one block only
+  for (auto size : seq(min_size, max_size)) {
+    best_ind(m - size, 0) = m;
+    C(m - size, 0) = 0;
+  }
 
-  // Computing all minimum costs, starting from the end
-  IntegerVector best_ind(m, NA_INTEGER);
-  NumericVector C(m + 1, NA_REAL); C[m] = 0;
-  // cannot split -> need to be used as a single block
-  int last_split_once = std::min(2 * min_size - 1, max_size);
-  C[m - seq(min_size, last_split_once)] = 0;
-  best_ind[m - seq(min_size, last_split_once)] = m;
-  // for (int row = m - max_size - 1; row >= 0; row--) {
-  for (int row = m - last_split_once - 1; row >= 0; row--) {
-    std::vector<float> E_i = res_E[row];
-    // Rcout << E_i.size() << std::endl;
-    double min_cost = R_PosInf;
-    int col = row + min_size - 1;
-    for (auto it = E_i.begin(); it != E_i.end(); ++it) {
-      double cost = double(*it) + C[col + 1] + pena_cost[col - row];
-      if (cost < min_cost) {
-        best_ind[row] = col + 1;
-        C[row] = cost;
-        min_cost = cost;
+  // Iterating over total numbers of blocks allowed
+  for (int k = 1; k < K; k++) {
+    // starting from the end
+    for (int row = m - ((k + 1) * min_size); row >= 0; row--) {
+
+      int col = row + min_size - 1;
+      std::vector<float> E_i = res_E[row];
+      double min_cost = R_PosInf;
+
+      for (auto it = E_i.begin(); it != E_i.end(); ++it) {
+        double cost = double(*it) + C(col + 1, k - 1);
+        if (cost < min_cost) {
+          min_cost = cost;
+          best_ind(row, k) = col + 1;
+          C(row, k) = cost;
+        }
+        col++;
       }
-      col++;
     }
   }
 
