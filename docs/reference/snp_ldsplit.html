@@ -74,7 +74,7 @@ correlation between these blocks (i.e. everything outside these blocks)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -128,6 +128,12 @@ correlation between these blocks (i.e. everything outside these blocks)." />
      
   </a>
 </li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -152,56 +158,68 @@ This will find the splitting in blocks that minimize the sum of squared
 correlation between these blocks (i.e. everything outside these blocks).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_ldsplit</span>(<span class='no'>corr</span>, <span class='no'>thr_r2</span>, <span class='no'>grid_param</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_ldsplit</span>(<span class='no'>corr</span>, <span class='no'>thr_r2</span>, <span class='no'>min_size</span>, <span class='no'>max_size</span>, <span class='no'>max_K</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>corr</th>
-      <td><p>Sparse correlation matrix. Usually the output of <code><a href='snp_cor.html'>snp_cor()</a></code>.</p></td>
+      <td><p>Sparse correlation matrix. Usually, the output of <code><a href='snp_cor.html'>snp_cor()</a></code>.</p></td>
     </tr>
     <tr>
       <th>thr_r2</th>
       <td><p>Threshold under which squared correlations are ignored.</p></td>
     </tr>
     <tr>
-      <th>grid_param</th>
-      <td><p>Grid of parameters to consider, a data frame with</p><ul>
-<li><p><code>$min_size</code>: Minimum number of variants in each block.</p></li>
-<li><p><code>$max_size</code>: Maximum number of variants in each block.</p></li>
-<li><p><code>$lambda</code>: Penalty coefficient to apply on the size of the blocks.
-Using <code>0</code> would disable this, while using <code>1e-3</code> could be a good value
-to get more smaller blocks.</p></li>
-</ul></td>
+      <th>min_size</th>
+      <td><p>Minimum number of variants in each block.</p></td>
+    </tr>
+    <tr>
+      <th>max_size</th>
+      <td><p>Maximum number of variants in each block.</p></td>
+    </tr>
+    <tr>
+      <th>max_K</th>
+      <td><p>Maximum number of blocks to consider.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Input <code>grid_param</code> as tibble with six extra columns:</p><ul>
+    <p>A tibble with five columns:</p><ul>
 <li><p><code>$n_block</code>: Number of blocks.</p></li>
 <li><p><code>$cost</code>: The sum of squared correlations outside the blocks.</p></li>
 <li><p><code>$block_num</code>: Resulting block numbers for each variant.</p></li>
 <li><p><code>$all_last</code>: Last index of each block.</p></li>
 <li><p><code>$all_size</code>: Sizes of the blocks.</p></li>
-<li><p><code>$all_cost</code>: Internal costs computed.</p></li>
 </ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 
   <span class='no'>corr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/connections.html'>url</a></span>(<span class='st'>"https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"</span>))
 
-  <span class='no'>grid_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(<span class='kw'>min_size</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>),
-                            <span class='kw'>max_size</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>30</span>, <span class='fl'>40</span>, <span class='fl'>50</span>),
-                            <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1e-3</span>, <span class='fl'>1e-2</span>))
-  <span class='no'>THR_R2</span> <span class='kw'>&lt;-</span> <span class='fl'>0.005</span>
+  <span class='no'>THR_R2</span> <span class='kw'>&lt;-</span> <span class='fl'>0.01</span>
 
-  (<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_ldsplit</span>(<span class='no'>corr</span>, <span class='no'>grid_param</span>, <span class='kw'>thr_r2</span> <span class='kw'>=</span> <span class='no'>THR_R2</span>))
-
-  <span class='no'>all_ind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>res</span>$<span class='no'>all_last</span><span class='kw'>[[</span><span class='fl'>5</span>]], -<span class='fl'>1</span>)
+  (<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_ldsplit</span>(<span class='no'>corr</span>, <span class='kw'>thr_r2</span> <span class='kw'>=</span> <span class='no'>THR_R2</span>, <span class='kw'>min_size</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>max_size</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>max_K</span> <span class='kw'>=</span> <span class='fl'>50</span>))</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 32 x 5</span><span>
+#&gt;    n_block   cost block_num   all_last   all_size  
+#&gt;      </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       9 3.88   </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [9]&gt;</span><span>  </span><span style='color: #949494;'>&lt;dbl [9]&gt;</span><span> 
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      10 0.032</span><span style='text-decoration: underline;'>3</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [10]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [10]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      11 0.011</span><span style='text-decoration: underline;'>6</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [11]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [11]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      12 0.011</span><span style='text-decoration: underline;'>6</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [12]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [12]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>      13 0.011</span><span style='text-decoration: underline;'>6</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [13]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [13]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>      14 0.011</span><span style='text-decoration: underline;'>6</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [14]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [14]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>      15 0.022</span><span style='text-decoration: underline;'>2</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [15]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [15]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>      16 0.042</span><span style='text-decoration: underline;'>9</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [16]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [16]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>      17 0.070</span><span style='text-decoration: underline;'>5</span><span> </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [17]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [17]&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      18 0.172  </span><span style='color: #949494;'>&lt;dbl [401]&gt;</span><span> </span><span style='color: #949494;'>&lt;int [18]&gt;</span><span> </span><span style='color: #949494;'>&lt;dbl [18]&gt;</span><span>
+#&gt; </span><span style='color: #949494;'># ... with 22 more rows</span><span></div><div class='input'>
+  <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘ggplot2’ was built under R version 3.6.3</span></div><div class='output co'>#&gt; <span class='message'>Want to understand how all the pieces fit together? Read R for Data</span>
+#&gt; <span class='message'>Science: https://r4ds.had.co.nz/</span></div><div class='input'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span>(<span class='no'>n_block</span>, <span class='no'>cost</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>res</span>) + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span>(<span class='fl'>16</span>) + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_log10</a></span>()</div><div class='img'><img src='snp_ldsplit-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='no'>all_ind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>res</span>$<span class='no'>all_last</span><span class='kw'>[[</span><span class='fl'>6</span>]], -<span class='fl'>1</span>)
 
   <span class='co'>## Transform sparse representation into (i,j,x) triplets</span>
   <span class='no'>corrT</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='no'>corr</span>, <span class='st'>"dgTMatrix"</span>)
@@ -213,7 +231,6 @@ to get more smaller blocks.</p></li>
   )
   <span class='no'>df</span>$<span class='no'>y</span> <span class='kw'>&lt;-</span> (<span class='no'>df</span>$<span class='no'>j</span> - <span class='no'>df</span>$<span class='no'>i</span>) / <span class='fl'>2</span>
 
-  <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>df</span>) +
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>i</span> + <span class='no'>y</span>, <span class='no'>y</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>r2</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>rel</a></span>(<span class='fl'>0.5</span>)) +
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_fixed</a></span>() +
@@ -222,8 +239,8 @@ to get more smaller blocks.</p></li>
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>axis.text.y</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span>(), <span class='kw'>axis.ticks.y</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span>()) +
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='no'>all_ind</span> + <span class='fl'>0.5</span>, <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>3</span>) +
     <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"Position"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>) +
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_alpha.html'>scale_alpha</a></span>(<span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>'none'</span>)
-}</div></pre>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_alpha.html'>scale_alpha</a></span>(<span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>'none'</span>)</div><div class='img'><img src='snp_ldsplit-2.png' alt='' width='700' height='433' /></div><div class='input'># }
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -29,6 +29,8 @@ navbar:
       href: https://privefl.github.io/about.html
     - icon: fa-github
       href: https://github.com/privefl/bigsnpr
+    - icon: fa-newspaper-o
+      href: news/index.html
 
 reference:
   - title: "Class bigSNP"
