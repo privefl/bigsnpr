@@ -1,33 +1,36 @@
 library(dplyr)
 library(ggplot2)
 
+# chr 22
 corr <- readRDS(runonce::download_file(
   "https://ndownloader.figshare.com/files/24928052", dir = "tmp-data"))
+
+# chr 12
+corr <- readRDS(runonce::download_file(
+  "https://ndownloader.figshare.com/files/24927977", dir = "tmp-data"))
 
 ## Transform sparse representation into (i,j,x) triplets
 corrT <- as(corr, "dgTMatrix")
 
-grid_param <- expand.grid(min_size = c(200),
-                          max_size = c(2000, 3000, 4000),
-                          lambda = c(0, 0.001, 0.003, 0.01, 0.03))
-THR_R2 <- 0.005
+THR_R2 <- 0.01
 
 # debugonce(bigsnpr::snp_ldsplit)
 system.time(
-  res <- bigsnpr::snp_ldsplit(corr, grid_param, thr_r2 = THR_R2)
+  res <- bigsnpr::snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 500,
+                              max_size = 12e3, max_K = 50)
 )
-print(res[1:5], n = 30)
+print(res[1:5], n = 20)
 
-qplot(n_block, cost, data = res) + theme_bw(16)
+qplot(n_block, cost, data = res) + theme_bw(16) + scale_y_log10()
 
-best_res <- res[13, ]
+best_res <- res[18, ]
 all_ind <- head(best_res$all_last[[1]], -1)
 block_num <- best_res$block_num[[1]]
 
 ind_group <- split(seq_along(block_num), block_num)
 ind_two <- lapply(seq(0, length(ind_group) - 2L), function(add) 1:2 + add)
 
-STEP <- 500
+STEP <- 1000
 
 all_plots <- lapply(ind_two, function(ind2) {
 
@@ -57,21 +60,5 @@ all_plots <- lapply(ind_two, function(ind2) {
 cowplot::plot_grid(
   plotlist = c(lapply(all_plots, function(p) p + theme(legend.position = "none")),
                list(cowplot::get_legend(all_plots[[1]]))),
-  nrow = 3
+  nrow = 4
 )
-
-# cowplot::plot_grid(
-#   cowplot::plot_grid(
-#     plotlist = c(all_plots[[1]] + theme(legend.position = "left"),
-#                  lapply(all_plots[-1],
-#                         function(p) p + theme(legend.position = "none"))),
-#     nrow = 4
-#   ),
-#   cowplot::get_legend(all_plots[[1]]),
-#   nrow = 1, rel_widths = c(7, 1)
-# )
-
-all_plots[[10]]  # why not more even blocks?
-bigsnpr:::compute_cost(block_num, corr, THR_R2) # 4.79
-block_num2 <- block_num; block_num2[401 - 0:20] <- 22
-bigsnpr:::compute_cost(block_num2, corr, THR_R2) # 2.29

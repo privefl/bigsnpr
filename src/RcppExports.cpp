@@ -398,16 +398,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_C
-List get_C(const arma::sp_mat& L, int min_size, int max_size, double lambda);
-RcppExport SEXP _bigsnpr_get_C(SEXP LSEXP, SEXP min_sizeSEXP, SEXP max_sizeSEXP, SEXP lambdaSEXP) {
+List get_C(const arma::sp_mat& L, int min_size, int max_size, int K);
+RcppExport SEXP _bigsnpr_get_C(SEXP LSEXP, SEXP min_sizeSEXP, SEXP max_sizeSEXP, SEXP KSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type L(LSEXP);
     Rcpp::traits::input_parameter< int >::type min_size(min_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type max_size(max_sizeSEXP);
-    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_C(L, min_size, max_size, lambda));
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_C(L, min_size, max_size, K));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -2,14 +2,14 @@
 
   corr <- readRDS(url("https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"))
 
-  grid_param <- expand.grid(min_size = c(10, 20),
-                            max_size = c(30, 40, 50),
-                            lambda = c(0, 1e-3, 1e-2))
-  THR_R2 <- 0.005
+  THR_R2 <- 0.01
 
-  (res <- snp_ldsplit(corr, grid_param, thr_r2 = THR_R2))
+  (res <- snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 10, max_size = 50, max_K = 50))
 
-  all_ind <- head(res$all_last[[5]], -1)
+  library(ggplot2)
+  qplot(n_block, cost, data = res) + theme_bw(16) + scale_y_log10()
+
+  all_ind <- head(res$all_last[[6]], -1)
 
   ## Transform sparse representation into (i,j,x) triplets
   corrT <- as(corr, "dgTMatrix")
@@ -21,7 +21,6 @@
   )
   df$y <- (df$j - df$i) / 2
 
-  library(ggplot2)
   ggplot(df) +
     geom_point(aes(i + y, y, color = r2), size = rel(0.5)) +
     coord_fixed() +

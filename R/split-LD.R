@@ -15,23 +15,18 @@ compute_cost <- function(block_num, corr.tril, thr_r2) {
 #' This will find the splitting in blocks that minimize the sum of squared
 #' correlation between these blocks (i.e. everything outside these blocks).
 #'
-#' @param corr Sparse correlation matrix. Usually the output of [snp_cor()].
+#' @param corr Sparse correlation matrix. Usually, the output of [snp_cor()].
 #' @param thr_r2 Threshold under which squared correlations are ignored.
-#' @param grid_param Grid of parameters to consider, a data frame with columns
-#'   - `$min_size`: Minimum number of variants in each block.
-#'   - `$max_size`: Maximum number of variants in each block.
-#'   - `$lambda`: Penalty coefficient to apply on the size of the blocks.
-#'     Using `0` would disable this. You can try multiple values, e.g.
-#'     `c(0, 0.001, 0.01, 0.1)`.
+#' @param min_size Minimum number of variants in each block.
+#' @param max_size Maximum number of variants in each block.
+#' @param max_K Maximum number of blocks to consider.
 #'
-#' @return Input `grid_param` as an ordered tibble with six extra columns:
+#' @return A tibble with five columns:
 #'   - `$n_block`: Number of blocks.
 #'   - `$cost`: The sum of squared correlations outside the blocks.
 #'   - `$block_num`: Resulting block numbers for each variant.
 #'   - `$all_last`: Last index of each block.
 #'   - `$all_size`: Sizes of the blocks.
-#'   - `$all_cost`: Internal costs computed.
-#' This is ordered by minimum cost and maximum number of blocks.
 #' @export
 #'
 #' @importFrom magrittr %>%
@@ -41,6 +36,8 @@ compute_cost <- function(block_num, corr.tril, thr_r2) {
 snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K) {
 
   m <- ncol(corr)
+  stopifnot(min_size >= 1 && max_size <= m)
+
   corr <- Matrix::tril(corr)
 
   # Precomputing L, E and computing all cost paths
@@ -52,20 +49,23 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K) {
     get_C(min_size = min_size, max_size = max_size, K = max_K)
 
   # Reconstructing paths
-  do.call("rbind", lapply(1:max_K, function(k) {
+  do.call("rbind", lapply(1:max_K, function(K) {
 
-    best_ind <- cost_path$best_ind[, k]
-    if (is.na(best_ind[1])) return(NULL)
+    cost <- cost_path$C[1, K]
+    if (is.na(cost)) return(NULL)
+
     all_last <- list()
     j <- 0
+    k <- K
     repeat {
-      j <- best_ind[j + 1L]
-      if (is.na(j)) break
+      j <- cost_path$best_ind[j + 1L, k]
       all_last[[length(all_last) + 1L]] <- j
+      if (k == 1) break
+      k <- k - 1L
     }
 
     all_last <- unlist(all_last)
-    stopifnot(length(all_last) == k)
+    stopifnot(length(all_last) == K)
 
     all_size <- diff(c(0, all_last))
     stopifnot(all(all_size >= min_size & all_size <= max_size))
@@ -74,11 +74,10 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K) {
 
     tibble::tibble(
       n_block   = length(all_last),
-      cost      = compute_cost(block_num, corr, thr_r2),
+      cost      = cost,
       block_num = list(block_num),
       all_last  = list(all_last),
-      all_size  = list(all_size),
-      all_cost  = list(cost_path$C[, k])
+      all_size  = list(all_size)
     )
   }))
 }

@@ -97,8 +97,8 @@ get_L <- function(p, i, x, thr_r2) {
     .Call(`_bigsnpr_get_L`, p, i, x, thr_r2)
 }
 
-get_C <- function(L, min_size, max_size, lambda) {
-    .Call(`_bigsnpr_get_C`, L, min_size, max_size, lambda)
+get_C <- function(L, min_size, max_size, K) {
+    .Call(`_bigsnpr_get_C`, L, min_size, max_size, K)
 }
 
 writebina <- function(filename, BM, tab, rowInd, colInd) {

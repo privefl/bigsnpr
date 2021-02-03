@@ -69,9 +69,8 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int K) {
 
   // Computing all minimum costs and corresponding indices
   IntegerMatrix best_ind(m, K); best_ind.fill(NA_INTEGER);
-  NumericMatrix C(m + 1, K); C.fill(NA_REAL);
-  // Adding one value at the end for convenience
-  for (int k = 0; k < K; k++) C(m, k) = 0;
+  NumericMatrix C(m, K); C.fill(NA_REAL);
+
   // Only a few indices allow one block only
   for (auto size : seq(min_size, max_size)) {
     best_ind(m - size, 0) = m;
@@ -80,6 +79,7 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int K) {
 
   // Iterating over total numbers of blocks allowed
   for (int k = 1; k < K; k++) {
+
     // starting from the end
     for (int row = m - ((k + 1) * min_size); row >= 0; row--) {
 
@@ -108,8 +108,14 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int K) {
 // double test_pow(int n) {
 //   return std::pow(n, 1.5);
 // }
-//
+
 // // [[Rcpp::export]]
 // IntegerVector test_seq() {
 //   return seq(1, 1);
+// }
+
+// // [[Rcpp::export]]
+// bool test_compare_NA() {
+//   double cost = NA_REAL;
+//   return (cost < R_PosInf);
 // }

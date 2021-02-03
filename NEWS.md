@@ -1,3 +1,7 @@
+## bigsnpr 1.6.4
+
+- Remove penalization in `snp_ldsplit()`. Instead, report the best splits for a range of numbers of blocks desired.
+
 ## bigsnpr 1.6.3
 
 - Penalization in `snp_ldsplit()` now makes more sense. Also fix a small bug that prevented splitting the last block in some cases.

@@ -4,32 +4,27 @@
 \alias{snp_ldsplit}
 \title{Independent LD blocks}
 \usage{
-snp_ldsplit(corr, thr_r2, grid_param)
+snp_ldsplit(corr, thr_r2, min_size, max_size, max_K)
 }
 \arguments{
-\item{corr}{Sparse correlation matrix. Usually the output of \code{\link[=snp_cor]{snp_cor()}}.}
+\item{corr}{Sparse correlation matrix. Usually, the output of \code{\link[=snp_cor]{snp_cor()}}.}
 
 \item{thr_r2}{Threshold under which squared correlations are ignored.}
 
-\item{grid_param}{Grid of parameters to consider, a data frame with columns
-\itemize{
-\item \verb{$min_size}: Minimum number of variants in each block.
-\item \verb{$max_size}: Maximum number of variants in each block.
-\item \verb{$lambda}: Penalty coefficient to apply on the size of the blocks.
-Using \code{0} would disable this. You can try multiple values, e.g.
-\code{c(0, 0.001, 0.01, 0.1)}.
-}}
+\item{min_size}{Minimum number of variants in each block.}
+
+\item{max_size}{Maximum number of variants in each block.}
+
+\item{max_K}{Maximum number of blocks to consider.}
 }
 \value{
-Input \code{grid_param} as an ordered tibble with six extra columns:
+A tibble with five columns:
 \itemize{
 \item \verb{$n_block}: Number of blocks.
 \item \verb{$cost}: The sum of squared correlations outside the blocks.
 \item \verb{$block_num}: Resulting block numbers for each variant.
 \item \verb{$all_last}: Last index of each block.
 \item \verb{$all_size}: Sizes of the blocks.
-\item \verb{$all_cost}: Internal costs computed.
-This is ordered by minimum cost and maximum number of blocks.
 }
 }
 \description{
@@ -42,14 +37,14 @@ correlation between these blocks (i.e. everything outside these blocks).
 
   corr <- readRDS(url("https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"))
 
-  grid_param <- expand.grid(min_size = c(10, 20),
-                            max_size = c(30, 40, 50),
-                            lambda = c(0, 1e-3, 1e-2))
-  THR_R2 <- 0.005
+  THR_R2 <- 0.01
 
-  (res <- snp_ldsplit(corr, grid_param, thr_r2 = THR_R2))
+  (res <- snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 10, max_size = 50, max_K = 50))
 
-  all_ind <- head(res$all_last[[5]], -1)
+  library(ggplot2)
+  qplot(n_block, cost, data = res) + theme_bw(16) + scale_y_log10()
+
+  all_ind <- head(res$all_last[[6]], -1)
 
   ## Transform sparse representation into (i,j,x) triplets
   corrT <- as(corr, "dgTMatrix")
@@ -61,7 +56,6 @@ correlation between these blocks (i.e. everything outside these blocks).
   )
   df$y <- (df$j - df$i) / 2
 
-  library(ggplot2)
   ggplot(df) +
     geom_point(aes(i + y, y, color = r2), size = rel(0.5)) +
     coord_fixed() +
