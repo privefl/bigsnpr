@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,7 +156,7 @@
     <p>Sequence, evenly spaced on a logarithmic scale</p>
     </div>
 
-    <pre class="usage"><span class='fu'>seq_log</span>(<span class='no'>from</span>, <span class='no'>to</span>, <span class='no'>length.out</span>)</pre>
+    <pre class="usage"><span class='fu'>seq_log</span><span class='op'>(</span><span class='va'>from</span>, <span class='va'>to</span>, <span class='va'>length.out</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,7 +183,9 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>seq_log</span>(<span class='fl'>1</span>, <span class='fl'>1000</span>, <span class='fl'>4</span>)</div><div class='output co'>#&gt; [1]    1   10  100 1000</div><div class='input'><span class='fu'>seq_log</span>(<span class='fl'>1</span>, <span class='fl'>100</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt; [1]   1.000000   3.162278  10.000000  31.622777 100.000000</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>seq_log</span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1000</span>, <span class='fl'>4</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1]    1   10  100 1000</div><div class='input'><span class='fu'>seq_log</span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span>, <span class='fl'>5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1]   1.000000   3.162278  10.000000  31.622777 100.000000</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -192,7 +202,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

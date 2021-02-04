@@ -56,6 +56,8 @@ human genome.
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -83,7 +85,7 @@ human genome.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -133,7 +135,13 @@ human genome.
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -170,43 +178,43 @@ human genome.</p></li>
 
     </div>
 
-    <pre class="usage"><span class='fu'>bed_clumping</span>(
-  <span class='no'>obj.bed</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
-  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)
+    <pre class="usage"><span class='fu'>bed_clumping</span><span class='op'>(</span>
+  <span class='va'>obj.bed</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  S <span class='op'>=</span> <span class='cn'>NULL</span>,
+  thr.r2 <span class='op'>=</span> <span class='fl'>0.2</span>,
+  size <span class='op'>=</span> <span class='fl'>100</span><span class='op'>/</span><span class='va'>thr.r2</span>,
+  exclude <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span>
 
-<span class='fu'>snp_clumping</span>(
-  <span class='no'>G</span>,
-  <span class='no'>infos.chr</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
-  <span class='kw'>S</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
-  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)
+<span class='fu'>snp_clumping</span><span class='op'>(</span>
+  <span class='va'>G</span>,
+  <span class='va'>infos.chr</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  S <span class='op'>=</span> <span class='cn'>NULL</span>,
+  thr.r2 <span class='op'>=</span> <span class='fl'>0.2</span>,
+  size <span class='op'>=</span> <span class='fl'>100</span><span class='op'>/</span><span class='va'>thr.r2</span>,
+  infos.pos <span class='op'>=</span> <span class='cn'>NULL</span>,
+  is.size.in.bp <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exclude <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span>
 
-<span class='fu'>snp_pruning</span>(
-  <span class='no'>G</span>,
-  <span class='no'>infos.chr</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>49</span>,
-  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>exclude</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)
+<span class='fu'>snp_pruning</span><span class='op'>(</span>
+  <span class='va'>G</span>,
+  <span class='va'>infos.chr</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  size <span class='op'>=</span> <span class='fl'>49</span>,
+  is.size.in.bp <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  infos.pos <span class='op'>=</span> <span class='cn'>NULL</span>,
+  thr.r2 <span class='op'>=</span> <span class='fl'>0.2</span>,
+  exclude <span class='op'>=</span> <span class='cn'>NULL</span>,
+  nploidy <span class='op'>=</span> <span class='fl'>2</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span>
 
-<span class='fu'>snp_indLRLDR</span>(<span class='no'>infos.chr</span>, <span class='no'>infos.pos</span>, <span class='kw'>LD.regions</span> <span class='kw'>=</span> <span class='no'>LD.wiki34</span>)</pre>
+<span class='fu'>snp_indLRLDR</span><span class='op'>(</span><span class='va'>infos.chr</span>, <span class='va'>infos.pos</span>, LD.regions <span class='op'>=</span> <span class='va'>LD.wiki34</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -306,16 +314,17 @@ Long-Range LD Can Confound Genome Scans in Admixed Populations.
 Am J Hum Genet. 2008;83(1):132-135. doi: <a href='https://doi.org/10.1016/j.ajhg.2008.06.005'>10.1016/j.ajhg.2008.06.005</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
-<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
+    <pre class="examples"><div class='input'><span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>test</span><span class='op'>$</span><span class='va'>genotypes</span>
 
 <span class='co'># clumping (prioritizing higher MAF)</span>
-<span class='no'>ind.keep</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_clumping</span>(<span class='no'>G</span>, <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>,
-                         <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>test</span>$<span class='no'>map</span>$<span class='no'>physical.pos</span>,
-                         <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
+<span class='va'>ind.keep</span> <span class='op'>&lt;-</span> <span class='fu'>snp_clumping</span><span class='op'>(</span><span class='va'>G</span>, infos.chr <span class='op'>=</span> <span class='va'>test</span><span class='op'>$</span><span class='va'>map</span><span class='op'>$</span><span class='va'>chromosome</span>,
+                         infos.pos <span class='op'>=</span> <span class='va'>test</span><span class='op'>$</span><span class='va'>map</span><span class='op'>$</span><span class='va'>physical.pos</span>,
+                         thr.r2 <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>
 
 <span class='co'># keep most of them -&gt; not much LD in this simulated dataset</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>ind.keep</span>) / <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>G</span>)</div><div class='output co'>#&gt; [1] 0.7919419</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>ind.keep</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.7919419</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -332,7 +341,7 @@ Am J Hum Genet. 2008;83(1):132-135. doi: <a href='https://doi.org/10.1016/j.ajhg
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

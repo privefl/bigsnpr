@@ -27,9 +27,9 @@ navbar:
     - text: "About"
       icon: fa-user
       href: https://privefl.github.io/about.html
-    - icon: fa-github
+    - icon: fa-github fa
       href: https://github.com/privefl/bigsnpr
-    - icon: fa-newspaper-o
+    - icon: fa-newspaper-o fa
       href: news/index.html
 
 reference:

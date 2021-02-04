@@ -46,6 +46,8 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs." />
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -73,7 +75,7 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -123,7 +125,13 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs." />
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -150,7 +158,7 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs." />
 This will use the slot <code>code</code> <strong>rounded</strong> to write 0s, 1s, 2s or NAs.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_writeBed</span>(<span class='no'>x</span>, <span class='no'>bedfile</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>))</pre>
+    <pre class="usage"><span class='fu'>snp_writeBed</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>bedfile</span>, ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>, ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,26 +190,31 @@ If not specified, all columns are used.<br />
     <p>The input <code>bedfile</code> path.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>17</span>
-<span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='fl'>911</span>
+    <pre class="examples"><div class='input'><span class='va'>N</span> <span class='op'>&lt;-</span> <span class='fl'>17</span>
+<span class='va'>M</span> <span class='op'>&lt;-</span> <span class='fl'>911</span>
 
-<span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span>(<span class='no'>N</span>, <span class='no'>M</span>)
-<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>genotypes</span>
-<span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/raw.html'>as.raw</a></span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='va'>fake</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span><span class='op'>(</span><span class='va'>N</span>, <span class='va'>M</span><span class='op'>)</span>
+<span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>fake</span><span class='op'>$</span><span class='va'>genotypes</span>
+<span class='va'>G</span><span class='op'>[</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/raw.html'>as.raw</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># Write the object as a bed/bim/fam object</span>
-<span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".bed"</span>)
-<span class='no'>bed</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_writeBed</span>(<span class='no'>fake</span>, <span class='no'>tmp</span>)
+<span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>fileext <span class='op'>=</span> <span class='st'>".bed"</span><span class='op'>)</span>
+<span class='va'>bed</span> <span class='op'>&lt;-</span> <span class='fu'>snp_writeBed</span><span class='op'>(</span><span class='va'>fake</span>, <span class='va'>tmp</span><span class='op'>)</span>
 
 <span class='co'># Read this new file for the first time</span>
-<span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span>(<span class='no'>bed</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
+<span class='va'>rds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_readBed.html'>snp_readBed</a></span><span class='op'>(</span><span class='va'>bed</span>, backingfile <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 <span class='co'># Attach object in R session</span>
-<span class='no'>fake2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rds</span>)
+<span class='va'>fake2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span><span class='va'>rds</span><span class='op'>)</span>
 
 <span class='co'># Same content</span>
-<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>[], <span class='no'>fake2</span>$<span class='no'>genotypes</span>[])</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span>(<span class='no'>fake</span>$<span class='no'>fam</span>, <span class='no'>fake2</span>$<span class='no'>fam</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span>(<span class='no'>fake</span>$<span class='no'>map</span>, <span class='no'>fake2</span>$<span class='no'>map</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>fake</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>[</span><span class='op'>]</span>, <span class='va'>fake2</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>[</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>fake</span><span class='op'>$</span><span class='va'>fam</span>, <span class='va'>fake2</span><span class='op'>$</span><span class='va'>fam</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>fake</span><span class='op'>$</span><span class='va'>map</span>, <span class='va'>fake2</span><span class='op'>$</span><span class='va'>map</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 <span class='co'># Two different backingfiles</span>
-<span class='no'>fake</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f2846a75edd.bk"</div><div class='input'><span class='no'>fake2</span>$<span class='no'>genotypes</span>$<span class='no'>backingfile</span></div><div class='output co'>#&gt; [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f2820b47e27.bk"</div></pre>
+<span class='va'>fake</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>$</span><span class='va'>backingfile</span>
+</div><div class='output co'>#&gt; [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file42741746799.bk"</div><div class='input'><span class='va'>fake2</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>$</span><span class='va'>backingfile</span>
+</div><div class='output co'>#&gt; [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427466ddce.bk"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -217,7 +230,7 @@ If not specified, all columns are used.<br />
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

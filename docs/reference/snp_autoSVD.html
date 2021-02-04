@@ -46,6 +46,8 @@ long-range LD regions." />
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -73,7 +75,7 @@ long-range LD regions." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -123,7 +125,13 @@ long-range LD regions." />
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -150,42 +158,42 @@ long-range LD regions." />
 long-range LD regions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_autoSVD</span>(
-  <span class='no'>G</span>,
-  <span class='no'>infos.chr</span>,
-  <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(),
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
-  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>alpha.tukey</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>min.mac</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>is.size.in.bp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)
+    <pre class="usage"><span class='fu'>snp_autoSVD</span><span class='op'>(</span>
+  <span class='va'>G</span>,
+  <span class='va'>infos.chr</span>,
+  infos.pos <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  fun.scaling <span class='op'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span><span class='op'>(</span><span class='op'>)</span>,
+  thr.r2 <span class='op'>=</span> <span class='fl'>0.2</span>,
+  size <span class='op'>=</span> <span class='fl'>100</span><span class='op'>/</span><span class='va'>thr.r2</span>,
+  k <span class='op'>=</span> <span class='fl'>10</span>,
+  roll.size <span class='op'>=</span> <span class='fl'>50</span>,
+  int.min.size <span class='op'>=</span> <span class='fl'>20</span>,
+  alpha.tukey <span class='op'>=</span> <span class='fl'>0.05</span>,
+  min.mac <span class='op'>=</span> <span class='fl'>10</span>,
+  max.iter <span class='op'>=</span> <span class='fl'>5</span>,
+  is.size.in.bp <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
-<span class='fu'>bed_autoSVD</span>(
-  <span class='no'>obj.bed</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='no'>bed_scaleBinom</span>,
-  <span class='kw'>thr.r2</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>100</span>/<span class='no'>thr.r2</span>,
-  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>roll.size</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>int.min.size</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>alpha.tukey</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>min.mac</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+<span class='fu'>bed_autoSVD</span><span class='op'>(</span>
+  <span class='va'>obj.bed</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  fun.scaling <span class='op'>=</span> <span class='va'>bed_scaleBinom</span>,
+  thr.r2 <span class='op'>=</span> <span class='fl'>0.2</span>,
+  size <span class='op'>=</span> <span class='fl'>100</span><span class='op'>/</span><span class='va'>thr.r2</span>,
+  k <span class='op'>=</span> <span class='fl'>10</span>,
+  roll.size <span class='op'>=</span> <span class='fl'>50</span>,
+  int.min.size <span class='op'>=</span> <span class='fl'>20</span>,
+  alpha.tukey <span class='op'>=</span> <span class='fl'>0.05</span>,
+  min.mac <span class='op'>=</span> <span class='fl'>10</span>,
+  max.iter <span class='op'>=</span> <span class='fl'>5</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -302,7 +310,7 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
 </ul>
 
 <p>Note that to obtain the Principal Components, you must use
-<a href='https://rdrr.io/pkg/bigstatsr/man/predict.big_SVD.html'>predict</a> on the result. See examples.</p>
+<a href='https://privefl.github.io/bigstatsr/reference/predict.big_SVD.html'>predict</a> on the result. See examples.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If you don't have any information about SNPs, you can try using</p><ul>
@@ -313,11 +321,12 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ex</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
+    <pre class="examples"><div class='input'><span class='va'>ex</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_autoSVD</span>(<span class='kw'>G</span> <span class='kw'>=</span> <span class='no'>ex</span>$<span class='no'>genotypes</span>,
-                       <span class='kw'>infos.chr</span> <span class='kw'>=</span> <span class='no'>ex</span>$<span class='no'>map</span>$<span class='no'>chromosome</span>,
-                       <span class='kw'>infos.pos</span> <span class='kw'>=</span> <span class='no'>ex</span>$<span class='no'>map</span>$<span class='no'>physical.position</span>)</div><div class='output co'>#&gt; 
+<span class='va'>obj.svd</span> <span class='op'>&lt;-</span> <span class='fu'>snp_autoSVD</span><span class='op'>(</span>G <span class='op'>=</span> <span class='va'>ex</span><span class='op'>$</span><span class='va'>genotypes</span>,
+                       infos.chr <span class='op'>=</span> <span class='va'>ex</span><span class='op'>$</span><span class='va'>map</span><span class='op'>$</span><span class='va'>chromosome</span>,
+                       infos.pos <span class='op'>=</span> <span class='va'>ex</span><span class='op'>$</span><span class='va'>map</span><span class='op'>$</span><span class='va'>physical.position</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
 #&gt; Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 4270 SNPs.
 #&gt; Discarding 0 variant with MAC &lt; 10.
 #&gt; 
@@ -326,7 +335,8 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
 #&gt; 0 outlier variant detected..
 #&gt; 
 #&gt; Converged!</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>obj.svd</span>)</div><div class='output co'>#&gt; List of 7
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>obj.svd</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 7
 #&gt;  $ d     : num [1:10] 235.4 148 105.5 96.4 94.9 ...
 #&gt;  $ u     : num [1:517, 1:10] 0.0801 0.0798 0.0646 0.0781 0.0818 ...
 #&gt;  $ v     : num [1:4270, 1:10] -0.00174 0.03142 -0.01527 0.0132 0.0154 ...
@@ -356,7 +366,7 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

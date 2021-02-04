@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,15 +156,15 @@
     <p>Functions to read bed/bim/fam files into a <a href='bigSNP-class.html'>bigSNP</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span>(<span class='no'>bedfile</span>))
+    <pre class="usage"><span class='fu'>snp_readBed</span><span class='op'>(</span><span class='va'>bedfile</span>, backingfile <span class='op'>=</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span><span class='op'>(</span><span class='va'>bedfile</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>snp_readBed2</span>(
-  <span class='no'>bedfile</span>,
-  <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span>(<span class='no'>bedfile</span>),
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)</pre>
+<span class='fu'>snp_readBed2</span><span class='op'>(</span>
+  <span class='va'>bedfile</span>,
+  backingfile <span class='op'>=</span> <span class='fu'><a href='sub_bed.html'>sub_bed</a></span><span class='op'>(</span><span class='va'>bedfile</span><span class='op'>)</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -207,14 +215,16 @@ which require minimal space to store and are faster to read. For example,
 to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_plinkQC.html'>snp_plinkQC</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>(<span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>))</div><div class='output co'>#&gt; [1] "C:/Users/au639593/Documents/R/win-library/3.6/bigsnpr/extdata/example.bed"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='op'>(</span><span class='va'>bedfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, package <span class='op'>=</span> <span class='st'>"bigsnpr"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "C:/Users/au639593/Documents/R/win-library/3.6/bigsnpr/extdata/example.bed"</div><div class='input'>
 <span class='co'># Reading the bedfile and storing the data in temporary directory</span>
-<span class='no'>rds</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_readBed</span>(<span class='no'>bedfile</span>, <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
+<span class='va'>rds</span> <span class='op'>&lt;-</span> <span class='fu'>snp_readBed</span><span class='op'>(</span><span class='va'>bedfile</span>, backingfile <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Loading the data from backing files</span>
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rds</span>)
+<span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span><span class='va'>rds</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>test</span>)</div><div class='output co'>#&gt; List of 3
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>test</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 3
 #&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 15 fields
 #&gt;   ..$ extptr      :&lt;externalptr&gt; 
 #&gt;   ..$ extptr_rw   :&lt;externalptr&gt; 
@@ -222,12 +232,12 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_
 #&gt;   ..$ ncol        : int 4542
 #&gt;   ..$ type        : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f28563946b.bk"
+#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427479d27ff5.bk"
 #&gt;   ..$ is_read_only: logi FALSE
 #&gt;   ..$ address     :&lt;externalptr&gt; 
 #&gt;   ..$ address_rw  :&lt;externalptr&gt; 
-#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f28563946b.bk"
-#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f28563946b.rds"
+#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427479d27ff5.bk"
+#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427479d27ff5.rds"
 #&gt;   ..$ is_saved    : logi TRUE
 #&gt;   ..$ type_chr    : chr "unsigned char"
 #&gt;   ..$ type_size   : int 1
@@ -250,7 +260,9 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_
 #&gt;   ..$ physical.pos: int [1:4542] 112 1098 2089 3107 4091 5091 6107 7103 8090 9074 ...
 #&gt;   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
 #&gt;   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
-#&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>)</div><div class='output co'>#&gt; [1]  517 4542</div><div class='input'><span class='no'>G</span>[<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='fl'>1</span>:<span class='fl'>8</span>]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+#&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>test</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1]  517 4542</div><div class='input'><span class='va'>G</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
 #&gt; [1,]    0    0    2    0    1    1    0    2
 #&gt; [2,]    1    0    1    0    0    1    0    2
 #&gt; [3,]    0    1    1    0    2    1    0    2
@@ -274,7 +286,7 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href='snp_
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

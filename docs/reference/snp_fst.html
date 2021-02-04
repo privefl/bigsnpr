@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,7 +156,7 @@
     <p>Fixation index (Fst), either per variant, or genome-wide</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_fst</span>(<span class='no'>list_df_af</span>, <span class='kw'>min_maf</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>overall</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>snp_fst</span><span class='op'>(</span><span class='va'>list_df_af</span>, min_maf <span class='op'>=</span> <span class='fl'>0</span>, overall <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,14 +190,15 @@ This should be equivalent to using '<code>--fst --within</code>' in PLINK.</p>
 analysis of population structure. Evolution, 1358-1370.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='no'>obj.bed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bed-class.html'>bed</a></span>(<span class='no'>bedfile</span>)
+    <pre class="examples"><div class='input'><span class='va'>bedfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"example.bed"</span>, package <span class='op'>=</span> <span class='st'>"bigsnpr"</span><span class='op'>)</span>
+<span class='va'>obj.bed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bed-class.html'>bed</a></span><span class='op'>(</span><span class='va'>bedfile</span><span class='op'>)</span>
 
-<span class='no'>pop</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>:<span class='fl'>3</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>143</span>, <span class='fl'>167</span>, <span class='fl'>207</span>))
-<span class='no'>ind_pop</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span>(<span class='no'>pop</span>), <span class='no'>pop</span>)
-<span class='no'>list_df_af</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>ind_pop</span>, <span class='kw'>function</span>(<span class='no'>ind</span>) <span class='fu'><a href='bed_MAF.html'>bed_MAF</a></span>(<span class='no'>obj.bed</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='no'>ind</span>))
+<span class='va'>pop</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>143</span>, <span class='fl'>167</span>, <span class='fl'>207</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>ind_pop</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>pop</span><span class='op'>)</span>, <span class='va'>pop</span><span class='op'>)</span>
+<span class='va'>list_df_af</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>ind_pop</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>ind</span><span class='op'>)</span> <span class='fu'><a href='bed_MAF.html'>bed_MAF</a></span><span class='op'>(</span><span class='va'>obj.bed</span>, ind.row <span class='op'>=</span> <span class='va'>ind</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>snp_fst</span>(<span class='no'>list_df_af</span>)</div><div class='output co'>#&gt;    [1]  1.543045e-02 -2.169328e-03  7.547931e-02  2.005200e-02  1.341171e-02
+<span class='fu'>snp_fst</span><span class='op'>(</span><span class='va'>list_df_af</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    [1]  1.543045e-02 -2.169328e-03  7.547931e-02  2.005200e-02  1.341171e-02
 #&gt;    [6]  1.284776e-02 -1.668094e-03  2.863110e-02  1.310423e-02  1.028161e-02
 #&gt;   [11]  1.311446e-03  6.048104e-02  6.461257e-04  1.634420e-02  3.937796e-02
 #&gt;   [16]  9.563337e-03  1.688172e-02  2.837635e-03  8.945946e-02  2.140082e-03
@@ -1097,7 +1106,10 @@ analysis of population structure. Evolution, 1358-1370.</p>
 #&gt; [4526]  7.407426e-02  1.118588e-02  3.739736e-02  3.742153e-02  6.079512e-03
 #&gt; [4531]  5.507471e-02  1.000590e-03  1.526019e-02  3.778144e-02  1.332125e-02
 #&gt; [4536]  5.211144e-03  4.739557e-02  1.326923e-02  5.188253e-02  2.051836e-02
-#&gt; [4541]  3.271079e-03  1.507747e-02</div><div class='input'><span class='fu'>snp_fst</span>(<span class='no'>list_df_af</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>)], <span class='kw'>overall</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0.02266401</div><div class='input'><span class='fu'>snp_fst</span>(<span class='no'>list_df_af</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>)], <span class='kw'>overall</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0.03573594</div><div class='input'><span class='fu'>snp_fst</span>(<span class='no'>list_df_af</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>2</span>)], <span class='kw'>overall</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0.01381693</div><div class='input'>
+#&gt; [4541]  3.271079e-03  1.507747e-02</div><div class='input'><span class='fu'>snp_fst</span><span class='op'>(</span><span class='va'>list_df_af</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>]</span>, overall <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.02266401</div><div class='input'><span class='fu'>snp_fst</span><span class='op'>(</span><span class='va'>list_df_af</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>]</span>, overall <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.03573594</div><div class='input'><span class='fu'>snp_fst</span><span class='op'>(</span><span class='va'>list_df_af</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>]</span>, overall <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.01381693</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -1114,7 +1126,7 @@ analysis of population structure. Evolution, 1358-1370.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

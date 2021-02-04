@@ -44,6 +44,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -121,13 +123,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
      
   </a>
 </li>
 <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o"></span>
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -202,14 +204,7 @@
 <h2 class="hasAnchor">
 <a href="#bigsnpr-155" class="anchor"></a>bigsnpr 1.5.5</h2>
 <ul>
-<li>Add option <code>return_sampling_betas</code> in <code><a href="../reference/LDpred2.html">snp_ldpred2_grid()</a></code> to return all sampling betas (after burn-in), which is useful for assessing the uncertainty of the PRS at the individual level (see <a href="https://doi.org/10.1101/2020.11.30.403188" class="uri">https://doi.org/10.1101/2020.11.30.403188</a>).</li>
-</ul>
-</div>
-    <div id="bigsparser-041" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bigsparser-041" class="anchor"></a>bigsparser 0.4.1</h2>
-<ul>
-<li>Faster cross-product with SFBM, which should make all LDpred2 models faster.</li>
+<li>Add option <code>return_sampling_betas</code> in <code><a href="../reference/snp_ldpred2_inf.html">snp_ldpred2_grid()</a></code> to return all sampling betas (after burn-in), which is useful for assessing the uncertainty of the PRS at the individual level (see https://doi.org/10.1101/2020.11.30.403188).</li>
 </ul>
 </div>
     <div id="bigsnpr-154" class="section level2">
@@ -254,13 +249,6 @@
 <li>Add option <code>sparse</code> to enable getting also a sparse solution in LDpred2-auto.</li>
 </ul>
 </div>
-    <div id="bigsparser-030" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bigsparser-030" class="anchor"></a>bigsparser 0.3.0</h2>
-<ul>
-<li>Faster <code><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html">bigsparser::as_SFBM()</a></code>.</li>
-</ul>
-</div>
     <div id="bigsnpr-147" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsnpr-147" class="anchor"></a>bigsnpr 1.4.7</h2>
@@ -287,7 +275,7 @@
 <a href="#bigsnpr-142" class="anchor"></a>bigsnpr 1.4.2</h2>
 <ul>
 <li><p>All 3 LDpred2 functions now use an SFBM as input format for the correlation matrix.</p></li>
-<li><p>Allow for multiple initial values for p in <code><a href="../reference/LDpred2.html">snp_ldpred2_auto()</a></code>.</p></li>
+<li><p>Allow for multiple initial values for p in <code><a href="../reference/snp_ldpred2_inf.html">snp_ldpred2_auto()</a></code>.</p></li>
 <li><p>Add function <code><a href="../reference/coef_to_liab.html">coef_to_liab()</a></code> for e.g. converting heritability to the liability scale.</p></li>
 </ul>
 </div>
@@ -302,7 +290,7 @@
 <h2 class="hasAnchor">
 <a href="#bigsnpr-140" class="anchor"></a>bigsnpr 1.4.0</h2>
 <ul>
-<li><p>Add functions <code><a href="../reference/LDpred2.html">snp_ldpred2_inf()</a></code>, <code><a href="../reference/LDpred2.html">snp_ldpred2_grid()</a></code> and <code><a href="../reference/LDpred2.html">snp_ldpred2_auto()</a></code> for running the new LDpred2-inf, LDpred2-grid and LDpred2-auto.</p></li>
+<li><p>Add functions <code><a href="../reference/snp_ldpred2_inf.html">snp_ldpred2_inf()</a></code>, <code><a href="../reference/snp_ldpred2_inf.html">snp_ldpred2_grid()</a></code> and <code><a href="../reference/snp_ldpred2_inf.html">snp_ldpred2_auto()</a></code> for running the new LDpred2-inf, LDpred2-grid and LDpred2-auto.</p></li>
 <li><p>Add functions <code><a href="../reference/snp_ldsc.html">snp_ldsc()</a></code> and <code><a href="../reference/snp_ldsc.html">snp_ldsc2()</a></code> for performing LD score regression.</p></li>
 <li><p>Add function <code><a href="../reference/snp_asGeneticPos.html">snp_asGeneticPos()</a></code> for transforming physical positions to genetic positions.</p></li>
 <li><p>Add function <code><a href="../reference/snp_simuPheno.html">snp_simuPheno()</a></code> for simulating phenotypes.</p></li>
@@ -390,7 +378,7 @@
 <li><code><a href="../reference/bed-class.html">bed()</a></code></li>
 <li><code><a href="../reference/bed_MAF.html">bed_MAF()</a></code></li>
 <li><code><a href="../reference/snp_autoSVD.html">bed_autoSVD()</a></code></li>
-<li><code><a href="../reference/snp_clumping.html">bed_clumping()</a></code></li>
+<li><code><a href="../reference/bed_clumping.html">bed_clumping()</a></code></li>
 <li><code><a href="../reference/bed_counts.html">bed_counts()</a></code></li>
 <li><code><a href="../reference/bed_cprodVec.html">bed_cprodVec()</a></code></li>
 <li><code><a href="../reference/snp_pcadapt.html">bed_pcadapt()</a></code></li>
@@ -460,8 +448,8 @@
 <a href="#bigsnpr-0100" class="anchor"></a>bigsnpr 0.10.0</h2>
 <ul>
 <li><p>For memory-mapping, now use <em>mio</em> instead of <em>boost</em>.</p></li>
-<li><p><code><a href="../reference/snp_clumping.html">snp_clumping()</a></code> (and <code><a href="../reference/snp_autoSVD.html">snp_autoSVD()</a></code>) now has a <code>size</code> that is inversely proportional to <code>thr.r2</code>.</p></li>
-<li><p><code><a href="../reference/snp_clumping.html">snp_pruning()</a></code> is deprecated (and will be removed someday); now always use <code><a href="../reference/snp_clumping.html">snp_clumping()</a></code>.</p></li>
+<li><p><code><a href="../reference/bed_clumping.html">snp_clumping()</a></code> (and <code><a href="../reference/snp_autoSVD.html">snp_autoSVD()</a></code>) now has a <code>size</code> that is inversely proportional to <code>thr.r2</code>.</p></li>
+<li><p><code><a href="../reference/bed_clumping.html">snp_pruning()</a></code> is deprecated (and will be removed someday); now always use <code><a href="../reference/bed_clumping.html">snp_clumping()</a></code>.</p></li>
 </ul>
 </div>
     <div id="bigsnpr-090" class="section level2">
@@ -561,7 +549,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

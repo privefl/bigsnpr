@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,19 +156,19 @@
     <p>LD score regression</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_ldsc</span>(
-  <span class='no'>ld_score</span>,
-  <span class='no'>ld_size</span>,
-  <span class='no'>chi2</span>,
-  <span class='no'>sample_size</span>,
-  <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>200</span>,
-  <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>chi2_thr1</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-  <span class='kw'>chi2_thr2</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)
+    <pre class="usage"><span class='fu'>snp_ldsc</span><span class='op'>(</span>
+  <span class='va'>ld_score</span>,
+  <span class='va'>ld_size</span>,
+  <span class='va'>chi2</span>,
+  <span class='va'>sample_size</span>,
+  blocks <span class='op'>=</span> <span class='fl'>200</span>,
+  intercept <span class='op'>=</span> <span class='cn'>NULL</span>,
+  chi2_thr1 <span class='op'>=</span> <span class='fl'>30</span>,
+  chi2_thr2 <span class='op'>=</span> <span class='cn'>Inf</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span>
 
-<span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>snp_ldsc2</span><span class='op'>(</span><span class='va'>corr</span>, <span class='va'>df_beta</span>, blocks <span class='op'>=</span> <span class='cn'>NULL</span>, intercept <span class='op'>=</span> <span class='fl'>1</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -226,7 +234,7 @@ You may use nb_cores.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code>snp_ldsc</code></p><dl'>
+      <td><p>Arguments passed on to <code>snp_ldsc</code></p><dl>
     <dt><code></code></dt><dd><p></p></dd>
   
 </dl></td>
@@ -245,17 +253,19 @@ You may use nb_cores.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bigsnp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
-<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>bigsnp</span>$<span class='no'>genotypes</span>
-<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='no'>bigsnp</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
-<span class='no'>corr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_cor.html'>snp_cor</a></span>(<span class='no'>G</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>1000</span>)
+    <pre class="examples"><div class='input'><span class='va'>bigsnp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>bigsnp</span><span class='op'>$</span><span class='va'>genotypes</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='va'>bigsnp</span><span class='op'>$</span><span class='va'>fam</span><span class='op'>$</span><span class='va'>affection</span> <span class='op'>-</span> <span class='fl'>1</span>
+<span class='va'>corr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_cor.html'>snp_cor</a></span><span class='op'>(</span><span class='va'>G</span>, ind.col <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span><span class='op'>)</span>
 
-<span class='no'>gwas</span> <span class='kw'>&lt;-</span> <span class='fu'>big_univLogReg</span>(<span class='no'>G</span>, <span class='no'>y</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>1000</span>)
-<span class='no'>df_beta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>beta</span> <span class='kw'>=</span> <span class='no'>gwas</span>$<span class='no'>estim</span>, <span class='kw'>beta_se</span> <span class='kw'>=</span> <span class='no'>gwas</span>$<span class='no'>std.err</span>,
-                      <span class='kw'>n_eff</span> <span class='kw'>=</span> <span class='fl'>4</span> / (<span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>0</span>) + <span class='fl'>1</span> / <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>y</span> <span class='kw'>==</span> <span class='fl'>1</span>)))
+<span class='va'>gwas</span> <span class='op'>&lt;-</span> <span class='fu'>big_univLogReg</span><span class='op'>(</span><span class='va'>G</span>, <span class='va'>y</span>, ind.col <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span><span class='op'>)</span>
+<span class='va'>df_beta</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>beta <span class='op'>=</span> <span class='va'>gwas</span><span class='op'>$</span><span class='va'>estim</span>, beta_se <span class='op'>=</span> <span class='va'>gwas</span><span class='op'>$</span><span class='va'>std.err</span>,
+                      n_eff <span class='op'>=</span> <span class='fl'>4</span> <span class='op'>/</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>==</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>)</div><div class='output co'>#&gt;       int        h2 
-#&gt; 1.0000000 0.2335429 </div><div class='input'><span class='fu'>snp_ldsc2</span>(<span class='no'>corr</span>, <span class='no'>df_beta</span>, <span class='kw'>blocks</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</div><div class='output co'>#&gt;       int    int_se        h2     h2_se 
+<span class='fu'>snp_ldsc2</span><span class='op'>(</span><span class='va'>corr</span>, <span class='va'>df_beta</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       int        h2 
+#&gt; 1.0000000 0.2335429 </div><div class='input'><span class='fu'>snp_ldsc2</span><span class='op'>(</span><span class='va'>corr</span>, <span class='va'>df_beta</span>, blocks <span class='op'>=</span> <span class='fl'>20</span>, intercept <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       int    int_se        h2     h2_se 
 #&gt; 0.4986445 0.2526338 0.6195226 0.1818980 </div><div class='input'>
 </div></pre>
   </div>
@@ -273,7 +283,7 @@ You may use nb_cores.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

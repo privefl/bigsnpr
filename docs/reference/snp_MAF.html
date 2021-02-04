@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,13 +156,13 @@
     <p>Minor Allele Frequency.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_MAF</span>(
-  <span class='no'>G</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>nploidy</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)</pre>
+    <pre class="usage"><span class='fu'>snp_MAF</span><span class='op'>(</span>
+  <span class='va'>G</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  nploidy <span class='op'>=</span> <span class='fl'>2</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,8 +203,9 @@ You may use nb_cores.</p></td>
     <p>A vector of MAFs, corresponding to <code>ind.col</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>obj.bigsnp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAF</span>(<span class='no'>obj.bigsnp</span>$<span class='no'>genotypes</span>))</div><div class='output co'>#&gt;  num [1:4542] 0.342 0.206 0.237 0.185 0.456 ...</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='va'>obj.bigsnp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>maf</span> <span class='op'>&lt;-</span> <span class='fu'>snp_MAF</span><span class='op'>(</span><span class='va'>obj.bigsnp</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  num [1:4542] 0.342 0.206 0.237 0.185 0.456 ...</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -213,7 +222,7 @@ You may use nb_cores.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

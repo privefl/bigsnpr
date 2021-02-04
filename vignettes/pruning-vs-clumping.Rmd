@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, error = TRUE, warning = FALSE)
 ```
 
 In this vignette, I show why clumping (on MAF) should be preferred over pruning for single-nucleotide polymorphism (SNP) arrays. 

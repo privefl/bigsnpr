@@ -46,6 +46,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -73,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -123,7 +125,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -150,7 +158,7 @@
 (additive, recessive and dominant).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_MAX3</span>(<span class='no'>Gna</span>, <span class='no'>y01.train</span>, <span class='kw'>ind.train</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>Gna</span>), <span class='kw'>val</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.5</span>, <span class='fl'>1</span>))</pre>
+    <pre class="usage"><span class='fu'>snp_MAX3</span><span class='op'>(</span><span class='va'>Gna</span>, <span class='va'>y01.train</span>, ind.train <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>Gna</span><span class='op'>)</span>, val <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.5</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -199,14 +207,15 @@ doi: <a href='https://doi.org/10.1007/978-1-4614-2245-7_6'>10.1007/978-1-4614-22
 .</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>1</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 
 <span class='co'># constructing a fake genotype big.matrix</span>
-<span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>50</span>; <span class='no'>M</span> <span class='kw'>&lt;-</span> <span class='fl'>1200</span>
-<span class='no'>fake</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span>(<span class='no'>N</span>, <span class='no'>M</span>)
-<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>genotypes</span>
-<span class='no'>G</span>[] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/raw.html'>as.raw</a></span>(<span class='fl'>0</span>:<span class='fl'>3</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>G</span>), <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>G</span>[<span class='fl'>1</span>:<span class='fl'>8</span>, <span class='fl'>1</span>:<span class='fl'>10</span>]</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+<span class='va'>N</span> <span class='op'>&lt;-</span> <span class='fl'>50</span>; <span class='va'>M</span> <span class='op'>&lt;-</span> <span class='fl'>1200</span>
+<span class='va'>fake</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_fake.html'>snp_fake</a></span><span class='op'>(</span><span class='va'>N</span>, <span class='va'>M</span><span class='op'>)</span>
+<span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>fake</span><span class='op'>$</span><span class='va'>genotypes</span>
+<span class='va'>G</span><span class='op'>[</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/raw.html'>as.raw</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>G</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 #&gt; [1,]    0    0   NA    0    2    1    0   NA   NA     2
 #&gt; [2,]   NA    0   NA    2   NA    2    2    2    2     1
 #&gt; [3,]    2    2    2    2    1    2    1    0    2     0
@@ -216,21 +225,25 @@ doi: <a href='https://doi.org/10.1007/978-1-4614-2245-7_6'>10.1007/978-1-4614-22
 #&gt; [7,]    2   NA    1    1    1   NA    1    2    1    NA
 #&gt; [8,]    2    2    1    0    1   NA   NA    2    0     1</div><div class='input'>
 <span class='co'># Specify case/control phenotypes</span>
-<span class='no'>fake</span>$<span class='no'>fam</span>$<span class='no'>affection</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>each</span> <span class='kw'>=</span> <span class='no'>N</span> / <span class='fl'>2</span>)
+<span class='va'>fake</span><span class='op'>$</span><span class='va'>fam</span><span class='op'>$</span><span class='va'>affection</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, each <span class='op'>=</span> <span class='va'>N</span> <span class='op'>/</span> <span class='fl'>2</span><span class='op'>)</span>
 
 <span class='co'># Get MAX3 statistics</span>
-<span class='no'>y01</span> <span class='kw'>&lt;-</span> <span class='no'>fake</span>$<span class='no'>fam</span>$<span class='no'>affection</span> - <span class='fl'>1</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>))</div><div class='output co'>#&gt; Classes 'mhtest' and 'data.frame':	1200 obs. of  1 variable:
+<span class='va'>y01</span> <span class='op'>&lt;-</span> <span class='va'>fake</span><span class='op'>$</span><span class='va'>fam</span><span class='op'>$</span><span class='va'>affection</span> <span class='op'>-</span> <span class='fl'>1</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'>snp_MAX3</span><span class='op'>(</span><span class='va'>fake</span><span class='op'>$</span><span class='va'>genotypes</span>, y01.train <span class='op'>=</span> <span class='va'>y01</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Classes 'mhtest' and 'data.frame':	1200 obs. of  1 variable:
 #&gt;  $ score: num  1.7124 0.0178 2.7611 0.1309 0.4396 ...
 #&gt;  - attr(*, "transfo")=function (x)  
 #&gt;  - attr(*, "predict")=function (xtr)  
 #&gt;   ..- attr(*, "srcref")= 'srcref' int  98 15 100 3 15 3 399 401
-#&gt;   .. ..- attr(*, "srcfile")=Classes 'srcfilealias', 'srcfile' &lt;environment: 0x0000000024d1d778&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test</span>)</div><div class='img'><img src='snp_MAX3-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='fu'><a href='snp_gc.html'>snp_gc</a></span>(<span class='no'>test</span>))</div><div class='img'><img src='snp_MAX3-2.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt;   .. ..- attr(*, "srcfile")=Classes 'srcfilealias', 'srcfile' &lt;environment: 0x0000000041050180&gt; </div><div class='input'><span class='co'># p-values are not well calibrated</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span><span class='op'>(</span><span class='va'>test</span><span class='op'>)</span>
+</div><div class='img'><img src='snp_MAX3-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># genomic control is not of much help</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span><span class='op'>(</span><span class='fu'><a href='snp_gc.html'>snp_gc</a></span><span class='op'>(</span><span class='va'>test</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='snp_MAX3-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Armitage trend test (well calibrated because only one test)</span>
-<span class='no'>test2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_MAX3</span>(<span class='no'>fake</span>$<span class='no'>genotypes</span>, <span class='kw'>y01.train</span> <span class='kw'>=</span> <span class='no'>y01</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>test2</span>)</div><div class='img'><img src='snp_MAX3-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>test2</span> <span class='op'>&lt;-</span> <span class='fu'>snp_MAX3</span><span class='op'>(</span><span class='va'>fake</span><span class='op'>$</span><span class='va'>genotypes</span>, y01.train <span class='op'>=</span> <span class='va'>y01</span>, val <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span><span class='op'>(</span><span class='va'>test2</span><span class='op'>)</span>
+</div><div class='img'><img src='snp_MAX3-3.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -247,7 +260,7 @@ doi: <a href='https://doi.org/10.1007/978-1-4614-2245-7_6'>10.1007/978-1-4614-22
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,12 +156,12 @@
     <p>Binomial(2, p) scaling where <code>p</code> is estimated.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bed_scaleBinom</span>(
-  <span class='no'>obj.bed</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)</pre>
+    <pre class="usage"><span class='fu'>bed_scaleBinom</span><span class='op'>(</span>
+  <span class='va'>obj.bed</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -197,13 +205,15 @@ PLoS Genet 2(12): e190. doi: <a href='https://doi.org/10.1371/journal.pgen.00201
 .</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bedfile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example-missing.bed"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"bigsnpr"</span>)
-<span class='no'>obj.bed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='bed-class.html'>bed</a></span>(<span class='no'>bedfile</span>)
+    <pre class="examples"><div class='input'><span class='va'>bedfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"example-missing.bed"</span>, package <span class='op'>=</span> <span class='st'>"bigsnpr"</span><span class='op'>)</span>
+<span class='va'>obj.bed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='bed-class.html'>bed</a></span><span class='op'>(</span><span class='va'>bedfile</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'>bed_scaleBinom</span>(<span class='no'>obj.bed</span>))</div><div class='output co'>#&gt; 'data.frame':	500 obs. of  2 variables:
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'>bed_scaleBinom</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 'data.frame':	500 obs. of  2 variables:
 #&gt;  $ center: num  0.0419 0.0829 0.1198 0.1744 0.2194 ...
 #&gt;  $ scale : num  0.203 0.282 0.336 0.399 0.442 ...</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='bed_randomSVD.html'>bed_randomSVD</a></span>(<span class='no'>obj.bed</span>, <span class='no'>bed_scaleBinom</span>))</div><div class='output co'>#&gt; List of 7
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='bed_randomSVD.html'>bed_randomSVD</a></span><span class='op'>(</span><span class='va'>obj.bed</span>, <span class='va'>bed_scaleBinom</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 7
 #&gt;  $ d     : num [1:10] 145.8 105.8 89.8 80 68.8 ...
 #&gt;  $ u     : num [1:200, 1:10] -0.10613 -0.03125 -0.02387 -0.00184 -0.0563 ...
 #&gt;  $ v     : num [1:500, 1:10] 0.0545 0.0518 0.0535 0.0551 0.04 ...
@@ -228,7 +238,7 @@ PLoS Genet 2(12): e190. doi: <a href='https://doi.org/10.1371/journal.pgen.00201
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

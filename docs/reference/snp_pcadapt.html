@@ -48,6 +48,8 @@ on mahalanobis distance, as implemented in package pcadapt." />
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -75,7 +77,7 @@ on mahalanobis distance, as implemented in package pcadapt." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -125,7 +127,13 @@ on mahalanobis distance, as implemented in package pcadapt." />
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -154,21 +162,21 @@ Principal Component Analysis. This corresponds to the statistic based
 on mahalanobis distance, as implemented in package <strong>pcadapt</strong>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_pcadapt</span>(
-  <span class='no'>G</span>,
-  <span class='no'>U.row</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>G</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>G</span>),
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)
+    <pre class="usage"><span class='fu'>snp_pcadapt</span><span class='op'>(</span>
+  <span class='va'>G</span>,
+  <span class='va'>U.row</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span>
 
-<span class='fu'>bed_pcadapt</span>(
-  <span class='no'>obj.bed</span>,
-  <span class='no'>U.row</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>cols_along</span>(<span class='no'>obj.bed</span>),
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)</pre>
+<span class='fu'>bed_pcadapt</span><span class='op'>(</span>
+  <span class='va'>obj.bed</span>,
+  <span class='va'>U.row</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -224,11 +232,13 @@ Molecular ecology resources, 17(1), 67-77.</p>
     <div class='dont-index'><p><a href='snp_manhattan.html'>snp_manhattan</a>, <a href='snp_qq.html'>snp_qq</a> and <a href='snp_gc.html'>snp_gc</a>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>()
-<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>test</span>$<span class='no'>genotypes</span>
-<span class='no'>obj.svd</span> <span class='kw'>&lt;-</span> <span class='fu'>big_SVD</span>(<span class='no'>G</span>, <span class='kw'>fun.scaling</span> <span class='kw'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span>(), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>obj.svd</span>) <span class='co'># there seems to be 3 "significant" components</span></div><div class='img'><img src='snp_pcadapt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>pcadapt</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_pcadapt</span>(<span class='no'>G</span>, <span class='no'>obj.svd</span>$<span class='no'>u</span>[, <span class='fl'>1</span>:<span class='fl'>3</span>])
-<span class='fu'><a href='snp_qq.html'>snp_qq</a></span>(<span class='no'>pcadapt</span>)</div><div class='img'><img src='snp_pcadapt-2.png' alt='' width='700' height='433' /></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>test</span><span class='op'>$</span><span class='va'>genotypes</span>
+<span class='va'>obj.svd</span> <span class='op'>&lt;-</span> <span class='fu'>big_SVD</span><span class='op'>(</span><span class='va'>G</span>, fun.scaling <span class='op'>=</span> <span class='fu'><a href='snp_scaleBinom.html'>snp_scaleBinom</a></span><span class='op'>(</span><span class='op'>)</span>, k <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>obj.svd</span><span class='op'>)</span> <span class='co'># there seems to be 3 "significant" components</span>
+</div><div class='img'><img src='snp_pcadapt-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>pcadapt</span> <span class='op'>&lt;-</span> <span class='fu'>snp_pcadapt</span><span class='op'>(</span><span class='va'>G</span>, <span class='va'>obj.svd</span><span class='op'>$</span><span class='va'>u</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='snp_qq.html'>snp_qq</a></span><span class='op'>(</span><span class='va'>pcadapt</span><span class='op'>)</span>
+</div><div class='img'><img src='snp_pcadapt-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -245,7 +255,7 @@ Molecular ecology resources, 17(1), 67-77.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

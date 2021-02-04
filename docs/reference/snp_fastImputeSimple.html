@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,11 +156,11 @@
     <p>Fast imputation via mode, mean, sampling according to allele frequencies, or 0.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_fastImputeSimple</span>(
-  <span class='no'>Gna</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mode"</span>, <span class='st'>"mean0"</span>, <span class='st'>"mean2"</span>, <span class='st'>"random"</span>),
-  <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)</pre>
+    <pre class="usage"><span class='fu'>snp_fastImputeSimple</span><span class='op'>(</span>
+  <span class='va'>Gna</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mode"</span>, <span class='st'>"mean0"</span>, <span class='st'>"mean2"</span>, <span class='st'>"random"</span><span class='op'>)</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,35 +192,40 @@ You may use nb_cores.</p></td>
     <div class='dont-index'><p><code><a href='snp_fastImpute.html'>snp_fastImpute()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>bigsnp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>(<span class='st'>"example-missing.bed"</span>)
-<span class='no'>G</span> <span class='kw'>&lt;-</span> <span class='no'>bigsnp</span>$<span class='no'>genotypes</span>
-<span class='no'>G</span>[, <span class='fl'>2</span>]  <span class='co'># some missing values</span></div><div class='output co'>#&gt;   [1] NA NA  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  0  1  0
+    <pre class="examples"><div class='input'><span class='va'>bigsnp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='st'>"example-missing.bed"</span><span class='op'>)</span>
+<span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>bigsnp</span><span class='op'>$</span><span class='va'>genotypes</span>
+<span class='va'>G</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span>  <span class='co'># some missing values</span>
+</div><div class='output co'>#&gt;   [1] NA NA  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  0  1  0
 #&gt;  [26]  0  0  0  0  1  0  1  0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  0  1  0
 #&gt;  [51]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
 #&gt;  [76]  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 NA
 #&gt; [101]  0  1  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0 NA  0  0  0  0  0
 #&gt; [126]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0 NA  0
 #&gt; [151]  1  0  0  0  0  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  1  0  0
-#&gt; [176]  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  0  0</div><div class='input'><span class='no'>G2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_fastImputeSimple</span>(<span class='no'>G</span>)
-<span class='no'>G2</span>[, <span class='fl'>2</span>]  <span class='co'># no missing values anymore</span></div><div class='output co'>#&gt;   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1
+#&gt; [176]  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  0  0</div><div class='input'><span class='va'>G2</span> <span class='op'>&lt;-</span> <span class='fu'>snp_fastImputeSimple</span><span class='op'>(</span><span class='va'>G</span><span class='op'>)</span>
+<span class='va'>G2</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span>  <span class='co'># no missing values anymore</span>
+</div><div class='output co'>#&gt;   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1
 #&gt;  [38] 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 #&gt;  [75] 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0
 #&gt; [112] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
 #&gt; [149] 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
-#&gt; [186] 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0</div><div class='input'><span class='no'>G</span>[, <span class='fl'>2</span>]  <span class='co'># imputed, but still returning missing values</span></div><div class='output co'>#&gt;   [1] NA NA  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  0  1  0
+#&gt; [186] 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0</div><div class='input'><span class='va'>G</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span>  <span class='co'># imputed, but still returning missing values</span>
+</div><div class='output co'>#&gt;   [1] NA NA  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  0  1  0
 #&gt;  [26]  0  0  0  0  1  0  1  0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  0  1  0
 #&gt;  [51]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
 #&gt;  [76]  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 NA
 #&gt; [101]  0  1  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0 NA  0  0  0  0  0
 #&gt; [126]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0 NA  0
 #&gt; [151]  1  0  0  0  0  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  1  0  0
-#&gt; [176]  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  0  0</div><div class='input'><span class='no'>G</span>$<span class='fu'>copy</span>(<span class='kw'>code</span> <span class='kw'>=</span> <span class='no'>CODE_IMPUTE_PRED</span>)[, <span class='fl'>2</span>]  <span class='co'># need to decode imputed values</span></div><div class='output co'>#&gt;   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1
+#&gt; [176]  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  0  0</div><div class='input'><span class='va'>G</span><span class='op'>$</span><span class='fu'>copy</span><span class='op'>(</span>code <span class='op'>=</span> <span class='va'>CODE_IMPUTE_PRED</span><span class='op'>)</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span>  <span class='co'># need to decode imputed values</span>
+</div><div class='output co'>#&gt;   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1
 #&gt;  [38] 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 #&gt;  [75] 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0
 #&gt; [112] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
 #&gt; [149] 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
 #&gt; [186] 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0</div><div class='input'>
-<span class='no'>G</span>$<span class='fu'>copy</span>(<span class='kw'>code</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>0</span>, <span class='fl'>253</span>)))[, <span class='fl'>2</span>]  <span class='co'># "imputation" by 0</span></div><div class='output co'>#&gt;   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1
+<span class='va'>G</span><span class='op'>$</span><span class='fu'>copy</span><span class='op'>(</span>code <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>253</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span>  <span class='co'># "imputation" by 0</span>
+</div><div class='output co'>#&gt;   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1
 #&gt;  [38] 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 #&gt;  [75] 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0
 #&gt; [112] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
@@ -234,7 +247,7 @@ You may use nb_cores.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

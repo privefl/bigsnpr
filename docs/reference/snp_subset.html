@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -122,7 +124,13 @@
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -148,21 +156,21 @@
     <p>Subset (copy) of a <code>bigSNP</code>, also stored on disk.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_subset</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>x</span>$<span class='no'>fam</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>x</span>$<span class='no'>map</span>),
-  <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)
+    <pre class="usage"><span class='fu'>snp_subset</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>fam</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>map</span><span class='op'>)</span>,
+  backingfile <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for bigSNP</span>
-<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(
-  <span class='no'>x</span>,
-  <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>x</span>$<span class='no'>fam</span>),
-  <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fu'>rows_along</span>(<span class='no'>x</span>$<span class='no'>map</span>),
-  <span class='kw'>backingfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>fam</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>map</span><span class='op'>)</span>,
+  backingfile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -203,7 +211,8 @@ to the prefix of the input bigSNP backing files.</p></td>
     <div class='dont-index'><p><a href='bigSNP-class.html'>bigSNP</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span>())</div><div class='output co'>#&gt; List of 3
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 3
 #&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 15 fields
 #&gt;   ..$ extptr      :&lt;externalptr&gt; 
 #&gt;   ..$ extptr_rw   :&lt;externalptr&gt; 
@@ -211,12 +220,12 @@ to the prefix of the input bigSNP backing files.</p></td>
 #&gt;   ..$ ncol        : int 4542
 #&gt;   ..$ type        : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4.bk"
+#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71.bk"
 #&gt;   ..$ is_read_only: logi FALSE
 #&gt;   ..$ address     :&lt;externalptr&gt; 
 #&gt;   ..$ address_rw  :&lt;externalptr&gt; 
-#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4.bk"
-#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4.rds"
+#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71.bk"
+#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71.rds"
 #&gt;   ..$ is_saved    : logi TRUE
 #&gt;   ..$ type_chr    : chr "unsigned char"
 #&gt;   ..$ type_size   : int 1
@@ -241,8 +250,9 @@ to the prefix of the input bigSNP backing files.</p></td>
 #&gt;   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 <span class='co'># keep only first 50 samples and SNPs</span>
-<span class='no'>rdsfile</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>, <span class='kw'>ind.col</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>50</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile</span>))</div><div class='output co'>#&gt; List of 3
+<span class='va'>rdsfile</span> <span class='op'>&lt;-</span> <span class='fu'>snp_subset</span><span class='op'>(</span><span class='va'>test</span>, ind.row <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>50</span>, ind.col <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>50</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span><span class='va'>rdsfile</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 3
 #&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 15 fields
 #&gt;   ..$ extptr      :&lt;externalptr&gt; 
 #&gt;   ..$ extptr_rw   :&lt;externalptr&gt; 
@@ -250,12 +260,12 @@ to the prefix of the input bigSNP backing files.</p></td>
 #&gt;   ..$ ncol        : int 50
 #&gt;   ..$ type        : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4_sub1.bk"
+#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71_sub1.bk"
 #&gt;   ..$ is_read_only: logi FALSE
 #&gt;   ..$ address     :&lt;externalptr&gt; 
 #&gt;   ..$ address_rw  :&lt;externalptr&gt; 
-#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4_sub1.bk"
-#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4_sub1.rds"
+#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71_sub1.bk"
+#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71_sub1.rds"
 #&gt;   ..$ is_saved    : logi TRUE
 #&gt;   ..$ type_chr    : chr "unsigned char"
 #&gt;   ..$ type_size   : int 1
@@ -280,8 +290,9 @@ to the prefix of the input bigSNP backing files.</p></td>
 #&gt;   ..$ allele2     : chr [1:50] "T" "A" "A" "A" ...
 #&gt;  - attr(*, "class")= chr "bigSNP"</div><div class='input'>
 <span class='co'># remove only first 50 samples and SNPs</span>
-<span class='no'>rdsfile2</span> <span class='kw'>&lt;-</span> <span class='fu'>snp_subset</span>(<span class='no'>test</span>, <span class='kw'>ind.row</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>), <span class='kw'>ind.col</span> <span class='kw'>=</span> -(<span class='fl'>1</span>:<span class='fl'>50</span>))
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='snp_attach.html'>snp_attach</a></span>(<span class='no'>rdsfile2</span>))</div><div class='output co'>#&gt; List of 3
+<span class='va'>rdsfile2</span> <span class='op'>&lt;-</span> <span class='fu'>snp_subset</span><span class='op'>(</span><span class='va'>test</span>, ind.row <span class='op'>=</span> <span class='op'>-</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>50</span><span class='op'>)</span>, ind.col <span class='op'>=</span> <span class='op'>-</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span><span class='va'>rdsfile2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 3
 #&gt;  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 15 fields
 #&gt;   ..$ extptr      :&lt;externalptr&gt; 
 #&gt;   ..$ extptr_rw   :&lt;externalptr&gt; 
@@ -289,12 +300,12 @@ to the prefix of the input bigSNP backing files.</p></td>
 #&gt;   ..$ ncol        : int 4492
 #&gt;   ..$ type        : Named int 1
 #&gt;   .. ..- attr(*, "names")= chr "unsigned char"
-#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4_sub2.bk"
+#&gt;   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71_sub2.bk"
 #&gt;   ..$ is_read_only: logi FALSE
 #&gt;   ..$ address     :&lt;externalptr&gt; 
 #&gt;   ..$ address_rw  :&lt;externalptr&gt; 
-#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4_sub2.bk"
-#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyqOEgn\\file4f286e9972f4_sub2.rds"
+#&gt;   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71_sub2.bk"
+#&gt;   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4etVds\\file427418e97c71_sub2.rds"
 #&gt;   ..$ is_saved    : logi TRUE
 #&gt;   ..$ type_chr    : chr "unsigned char"
 #&gt;   ..$ type_size   : int 1
@@ -334,7 +345,7 @@ to the prefix of the input bigSNP backing files.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -1,11 +1,11 @@
 pandoc: 2.11.2
-pkgdown: 1.5.1
-pkgdown_sha: ~
+pkgdown: 1.6.1.9000
+pkgdown_sha: c931fe24c135c6ca704ae9f300470e9c66d8bfe7
 articles:
   demo: demo.html
   exo: exo.html
   LDpred2: LDpred2.html
   pruning-vs-clumping: pruning-vs-clumping.html
   SCT: SCT.html
-last_built: 2021-01-28T13:26Z
+last_built: 2021-02-04T14:40Z
 

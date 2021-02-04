@@ -47,6 +47,8 @@ strand flips and reverse reference alleles (opposite effects)." />
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -74,7 +76,7 @@ strand flips and reverse reference alleles (opposite effects)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
       </span>
     </div>
 
@@ -124,7 +126,13 @@ strand flips and reverse reference alleles (opposite effects)." />
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github"></span>
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -152,14 +160,14 @@ Match by ("chr", "a0", "a1") and ("pos" or "rsid"), accounting for possible
 strand flips and reverse reference alleles (opposite effects).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_match</span>(
-  <span class='no'>sumstats</span>,
-  <span class='no'>info_snp</span>,
-  <span class='kw'>strand_flip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>join_by_pos</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>remove_dups</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>match.min.prop</span> <span class='kw'>=</span> <span class='fl'>0.5</span>
-)</pre>
+    <pre class="usage"><span class='fu'>snp_match</span><span class='op'>(</span>
+  <span class='va'>sumstats</span>,
+  <span class='va'>info_snp</span>,
+  strand_flip <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  join_by_pos <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  remove_dups <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  match.min.prop <span class='op'>=</span> <span class='fl'>0.5</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -203,28 +211,30 @@ are multiplied by -1 for variants with alleles reversed.</p>
     <div class='dont-index'><p><a href='snp_modifyBuild.html'>snp_modifyBuild</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>sumstats</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-  <span class='kw'>chr</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>pos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>86303</span>, <span class='fl'>86331</span>, <span class='fl'>162463</span>, <span class='fl'>752566</span>, <span class='fl'>755890</span>, <span class='fl'>758144</span>),
-  <span class='kw'>a0</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"T"</span>, <span class='st'>"G"</span>, <span class='st'>"C"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span>, <span class='st'>"G"</span>),
-  <span class='kw'>a1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"A"</span>),
-  <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>1.868</span>, <span class='fl'>0.250</span>, -<span class='fl'>0.671</span>, <span class='fl'>2.112</span>, <span class='fl'>0.239</span>, <span class='fl'>1.272</span>),
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.860</span>, <span class='fl'>0.346</span>, <span class='fl'>0.900</span>, <span class='fl'>0.456</span>, <span class='fl'>0.776</span>, <span class='fl'>0.383</span>)
-)
+    <pre class="examples"><div class='input'><span class='va'>sumstats</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+  chr <span class='op'>=</span> <span class='fl'>1</span>,
+  pos <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>86303</span>, <span class='fl'>86331</span>, <span class='fl'>162463</span>, <span class='fl'>752566</span>, <span class='fl'>755890</span>, <span class='fl'>758144</span><span class='op'>)</span>,
+  a0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"T"</span>, <span class='st'>"G"</span>, <span class='st'>"C"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span>, <span class='st'>"G"</span><span class='op'>)</span>,
+  a1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"A"</span><span class='op'>)</span>,
+  beta <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1.868</span>, <span class='fl'>0.250</span>, <span class='op'>-</span><span class='fl'>0.671</span>, <span class='fl'>2.112</span>, <span class='fl'>0.239</span>, <span class='fl'>1.272</span><span class='op'>)</span>,
+  p <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.860</span>, <span class='fl'>0.346</span>, <span class='fl'>0.900</span>, <span class='fl'>0.456</span>, <span class='fl'>0.776</span>, <span class='fl'>0.383</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='no'>info_snp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-  <span class='kw'>id</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"rs2949417"</span>, <span class='st'>"rs115209712"</span>, <span class='st'>"rs143399298"</span>, <span class='st'>"rs3094315"</span>, <span class='st'>"rs3115858"</span>),
-  <span class='kw'>chr</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>pos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>86303</span>, <span class='fl'>86331</span>, <span class='fl'>162463</span>, <span class='fl'>752566</span>, <span class='fl'>755890</span>),
-  <span class='kw'>a0</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"T"</span>, <span class='st'>"A"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span>),
-  <span class='kw'>a1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"G"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>)
-)
+<span class='va'>info_snp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+  id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"rs2949417"</span>, <span class='st'>"rs115209712"</span>, <span class='st'>"rs143399298"</span>, <span class='st'>"rs3094315"</span>, <span class='st'>"rs3115858"</span><span class='op'>)</span>,
+  chr <span class='op'>=</span> <span class='fl'>1</span>,
+  pos <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>86303</span>, <span class='fl'>86331</span>, <span class='fl'>162463</span>, <span class='fl'>752566</span>, <span class='fl'>755890</span><span class='op'>)</span>,
+  a0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"T"</span>, <span class='st'>"A"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span><span class='op'>)</span>,
+  a1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"G"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span>, <span class='st'>"G"</span>, <span class='st'>"A"</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>snp_match</span>(<span class='no'>sumstats</span>, <span class='no'>info_snp</span>)</div><div class='output co'>#&gt; <span class='message'>6 variants to be matched.</span></div><div class='output co'>#&gt; <span class='message'>1 ambiguous SNPs have been removed.</span></div><div class='output co'>#&gt; <span class='message'>4 variants have been matched; 1 were flipped and 1 were reversed.</span></div><div class='output co'>#&gt;   chr    pos a0 a1   beta     p _NUM_ID_.ss          id _NUM_ID_
+<span class='fu'>snp_match</span><span class='op'>(</span><span class='va'>sumstats</span>, <span class='va'>info_snp</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>6 variants to be matched.</span></div><div class='output co'>#&gt; <span class='message'>1 ambiguous SNPs have been removed.</span></div><div class='output co'>#&gt; <span class='message'>4 variants have been matched; 1 were flipped and 1 were reversed.</span></div><div class='output co'>#&gt;   chr    pos a0 a1   beta     p _NUM_ID_.ss          id _NUM_ID_
 #&gt; 1   1  86303  T  G -1.868 0.860           1   rs2949417        1
 #&gt; 2   1  86331  A  G -0.250 0.346           2 rs115209712        2
 #&gt; 3   1 162463  G  A -0.671 0.900           3 rs143399298        3
-#&gt; 4   1 752566  A  G  2.112 0.456           4   rs3094315        4</div><div class='input'><span class='fu'>snp_match</span>(<span class='no'>sumstats</span>, <span class='no'>info_snp</span>, <span class='kw'>strand_flip</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>6 variants to be matched.</span></div><div class='output co'>#&gt; <span class='message'>4 variants have been matched; 0 were flipped and 1 were reversed.</span></div><div class='output co'>#&gt;   chr    pos a0 a1   beta     p _NUM_ID_.ss          id _NUM_ID_
+#&gt; 4   1 752566  A  G  2.112 0.456           4   rs3094315        4</div><div class='input'><span class='fu'>snp_match</span><span class='op'>(</span><span class='va'>sumstats</span>, <span class='va'>info_snp</span>, strand_flip <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>6 variants to be matched.</span></div><div class='output co'>#&gt; <span class='message'>4 variants have been matched; 0 were flipped and 1 were reversed.</span></div><div class='output co'>#&gt;   chr    pos a0 a1   beta     p _NUM_ID_.ss          id _NUM_ID_
 #&gt; 1   1  86303  T  G -1.868 0.860           1   rs2949417        1
 #&gt; 2   1  86331  A  G -0.250 0.346           2 rs115209712        2
 #&gt; 3   1 752566  A  G  2.112 0.456           4   rs3094315        4
@@ -244,7 +254,7 @@ are multiplied by -1 for variants with alleles reversed.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
