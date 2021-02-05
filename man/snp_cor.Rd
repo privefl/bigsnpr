@@ -10,6 +10,7 @@ snp_cor(
   ind.col = cols_along(Gna),
   size = 500,
   alpha = 1,
+  thr_r2 = 0,
   fill.diag = TRUE,
   infos.pos = NULL,
   ncores = 1
@@ -34,6 +35,8 @@ a window in number of SNPs, otherwise it is a window in kb (genetic distance).}
 
 \item{alpha}{Type-I error for testing correlations.
 Default is \code{1} (no threshold is applied).}
+
+\item{thr_r2}{Threshold to apply on squared correlations. Default is \code{0}.}
 
 \item{fill.diag}{Whether to fill the diagonal with 1s (the default)
 or to keep it as 0s.}

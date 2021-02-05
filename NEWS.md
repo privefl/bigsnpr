@@ -1,3 +1,7 @@
+## bigsnpr 1.6.5
+
+- Add parameter `thr_r2` in `snp_cor()`.
+
 ## bigsnpr 1.6.4
 
 - Remove penalization in `snp_ldsplit()`. Instead, report the best splits for a range of numbers of blocks desired.

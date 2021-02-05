@@ -11,6 +11,7 @@
 #' a window in number of SNPs, otherwise it is a window in kb (genetic distance).
 #' @param alpha Type-I error for testing correlations.
 #'   Default is `1` (no threshold is applied).
+#' @param thr_r2 Threshold to apply on squared correlations. Default is `0`.
 #' @param fill.diag Whether to fill the diagonal with 1s (the default)
 #' or to keep it as 0s.
 #'
@@ -33,6 +34,7 @@ snp_cor <- function(Gna,
                     ind.col = cols_along(Gna),
                     size = 500,
                     alpha = 1,
+                    thr_r2 = 0,
                     fill.diag = TRUE,
                     infos.pos = NULL,
                     ncores = 1) {
@@ -56,7 +58,7 @@ snp_cor <- function(Gna,
     rowInd = ind.row,
     colInd = ind.col,
     size   = size * 1000,
-    thr    = THR,
+    thr    = pmax(THR, sqrt(thr_r2)),
     pos    = infos.pos,
     ncores = ncores
   )

@@ -96,6 +96,17 @@ test_that("Same correlations as Hmisc (with significance levels)", {
   expect_equal(dim(corr2), c(m, m))
   expect_equal(corr2[ind], true$r[ind])
   expect_equal(2*length(corr2@i), length(ind))
+
+  # with additional threshold
+  corr3 <- snp_cor(G = test$genotypes,
+                   ind.row = ind.row,
+                   ind.col = ind.col,
+                   alpha = alpha,
+                   thr_r2 = 0.02,
+                   fill.diag = TRUE)
+
+  expect_equal(dim(corr3), c(m, m))
+  expect_gte(min(corr3@x^2), 0.02)
 })
 
 ################################################################################
