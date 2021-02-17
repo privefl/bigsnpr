@@ -79,8 +79,12 @@ If no or few variants are actually flipped, you might want to disable the strand
 
 ```{r}
 info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
-beta <- info_snp$beta
-lpval <- -log10(info_snp$p)
+# beta and lpval need to have the same length as ncol(G), CHR and POS
+# -> one solution is to use missing values and use the 'exclude' parameter
+beta <- rep(NA, ncol(G))
+beta[info_snp$`_NUM_ID_`] <- info_snp$beta
+lpval <- rep(NA, ncol(G))
+lpval[info_snp$`_NUM_ID_`] <- -log10(info_snp$p)
 ```
 
 ## Computing C+T scores for a grid of parameters and chromosomes
@@ -92,7 +96,8 @@ First, the function `snp_grid_clumping()` computes sets of variants resulting fr
 ```{r, cache=TRUE}
 # The clumping step might take some time to complete
 all_keep <- snp_grid_clumping(G, CHR, POS, ind.row = ind.train,
-                              lpS = lpval, ncores = NCORES)
+                              lpS = lpval, exclude = which(is.na(lpval)),
+                              ncores = NCORES)
 attr(all_keep, "grid")
 ```
 
@@ -157,10 +162,10 @@ ggplot(data.frame(
 Instead of stacking, an alternative is to choose the best C+T score based on the computed grid. This procedure is appealing when there are not enough individuals to learn the stacking weights.
 
 ```{r, message=FALSE}
-library(tidyverse)
+library(dplyr)
 grid2 <- attr(all_keep, "grid") %>%
   mutate(thr.lp = list(attr(multi_PRS, "grid.lpS.thr")), id = row_number()) %>%
-  unnest(cols = "thr.lp")
+  tidyr::unnest(cols = "thr.lp")
 s <- nrow(grid2)
 grid2$auc <- big_apply(multi_PRS, a.FUN = function(X, ind, s, y.train) {
   # Sum over all chromosomes, for the same C+T parameters
@@ -175,7 +180,7 @@ max_prs <- grid2 %>% arrange(desc(auc)) %>% slice(1:10) %>% print() %>% slice(1)
 ```
 
 ```{r}
-ind.keep <- unlist(map(all_keep, max_prs$id))
+ind.keep <- unlist(purrr::map(all_keep, max_prs$id))
 sum(lpval[ind.keep] > max_prs$thr.lp)
 AUCBoot(
   snp_PRS(G, beta[ind.keep], ind.test = ind.test, ind.keep = ind.keep,

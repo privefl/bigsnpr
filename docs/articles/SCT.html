@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Vignettes
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -74,15 +74,21 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://privefl.github.io/about.html">
-    <span class="fa fa-user"></span>
-
+    <span class="fas fa-user"></span>
+     
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fa fa-github"></span>
-
+    <span class="fas fa-github fa"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fas fa-newspaper-o fa"></span>
+     
   </a>
 </li>
       </ul>
@@ -93,23 +99,23 @@
 </div>
 <!--/.navbar -->
 
+      
 
-
-      </header><div class="row">
+      </header><script src="SCT_files/header-attrs/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</h1>
                         <h4 class="author">Florian Privé and Michael Blum</h4>
-
+            
             <h4 class="date">May 23, 2019</h4>
-
+      
       <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/master/vignettes/SCT.Rmd"><code>vignettes/SCT.Rmd</code></a></small>
       <div class="hidden name"><code>SCT.Rmd</code></div>
 
     </div>
 
-
-
+    
+    
 <p>In this document, we show how to compute polygenic risk scores using Stacked Clumping and Thresholding (SCT).</p>
 <div id="downloading-genotype-data-and-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
@@ -117,16 +123,19 @@
 <p>You can download <a href="https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip">data</a> and unzip files in R. We store those files in a directory called <code>"tmp-data"</code> here.</p>
 <p>You can see <a href="https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R">there</a> how we generated these data from <a href="https://www.nature.com/articles/nature15393">the 1000 Genomes project</a>. Note that these data are for educational purposes only, not for use as a reference panel.</p>
 <p>First, you need to read genotype data from the PLINK files (or BGEN files) as well as the text file containing summary statistics.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># Load packages bigsnpr and bigstatsr</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">bigsnpr</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="co"># Load packages bigsnpr and bigstatsr</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://privefl.github.io/bigsnpr/">bigsnpr</a></span><span class="op">)</span></pre></div>
 <pre><code>## Loading required package: bigstatsr</code></pre>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Read from bed/bim/fam, it generates .bk and .rds files.</span>
-<span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span>(<span class="st">"tmp-data/public-data.bed"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># Read from bed/bim/fam, it generates .bk and .rds files.</span>
+<span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="st">"tmp-data/public-data.bed"</span><span class="op">)</span></pre></div>
 <pre><code>## [1] "C:\\Users\\au639593\\Desktop\\bigsnpr\\tmp-data\\public-data.rds"</code></pre>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># Attach the "bigSNP" object in R session</span>
-<span class="no">obj.bigSNP</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span>(<span class="st">"tmp-data/public-data.rds"</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="co"># Attach the "bigSNP" object in R session</span>
+<span class="va">obj.bigSNP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="st">"tmp-data/public-data.rds"</span><span class="op">)</span>
 <span class="co"># See how the file looks like</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">obj.bigSNP</span>, <span class="kw">max.level</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">strict.width</span> <span class="kw">=</span> <span class="st">"cut"</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">obj.bigSNP</span>, max.level <span class="op">=</span> <span class="fl">2</span>, strict.width <span class="op">=</span> <span class="st">"cut"</span><span class="op">)</span></pre></div>
 <pre><code>## List of 3
 ##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 15 ..
 ##   ..and 26 methods, of which 12 are  possibly relevant:
@@ -148,23 +157,25 @@
 ##   ..$ allele1     : chr [1:130816] "C" "G" "T" "A" ...
 ##   ..$ allele2     : chr [1:130816] "T" "C" "C" "G" ...
 ##  - attr(*, "class")= chr "bigSNP"</code></pre>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># Get aliases for useful slots</span>
-<span class="no">G</span>   <span class="kw">&lt;-</span> <span class="no">obj.bigSNP</span>$<span class="no">genotypes</span>
-<span class="no">CHR</span> <span class="kw">&lt;-</span> <span class="no">obj.bigSNP</span>$<span class="no">map</span>$<span class="no">chromosome</span>
-<span class="no">POS</span> <span class="kw">&lt;-</span> <span class="no">obj.bigSNP</span>$<span class="no">map</span>$<span class="no">physical.pos</span>
-<span class="no">y</span>   <span class="kw">&lt;-</span> <span class="no">obj.bigSNP</span>$<span class="no">fam</span>$<span class="no">affection</span> - <span class="fl">1</span>
-<span class="no">NCORES</span> <span class="kw">&lt;-</span> <span class="fu">nb_cores</span>()
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="co"># Get aliases for useful slots</span>
+<span class="va">G</span>   <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">genotypes</span>
+<span class="va">CHR</span> <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span>
+<span class="va">POS</span> <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.pos</span>
+<span class="va">y</span>   <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">fam</span><span class="op">$</span><span class="va">affection</span> <span class="op">-</span> <span class="fl">1</span>
+<span class="va">NCORES</span> <span class="op">&lt;-</span> <span class="fu">nb_cores</span><span class="op">(</span><span class="op">)</span>
 <span class="co"># Check some counts for the 10 first variants</span>
-<span class="fu">big_counts</span>(<span class="no">G</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">10</span>)</pre></body></html></div>
+<span class="fu">big_counts</span><span class="op">(</span><span class="va">G</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
 ## 0     504  468  421  483  476  420  380  383  478   389
 ## 1      48   69  107   66   73  124  136  135   70   133
 ## 2       7   22   31   10   10   15   43   41   11    37
 ## &lt;NA&gt;    0    0    0    0    0    0    0    0    0     0</code></pre>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># Read external summary statistics</span>
-<span class="no">sumstats</span> <span class="kw">&lt;-</span> <span class="kw pkg">bigreadr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html">fread2</a></span>(<span class="st">"tmp-data/public-data-sumstats.txt"</span>,
-                             <span class="kw">select</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>:<span class="fl">6</span>, <span class="fl">10</span>))
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">sumstats</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="co"># Read external summary statistics</span>
+<span class="va">sumstats</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html">fread2</a></span><span class="op">(</span><span class="st">"tmp-data/public-data-sumstats.txt"</span>, 
+                             select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">sumstats</span><span class="op">)</span></pre></div>
 <pre><code>## 'data.frame':    130816 obs. of  7 variables:
 ##  $ chromosome  : int  2 2 2 2 2 2 2 2 2 2 ...
 ##  $ marker.ID   : chr  "rs13400442" "rs7594567" "rs7597758" "rs13383216" ...
@@ -174,27 +185,37 @@
 ##  $ beta        : num  -0.073 0.0439 -0.3325 -0.5445 -0.4881 ...
 ##  $ p           : num  0.7925 0.8593 0.0846 0.028 0.0439 ...</code></pre>
 <p>We split genotype data using part of the data to learn parameters of stacking and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals in the training set.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
-<span class="no">ind.train</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">G</span>), <span class="fl">400</span>)
-<span class="no">ind.test</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span>(<span class="fu">rows_along</span>(<span class="no">G</span>), <span class="no">ind.train</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">ind.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span>
+<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span></pre></div>
 </div>
 <div id="matching-variants-between-genotype-data-and-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#matching-variants-between-genotype-data-and-summary-statistics" class="anchor"></a>Matching variants between genotype data and summary statistics</h2>
 <p>To match variants contained in genotype data and summary statistics, the variables <code>"chr"</code> (chromosome number), <code>"pos"</code> (genetic position), <code>"a0"</code> (reference allele) and <code>"a1"</code> (derived allele) should be available in the summary statistics and in the genotype data. These 4 variables are used to match variants between the two data frames.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">sumstats</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr"</span>, <span class="st">"rsid"</span>, <span class="st">"pos"</span>, <span class="st">"a0"</span>, <span class="st">"a1"</span>, <span class="st">"beta"</span>, <span class="st">"p"</span>)
-<span class="no">map</span> <span class="kw">&lt;-</span> <span class="no">obj.bigSNP</span>$<span class="no">map</span>[,-(<span class="fl">2</span>:<span class="fl">3</span>)]
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">map</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr"</span>, <span class="st">"pos"</span>, <span class="st">"a0"</span>, <span class="st">"a1"</span>)
-<span class="no">info_snp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span>(<span class="no">sumstats</span>, <span class="no">map</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">sumstats</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chr"</span>, <span class="st">"rsid"</span>, <span class="st">"pos"</span>, <span class="st">"a0"</span>, <span class="st">"a1"</span>, <span class="st">"beta"</span>, <span class="st">"p"</span><span class="op">)</span>
+<span class="va">map</span> <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">map</span><span class="op">[</span>,<span class="op">-</span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">map</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chr"</span>, <span class="st">"pos"</span>, <span class="st">"a0"</span>, <span class="st">"a1"</span><span class="op">)</span>
+<span class="va">info_snp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span><span class="op">(</span><span class="va">sumstats</span>, <span class="va">map</span><span class="op">)</span></pre></div>
 <pre><code>## 130,816 variants to be matched.</code></pre>
 <pre><code>## 18,932 ambiguous SNPs have been removed.</code></pre>
-<pre><code>## 111,884 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
+<pre><code>## Some duplicates were removed.</code></pre>
+<pre><code>## 111,866 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
 <p>If no or few variants are actually flipped, you might want to disable the strand flipping option. Here, these are simulated data so all variants use the same strand and the same reference.</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">info_snp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span>(<span class="no">sumstats</span>, <span class="no">map</span>, <span class="kw">strand_flip</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb17"><pre class="downlit">
+<span class="va">info_snp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span><span class="op">(</span><span class="va">sumstats</span>, <span class="va">map</span>, strand_flip <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
 <pre><code>## 130,816 variants to be matched.</code></pre>
-<pre><code>## 130,816 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">beta</span> <span class="kw">&lt;-</span> <span class="no">info_snp</span>$<span class="no">beta</span>
-<span class="no">lpval</span> <span class="kw">&lt;-</span> -<span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(<span class="no">info_snp</span>$<span class="no">p</span>)</pre></body></html></div>
+<pre><code>## Some duplicates were removed.</code></pre>
+<pre><code>## 130,792 variants have been matched; 0 were flipped and 0 were reversed.</code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="co"># beta and lpval need to have the same length as ncol(G), CHR and POS</span>
+<span class="co"># -&gt; one solution is to use missing values and use the 'exclude' parameter</span>
+<span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span>
+<span class="va">beta</span><span class="op">[</span><span class="va">info_snp</span><span class="op">$</span><span class="va">`_NUM_ID_`</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">info_snp</span><span class="op">$</span><span class="va">beta</span>
+<span class="va">lpval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span>
+<span class="va">lpval</span><span class="op">[</span><span class="va">info_snp</span><span class="op">$</span><span class="va">`_NUM_ID_`</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">info_snp</span><span class="op">$</span><span class="va">p</span><span class="op">)</span></pre></div>
 </div>
 <div id="computing-ct-scores-for-a-grid-of-parameters-and-chromosomes" class="section level2">
 <h2 class="hasAnchor">
@@ -203,10 +224,12 @@
 <h3 class="hasAnchor">
 <a href="#clumping" class="anchor"></a>Clumping</h3>
 <p>First, the function <code><a href="../reference/SCT.html">snp_grid_clumping()</a></code> computes sets of variants resulting from the clumping procedure that is applied repeatedly with different values of hyper-parameters (threshold of correlation for clumping, window size, and possibly imputation accuracy threshold). By default, the function uses 28 (7 thresholds of correlation x 4 window sizes) different sets of hyper-parameters for generating sets of variants resulting from clumping.</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="co"># The clumping step might take some time to complete</span>
-<span class="no">all_keep</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/SCT.html">snp_grid_clumping</a></span>(<span class="no">G</span>, <span class="no">CHR</span>, <span class="no">POS</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.train</span>,
-                              <span class="kw">lpS</span> <span class="kw">=</span> <span class="no">lpval</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span>(<span class="no">all_keep</span>, <span class="st">"grid"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb22"><pre class="downlit">
+<span class="co"># The clumping step might take some time to complete</span>
+<span class="va">all_keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCT.html">snp_grid_clumping</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">CHR</span>, <span class="va">POS</span>, ind.row <span class="op">=</span> <span class="va">ind.train</span>,
+                              lpS <span class="op">=</span> <span class="va">lpval</span>, exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">lpval</span><span class="op">)</span><span class="op">)</span>,
+                              ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">all_keep</span>, <span class="st">"grid"</span><span class="op">)</span></pre></div>
 <pre><code>##     size thr.r2 grp.num thr.imp
 ## 1   5000   0.01       1       1
 ## 2  10000   0.01       1       1
@@ -241,10 +264,11 @@
 <h3 class="hasAnchor">
 <a href="#thresholding" class="anchor"></a>Thresholding</h3>
 <p>Then, for each chromosome, for each set of variants resulting from clumping and for each p-value threshold, the function <code><a href="../reference/SCT.html">snp_grid_PRS()</a></code> computes C+T scores.</p>
-<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">multi_PRS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/SCT.html">snp_grid_PRS</a></span>(<span class="no">G</span>, <span class="no">all_keep</span>, <span class="no">beta</span>, <span class="no">lpval</span>, <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.train</span>,
-                          <span class="kw">backingfile</span> <span class="kw">=</span> <span class="st">"tmp-data/public-data-scores"</span>,
-                          <span class="kw">n_thr_lpS</span> <span class="kw">=</span> <span class="fl">50</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">multi_PRS</span>)  <span class="co">## 4200 C+T scores for 400 individuals</span></pre></body></html></div>
+<div class="sourceCode" id="cb24"><pre class="downlit">
+<span class="va">multi_PRS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCT.html">snp_grid_PRS</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">all_keep</span>, <span class="va">beta</span>, <span class="va">lpval</span>, ind.row <span class="op">=</span> <span class="va">ind.train</span>,
+                          backingfile <span class="op">=</span> <span class="st">"tmp-data/public-data-scores"</span>, 
+                          n_thr_lpS <span class="op">=</span> <span class="fl">50</span>, ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">multi_PRS</span><span class="op">)</span>  <span class="co">## 4200 C+T scores for 400 individuals</span></pre></div>
 <pre><code>## [1]  400 4200</code></pre>
 </div>
 </div>
@@ -252,80 +276,92 @@
 <h2 class="hasAnchor">
 <a href="#stacking-ct-predictions" class="anchor"></a>Stacking C+T predictions</h2>
 <p>A penalized regression is finally used to learn an optimal linear combination of C+T scores.</p>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">final_mod</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/SCT.html">snp_grid_stacking</a></span>(<span class="no">multi_PRS</span>, <span class="no">y</span>[<span class="no">ind.train</span>], <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>, <span class="kw">K</span> <span class="kw">=</span> <span class="fl">4</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">final_mod</span>$<span class="no">mod</span>)</pre></body></html></div>
-<pre><code>## # A tibble: 3 x 7
-##    alpha validation_loss intercept beta          nb_var message   all_conv
-##    &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;         &lt;int&gt; &lt;list&gt;    &lt;lgl&gt;
-## 1 0.0001           0.565     -1.04 &lt;dbl [4,060]&gt;   4024 &lt;chr [4]&gt; TRUE
-## 2 0.01             0.566     -1.05 &lt;dbl [4,060]&gt;    757 &lt;chr [4]&gt; TRUE
-## 3 1                0.569     -1.08 &lt;dbl [4,060]&gt;    118 &lt;chr [4]&gt; TRUE</code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit">
+<span class="va">final_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCT.html">snp_grid_stacking</a></span><span class="op">(</span><span class="va">multi_PRS</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.train</span><span class="op">]</span>, ncores <span class="op">=</span> <span class="va">NCORES</span>, K <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">final_mod</span><span class="op">$</span><span class="va">mod</span><span class="op">)</span></pre></div>
+<pre><code>## # A tibble: 3 x 9
+##    alpha power_adaptive power_scale validation_loss intercept beta  nb_var
+##    &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt; &lt;lis&gt;  &lt;int&gt;
+## 1 0.0001              0           1           0.565     -1.05 &lt;dbl~   4028
+## 2 0.01                0           1           0.567     -1.06 &lt;dbl~    808
+## 3 1                   0           1           0.569     -1.09 &lt;dbl~    136
+## # ... with 2 more variables: message &lt;list&gt;, all_conv &lt;lgl&gt;</code></pre>
 <p>Here, I use <code>K = 4</code> folds because this example data is very small; the default is to use <code>10</code>. For options for fitting penalized regressions, see <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html">this vignette</a>.</p>
 <p>From stacking C+T scores, we can derive a unique vector of weights and compare effects resulting from stacking to the initial regression coefficients provided as summary statistics.</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="no">new_beta</span> <span class="kw">&lt;-</span> <span class="no">final_mod</span>$<span class="no">beta.G</span>
-<span class="no">ind</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="no">new_beta</span> <span class="kw">!=</span> <span class="fl">0</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb28"><pre class="downlit">
+<span class="va">new_beta</span> <span class="op">&lt;-</span> <span class="va">final_mod</span><span class="op">$</span><span class="va">beta.G</span>
+<span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">new_beta</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></pre></div>
 <pre><code>## Warning: package 'ggplot2' was built under R version 3.6.3</code></pre>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">new_beta</span>, <span class="kw">x</span> <span class="kw">=</span> <span class="no">beta</span>)[<span class="no">ind</span>, ]) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>(<span class="kw">slope</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">intercept</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"red"</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span>(<span class="kw">slope</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">intercept</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"blue"</span>) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">x</span>, <span class="no">y</span>), <span class="kw">size</span> <span class="kw">=</span> <span class="fl">0.6</span>) +
-  <span class="fu">theme_bigstatsr</span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">"Effect sizes from GWAS"</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="st">"Non-zero effect sizes from SCT"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb31"><pre class="downlit">
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">new_beta</span>, x <span class="op">=</span> <span class="va">beta</span><span class="op">)</span><span class="op">[</span><span class="va">ind</span>, <span class="op">]</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, intercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">0</span>, intercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">theme_bigstatsr</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Effect sizes from GWAS"</span>, y <span class="op">=</span> <span class="st">"Non-zero effect sizes from SCT"</span><span class="op">)</span></pre></div>
 <p><img src="SCT_files/figure-html/unnamed-chunk-11-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>We can use this vector of variant weights to compute polygenic risk scores on the test set and evaluate the Area Under the Curve (AUC).</p>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">pred</span> <span class="kw">&lt;-</span> <span class="no">final_mod</span>$<span class="no">intercept</span> +
-  <span class="fu">big_prodVec</span>(<span class="no">G</span>, <span class="no">new_beta</span>[<span class="no">ind</span>], <span class="kw">ind.row</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.col</span> <span class="kw">=</span> <span class="no">ind</span>)
-<span class="fu">AUCBoot</span>(<span class="no">pred</span>, <span class="no">y</span>[<span class="no">ind.test</span>])</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd
-## 0.68476801 0.58440363 0.77687993 0.04867468</code></pre>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
-  <span class="kw">Phenotype</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">y</span>[<span class="no">ind.test</span>], <span class="kw">levels</span> <span class="kw">=</span> <span class="fl">0</span>:<span class="fl">1</span>, <span class="kw">labels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Control"</span>, <span class="st">"Case"</span>)),
-  <span class="kw">Probability</span> <span class="kw">=</span> <span class="fl">1</span> / (<span class="fl">1</span> + <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(-<span class="no">pred</span>)))) +
-  <span class="fu">theme_bigstatsr</span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">Probability</span>, <span class="kw">fill</span> <span class="kw">=</span> <span class="no">Phenotype</span>), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.3</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb32"><pre class="downlit">
+<span class="va">pred</span> <span class="op">&lt;-</span> <span class="va">final_mod</span><span class="op">$</span><span class="va">intercept</span> <span class="op">+</span> 
+  <span class="fu">big_prodVec</span><span class="op">(</span><span class="va">G</span>, <span class="va">new_beta</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span>, ind.row <span class="op">=</span> <span class="va">ind.test</span>, ind.col <span class="op">=</span> <span class="va">ind</span><span class="op">)</span>
+<span class="fu">AUCBoot</span><span class="op">(</span><span class="va">pred</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></pre></div>
+<pre><code>##      Mean      2.5%     97.5%        Sd 
+## 0.6829444 0.5847917 0.7756834 0.0486900</code></pre>
+<div class="sourceCode" id="cb34"><pre class="downlit">
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
+  Phenotype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span>, levels <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Control"</span>, <span class="st">"Case"</span><span class="op">)</span><span class="op">)</span>,
+  Probability <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="op">-</span><span class="va">pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">theme_bigstatsr</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">Probability</span>, fill <span class="op">=</span> <span class="va">Phenotype</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></pre></div>
 <p><img src="SCT_files/figure-html/unnamed-chunk-13-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 <div id="best-ct-predictions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#best-ct-predictions" class="anchor"></a>Best C+T predictions</h2>
 <p>Instead of stacking, an alternative is to choose the best C+T score based on the computed grid. This procedure is appealing when there are not enough individuals to learn the stacking weights.</p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)</pre></body></html></div>
-<pre><code>## Warning: package 'tibble' was built under R version 3.6.3</code></pre>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">grid2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span>(<span class="no">all_keep</span>, <span class="st">"grid"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">thr.lp</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span>(<span class="no">multi_PRS</span>, <span class="st">"grid.lpS.thr"</span>)), <span class="kw">id</span> <span class="kw">=</span> <span class="fu">row_number</span>()) <span class="kw">%&gt;%</span>
-  <span class="fu">unnest</span>(<span class="kw">cols</span> <span class="kw">=</span> <span class="st">"thr.lp"</span>)
-<span class="no">s</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">grid2</span>)
-<span class="no">grid2</span>$<span class="no">auc</span> <span class="kw">&lt;-</span> <span class="fu">big_apply</span>(<span class="no">multi_PRS</span>, <span class="kw">a.FUN</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">X</span>, <span class="no">ind</span>, <span class="no">s</span>, <span class="no">y.train</span>) {
+<div class="sourceCode" id="cb35"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></pre></div>
+<pre><code>## Warning: package 'dplyr' was built under R version 3.6.3</code></pre>
+<div class="sourceCode" id="cb37"><pre class="downlit">
+<span class="va">grid2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">all_keep</span>, <span class="st">"grid"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>thr.lp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">multi_PRS</span>, <span class="st">"grid.lpS.thr"</span><span class="op">)</span><span class="op">)</span>, id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="st">"thr.lp"</span><span class="op">)</span>
+<span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">grid2</span><span class="op">)</span>
+<span class="va">grid2</span><span class="op">$</span><span class="va">auc</span> <span class="op">&lt;-</span> <span class="fu">big_apply</span><span class="op">(</span><span class="va">multi_PRS</span>, a.FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">X</span>, <span class="va">ind</span>, <span class="va">s</span>, <span class="va">y.train</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># Sum over all chromosomes, for the same C+T parameters</span>
-  <span class="no">single_PRS</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(<span class="no">X</span>[, <span class="no">ind</span> + <span class="no">s</span> * (<span class="fl">0</span>:<span class="fl">2</span>)])  <span class="co">## replace by 0:21 in real data</span>
-  <span class="kw pkg">bigstatsr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigstatsr/man/AUC.html">AUC</a></span>(<span class="no">single_PRS</span>, <span class="no">y.train</span>)
-}, <span class="kw">ind</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="no">s</span>, <span class="kw">s</span> <span class="kw">=</span> <span class="no">s</span>, <span class="kw">y.train</span> <span class="kw">=</span> <span class="no">y</span>[<span class="no">ind.train</span>],
-<span class="kw">a.combine</span> <span class="kw">=</span> <span class="st">'c'</span>, <span class="kw">block.size</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">ncores</span> <span class="kw">=</span> <span class="no">NCORES</span>)</pre></body></html></div>
-<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="no">max_prs</span> <span class="kw">&lt;-</span> <span class="no">grid2</span> <span class="kw">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="no">auc</span>)) <span class="kw">%&gt;%</span> <span class="fu">slice</span>(<span class="fl">1</span>:<span class="fl">10</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>() <span class="kw">%&gt;%</span> <span class="fu">slice</span>(<span class="fl">1</span>)</pre></body></html></div>
+  <span class="va">single_PRS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>, <span class="va">ind</span> <span class="op">+</span> <span class="va">s</span> <span class="op">*</span> <span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>  <span class="co">## replace by 0:21 in real data</span>
+  <span class="fu">bigstatsr</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/AUC.html">AUC</a></span><span class="op">(</span><span class="va">single_PRS</span>, <span class="va">y.train</span><span class="op">)</span>
+<span class="op">}</span>, ind <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">s</span>, s <span class="op">=</span> <span class="va">s</span>, y.train <span class="op">=</span> <span class="va">y</span><span class="op">[</span><span class="va">ind.train</span><span class="op">]</span>,
+a.combine <span class="op">=</span> <span class="st">'c'</span>, block.size <span class="op">=</span> <span class="fl">1</span>, ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb38"><pre class="downlit">
+<span class="va">max_prs</span> <span class="op">&lt;-</span> <span class="va">grid2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">auc</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></pre></div>
 <pre><code>## # A tibble: 10 x 7
 ##     size thr.r2 grp.num thr.imp thr.lp    id   auc
 ##    &lt;int&gt;  &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;
-##  1 10000   0.05       1       1  0.733     8 0.651
-##  2  4000   0.05       1       1  1.63      7 0.651
-##  3  5000   0.1        1       1  0.733    12 0.651
-##  4  4000   0.05       1       1  1.01      7 0.650
-##  5 10000   0.05       1       1  0.492     8 0.650
-##  6 10000   0.05       1       1  0.533     8 0.650
-##  7 10000   0.05       1       1  0.455     8 0.650
-##  8 10000   0.05       1       1  0.127     8 0.650
+##  1  4000   0.05       1       1  1.63      7 0.651
+##  2 10000   0.05       1       1  0.733     8 0.651
+##  3 10000   0.05       1       1  1.63      8 0.651
+##  4 10000   0.05       1       1  0.455     8 0.650
+##  5  5000   0.1        1       1  0.733    12 0.650
+##  6 10000   0.05       1       1  0.492     8 0.650
+##  7 10000   0.05       1       1  0.127     8 0.650
+##  8  4000   0.05       1       1  1.01      7 0.650
 ##  9 10000   0.05       1       1  0.149     8 0.650
-## 10 10000   0.05       1       1  1.63      8 0.650</code></pre>
-<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">ind.keep</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="fu">map</span>(<span class="no">all_keep</span>, <span class="no">max_prs</span>$<span class="no">id</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">lpval</span>[<span class="no">ind.keep</span>] <span class="kw">&gt;</span> <span class="no">max_prs</span>$<span class="no">thr.lp</span>)</pre></body></html></div>
-<pre><code>## [1] 4573</code></pre>
-<div class="sourceCode" id="cb40"><html><body><pre class="r"><span class="fu">AUCBoot</span>(
-  <span class="fu"><a href="../reference/snp_PRS.html">snp_PRS</a></span>(<span class="no">G</span>, <span class="no">beta</span>[<span class="no">ind.keep</span>], <span class="kw">ind.test</span> <span class="kw">=</span> <span class="no">ind.test</span>, <span class="kw">ind.keep</span> <span class="kw">=</span> <span class="no">ind.keep</span>,
-          <span class="kw">lpS.keep</span> <span class="kw">=</span> <span class="no">lpval</span>[<span class="no">ind.keep</span>], <span class="kw">thr.list</span> <span class="kw">=</span> <span class="no">max_prs</span>$<span class="no">thr.lp</span>),
-  <span class="no">y</span>[<span class="no">ind.test</span>]
-)</pre></body></html></div>
-<pre><code>##       Mean       2.5%      97.5%         Sd
-## 0.67043835 0.57621832 0.75998783 0.04662065</code></pre>
+## 10 10000   0.05       1       1  0.533     8 0.650</code></pre>
+<div class="sourceCode" id="cb40"><pre class="downlit">
+<span class="va">ind.keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">all_keep</span>, <span class="va">max_prs</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">lpval</span><span class="op">[</span><span class="va">ind.keep</span><span class="op">]</span> <span class="op">&gt;</span> <span class="va">max_prs</span><span class="op">$</span><span class="va">thr.lp</span><span class="op">)</span></pre></div>
+<pre><code>## [1] 1098</code></pre>
+<div class="sourceCode" id="cb42"><pre class="downlit">
+<span class="fu">AUCBoot</span><span class="op">(</span>
+  <span class="fu"><a href="../reference/snp_PRS.html">snp_PRS</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">beta</span><span class="op">[</span><span class="va">ind.keep</span><span class="op">]</span>, ind.test <span class="op">=</span> <span class="va">ind.test</span>, ind.keep <span class="op">=</span> <span class="va">ind.keep</span>,
+          lpS.keep <span class="op">=</span> <span class="va">lpval</span><span class="op">[</span><span class="va">ind.keep</span><span class="op">]</span>, thr.list <span class="op">=</span> <span class="va">max_prs</span><span class="op">$</span><span class="va">thr.lp</span><span class="op">)</span>,
+  <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span>
+<span class="op">)</span></pre></div>
+<pre><code>##      Mean      2.5%     97.5%        Sd 
+## 0.6779916 0.5814000 0.7691177 0.0477630</code></pre>
 <p>For this example, the best C+T predictions provides an AUC of 67% whereas stacking, which should be preferred, provides an AUC of 68.5%.</p>
 <div id="reference" class="section level3">
 <h3 class="hasAnchor">
@@ -350,13 +386,13 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
 </div>
 
-
+  
 
 
   </body>
