@@ -1,27 +1,26 @@
 /******************************************************************************/
 
-// #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/BMCodeAcc.h>
 
 using namespace Rcpp;
 
 /******************************************************************************/
 
-// [[Rcpp::export]]
-List corMat(Environment BM,
-            const IntegerVector& rowInd,
-            const IntegerVector& colInd,
-            double size,
-            const NumericVector& thr,
-            const NumericVector& pos,
-            int ncores) {
+bool is_na0(double x) { return NumericVector::is_na(x); }
 
-  myassert_size(colInd.size(), pos.size());
+bool is_na3(double x) { return(x == 3); }
 
-  XPtr<FBM> xpBM = BM["address"];
-  NumericVector code = clone(as<NumericVector>(BM["code256"]));
-  code[is_na(code)] = 3;
-  SubBMCode256Acc macc(xpBM, rowInd, colInd, code, 1);
+/******************************************************************************/
+
+template <class C>
+List corMat0(C macc,
+             bool(*isna)(double),
+             const IntegerVector& rowInd,
+             const IntegerVector& colInd,
+             double size,
+             const NumericVector& thr,
+             const NumericVector& pos,
+             int ncores) {
 
   int n = macc.nrow();
   int m = macc.ncol();
@@ -45,7 +44,7 @@ List corMat(Environment BM,
       double xSum0 = 0, xxSum0 = 0;
       for (int i = 0; i < n; i++) {
         double x = macc(i, j0);
-        if (x != 3) {
+        if (!isna(x)) {
           xSum0  += x;
           xxSum0 += x * x;
         }
@@ -61,10 +60,10 @@ List corMat(Environment BM,
         for (int i = 0; i < n; i++) {
 
           double x = macc(i, j0);
-          if (x == 3) continue;
+          if (isna(x)) continue;
 
           double y = macc(i, j);
-          if (y == 3) {
+          if (isna(y)) {
             // y is missing, but not x
             xSum  -= x;
             xxSum -= x * x;
@@ -95,6 +94,39 @@ List corMat(Environment BM,
 
 
   return res;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+List corMat(Environment BM,
+            const IntegerVector& rowInd,
+            const IntegerVector& colInd,
+            double size,
+            const NumericVector& thr,
+            const NumericVector& pos,
+            int ncores) {
+
+  myassert_size(colInd.size(), pos.size());
+
+  XPtr<FBM> xpBM = BM["address"];
+
+  if (BM.exists("code256")) {
+    NumericVector code = clone(as<NumericVector>(BM["code256"]));
+    code[is_na(code)] = 3;
+    SubBMCode256Acc macc(xpBM, rowInd, colInd, code, 1);
+    return corMat0(macc, &is_na3, rowInd, colInd, size, thr, pos, ncores);
+  } else {
+    switch(xpBM->matrix_type()) {
+    case 6:
+    {
+      SubBMAcc<float> macc(xpBM, rowInd, colInd, 1);
+      return corMat0(macc, &is_na0, rowInd, colInd, size, thr, pos, ncores);
+    }
+    default:
+      throw Rcpp::exception(ERROR_TYPE);
+    }
+  }
 }
 
 /******************************************************************************/

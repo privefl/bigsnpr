@@ -39,7 +39,7 @@ snp_cor <- function(Gna,
                     infos.pos = NULL,
                     ncores = 1) {
 
-  check_args()
+  check_args(Gna = "assert_class(Gna, 'FBM')")
 
   if (is.null(infos.pos)) infos.pos <- 1000 * seq_along(ind.col)
   assert_lengths(infos.pos, ind.col)
