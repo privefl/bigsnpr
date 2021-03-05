@@ -32,7 +32,7 @@ Imports:
     bigparallelr,
     bigsparser (>= 0.4.1),
     bigreadr,
-    bigutilsr (>= 0.3),
+    bigutilsr (>= 0.3.3),
     data.table,
     foreach,
     ggplot2,

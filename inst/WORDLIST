@@ -55,6 +55,7 @@ ggplot
 GigaScience
 github
 GWAS
+gzipped
 HapMap
 heritability
 Hinrichs
@@ -135,6 +136,7 @@ svds
 Tcrossprod
 Tellier
 th
+tibble
 tmp
 UCSC
 UKBB

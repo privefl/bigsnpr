@@ -2,7 +2,7 @@
 
 compute_cost <- function(block_num, corr.tril, thr_r2) {
   corr.tril %>%
-    as("dgTMatrix") %>%
+    methods::as("dgTMatrix") %>%
     { .@x[block_num[.@i + 1L] != block_num[.@j + 1L]]^2 } %>%
     { sum(.[. >= thr_r2]) }
 }
