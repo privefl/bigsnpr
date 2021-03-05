@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.6</span>
       </span>
     </div>
 
@@ -133,11 +133,11 @@
 <p>This package uses a class called <code>bigSNP</code> for representing SNP data. A <code>bigSNP</code> object is a list with some elements:</p>
 <ul>
 <li>
-<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are SNPs. This stores genotype calls or <strong>dosages</strong> (rounded to 2 decimal places).</li>
+<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are variants. This stores genotype calls or <strong>dosages</strong> (rounded to 2 decimal places).</li>
 <li>
-<code>fam</code>: A <code>data.frame</code> with some information on the SNPs.</li>
+<code>fam</code>: A <code>data.frame</code> with some information on the individuals.</li>
 <li>
-<code>map</code>: A <code>data.frame</code> with some information on the individuals.</li>
+<code>map</code>: A <code>data.frame</code> with some information on the variants.</li>
 </ul>
 <p><strong>New!</strong> Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper “Efficient toolkit implementing..”.</p>
 </div>

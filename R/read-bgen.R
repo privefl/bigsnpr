@@ -104,6 +104,7 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   assert_noexist(paste0(backingfile, ".bk"))
 
   # Check extension of files
+  bgenfiles <- path.expand(bgenfiles)
   sapply(bgenfiles, assert_ext, ext = "bgen")
   # Check if all files exist
   bgifiles <- file.path(bgi_dir, paste0(basename(bgenfiles), ".bgi"))

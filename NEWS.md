@@ -1,3 +1,7 @@
+## bigsnpr 1.6.6
+
+- Fix crash in `snp_readBGEN()` when using BGEN files containing `~`.
+
 ## bigsnpr 1.6.5
 
 - Add parameter `thr_r2` in `snp_cor()`.

@@ -42,9 +42,9 @@ This package can also read **UK Biobank BGEN files** using function `snp_readBGE
 
 This package uses a class called `bigSNP` for representing SNP data. A `bigSNP` object is a list with some elements:
 
-- `genotypes`: A [`FBM.code256`](https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html). Rows are samples and columns are SNPs. This stores genotype calls or **dosages** (rounded to 2 decimal places).
-- `fam`: A `data.frame` with some information on the SNPs.
-- `map`: A `data.frame` with some information on the individuals.
+- `genotypes`: A [`FBM.code256`](https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html). Rows are samples and columns are variants. This stores genotype calls or **dosages** (rounded to 2 decimal places).
+- `fam`: A `data.frame` with some information on the individuals.
+- `map`: A `data.frame` with some information on the variants.
 
 **New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
 
