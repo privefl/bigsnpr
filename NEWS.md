@@ -1,3 +1,7 @@
+## bigsnpr 1.6.7
+
+- Add parameter `report_step` in `snp_ldpred2_auto()` to report some of the internal sampling betas.
+
 ## bigsnpr 1.6.6
 
 - Fix crash in `snp_readBGEN()` when using BGEN files containing `~`.

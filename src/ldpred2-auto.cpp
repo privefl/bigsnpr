@@ -22,6 +22,7 @@ List ldpred2_gibbs_auto(Environment corr,
                         double h2_init,
                         int burn_in,
                         int num_iter,
+                        int report_step,
                         bool verbose = false) {
 
   XPtr<SFBM> sfbm = corr["address"];
@@ -36,6 +37,9 @@ List ldpred2_gibbs_auto(Environment corr,
   std::vector<double> is_causal(m, p_init);
   arma::vec curr_beta(beta_init.begin(), m);
   arma::vec avg_beta(m, arma::fill::zeros), avg_postp(m, arma::fill::zeros);
+
+  arma::mat sample_beta(m, num_iter / report_step, arma::fill::zeros);
+  int ind_report = 0, next_k_reported = burn_in - 1 + report_step;
 
   int num_iter_tot = burn_in + num_iter;
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
@@ -81,6 +85,10 @@ List ldpred2_gibbs_auto(Environment corr,
     if (k >= burn_in) {
       avg_p  += p;
       avg_h2 += h2;
+      if (k == next_k_reported) {
+        sample_beta.col(ind_report++) = curr_beta;
+        next_k_reported += report_step;
+      }
     }
     p_est[k]  = p;
     h2_est[k] = h2;
@@ -93,6 +101,7 @@ List ldpred2_gibbs_auto(Environment corr,
   return List::create(
     _["beta_est"]    = avg_beta  / num_iter,
     _["postp_est"]   = avg_postp / num_iter,
+    _["sample_beta"] = sample_beta,
     _["p_est"]       = est_p,
     _["h2_est"]      = est_h2,
     _["path_p_est"]  = p_est,

@@ -128,10 +128,14 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   running LDpred2-grid with the estimates of p and h2 from LDpred2-auto, and
 #'   sparsity enabled. Default is `FALSE`.
 #' @param verbose Whether to print "p // h2" estimates at each iteration.
+#' @param report_step Step to report sampling betas (after burn-in and before
+#'   unscaling). Nothing is reported by default. If using `num_iter = 500` and
+#'   `report_step = 50`, then 10 vectors of betas are reported.
 #'
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes
 #'   - `$beta_est_sparse` (only when `sparse = TRUE`): sparse vector of effect sizes
+#'   - `$sample_beta`: Matrix of sampling betas (see parameter `report_step`)
 #'   - `$postp_est`: vector of posterior probabilities of being causal
 #'   - `$p_est`: estimate of p, the proportion of causal variants
 #'   - `$h2_est`: estimate of the (SNP) heritability (also see [coef_to_liab])
@@ -153,6 +157,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              num_iter = 500,
                              sparse = FALSE,
                              verbose = FALSE,
+                             report_step = num_iter + 1L,
                              ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
@@ -179,7 +184,8 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       h2_init   = h2_init,
       burn_in   = burn_in,
       num_iter  = num_iter,
-      verbose   = verbose
+      verbose   = verbose,
+      report_step = report_step
     )
     ldpred_auto$beta_est  <- drop(ldpred_auto$beta_est) * scale
     ldpred_auto$postp_est <- drop(ldpred_auto$postp_est)

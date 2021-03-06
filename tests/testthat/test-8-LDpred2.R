@@ -74,6 +74,15 @@ test_that("LDpred2 works", {
   expect_length(mod$postp_est, length(mod$beta_est))
   expect_null(dim(mod$postp_est))
   expect_equal(mean(mod$postp_est), mod$p_est, tolerance = 0.01)
+  expect_equal(dim(mod$sample_beta), c(ncol(corr), 0))
+
+  # Sampling betas
+  beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
+                                burn_in = 200, num_iter = 200, report_step = 10)
+  bsamp <- beta_auto[[1]]$sample_beta
+  expect_equal(dim(bsamp), c(ncol(corr), 20))
+  h2_est <- apply(bsamp, 2, function(x) crossprod(x, bigsparser::sp_prodVec(corr, x)))
+  expect_equal(h2_est, beta_auto[[1]]$path_h2_est[seq(210, 400, by = 10)])
 
   # Errors
   expect_error(snp_ldpred2_inf(corr, df_beta[-1]),
