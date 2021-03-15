@@ -124,7 +124,7 @@ beta_hat <- df_beta$beta / scale
 lambda0 <- max(abs(beta_hat))
 params <- expand.grid(
   lambda = seq_log(0.01 * lambda0, lambda0, 10),
-  s = c(0.5, 0.8, 0.9, 0.95, 1)
+  s = c(0, 0.2, 0.5, 0.8, 0.9, 0.95, 1)
 )
 
 library(furrr)
@@ -141,16 +141,61 @@ all_res <- future_pmap_dfr(params, function(lambda, s) {
       beta_init = 0 * beta_hat,
       order = seq_along(beta_hat) - 1L,
       lambda = lambda,
-      s = s
+      s = s,
+      tol = 1e-14
     )
   )[3]
 
   pred_lassosum <- big_prodVec(G, beta_lassosum * scale, ind.row = ind.val)
   r2 <- cor(pred_lassosum, y[ind.val, 1]) ** 2
 
-  tibble::tibble(lambda, s, time, sparsity = mean(beta_lassosum == 0), r2)
+  tibble::tibble(lambda, s, time, sparsity = mean(beta_lassosum == 0), r2,
+                 beta = list(beta_lassosum))
 }, .progress = TRUE)
 # saveRDS(all_res, "tmp-data/all_res_to_plot.rds")
+plan("sequential")
+
+c(max(all_res$r2, na.rm = TRUE), cor(pred, y[ind.val, 1]) ** 2)
+
+z <- with(df_beta, beta / beta_se)
+pval <- pchisq(z^2, df = 1, lower.tail = FALSE)
+# i <- which.min(pval); pval[i] <- 0
+fdr0 <- fdrtool::fdrtool(z, statistic = "normal", plot = FALSE)
+fdr0.2 <- fdrtool::fdrtool(c(z, rnorm(1e6)), statistic = "normal", plot = FALSE)
+plot(fdr0$lfdr, head(fdr0.2$lfdr, -1e6))
+ldfr <- head(fdr0.2$lfdr, -1e6)
+fdr0.3 <- fdrtool::fdrtool(pval, statistic = "pvalue", plot = FALSE)
+plot(z^2, fdr0.3$lfdr)
+plot(fdr0$lfdr, fdr0.3$lfdr)
+min(fdr0$lfdr)
+plot(fdr0$qval, fdr0$lfdr)
+
+ldfr2 <- qvalue::lfdr(pval)
+plot(ldfr2, fdr0$lfdr)
+
+fdr0.4 <- locfdr::locfdr(z)
+plot(fdr0.4$fdr, fdr0.3$lfdr)
+
+fdr <- fdrtool::fdrtool(beta_hat, statistic = "correlation", plot = FALSE)
+plot(fdr0$lfdr, fdr$lfdr)
+beta_hat_shrunk <- beta_hat
+beta_hat_shrunk <- round(beta_hat * (1 - fdr$lfdr), 16)
+sum(beta_hat_shrunk != 0)
+
+all_res$auto_score <- purrr::pmap_dbl(all_res[c("beta", "s")], function(beta, s) {
+  cat(".")
+  bRb <- crossprod(beta, bigsparser::sp_prodVec(corr2, beta))
+  crossprod(beta, beta_hat_shrunk) / sqrt(bRb)
+})
+
+library(ggplot2)
+qplot(auto_score, (r2), color = s, data = all_res) +
+  theme_bw(15) +
+  scale_color_viridis_c()
+
+qplot(auto_score, (r2), color = sparsity, data = all_res) +
+  theme_bw(15) +
+  scale_color_viridis_c(trans = "log10")
 
 
 # time is larger for smaller n and smaller lambda
