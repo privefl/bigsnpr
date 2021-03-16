@@ -15,7 +15,7 @@
 #' @param tol Tolerance parameter for assessing convergence. Default is `1e-5`.
 #'
 #' @return A matrix of effect sizes, one vector (column) for each row in
-#'   `attr(<res>, "grid_param")`.
+#'   `attr(<res>, "grid_param")`, where you can get extra information.
 #'
 #' @export
 #'
@@ -28,36 +28,57 @@ snp_lassosum2 <- function(corr, df_beta, s = 1:10 / 10,
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
   assert_pos(df_beta$beta_se, strict = TRUE)
   assert_cores(ncores)
+  assert_package("fdrtool")
 
   N <- df_beta$n_eff
   scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
+  chi2 <- (df_beta$beta / df_beta$beta_se)^2
+  pval <- stats::pchisq(chi2, df = 1, lower.tail = FALSE)
+  utils::capture.output(
+    fdr <- fdrtool::fdrtool(pval, statistic = "pvalue", plot = FALSE))
+  beta_hat_shrunk <- beta_hat * (1 - fdr$lfdr)
+
   lambda0 <- max(abs(beta_hat))
   seq_lam <- head(seq_log(lambda.min.ratio * lambda0, lambda0, nlambda + 1), -1)
-  grid_param <- expand.grid(s = sort(s), lambda = seq_lam)
+  grid_param <- expand.grid(lambda = seq_lam, s = sort(s))
+  res_grid <- FBM(nrow(grid_param), 3) # auto_score / num_iter / time
 
   bigparallelr::register_parallel(ncores)
 
-  res_grid <- foreach(ic = rows_along(grid_param), .export = "lassosum2") %dopar% {
+  beta_grid <- foreach(ic = rows_along(grid_param), .export = "lassosum2") %dopar% {
 
     # lassosum2 model
-    lassosum2(
-      corr     = corr,
-      beta_hat = beta_hat,
-      lambda   = grid_param$lambda[ic],
-      s        = grid_param$s[ic],
-      dfmax    = dfmax,
-      maxiter  = maxiter,
-      tol      = tol
+    time <- system.time(
+      res <- lassosum2(
+        corr     = corr,
+        beta_hat = beta_hat,
+        lambda   = grid_param$lambda[ic],
+        s        = grid_param$s[ic],
+        dfmax    = dfmax,
+        maxiter  = maxiter,
+        tol      = tol
+      )
     )
+
+    beta <- res$beta_est
+    bRb <- crossprod(beta, bigsparser::sp_prodVec(corr, beta))
+
+    res_grid[ic, 1] <- crossprod(beta, beta_hat_shrunk) / sqrt(bRb)
+    res_grid[ic, 2] <- res$num_iter
+    res_grid[ic, 3] <- time[[3]]
+
+    beta * scale
   }
 
-  grid_param$num_iter <- sapply(res_grid, function(.) .$num_iter)
-  beta_grid <- do.call("cbind", lapply(res_grid, function(.) .$beta_est))
-  grid_param$sparsity <- colMeans(beta_grid == 0)
+  beta_grid <- do.call("cbind", beta_grid)
+  grid_param$sparsity   <- colMeans(beta_grid == 0)
+  grid_param$auto_score <- res_grid[, 1]
+  grid_param$num_iter   <- res_grid[, 2]
+  grid_param$time       <- res_grid[, 3]
 
-  structure(sweep(beta_grid, 1, scale, '*'), grid_param = grid_param)
+  structure(beta_grid, grid_param = grid_param)
 }
 
 ################################################################################
