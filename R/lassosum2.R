@@ -3,8 +3,8 @@
 #' lassosum2
 #'
 #' @inheritParams snp_ldpred2_grid
-#' @param s Vector of shrinkage parameters to try.
-#'   Default is `c(0.2, 0.5, 0.8, 0.9, 0.95, 1)`.
+#' @param s Vector of shrinkage parameters to try. Default is `1:10 / 10`.
+#'   Try to avoid using `0` as it often leads to effects exploding.
 #' @param nlambda Number of different lambdas to try. Default is `20`.
 #' @param lambda.min.ratio Ratio between last and first lambdas to try.
 #'   Default is `0.01`.
@@ -12,16 +12,16 @@
 #'   Default is `200e3`. This is not used when `s = 1`.
 #' @param maxiter Maximum number of iterations before convergence.
 #'   Default is `500`.
-#' @param tol Tolerance parameter for assessing convergence. Default is `1e-10`.
+#' @param tol Tolerance parameter for assessing convergence. Default is `1e-5`.
 #'
 #' @return A matrix of effect sizes, one vector (column) for each row in
 #'   `attr(<res>, "grid_param")`.
 #'
 #' @export
 #'
-snp_lassosum2 <- function(corr, df_beta, s = c(0.5, 0.8, 0.9, 0.95, 1),
+snp_lassosum2 <- function(corr, df_beta, s = 1:10 / 10,
                           nlambda = 20, lambda.min.ratio = 0.01,
-                          dfmax = 200e3, maxiter = 500, tol = 1e-10,
+                          dfmax = 200e3, maxiter = 500, tol = 1e-5,
                           ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
@@ -35,7 +35,7 @@ snp_lassosum2 <- function(corr, df_beta, s = c(0.5, 0.8, 0.9, 0.95, 1),
 
   lambda0 <- max(abs(beta_hat))
   seq_lam <- head(seq_log(lambda.min.ratio * lambda0, lambda0, nlambda + 1), -1)
-  grid_param <- expand.grid(lambda = seq_lam, s = s)
+  grid_param <- expand.grid(lambda = seq_lam, s = sort(s))
 
   bigparallelr::register_parallel(ncores)
 

@@ -64,7 +64,12 @@ df_beta <- data.frame(beta = gwas$estim, beta_se = gwas$std.err,
                       n_eff = length(ind.gwas))
 
 # Lassosum2
-beta_lassosum2 <- snp_lassosum2(corr2, df_beta, ncores = 4)
+beta_lassosum2 <- snp_lassosum2(corr2, df_beta,
+                                ncores = 4,
+                                lambda.min.ratio = 0.05,
+                                nlambda = 10,
+                                maxiter = 100,
+                                s = 1:10 / 10)
 
 params <- attr(beta_lassosum2, "grid_param")
 

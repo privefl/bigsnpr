@@ -7,12 +7,12 @@
 snp_lassosum2(
   corr,
   df_beta,
-  s = c(0.5, 0.8, 0.9, 0.95, 1),
+  s = 1:10/10,
   nlambda = 20,
   lambda.min.ratio = 0.01,
   dfmax = 2e+05,
-  maxiter = 200,
-  tol = 1e-08,
+  maxiter = 500,
+  tol = 1e-05,
   ncores = 1
 )
 }
@@ -28,18 +28,21 @@ If \code{corr} is a dsCMatrix or a dgCMatrix, you can use \code{as_SFBM(corr)}.}
 (in the case of binary traits, this is \code{4 / (1 / n_control + 1 / n_case)})
 }}
 
-\item{s}{Vector of shrinkage parameters to try. Default is \code{c(0.2, 0.5, 0.8, 0.9, 0.95, 1)}.}
+\item{s}{Vector of shrinkage parameters to try. Default is \code{1:10 / 10}.
+Try to avoid using \code{0} as it often leads to effects exploding.}
 
 \item{nlambda}{Number of different lambdas to try. Default is \code{20}.}
 
-\item{lambda.min.ratio}{Ratio between last and first lambdas to try. Default is \code{0.01}.}
+\item{lambda.min.ratio}{Ratio between last and first lambdas to try.
+Default is \code{0.01}.}
 
-\item{dfmax}{Maximum number of non-zero effects in the model. Default is \code{200e3}.
-This is not used when \code{s = 1}.}
+\item{dfmax}{Maximum number of non-zero effects in the model.
+Default is \code{200e3}. This is not used when \code{s = 1}.}
 
-\item{maxiter}{Maximum number of iterations before convergence. Default is \code{200}.}
+\item{maxiter}{Maximum number of iterations before convergence.
+Default is \code{500}.}
 
-\item{tol}{Tolerance parameter for assessing convergence. Default is \code{1e-8}.}
+\item{tol}{Tolerance parameter for assessing convergence. Default is \code{1e-5}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
