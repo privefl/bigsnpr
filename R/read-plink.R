@@ -51,7 +51,7 @@ snp_readBed <- function(bedfile, backingfile = sub_bed(bedfile)) {
   )
 
   # Fill the FBM from bedfile
-  reach.eof <- readbina(bedfile, bigGeno, getCode())
+  reach.eof <- readbina(path.expand(bedfile), bigGeno, getCode())
   if (!reach.eof) warning("EOF of bedfile has not been reached.")
 
   # Create the bigSNP object

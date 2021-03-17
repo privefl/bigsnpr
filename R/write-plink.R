@@ -36,7 +36,7 @@ snp_writeBed <- function(x, bedfile,
   stopifnot(all(G.round$code256 %in% 0:3))
 
   ## write files
-  writebina(bedfile, G.round, getInverseCode(), ind.row, ind.col)
+  writebina(path.expand(bedfile), G.round, getInverseCode(), ind.row, ind.col)
   write.table2(new_fam, file = famfile, na = 0)
   write.table2(new_map, file = bimfile, na = 0)
 
