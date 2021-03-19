@@ -33,15 +33,15 @@ test$map$`p-values` <- runif(nrow(test$map))
 str(test$map)
 
 # Reading again
-test.savedIn <- sub_bk(test$genotypes$backingfile, ".rds")
-test2 <- snp_attach(rdsfile = test.savedIn)
+rds <- test$genotypes$rds
+test2 <- snp_attach(rds)
 str(test2$map) # new slot wasn't saved
 
 # Save it
-test <- snp_save(test)
+snp_save(test)
 
 # Reading again
-test3 <- snp_attach(rdsfile = test.savedIn)
+test3 <- snp_attach(rds)
 str(test3$map) # it is saved now
 
 # The complicated code of this function

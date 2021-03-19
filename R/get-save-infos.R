@@ -17,7 +17,7 @@
 #' @export
 snp_save <- function(x, version = NULL) {
   saveRDS(x, file = x$genotypes$rds, version = version)
-  x
+  invisible(x)
 }
 
 ################################################################################
