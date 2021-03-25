@@ -30,7 +30,7 @@ Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was 
 ## Downloading genotype data and summary statistics
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, width = 75)
+options(htmltools.dir.version = FALSE, width = 75, max.print = 30)
 knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
 knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
 ```
@@ -116,26 +116,24 @@ ind.chr <- which(info_snp$chr == 2)
 df_beta <- info_snp[ind.chr, c("beta", "beta_se", "n_eff")]
 ```
 
-```{r, cache=TRUE}
+```{r}
 ## indices in G
 ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]    
-corr0 <- snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
-                 infos.pos = POS2[ind.chr2], size = 3 / 1000)
+corr0 <- runonce::save_run(
+  snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
+          infos.pos = POS2[ind.chr2], size = 3 / 1000),
+  file = "tmp-data/corr_ldpred2_tutorial.rds")
 ```
 
 ```{r}
 tmp <- tempfile(tmpdir = "tmp-data")
-if (packageVersion("bigsnpr") >= package_version("1.4.9") &&
-    packageVersion("bigsparser") >= package_version("0.4.0")) {
-  corr <- as_SFBM(corr0, tmp)
-} else {
-  corr <- bigsparser::as_SFBM(as(corr0, "dgCMatrix"), tmp)
-}
+corr <- bigsparser::as_SFBM(as(corr0, "dgCMatrix"), tmp)
 ```
 
 Here, we have built the LD matrix using variants from one chromosome only. In practice, you need to build it for variants from all chromosomes. Please look at the code linked at the beginning.
 
-### Infinitesimal model
+
+### LDpred2-inf: infinitesimal model
 
 ```{r, cache=TRUE}
 (ldsc <- snp_ldsc2(corr0, df_beta))
@@ -152,7 +150,8 @@ pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = ind.chr2)
 AUCBoot(pred_inf, y[ind.test])
 ```
 
-### Grid of models
+
+### LDpred2(-grid): grid of models
 
 In practice, we recommend to test multiple values for h2 and p. 
 
@@ -224,14 +223,14 @@ pred_sp <- big_prodVec(G, best_grid_sp, ind.row = ind.test, ind.col = ind.chr2)
 AUCBoot(pred_sp, y[ind.test])
 ```
 
-### Automatic model
+### LDpred2-auto: automatic model
 
 We recommend to run many of them in parallel with different initial values for `p` (e.g. `length.out = 30`).
 
 ```{r, cache=TRUE}
 # takes a few minutes
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
-                               vec_p_init = seq_log(1e-4, 0.9, length.out = NCORES),
+                               vec_p_init = seq_log(1e-4, 0.5, length.out = NCORES),
                                ncores = NCORES)
 str(multi_auto)
 ```
@@ -277,7 +276,6 @@ AUCBoot(final_pred_auto, y[ind.test])
 # Some cleaning
 rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 ```
-
 
 ## Conclusion
 
