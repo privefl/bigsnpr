@@ -33,8 +33,7 @@ If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{k}{Number of singular vectors/values to compute. Default is \code{10}.
-\strong{This algorithm should be used to compute only a
-few singular vectors/values.}}
+\strong{This algorithm should be used to compute only a few singular vectors/values.}}
 
 \item{tol}{Precision parameter of \link[RSpectra:svds]{svds}. Default is \code{1e-4}.}
 
