@@ -127,7 +127,7 @@ corr0 <- runonce::save_run(
 
 ```{r}
 tmp <- tempfile(tmpdir = "tmp-data")
-corr <- bigsparser::as_SFBM(as(corr0, "dgCMatrix"), tmp)
+corr <- as_SFBM(corr0, tmp)
 ```
 
 Here, we have built the LD matrix using variants from one chromosome only. In practice, you need to build it for variants from all chromosomes. Please look at the code linked at the beginning.

@@ -1,0 +1,123 @@
+---
+title: "Estimating uncertainty in polygenic scores using LDpred2"
+date: "March 26, 2021"
+author: "Yi Ding and colleagues"
+output: html_document
+editor_options:
+  chunk_output_type: console
+---
+
+---
+
+Here we show how to estimate the full posterior distribution of genetic value using LDpred2 as described in
+[Large uncertainty in individual PRS estimation impacts PRS-based risk stratification](https://doi.org/10.1101/2020.11.30.403188).
+
+This tutorial assumes that you have already tuned the hyperparameters using grid search. Please refer to [Computing polygenic scores using LDpred2](https://privefl.github.io/bigsnpr/articles/LDpred2.html) for tutorials on data preprocessing and LDpred2-grid.
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 75, max.print = 30)
+knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
+```
+
+
+```{r preprocess, include=FALSE}
+library(bigsnpr)
+obj.bigSNP <- snp_attach("tmp-data/public-data.rds")
+map <- obj.bigSNP$map[-(2:3)]
+names(map) <- c("chr", "pos", "a0", "a1")
+
+# Get aliases for useful slots
+G <- obj.bigSNP$genotypes
+NCORES <- nb_cores()
+
+# Read external summary statistics
+sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+sumstats$n_eff <- 4 / (1 / sumstats$n_case + 1 / sumstats$n_control)
+sumstats$n_case <- sumstats$n_control <- NULL
+names(sumstats) <- c("chr", "rsid", "pos", "a0", "a1", "beta", "beta_se", "p", "n_eff")
+info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
+
+## indices in info_snp
+ind.chr <- which(info_snp$chr == 2)         
+df_beta <- info_snp[ind.chr, c("beta", "beta_se", "n_eff")]
+## indices in G
+ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]   
+
+# correlation 
+corr0 <- readRDS("tmp-data/corr_ldpred2_tutorial.rds")
+tmp <- tempfile(tmpdir = "tmp-data")
+corr <- as_SFBM(corr0, tmp)
+```
+
+## Approximating the posterior distribution of genetic value
+
+Given the set of tuned hyperparameters (see above), we want to approximate the full posterior distribution of an individual's genetic value, $\small{GV_i = \mathrm{\bf{x}}_i^T \boldsymbol\beta}$. From the posterior, one can obtain the **posterior mean**, $\small{\widehat{PRS}_i \equiv \mathbb{E}(GV_i|\mathrm{Data})}$, and various metrics of uncertainty such as the **posterior variance**, $\small{var(GV_i|\mathrm{Data})}$, where $\small{GV_i}$ is the genetic value of individual $i$ and $\mathrm{\small{Data}}$ refers to a given GWAS, and **$\rho$-credible interval**, the interval within which the individual's genetic value falls with probability $\rho$.
+
+An individual's genetic value is their genotype vector multipled by the causal effect vector. We therefore need to obtain MCMC samples from the posterior of the causal effects. This is done by supplying the tuned hyperparameters (`best_param` in the example below) to `snp_ldpred2_grid` and setting `return_sampling_betas = TRUE`. In the example below, we return 500 MCMC samples from the posterior of the causal effects with the option `num_iter = 500`.
+
+Note that, when using `return_sampling_betas = TRUE`, you must supply one set of parameters only, i.e. `best_param` must be a data frame with exactly 1 row (otherwise it will raise an error).
+
+```{r}
+best_param <- data.frame(p = 0.0018, h2 = 0.1146, sparse = FALSE)
+```
+```{r}
+posterior_beta_samples <- snp_ldpred2_grid(
+  corr, df_beta, best_param,
+  return_sampling_betas = TRUE, num_iter = 500)
+dim(posterior_beta_samples)
+```
+
+Posterior samples of the individual's genetic value are then obtained by multiplying their genotype with the posterior samples of $\boldsymbol{\beta}$.
+
+```{r}
+posterior_gv_samples <- big_prodMat(G, posterior_beta_samples, ind.col = ind.chr2)
+dim(posterior_gv_samples)
+```
+
+The autocorrelation is generally weak, otherwise, you can perform some thinning.
+
+```{r}
+acf(posterior_gv_samples[1, ], lag.max = 10, plot = TRUE)$acf
+rowMeans(apply(posterior_gv_samples, 1, function(x) {
+  acf(x, lag.max = 10, plot = FALSE)$acf
+}))
+```
+
+
+## Estimating the posterior mean and posterior variance
+
+From the posterior samples of genetic value (see above), we can compute summary statistics such as the posterior mean and posterior variance. The posterior mean can be interpreted as the individual's polygenic (risk) score, i.e. $\small{\widehat{PRS}_i \equiv \mathbb{E}(GV_i|\mathrm{Data})}$. The posterior variance, $\small{var(GV_i|\mathrm{Data})}$, is one metric of uncertainty; credible intervals are discussed below.
+
+```{r}
+samples <- posterior_gv_samples[1, ]
+posterior_gv_mean <- mean(samples)
+posterior_gv_var <- var(samples)
+```
+
+## Constructing credible intervals of genetic value
+
+Another way to quantify uncertainty in an individual's polygenic score is by constructing a $\rho$-credible interval of the individual's genetic value, i.e. the range of values that contains the individual's true genetic value with probability $\rho$.
+
+The example below demonstrates how one can obtain a 95% credible interval of the individual's genetic value.
+
+```{r}
+rho <- 0.95
+bound <- (1 - rho) / 2
+samples <- posterior_gv_samples[1, ]
+mean <- mean(samples)
+lower_ci <- quantile(samples, bound)
+upper_ci <- quantile(samples, 1 - bound)
+hist(samples, main = "Posterior distribution of genetic value", xlab = NULL) 
+abline(v = c(lower_ci, mean, upper_ci), col = c("blue", "red", "blue"), lty = c(2,1,2))
+legend("topright", legend = c("Credible Interval", "PRS"),
+       col = c("blue", "red"), lty = c(2,1), cex = 0.8)
+```
+
+To get for all individuals:
+```{r}
+means <- rowMeans(posterior_gv_samples)
+limits <- t(apply(posterior_gv_samples, 1, quantile, probs = c(bound, 1 - bound)))
+```
+

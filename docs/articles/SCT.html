@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -67,6 +67,9 @@
     </li>
     <li>
       <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
     </li>
   </ul>
 </li>
@@ -137,7 +140,7 @@
 <span class="co"># See how the file looks like</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">obj.bigSNP</span>, max.level <span class="op">=</span> <span class="fl">2</span>, strict.width <span class="op">=</span> <span class="st">"cut"</span><span class="op">)</span></pre></div>
 <pre><code>## List of 3
-##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 15 ..
+##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 16 ..
 ##   ..and 26 methods, of which 12 are  possibly relevant:
 ##   ..  add_columns, as.FBM, bm, bm.desc, check_dimensions,
 ##   ..  check_write_permissions, copy#envRefClass, initialize,
@@ -188,7 +191,7 @@
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="va">ind.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span>
-<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span></pre></div>
+<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span></pre></div>
 </div>
 <div id="matching-variants-between-genotype-data-and-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
@@ -292,7 +295,7 @@
 <span class="va">new_beta</span> <span class="op">&lt;-</span> <span class="va">final_mod</span><span class="op">$</span><span class="va">beta.G</span>
 <span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">new_beta</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span></pre></div>
 <div class="sourceCode" id="cb29"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></pre></div>
 <pre><code>## Warning: package 'ggplot2' was built under R version 3.6.3</code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit">
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">new_beta</span>, x <span class="op">=</span> <span class="va">beta</span><span class="op">)</span><span class="op">[</span><span class="va">ind</span>, <span class="op">]</span><span class="op">)</span> <span class="op">+</span>

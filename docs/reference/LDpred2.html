@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -110,6 +110,9 @@
     </li>
     <li>
       <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
     </li>
   </ul>
 </li>
@@ -177,6 +180,7 @@
   num_iter <span class='op'>=</span> <span class='fl'>500</span>,
   sparse <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  report_step <span class='op'>=</span> <span class='va'>num_iter</span> <span class='op'>+</span> <span class='fl'>1L</span>,
   ncores <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span></pre>
 
@@ -250,6 +254,12 @@ sparsity enabled. Default is <code>FALSE</code>.</p></td>
       <th>verbose</th>
       <td><p>Whether to print "p // h2" estimates at each iteration.</p></td>
     </tr>
+    <tr>
+      <th>report_step</th>
+      <td><p>Step to report sampling betas (after burn-in and before
+unscaling). Nothing is reported by default. If using <code>num_iter = 500</code> and
+<code>report_step = 50</code>, then 10 vectors of betas are reported.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -261,6 +271,7 @@ column corresponds to one iteration instead (after burn-in).</p>
 <p><code>snp_ldpred2_auto</code>: A list (over <code>vec_p_init</code>) of lists with</p><ul>
 <li><p><code>$beta_est</code>: vector of effect sizes</p></li>
 <li><p><code>$beta_est_sparse</code> (only when <code>sparse = TRUE</code>): sparse vector of effect sizes</p></li>
+<li><p><code>$sample_beta</code>: Matrix of sampling betas (see parameter <code>report_step</code>)</p></li>
 <li><p><code>$postp_est</code>: vector of posterior probabilities of being causal</p></li>
 <li><p><code>$p_est</code>: estimate of p, the proportion of causal variants</p></li>
 <li><p><code>$h2_est</code>: estimate of the (SNP) heritability (also see <a href='coef_to_liab.html'>coef_to_liab</a>)</p></li>

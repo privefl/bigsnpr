@@ -23,6 +23,8 @@ navbar:
         href: articles/SCT.html
       - text: "Computing polygenic scores using LDpred2"
         href: articles/LDpred2.html
+      - text: "Estimating uncertainty in polygenic scores using LDpred2"
+        href: articles/prs_uncertainty.html
   right:
     - text: "About"
       icon: fa-user
@@ -64,11 +66,10 @@ reference:
       - snp_clumping
       - snp_indLRLDR
       - snp_autoSVD
-      - snp_PRS
       - snp_cor
       - snp_ldsc
       - snp_ldsplit
-  - title: "Stacked Clumping and Thresholding (SCT) // LDpred2"
+  - title: "Polygenic scores"
     contents:
       - snp_match
       - snp_grid_clumping
@@ -77,6 +78,8 @@ reference:
       - snp_ldpred2_inf
       - snp_ldpred2_grid
       - snp_ldpred2_auto
+      - snp_lassosum2
+      - snp_PRS
       - snp_thr_correct
   - title: "Multiple testing - plots"
     contents:

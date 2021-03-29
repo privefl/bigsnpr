@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -111,6 +111,9 @@
     </li>
     <li>
       <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
     </li>
   </ul>
 </li>
@@ -164,6 +167,7 @@
   ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>Gna</span><span class='op'>)</span>,
   size <span class='op'>=</span> <span class='fl'>500</span>,
   alpha <span class='op'>=</span> <span class='fl'>1</span>,
+  thr_r2 <span class='op'>=</span> <span class='fl'>0</span>,
   fill.diag <span class='op'>=</span> <span class='cn'>TRUE</span>,
   infos.pos <span class='op'>=</span> <span class='cn'>NULL</span>,
   ncores <span class='op'>=</span> <span class='fl'>1</span>
@@ -200,6 +204,10 @@ a window in number of SNPs, otherwise it is a window in kb (genetic distance).</
       <th>alpha</th>
       <td><p>Type-I error for testing correlations.
 Default is <code>1</code> (no threshold is applied).</p></td>
+    </tr>
+    <tr>
+      <th>thr_r2</th>
+      <td><p>Threshold to apply on squared correlations. Default is <code>0</code>.</p></td>
     </tr>
     <tr>
       <th>fill.diag</th>

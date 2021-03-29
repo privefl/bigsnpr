@@ -68,6 +68,9 @@
     <li>
       <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
     </li>
+    <li>
+      <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -247,7 +250,7 @@
   file <span class="op">=</span> <span class="st">"tmp-data/corr_ldpred2_tutorial.rds"</span><span class="op">)</span></pre></div>
 <div class="sourceCode" id="cb24"><pre class="downlit">
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>tmpdir <span class="op">=</span> <span class="st">"tmp-data"</span><span class="op">)</span>
-<span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu">bigsparser</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html">as_SFBM</a></span><span class="op">(</span><span class="fu">as</span><span class="op">(</span><span class="va">corr0</span>, <span class="st">"dgCMatrix"</span><span class="op">)</span>, <span class="va">tmp</span><span class="op">)</span></pre></div>
+<span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html">as_SFBM</a></span><span class="op">(</span><span class="va">corr0</span>, <span class="va">tmp</span><span class="op">)</span></pre></div>
 <p>Here, we have built the LD matrix using variants from one chromosome only. In practice, you need to build it for variants from all chromosomes. Please look at the code linked at the beginning.</p>
 </div>
 <div id="ldpred2-inf-infinitesimal-model" class="section level3">
@@ -300,7 +303,9 @@
 <span class="va">pred_grid</span> <span class="op">&lt;-</span> <span class="fu">big_prodMat</span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_grid</span>, ind.col <span class="op">=</span> <span class="va">ind.chr2</span><span class="op">)</span>
 <span class="va">params</span><span class="op">$</span><span class="va">score</span> <span class="op">&lt;-</span> <span class="fu">big_univLogReg</span><span class="op">(</span><span class="fu">as_FBM</span><span class="op">(</span><span class="va">pred_grid</span><span class="op">[</span><span class="va">ind.val</span>, <span class="op">]</span><span class="op">)</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.val</span><span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">score</span></pre></div>
 <div class="sourceCode" id="cb39"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></pre></div>
+<pre><code>## Warning: package 'ggplot2' was built under R version 3.6.3</code></pre>
+<div class="sourceCode" id="cb41"><pre class="downlit">
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">params</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">p</span>, y <span class="op">=</span> <span class="va">score</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">h2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">theme_bigstatsr</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -310,8 +315,10 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"GLM Z-Score"</span>, color <span class="op">=</span> <span class="st">"h2"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span>, panel.spacing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html">unit</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"lines"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="LDpred2_files/figure-html/unnamed-chunk-18-1.png" width="90%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb40"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb42"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></pre></div>
+<pre><code>## Warning: package 'dplyr' was built under R version 3.6.3</code></pre>
+<div class="sourceCode" id="cb44"><pre class="downlit">
 <span class="va">params</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>sparsity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">beta_grid</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span>, id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -326,7 +333,7 @@
 ##  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]</code></pre>
 <p>You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step (using parameter <code>covar.train</code> in <code>big_univLogReg()</code> or <code>big_univLinReg()</code>).</p>
 <p>Also note that we separate both sparse and non-sparse models here (and in the paper) to show that their predictive performance are similar. In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit">
+<div class="sourceCode" id="cb46"><pre class="downlit">
 <span class="va">best_grid_nosp</span> <span class="op">&lt;-</span> <span class="va">params</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="va">sparse</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -339,7 +346,7 @@
 <span class="fu">AUCBoot</span><span class="op">(</span><span class="va">pred_nosp</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></pre></div>
 <pre><code>##      Mean      2.5%     97.5%        Sd 
 ## 0.6720025 0.5747335 0.7652376 0.0489906</code></pre>
-<div class="sourceCode" id="cb44"><pre class="downlit">
+<div class="sourceCode" id="cb48"><pre class="downlit">
 <span class="va">best_grid_sp</span> <span class="op">&lt;-</span> <span class="va">params</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">sparse</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -357,7 +364,7 @@
 <h3 class="hasAnchor">
 <a href="#ldpred2-auto-automatic-model" class="anchor"></a>LDpred2-auto: automatic model</h3>
 <p>We recommend to run many of them in parallel with different initial values for <code>p</code> (e.g. <code>length.out = 30</code>).</p>
-<div class="sourceCode" id="cb46"><pre class="downlit">
+<div class="sourceCode" id="cb50"><pre class="downlit">
 <span class="co"># takes a few minutes</span>
 <span class="va">multi_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_ldpred2_inf.html">snp_ldpred2_auto</a></span><span class="op">(</span><span class="va">corr</span>, <span class="va">df_beta</span>, h2_init <span class="op">=</span> <span class="va">h2_est</span>,
                                vec_p_init <span class="op">=</span> <span class="fu"><a href="../reference/seq_log.html">seq_log</a></span><span class="op">(</span><span class="fl">1e-4</span>, <span class="fl">0.5</span>, length.out <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span>,
@@ -406,7 +413,7 @@
 ##   ..$ p_init     : num 0.5</code></pre>
 <p>You should verify if the chains “converged”. You can look at the path of the chains, as shown below. In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112">this code</a>, reproduced below).</p>
 <p>This is not the case here, which is probably because the data is so small.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit">
+<div class="sourceCode" id="cb52"><pre class="downlit">
 <span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">multi_auto</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu">plot_grid</span><span class="op">(</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html">qplot</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">auto</span><span class="op">$</span><span class="va">path_p_est</span><span class="op">)</span> <span class="op">+</span> 
@@ -421,24 +428,24 @@
   ncol <span class="op">=</span> <span class="fl">1</span>, align <span class="op">=</span> <span class="st">"hv"</span>
 <span class="op">)</span></pre></div>
 <p><img src="LDpred2_files/figure-html/unnamed-chunk-23-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb49"><pre class="downlit">
+<div class="sourceCode" id="cb53"><pre class="downlit">
 <span class="va">beta_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="va">auto</span><span class="op">$</span><span class="va">beta_est</span><span class="op">)</span>
 <span class="va">pred_auto</span> <span class="op">&lt;-</span> <span class="fu">big_prodMat</span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_auto</span>, ind.row <span class="op">=</span> <span class="va">ind.test</span>, ind.col <span class="op">=</span> <span class="va">ind.chr2</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb50"><pre class="downlit">
+<div class="sourceCode" id="cb54"><pre class="downlit">
 <span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">pred_auto</span>, <span class="fl">2</span>, <span class="va">sd</span><span class="op">)</span>
 <span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">sc</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">sc</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">3</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/mad.html">mad</a></span><span class="op">(</span><span class="va">sc</span><span class="op">)</span>
 <span class="va">final_beta_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">beta_auto</span><span class="op">[</span>, <span class="va">keep</span><span class="op">]</span><span class="op">)</span>
 <span class="va">final_pred_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">pred_auto</span><span class="op">[</span>, <span class="va">keep</span><span class="op">]</span><span class="op">)</span></pre></div>
-<div class="sourceCode" id="cb51"><pre class="downlit">
+<div class="sourceCode" id="cb55"><pre class="downlit">
 <span class="fu">AUCBoot</span><span class="op">(</span><span class="va">final_pred_auto</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></pre></div>
 <pre><code>##       Mean       2.5%      97.5%         Sd 
 ## 0.66330593 0.56894186 0.75215811 0.04732721</code></pre>
-<div class="sourceCode" id="cb53"><pre class="downlit">
+<div class="sourceCode" id="cb57"><pre class="downlit">
 <span class="co"># Some cleaning</span>
 <span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></pre></div>
-<pre><code>##            used  (Mb) gc trigger   (Mb)  max used   (Mb)
-## Ncells  3394608 181.3    5715140  305.3   5715140  305.3
-## Vcells 81822509 624.3  228451425 1743.0 219837329 1677.3</code></pre>
+<pre><code>##            used  (Mb) gc trigger   (Mb) max used  (Mb)
+## Ncells  3408861 182.1    5798727  309.7  5798727 309.7
+## Vcells 81840859 624.4  133092554 1015.5 92303119 704.3</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 </div>

@@ -76,7 +76,7 @@ correlation between these blocks (i.e. everything outside these blocks)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -112,6 +112,9 @@ correlation between these blocks (i.e. everything outside these blocks)." />
     </li>
     <li>
       <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
     </li>
   </ul>
 </li>
@@ -207,7 +210,7 @@ correlation between these blocks (i.e. everything outside these blocks).</p>
 
   <span class='op'>(</span><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>snp_ldsplit</span><span class='op'>(</span><span class='va'>corr</span>, thr_r2 <span class='op'>=</span> <span class='va'>THR_R2</span>, min_size <span class='op'>=</span> <span class='fl'>10</span>, max_size <span class='op'>=</span> <span class='fl'>50</span>, max_K <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
 
-  <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/qplot.html'>qplot</a></span><span class='op'>(</span><span class='va'>n_block</span>, <span class='va'>cost</span>, data <span class='op'>=</span> <span class='va'>res</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='fl'>16</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_log10</a></span><span class='op'>(</span><span class='op'>)</span>
 
   <span class='va'>all_ind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>$</span><span class='va'>all_last</span><span class='op'>[[</span><span class='fl'>6</span><span class='op'>]</span><span class='op'>]</span>, <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>

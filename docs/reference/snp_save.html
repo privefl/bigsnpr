@@ -77,7 +77,7 @@ save these modifications in the corresponding &quot;.rds&quot; backing file." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
       </span>
     </div>
 
@@ -113,6 +113,9 @@ save these modifications in the corresponding &quot;.rds&quot; backing file." />
     </li>
     <li>
       <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
     </li>
   </ul>
 </li>
@@ -201,8 +204,8 @@ save these modifications in the corresponding ".rds" backing file.</p>
 #&gt;  $ allele2     : chr  "T" "A" "A" "A" ...
 #&gt;  $ p-values    : num  0.266 0.372 0.573 0.908 0.202 ...</div><div class='input'>
 <span class='co'># Reading again</span>
-<span class='va'>test.savedIn</span> <span class='op'>&lt;-</span> <span class='fu'>sub_bk</span><span class='op'>(</span><span class='va'>test</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>$</span><span class='va'>backingfile</span>, <span class='st'>".rds"</span><span class='op'>)</span>
-<span class='va'>test2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span>rdsfile <span class='op'>=</span> <span class='va'>test.savedIn</span><span class='op'>)</span>
+<span class='va'>rds</span> <span class='op'>&lt;-</span> <span class='va'>test</span><span class='op'>$</span><span class='va'>genotypes</span><span class='op'>$</span><span class='va'>rds</span>
+<span class='va'>test2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span><span class='va'>rds</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>test2</span><span class='op'>$</span><span class='va'>map</span><span class='op'>)</span> <span class='co'># new slot wasn't saved</span>
 </div><div class='output co'>#&gt; 'data.frame':	4542 obs. of  6 variables:
 #&gt;  $ chromosome  : int  1 1 1 1 1 1 1 1 1 1 ...
@@ -212,10 +215,10 @@ save these modifications in the corresponding ".rds" backing file.</p>
 #&gt;  $ allele1     : chr  "A" "T" "T" "T" ...
 #&gt;  $ allele2     : chr  "T" "A" "A" "A" ...</div><div class='input'>
 <span class='co'># Save it</span>
-<span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'>snp_save</span><span class='op'>(</span><span class='va'>test</span><span class='op'>)</span>
+<span class='fu'>snp_save</span><span class='op'>(</span><span class='va'>test</span><span class='op'>)</span>
 
 <span class='co'># Reading again</span>
-<span class='va'>test3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span>rdsfile <span class='op'>=</span> <span class='va'>test.savedIn</span><span class='op'>)</span>
+<span class='va'>test3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attach.html'>snp_attach</a></span><span class='op'>(</span><span class='va'>rds</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>test3</span><span class='op'>$</span><span class='va'>map</span><span class='op'>)</span> <span class='co'># it is saved now</span>
 </div><div class='output co'>#&gt; 'data.frame':	4542 obs. of  7 variables:
 #&gt;  $ chromosome  : int  1 1 1 1 1 1 1 1 1 1 ...
@@ -229,9 +232,9 @@ save these modifications in the corresponding ".rds" backing file.</p>
 <span class='va'>snp_save</span>
 </div><div class='output co'>#&gt; function(x, version = NULL) {
 #&gt;   saveRDS(x, file = x$genotypes$rds, version = version)
-#&gt;   x
+#&gt;   invisible(x)
 #&gt; }
-#&gt; &lt;bytecode: 0x0000000023b6c208&gt;
+#&gt; &lt;bytecode: 0x00000000204441d8&gt;
 #&gt; &lt;environment: namespace:bigsnpr&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
