@@ -4,7 +4,13 @@
 \alias{snp_asGeneticPos}
 \title{Interpolate to genetic positions}
 \usage{
-snp_asGeneticPos(infos.chr, infos.pos, dir = tempdir(), ncores = 1)
+snp_asGeneticPos(
+  infos.chr,
+  infos.pos,
+  dir = tempdir(),
+  ncores = 1,
+  rsid = NULL
+)
 }
 \arguments{
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
@@ -19,6 +25,10 @@ Default is \code{tempdir()}. Directly use files there if already present.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
+
+\item{rsid}{If providing rsIDs, the matching is performed using those
+(instead of positions) and variants not matched are interpolated using
+spline interpolation of variants that have been matched.}
 }
 \value{
 The new vector of genetic positions.

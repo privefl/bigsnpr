@@ -1,3 +1,11 @@
+## bigsnpr 1.7.1
+
+- Add parameter `rsid` to `snp_asGeneticPos()` to also allow matching with rsIDs.
+
+## bigsnpr 1.7.0
+
+- Add function `snp_lassosum2()` to train the lassosum models using the exact same input data as LDpred2.
+
 ## bigsnpr 1.6.7
 
 - Add parameter `report_step` in `snp_ldpred2_auto()` to report some of the internal sampling betas.

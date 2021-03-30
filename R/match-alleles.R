@@ -260,16 +260,22 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #' @inheritParams bigsnpr-package
 #' @param dir Directory where to download and decompress files.
 #'   Default is `tempdir()`. Directly use files there if already present.
+#' @param rsid If providing rsIDs, the matching is performed using those
+#'   (instead of positions) and variants not matched are interpolated using
+#'   spline interpolation of variants that have been matched.
 #'
 #' @return The new vector of genetic positions.
 #' @export
 #'
-snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1) {
+snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
+                             rsid = NULL) {
 
   assert_package("R.utils")
   assert_lengths(infos.chr, infos.pos)
+  if (!is.null(rsid)) assert_lengths(rsid, infos.pos)
 
-  snp_split(infos.chr, function(ind.chr, pos, dir) {
+  snp_split(infos.chr, function(ind.chr, pos, dir, rsid) {
+
     chr <- attr(ind.chr, "chr")
     basename <- paste0("chr", chr, ".OMNI.interpolated_genetic_map")
     mapfile <- file.path(dir, basename)
@@ -281,10 +287,26 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1) 
       R.utils::gunzip(gzfile)
     }
     map.chr <- bigreadr::fread2(mapfile, showProgress = FALSE)
-    ind <- bigutilsr::knn_parallel(as.matrix(map.chr$V2), as.matrix(pos[ind.chr]),
-                                   k = 1, ncores = 1)$nn.idx
-    map.chr$V3[ind]
-  }, combine = "c", pos = infos.pos, dir = dir, ncores = ncores)
+
+    if (is.null(rsid)) {
+      ind <- bigutilsr::knn_parallel(as.matrix(map.chr$V2), as.matrix(pos[ind.chr]),
+                                     k = 1, ncores = 1)$nn.idx
+      new_pos <- map.chr$V3[ind]
+    } else {
+      ind <- match(rsid[ind.chr], map.chr$V1)
+      new_pos <- map.chr$V3[ind]
+
+      indNA <- which(is.na(ind))
+      if (length(indNA) > 0) {
+        pos.chr <- pos[ind.chr]
+        new_pos[indNA] <- suppressWarnings(
+          stats::spline(pos.chr, new_pos, xout = pos.chr[indNA], method = "hyman")$y)
+      }
+    }
+
+    new_pos
+
+  }, combine = "c", pos = infos.pos, dir = dir, rsid = rsid, ncores = ncores)
 }
 
 ################################################################################
