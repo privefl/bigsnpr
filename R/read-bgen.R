@@ -155,7 +155,7 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
 
       # Get dosages in FBM
       ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
-      ID <- read_bgen(
+      varinfo <- read_bgen(
         filename = bgenfiles[ic],
         offsets  = as.double(infos$file_start_position),
         BM       = G,
@@ -168,9 +168,10 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
       )
 
       # Return variant info
-      dplyr::bind_cols(infos, marker.ID = ID) %>%
-        dplyr::select(chromosome, marker.ID, rsid, physical.pos = position,
-                      allele1, allele2)
+      infos %>%
+        dplyr::bind_cols(varinfo) %>%
+        dplyr::select(chromosome, marker.ID = ID, rsid, physical.pos = position,
+                      allele1, allele2, freq = FREQ, info = INFO)
     }))
   })
 

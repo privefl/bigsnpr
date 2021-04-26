@@ -17,7 +17,8 @@ system.file("testdata", "bgi_example.rds",  package = "bigsnpr") %>%
   readRDS() %>% writeBin(paste0(bgen_file, ".bgi"), useBytes = TRUE)
 
 variants <- readRDS(system.file("testdata", "bgen_variants.rds", package = "bigsnpr"))
-dosages <- readRDS(system.file("testdata", "bgen_dosages.rds", package = "bigsnpr"))
+dosages  <- readRDS(system.file("testdata", "bgen_dosages.rds",  package = "bigsnpr"))
+snp_info <- readRDS(system.file("testdata", "bgen_varinfo.rds",  package = "bigsnpr"))
 IDs <- with(variants, paste(1, physical.pos, allele1, allele2, sep = "_"))
 # variants 18 & 19 have identical IDs
 excl <- c(18, 19)
@@ -50,10 +51,29 @@ test_that("same as package {rbgen}", {
   replicate(20, {
     test <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs), ncores = ncores()))
     G <- test$genotypes
-    expect_identical(test$map[-excl, ], variants[-excl, ])
+    expect_identical(test$map[-excl, 1:6], variants[-excl, ])
     expect_identical(G[, -excl][501], NA_real_)
     expect_equal(G[, -excl], round(dosages[, -excl], 2))
   })
+})
+
+################################################################################
+
+test_that("same variant infos as with QCTOOL", {
+
+  test <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs), ncores = ncores()))
+
+  expect_identical(
+    dplyr::mutate(test$map[-19, 1:6], chromosome = as.integer(chromosome)),
+    dplyr::as_tibble(dplyr::transmute(
+      snp_info[-19, ], chromosome, marker.ID = alternate_ids, rsid,
+      physical.pos = position, allele1 = alleleA, allele2 = alleleB))
+  )
+
+  expect_equal(test$map$freq, colMeans(test$genotypes[], na.rm = TRUE) / 2,
+               tolerance = 2e-4)
+  expect_equal(test$map$freq[-19], snp_info$alleleB_frequency[-19], tolerance = 1e-6)
+  expect_equal(test$map$info[-19], snp_info$impute_info[-19], tolerance = 1e-6)
 })
 
 ################################################################################
@@ -66,7 +86,7 @@ test_that("works with a subset of SNPs", {
                                    ncores = ncores()))
   G2 <- test2$genotypes
   expect_equal(dim(G2), c(500, length(ind_snp)))
-  expect_identical(test2$map, variants[ind_snp, ])
+  expect_identical(test2$map[1:6], variants[ind_snp, ])
   expect_equal(G2[], round(dosages[, ind_snp], 2))
 })
 
@@ -80,7 +100,7 @@ test_that("works with a subset of individuals", {
     snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]), ind_row, ncores = ncores()))
   G3 <- test3$genotypes
   expect_equal(dim(G3), c(length(ind_row), length(ind_snp)))
-  expect_identical(test3$map, variants[ind_snp, ])
+  expect_identical(test3$map[1:6], variants[ind_snp, ])
   expect_equal(G3[], round(dosages[ind_row, ind_snp], 2))
 })
 
@@ -94,7 +114,7 @@ test_that("works with multiple files", {
     snp_readBGEN(rep(bgen_file, 3), tempfile(), list_IDs, ind_row, ncores = ncores()))
   G4 <- test4$genotypes
   expect_equal(dim(G4), c(length(ind_row), length(ind_snp)))
-  expect_identical(test4$map, variants[ind_snp, ])
+  expect_identical(test4$map[1:6], variants[ind_snp, ])
   expect_equal(G4[], round(dosages[ind_row, ind_snp], 2))
 })
 

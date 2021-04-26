@@ -1,3 +1,7 @@
+## bigsnpr 1.7.2
+
+- Function `snp_readBGEN()` now also returns frequencies and imputation INFO scores.
+
 ## bigsnpr 1.7.1
 
 - Add parameter `rsid` to `snp_asGeneticPos()` to also allow matching with rsIDs.
