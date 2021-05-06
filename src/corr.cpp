@@ -14,9 +14,13 @@ List corMat(Environment BM,
             double size,
             const NumericVector& thr,
             const NumericVector& pos,
+            const NumericVector& info,
             int ncores) {
 
   myassert_size(colInd.size(), pos.size());
+  myassert_size(colInd.size(), info.size());
+
+  NumericVector sqrt_info = sqrt(info);
 
   XPtr<FBM> xpBM = BM["address"];
   NumericVector code = clone(as<NumericVector>(BM["code256"]));
@@ -81,6 +85,7 @@ List corMat(Environment BM,
         double deno_x = xxSum - xSum * xSum / nona;
         double deno_y = yySum - ySum * ySum / nona;
         double r = num / ::sqrt(deno_x * deno_y);
+        r *= sqrt_info[j] * sqrt_info[j0];
 
         if (std::abs(r) > thr[nona - 1]) {
           ind.push_back(j + 1);

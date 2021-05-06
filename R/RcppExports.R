@@ -53,8 +53,8 @@ replaceSNP <- function(BM, BM2, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_replaceSNP`, BM, BM2, rowInd, colInd))
 }
 
-corMat <- function(BM, rowInd, colInd, size, thr, pos, ncores) {
-    .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos, ncores)
+corMat <- function(BM, rowInd, colInd, size, thr, pos, info, ncores) {
+    .Call(`_bigsnpr_corMat`, BM, rowInd, colInd, size, thr, pos, info, ncores)
 }
 
 impute <- function(BM, method, ncores) {

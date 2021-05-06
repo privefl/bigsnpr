@@ -12,6 +12,8 @@
 #' @param alpha Type-I error for testing correlations.
 #'   Default is `1` (no threshold is applied).
 #' @param thr_r2 Threshold to apply on squared correlations. Default is `0`.
+#' @param info Vector of imputation INFO scores to correct correlations when
+#'   they are computed from imputed dosage data.
 #' @param fill.diag Whether to fill the diagonal with 1s (the default)
 #' or to keep it as 0s.
 #'
@@ -37,13 +39,16 @@ snp_cor <- function(Gna,
                     thr_r2 = 0,
                     fill.diag = TRUE,
                     infos.pos = NULL,
+                    info = rep(1, length(ind.col)),
                     ncores = 1) {
 
   check_args()
 
   if (is.null(infos.pos)) infos.pos <- 1000 * seq_along(ind.col)
-  assert_lengths(infos.pos, ind.col)
+  assert_lengths(infos.pos, info, ind.col)
   assert_sorted(infos.pos)
+  if (!all(0.1 <= info & info <= 1))
+    stop2("All values of 'info' must be between 0.1 and 1.")
 
   # Get significance thresholds with type-I error `alpha`
   suppressWarnings(
@@ -60,6 +65,7 @@ snp_cor <- function(Gna,
     size   = size * 1000,
     thr    = pmax(THR, sqrt(thr_r2)),
     pos    = infos.pos,
+    info   = info,
     ncores = ncores
   )
 

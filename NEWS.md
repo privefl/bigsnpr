@@ -1,3 +1,7 @@
+## bigsnpr 1.7.3
+
+- Add parameter `info` to `snp_cor()` to correct correlations when they are computed from imputed dosage data.
+
 ## bigsnpr 1.7.2
 
 - Function `snp_readBGEN()` now also returns frequencies and imputation INFO scores.

@@ -13,6 +13,7 @@ snp_cor(
   thr_r2 = 0,
   fill.diag = TRUE,
   infos.pos = NULL,
+  info = rep(1, length(ind.col)),
   ncores = 1
 )
 }
@@ -44,6 +45,9 @@ or to keep it as 0s.}
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr
 Typically \verb{<bigSNP>$map$physical.pos}.}
+
+\item{info}{Vector of imputation INFO scores to correct correlations when
+they are computed from imputed dosage data.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
