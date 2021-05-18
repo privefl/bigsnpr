@@ -74,8 +74,10 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
   assert_pos(chi2, strict = TRUE)
   assert_lengths(chi2, ld_score)
   assert_one_int(ld_size)
+
+  M <- length(chi2)
   if (length(sample_size) == 1) {
-    sample_size <- rep(sample_size, length(chi2))
+    sample_size <- rep(sample_size, M)
   } else {
     assert_lengths(sample_size, chi2)
   }
@@ -121,29 +123,36 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 
   } else {
 
+    #### delete-a-group jackknife variance estimator ####
+
     if (length(blocks) == 1) {
-      blocks <- sort(rep_len(seq_len(blocks), length(chi2)))
+      blocks <- sort(rep_len(seq_len(blocks), M))
     } else {
       assert_lengths(blocks, chi2)
     }
     ind_blocks <- split(seq_along(blocks), blocks)
-    n_blocks <- length(ind_blocks)
+    h_blocks <- M / lengths(ind_blocks)
 
     bigparallelr::register_parallel(ncores)
 
-    delete_values <- foreach(ic = 1:n_blocks, .combine = "cbind") %dopar% {
-      ind_rm <- ind_blocks[[ic]]
-      snp_ldsc(ld_score[-ind_rm], ld_size, chi2[-ind_rm], sample_size[-ind_rm],
+    delete_values <- foreach(ind_rm = c(list(NULL), ind_blocks), .combine = "cbind") %dopar% {
+      keep <- which(!seq_along(ld_score) %in% ind_rm)
+      snp_ldsc(ld_score[keep], ld_size, chi2[keep], sample_size[keep],
                NULL, intercept, chi2_thr1, chi2_thr2)
     }
-    est <- snp_ldsc(ld_score, ld_size, chi2, sample_size,
-                    NULL, intercept, chi2_thr1, chi2_thr2)
-    pseudovalues <- n_blocks * est - (n_blocks - 1) * delete_values
+    estim <- delete_values[, 1]
 
-    c(int    = mean(pseudovalues[1, ]),
-      int_se = stats::sd(pseudovalues[1, ]) / sqrt(n_blocks),
-      h2     = mean(pseudovalues[2, ]),
-      h2_se  = stats::sd(pseudovalues[2, ]) / sqrt(n_blocks))
+    # https://doi.org/10.1023/A:1008800423698
+    int_pseudovalues <- h_blocks * estim[1] - (h_blocks - 1) * delete_values[1, -1]
+    h2_pseudovalues  <- h_blocks * estim[2] - (h_blocks - 1) * delete_values[2, -1]
+
+    int_J <- sum(int_pseudovalues / h_blocks)
+    h2_J  <- sum( h2_pseudovalues / h_blocks)
+
+    c(int    = int_J,
+      int_se = sqrt(mean((int_pseudovalues - int_J)^2 / (h_blocks - 1))),
+      h2     = h2_J,
+      h2_se  = sqrt(mean(( h2_pseudovalues -  h2_J)^2 / (h_blocks - 1))))
 
   }
 }

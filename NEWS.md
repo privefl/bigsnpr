@@ -1,3 +1,7 @@
+## bigsnpr 1.7.4
+
+- Now use a better formula for computing standard errors in `snp_ldsc()` when using blocks with different sizes.
+
 ## bigsnpr 1.7.3
 
 - Add parameter `info` to `snp_cor()` to correct correlations when they are computed from imputed dosage data.
