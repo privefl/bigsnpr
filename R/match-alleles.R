@@ -300,7 +300,7 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
       if (length(indNA) > 0) {
         pos.chr <- pos[ind.chr]
         new_pos[indNA] <- suppressWarnings(
-          stats::spline(pos.chr, new_pos, xout = pos.chr[indNA], method = "hyman")$y)
+          stats::spline(pos.chr, new_pos, xout = pos.chr[indNA], method = "hyman", ties = "ordered")$y)
       }
     }
 
