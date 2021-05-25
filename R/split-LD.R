@@ -17,9 +17,23 @@ compute_cost <- function(block_num, corr.tril, thr_r2) {
 #'
 #' @param corr Sparse correlation matrix. Usually, the output of [snp_cor()].
 #' @param thr_r2 Threshold under which squared correlations are ignored.
-#' @param min_size Minimum number of variants in each block.
-#' @param max_size Maximum number of variants in each block.
-#' @param max_K Maximum number of blocks to consider.
+#'   This is useful to avoid counting noise, which should give clearer patterns
+#'   of costs vs. number of blocks. It is therefore possible to have a splitting
+#'   cost of 0. If this parameter is used, then `corr` can be computed using the
+#'   same parameter in [snp_cor()] (to increase the sparsity of the resulting matrix).
+#' @param min_size Minimum number of variants in each block. This is used not to
+#'   have a disproportionate number of small blocks.
+#' @param max_size Maximum number of variants in each block. This is used not to
+#'   have blocks that are too large, e.g. to limit computational and memory
+#'   requirements of applications that would use these blocks. For some long-range
+#'   LD regions, it may be needed to allow for large blocks.
+#' @param max_K Maximum number of blocks to consider. All optimal solutions for K
+#'   from 1 to `max_K` will be returned. Some of these K might not have any corresponding
+#'   solution due to the limitations in size of the blocks. For example, splitting
+#'   10,000 variants in blocks with at least 500 and at most 2000 variants implies
+#'   that there are at least 5 and at most 20 blocks. Then, the choice of K depends
+#'   on the application, but a simple solution is to choose the largest K for which
+#'   the cost is lower than some threshold.
 #'
 #' @return A tibble with five columns:
 #'   - `$n_block`: Number of blocks.
