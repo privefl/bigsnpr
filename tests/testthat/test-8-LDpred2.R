@@ -39,7 +39,7 @@ test_that("LDpred2 works", {
 
   # LDpred2-gibbs
   p_seq <- signif(seq_log(1e-3, 1, length.out = 7), 1)
-  params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE))
+  params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]] / 5, sparse = c(FALSE, TRUE))
   expect_equal(dim(params), c(14, 3))
   beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
   expect_gt(max(cor(beta_grid, true_beta), na.rm = TRUE), 0.4)
