@@ -55,8 +55,9 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
 #'   If `TRUE`, only one set of parameters is allowed.
 #'
 #' @return `snp_ldpred2_grid`: A matrix of effect sizes, one vector (column)
-#'   for each row of `grid_param`. If using `return_sampling_betas`, each
-#'   column corresponds to one iteration instead (after burn-in).
+#'   for each row of `grid_param`. Missing values are returned when strong
+#'   divergence is detected. If using `return_sampling_betas`, each column
+#'   corresponds to one iteration instead (after burn-in).
 #'
 #' @export
 #'

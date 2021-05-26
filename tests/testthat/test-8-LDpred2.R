@@ -42,7 +42,7 @@ test_that("LDpred2 works", {
   params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE))
   expect_equal(dim(params), c(14, 3))
   beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
-  expect_gt(max(cor(beta_grid, true_beta)), 0.4)
+  expect_gt(max(cor(beta_grid, true_beta), na.rm = TRUE), 0.4)
 
   # LDpred2-uncertainty
   expect_error(snp_ldpred2_grid(corr, df_beta, params, return_sampling_betas = TRUE),

@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.0</span>
       </span>
     </div>
 
@@ -153,6 +153,14 @@
       <small>Source: <a href='https://github.com/privefl/bigsnpr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="bigsnpr-180" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-180" class="anchor"></a>bigsnpr 1.8.0</h2>
+<ul>
+<li><p>Replace parameter <code>s</code> by <code>delta</code> in <code><a href="../reference/snp_lassosum2.html">snp_lassosum2()</a></code>. This new parameter <code>delta</code> better reflects that the lassosum model also uses L2-regularization (therefore, elastic-net regularization).</p></li>
+<li><p>Now detect strong divergence in lassosum2 and LDpred2-grid, and return missing values for the corresponding effect sizes.</p></li>
+</ul>
+</div>
     <div id="bigsnpr-174" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsnpr-174" class="anchor"></a>bigsnpr 1.7.4</h2>

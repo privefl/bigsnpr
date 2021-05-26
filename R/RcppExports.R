@@ -61,8 +61,8 @@ impute <- function(BM, method, ncores) {
     invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
 }
 
-lassosum2 <- function(corr, beta_hat, lambda, s, dfmax, maxiter, tol) {
-    .Call(`_bigsnpr_lassosum2`, corr, beta_hat, lambda, s, dfmax, maxiter, tol)
+lassosum2 <- function(corr, beta_hat, lambda, delta, dfmax, maxiter, tol) {
+    .Call(`_bigsnpr_lassosum2`, corr, beta_hat, lambda, delta, dfmax, maxiter, tol)
 }
 
 ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, verbose = FALSE) {

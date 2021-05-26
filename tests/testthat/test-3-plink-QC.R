@@ -3,7 +3,7 @@
 context("PLINK_QC")
 
 skip_on_os("solaris")
-skip_on_cran()
+skip_if(is_cran)
 skip_if_offline("www.cog-genomics.org")
 skip_if_offline("s3.amazonaws.com")
 

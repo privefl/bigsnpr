@@ -6,13 +6,13 @@
 
 /******************************************************************************/
 
-inline double soft_thres(double z, double l1) {
+inline double soft_thres(double z, double l1, double one_plus_l2) {
   if (z > 0) {
     double num = z - l1;
-    return (num > 0) ? num : 0;
+    return (num > 0) ? num / one_plus_l2 : 0;
   } else {
     double num = z + l1;
-    return (num < 0) ? num : 0;
+    return (num < 0) ? num / one_plus_l2 : 0;
   }
 }
 
@@ -20,9 +20,9 @@ inline double soft_thres(double z, double l1) {
 
 // [[Rcpp::export]]
 List lassosum2(Environment corr,
-               const NumericVector& beta_hat,
+               const arma::vec& beta_hat,
                double lambda,
-               double s,
+               double delta,
                double dfmax,
                int maxiter,
                double tol) {
@@ -35,19 +35,22 @@ List lassosum2(Environment corr,
 
   arma::vec curr_beta(m, arma::fill::zeros), dotprods(m, arma::fill::zeros);
 
-  double one_minus_s = 1 - s;
-  if (one_minus_s == 0) dfmax = R_PosInf;
+  double one_plus_delta = 1 + delta;
+  double gap0 = arma::dot(beta_hat, beta_hat);
 
   int k = 0;
   for (; k < maxiter; k++) {
 
     bool conv = true;
     double df = 0;
+    double gap = 0;
 
     for (int j = 0; j < m; j++) {
 
-      double u_j = beta_hat[j] + one_minus_s * (curr_beta[j] - dotprods[j]);
-      double new_beta_j = soft_thres(u_j, lambda);
+      double resid = beta_hat[j] - dotprods[j];
+      gap += resid * resid;
+      double u_j = curr_beta[j] + resid;
+      double new_beta_j = soft_thres(u_j, lambda, one_plus_delta);
       if (new_beta_j != 0) df++;
 
       double shift = new_beta_j - curr_beta[j];
@@ -58,6 +61,7 @@ List lassosum2(Environment corr,
       }
     }
 
+    if (gap > gap0) { curr_beta.fill(NA_REAL); break; }
     if (conv || df > dfmax) break;
   }
 

@@ -84,8 +84,9 @@ unscaling). Nothing is reported by default. If using \code{num_iter = 500} and
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
 
 \code{snp_ldpred2_grid}: A matrix of effect sizes, one vector (column)
-for each row of \code{grid_param}. If using \code{return_sampling_betas}, each
-column corresponds to one iteration instead (after burn-in).
+for each row of \code{grid_param}. Missing values are returned when strong
+divergence is detected. If using \code{return_sampling_betas}, each column
+corresponds to one iteration instead (after burn-in).
 
 \code{snp_ldpred2_auto}: A list (over \code{vec_p_init}) of lists with
 \itemize{

@@ -13,7 +13,7 @@ inline double square(double x) {
 /******************************************************************************/
 
 arma::vec ldpred2_gibbs_one(XPtr<SFBM> sfbm,
-                            const NumericVector& beta_hat,
+                            const arma::vec& beta_hat,
                             const NumericVector& beta_init,
                             const IntegerVector& order,
                             const NumericVector& n_vec,
@@ -27,29 +27,38 @@ arma::vec ldpred2_gibbs_one(XPtr<SFBM> sfbm,
   arma::vec curr_beta(beta_init.begin(), m);
   arma::vec avg_beta(m, arma::fill::zeros);
 
-  int num_iter_tot = burn_in + num_iter;
-  for (int k = 0; k < num_iter_tot; k++) {
+  double h2_per_var = h2 / (m * p);
+  double inv_odd_p = (1 - p) / p;
+  double gap0 = arma::dot(beta_hat, beta_hat);
+
+  for (int k = -burn_in; k < num_iter; k++) {
+
+    double gap = 0;
 
     for (const int& j : order) {
 
       double dotprod = sfbm->dot_col(j, curr_beta);
-      double res_beta_hat_j = beta_hat[j] + curr_beta[j] - dotprod;
+      double resid = beta_hat[j] - dotprod;
+      gap += resid * resid;
+      double res_beta_hat_j = curr_beta[j] + resid;
 
-      double C1 = h2 * n_vec[j] / (m * p);
+      double C1 = h2_per_var * n_vec[j];
       double C2 = 1 / (1 + 1 / C1);
       double C3 = C2 * res_beta_hat_j;
       double C4 = ::sqrt(C2 / n_vec[j]);
 
       double post_p_j = 1 /
-        (1 + (1 - p) / p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
+        (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
 
       if (sparse && (post_p_j < p)) {
         curr_beta[j] = 0;
       } else {
-        curr_beta[j] = (post_p_j > ::unif_rand()) ? (C3 + ::norm_rand() * C4) : 0;
-        if (k >= burn_in) avg_beta[j] += C3 * post_p_j;
+        curr_beta[j] = (post_p_j > ::unif_rand()) ? ::Rf_rnorm(C3, C4) : 0;
+        if (k >= 0) avg_beta[j] += C3 * post_p_j;
       }
     }
+
+    if (gap > gap0) { avg_beta.fill(NA_REAL); return avg_beta; }
   }
 
   return avg_beta / num_iter;

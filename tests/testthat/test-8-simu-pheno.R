@@ -6,7 +6,7 @@ context("SIMU_PHENO")
 
 test_that("snp_simuPheno() works", {
 
-  skip_on_cran()
+  skip_if(is_cran)
 
   bigsnp <- snp_attachExtdata()
   G <- bigsnp$genotypes

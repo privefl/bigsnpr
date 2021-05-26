@@ -1,3 +1,9 @@
+## bigsnpr 1.8.0
+
+- Replace parameter `s` by `delta` in `snp_lassosum2()`. This new parameter `delta` better reflects that the lassosum model also uses L2-regularization (therefore, elastic-net regularization).
+
+- Now detect strong divergence in lassosum2 and LDpred2-grid, and return missing values for the corresponding effect sizes.
+
 ## bigsnpr 1.7.4
 
 - Now use a better formula for computing standard errors in `snp_ldsc()` when using blocks with different sizes.

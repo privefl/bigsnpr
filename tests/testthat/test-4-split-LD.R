@@ -81,7 +81,7 @@ test_that("get_L() and get_C() work", {
 
 test_that("snp_ldsplit() gives consistent results", {
 
-  skip_on_cran()
+  skip_if(is_cran)
   skip_if_offline("dropbox.com")
 
   corr <- readRDS(url("https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"))
