@@ -13,6 +13,9 @@
 \arguments{
 \item{x}{Object of type \code{bed}.}
 }
+\value{
+Dimensions of \code{x}.
+}
 \description{
 Methods for the bed class
 

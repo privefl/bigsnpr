@@ -156,6 +156,9 @@ snp_grid_clumping <- function(
 #'
 #' @inheritParams base::seq
 #'
+#' @return A sequence of length `length.out`, evenly spaced on a logarithmic scale
+#'   between `from` and `to`.
+#'
 #' @examples
 #' seq_log(1, 1000, 4)
 #' seq_log(1, 100, 5)

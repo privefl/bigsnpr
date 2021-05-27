@@ -44,8 +44,8 @@ You may use \link{nb_cores}.}
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 }
 \description{
-Easy-to-use, efficient, flexible and scalable tools
-    for analyzing massive SNP arrays <doi:10.1093/bioinformatics/bty185>.
+Easy-to-use, efficient, flexible and scalable tools for analyzing 
+    massive SNP arrays. Privé et al. (2018) <doi:10.1093/bioinformatics/bty185>
 }
 \seealso{
 Useful links:

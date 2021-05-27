@@ -19,6 +19,10 @@ seq_log(from, to, length.out)
     non-negative number, which for \code{seq} and \code{seq.int} will be
     rounded up if fractional.}
 }
+\value{
+A sequence of length \code{length.out}, evenly spaced on a logarithmic scale
+between \code{from} and \code{to}.
+}
 \description{
 Sequence, evenly spaced on a logarithmic scale
 }
