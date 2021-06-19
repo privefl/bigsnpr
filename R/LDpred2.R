@@ -129,9 +129,17 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   running LDpred2-grid with the estimates of p and h2 from LDpred2-auto, and
 #'   sparsity enabled. Default is `FALSE`.
 #' @param verbose Whether to print "p // h2" estimates at each iteration.
+#'   Disabled when parallelism is used.
 #' @param report_step Step to report sampling betas (after burn-in and before
 #'   unscaling). Nothing is reported by default. If using `num_iter = 500` and
 #'   `report_step = 50`, then 10 vectors of betas are reported.
+#' @param num_iter_change Number of iterations where the sign of the effect could
+#'   change before starting to shrink the variants that change sign too much.
+#'   Default is `Inf` (disabled). You can use e.g. `20` when p is converging to 1
+#'   when it is not supposed to.
+#' @param shrink_corr Shrinkage multiplicative coefficient to apply to off-diagonal
+#'   elements of the correlation matrix. Default is `1` (unchanged).
+#'   You can use e.g. `0.9`.
 #'
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes
@@ -159,6 +167,8 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              sparse = FALSE,
                              verbose = FALSE,
                              report_step = num_iter + 1L,
+                             num_iter_change = Inf,
+                             shrink_corr = 1,
                              ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
@@ -185,11 +195,14 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       h2_init   = h2_init,
       burn_in   = burn_in,
       num_iter  = num_iter,
-      verbose   = verbose,
-      report_step = report_step
+      verbose   = verbose && (ncores == 1),
+      report_step = report_step,
+      niter_change = num_iter_change,
+      shrink_corr = shrink_corr
     )
     ldpred_auto$beta_est  <- drop(ldpred_auto$beta_est) * scale
     ldpred_auto$postp_est <- drop(ldpred_auto$postp_est)
+    ldpred_auto$corr_est  <- drop(ldpred_auto$corr_est)
     ldpred_auto$h2_init <- h2_init
     ldpred_auto$p_init  <- p_init
 

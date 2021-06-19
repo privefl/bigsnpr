@@ -45,7 +45,7 @@ Use \code{obj.bed <- bed(bedfile)} to get this object.}
 }
 \description{
 Easy-to-use, efficient, flexible and scalable tools for analyzing 
-    massive SNP arrays. Privé et al. (2018) <doi:10.1093/bioinformatics/bty185>
+    massive SNP arrays. Privé et al. (2018) <doi:10.1093/bioinformatics/bty185>.
 }
 \seealso{
 Useful links:
@@ -62,6 +62,7 @@ Other contributors:
 \itemize{
   \item Michael Blum \email{michael.blum@univ-grenoble-alpes.fr} [thesis advisor]
   \item Hugues Aschard \email{hugues.aschard@pasteur.fr} [thesis advisor]
+  \item Bjarni Jóhann Vilhjálmsson \email{bjv@econ.au.dk} [thesis advisor]
 }
 
 }

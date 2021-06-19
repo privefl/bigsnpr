@@ -28,6 +28,8 @@ snp_ldpred2_auto(
   sparse = FALSE,
   verbose = FALSE,
   report_step = num_iter + 1L,
+  num_iter_change = Inf,
+  shrink_corr = 1,
   ncores = 1
 )
 }
@@ -74,11 +76,21 @@ If \code{TRUE}, only one set of parameters is allowed.}
 running LDpred2-grid with the estimates of p and h2 from LDpred2-auto, and
 sparsity enabled. Default is \code{FALSE}.}
 
-\item{verbose}{Whether to print "p // h2" estimates at each iteration.}
+\item{verbose}{Whether to print "p // h2" estimates at each iteration.
+Disabled when parallelism is used.}
 
 \item{report_step}{Step to report sampling betas (after burn-in and before
 unscaling). Nothing is reported by default. If using \code{num_iter = 500} and
 \code{report_step = 50}, then 10 vectors of betas are reported.}
+
+\item{num_iter_change}{Number of iterations where the sign of the effect could
+change before starting to shrink the variants that change sign too much.
+Default is \code{Inf} (disabled). You can use e.g. \code{20} when p is converging to 1
+when it is not supposed to.}
+
+\item{shrink_corr}{Shrinkage multiplicative coefficient to apply to off-diagonal
+elements of the correlation matrix. Default is \code{1} (unchanged).
+You can use e.g. \code{0.9}.}
 }
 \value{
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.

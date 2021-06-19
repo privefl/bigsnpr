@@ -65,8 +65,8 @@ lassosum2 <- function(corr, beta_hat, lambda, delta, dfmax, maxiter, tol) {
     .Call(`_bigsnpr_lassosum2`, corr, beta_hat, lambda, delta, dfmax, maxiter, tol)
 }
 
-ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, verbose = FALSE) {
-    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, verbose)
+ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, niter_change, shrink_corr, verbose = FALSE) {
+    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, niter_change, shrink_corr, verbose)
 }
 
 ldpred2_gibbs_one_sampling <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter) {

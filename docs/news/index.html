@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.2</span>
       </span>
     </div>
 
@@ -153,6 +153,20 @@
       <small>Source: <a href='https://github.com/privefl/bigsnpr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="bigsnpr-182" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-182" class="anchor"></a>bigsnpr 1.8.2</h2>
+<ul>
+<li>
+<p>Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:</p>
+<ul>
+<li><p>add parameter <code>shrink_corr</code> to shrink off-diagonal elements of the LD matrix,</p></li>
+<li><p>add parameter <code>num_iter_change</code> to control when starting to shrink the variants that change sign too much,</p></li>
+<li><p>also return <code>corr_est</code>, the “imputed” correlations between variants and phenotypes, which can be used for post-QCing variants by comparing those to <code>beta / sqrt(n_eff * beta_se^2 + beta^2)</code>.</p></li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="bigsnpr-180" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsnpr-180" class="anchor"></a>bigsnpr 1.8.0</h2>

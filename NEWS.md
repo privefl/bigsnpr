@@ -1,3 +1,13 @@
+## bigsnpr 1.8.2
+
+- Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:
+
+    - add parameter `shrink_corr` to shrink off-diagonal elements of the LD matrix,
+    
+    - add parameter `num_iter_change` to control when starting to shrink the variants that change sign too much,
+    
+    - also return `corr_est`, the "imputed" correlations between variants and phenotypes, which can be used for post-QCing variants by comparing those to `beta / sqrt(n_eff * beta_se^2 + beta^2)`.
+
 ## bigsnpr 1.8.0
 
 - Replace parameter `s` by `delta` in `snp_lassosum2()`. This new parameter `delta` better reflects that the lassosum model also uses L2-regularization (therefore, elastic-net regularization).

@@ -59,7 +59,8 @@ test_that("LDpred2 works", {
 
   # LDpred2-auto
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
-                                burn_in = 200, num_iter = 200, sparse = TRUE)
+                                burn_in = 200, num_iter = 200, sparse = TRUE,
+                                shrink_corr = runif(1, 0.9, 1))
   expect_length(beta_auto, 1)
   mod <- beta_auto[[1]]
   expect_null(dim(mod$beta_est))
@@ -75,6 +76,8 @@ test_that("LDpred2 works", {
   expect_null(dim(mod$postp_est))
   expect_equal(mean(mod$postp_est), mod$p_est, tolerance = 0.01)
   expect_equal(dim(mod$sample_beta), c(ncol(corr), 0))
+  beta_hat <- with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))
+  expect_gt(cor(mod$corr_est, beta_hat), 0.9)
 
   # Sampling betas
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
