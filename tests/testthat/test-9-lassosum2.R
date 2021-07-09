@@ -10,7 +10,7 @@ test_that("lassosum2 works", {
   skip_if_offline("dropbox.com")
 
   load(url("https://www.dropbox.com/s/c13uygnjh6yh7vf/to-test-ldpred2.RData?raw=1"))
-  corr <- as_SFBM(corr)
+  corr <- as_SFBM(corr, compact = sample(c(TRUE, FALSE), 1))
 
   # lassosum2
   nlam <- sample(8:15, 1)

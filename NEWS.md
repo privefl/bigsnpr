@@ -1,3 +1,7 @@
+## bigsparser 0.5
+
+- New compact format for SFBMs which should be really useful for LDpred2 (should require about half of memory and be twice as fast). The only thing that you need to change is `as_SFBM(corr0, compact = TRUE)`. Make sure to reinstall {bigsnpr} after updating to {bigsparser} v0.5. 
+
 ## bigsnpr 1.8.2
 
 - Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:
