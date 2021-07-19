@@ -58,6 +58,11 @@ snp_readBGI <- function(bgifile, snp_id) {
 #' use *qctool* to generate your own BGEN files, please make sure you are using
 #' options '`-ofiletype bgen_v1.2 -bgen-bits 8`'.
 #'
+#' If the format is not the expected one, this will result in an error or even
+#' a crash of your R session. Another common source of error is due to corrupted
+#' files; e.g. if using UK Biobank files, compare the result of [tools::md5sum()]
+#' with the ones at https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998.
+#'
 #' You can look at some example code from my papers on how to use this function:
 #' - https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62
 #' - https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75

@@ -62,6 +62,11 @@ alleles, and that each probability is stored on 8 bits. For example, if you
 use \emph{qctool} to generate your own BGEN files, please make sure you are using
 options '\verb{-ofiletype bgen_v1.2 -bgen-bits 8}'.
 
+If the format is not the expected one, this will result in an error or even
+a crash of your R session. Another common source of error is due to corrupted
+files; e.g. if using UK Biobank files, compare the result of \code{\link[tools:md5sum]{tools::md5sum()}}
+with the ones at https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998.
+
 You can look at some example code from my papers on how to use this function:
 \itemize{
 \item https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62

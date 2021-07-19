@@ -259,7 +259,8 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #'
 #' @inheritParams bigsnpr-package
 #' @param dir Directory where to download and decompress files.
-#'   Default is `tempdir()`. Directly use files there if already present.
+#'   Default is `tempdir()`. Directly use *uncompressed* files there if already
+#'   present. You can use [R.utils::gunzip()] to uncompress local files.
 #' @param rsid If providing rsIDs, the matching is performed using those
 #'   (instead of positions) and variants not matched are interpolated using
 #'   spline interpolation of variants that have been matched.
