@@ -80,8 +80,8 @@ sparsity enabled. Default is \code{FALSE}.}
 Disabled when parallelism is used.}
 
 \item{report_step}{Step to report sampling betas (after burn-in and before
-unscaling). Nothing is reported by default. If using \code{num_iter = 500} and
-\code{report_step = 50}, then 10 vectors of betas are reported.}
+unscaling). Nothing is reported by default. If using \code{num_iter = 200} and
+\code{report_step = 20}, then 10 vectors of betas are reported.}
 
 \item{allow_jump_sign}{Whether to allow for effects sizes to change sign in
 consecutive iterations? Default is \code{TRUE} (normal sampling). You can use
@@ -106,6 +106,9 @@ corresponds to one iteration instead (after burn-in).
 \itemize{
 \item \verb{$beta_est}: vector of effect sizes
 \item \verb{$beta_est_sparse} (only when \code{sparse = TRUE}): sparse vector of effect sizes
+\item \verb{$corr_est}, the "imputed" correlations between variants and phenotypes,
+which can be used for post-QCing variants by comparing those to
+\code{beta / sqrt(n_eff * beta_se^2 + beta^2)}.
 \item \verb{$sample_beta}: Matrix of sampling betas (see parameter \code{report_step})
 \item \verb{$postp_est}: vector of posterior probabilities of being causal
 \item \verb{$p_est}: estimate of p, the proportion of causal variants

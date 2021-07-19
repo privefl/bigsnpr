@@ -76,7 +76,7 @@ correlation between these blocks (i.e. everything outside these blocks)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
       </span>
     </div>
 
@@ -174,19 +174,33 @@ correlation between these blocks (i.e. everything outside these blocks).</p>
     </tr>
     <tr>
       <th>thr_r2</th>
-      <td><p>Threshold under which squared correlations are ignored.</p></td>
+      <td><p>Threshold under which squared correlations are ignored.
+This is useful to avoid counting noise, which should give clearer patterns
+of costs vs. number of blocks. It is therefore possible to have a splitting
+cost of 0. If this parameter is used, then <code>corr</code> can be computed using the
+same parameter in <code><a href='snp_cor.html'>snp_cor()</a></code> (to increase the sparsity of the resulting matrix).</p></td>
     </tr>
     <tr>
       <th>min_size</th>
-      <td><p>Minimum number of variants in each block.</p></td>
+      <td><p>Minimum number of variants in each block. This is used not to
+have a disproportionate number of small blocks.</p></td>
     </tr>
     <tr>
       <th>max_size</th>
-      <td><p>Maximum number of variants in each block.</p></td>
+      <td><p>Maximum number of variants in each block. This is used not to
+have blocks that are too large, e.g. to limit computational and memory
+requirements of applications that would use these blocks. For some long-range
+LD regions, it may be needed to allow for large blocks.</p></td>
     </tr>
     <tr>
       <th>max_K</th>
-      <td><p>Maximum number of blocks to consider.</p></td>
+      <td><p>Maximum number of blocks to consider. All optimal solutions for K
+from 1 to <code>max_K</code> will be returned. Some of these K might not have any corresponding
+solution due to the limitations in size of the blocks. For example, splitting
+10,000 variants in blocks with at least 500 and at most 2000 variants implies
+that there are at least 5 and at most 20 blocks. Then, the choice of K depends
+on the application, but a simple solution is to choose the largest K for which
+the cost is lower than some threshold.</p></td>
     </tr>
     </table>
 

@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
       </span>
     </div>
 
@@ -162,7 +162,7 @@
     <pre class="usage"><span class='fu'>snp_lassosum2</span><span class='op'>(</span>
   <span class='va'>corr</span>,
   <span class='va'>df_beta</span>,
-  s <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>/</span><span class='fl'>10</span>,
+  delta <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span><span class='op'>(</span><span class='fu'><a href='seq_log.html'>seq_log</a></span><span class='op'>(</span><span class='fl'>0.001</span>, <span class='fl'>3</span>, <span class='fl'>6</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>)</span>,
   nlambda <span class='op'>=</span> <span class='fl'>20</span>,
   lambda.min.ratio <span class='op'>=</span> <span class='fl'>0.01</span>,
   dfmax <span class='op'>=</span> <span class='fl'>2e+05</span>,
@@ -189,9 +189,9 @@ If <code>corr</code> is a dsCMatrix or a dgCMatrix, you can use <code><a href='h
 </ul></td>
     </tr>
     <tr>
-      <th>s</th>
-      <td><p>Vector of shrinkage parameters to try. Default is <code>1:10 / 10</code>.
-Try to avoid using <code>0</code> as it often leads to effects exploding.</p></td>
+      <th>delta</th>
+      <td><p>Vector of shrinkage parameters to try (L2-regularization).
+Default is <code><a href='https://rdrr.io/r/base/c.html'>c(0.001, 0.005, 0.02, 0.1, 0.6, 3)</a></code>.</p></td>
     </tr>
     <tr>
       <th>nlambda</th>
@@ -199,18 +199,15 @@ Try to avoid using <code>0</code> as it often leads to effects exploding.</p></t
     </tr>
     <tr>
       <th>lambda.min.ratio</th>
-      <td><p>Ratio between last and first lambdas to try.
-Default is <code>0.01</code>.</p></td>
+      <td><p>Ratio between last and first lambdas to try. Default is <code>0.01</code>.</p></td>
     </tr>
     <tr>
       <th>dfmax</th>
-      <td><p>Maximum number of non-zero effects in the model.
-Default is <code>200e3</code>. This is not used when <code>s = 1</code>.</p></td>
+      <td><p>Maximum number of non-zero effects in the model. Default is <code>200e3</code>.</p></td>
     </tr>
     <tr>
       <th>maxiter</th>
-      <td><p>Maximum number of iterations before convergence.
-Default is <code>500</code>.</p></td>
+      <td><p>Maximum number of iterations before convergence. Default is <code>500</code>.</p></td>
     </tr>
     <tr>
       <th>tol</th>
@@ -226,7 +223,8 @@ You may use nb_cores.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A matrix of effect sizes, one vector (column) for each row in
-<code>attr(&lt;res&gt;, "grid_param")</code>.</p>
+<code>attr(&lt;res&gt;, "grid_param")</code>. Missing values are returned when strong
+divergence is detected.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

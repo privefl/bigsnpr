@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
       </span>
     </div>
 
@@ -170,6 +170,7 @@
   thr_r2 <span class='op'>=</span> <span class='fl'>0</span>,
   fill.diag <span class='op'>=</span> <span class='cn'>TRUE</span>,
   infos.pos <span class='op'>=</span> <span class='cn'>NULL</span>,
+  info <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>ind.col</span><span class='op'>)</span><span class='op'>)</span>,
   ncores <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span></pre>
 
@@ -219,6 +220,11 @@ or to keep it as 0s.</p></td>
       <td><p>Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.<br />
 Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
+    </tr>
+    <tr>
+      <th>info</th>
+      <td><p>Vector of imputation INFO scores to correct correlations when
+they are computed from imputed dosage data.</p></td>
     </tr>
     <tr>
       <th>ncores</th>

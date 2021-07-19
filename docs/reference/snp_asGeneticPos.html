@@ -76,7 +76,7 @@ to interpolate physical positions (in bp) to genetic positions (in cM)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
       </span>
     </div>
 
@@ -163,7 +163,13 @@ to interpolate physical positions (in bp) to genetic positions (in cM)." />
 to interpolate physical positions (in bp) to genetic positions (in cM).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_asGeneticPos</span><span class='op'>(</span><span class='va'>infos.chr</span>, <span class='va'>infos.pos</span>, dir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, ncores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>snp_asGeneticPos</span><span class='op'>(</span>
+  <span class='va'>infos.chr</span>,
+  <span class='va'>infos.pos</span>,
+  dir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>,
+  rsid <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,12 +188,19 @@ Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
     <tr>
       <th>dir</th>
       <td><p>Directory where to download and decompress files.
-Default is <code><a href='https://rdrr.io/r/base/tempfile.html'>tempdir()</a></code>. Directly use files there if already present.</p></td>
+Default is <code><a href='https://rdrr.io/r/base/tempfile.html'>tempdir()</a></code>. Directly use <em>uncompressed</em> files there if already
+present. You can use <code><a href='https://rdrr.io/pkg/R.utils/man/compressFile.html'>R.utils::gunzip()</a></code> to uncompress local files.</p></td>
     </tr>
     <tr>
       <th>ncores</th>
       <td><p>Number of cores used. Default doesn't use parallelism.
 You may use nb_cores.</p></td>
+    </tr>
+    <tr>
+      <th>rsid</th>
+      <td><p>If providing rsIDs, the matching is performed using those
+(instead of positions) and variants not matched are interpolated using
+spline interpolation of variants that have been matched.</p></td>
     </tr>
     </table>
 

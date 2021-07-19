@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
       </span>
     </div>
 
@@ -176,11 +176,13 @@
   <span class='va'>df_beta</span>,
   <span class='va'>h2_init</span>,
   vec_p_init <span class='op'>=</span> <span class='fl'>0.1</span>,
-  burn_in <span class='op'>=</span> <span class='fl'>1000</span>,
-  num_iter <span class='op'>=</span> <span class='fl'>500</span>,
+  burn_in <span class='op'>=</span> <span class='fl'>500</span>,
+  num_iter <span class='op'>=</span> <span class='fl'>200</span>,
   sparse <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
   report_step <span class='op'>=</span> <span class='va'>num_iter</span> <span class='op'>+</span> <span class='fl'>1L</span>,
+  allow_jump_sign <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  shrink_corr <span class='op'>=</span> <span class='fl'>1</span>,
   ncores <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span></pre>
 
@@ -252,7 +254,8 @@ sparsity enabled. Default is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>Whether to print "p // h2" estimates at each iteration.</p></td>
+      <td><p>Whether to print "p // h2" estimates at each iteration.
+Disabled when parallelism is used.</p></td>
     </tr>
     <tr>
       <th>report_step</th>
@@ -260,14 +263,30 @@ sparsity enabled. Default is <code>FALSE</code>.</p></td>
 unscaling). Nothing is reported by default. If using <code>num_iter = 500</code> and
 <code>report_step = 50</code>, then 10 vectors of betas are reported.</p></td>
     </tr>
+    <tr>
+      <th>allow_jump_sign</th>
+      <td><p>Whether to allow for effects sizes to change sign in
+consecutive iterations? Default is <code>TRUE</code> (normal sampling). You can use
+<code>FALSE</code> to force effects to go through 0 first before changing sign. Setting
+this parameter to <code>FALSE</code> could be useful to prevent instability (oscillation
+and ultimately divergence) of the Gibbs sampler. This would also be useful
+for accelerating convergence of chains with a large initial value for p.</p></td>
+    </tr>
+    <tr>
+      <th>shrink_corr</th>
+      <td><p>Shrinkage multiplicative coefficient to apply to off-diagonal
+elements of the correlation matrix. Default is <code>1</code> (unchanged).
+You can use e.g. <code>0.9</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>snp_ldpred2_inf</code>: A vector of effects, assuming an infinitesimal model.</p>
 <p><code>snp_ldpred2_grid</code>: A matrix of effect sizes, one vector (column)
-for each row of <code>grid_param</code>. If using <code>return_sampling_betas</code>, each
-column corresponds to one iteration instead (after burn-in).</p>
+for each row of <code>grid_param</code>. Missing values are returned when strong
+divergence is detected. If using <code>return_sampling_betas</code>, each column
+corresponds to one iteration instead (after burn-in).</p>
 <p><code>snp_ldpred2_auto</code>: A list (over <code>vec_p_init</code>) of lists with</p><ul>
 <li><p><code>$beta_est</code>: vector of effect sizes</p></li>
 <li><p><code>$beta_est_sparse</code> (only when <code>sparse = TRUE</code>): sparse vector of effect sizes</p></li>

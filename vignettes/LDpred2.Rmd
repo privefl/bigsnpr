@@ -246,6 +246,7 @@ In the paper, we propose an automatic way to filter bad chains by comparing the 
 This is not the case here, which is probably because the data is so small.
 
 ```{r}
+library(ggplot2)
 auto <- multi_auto[[1]]
 plot_grid(
   qplot(y = auto$path_p_est) + 
@@ -260,14 +261,6 @@ plot_grid(
   ncol = 1, align = "hv"
 )
 ```
-
-One can also check the estimate of the correlations (between PGS and phenotype) compared to the actual value (from the summary statistics):
-
-```{r}
-corr_hat <- with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))
-drop(cor(sapply(multi_auto, function(auto) auto$corr_est), corr_hat))
-```
-
 
 ```{r}
 beta_auto <- sapply(multi_auto, function(auto) auto$beta_est)

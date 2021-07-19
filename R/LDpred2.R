@@ -131,8 +131,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @param verbose Whether to print "p // h2" estimates at each iteration.
 #'   Disabled when parallelism is used.
 #' @param report_step Step to report sampling betas (after burn-in and before
-#'   unscaling). Nothing is reported by default. If using `num_iter = 500` and
-#'   `report_step = 50`, then 10 vectors of betas are reported.
+#'   unscaling). Nothing is reported by default. If using `num_iter = 200` and
+#'   `report_step = 20`, then 10 vectors of betas are reported.
 #' @param allow_jump_sign Whether to allow for effects sizes to change sign in
 #'   consecutive iterations? Default is `TRUE` (normal sampling). You can use
 #'   `FALSE` to force effects to go through 0 first before changing sign. Setting
@@ -146,6 +146,9 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes
 #'   - `$beta_est_sparse` (only when `sparse = TRUE`): sparse vector of effect sizes
+#'   - `$corr_est`, the "imputed" correlations between variants and phenotypes,
+#'     which can be used for post-QCing variants by comparing those to
+#'     `beta / sqrt(n_eff * beta_se^2 + beta^2)`.
 #'   - `$sample_beta`: Matrix of sampling betas (see parameter `report_step`)
 #'   - `$postp_est`: vector of posterior probabilities of being causal
 #'   - `$p_est`: estimate of p, the proportion of causal variants
