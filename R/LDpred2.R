@@ -133,10 +133,12 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @param report_step Step to report sampling betas (after burn-in and before
 #'   unscaling). Nothing is reported by default. If using `num_iter = 500` and
 #'   `report_step = 50`, then 10 vectors of betas are reported.
-#' @param num_iter_change Number of iterations where the sign of the effect could
-#'   change before starting to shrink the variants that change sign too much.
-#'   Default is `Inf` (disabled). You can use e.g. `20` when p is converging to 1
-#'   when it is not supposed to.
+#' @param allow_jump_sign Whether to allow for effects sizes to change sign in
+#'   consecutive iterations? Default is `TRUE` (normal sampling). You can use
+#'   `FALSE` to force effects to go through 0 first before changing sign. Setting
+#'   this parameter to `FALSE` could be useful to prevent instability (oscillation
+#'   and ultimately divergence) of the Gibbs sampler. This would also be useful
+#'   for accelerating convergence of chains with a large initial value for p.
 #' @param shrink_corr Shrinkage multiplicative coefficient to apply to off-diagonal
 #'   elements of the correlation matrix. Default is `1` (unchanged).
 #'   You can use e.g. `0.9`.
@@ -162,12 +164,12 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'
 snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              vec_p_init = 0.1,
-                             burn_in = 1000,
-                             num_iter = 500,
+                             burn_in = 500,
+                             num_iter = 200,
                              sparse = FALSE,
                              verbose = FALSE,
                              report_step = num_iter + 1L,
-                             num_iter_change = Inf,
+                             allow_jump_sign = TRUE,
                              shrink_corr = 1,
                              ncores = 1) {
 
@@ -197,7 +199,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       num_iter  = num_iter,
       verbose   = verbose && (ncores == 1),
       report_step = report_step,
-      niter_change = num_iter_change,
+      allow_jump_sign = allow_jump_sign,
       shrink_corr = shrink_corr
     )
     ldpred_auto$beta_est  <- drop(ldpred_auto$beta_est) * scale

@@ -1,3 +1,9 @@
+## bigsnpr 1.8.4
+
+- Trade new parameter `num_iter_change` for a simpler `allow_jump_sign`.
+
+- Change defaults in LDpred2-auto to use 500 burn-in iterations (was 1000 before) followed by 200 iterations (500 before). Such a large number of iterations is usually not really needed.
+
 ## bigsparser 0.5
 
 - New compact format for SFBMs which should be really useful for LDpred2 (should require about half of memory and be twice as fast). The only thing that you need to change is `as_SFBM(corr0, compact = TRUE)`. Make sure to reinstall {bigsnpr} after updating to {bigsparser} v0.5. 

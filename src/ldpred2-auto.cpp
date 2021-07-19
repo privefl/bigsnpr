@@ -26,7 +26,7 @@ List ldpred2_gibbs_auto(Environment corr,
                         int burn_in,
                         int num_iter,
                         int report_step,
-                        double niter_change,
+                        bool allow_jump_sign,
                         double shrink_corr,
                         bool verbose = false) {
 
@@ -49,8 +49,6 @@ List ldpred2_gibbs_auto(Environment corr,
   int num_iter_tot = burn_in + num_iter;
   std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
 
-  NumericVector prev_samp_beta(m), n_kept_sign(m), n_could_change_sign(m);
-
   double cur_h2_est = arma::dot(curr_beta, sfbm->prod(curr_beta));
   double p = p_init, h2 = h2_init, avg_p = 0, avg_h2 = 0;
 
@@ -72,8 +70,6 @@ List ldpred2_gibbs_auto(Environment corr,
 
       double postp = 1 /
         (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
-      if (n_could_change_sign[j] >= niter_change)
-        postp *= ::sqrt(n_kept_sign[j] / n_could_change_sign[j]);
 
       double prev_beta = curr_beta[j];
       double dotprod_shrunk = shrink_corr * dotprod + (1 - shrink_corr) * prev_beta;
@@ -89,16 +85,17 @@ List ldpred2_gibbs_auto(Environment corr,
 
         double samp_beta = ::Rf_rnorm(C3, C4);
 
-        double prod_betas = samp_beta * prev_samp_beta[j];
-        if (prod_betas != 0) {
-          n_could_change_sign[j]++;
-          if (prod_betas > 0) n_kept_sign[j]++;
+        if (!allow_jump_sign && (samp_beta * prev_beta) < 0) {
+          curr_beta[j] = 0;
+          if (k >= burn_in) {
+            avg_postp[j] -= postp;
+            avg_beta[j]  -= C3 * postp;
+          }
+        } else {
+          curr_beta[j] = samp_beta;
+          diff += samp_beta;
+          nb_causal++;
         }
-        prev_samp_beta[j] = samp_beta;
-
-        curr_beta[j] = samp_beta;
-        diff += samp_beta;
-        nb_causal++;
 
       } else {
         curr_beta[j] = 0;

@@ -23,12 +23,12 @@ snp_ldpred2_auto(
   df_beta,
   h2_init,
   vec_p_init = 0.1,
-  burn_in = 1000,
-  num_iter = 500,
+  burn_in = 500,
+  num_iter = 200,
   sparse = FALSE,
   verbose = FALSE,
   report_step = num_iter + 1L,
-  num_iter_change = Inf,
+  allow_jump_sign = TRUE,
   shrink_corr = 1,
   ncores = 1
 )
@@ -83,10 +83,12 @@ Disabled when parallelism is used.}
 unscaling). Nothing is reported by default. If using \code{num_iter = 500} and
 \code{report_step = 50}, then 10 vectors of betas are reported.}
 
-\item{num_iter_change}{Number of iterations where the sign of the effect could
-change before starting to shrink the variants that change sign too much.
-Default is \code{Inf} (disabled). You can use e.g. \code{20} when p is converging to 1
-when it is not supposed to.}
+\item{allow_jump_sign}{Whether to allow for effects sizes to change sign in
+consecutive iterations? Default is \code{TRUE} (normal sampling). You can use
+\code{FALSE} to force effects to go through 0 first before changing sign. Setting
+this parameter to \code{FALSE} could be useful to prevent instability (oscillation
+and ultimately divergence) of the Gibbs sampler. This would also be useful
+for accelerating convergence of chains with a large initial value for p.}
 
 \item{shrink_corr}{Shrinkage multiplicative coefficient to apply to off-diagonal
 elements of the correlation matrix. Default is \code{1} (unchanged).

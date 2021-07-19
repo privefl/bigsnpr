@@ -267,8 +267,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs_auto
-List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, int report_step, double niter_change, double shrink_corr, bool verbose);
-RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP report_stepSEXP, SEXP niter_changeSEXP, SEXP shrink_corrSEXP, SEXP verboseSEXP) {
+List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, int report_step, bool allow_jump_sign, double shrink_corr, bool verbose);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP report_stepSEXP, SEXP allow_jump_signSEXP, SEXP shrink_corrSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -282,10 +282,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
     Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
     Rcpp::traits::input_parameter< int >::type report_step(report_stepSEXP);
-    Rcpp::traits::input_parameter< double >::type niter_change(niter_changeSEXP);
+    Rcpp::traits::input_parameter< bool >::type allow_jump_sign(allow_jump_signSEXP);
     Rcpp::traits::input_parameter< double >::type shrink_corr(shrink_corrSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_auto(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, niter_change, shrink_corr, verbose));
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_auto(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, allow_jump_sign, shrink_corr, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

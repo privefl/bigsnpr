@@ -79,6 +79,12 @@ test_that("LDpred2 works", {
   beta_hat <- with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))
   expect_gt(cor(mod$corr_est, beta_hat), 0.9)
 
+  beta_auto2 <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
+                                 burn_in = 200, num_iter = 200,
+                                 vec_p_init = 1, allow_jump_sign = FALSE)
+  expect_gt(cor(beta_auto2[[1]]$beta_est, true_beta), 0.3)
+  expect_lt(beta_auto2[[1]]$p_est, 0.3)
+
   # Sampling betas
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
                                 burn_in = 200, num_iter = 200, report_step = 10)
