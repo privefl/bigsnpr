@@ -345,6 +345,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// prod_bgen
+arma::cube prod_bgen(std::string filename, const NumericVector& offsets, const arma::mat& beta_trans, const IntegerVector& ind_row, const NumericVector& decode, bool dosage, int N, int ncores);
+RcppExport SEXP _bigsnpr_prod_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP beta_transSEXP, SEXP ind_rowSEXP, SEXP decodeSEXP, SEXP dosageSEXP, SEXP NSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type offsets(offsetsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta_trans(beta_transSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type decode(decodeSEXP);
+    Rcpp::traits::input_parameter< bool >::type dosage(dosageSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(prod_bgen(filename, offsets, beta_trans, ind_row, decode, dosage, N, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // read_bgen
 List read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode, bool dosage, int N, int ncores);
 RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP, SEXP dosageSEXP, SEXP NSEXP, SEXP ncoresSEXP) {
@@ -479,6 +497,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_ldpred2_gibbs_one_sampling", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one_sampling, 10},
     {"_bigsnpr_ldpred2_gibbs", (DL_FUNC) &_bigsnpr_ldpred2_gibbs, 11},
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},
+    {"_bigsnpr_prod_bgen", (DL_FUNC) &_bigsnpr_prod_bgen, 8},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 9},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},

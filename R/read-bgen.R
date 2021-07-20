@@ -45,6 +45,25 @@ snp_readBGI <- function(bgifile, snp_id) {
 
 ################################################################################
 
+check_bgen_format <- function(bgenfile) {
+
+  header <- readBin(bgenfile, what = integer(), size = 4, n = 5)
+  bgen_int <- readBin(charToRaw("bgen"), what = integer(), size = 4)
+  if (!identical(header[5], bgen_int))
+    stop2("'%s' is not a BGEN file.", bgenfile)
+
+  header_raw <- readBin(bgenfile, what = raw(), n = 4 + header[2])
+  flags <- rawToBits(tail(header_raw, 4))
+  if (!identical(flags[1:2], rawToBits(as.raw(1))[1:2]))
+    stop2("'%s' is not compressed with zlib.", bgenfile)
+  if (!identical(flags[3:6], rawToBits(as.raw(2))[1:4]))
+    stop2("'%s' is not using Layout 2.", bgenfile)
+
+  N <- header[4]
+}
+
+################################################################################
+
 #' Read BGEN files into a "bigSNP"
 #'
 #' Function to read the UK Biobank BGEN files into a [bigSNP][bigSNP-class].
@@ -121,20 +140,10 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
   assert_lengths(list_snp_id, bgenfiles)
   sizes <- lengths(list_snp_id)
 
-  # Check format
-  header <- readBin(bgenfiles[1], what = integer(), size = 4, n = 5)
-  bgen_int <- readBin(charToRaw("bgen"), what = integer(), size = 4)
-  if (!identical(header[5], bgen_int))
-    stop2("'%s' is not a BGEN file.", bgenfiles[1])
-  header_raw <- readBin(bgenfiles[1], what = raw(), n = 4 + header[2])
-  flags <- rawToBits(tail(header_raw, 4))
-  if (!identical(flags[1:2], rawToBits(as.raw(1))[1:2]))
-    stop2("'%s' is not compressed with zlib.", bgenfiles[1])
-  if (!identical(flags[3:6], rawToBits(as.raw(2))[1:4]))
-    stop2("'%s' is not using Layout 2.", bgenfiles[1])
-
-  # Samples
-  N <- header[4]
+  # Check format of BGEN files + check samples
+  all_N <- sapply(bgenfiles, check_bgen_format)
+  N <- all_N[1]
+  bigassertr::assert_all(all_N, N)
   if (is.null(ind_row)) ind_row <- seq_len(N)
   assert_nona(ind_row)
   stopifnot(all(ind_row >= 1 & ind_row <= N))

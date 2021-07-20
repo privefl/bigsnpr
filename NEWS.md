@@ -1,3 +1,7 @@
+## bigsnpr 1.8.5
+
+- Add function `snp_prodBGEN()` to compute a matrix product between BGEN files and a matrix (or a vector). This removes the need to read an intermediate FBM object with `snp_readBGEN()` to compute the product. Moreover, when using dosages, they are not rounded to two decimal places anymore.
+
 ## bigsnpr 1.8.4
 
 - Trade new parameter `num_iter_change` for a simpler `allow_jump_sign`.
