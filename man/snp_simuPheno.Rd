@@ -44,7 +44,7 @@ A list with 3 elements:
 \itemize{
 \item \verb{$pheno}: vector of phenotypes,
 \item \verb{$set}: indices of causal variants,
-\item \verb{$effects}: effect sizes corresponding to \code{set}.
+\item \verb{$effects}: effect sizes (of scaled genotypes) corresponding to \code{set}.
 }
 }
 \description{

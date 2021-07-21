@@ -25,7 +25,7 @@ scaled_prod <- function(X, ind, ind.row, ind.col, beta) {
 #' @return A list with 3 elements:
 #'   - `$pheno`: vector of phenotypes,
 #'   - `$set`: indices of causal variants,
-#'   - `$effects`: effect sizes corresponding to `set`.
+#'   - `$effects`: effect sizes (of scaled genotypes) corresponding to `set`.
 #' @export
 #'
 snp_simuPheno <- function(G, h2, M, K = NULL,

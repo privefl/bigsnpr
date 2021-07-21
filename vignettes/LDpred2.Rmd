@@ -1,7 +1,7 @@
 ---
 title: "Computing polygenic scores using LDpred2"
 author: "Florian Privé"
-date: "July 19, 2021"
+date: "July 21, 2021"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -9,8 +9,8 @@ editor_options:
 
 Here we show how to compute polygenic risk scores using [LDpred2](https://doi.org/10.1101/2020.04.28.066720).
 
-This tutorial uses fake data for educational purposes only. It would be nice to use some better fake data for this tutorial; any idea?
-Another tutorial using more realistic data can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
+This tutorial uses fake data for educational purposes only.
+Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
 
 You should also probably look at [the code of the paper](https://github.com/privefl/paper-ldpred2/tree/master/code), particularly at [the code to prepare summary statistics (including performing the quality control presented in the Methods section "Quality control of summary statistics" of the paper)](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R), at [the code to read BGEN files into the data format used by bigsnpr](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62), at [the code to prepare LD matrices](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26) and at [the code to run LDpred2 (genome-wide)](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L34-L118).
 
@@ -27,7 +27,7 @@ info <- readRDS(runonce::download_file(
 str(info)
 ```
 
-Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was shown in the first versions of this tutorial. The only difference it makes is when building the SFBM (the sparse LD matrix on disk), you need to build it so that it contains all variants genome-wide (see e.g. [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L39-L64)).
+Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was shown in the first versions of this tutorial. The only difference it makes is when building the SFBM (the sparse LD matrix on disk), you need to build it so that it contains all variants genome-wide (see e.g. [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L39-L64) and below).
 
 
 
@@ -39,18 +39,15 @@ knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
 knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
 ```
 
-You can download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files in R. We store those files in a directory called `"tmp-data"` here.
+You can download [the tutorial data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip) and unzip files in R. We store those files in a directory called `"tmp-data"` here.
 
 ```{r, echo=FALSE, eval=FALSE}
-unzip("data-raw/public-data.zip")
+unzip("data-raw/public-data3.zip")
 ```
 
 ```{r, echo=FALSE}
-unlink(paste0("tmp-data/public-data", c(".bk", ".rds")))
+unlink(paste0("tmp-data/public-data3", c(".bk", ".rds")))
 ```
-
-You can see [there](https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data.R) how we generated these data from [the 1000 Genomes project](https://www.nature.com/articles/nature15393).
-Note that these data are for educational purposes only, not for use as a reference panel.
 
 First, you need to read genotype data from the PLINK files (or BGEN files) as well as the text file containing summary statistics.
 
@@ -58,27 +55,27 @@ First, you need to read genotype data from the PLINK files (or BGEN files) as we
 # Load packages bigsnpr and bigstatsr
 library(bigsnpr)
 # Read from bed/bim/fam, it generates .bk and .rds files.
-snp_readBed("tmp-data/public-data.bed")
+snp_readBed("tmp-data/public-data3.bed")
 # Attach the "bigSNP" object in R session
-obj.bigSNP <- snp_attach("tmp-data/public-data.rds")
+obj.bigSNP <- snp_attach("tmp-data/public-data3.rds")
 # See how the file looks like
 str(obj.bigSNP, max.level = 2, strict.width = "cut")
 # Get aliases for useful slots
 G   <- obj.bigSNP$genotypes
 CHR <- obj.bigSNP$map$chromosome
 POS <- obj.bigSNP$map$physical.pos
-y   <- obj.bigSNP$fam$affection - 1
+y   <- obj.bigSNP$fam$affection
 NCORES <- nb_cores()
 # Read external summary statistics
-sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+sumstats <- bigreadr::fread2("tmp-data/public-data3-sumstats.txt")
 str(sumstats)
 ```
 
-We split genotype data using part of the data to choose hyper-parameters and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 400 individuals to be used as validation set to tune hyper-parameters for LDpred2-grid. The other 159 individuals are used as test set to evaluate the final models.
+We split the genotype data using part of the data to choose hyper-parameters and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 350 individuals to be used as validation set to tune hyper-parameters for LDpred2-grid. The other 153 individuals are used as test set to evaluate the final models.
 
 ```{r}
 set.seed(1)
-ind.val <- sample(nrow(G), 400)
+ind.val <- sample(nrow(G), 350)
 ind.test <- setdiff(rows_along(G), ind.val)
 ```
 
@@ -87,24 +84,25 @@ ind.test <- setdiff(rows_along(G), ind.val)
 To match variants contained in genotype data and summary statistics, the variables `"chr"` (chromosome number), `"pos"` (genetic position), `"a0"` (reference allele) and `"a1"` (derived allele) should be available in the summary statistics and in the genotype data. These 4 variables are used to match variants between the two data frames. 
 From the summary statistics, you need to get `"beta"`, `"beta_se"` (standard errors), and `"n_eff"` (effective sample size per variant for GWAS with logistic regression, and just total sample size for continuous traits).
 
-```{r}
-sumstats$n_eff <- 4 / (1 / sumstats$n_case + 1 / sumstats$n_control)
-sumstats$n_case <- sumstats$n_control <- NULL
-names(sumstats) <- c("chr", "rsid", "pos", "a0", "a1", "beta", "beta_se", "p", "n_eff")
-map <- obj.bigSNP$map[-(2:3)]
-names(map) <- c("chr", "pos", "a0", "a1")
-info_snp <- snp_match(sumstats, map)
+```{r, error=TRUE}
+# sumstats$n_eff <- 4 / (1 / sumstats$n_case + 1 / sumstats$n_control)
+# sumstats$n_case <- sumstats$n_control <- NULL
+sumstats$n_eff <- sumstats$N
+map <- setNames(obj.bigSNP$map[-3], c("chr", "rsid", "pos", "a1", "a0"))
+df_beta <- snp_match(sumstats, map)
 ```
 
-If no or few variants are actually flipped, you might want to disable the strand flipping option. Here, these are simulated data so all variants use the same strand and the same reference.
+Here, there is problem with the matching; this is due to different genome builds. You can either convert between builds with `snp_modifyBuild()` (or directly use the converted positions in `info`), or match by rsIDs instead.
 
 ```{r}
-info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
+df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)  # use rsid instead of pos
 ```
+
+If no or few variants are actually flipped, you might want to disable the strand flipping option (`strand_flip = FALSE`).
 
 ## Computing LDpred2 scores for one chromosome
 
-**Some quality control on summary statistics is highly recommended (see paper).**
+**Some quality control on summary statistics is highly recommended (see paper and other tutorial).**
 
 ### Correlation
 
@@ -112,30 +110,37 @@ First, you need to compute correlations between variants.
 We recommend to use a window size of 3 cM (see [paper](https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173#233620536)).
 
 ```{r}
-POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = NCORES)
+# POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = NCORES)
+# To avoid downloading "large" files, this has been precomputed
+POS2 <- obj.bigSNP$map$genetic.dist
 ```
 
-```{r}
-## indices in info_snp
-ind.chr <- which(info_snp$chr == 2)         
-df_beta <- info_snp[ind.chr, c("beta", "beta_se", "n_eff")]
-```
-
-```{r}
-## indices in G
-ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]    
-corr0 <- runonce::save_run(
-  snp_cor(G, ind.col = ind.chr2, ncores = NCORES, 
-          infos.pos = POS2[ind.chr2], size = 3 / 1000),
-  file = "tmp-data/corr_ldpred2_tutorial.rds")
-```
+We create the on-disk sparse genome-wide correlation matrix on-the-fly:
 
 ```{r}
 tmp <- tempfile(tmpdir = "tmp-data")
-corr <- as_SFBM(corr0, tmp, compact = TRUE)
-```
 
-Here, we have built the LD matrix using variants from one chromosome only. In practice, you need to build it for variants from all chromosomes. Please look at the code from the paper or the other tutorial (links at the beginning).
+for (chr in 1:22) {
+  
+  # print(chr)
+  
+  ## indices in 'df_beta'
+  ind.chr <- which(df_beta$chr == chr)
+  ## indices in 'G'
+  ind.chr2 <- df_beta$`_NUM_ID_`[ind.chr]
+  
+  corr0 <- snp_cor(G, ind.col = ind.chr2, size = 3 / 1000,
+                   infos.pos = POS2[ind.chr2], ncores = NCORES)
+  
+  if (chr == 1) {
+    ld <- Matrix::colSums(corr0^2)
+    corr <- as_SFBM(corr0, tmp, compact = TRUE)
+  } else {
+    ld <- c(ld, Matrix::colSums(corr0^2))
+    corr$add_columns(corr0, nrow(corr))
+  }
+}
+```
 
 Note that the "compact" format for SFBMs is quite new. You will need `packageVersion("bigsparser") >= package_version("0.5")`. 
 Make sure to reinstall {bigsnpr} when updating {bigsparser} to this new version (to avoid crashes).
@@ -144,13 +149,14 @@ Make sure to reinstall {bigsnpr} when updating {bigsparser} to this new version 
 file.size(corr$sbk) / 1024^3  # file size in GB
 ```
 
-Note that you will need at least the same memory as this file size (to keep it cached for faster processing) + some other memory for all the results returned. If you do not have enough memory, processing will be very slow (because you would read the data from disk all the time). If using HapMap3 variants, requesting 60 GB should be enough. For this small example, 8 GB of RAM should be enough.
+Note that you will need at least the same memory as this file size (to keep it cached for faster processing) + some other memory for all the results returned. If you do not have enough memory, processing will be very slow (because you would read the data from disk all the time). If using the one million HapMap3 variants, requesting 60 GB should be enough.
 
 
 ### LDpred2-inf: infinitesimal model
 
 ```{r, cache=TRUE}
-(ldsc <- snp_ldsc2(corr0, df_beta))
+(ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
+                                sample_size = n_eff, blocks = NULL)))
 h2_est <- ldsc[["h2"]]
 ```
 
@@ -160,8 +166,8 @@ beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
 
 
 ```{r}
-pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = ind.chr2)
-AUCBoot(pred_inf, y[ind.test])
+pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = df_beta[["_NUM_ID_"]])
+cor(pred_inf, y[ind.test])
 ```
 
 
@@ -176,19 +182,20 @@ In practice, we recommend to test multiple values for h2 and p.
 ```
 
 ```{r, cache=TRUE}
-# takes several minutes if you do not have many cores
+# takes less than 2 min with 4 cores
 beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 ```
 
 ```{r}
-pred_grid <- big_prodMat(G, beta_grid, ind.col = ind.chr2)
+pred_grid <- big_prodMat(G, beta_grid, ind.col = df_beta[["_NUM_ID_"]])
 params$score <- apply(pred_grid[ind.val, ], 2, function(x) {
   if (all(is.na(x))) return(NA)
-  summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]
+  summary(lm(y[ind.val] ~ x))$coef["x", 3]
+  # summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]
 })
 ```
 
-Note that missing values represent models that diverged substantially. Here the data is very small and very fake, so there are some problems with the Gibbs sampler.
+Note that missing values represent models that diverged substantially.
 
 ```{r, out.width="90%", fig.asp=0.5}
 library(ggplot2)
@@ -211,12 +218,12 @@ params %>%
   slice(1:10)
 ```
 
-You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the (logistic) regression of the phenotype by the PRS since we have found it more robust than using the AUC. It also enables adjusting for covariates in this step.
+You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the (linear or logistic) regression of the phenotype by the PRS since we have found it more robust than using the correlation or the AUC. It also enables adjusting for covariates in this step.
 
 Also note that we separate both sparse and non-sparse models to show that their predictive performance are similar (in the paper). In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models.
 
 ```{r}
-best_grid <- params %>%
+best_beta_grid <- params %>%
   mutate(id = row_number()) %>%
   # filter(sparse) %>% 
   arrange(desc(score)) %>%
@@ -224,26 +231,26 @@ best_grid <- params %>%
   pull(id) %>% 
   beta_grid[, .]
 
-pred <- big_prodVec(G, best_grid, ind.row = ind.test, ind.col = ind.chr2)
-AUCBoot(pred, y[ind.test])
+pred <- big_prodVec(G, best_beta_grid, ind.row = ind.test,
+                    ind.col = df_beta[["_NUM_ID_"]])
+cor(pred, y[ind.test])
 ```
 
 ### LDpred2-auto: automatic model
 
-We recommend to run many of them in parallel with different initial values for `p` (e.g. `length.out = 30`).
+We recommend to run many chains in parallel with different initial values for `p`.
 
 ```{r, cache=TRUE}
-# takes a few minutes
+# takes less than 2 min with 4 cores
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
-                               vec_p_init = seq_log(1e-4, 0.5, length.out = NCORES),
+                               vec_p_init = seq_log(1e-4, 0.5, length.out = 30),
                                ncores = NCORES)
-str(multi_auto)
+str(multi_auto, max.level = 1)
+str(multi_auto[[1]], max.level = 1)
 ```
 
 You should verify if the chains "converged". You can look at the path of the chains, as shown below.
-In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112), reproduced below).
-
-This is not the case here, which is probably because the data is so small.
+In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112), reproduced below). You can also filter on h2 and p estimates that diverge from the median of the chains.
 
 ```{r}
 library(ggplot2)
@@ -264,7 +271,7 @@ plot_grid(
 
 ```{r}
 beta_auto <- sapply(multi_auto, function(auto) auto$beta_est)
-pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = ind.chr2)
+pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = df_beta[["_NUM_ID_"]])
 ```
 
 ```{r}
@@ -275,19 +282,60 @@ final_pred_auto <- rowMeans(pred_auto[, keep])
 ```
 
 ```{r}
-AUCBoot(final_pred_auto, y[ind.test])
+cor(final_pred_auto, y[ind.test])
+```
+
+### lassosum2: grid of models
+
+lassosum2 is a re-implementation of [the lassosum model](https://doi.org/10.1002/gepi.22050) that now uses the exact same input parameters as LDpred2 (`corr` and `df_beta`). It should be fast to run. It can be run next to LDpred2 and the best model can be chosen using the validation set.
+Note that parameter 's' from lassosum has been replaced by a new parameter 'delta' in lassosum2, in order to better reflect that the lassosum model also uses L2-regularization (therefore, elastic-net regularization).
+
+```{r}
+beta_lassosum2 <- snp_lassosum2(corr, df_beta, ncores = NCORES)
+```
+
+```{r}
+params2 <- attr(beta_lassosum2, "grid_param")
+pred_grid2 <- big_prodMat(G, beta_lassosum2, ind.col = df_beta[["_NUM_ID_"]])
+params2$score <- apply(pred_grid2[ind.val, ], 2, function(x) {
+  if (all(is.na(x))) return(NA)
+  summary(lm(y[ind.val] ~ x))$coef["x", 3]
+  # summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]
+})
+```
+
+```{r}
+library(ggplot2)
+ggplot(params2, aes(x = lambda, y = score, color = as.factor(delta))) +
+  theme_bigstatsr() +
+  geom_point() +
+  geom_line() +
+  scale_x_log10(breaks = 10^(-5:0)) +
+  labs(y = "GLM Z-Score", color = "delta") +
+  theme(legend.position = "top") +
+  guides(colour = guide_legend(nrow = 1))
+```
+
+```{r}
+library(dplyr)
+best_grid_lassosum2 <- params2 %>%
+  mutate(id = row_number()) %>%
+  arrange(desc(score)) %>%
+  slice(1) %>%
+  pull(id) %>% 
+  beta_lassosum2[, .]
+```
+
+```{r}
+best_grid_overall <- 
+  `if`(max(params2$score, na.rm = TRUE) > max(params$score, na.rm = TRUE),
+       best_grid_lassosum2, best_beta_grid)
 ```
 
 ```{r}
 # Some cleaning
 rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 ```
-
-## Conclusion
-
-We have seen how to run 3 versions of LDpred2 ("-inf", "-grid" and "-auto") for one chromosome.
-
-Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was shown in the first versions of this tutorial. The only difference it makes is when building the SFBM (the sparse LD matrix on disk), you need to build it so that it contains all variants genome-wide (see e.g. [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L39-L64)).
 
 ## Reference
 
