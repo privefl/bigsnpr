@@ -81,8 +81,12 @@ multLinReg <- function(obj, ind_row, ind_col, U, ncores = 1L) {
     .Call(`_bigsnpr_multLinReg`, obj, ind_row, ind_col, U, ncores)
 }
 
-prod_bgen <- function(filename, offsets, beta_trans, ind_row, decode, dosage, N, ncores) {
-    .Call(`_bigsnpr_prod_bgen`, filename, offsets, beta_trans, ind_row, decode, dosage, N, ncores)
+extract_submat_bgen <- function(filename, offsets, X, ind_row, decode, dosage, N, ncores) {
+    .Call(`_bigsnpr_extract_submat_bgen`, filename, offsets, X, ind_row, decode, dosage, N, ncores)
+}
+
+prod_bgen2 <- function(filename, offsets, XY, Y, ind_row, decode, dosage, N, max_size, ncores) {
+    .Call(`_bigsnpr_prod_bgen2`, filename, offsets, XY, Y, ind_row, decode, dosage, N, max_size, ncores)
 }
 
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage, N, ncores) {

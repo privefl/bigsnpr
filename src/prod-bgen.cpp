@@ -7,13 +7,6 @@
 
 using namespace Rcpp;
 
-
-#if defined(_OPENMP)
-#include <omp.h>
-#else
-inline int omp_get_thread_num() { return 0; }
-#endif
-
 /******************************************************************************/
 
 inline double sample_from_prob(double p0, double p1) {
@@ -23,14 +16,12 @@ inline double sample_from_prob(double p0, double p1) {
 
 /******************************************************************************/
 
-void prod_variant(std::ifstream * ptr_stream,
-                  const arma::vec& beta_trans_j,
-                  arma::mat& res,
+void read_variant(std::ifstream * ptr_stream,
+                  arma::mat& X, int j,
                   const IntegerVector& ind_row,
                   const NumericVector& decode,
                   bool dosage,
-                  int N,
-                  int L) {
+                  int N) {
 
   std::string id   = read_string(ptr_stream);
   std::string rsid = read_string(ptr_stream);
@@ -46,24 +37,13 @@ void prod_variant(std::ifstream * ptr_stream,
   int D = read_int(ptr_stream);
   myassert(D == (10 + 3 * N), "Probabilities should be stored using 8 bits.");
 
-  // decompress variant data
+  // uncompress variant data
   unsigned char *buffer_in = new unsigned char[C];
   ptr_stream->read((char *)buffer_in, C);
   unsigned char *buffer_out = new unsigned char[D];
-  // zlib struct (https://gist.github.com/arq5x/5315739)
-  z_stream infstream;
-  infstream.zalloc = Z_NULL;
-  infstream.zfree  = Z_NULL;
-  infstream.opaque = Z_NULL;
-  infstream.avail_in  = C;             // size of input
-  infstream.next_in   = buffer_in;     // input char array
-  infstream.avail_out = D;             // size of output
-  infstream.next_out  = buffer_out;    // output char array
-  // the actual DE-compression work.
-  myassert(inflateInit(&infstream) == Z_OK, "Problem when decompressing.");
-  myassert(inflate(&infstream, Z_NO_FLUSH) != Z_STREAM_ERROR,
-           "Problem when decompressing.");
-  inflateEnd(&infstream);
+  uLongf D2 = D;
+  myassert(uncompress(buffer_out, &D2, buffer_in, C) == Z_OK,
+           "Problem when uncompressing.");
 
   // read uncompressed "probabilities" and compute products
   int n = ind_row.size();
@@ -71,14 +51,13 @@ void prod_variant(std::ifstream * ptr_stream,
     int i_G = ind_row[i];
     int i_pld = 8 + i_G;
     if (buffer_out[i_pld] >= 0x80) {
-      res.row(i).fill(NA_REAL);  // missing
+      X(i, j) = NA_REAL;  // missing
     } else {
-      // probabilities * 255
       int i_prblt = 10 + N + 2 * i_G;
+      // probabilities * 255
       unsigned char p0 = buffer_out[i_prblt];
       unsigned char p1 = buffer_out[i_prblt + 1];
-      double g_ij = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
-      for (int l = 0; l < L; l++) res(i, l) += g_ij * beta_trans_j[l];
+      X(i, j) = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
     }
   }
 
@@ -89,20 +68,16 @@ void prod_variant(std::ifstream * ptr_stream,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-arma::cube prod_bgen(std::string filename,
-                     const NumericVector& offsets,
-                     const arma::mat& beta_trans,
-                     const IntegerVector& ind_row,
-                     const NumericVector& decode,
-                     bool dosage,
-                     int N,
-                     int ncores) {
+arma::mat& extract_submat_bgen(std::string filename,
+                               const std::vector<size_t>& offsets,
+                               arma::mat& X,
+                               const IntegerVector& ind_row,
+                               const NumericVector& decode,
+                               bool dosage,
+                               int N,
+                               int ncores) {
 
   int m = offsets.size();
-  myassert_size(beta_trans.n_cols, m);
-
-  int L = beta_trans.n_rows;
-  arma::cube res(ind_row.size(), L, ncores, arma::fill::zeros);
 
   #pragma omp parallel num_threads(ncores)
   {
@@ -110,20 +85,59 @@ arma::cube prod_bgen(std::string filename,
     std::ifstream stream(filename.c_str(), std::ifstream::binary);
     if (!stream) Rcpp::stop("Error while opening '%s'.", filename);
 
-    int id = omp_get_thread_num();
-
-    // compute (increment) product variant by variant
+    // read variants into X
     #pragma omp for
     for (int j = 0; j < m; j++) {
       stream.seekg(offsets[j]);
-      prod_variant(&stream, beta_trans.col(j), res.slice(id),
-                   ind_row, decode, dosage, N, L);
+      read_variant(&stream, X, j, ind_row, decode, dosage, N);
     }
 
     stream.close();
   }
 
-  return res;
+  return X;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+arma::mat& prod_bgen2(std::string filename,
+                      const NumericVector& offsets,
+                      arma::mat& XY,
+                      const arma::mat& Y,
+                      const IntegerVector& ind_row,
+                      const NumericVector& decode,
+                      bool dosage,
+                      int N,
+                      int max_size,
+                      int ncores) {
+
+  int n = ind_row.size();
+  int m = offsets.size();
+
+  arma::mat X(n, max_size);  // temporary matrix to access blocks
+  std::vector<size_t> sub_offsets(max_size);
+
+  for (int j = 0; j < m; ) {
+
+    int k;
+    for (k = 0; k < max_size && j < m; k++, j++) sub_offsets[k] = offsets[j];
+
+    if (k < max_size) {
+      // last block can be shorter
+      sub_offsets.resize(k);
+      XY += extract_submat_bgen(filename, sub_offsets, X, ind_row,
+                                decode, dosage, N, ncores).head_cols(k) *
+        Y.rows(j - k, j - 1);
+    } else {
+      // k == max_size
+      XY += extract_submat_bgen(filename, sub_offsets, X, ind_row,
+                                decode, dosage, N, ncores) *
+        Y.rows(j - k, j - 1);
+    }
+  }
+
+  return XY;
 }
 
 /******************************************************************************/

@@ -19,6 +19,8 @@ format_snp_id <- function(snp_id) {
 #'
 #' @return A data frame containing variant information.
 #'
+#' @importFrom magrittr %>%
+#'
 #' @export
 snp_readBGI <- function(bgifile, snp_id) {
 
@@ -29,18 +31,23 @@ snp_readBGI <- function(bgifile, snp_id) {
   # read variant information from index files
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
   on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
-  infos <- dplyr::collect(dplyr::tbl(db_con, "Variant"))
+
+  snp_id <- format_snp_id(snp_id)
+  snp_pos <- as.integer(sub("^[[:alnum:]]{2}_([[:digit:]]+)_.+$", "\\1", snp_id))
+  info <- dplyr::tbl(db_con, "Variant") %>%
+    dplyr::filter(position %in% snp_pos) %>%
+    dplyr::collect()
 
   # check
-  infos$myid <- with(infos, paste(chromosome, position, allele1, allele2, sep = "_"))
-  ind <- match(snp_id, format_snp_id(infos$myid))
+  info_id <- with(info, paste(chromosome, position, allele1, allele2, sep = "_"))
+  ind <- match(snp_id, format_snp_id(info_id))
   if (anyNA(ind)) {
     saveRDS(snp_id[is.na(ind)],
             tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifile))
     stop2("Some variants have not been found (stored in '%s').", tmp)
   }
 
-  infos[ind, ]
+  info[ind, ]
 }
 
 ################################################################################
@@ -164,14 +171,13 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
     # Fill the FBM from BGEN files (and get SNP info)
     do.call("rbind", lapply(seq_along(bgenfiles), function(ic) {
 
-      snp_id <- format_snp_id(list_snp_id[[ic]])
-      infos <- snp_readBGI(bgifiles[ic], snp_id)
+      info <- snp_readBGI(bgifiles[ic], list_snp_id[[ic]])
 
       # Get dosages in FBM
       ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
       varinfo <- read_bgen(
         filename = bgenfiles[ic],
-        offsets  = as.double(infos$file_start_position),
+        offsets  = as.double(info$file_start_position),
         BM       = G,
         ind_row  = ind_row - 1L,
         ind_col  = ind.col,
@@ -182,7 +188,7 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
       )
 
       # Return variant info
-      infos %>%
+      info %>%
         dplyr::bind_cols(varinfo) %>%
         dplyr::select(chromosome, marker.ID = ID, rsid, physical.pos = position,
                       allele1, allele2, freq = FREQ, info = INFO)
