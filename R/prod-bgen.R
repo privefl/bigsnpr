@@ -52,8 +52,8 @@ snp_prodBGEN2 <- function(bgenfiles, beta, list_snp_id,
   # Compute the product from BGEN files
   res <- Reduce('+', lapply(seq_along(bgenfiles), function(ic) {
 
-    snp_id <- format_snp_id(list_snp_id[[ic]])
-    start_pos_in_file <- snp_readBGI(bgifiles[ic], snp_id)$file_start_position
+    start_pos_in_file <-
+      snp_readBGI(bgifiles[ic], list_snp_id[[ic]])$file_start_position
 
     ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
     res_chr <- prod_bgen(
@@ -119,8 +119,8 @@ snp_prodBGEN <- function(bgenfiles, beta, list_snp_id,
   # Compute the product from BGEN files
   for (ic in seq_along(bgenfiles)) {
 
-    snp_id <- format_snp_id(list_snp_id[[ic]])
-    start_pos_in_file <- snp_readBGI(bgifiles[ic], snp_id)$file_start_position
+    start_pos_in_file <-
+      snp_readBGI(bgifiles[ic], list_snp_id[[ic]])$file_start_position
 
     ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
     XY <- prod_bgen2(
