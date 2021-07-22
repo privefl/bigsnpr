@@ -36,14 +36,16 @@ test_that("same as with intermediate FBM", {
     snp_attach() %>%
     .$genotypes
   beta <- matrix(rnorm(ncol(G) * 3), ncol = 3)
-  prod1 <- snp_prodBGEN(bgen_file, beta, list(IDs), ncores = ncores())
+  prod1 <- snp_prodBGEN(bgen_file, beta, list(IDs),
+                        block_size = 2, ncores = ncores())
   expect_equal(prod1, G[] %*% beta, tolerance = 0.1)
 
   prod2 <- snp_prodBGEN(bgen_file, beta[, 1], list(IDs), ncores = ncores())
   expect_null(dim(prod2))
   expect_equal(prod2, prod1[, 1])
 
-  prod3 <- snp_prodBGEN(bgen_file, beta[, 1, drop = FALSE], list(IDs), ncores = ncores())
+  prod3 <- snp_prodBGEN(bgen_file, beta[, 1, drop = FALSE], list(IDs),
+                        ncores = ncores())
   expect_equal(ncol(prod3), 1)
   expect_equal(prod3, prod1[, 1, drop = FALSE])
 
@@ -66,7 +68,8 @@ test_that("works with a subset of SNPs", {
                                    ncores = ncores()))
   G2 <- test2$genotypes
   beta <- matrix(rnorm(length(ind_snp) * 3), ncol = 3)
-  prod <- snp_prodBGEN(bgen_file, beta, list(IDs[ind_snp]), ncores = ncores())
+  prod <- snp_prodBGEN(bgen_file, beta, list(IDs[ind_snp]),
+                       block_size = 2, ncores = ncores())
   expect_equal(prod, G2[] %*% beta, tolerance = 0.1)
 })
 
@@ -74,10 +77,12 @@ test_that("works with a subset of individuals", {
   ind_snp <- setdiff2(sample(length(IDs), 100, replace = TRUE), excl)
   ind_row <- sample(500, 100, replace = TRUE)
   test3 <- snp_attach(
-    snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]), ind_row, ncores = ncores()))
+    snp_readBGEN(bgen_file, tempfile(), list(IDs[ind_snp]), ind_row,
+                 ncores = ncores()))
   G3 <- test3$genotypes
   beta <- matrix(rnorm(length(ind_snp) * 3), ncol = 3)
-  prod <- snp_prodBGEN(bgen_file, beta, list(IDs[ind_snp]), ind_row, ncores = ncores())
+  prod <- snp_prodBGEN(bgen_file, beta, list(IDs[ind_snp]), ind_row,
+                       block_size = 2, ncores = ncores())
   expect_equal(prod, G3[] %*% beta, tolerance = 0.1)
 })
 
@@ -88,10 +93,12 @@ test_that("works with multiple files", {
   ind_row <- sample(500, 100, replace = TRUE)
   list_IDs <- split(IDs[ind_snp], sort(rep_len(1:3, length(ind_snp))))
   test4 <- snp_attach(
-    snp_readBGEN(rep(bgen_file, 3), tempfile(), list_IDs, ind_row, ncores = ncores()))
+    snp_readBGEN(rep(bgen_file, 3), tempfile(), list_IDs, ind_row,
+                 ncores = ncores()))
   G4 <- test4$genotypes
   beta <- matrix(rnorm(length(ind_snp) * 3), ncol = 3)
-  prod <- snp_prodBGEN(rep(bgen_file, 3), beta, list_IDs, ind_row, ncores = ncores())
+  prod <- snp_prodBGEN(rep(bgen_file, 3), beta, list_IDs, ind_row,
+                       block_size = 2, ncores = ncores())
   expect_equal(prod, G4[] %*% beta, tolerance = 0.1)
 })
 

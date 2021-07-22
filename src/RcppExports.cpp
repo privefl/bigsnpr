@@ -363,18 +363,56 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// extract_submat_bgen
+arma::mat& extract_submat_bgen(std::string filename, const std::vector<size_t>& offsets, arma::mat& X, const IntegerVector& ind_row, const NumericVector& decode, bool dosage, int N, int ncores);
+RcppExport SEXP _bigsnpr_extract_submat_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP XSEXP, SEXP ind_rowSEXP, SEXP decodeSEXP, SEXP dosageSEXP, SEXP NSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< const std::vector<size_t>& >::type offsets(offsetsSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type decode(decodeSEXP);
+    Rcpp::traits::input_parameter< bool >::type dosage(dosageSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(extract_submat_bgen(filename, offsets, X, ind_row, decode, dosage, N, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prod_bgen2
+arma::mat& prod_bgen2(std::string filename, const NumericVector& offsets, arma::mat& XY, const arma::mat& Y, const IntegerVector& ind_row, const NumericVector& decode, bool dosage, int N, int max_size, int ncores);
+RcppExport SEXP _bigsnpr_prod_bgen2(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP XYSEXP, SEXP YSEXP, SEXP ind_rowSEXP, SEXP decodeSEXP, SEXP dosageSEXP, SEXP NSEXP, SEXP max_sizeSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type offsets(offsetsSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type XY(XYSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type decode(decodeSEXP);
+    Rcpp::traits::input_parameter< bool >::type dosage(dosageSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type max_size(max_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(prod_bgen2(filename, offsets, XY, Y, ind_row, decode, dosage, N, max_size, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // read_bgen
-List read_bgen(std::string filename, NumericVector offsets, Environment BM, IntegerVector ind_row, IntegerVector ind_col, RawVector decode, bool dosage, int N, int ncores);
+List read_bgen(std::string filename, const NumericVector& offsets, const Environment& BM, const IntegerVector& ind_row, const IntegerVector& ind_col, const RawVector& decode, bool dosage, int N, int ncores);
 RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP, SEXP dosageSEXP, SEXP NSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type offsets(offsetsSEXP);
-    Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type ind_row(ind_rowSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type ind_col(ind_colSEXP);
-    Rcpp::traits::input_parameter< RawVector >::type decode(decodeSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type offsets(offsetsSEXP);
+    Rcpp::traits::input_parameter< const Environment& >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const RawVector& >::type decode(decodeSEXP);
     Rcpp::traits::input_parameter< bool >::type dosage(dosageSEXP);
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
@@ -498,6 +536,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_ldpred2_gibbs", (DL_FUNC) &_bigsnpr_ldpred2_gibbs, 11},
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},
     {"_bigsnpr_prod_bgen", (DL_FUNC) &_bigsnpr_prod_bgen, 8},
+    {"_bigsnpr_extract_submat_bgen", (DL_FUNC) &_bigsnpr_extract_submat_bgen, 8},
+    {"_bigsnpr_prod_bgen2", (DL_FUNC) &_bigsnpr_prod_bgen2, 10},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 9},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
