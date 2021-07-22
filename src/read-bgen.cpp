@@ -68,8 +68,8 @@ std::string read_variant(std::ifstream * ptr_stream,
       ptr_mat[i] = 3;  // missing
       nona--;
     } else {
-      // probabilities * 255
       int i_prblt = 10 + N + 2 * i_G;
+      // probabilities * 255
       unsigned char p0 = buffer_out[i_prblt];
       unsigned char p1 = buffer_out[i_prblt + 1];
       double e_ij = 2 * p0 + p1;
@@ -95,11 +95,11 @@ std::string read_variant(std::ifstream * ptr_stream,
 
 // [[Rcpp::export]]
 List read_bgen(std::string filename,
-               NumericVector offsets,
-               Environment BM,
-               IntegerVector ind_row,
-               IntegerVector ind_col,
-               RawVector decode,
+               const NumericVector& offsets,
+               const Environment& BM,
+               const IntegerVector& ind_row,
+               const IntegerVector& ind_col,
+               const RawVector& decode,
                bool dosage,
                int N,
                int ncores) {
