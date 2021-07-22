@@ -38,24 +38,13 @@ std::string read_variant(std::ifstream * ptr_stream,
   int D = read_int(ptr_stream);
   myassert(D == (10 + 3 * N), "Probabilities should be stored using 8 bits.");
 
-  // decompress variant data
+  // uncompress variant data
   unsigned char *buffer_in = new unsigned char[C];
   ptr_stream->read((char *)buffer_in, C);
   unsigned char *buffer_out = new unsigned char[D];
-  // zlib struct (https://gist.github.com/arq5x/5315739)
-  z_stream infstream;
-  infstream.zalloc = Z_NULL;
-  infstream.zfree  = Z_NULL;
-  infstream.opaque = Z_NULL;
-  infstream.avail_in  = C;             // size of input
-  infstream.next_in   = buffer_in;     // input char array
-  infstream.avail_out = D;             // size of output
-  infstream.next_out  = buffer_out;    // output char array
-  // the actual DE-compression work.
-  myassert(inflateInit(&infstream) == Z_OK, "Problem when decompressing.");
-  myassert(inflate(&infstream, Z_NO_FLUSH) != Z_STREAM_ERROR,
-           "Problem when decompressing.");
-  inflateEnd(&infstream);
+  uLongf D2 = D;
+  myassert(uncompress(buffer_out, &D2, buffer_in, C) == Z_OK,
+           "Problem when uncompressing.");
 
   // read uncompressed "probabilities" and store them as rounded dosages or hard calls
   int n = ind_row.size();
