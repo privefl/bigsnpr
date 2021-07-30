@@ -38,6 +38,7 @@ compute_cost <- function(block_num, corr.tril, thr_r2) {
 #' @return A tibble with five columns:
 #'   - `$n_block`: Number of blocks.
 #'   - `$cost`: The sum of squared correlations outside the blocks.
+#'   - `$perc_kept`: Percentage of initial non-zero values kept within the blocks defined.
 #'   - `$block_num`: Resulting block numbers for each variant.
 #'   - `$all_last`: Last index of each block.
 #'   - `$all_size`: Sizes of the blocks.
@@ -89,6 +90,7 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K) {
     tibble::tibble(
       n_block   = length(all_last),
       cost      = cost,
+      perc_kept = get_perc(corr@p, corr@i, block_num),
       block_num = list(block_num),
       all_last  = list(all_last),
       all_size  = list(all_size)

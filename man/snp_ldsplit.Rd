@@ -36,6 +36,7 @@ A tibble with five columns:
 \itemize{
 \item \verb{$n_block}: Number of blocks.
 \item \verb{$cost}: The sum of squared correlations outside the blocks.
+\item \verb{$perc_kept}: Percentage of initial non-zero values kept within the blocks defined.
 \item \verb{$block_num}: Resulting block numbers for each variant.
 \item \verb{$all_last}: Last index of each block.
 \item \verb{$all_size}: Sizes of the blocks.

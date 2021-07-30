@@ -7,7 +7,9 @@ using namespace Rcpp;
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List get_L(std::vector<size_t> p, IntegerVector i, NumericVector x,
+List get_L(std::vector<size_t> p,
+           const IntegerVector& i,
+           const NumericVector& x,
            double thr_r2) {
 
   std::vector<int>    res_i;
@@ -100,6 +102,36 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int K) {
   }
 
   return List::create(_["C"] = C, _["best_ind"] = best_ind);
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+double get_perc(std::vector<size_t> p,
+                const IntegerVector& i,
+                const IntegerVector& block_num) {
+
+  double count_within = 0, count_all = 0;
+
+  int m = p.size() - 1;
+
+  for (int j = 0; j < m; j++) {
+
+    size_t lo = p[j];
+    size_t up = p[j + 1];
+
+    for (size_t k = lo; k < up; k++) {
+      if (i[k] == j) {
+        count_all++;
+        count_within++;
+      } else {
+        count_all += 2;
+        if (block_num[i[k]] == block_num[j]) count_within += 2;
+      }
+    }
+  }
+
+  return count_within / count_all;
 }
 
 /******************************************************************************/

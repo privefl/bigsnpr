@@ -113,6 +113,10 @@ get_C <- function(L, min_size, max_size, K) {
     .Call(`_bigsnpr_get_C`, L, min_size, max_size, K)
 }
 
+get_perc <- function(p, i, block_num) {
+    .Call(`_bigsnpr_get_perc`, p, i, block_num)
+}
+
 writebina <- function(filename, BM, tab, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_writebina`, filename, BM, tab, rowInd, colInd))
 }

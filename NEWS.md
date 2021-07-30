@@ -1,3 +1,7 @@
+## bigsnpr 1.8.7
+
+- Add `$perc_kept` in the output of `snp_ldsplit()`, the percentage of initial non-zero values kept within the blocks defined.
+
 ## bigsnpr 1.8.6
 
 - Faster `snp_prodBGEN()`.

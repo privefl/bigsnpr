@@ -79,6 +79,18 @@ test_that("get_L() and get_C() work", {
 
 ################################################################################
 
+test_that("$perc_kept in snp_ldsplit() is exact", {
+
+  corr <- as(outer(1:4 / 10, 1:4 / 10, '+'), "dgCMatrix")
+  diag(corr) <- 1
+
+  test <- snp_ldsplit(corr, 0, 1, 2, 4)
+  expect_identical(test$n_block, 2:4)
+  expect_identical(test$perc_kept, c(8, 6, 4) / 16)
+})
+
+################################################################################
+
 test_that("snp_ldsplit() gives consistent results", {
 
   skip_if(is_cran)
