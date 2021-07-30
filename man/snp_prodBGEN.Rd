@@ -11,6 +11,7 @@ snp_prodBGEN(
   ind_row = NULL,
   bgi_dir = dirname(bgenfiles),
   read_as = c("dosage", "random"),
+  block_size = 1000,
   ncores = 1
 )
 }
@@ -37,6 +38,9 @@ are used. If not specified, all rows are used.\cr
 \item as hard calls, randomly sampled based on those probabilities
 (similar to PLINK option '\verb{--hard-call-threshold random}').
 }}
+
+\item{block_size}{Maximum size of temporary blocks (in number of variants).
+Default is \code{1000}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \code{\link[=nb_cores]{nb_cores()}}.}

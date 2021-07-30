@@ -5,11 +5,16 @@
 #' @inheritParams snp_ldpred2_grid
 #' @param delta Vector of shrinkage parameters to try (L2-regularization).
 #'   Default is `c(0.001, 0.005, 0.02, 0.1, 0.6, 3)`.
-#' @param nlambda Number of different lambdas to try. Default is `20`.
-#' @param lambda.min.ratio Ratio between last and first lambdas to try. Default is `0.01`.
-#' @param dfmax Maximum number of non-zero effects in the model. Default is `200e3`.
-#' @param maxiter Maximum number of iterations before convergence. Default is `500`.
-#' @param tol Tolerance parameter for assessing convergence. Default is `1e-5`.
+#' @param nlambda Number of different lambdas to try (L1-regularization).
+#'   Default is `20`.
+#' @param lambda.min.ratio Ratio between last and first lambdas to try.
+#'   Default is `0.01`.
+#' @param dfmax Maximum number of non-zero effects in the model.
+#'   Default is `200e3`.
+#' @param maxiter Maximum number of iterations before convergence.
+#'   Default is `500`.
+#' @param tol Tolerance parameter for assessing convergence.
+#'   Default is `1e-5`.
 #'
 #' @return A matrix of effect sizes, one vector (column) for each row in
 #'   `attr(<res>, "grid_param")`. Missing values are returned when strong
