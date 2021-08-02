@@ -176,7 +176,7 @@ cor(pred_inf, y[ind.test])
 In practice, we recommend to test multiple values for h2 and p. 
 
 ```{r}
-(h2_seq <- round(h2_est * c(0.1, 0.7, 1, 1.4), 4))
+(h2_seq <- round(h2_est * c(0.3, 0.7, 1, 1.4), 4))
 (p_seq <- signif(seq_log(1e-5, 1, length.out = 21), 2))
 (params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE, TRUE)))
 ```
