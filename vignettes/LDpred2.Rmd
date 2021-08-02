@@ -100,7 +100,7 @@ df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)  # use rsid instead of 
 
 If no or few variants are actually flipped, you might want to disable the strand flipping option (`strand_flip = FALSE`).
 
-## Computing LDpred2 scores for one chromosome
+## Computing LDpred2 scores genome-wide
 
 **Some quality control on summary statistics is highly recommended (see paper and other tutorial).**
 
@@ -154,7 +154,7 @@ Note that you will need at least the same memory as this file size (to keep it c
 
 ### LDpred2-inf: infinitesimal model
 
-```{r, cache=TRUE}
+```{r}
 (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
                                 sample_size = n_eff, blocks = NULL)))
 h2_est <- ldsc[["h2"]]
@@ -181,7 +181,7 @@ In practice, we recommend to test multiple values for h2 and p.
 (params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE, TRUE)))
 ```
 
-```{r, cache=TRUE}
+```{r}
 # takes less than 2 min with 4 cores
 beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 ```
@@ -240,7 +240,7 @@ cor(pred, y[ind.test])
 
 We recommend to run many chains in parallel with different initial values for `p`.
 
-```{r, cache=TRUE}
+```{r}
 # takes less than 2 min with 4 cores
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
                                vec_p_init = seq_log(1e-4, 0.5, length.out = 30),

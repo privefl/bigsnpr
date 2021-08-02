@@ -205,7 +205,7 @@
 <div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="va">ind.val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">350</span><span class="op">)</span>
-<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></pre></div>
+<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></pre></div>
 </div>
 <div id="matching-variants-between-genotype-data-and-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
@@ -229,9 +229,9 @@
 <pre><code>## 45,337 variants have been matched; 22,758 were flipped and 15,092 were reversed.</code></pre>
 <p>If no or few variants are actually flipped, you might want to disable the strand flipping option (<code>strand_flip = FALSE</code>).</p>
 </div>
-<div id="computing-ldpred2-scores-for-one-chromosome" class="section level2">
+<div id="computing-ldpred2-scores-genome-wide" class="section level2">
 <h2 class="hasAnchor">
-<a href="#computing-ldpred2-scores-for-one-chromosome" class="anchor"></a>Computing LDpred2 scores for one chromosome</h2>
+<a href="#computing-ldpred2-scores-genome-wide" class="anchor"></a>Computing LDpred2 scores genome-wide</h2>
 <p><strong>Some quality control on summary statistics is highly recommended (see paper and other tutorial).</strong></p>
 <div id="correlation" class="section level3">
 <h3 class="hasAnchor">
@@ -344,11 +344,11 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_at</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"score"</span>, <span class="st">"sparsity"</span><span class="op">)</span>, <span class="va">round</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></pre></div>
 <pre><code>##       p     h2 sparse  score sparsity  id
-## 1 0.010 0.2981  FALSE 10.234    0.000  55
-## 2 0.018 0.4174  FALSE 10.222    0.000  77
-## 3 0.010 0.4174   TRUE 10.212    0.839 160
-## 4 0.018 0.2981   TRUE 10.204    0.745 140
-## 5 0.018 0.4174   TRUE 10.203    0.775 161
+## 1 0.018 0.4174  FALSE 10.290    0.000  77
+## 2 0.010 0.4174  FALSE 10.260    0.000  76
+## 3 0.018 0.2981  FALSE 10.207    0.000  56
+## 4 0.018 0.4174   TRUE 10.206    0.776 161
+## 5 0.010 0.4174   TRUE 10.202    0.838 160
 ##  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]</code></pre>
 <p>You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the (linear or logistic) regression of the phenotype by the PRS since we have found it more robust than using the correlation or the AUC. It also enables adjusting for covariates in this step.</p>
 <p>Also note that we separate both sparse and non-sparse models to show that their predictive performance are similar (in the paper). In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models.</p>
@@ -364,7 +364,7 @@
 <span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu">big_prodVec</span><span class="op">(</span><span class="va">G</span>, <span class="va">best_beta_grid</span>, ind.row <span class="op">=</span> <span class="va">ind.test</span>,
                     ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">pred</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></pre></div>
-<pre><code>## [1] 0.4947602</code></pre>
+<pre><code>## [1] 0.4974708</code></pre>
 </div>
 <div id="ldpred2-auto-automatic-model" class="section level3">
 <h3 class="hasAnchor">
@@ -410,14 +410,14 @@
 <div class="sourceCode" id="cb47"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, max.level <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></pre></div>
 <pre><code>## List of 10
-##  $ beta_est   : num [1:45337] 6.59e-05 3.29e-04 1.01e-04 -1.18e-04 2.37e-05 ...
-##  $ postp_est  : num [1:45337] 0.00621 0.01429 0.00696 0.00711 0.00489 ...
-##  $ corr_est   : num [1:45337] 1.15e-04 1.90e-04 6.61e-05 -2.14e-05 1.36e-05 ...
+##  $ beta_est   : num [1:45337] 6.80e-05 3.34e-04 1.04e-04 -1.23e-04 2.44e-05 ...
+##  $ postp_est  : num [1:45337] 0.00642 0.01462 0.0072 0.0074 0.00507 ...
+##  $ corr_est   : num [1:45337] 2.92e-05 1.10e-04 2.09e-05 -1.07e-04 3.43e-05 ...
 ##  $ sample_beta: num[1:45337, 0 ] 
-##  $ p_est      : num 0.0124
-##  $ h2_est     : num 0.218
-##  $ path_p_est : num [1:700] 0.000946 0.001606 0.00244 0.002794 0.003328 ...
-##  $ path_h2_est: num [1:700] 0.0868 0.1209 0.134 0.1333 0.1447 ...
+##  $ p_est      : num 0.0127
+##  $ h2_est     : num 0.221
+##  $ path_p_est : num [1:700] 0.00069 0.0018 0.0035 0.00456 0.00511 ...
+##  $ path_h2_est: num [1:700] 0.0881 0.1095 0.1376 0.1677 0.1754 ...
 ##  $ h2_init    : num 0.298
 ##  $ p_init     : num 1e-04</code></pre>
 <p>You should verify if the chains “converged”. You can look at the path of the chains, as shown below. In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112">this code</a>, reproduced below). You can also filter on h2 and p estimates that diverge from the median of the chains.</p>
@@ -447,7 +447,7 @@
 <span class="va">final_pred_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">pred_auto</span><span class="op">[</span>, <span class="va">keep</span><span class="op">]</span><span class="op">)</span></pre></div>
 <div class="sourceCode" id="cb52"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">final_pred_auto</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></pre></div>
-<pre><code>## [1] 0.4969077</code></pre>
+<pre><code>## [1] 0.4964273</code></pre>
 </div>
 <div id="lassosum2-grid-of-models" class="section level3">
 <h3 class="hasAnchor">
@@ -492,8 +492,8 @@
 <span class="co"># Some cleaning</span>
 <span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <pre><code>##            used  (Mb) gc trigger  (Mb) max used  (Mb)
-## Ncells  3272024 174.8    6035635 322.4  6035635 322.4
-## Vcells 34921179 266.5   61937301 472.6 51446954 392.6</code></pre>
+## Ncells  3275210 175.0    6035628 322.4  6035628 322.4
+## Vcells 34928115 266.5   63670624 485.8 59459483 453.7</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 </div>
