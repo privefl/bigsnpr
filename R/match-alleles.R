@@ -29,6 +29,10 @@ flip_strand <- function(allele) {
 #'   Default is `TRUE`.
 #' @param match.min.prop Minimum proportion of variants in the smallest data
 #'   to be matched, otherwise stops with an error. Default is `50%`.
+#' @param return_flip_and_rev Whether to return internal boolean variables
+#'   `"_FLIP_"` and `"_REV_"` (whether the alleles were flipped and/or reversed).
+#'   Default is `FALSE`. Values in column `$beta` are multiplied by -1 for
+#'   variants with alleles reversed.
 #'
 #' @return A single data frame with matched variants. Values in column `$beta`
 #'   are multiplied by -1 for variants with alleles reversed.
@@ -43,7 +47,8 @@ snp_match <- function(sumstats, info_snp,
                       strand_flip = TRUE,
                       join_by_pos = TRUE,
                       remove_dups = TRUE,
-                      match.min.prop = 0.5) {
+                      match.min.prop = 0.5,
+                      return_flip_and_rev = FALSE) {
 
   sumstats <- as.data.frame(sumstats)
   info_snp <- as.data.frame(info_snp)
@@ -115,7 +120,9 @@ snp_match <- function(sumstats, info_snp,
   if (nrow(matched) < min_match)
     stop2("Not enough variants have been matched.")
 
-  as.data.frame(matched[, c("_FLIP_", "_REV_") := NULL][order(chr, pos)])
+  if (!return_flip_and_rev) matched <- matched[, c("_FLIP_", "_REV_") := NULL]
+
+  as.data.frame(matched[order(chr, pos)])
 }
 
 ################################################################################

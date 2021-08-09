@@ -36,6 +36,12 @@ expect_message(snp_match(data.table::as.data.table(sumstats), info_snp),
 expect_message(snp_match(sumstats, data.table::as.data.table(info_snp)),
                "4 variants have been matched; 1 were flipped and 1 were reversed.")
 
+expect_message(matched3 <- snp_match(sumstats, info_snp, return_flip_and_rev = TRUE),
+               "4 variants have been matched; 1 were flipped and 1 were reversed.")
+expect_equal(dim(matched3), c(4, 11))
+expect_equal(matched3[["_FLIP_"]], c(FALSE, FALSE,  TRUE, FALSE))
+expect_equal(matched3[["_REV_"]],  c(FALSE,  TRUE, FALSE, FALSE))
+
 
 sumstats2 <- data.frame(
   chr = 1,

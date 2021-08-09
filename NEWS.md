@@ -1,3 +1,7 @@
+## bigsnpr 1.8.8
+
+- Add parameter `return_flip_and_rev` to `snp_match()` for whether to return internal boolean variables `"_FLIP_"` and `"_REV_"`.
+
 ## bigsnpr 1.8.7
 
 - Add `$perc_kept` in the output of `snp_ldsplit()`, the percentage of initial non-zero values kept within the blocks defined.
