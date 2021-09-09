@@ -1,3 +1,7 @@
+## bigsnpr 1.8.9
+
+- Add parameter `type` in `snp_asGeneticPos()` to also be able to use interpolated genetic maps from [here](https://github.com/joepickrell/1000-genomes-genetic-maps/tree/master/interpolated_from_hapmap).
+
 ## bigsnpr 1.8.8
 
 - Add parameter `return_flip_and_rev` to `snp_match()` for whether to return internal boolean variables `"_FLIP_"` and `"_REV_"`.

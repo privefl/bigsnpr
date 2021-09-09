@@ -98,6 +98,15 @@ test_that("snp_asGeneticPos() works", {
   expect_equal(res2[-3], map$V3)
   expect_gt(res2[3], res2[2])
   expect_lt(res2[3], res2[4])
+
+  skip_if_offline("github.com")
+  skip_if(is_cran)
+
+  info2 <- data.frame(chr = 22, pos = 18206376)
+  res3 <- snp_asGeneticPos(info2$chr, info2$pos, dir = tempdir())
+  expect_equal(res3, 3.682628, tolerance = 1e-5)
+  res4 <- snp_asGeneticPos(info2$chr, info2$pos, dir = tempdir(), type = "hapmap")
+  expect_equal(res4, 5.905713, tolerance = 1e-5)
 })
 
 ################################################################################
