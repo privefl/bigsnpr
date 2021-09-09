@@ -271,12 +271,18 @@ same_ref <- function(ref1, alt1, ref2, alt2) {
 #' @param rsid If providing rsIDs, the matching is performed using those
 #'   (instead of positions) and variants not matched are interpolated using
 #'   spline interpolation of variants that have been matched.
+#' @param type Whether to use the genetic maps interpolated from "OMNI"
+#'   (the default), or from "hapmap".
 #'
 #' @return The new vector of genetic positions.
 #' @export
 #'
 snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
-                             rsid = NULL) {
+                             rsid = NULL, type = c("OMNI", "hapmap")) {
+
+  type <- match.arg(type)
+  path <- c(OMNI   = "interpolated_OMNI",
+            hapmap = "interpolated_from_hapmap")[type]
 
   assert_package("R.utils")
   assert_lengths(infos.chr, infos.pos)
@@ -285,11 +291,12 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
   snp_split(infos.chr, function(ind.chr, pos, dir, rsid) {
 
     chr <- attr(ind.chr, "chr")
-    basename <- paste0("chr", chr, ".OMNI.interpolated_genetic_map")
+    basename <- paste0("chr", chr, `if`(type == "OMNI", ".OMNI", ""),
+                       ".interpolated_genetic_map")
     mapfile <- file.path(dir, basename)
     if (!file.exists(mapfile)) {
       url <- paste0("https://github.com/joepickrell/1000-genomes-genetic-maps/",
-                    "raw/master/interpolated_OMNI/", basename, ".gz")
+                    "raw/master/", path, "/", basename, ".gz")
       gzfile <- paste0(mapfile, ".gz")
       utils::download.file(url, destfile = gzfile, quiet = TRUE)
       R.utils::gunzip(gzfile)

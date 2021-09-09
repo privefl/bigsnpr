@@ -9,7 +9,8 @@ snp_asGeneticPos(
   infos.pos,
   dir = tempdir(),
   ncores = 1,
-  rsid = NULL
+  rsid = NULL,
+  type = c("OMNI", "hapmap")
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ You may use \link{nb_cores}.}
 \item{rsid}{If providing rsIDs, the matching is performed using those
 (instead of positions) and variants not matched are interpolated using
 spline interpolation of variants that have been matched.}
+
+\item{type}{Whether to use the genetic maps interpolated from "OMNI"
+(the default), or from "hapmap".}
 }
 \value{
 The new vector of genetic positions.
