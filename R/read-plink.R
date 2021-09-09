@@ -37,8 +37,8 @@ snp_readBed <- function(bedfile, backingfile = sub_bed(bedfile)) {
   sapply(c(bedfile, bimfile, famfile), assert_exist)
 
   # Read map and family files
-  fam <- bigreadr::fread2(famfile, col.names = NAMES.FAM)
-  bim <- bigreadr::fread2(bimfile, col.names = NAMES.MAP)
+  fam <- bigreadr::fread2(famfile, col.names = NAMES.FAM, nThread = 1)
+  bim <- bigreadr::fread2(bimfile, col.names = NAMES.MAP, nThread = 1)
 
   # Prepare Filebacked Big Matrix
   bigGeno <- FBM.code256(

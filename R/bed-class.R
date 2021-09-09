@@ -79,13 +79,15 @@ bed_RC <- methods::setRefClass(
 
     fam = function() {
       if (base::ncol(.self$.fam) == 0) {
-        .self$.fam <- bigreadr::fread2(.self$famfile, col.names = NAMES.FAM)
+        .self$.fam <-
+          bigreadr::fread2(.self$famfile, col.names = NAMES.FAM, nThread = 1)
       }
       .self$.fam
     },
     map = function() {
       if (base::ncol(.self$.map) == 0) {
-        .self$.map <- bigreadr::fread2(.self$bimfile, col.names = NAMES.MAP)
+        .self$.map <-
+          bigreadr::fread2(.self$bimfile, col.names = NAMES.MAP, nThread = 1)
       }
       .self$.map
     },

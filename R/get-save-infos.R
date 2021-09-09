@@ -69,7 +69,7 @@ snp_getSampleInfos <- function(x, df.or.files,
   if (is.data.frame(df.or.files)) {
     data.infos <- df.or.files
   } else if (is.character(df.or.files)) {
-    data.infos <- bigreadr::fread2(df.or.files, ...)
+    data.infos <- bigreadr::fread2(df.or.files, ..., nThread = 1)
   } else {
     stop2("'df.or.files' must be a data.frame or a vector of file paths.")
   }

@@ -175,7 +175,7 @@ snp_modifyBuild <- function(info_snp, liftOver, from = "hg18", to = "hg19") {
   system(paste(liftOver, BED, chain, lifted, unmapped))
 
   # readLines(lifted, n = 5)
-  new_pos <- bigreadr::fread2(lifted)
+  new_pos <- bigreadr::fread2(lifted, nThread = 1)
 
   # readLines(unmapped, n = 6)
   bad <- grep("^#", readLines(unmapped), value = TRUE, invert = TRUE)
@@ -301,7 +301,7 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
       utils::download.file(url, destfile = gzfile, quiet = TRUE)
       R.utils::gunzip(gzfile)
     }
-    map.chr <- bigreadr::fread2(mapfile, showProgress = FALSE)
+    map.chr <- bigreadr::fread2(mapfile, showProgress = FALSE, nThread = 1)
 
     if (is.null(rsid)) {
       ind <- bigutilsr::knn_parallel(as.matrix(map.chr$V2), as.matrix(pos[ind.chr]),
