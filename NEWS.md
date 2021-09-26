@@ -1,3 +1,7 @@
+## bigsnpr 1.8.10
+
+- Function `snp_cor()` now also uses the upper triangle (`@uplo = "U"`) when the sparse correlation matrix is diagonal, so that it is easier to use with e.g. `as_SFBM()`.
+
 ## bigsnpr 1.8.9
 
 - Add parameter `type` in `snp_asGeneticPos()` to also be able to use interpolated genetic maps from [here](https://github.com/joepickrell/1000-genomes-genetic-maps/tree/master/interpolated_from_hapmap).

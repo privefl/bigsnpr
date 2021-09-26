@@ -64,6 +64,9 @@ M <- 100
 test <- snp_fake(N, M)
 G <- test$genotypes
 G[] <- sample(as.raw(0:3), size = length(G), replace = TRUE)
+corr_diag <- snp_cor(G, thr_r2 = 0.99)
+expect_identical(corr_diag@uplo, "U")  # case of diagonal matrix
+expect_s4_class(as_SFBM(corr_diag), "SFBM")
 
 # random parameters
 alpha <- runif(1, 0.01, 0.2)

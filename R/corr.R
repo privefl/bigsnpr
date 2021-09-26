@@ -78,6 +78,8 @@ snp_cor <- function(Gna,
     symmetric = TRUE)
 
   if (fill.diag) diag(corr) <- 1
+  if (corr@uplo == "L" && Matrix::isDiagonal(corr))
+    corr@uplo <- "U"
 
   corr
 }
