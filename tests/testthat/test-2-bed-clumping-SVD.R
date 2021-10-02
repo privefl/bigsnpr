@@ -8,11 +8,17 @@ skip_if(is_cran)
 
 ################################################################################
 
-# test_that()
-
 # No missing value -> with {bigstatsr}
 bigSNP <- snp_attachExtdata()
 G <- bigSNP$genotypes
+
+test_that("Scales work", {
+  sc1 <- snp_scaleBinom()(G)
+  sc2 <- snp_scaleAlpha()(G)
+  expect_equal(sc1, sc2)
+  expect_equal(snp_scaleAlpha(alpha = 0)(G)$scale, rep(1, ncol(G)))
+})
+
 POS <- bigSNP$map$physical.pos
 CHR0 <- sort(rep_len(1:2, ncol(G)))
 ind.keep0 <- snp_clumping(G, infos.chr = CHR0, infos.pos = POS,

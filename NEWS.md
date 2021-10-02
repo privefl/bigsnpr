@@ -1,3 +1,7 @@
+## bigsnpr 1.8.11
+
+- Add function `snp_scaleAlpha()`, which is similar to `snp_scaleBinom()`, but has a parameter `alpha` that controls the relation between the scaling and the allele frequencies.
+
 ## bigsnpr 1.8.10
 
 - Function `snp_cor()` now also uses the upper triangle (`@uplo = "U"`) when the sparse correlation matrix is diagonal, so that it is easier to use with e.g. `as_SFBM()`.

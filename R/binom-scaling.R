@@ -1,5 +1,33 @@
 ################################################################################
 
+#' @param alpha Assumes that the average contribution (e.g. heritability)
+#'   of a SNP of frequency \eqn{p} is proportional to
+#'   \eqn{[2p(1−p)]^{1+\alpha}}. The `center` is then \eqn{2 p} and the `scale`
+#'   is \eqn{[2p(1−p)]^{-\alpha/2}}. Default is `-1`.
+#'
+#' @rdname snp_scaleBinom
+#'
+#' @export
+#'
+snp_scaleAlpha <- function(alpha = -1) {
+
+  function(X,
+           ind.row = rows_along(X),
+           ind.col = cols_along(X),
+           ncores = 1) {
+
+    af <- snp_colstats(X, ind.row, ind.col, ncores)$sumX /
+      (2 * length(ind.row))
+
+    data.frame(
+      center = 2 * af,
+      scale = (2 * af * (1 - af))^(-alpha / 2)
+    )
+  }
+}
+
+################################################################################
+
 #' Binomial(n, p) scaling
 #'
 #' Binomial(n, p) scaling where `n` is fixed and `p` is estimated.
@@ -41,7 +69,10 @@ snp_scaleBinom <- function(nploidy = 2) {
     af <- snp_colstats(X, ind.row, ind.col, ncores)$sumX /
       (length(ind.row) * nploidy)
 
-    data.frame(center = nploidy * af, scale = sqrt(nploidy * af * (1 - af)))
+    data.frame(
+      center = nploidy * af,
+      scale = sqrt(nploidy * af * (1 - af))
+    )
   }
 }
 
