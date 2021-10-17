@@ -3,7 +3,7 @@ setwd("tmp-data/")
 # https://cran.r-project.org/web/packages/plinkQC/vignettes/Genomes1000.pdf
 download.file("https://www.dropbox.com/s/afvvf1e15gqzsqo/all_phase3.pgen.zst?dl=1",
               destfile = "all_phase3.pgen.zst")
-download.file("https://www.dropbox.com/s/0nz9ey756xfocjm/all_phase3.pvar.zst?dl=1",
+download.file("https://www.dropbox.com/s/op9osq6luy3pjg8/all_phase3.pvar.zst?dl=1",
               destfile = "all_phase3.pvar.zst")
 download.file("https://www.dropbox.com/s/yozrzsdrwqej63q/phase3_corrected.psam?dl=1",
               destfile = "all_phase3.psam")

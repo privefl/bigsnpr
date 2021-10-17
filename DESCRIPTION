@@ -52,6 +52,7 @@ Suggests:
     glue,
     Hmisc,
     pcadapt (>= 4.1),
+    quadprog,
     rmutil,
     RSpectra,
     RSQLite,
