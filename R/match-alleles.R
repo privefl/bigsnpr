@@ -348,14 +348,14 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
 #' res <- snp_ancestry_prop(y, X)
 #' str(res)
 #'
-snp_ancestry <- function(freq, info_freq_ref) {
+snp_ancestry_summary <- function(freq, info_freq_ref) {
 
   assert_package("quadprog")
   assert_nona(freq)
   assert_nona(info_freq_ref)
   assert_lengths(freq, rows_along(info_freq_ref))
 
-  scale <- pmax(sqrt(freq * (1 - freq)), 0.01)
+  scale <- pmax(sqrt(freq * (1 - freq)), 0.1)
   y <- freq / scale
   X0 <- as.matrix(info_freq_ref)
   X <- sweep(X0, 1, scale, '/')
