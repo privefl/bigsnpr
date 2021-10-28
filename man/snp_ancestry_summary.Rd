@@ -13,11 +13,11 @@ snp_ancestry_summary(freq, info_freq_ref)
 be used as reference (one population per column).}
 }
 \value{
-A list of four elements:
+A list of three elements:
 \itemize{
 \item \verb{$coef}: vector of coefficients representing the ancestry proportions,
-\item \verb{$pred}: vector of predicted frequencies,
-\item \verb{$cor_pred}: correlation between optimal solution \verb{$pred} and \code{freq},
+\item \verb{$cor_pred}: correlation between between \code{freq} and the optimal solution
+\code{info_freq_ref \%*\% coef},
 \item \verb{$all_cor}: all correlations between \code{freq} and \code{info_freq_ref}.
 }
 }
@@ -26,9 +26,42 @@ Estimation of ancestry proportions. Make sure to match summary statistics
 using \code{\link[=snp_match]{snp_match()}} (and reversing frequencies when needed).
 }
 \examples{
-X <- matrix(rbeta(3000, 1, 3), ncol = 3)
-y <- X \%*\% c(0.3, 0.1, 0.6)
-res <- snp_ancestry_prop(y, X)
+## Toy example
+
+X <- matrix(rbeta(4000, 1, 3), ncol = 4)
+y <- X \%*\% c(0.2, 0.1, 0.6, 0.1)
+res <- snp_ancestry_summary(y, X)
 str(res)
 
+
+## Real GWAS summary statistics: Epilepsy (supposedly in EUR+EAS+AFR)
+
+\dontrun{
+
+library(dplyr)
+
+gz <- runonce::download_file(
+  "http://www.epigad.org/gwas_ilae2018_16loci/all_epilepsy_METAL.gz",
+  dir = "tmp-data")
+readLines(gz, n = 3)
+sumstats <- bigreadr::fread2(
+  gz, select = c("CHR", "BP", "Allele2", "Allele1", "Freq1"),
+  col.names = c("chr", "pos", "a0", "a1", "freq")
+) \%>\%
+  mutate_at(3:4, toupper)
+
+all_freq <- bigreadr::fread2(
+  runonce::download_file("https://figshare.com/ndownloader/files/31218445",
+                         dir = "tmp-data", fname = "ref_freqs.csv.gz"))
+
+matched <- bigsnpr::snp_match(
+  mutate(sumstats, chr = as.integer(chr), beta = 1),
+  all_freq[1:5], return_flip_and_rev = TRUE
+) \%>\%
+  mutate(freq = ifelse(`_REV_`, 1 - freq, freq))
+
+X <- as.matrix(all_freq[matched$`_NUM_ID_`, -(1:5)])
+y <- matched$freq
+snp_ancestry_summary(y, X)
+}
 }

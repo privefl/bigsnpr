@@ -76,7 +76,6 @@ expect_equal(same_ref(ref1 = info_snp$a1, alt1 = info_snp$a0,
 
 ################################################################################
 
-
 test_that("snp_asGeneticPos() works", {
 
   info <- data.frame(
@@ -107,6 +106,23 @@ test_that("snp_asGeneticPos() works", {
   expect_equal(res3, 3.682628, tolerance = 1e-5)
   res4 <- snp_asGeneticPos(info2$chr, info2$pos, dir = tempdir(), type = "hapmap")
   expect_equal(res4, 5.905713, tolerance = 1e-5)
+})
+
+################################################################################
+
+test_that("snp_ancestry_summary() works", {
+
+  X <- matrix(rbeta(4000, 1, 3), ncol = 4)
+  prop <- c(0.2, 0.1, 0.6, 0.1)
+  y <- X %*% prop
+  res <- snp_ancestry_summary(y, X)
+  expect_equal(res$coef, prop)
+
+  expect_warning(res2 <- snp_ancestry_summary(y, X[, -1]),
+                 "The solution does not perfectly match the frequencies.")
+  expect_equal(res2$all_cor, res$all_cor[-1])
+  expect_true(all(res2$coef > prop[-1]))
+  expect_equal(res2$coef, prop[-1], tolerance = 0.1)
 })
 
 ################################################################################

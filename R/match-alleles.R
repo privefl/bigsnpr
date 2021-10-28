@@ -335,18 +335,16 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
 #' @param info_freq_ref A data frame (or matrix) with the set of frequencies to
 #'   be used as reference (one population per column).
 #'
-#' @return A list of four elements:
+#' @return A list of three elements:
 #'   - `$coef`: vector of coefficients representing the ancestry proportions,
-#'   - `$pred`: vector of predicted frequencies,
-#'   - `$cor_pred`: correlation between optimal solution `$pred` and `freq`,
+#'   - `$cor_pred`: correlation between between `freq` and the optimal solution
+#'     `info_freq_ref %*% coef`,
 #'   - `$all_cor`: all correlations between `freq` and `info_freq_ref`.
 #' @export
 #'
-#' @examples
-#' X <- matrix(rbeta(3000, 1, 3), ncol = 3)
-#' y <- X %*% c(0.3, 0.1, 0.6)
-#' res <- snp_ancestry_prop(y, X)
-#' str(res)
+#' @importFrom stats cor
+#'
+#' @example examples/example-ancestry-summary.R
 #'
 snp_ancestry_summary <- function(freq, info_freq_ref) {
 
@@ -364,12 +362,11 @@ snp_ancestry_summary <- function(freq, info_freq_ref) {
 
   # solve QP problem using https://stats.stackexchange.com/a/21566/135793
   res <- quadprog::solve.QP(
-    Dmat = solve(chol(crossprod(X))),
-    factorized = TRUE,
+    Dmat = solve(chol(crossprod(X))), factorized = TRUE,
     dvec = crossprod(y, X),
     Amat = cbind(1, diag(ncol(X))),
     bvec = c(1, rep(0, ncol(X))),
-    meq = 1
+    meq  = 1
   )
 
   y_hat <- drop(X0 %*% res$solution)
@@ -378,10 +375,9 @@ snp_ancestry_summary <- function(freq, info_freq_ref) {
     warning2("The solution does not perfectly match the frequencies.")
 
   list(
-    coef = setNames(round(res$solution, 7), colnames(info_freq_ref)),
-    pred = y_hat,
+    coef     = setNames(round(res$solution, 7), colnames(info_freq_ref)),
     cor_pred = cor_pred,
-    all_cor = drop(cor(X0, freq))
+    all_cor  = drop(cor(X0, freq))
   )
 }
 
