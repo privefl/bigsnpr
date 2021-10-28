@@ -23,6 +23,7 @@ Biometrics
 bioRxiv
 BioRxiv
 Biostatistics
+Bjarni Jóhann Vilhjálmsson
 Blum
 bp
 bty
@@ -56,7 +57,7 @@ GigaScience
 github
 GWAS
 gzipped
-HapMap
+hapmap
 heritability
 Hinrichs
 https
@@ -93,6 +94,7 @@ nb
 Neale
 OADP
 OGK
+OMNI
 OpenMP
 parallelization
 parallelize
@@ -113,6 +115,7 @@ Privé
 privefl
 PRS
 QCed
+QCing
 qctool
 Qiu
 RcppParallel
@@ -143,6 +146,7 @@ tmp
 UCSC
 UKBB
 UKBiobank
+uncompress
 univLinReg
 univLogReg
 unscaling
