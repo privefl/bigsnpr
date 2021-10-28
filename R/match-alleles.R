@@ -28,7 +28,7 @@ flip_strand <- function(allele) {
 #' @param remove_dups Whether to remove duplicates (same physical position)?
 #'   Default is `TRUE`.
 #' @param match.min.prop Minimum proportion of variants in the smallest data
-#'   to be matched, otherwise stops with an error. Default is `50%`.
+#'   to be matched, otherwise stops with an error. Default is `20%`.
 #' @param return_flip_and_rev Whether to return internal boolean variables
 #'   `"_FLIP_"` and `"_REV_"` (whether the alleles were flipped and/or reversed).
 #'   Default is `FALSE`. Values in column `$beta` are multiplied by -1 for
@@ -47,7 +47,7 @@ snp_match <- function(sumstats, info_snp,
                       strand_flip = TRUE,
                       join_by_pos = TRUE,
                       remove_dups = TRUE,
-                      match.min.prop = 0.5,
+                      match.min.prop = 0.2,
                       return_flip_and_rev = FALSE) {
 
   sumstats <- as.data.frame(sumstats)
@@ -322,6 +322,63 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
     new_pos
 
   }, combine = "c", pos = infos.pos, dir = dir, rsid = rsid, ncores = ncores)
+}
+
+################################################################################
+
+#' Estimation of ancestry proportions
+#'
+#' Estimation of ancestry proportions. Make sure to match summary statistics
+#' using [snp_match()] (and reversing frequencies when needed).
+#'
+#' @param freq Vector of frequencies from which to estimate ancestry proportions.
+#' @param info_freq_ref A data frame (or matrix) with the set of frequencies to
+#'   be used as reference (one population per column).
+#'
+#' @return A list of three elements:
+#'   - `$coef`: vector of coefficients representing the ancestry proportions,
+#'   - `$cor_pred`: correlation between between `freq` and the optimal solution
+#'     `info_freq_ref %*% coef`,
+#'   - `$all_cor`: all correlations between `freq` and `info_freq_ref`.
+#' @export
+#'
+#' @importFrom stats cor
+#'
+#' @example examples/example-ancestry-summary.R
+#'
+snp_ancestry_summary <- function(freq, info_freq_ref) {
+
+  assert_package("quadprog")
+  assert_nona(freq)
+  assert_nona(info_freq_ref)
+  assert_lengths(freq, rows_along(info_freq_ref))
+
+  scale <- pmax(sqrt(freq * (1 - freq)), 0.1)
+  y <- freq / scale
+  X0 <- as.matrix(info_freq_ref)
+  X <- sweep(X0, 1, scale, '/')
+  if (mean(cor(X, y)) < -0.2)
+    stop2("Frequencies seem all reversed; change reference allele?")
+
+  # solve QP problem using https://stats.stackexchange.com/a/21566/135793
+  res <- quadprog::solve.QP(
+    Dmat = solve(chol(crossprod(X))), factorized = TRUE,
+    dvec = crossprod(y, X),
+    Amat = cbind(1, diag(ncol(X))),
+    bvec = c(1, rep(0, ncol(X))),
+    meq  = 1
+  )
+
+  y_hat <- drop(X0 %*% res$solution)
+  cor_pred <- drop(cor(y_hat, freq))
+  if (cor_pred < 0.99)
+    warning2("The solution does not perfectly match the frequencies.")
+
+  list(
+    coef     = setNames(round(res$solution, 7), colnames(info_freq_ref)),
+    cor_pred = cor_pred,
+    all_cor  = drop(cor(X0, freq))
+  )
 }
 
 ################################################################################

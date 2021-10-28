@@ -1,3 +1,7 @@
+## bigsnpr 1.9.0
+
+- Add function `snp_ancestry_summary()` to estimate ancestry proportions from a cohort using only its summary allele frequencies.
+
 ## bigsnpr 1.8.11
 
 - Add function `snp_scaleAlpha()`, which is similar to `snp_scaleBinom()`, but has a parameter `alpha` that controls the relation between the scaling and the allele frequencies.

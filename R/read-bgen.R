@@ -87,12 +87,12 @@ check_bgen_format <- function(bgenfile) {
 #' If the format is not the expected one, this will result in an error or even
 #' a crash of your R session. Another common source of error is due to corrupted
 #' files; e.g. if using UK Biobank files, compare the result of [tools::md5sum()]
-#' with the ones at https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998.
+#' with the ones at \url{https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998}.
 #'
 #' You can look at some example code from my papers on how to use this function:
-#' - https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62
-#' - https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75
-#' - https://github.com/privefl/UKBiobank/blob/master/10-get-dosages.R
+#' - \url{https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62}
+#' - \url{https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75}
+#' - \url{https://github.com/privefl/UKBiobank/blob/master/10-get-dosages.R}
 #'
 #' @param bgenfiles Character vector of paths to files with extension ".bgen".
 #'   The corresponding ".bgen.bgi" index files must exist.

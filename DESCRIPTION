@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.8.11
-Date: 2021-10-07
+Version: 1.9.0
+Date: 2021-10-28
 Authors@R: c(
     person("Florian", "Privé", email = "florian.prive.21@gmail.com", role = c("aut", "cre")),
     person("Michael", "Blum", email = "michael.blum@univ-grenoble-alpes.fr", role = "ths"),
@@ -52,9 +52,11 @@ Suggests:
     glue,
     Hmisc,
     pcadapt (>= 4.1),
+    quadprog,
     rmutil,
     RSpectra,
     RSQLite,
+    runonce,
     R.utils,
     spelling, 
     testthat,

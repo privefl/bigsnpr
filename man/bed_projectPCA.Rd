@@ -46,7 +46,7 @@ If so, ambiguous alleles A/T and C/G are removed.}
 or instead by rsid.}
 
 \item{match.min.prop}{Minimum proportion of variants in the smallest data
-to be matched, otherwise stops with an error. Default is \verb{50\%}.}
+to be matched, otherwise stops with an error. Default is \verb{20\%}.}
 
 \item{build.new}{Genome build of the target data. Default is \code{hg19}.}
 

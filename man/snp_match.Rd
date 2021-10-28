@@ -10,7 +10,7 @@ snp_match(
   strand_flip = TRUE,
   join_by_pos = TRUE,
   remove_dups = TRUE,
-  match.min.prop = 0.5,
+  match.min.prop = 0.2,
   return_flip_and_rev = FALSE
 )
 }
@@ -29,7 +29,7 @@ or instead by rsid.}
 Default is \code{TRUE}.}
 
 \item{match.min.prop}{Minimum proportion of variants in the smallest data
-to be matched, otherwise stops with an error. Default is \verb{50\%}.}
+to be matched, otherwise stops with an error. Default is \verb{20\%}.}
 
 \item{return_flip_and_rev}{Whether to return internal boolean variables
 \code{"_FLIP_"} and \code{"_REV_"} (whether the alleles were flipped and/or reversed).
