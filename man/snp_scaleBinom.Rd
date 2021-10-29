@@ -12,8 +12,8 @@ snp_scaleBinom(nploidy = 2)
 \arguments{
 \item{alpha}{Assumes that the average contribution (e.g. heritability)
 of a SNP of frequency \eqn{p} is proportional to
-\eqn{[2p(1−p)]^{1+\alpha}}. The \code{center} is then \eqn{2 p} and the \code{scale}
-is \eqn{[2p(1−p)]^{-\alpha/2}}. Default is \code{-1}.}
+\eqn{[2p(1-p)]^{1+\alpha}}. The \code{center} is then \eqn{2 p} and the \code{scale}
+is \eqn{[2p(1-p)]^{-\alpha/2}}. Default is \code{-1}.}
 
 \item{nploidy}{Number of trials, parameter of the binomial distribution.
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}

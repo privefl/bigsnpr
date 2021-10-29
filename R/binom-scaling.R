@@ -2,8 +2,8 @@
 
 #' @param alpha Assumes that the average contribution (e.g. heritability)
 #'   of a SNP of frequency \eqn{p} is proportional to
-#'   \eqn{[2p(1−p)]^{1+\alpha}}. The `center` is then \eqn{2 p} and the `scale`
-#'   is \eqn{[2p(1−p)]^{-\alpha/2}}. Default is `-1`.
+#'   \eqn{[2p(1-p)]^{1+\alpha}}. The `center` is then \eqn{2 p} and the `scale`
+#'   is \eqn{[2p(1-p)]^{-\alpha/2}}. Default is `-1`.
 #'
 #' @rdname snp_scaleBinom
 #'
