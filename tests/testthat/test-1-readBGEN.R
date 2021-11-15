@@ -64,8 +64,8 @@ test_that("same variant infos as with QCTOOL", {
   test <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs), ncores = ncores()))
 
   expect_identical(
-    dplyr::relocate(dplyr::mutate(test$map[-19, 1:6], chromosome = as.integer(chromosome)), rsid, .before = "chromosome"),
-    dplyr::as_tibble(dplyr::transmute(
+    dplyr::mutate(test$map[-19, 1:6], chromosome = as.integer(chromosome)),
+    dplyr::as_tibble(dplyr::select(
       snp_info[-19, ], chromosome, marker.ID = alternate_ids, rsid,
       physical.pos = position, allele1 = alleleA, allele2 = alleleB))
   )
