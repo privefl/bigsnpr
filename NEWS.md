@@ -1,3 +1,9 @@
+## bigsnpr 1.9.1
+
+- Add function `bed_cor()` (similar to `snp_cor()` but with bed files/objects directly).
+
+- Add functions `snp_ld_scores()` and `bed_ld_scores()`.
+
 ## bigsnpr 1.9.0
 
 - Add function `snp_ancestry_summary()` to estimate ancestry proportions from a cohort using only its summary allele frequencies.

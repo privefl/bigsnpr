@@ -160,11 +160,51 @@ test_that("parallel snp_cor() works", {
   rows <- sample(nrow(G), replace = TRUE)
   cols <- sample(ncol(G), replace = TRUE)
 
-  test <- replicate(10, simplify = FALSE, {
+  test <- replicate(5, simplify = FALSE, {
     snp_cor(G, rows, cols, ncores = 2)
   })
-  true <- snp_cor(G, rows, cols, ncores = 1)
+  time <- system.time(true <- snp_cor(G, rows, cols, ncores = 1))[3]
 
+  expect_lt(system.time(snp_cor(G, rows, cols, ncores = 2))[3], time)
+  expect_true(all(sapply(test, all.equal, current = true)))
+
+  bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+  obj.bed <- bed(bedfile)
+
+  test <- replicate(5, simplify = FALSE, {
+    bed_cor(obj.bed, rows, cols, ncores = 2)
+  })
+  time <- system.time(true <- bed_cor(obj.bed, rows, cols, ncores = 1))[3]
+
+  expect_lt(system.time(bed_cor(obj.bed, rows, cols, ncores = 2))[3], time)
+  expect_true(all(sapply(test, all.equal, current = true)))
+})
+
+################################################################################
+
+test_that("parallel snp_ld_scores() works", {
+
+  G <- snp_attachExtdata()$genotypes
+  rows <- sample(nrow(G), replace = TRUE)
+  cols <- sample(ncol(G), replace = TRUE)
+
+  test <- replicate(5, simplify = FALSE, {
+    snp_ld_scores(G, rows, cols, ncores = 2)
+  })
+  time <- system.time(true <- snp_ld_scores(G, rows, cols, ncores = 1))[3]
+
+  expect_lt(system.time(snp_ld_scores(G, rows, cols, ncores = 2))[3], time)
+  expect_true(all(sapply(test, all.equal, current = true)))
+
+  bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
+  obj.bed <- bed(bedfile)
+
+  test <- replicate(5, simplify = FALSE, {
+    bed_ld_scores(obj.bed, rows, cols, ncores = 2)
+  })
+  time <- system.time(true <- bed_ld_scores(obj.bed, rows, cols, ncores = 1))[3]
+
+  expect_lt(system.time(bed_ld_scores(obj.bed, rows, cols, ncores = 2))[3], time)
   expect_true(all(sapply(test, all.equal, current = true)))
 })
 

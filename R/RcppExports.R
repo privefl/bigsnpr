@@ -65,6 +65,10 @@ lassosum2 <- function(corr, beta_hat, lambda, delta, dfmax, maxiter, tol) {
     .Call(`_bigsnpr_lassosum2`, corr, beta_hat, lambda, delta, dfmax, maxiter, tol)
 }
 
+ld_scores <- function(obj, rowInd, colInd, size, pos, ncores) {
+    .Call(`_bigsnpr_ld_scores`, obj, rowInd, colInd, size, pos, ncores)
+}
+
 ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, allow_jump_sign, shrink_corr, verbose = FALSE) {
     .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, allow_jump_sign, shrink_corr, verbose)
 }

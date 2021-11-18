@@ -266,6 +266,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ld_scores
+NumericVector ld_scores(Environment obj, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& pos, int ncores);
+RcppExport SEXP _bigsnpr_ld_scores(SEXP objSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP posSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type pos(posSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(ld_scores(obj, rowInd, colInd, size, pos, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ldpred2_gibbs_auto
 List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, int report_step, bool allow_jump_sign, double shrink_corr, bool verbose);
 RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP report_stepSEXP, SEXP allow_jump_signSEXP, SEXP shrink_corrSEXP, SEXP verboseSEXP) {
@@ -526,6 +542,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 8},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
     {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 7},
+    {"_bigsnpr_ld_scores", (DL_FUNC) &_bigsnpr_ld_scores, 6},
     {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 13},
     {"_bigsnpr_ldpred2_gibbs_one_sampling", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one_sampling, 10},
     {"_bigsnpr_ldpred2_gibbs", (DL_FUNC) &_bigsnpr_ldpred2_gibbs, 11},

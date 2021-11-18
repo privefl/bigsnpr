@@ -67,6 +67,7 @@ reference:
       - snp_indLRLDR
       - snp_autoSVD
       - snp_cor
+      - snp_ld_scores
       - snp_ldsc
       - snp_ldsplit
   - title: "Polygenic scores"
