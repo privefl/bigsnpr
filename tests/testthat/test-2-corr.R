@@ -18,7 +18,7 @@ t <- r * sqrt((length(ind.row) - 2) / (1 - r^2))
 r_again <- t / sqrt(length(ind.row) - 2 + t^2)
 expect_equal(r_again, r)
 
-ind_val <- bigsnpr:::corMat(BM = G,
+ind_val <- bigsnpr:::corMat(G,
                             rowInd = ind.row,
                             colInd = ind.col,
                             size = size,
@@ -91,7 +91,7 @@ test_that("Same correlations as Hmisc (with significance levels)", {
   expect_equal(2*(length(corr@i) - nrow(corr)), length(ind))
 
   # without diagonal
-  corr2 <- snp_cor(G = test$genotypes,
+  corr2 <- snp_cor(G = G,
                    ind.row = ind.row,
                    ind.col = ind.col,
                    alpha = alpha,
@@ -102,7 +102,7 @@ test_that("Same correlations as Hmisc (with significance levels)", {
   expect_equal(2*length(corr2@i), length(ind))
 
   # with additional threshold
-  corr3 <- snp_cor(G = test$genotypes,
+  corr3 <- snp_cor(G = G,
                    ind.row = ind.row,
                    ind.col = ind.col,
                    alpha = alpha,
@@ -117,25 +117,25 @@ test_that("Same correlations as Hmisc (with significance levels)", {
 
 test_that("Information on position is used in snp_cor()", {
 
-  corr3 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+  corr3 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
                    alpha = alpha, fill.diag = FALSE, size = 5)
 
-  corr3.2 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+  corr3.2 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
                     alpha = alpha, fill.diag = FALSE, size = 5,
                     ncores = 2)
   expect_equal(corr3.2, corr3)
 
-  corr4 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+  corr4 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
                    alpha = alpha, fill.diag = FALSE, size = 5e3,
                    infos.pos = 1e6 * seq_along(ind.col))
   expect_equal(corr4, corr3)
 
-  corr5 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+  corr5 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
                    alpha = alpha, fill.diag = FALSE, size = 5e-3,
                    infos.pos = seq_along(ind.col))
   expect_equal(corr5, corr3)
 
-  corr6 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+  corr6 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
                    alpha = alpha, fill.diag = FALSE, size = 5e-3,
                    infos.pos = 1000 * seq_along(ind.col))
   expect_length(corr6@x, 0)
@@ -145,15 +145,30 @@ test_that("Information on position is used in snp_cor()", {
 
 test_that("INFO scores used in snp_cor()", {
 
-  corr7 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+  corr7 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
                    fill.diag = FALSE)
   info <- runif(length(ind.col), min = 0.5)
 
-  corr8 <- snp_cor(G = test$genotypes, ind.row = ind.row, ind.col = ind.col,
+  corr8 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
                    fill.diag = FALSE, info = info)
 
   expect_equal(as(corr8, "dgeMatrix"),
                sweep(sweep(corr7, 1, sqrt(info), '*'), 2, sqrt(info), '*'))
+})
+
+################################################################################
+
+test_that("bed_cor() works like snp_cor()", {
+
+  bedfile <- snp_writeBed(test, tempfile(fileext = ".bed"))
+  obj_bed <- bed(bedfile)
+  alpha <- runif(1)
+  expect_error(bed_cor(obj.bed = G, alpha = alpha),
+               "'obj.bed' is not of class 'bed'.", fixed = TRUE)
+  expect_identical(
+    snp_cor(Gna = G, alpha = alpha),
+    bed_cor(obj.bed = obj_bed, alpha = alpha)
+  )
 })
 
 ################################################################################

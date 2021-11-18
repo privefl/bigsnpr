@@ -220,12 +220,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // corMat
-List corMat(Environment BM, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos, const NumericVector& info, int ncores);
-RcppExport SEXP _bigsnpr_corMat(SEXP BMSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP posSEXP, SEXP infoSEXP, SEXP ncoresSEXP) {
+List corMat(Environment obj, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos, const NumericVector& info, int ncores);
+RcppExport SEXP _bigsnpr_corMat(SEXP objSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP posSEXP, SEXP infoSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< Environment >::type obj(objSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
     Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
@@ -233,7 +233,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type pos(posSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type info(infoSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(corMat(BM, rowInd, colInd, size, thr, pos, info, ncores));
+    rcpp_result_gen = Rcpp::wrap(corMat(obj, rowInd, colInd, size, thr, pos, info, ncores));
     return rcpp_result_gen;
 END_RCPP
 }

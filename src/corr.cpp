@@ -2,35 +2,26 @@
 
 // #include <bigstatsr/arma-strict-R-headers.h>
 #include <bigstatsr/BMCodeAcc.h>
+#include "bed-acc.h"
 
 using namespace Rcpp;
 
 /******************************************************************************/
 
-// [[Rcpp::export]]
-List corMat(Environment BM,
-            const IntegerVector& rowInd,
-            const IntegerVector& colInd,
-            double size,
-            const NumericVector& thr,
-            const NumericVector& pos,
-            const NumericVector& info,
-            int ncores) {
-
-  myassert_size(colInd.size(), pos.size());
-  myassert_size(colInd.size(), info.size());
-
-  NumericVector sqrt_info = sqrt(info);
-
-  XPtr<FBM> xpBM = BM["address"];
-  NumericVector code = clone(as<NumericVector>(BM["code256"]));
-  code[is_na(code)] = 3;
-  SubBMCode256Acc macc(xpBM, rowInd, colInd, code, 1);
+template <class C>
+List corMat0(C macc,
+             double size,
+             const NumericVector& thr,
+             const NumericVector& pos,
+             const NumericVector& info,
+             int ncores) {
 
   int n = macc.nrow();
   int m = macc.ncol();
 
   List res(m);
+
+  NumericVector sqrt_info = sqrt(info);
 
   int chunk_size = ceil(m / (10.0 * ncores));
 
@@ -98,8 +89,37 @@ List corMat(Environment BM,
     }
   }
 
-
   return res;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
+List corMat(Environment obj,
+            const IntegerVector& rowInd,
+            const IntegerVector& colInd,
+            double size,
+            const NumericVector& thr,
+            const NumericVector& pos,
+            const NumericVector& info,
+            int ncores) {
+
+  myassert_size(colInd.size(), pos.size());
+  myassert_size(colInd.size(), info.size());
+
+  if (obj.exists("code256")) {
+    XPtr<FBM> xpBM = obj["address"];
+    NumericVector code = clone(as<NumericVector>(obj["code256"]));
+    code[is_na(code)] = 3;
+    SubBMCode256Acc macc(xpBM, rowInd, colInd, code, 1);
+    return corMat0(macc, size, thr, pos, info, ncores);
+  } else if (obj.exists("bedfile")) {
+    XPtr<bed> xp_bed = obj["address"];
+    bedAcc macc(xp_bed, rowInd, colInd);
+    return corMat0(macc, size, thr, pos, info, ncores);
+  } else {
+    throw Rcpp::exception("Unknown object type.");
+  }
 }
 
 /******************************************************************************/
