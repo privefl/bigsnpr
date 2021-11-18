@@ -165,7 +165,7 @@ test_that("bed_cor() works like snp_cor()", {
   alpha <- runif(1)
   expect_error(bed_cor(obj.bed = G, alpha = alpha),
                "'obj.bed' is not of class 'bed'.", fixed = TRUE)
-  expect_identical(
+  expect_equal(
     snp_cor(Gna = G, alpha = alpha),
     bed_cor(obj.bed = obj_bed, alpha = alpha)
   )

@@ -37,16 +37,16 @@ test_that("Information on position is used in snp_ld_scores()", {
   expect_length(ld2, ncol(G))
   expect_true(all(ld2 > 1))
   ld3 <- snp_ld_scores(G, size = 5, ncores = 2)
-  expect_identical(ld3, ld2)
+  expect_equal(ld3, ld2)
 
   ld4 <- snp_ld_scores(G, size = 5e3, infos.pos = 1e6 * cols_along(G))
-  expect_identical(ld4, ld2)
+  expect_equal(ld4, ld2)
 
   ld5 <- snp_ld_scores(G, size = 5e-3, infos.pos = cols_along(G))
-  expect_identical(ld5, ld2)
+  expect_equal(ld5, ld2)
 
   ld6 <- snp_ld_scores(G, size = 0.5)
-  expect_identical(ld6, rep(1, ncol(G)))
+  expect_equal(ld6, rep(1, ncol(G)))
 })
 
 ################################################################################
@@ -57,7 +57,7 @@ test_that("bed_ld_scores() works like snp_ld_scores()", {
   obj_bed <- bed(bedfile)
   expect_error(bed_ld_scores(obj.bed = G),
                "'obj.bed' is not of class 'bed'.", fixed = TRUE)
-  expect_identical(
+  expect_equal(
     snp_ld_scores(Gna = G, size = 20),
     bed_ld_scores(obj.bed = obj_bed, size = 20)
   )
