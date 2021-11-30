@@ -24,11 +24,10 @@ public:
     IntegerVector num = IntegerVector::create(2, NA_VAL, 1, 0);
     IntegerMatrix code(4, 256);
 
-    int i, k, k2;
     int coeff = 1;
-    for (i = 0; i < 4; i++) {
-      for (k = 0; k < 256; k++) {
-        k2 = k / coeff;
+    for (int i = 0; i < 4; i++) {
+      for (int k = 0; k < 256; k++) {
+        int k2 = k / coeff;  // integer division
         code(i, k) = num[k2 % 4];
       }
       coeff *= 4;
