@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Binomial(n, p) scaling — snp_scaleBinom • bigsnpr</title>
+<title>Binomial(n, p) scaling — snp_scaleAlpha • bigsnpr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Binomial(n, p) scaling — snp_scaleBinom" />
+<meta property="og:title" content="Binomial(n, p) scaling — snp_scaleAlpha" />
 <meta property="og:description" content="Binomial(n, p) scaling where n is fixed and p is estimated." />
 
 
@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
       </span>
     </div>
 
@@ -159,11 +159,20 @@
     <p>Binomial(n, p) scaling where <code>n</code> is fixed and <code>p</code> is estimated.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>snp_scaleBinom</span><span class='op'>(</span>nploidy <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>snp_scaleAlpha</span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>
+
+<span class='fu'>snp_scaleBinom</span><span class='op'>(</span>nploidy <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>alpha</th>
+      <td><p>Assumes that the average contribution (e.g. heritability)
+of a SNP of frequency \(p\) is proportional to
+\([2p(1-p)]^{1+\alpha}\). The <code>center</code> is then \(2 p\) and the <code>scale</code>
+is \([2p(1-p)]^{-\alpha/2}\). Default is <code>-1</code>.</p></td>
+    </tr>
     <tr>
       <th>nploidy</th>
       <td><p>Number of trials, parameter of the binomial distribution.

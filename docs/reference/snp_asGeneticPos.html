@@ -76,7 +76,7 @@ to interpolate physical positions (in bp) to genetic positions (in cM)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
       </span>
     </div>
 
@@ -168,7 +168,8 @@ to interpolate physical positions (in bp) to genetic positions (in cM).</p>
   <span class='va'>infos.pos</span>,
   dir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>,
   ncores <span class='op'>=</span> <span class='fl'>1</span>,
-  rsid <span class='op'>=</span> <span class='cn'>NULL</span>
+  rsid <span class='op'>=</span> <span class='cn'>NULL</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"OMNI"</span>, <span class='st'>"hapmap"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -201,6 +202,11 @@ You may use nb_cores.</p></td>
       <td><p>If providing rsIDs, the matching is performed using those
 (instead of positions) and variants not matched are interpolated using
 spline interpolation of variants that have been matched.</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>Whether to use the genetic maps interpolated from "OMNI"
+(the default), or from "hapmap".</p></td>
     </tr>
     </table>
 

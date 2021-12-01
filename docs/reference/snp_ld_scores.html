@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Projecting PCA — bed_projectPCA • bigsnpr</title>
+<title>LD scores — snp_ld_scores • bigsnpr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Projecting PCA — bed_projectPCA" />
-<meta property="og:description" content="Computing and projecting PCA of reference dataset to a target dataset." />
+<meta property="og:title" content="LD scores — snp_ld_scores" />
+<meta property="og:description" content="LD scores" />
 
 
 
@@ -150,30 +150,30 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Projecting PCA</h1>
-    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/bed-projectPCA.R'><code>R/bed-projectPCA.R</code></a></small>
-    <div class="hidden name"><code>bed_projectPCA.Rd</code></div>
+    <h1>LD scores</h1>
+    <small class="dont-index">Source: <a href='https://github.com/privefl/bigsnpr/blob/master/R/ld-scores.R'><code>R/ld-scores.R</code></a></small>
+    <div class="hidden name"><code>snp_ld_scores.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Computing and projecting PCA of reference dataset to a target dataset.</p>
+    <p>LD scores</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bed_projectPCA</span><span class='op'>(</span>
-  <span class='va'>obj.bed.ref</span>,
-  <span class='va'>obj.bed.new</span>,
-  k <span class='op'>=</span> <span class='fl'>10</span>,
-  ind.row.new <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed.new</span><span class='op'>)</span>,
-  ind.row.ref <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed.ref</span><span class='op'>)</span>,
-  ind.col.ref <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>obj.bed.ref</span><span class='op'>)</span>,
-  strand_flip <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  join_by_pos <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  match.min.prop <span class='op'>=</span> <span class='fl'>0.5</span>,
-  build.new <span class='op'>=</span> <span class='st'>"hg19"</span>,
-  build.ref <span class='op'>=</span> <span class='st'>"hg19"</span>,
-  liftOver <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>...</span>,
-  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+    <pre class="usage"><span class='fu'>snp_ld_scores</span><span class='op'>(</span>
+  <span class='va'>Gna</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>Gna</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>Gna</span><span class='op'>)</span>,
+  size <span class='op'>=</span> <span class='fl'>500</span>,
+  infos.pos <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ncores <span class='op'>=</span> <span class='fl'>1</span>
+<span class='op'>)</span>
+
+<span class='fu'>bed_ld_scores</span><span class='op'>(</span>
+  <span class='va'>obj.bed</span>,
+  ind.row <span class='op'>=</span> <span class='fu'>rows_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  ind.col <span class='op'>=</span> <span class='fu'>cols_along</span><span class='op'>(</span><span class='va'>obj.bed</span><span class='op'>)</span>,
+  size <span class='op'>=</span> <span class='fl'>500</span>,
+  infos.pos <span class='op'>=</span> <span class='cn'>NULL</span>,
   ncores <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span></pre>
 
@@ -181,110 +181,66 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>obj.bed.ref</th>
-      <td><p>Object of type bed, which is the mapping of the bed file of
-the reference data. Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
+      <th>Gna</th>
+      <td><p>A FBM.code256
+(typically <code>&lt;bigSNP&gt;$genotypes</code>).<br />
+You can have missing values in these data.</p></td>
     </tr>
     <tr>
-      <th>obj.bed.new</th>
-      <td><p>Object of type bed, which is the mapping of the bed file of
-the target data. Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
+      <th>ind.row</th>
+      <td><p>An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.<br />
+<strong>Don't use negative indices.</strong></p></td>
     </tr>
     <tr>
-      <th>k</th>
-      <td><p>Number of principal components to compute and project.</p></td>
+      <th>ind.col</th>
+      <td><p>An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.<br />
+<strong>Don't use negative indices.</strong></p></td>
     </tr>
     <tr>
-      <th>ind.row.new</th>
-      <td><p>Rows to be used in the target data. Default uses them all.</p></td>
+      <th>size</th>
+      <td><p>For one SNP, window size around this SNP to compute correlations.
+Default is <code>500</code>. If not providing <code>infos.pos</code> (<code>NULL</code>, the default), this is
+a window in number of SNPs, otherwise it is a window in kb (genetic distance).</p></td>
     </tr>
     <tr>
-      <th>ind.row.ref</th>
-      <td><p>Rows to be used in the reference data.
-Default uses them all.</p></td>
-    </tr>
-    <tr>
-      <th>ind.col.ref</th>
-      <td><p>Columns to be potentially used in the reference data.
-Default uses all the ones in common with target data.</p></td>
-    </tr>
-    <tr>
-      <th>strand_flip</th>
-      <td><p>Whether to try to flip strand? (default is <code>TRUE</code>)
-If so, ambiguous alleles A/T and C/G are removed.</p></td>
-    </tr>
-    <tr>
-      <th>join_by_pos</th>
-      <td><p>Whether to join by chromosome and position (default),
-or instead by rsid.</p></td>
-    </tr>
-    <tr>
-      <th>match.min.prop</th>
-      <td><p>Minimum proportion of variants in the smallest data
-to be matched, otherwise stops with an error. Default is <code>20%</code>.</p></td>
-    </tr>
-    <tr>
-      <th>build.new</th>
-      <td><p>Genome build of the target data. Default is <code>hg19</code>.</p></td>
-    </tr>
-    <tr>
-      <th>build.ref</th>
-      <td><p>Genome build of the reference data. Default is <code>hg19</code>.</p></td>
-    </tr>
-    <tr>
-      <th>liftOver</th>
-      <td><p>Path to liftOver executable. Binaries can be downloaded at
-<a href='https://hgdownload.cse.ucsc.edu/admin/exe/macOSX.x86_64/liftOver'>https://hgdownload.cse.ucsc.edu/admin/exe/macOSX.x86_64/liftOver</a> for Mac
-and at <a href='https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver'>https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/liftOver</a>
-for Linux.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments passed on to <code><a href='snp_autoSVD.html'>bed_autoSVD</a></code></p><dl>
-    <dt><code>fun.scaling</code></dt><dd><p>A function that returns a named list of <code>mean</code> and <code>sd</code>
-for every column, to scale each of their elements such as followed:
-$$\frac{X_{i,j} - mean_j}{sd_j}.$$ Default is <code><a href='snp_scaleAlpha.html'>snp_scaleBinom()</a></code>.</p></dd>
-    <dt><code>roll.size</code></dt><dd><p>Radius of rolling windows to smooth log-p-values.
-Default is <code>50</code>.</p></dd>
-    <dt><code>int.min.size</code></dt><dd><p>Minimum number of consecutive outlier SNPs
-in order to be reported as long-range LD region. Default is <code>20</code>.</p></dd>
-    <dt><code>thr.r2</code></dt><dd><p>Threshold over the squared correlation between two SNPs.
-Default is <code>0.2</code>. Use <code>NA</code> if you want to skip the clumping step.</p></dd>
-    <dt><code>alpha.tukey</code></dt><dd><p>Default is <code>0.1</code>. The type-I error rate in outlier
-detection (that is further corrected for multiple testing).</p></dd>
-    <dt><code>min.mac</code></dt><dd><p>Minimum minor allele count (MAC) for variants to be included.
-Default is <code>10</code>.</p></dd>
-    <dt><code>max.iter</code></dt><dd><p>Maximum number of iterations of outlier detection.
-Default is <code>5</code>.</p></dd>
-    <dt><code>size</code></dt><dd><p>For one SNP, window size around this SNP to compute correlations.
-Default is <code>100 / thr.r2</code> for clumping (0.2 -&gt; 500; 0.1 -&gt; 1000; 0.5 -&gt; 200).
-If not providing <code>infos.pos</code> (<code>NULL</code>, the default), this is a window in
-number of SNPs, otherwise it is a window in kb (genetic distance).
-I recommend that you provide the positions if available.</p></dd>
-  
-</dl></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Output some information on the iterations? Default is <code>TRUE</code>.</p></td>
+      <th>infos.pos</th>
+      <td><p>Vector of integers specifying the physical position
+on a chromosome (in base pairs) of each SNP.<br />
+Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></td>
     </tr>
     <tr>
       <th>ncores</th>
       <td><p>Number of cores used. Default doesn't use parallelism.
 You may use nb_cores.</p></td>
     </tr>
+    <tr>
+      <th>obj.bed</th>
+      <td><p>Object of type <code>bed</code>, which is the mapping of some bed file.
+Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of 3 elements:</p><ul>
-<li><p><code>$obj.svd.ref</code>: big_SVD object computed from reference data.</p></li>
-<li><p><code>$simple_proj</code>: simple projection of new data into space of reference PCA.</p></li>
-<li><p><code>$OADP_proj</code>: Online Augmentation, Decomposition, and Procrustes (OADP)
-projection of new data into space of reference PCA.</p></li>
-</ul>
+    <p>A vector of LD scores. For each variant, this is the sum of squared
+correlations with the neighboring variants (including itself).</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'><a href='snp_attachExtdata.html'>snp_attachExtdata</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>G</span> <span class='op'>&lt;-</span> <span class='va'>test</span><span class='op'>$</span><span class='va'>genotypes</span>
 
+<span class='op'>(</span><span class='va'>ld</span> <span class='op'>&lt;-</span> <span class='fu'>snp_ld_scores</span><span class='op'>(</span><span class='va'>G</span>, ind.col <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] 2.483941 2.172068 3.263946 2.183188 2.429795 2.398690 2.014529 2.356609
+#&gt;  [9] 2.366944 2.372684 2.027740 3.122179 2.133183 2.172548 2.519639 2.021563
+#&gt; [17] 2.314697 2.037480 2.782503 1.924502 2.041895 2.750078 2.725187 2.169489
+#&gt; [25] 2.172800 2.056492 2.310708 1.954138 2.218048 1.992463 2.052143 2.817170
+#&gt; [33] 2.348052 2.522452 1.988571 2.460693 2.348271 2.171589 2.309941 2.141150
+#&gt; [41] 2.898284 2.228980 1.957499 2.321395 2.283141 3.252310 2.071685 2.436255
+#&gt; [49] 2.422020 3.116608
+#&gt;  [ reached getOption("max.print") -- omitted 950 entries ]</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

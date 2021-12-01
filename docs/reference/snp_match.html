@@ -76,7 +76,7 @@ strand flips and reverse reference alleles (opposite effects)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
       </span>
     </div>
 
@@ -169,7 +169,8 @@ strand flips and reverse reference alleles (opposite effects).</p>
   strand_flip <span class='op'>=</span> <span class='cn'>TRUE</span>,
   join_by_pos <span class='op'>=</span> <span class='cn'>TRUE</span>,
   remove_dups <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  match.min.prop <span class='op'>=</span> <span class='fl'>0.5</span>
+  match.min.prop <span class='op'>=</span> <span class='fl'>0.2</span>,
+  return_flip_and_rev <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -201,7 +202,14 @@ Default is <code>TRUE</code>.</p></td>
     <tr>
       <th>match.min.prop</th>
       <td><p>Minimum proportion of variants in the smallest data
-to be matched, otherwise stops with an error. Default is <code>50%</code>.</p></td>
+to be matched, otherwise stops with an error. Default is <code>20%</code>.</p></td>
+    </tr>
+    <tr>
+      <th>return_flip_and_rev</th>
+      <td><p>Whether to return internal boolean variables
+<code>"_FLIP_"</code> and <code>"_REV_"</code> (whether the alleles were flipped and/or reversed).
+Default is <code>FALSE</code>. Values in column <code>$beta</code> are multiplied by -1 for
+variants with alleles reversed.</p></td>
     </tr>
     </table>
 

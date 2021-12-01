@@ -92,8 +92,10 @@ reference:
       - snp_fst
   - title: "Utilities"
     contents:
+      - snp_prodBGEN
       - snp_match
       - snp_asGeneticPos
+      - snp_ancestry_summary
       - snp_simuPheno
       - snp_modifyBuild
       - snp_split

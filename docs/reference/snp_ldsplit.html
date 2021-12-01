@@ -76,7 +76,7 @@ correlation between these blocks (i.e. everything outside these blocks)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
       </span>
     </div>
 
@@ -209,6 +209,7 @@ the cost is lower than some threshold.</p></td>
     <p>A tibble with five columns:</p><ul>
 <li><p><code>$n_block</code>: Number of blocks.</p></li>
 <li><p><code>$cost</code>: The sum of squared correlations outside the blocks.</p></li>
+<li><p><code>$perc_kept</code>: Percentage of initial non-zero values kept within the blocks defined.</p></li>
 <li><p><code>$block_num</code>: Resulting block numbers for each variant.</p></li>
 <li><p><code>$all_last</code>: Last index of each block.</p></li>
 <li><p><code>$all_size</code>: Sizes of the blocks.</p></li>
