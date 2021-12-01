@@ -4,64 +4,70 @@
 \alias{snp_ancestry_summary}
 \title{Estimation of ancestry proportions}
 \usage{
-snp_ancestry_summary(freq, info_freq_ref)
+snp_ancestry_summary(freq, info_freq_ref, projection, correction)
 }
 \arguments{
 \item{freq}{Vector of frequencies from which to estimate ancestry proportions.}
 
 \item{info_freq_ref}{A data frame (or matrix) with the set of frequencies to
 be used as reference (one population per column).}
+
+\item{projection}{Matrix of "loadings" for each variant/PC to be used to
+project allele frequencies.}
+
+\item{correction}{Coefficients to correct for shrinkage when projecting.}
 }
 \value{
-A list of three elements:
-\itemize{
-\item \verb{$coef}: vector of coefficients representing the ancestry proportions,
-\item \verb{$cor_pred}: correlation between between \code{freq} and the optimal solution
-\code{info_freq_ref \%*\% coef},
-\item \verb{$all_cor}: all correlations between \code{freq} and \code{info_freq_ref}.
-}
+vector of coefficients representing the ancestry proportions.
 }
 \description{
 Estimation of ancestry proportions. Make sure to match summary statistics
-using \code{\link[=snp_match]{snp_match()}} (and reversing frequencies when needed).
+using \code{\link[=snp_match]{snp_match()}} (and to reverse frequencies correspondingly).
 }
 \examples{
-## Toy example
-
-X <- matrix(rbeta(4000, 1, 3), ncol = 4)
-y <- X \%*\% c(0.2, 0.1, 0.6, 0.1)
-res <- snp_ancestry_summary(y, X)
-str(res)
-
-
-## Real GWAS summary statistics: Epilepsy (supposedly in EUR+EAS+AFR)
-
 \dontrun{
 
-library(dplyr)
-
+# GWAS summary statistics for Epilepsy (supposedly in EUR+EAS+AFR)
 gz <- runonce::download_file(
   "http://www.epigad.org/gwas_ilae2018_16loci/all_epilepsy_METAL.gz",
   dir = "tmp-data")
 readLines(gz, n = 3)
+
+library(dplyr)
 sumstats <- bigreadr::fread2(
   gz, select = c("CHR", "BP", "Allele2", "Allele1", "Freq1"),
   col.names = c("chr", "pos", "a0", "a1", "freq")
 ) \%>\%
   mutate_at(3:4, toupper)
+# It is a good idea to filter for similar per-variant N (when available..)
 
 all_freq <- bigreadr::fread2(
-  runonce::download_file("https://figshare.com/ndownloader/files/31218445",
+  runonce::download_file("https://figshare.com/ndownloader/files/31620968",
                          dir = "tmp-data", fname = "ref_freqs.csv.gz"))
+projection <- bigreadr::fread2(
+  runonce::download_file("https://figshare.com/ndownloader/files/31620953",
+                         dir = "tmp-data", fname = "projection.csv.gz"))
 
-matched <- bigsnpr::snp_match(
+matched <- snp_match(
   mutate(sumstats, chr = as.integer(chr), beta = 1),
-  all_freq[1:5], return_flip_and_rev = TRUE
+  all_freq[1:5],
+  return_flip_and_rev = TRUE
 ) \%>\%
   mutate(freq = ifelse(`_REV_`, 1 - freq, freq))
 
-X <- as.matrix(all_freq[matched$`_NUM_ID_`, -(1:5)])
-y <- matched$freq
-snp_ancestry_summary(y, X)
+res <- snp_ancestry_summary(
+  freq = matched$freq,
+  info_freq_ref = all_freq[matched$`_NUM_ID_`, -(1:5)],
+  projection = projection[matched$`_NUM_ID_`, -(1:5)],
+  correction = c(1, 1, 1, 1.008, 1.021, 1.034, 1.052, 1.074, 1.099,
+                 1.123, 1.15, 1.195, 1.256, 1.321, 1.382, 1.443)
+)
+
+# Some ancestry groups are very close to each other, and should be merged
+group <- colnames(all_freq)[-(1:5)]
+group[group \%in\% c("Scandinavia", "United Kingdom", "Ireland")]   <- "Europe (North West)"
+group[group \%in\% c("Europe (South East)", "Europe (North East)")] <- "Europe (East)"
+
+tapply(res, factor(group, unique(group)), sum)
 }
 }

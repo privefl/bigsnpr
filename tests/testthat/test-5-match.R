@@ -110,19 +110,19 @@ test_that("snp_asGeneticPos() works", {
 
 ################################################################################
 
-test_that("snp_ancestry_summary() works", {
+test_that("snp_ancestry_summary() works (with no projection here)", {
 
   X <- matrix(rbeta(4000, 1, 3), ncol = 4)
   prop <- c(0.2, 0.1, 0.6, 0.1)
   y <- X %*% prop
-  res <- snp_ancestry_summary(y, X)
-  expect_equal(res$coef, prop)
+  res <- snp_ancestry_summary(y, X, Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)))
+  expect_equal(res, prop)
 
-  expect_warning(res2 <- snp_ancestry_summary(y, X[, -1]),
-                 "The solution does not perfectly match the frequencies.")
-  expect_equal(res2$all_cor, res$all_cor[-1])
-  expect_true(all(res2$coef > prop[-1]))
-  expect_equal(res2$coef, prop[-1], tolerance = 0.1)
+  expect_warning(res2 <- snp_ancestry_summary(
+    y, X[, -1], Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X))),
+    "The solution does not perfectly match the frequencies.")
+  expect_true(all(res2 > prop[-1]))
+  expect_equal(res2, prop[-1], tolerance = 0.1)
 })
 
 ################################################################################
