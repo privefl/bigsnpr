@@ -157,7 +157,7 @@ test_that("parallel snp_readBed2() works", {
 test_that("parallel snp_cor() works", {
 
   G <- snp_attachExtdata()$genotypes
-  rows <- sample(nrow(G), replace = TRUE)
+  rows <- sample(nrow(G), 2 * nrow(G), replace = TRUE)
   cols <- sample(ncol(G), replace = TRUE)
 
   test <- replicate(5, simplify = FALSE, {
@@ -185,7 +185,7 @@ test_that("parallel snp_cor() works", {
 test_that("parallel snp_ld_scores() works", {
 
   G <- snp_attachExtdata()$genotypes
-  rows <- sample(nrow(G), replace = TRUE)
+  rows <- sample(nrow(G), 2 * nrow(G), replace = TRUE)
   cols <- sample(ncol(G), replace = TRUE)
 
   test <- replicate(5, simplify = FALSE, {

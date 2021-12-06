@@ -64,8 +64,8 @@ test_that("LDpred2 works", {
   expect_length(beta_auto, 1)
   mod <- beta_auto[[1]]
   expect_null(dim(mod$beta_est))
-  expect_gt(cor(mod$beta_est, true_beta), 0.4)
-  expect_gt(cor(mod$beta_est_sparse, true_beta), 0.4)
+  expect_gt(cor(mod$beta_est, true_beta), 0.3)
+  expect_gt(cor(mod$beta_est_sparse, true_beta), 0.3)
   expect_lt(mean(mod$beta_est == 0), 0.001)
   expect_gt(mean(mod$beta_est_sparse == 0), 0.1)
   expect_equal(mod$h2_init, ldsc[["h2"]])
