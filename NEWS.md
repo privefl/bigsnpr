@@ -1,3 +1,7 @@
+## bigsnpr 1.9.3
+
+- Fix `snp_manhattan()` when non-ordered (chr, pos) are provided.
+
 ## bigsnpr 1.9.2
 
 - Enhance function `snp_ancestry_summary()` by allowing to estimate ancestry proportions after PCA projection (instead of directly using the allele frequencies).

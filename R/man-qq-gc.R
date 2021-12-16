@@ -31,7 +31,7 @@
 #' [this chapter](https://r4ds.had.co.nz/data-visualisation.html)
 #' to get more familiar with the package **ggplot2**.
 #' @export
-#' @import ggplot2 foreach
+#' @import ggplot2
 #'
 #' @example examples/example-man-qq-gc.R
 snp_manhattan <- function(gwas, infos.chr, infos.pos,
@@ -43,23 +43,27 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
                           npoints = NULL,
                           coeff = 1) {
 
-  check_args()
+  check_args(infos.chr = "")
+
+  # get ordering
+  ord <- order(infos.chr, infos.pos)
+  infos.chr <- infos.chr[ord]
+  infos.pos <- infos.pos[ord]
 
   # get all chromosomes
   all.chr <- sort(unique(infos.chr))
   if (is.null(labels)) labels <- all.chr
 
   # get plotting positions of each SNP and chromosome
-  previous.pos <- 0
-  i <- 0
-  label.pos <- numeric(length(all.chr))
-  all.pos <- foreach(ic = all.chr, .combine = 'c') %do% {
-    ind.chr <- which(infos.chr == ic)
-    pos <- infos.pos[ind.chr] + previous.pos + dist.sep.chrs
-    previous.pos <- tail(pos, 1)
-    label.pos[i <- i + 1] <- mean(range(pos))
+  offset <- 0
+  all.pos <- lapply(all.chr, function(chr) {
+    ind.chr <- which(infos.chr == chr)
+    pos <- infos.pos[ind.chr] + offset + dist.sep.chrs
+    offset <<- tail(pos, 1)
     pos
-  }
+  })
+  label.pos <- sapply(all.pos, function(pos) mean(range(pos)))
+  all.pos <- unlist(all.pos)
 
   # get colors
   colors <- rep_len(colors, length(all.chr))
@@ -67,7 +71,7 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
   all.colors[ind.highlight] <- col.highlight
 
   # get plot
-  lpval <- stats::predict(gwas)
+  lpval <- stats::predict(gwas)[ord]
   cond <- is.null(npoints)
   ind <- `if`(cond, seq_along(lpval), head(order(lpval), npoints))
   ymin <- -lpval[tail(ind, 1)]
@@ -80,6 +84,8 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
          y = expression(-log[10](italic("p-value"))),
          subtitle = `if`(cond, NULL, eval(subtitle))) +
     theme_bigstatsr(size.rel = coeff)
+
+  p$plot_env <- emptyenv()
 
   `if`(cond, p, structure(p, subset = ind))
 }
