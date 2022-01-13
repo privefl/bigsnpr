@@ -27,6 +27,13 @@ ncores <- function() sample(1:2, 1)
 
 ################################################################################
 
+test_that("snp_readBGI() can return the full variant information", {
+  full_info <- snp_readBGI(paste0(bgen_file, ".bgi"))
+  expect_equal(full_info[c(1:2, 5:6)], variants[c(1, 4:6)], check.attributes = FALSE)
+})
+
+################################################################################
+
 test_that("raises some errors", {
   expect_error(snp_attach(snp_readBGEN(bgen_file, tempfile(), IDs, ncores = ncores())),
                "'list_snp_id' is not of class 'list'.", fixed = TRUE)

@@ -4,14 +4,15 @@
 \alias{snp_readBGI}
 \title{Read variant info from one BGI file}
 \usage{
-snp_readBGI(bgifile, snp_id)
+snp_readBGI(bgifile, snp_id = NULL)
 }
 \arguments{
 \item{bgifile}{Path to one file with extension ".bgi".}
 
 \item{snp_id}{Character vector of SNP IDs. These should be in the form
 \code{"<chr>_<pos>_<a1>_<a2>"} (e.g. \code{"1_88169_C_T"} or \code{"01_88169_C_T"}).
-\strong{This function assumes that these IDs are uniquely identifying variants.}}
+\strong{This function assumes that these IDs are uniquely identifying variants.}
+Default is \code{NULL}, and returns information on all variants.}
 }
 \value{
 A data frame containing variant information.

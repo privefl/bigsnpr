@@ -1,3 +1,7 @@
+## bigsnpr 1.9.4
+
+- You can now return information on all variants with `snp_readBGI()`.
+
 ## bigsnpr 1.9.3
 
 - Fix `snp_manhattan()` when non-ordered (chr, pos) are provided.

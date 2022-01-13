@@ -16,13 +16,14 @@ format_snp_id <- function(snp_id) {
 #' @param snp_id Character vector of SNP IDs. These should be in the form
 #'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"` or `"01_88169_C_T"`).
 #'  **This function assumes that these IDs are uniquely identifying variants.**
+#'  Default is `NULL`, and returns information on all variants.
 #'
 #' @return A data frame containing variant information.
 #'
 #' @importFrom magrittr %>%
 #'
 #' @export
-snp_readBGI <- function(bgifile, snp_id) {
+snp_readBGI <- function(bgifile, snp_id = NULL) {
 
   # check for packages
   assert_package("RSQLite")
@@ -32,22 +33,31 @@ snp_readBGI <- function(bgifile, snp_id) {
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
   on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
 
-  snp_id <- format_snp_id(snp_id)
-  snp_pos <- as.integer(sub("^[[:alnum:]]{2}_([[:digit:]]+)_.+$", "\\1", snp_id))
-  info <- dplyr::tbl(db_con, "Variant") %>%
-    dplyr::filter(position %in% snp_pos) %>%
-    dplyr::collect()
+  if (is.null(snp_id)) {
 
-  # check
-  info_id <- with(info, paste(chromosome, position, allele1, allele2, sep = "_"))
-  ind <- match(snp_id, format_snp_id(info_id))
-  if (anyNA(ind)) {
-    saveRDS(snp_id[is.na(ind)],
-            tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifile))
-    stop2("Some variants have not been found (stored in '%s').", tmp)
+    dplyr::tbl(db_con, "Variant") %>%
+      dplyr::collect()
+
+  } else {
+
+    snp_id <- format_snp_id(snp_id)
+    snp_pos <- as.integer(sub("^[[:alnum:]]{2}_([[:digit:]]+)_.+$", "\\1", snp_id))
+    info <- dplyr::tbl(db_con, "Variant") %>%
+      dplyr::filter(position %in% snp_pos) %>%
+      dplyr::collect()
+
+    # check
+    info_id <- with(info, paste(chromosome, position, allele1, allele2, sep = "_"))
+    ind <- match(snp_id, format_snp_id(info_id))
+    if (anyNA(ind)) {
+      saveRDS(snp_id[is.na(ind)],
+              tmp <- sub("\\.bgen\\.bgi$", "_not_found.rds", bgifile))
+      stop2("Some variants have not been found (stored in '%s').", tmp)
+    }
+
+    info[ind, ]
+
   }
-
-  info[ind, ]
 }
 
 ################################################################################
