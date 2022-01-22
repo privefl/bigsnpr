@@ -111,6 +111,7 @@ check_bgen_format <- function(bgenfile) {
 #' @param list_snp_id List (same length as the number of BGEN files) of
 #'  character vector of SNP IDs to read. These should be in the form
 #'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"` or `"01_88169_C_T"`).
+#'  If you have one BGEN file only, just wrap your vector of IDs with `list()`.
 #'  **This function assumes that these IDs are uniquely identifying variants.**
 #' @param bgi_dir Directory of index files. Default is the same as `bgenfiles`.
 #' @param ind_row An optional vector of the row indices (individuals) that
