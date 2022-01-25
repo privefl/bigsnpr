@@ -13,15 +13,12 @@ List corMat0(C macc,
              double size,
              const NumericVector& thr,
              const NumericVector& pos,
-             const NumericVector& info,
              int ncores) {
 
   int n = macc.nrow();
   int m = macc.ncol();
 
   List res(m);
-
-  NumericVector sqrt_info = sqrt(info);
 
   int chunk_size = ceil(m / (10.0 * ncores));
 
@@ -76,9 +73,8 @@ List corMat0(C macc,
         double deno_x = xxSum - xSum * xSum / nona;
         double deno_y = yySum - ySum * ySum / nona;
         double r = num / ::sqrt(deno_x * deno_y);
-        r *= sqrt_info[j] * sqrt_info[j0];
 
-        if (std::abs(r) > thr[nona - 1]) {
+        if (ISNAN(r) || std::abs(r) > thr[nona - 1]) {
           ind.push_back(j + 1);
           val.push_back(r);
         }
@@ -101,22 +97,20 @@ List corMat(Environment obj,
             double size,
             const NumericVector& thr,
             const NumericVector& pos,
-            const NumericVector& info,
             int ncores) {
 
   myassert_size(colInd.size(), pos.size());
-  myassert_size(colInd.size(), info.size());
 
   if (obj.exists("code256")) {
     XPtr<FBM> xpBM = obj["address"];
     NumericVector code = clone(as<NumericVector>(obj["code256"]));
     code[is_na(code)] = 3;
     SubBMCode256Acc macc(xpBM, rowInd, colInd, code, 1);
-    return corMat0(macc, size, thr, pos, info, ncores);
+    return corMat0(macc, size, thr, pos, ncores);
   } else if (obj.exists("bedfile")) {
     XPtr<bed> xp_bed = obj["address"];
     bedAcc macc(xp_bed, rowInd, colInd);
-    return corMat0(macc, size, thr, pos, info, ncores);
+    return corMat0(macc, size, thr, pos, ncores);
   } else {
     throw Rcpp::exception("Unknown object type.");
   }

@@ -1,3 +1,9 @@
+## bigsnpr 1.9.5
+
+- Remove parameter `info` from `snp_cor()` and `bed_cor()` because this correction is not useful after all.
+
+- `snp_cor()` and `bed_cor()` now return NaNs when e.g. the standard deviation is 0 (and warn about it). Before, these values were not reported (i.e. treated as 0).
+
 ## bigsnpr 1.9.4
 
 - You can now return information on all variants with `snp_readBGI()`.

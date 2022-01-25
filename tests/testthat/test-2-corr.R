@@ -24,7 +24,6 @@ ind_val <- bigsnpr:::corMat(G,
                             size = size,
                             thr = rep(r, n),
                             pos = seq_along(ind.col),
-                            info = rep(1, length(ind.col)),
                             ncores = 2)
 
 list_i <- lapply(ind_val, function(.) .$i)
@@ -143,21 +142,6 @@ test_that("Information on position is used in snp_cor()", {
 
 ################################################################################
 
-test_that("INFO scores used in snp_cor()", {
-
-  corr7 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
-                   fill.diag = FALSE)
-  info <- runif(length(ind.col), min = 0.5)
-
-  corr8 <- snp_cor(G = G, ind.row = ind.row, ind.col = ind.col,
-                   fill.diag = FALSE, info = info)
-
-  expect_equal(as(corr8, "dgeMatrix"),
-               sweep(sweep(corr7, 1, sqrt(info), '*'), 2, sqrt(info), '*'))
-})
-
-################################################################################
-
 test_that("bed_cor() works like snp_cor()", {
 
   bedfile <- snp_writeBed(test, tempfile(fileext = ".bed"))
@@ -169,6 +153,18 @@ test_that("bed_cor() works like snp_cor()", {
     snp_cor(Gna = G, alpha = alpha),
     bed_cor(obj.bed = obj_bed, alpha = alpha)
   )
+})
+
+################################################################################
+
+test_that("snp_cor() returns NaNs when SD is 0 (and warns about it)", {
+
+  G <- snp_fake(10, 10)$genotypes
+  G[] <- sample(0:2, length(G), replace = TRUE)
+  G[, 1] <- 0
+  corr <- expect_warning(snp_cor(G), "NA or NaN values")
+  corr2 <- expect_warning(cor(G[]), "the standard deviation is zero")
+  expect_equal(as.matrix(corr), corr2, check.attributes = FALSE)
 })
 
 ################################################################################
