@@ -15,10 +15,6 @@
 
 [**LIST OF FEATURES**](https://privefl.github.io/bigsnpr/reference/index.html)
 
-**Note that most of the algorithms of this package don't handle missing values.** You can use `snp_fastImpute()` (taking a few hours for a chip of 15K x 300K) and `snp_fastImputeSimple()` (taking a few minutes only) to impute missing values of *genotyped* variants.
-
-**New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
-
 
 ## Installation
 
@@ -44,11 +40,13 @@ This package can also read **UK Biobank BGEN files** using function `snp_readBGE
 
 This package uses a class called `bigSNP` for representing SNP data. A `bigSNP` object is a list with some elements:
 
-- `genotypes`: A [`FBM.code256`](https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html). Rows are samples and columns are variants. This stores genotype calls or **dosages** (rounded to 2 decimal places).
-- `fam`: A `data.frame` with some information on the individuals.
-- `map`: A `data.frame` with some information on the variants.
+- `$genotypes`: A [`FBM.code256`](https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html). Rows are samples and columns are variants. This stores genotype calls or **dosages** (rounded to 2 decimal places).
+- `$fam`: A `data.frame` with some information on the individuals.
+- `$map`: A `data.frame` with some information on the variants.
 
-**New!** Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper "Efficient toolkit implementing..".
+**Note that most of the algorithms of this package don't handle missing values.** You can use `snp_fastImpute()` (taking a few hours for a chip of 15K x 300K) and `snp_fastImputeSimple()` (taking a few minutes only) to impute missing values of *genotyped* variants.
+
+Package {bigsnpr} also provides functions that directly work on bed files with a few missing values (the `bed_*()` functions). See paper ["Efficient toolkit implementing.."](https://doi.org/10.1093/bioinformatics/btaa520).
 
 
 ## Polygenic scores
@@ -59,7 +57,7 @@ Polygenic scores are one of the main focus of this package. There are 3 main met
 
 - Clumping and Thresholding (C+T) and Stacked C+T (SCT) with summary statistics and individual level data (see [paper](https://doi.org/10.1016/j.ajhg.2019.11.001) and [tutorial](https://privefl.github.io/bigsnpr/articles/SCT.html)).
 
-- LDpred2 with summary statistics (see [preprint](https://doi.org/10.1101/2020.04.28.066720) and [tutorial](https://privefl.github.io/bigsnpr/articles/LDpred2.html))
+- LDpred2 with summary statistics (see [paper](https://doi.org/10.1093/bioinformatics/btaa1029) and [tutorial](https://privefl.github.io/bigsnpr/articles/LDpred2.html))
 
 
 ## Possible upcoming features
@@ -71,13 +69,13 @@ Polygenic scores are one of the main focus of this package. There are 3 main met
 You can request some feature by opening an issue.
 
 
-## Bug report
+## Bug report / Support
 
 [How to make a great R reproducible example?](https://stackoverflow.com/q/5963269/6103040)
 
 Please open an issue if you find a bug.
 
-If you want help using {bigstatsr}, please open an issue on [{bigstatsr}'s repo](https://github.com/privefl/bigstatsr/issues) or post on Stack Overflow with the tag *bigstatsr*.
+If you want help using {bigstatsr} (the `big_*()` functions), please open an issue on [{bigstatsr}'s repo](https://github.com/privefl/bigstatsr/issues), or post on Stack Overflow with the tag *bigstatsr*.
 
 I will always redirect you to GitHub issues if you email me, so that others can benefit from our discussion.
 
@@ -90,8 +88,12 @@ I will always redirect you to GitHub issues if you email me, so that others can 
 
 - Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) The American Journal of Human Genetics 105.6 (2019): 1213-1221.
 
-- Privé, Florian, et al. ["Efficient toolkit implementing best practices for principal component analysis of population genetic data."](https://doi.org/10.1093/bioinformatics/btaa520) Bioinformatics (2020).
+- Privé, Florian, et al. ["Efficient toolkit implementing best practices for principal component analysis of population genetic data."](https://doi.org/10.1093/bioinformatics/btaa520) Bioinformatics 36.16 (2020): 4449-4457.
 
-- Privé, Florian, et al. ["LDpred2: better, faster, stronger."](https://doi.org/10.1101/2020.04.28.066720) BioRxiv (2020).
+- Privé, Florian, et al. ["LDpred2: better, faster, stronger."](https://doi.org/10.1093/bioinformatics/btaa1029) Bioinformatics 36.22-23 (2020): 5424-5431.
+
+- Privé, Florian. ["Optimal linkage disequilibrium splitting."]((https://doi.org/10.1093/bioinformatics/btab519)) Bioinformatics 38.1 (2022): 255–256.
+
+- Privé, Florian. ["Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics."]((https://doi.org/10.1101/2021.10.27.466078)) bioRxiv (2021).
 
 <br>

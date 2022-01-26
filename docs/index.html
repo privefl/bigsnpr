@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
       </span>
     </div>
 
@@ -78,20 +78,20 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://privefl.github.io/about.html">
-    <span class="fas fa-user"></span>
+    <span class="fa fa-user"></span>
      
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github fa"></span>
+    <span class="fa fa-github fa"></span>
      
   </a>
 </li>
 <li>
   <a href="news/index.html">
-    <span class="fas fa-newspaper-o fa"></span>
+    <span class="fa fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -115,8 +115,6 @@
 <p>{bigsnpr} is an R package for the analysis of massive SNP arrays, primarily designed for human genetics. It enhances the features of <a href="https://privefl.github.io/bigstatsr/">package {bigstatsr}</a> for the purpose of analyzing genotype data.</p>
 <p><a href="https://privefl.github.io/bigsnpr/articles/demo.html">Quick demo</a></p>
 <p><a href="https://privefl.github.io/bigsnpr/reference/index.html"><strong>LIST OF FEATURES</strong></a></p>
-<p><strong>Note that most of the algorithms of this package don’t handle missing values.</strong> You can use <code><a href="reference/snp_fastImpute.html">snp_fastImpute()</a></code> (taking a few hours for a chip of 15K x 300K) and <code><a href="reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code> (taking a few minutes only) to impute missing values of <em>genotyped</em> variants.</p>
-<p><strong>New!</strong> Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper “Efficient toolkit implementing..”.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -136,13 +134,14 @@
 <p>This package uses a class called <code>bigSNP</code> for representing SNP data. A <code>bigSNP</code> object is a list with some elements:</p>
 <ul>
 <li>
-<code>genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are variants. This stores genotype calls or <strong>dosages</strong> (rounded to 2 decimal places).</li>
+<code>$genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are variants. This stores genotype calls or <strong>dosages</strong> (rounded to 2 decimal places).</li>
 <li>
-<code>fam</code>: A <code>data.frame</code> with some information on the individuals.</li>
+<code>$fam</code>: A <code>data.frame</code> with some information on the individuals.</li>
 <li>
-<code>map</code>: A <code>data.frame</code> with some information on the variants.</li>
+<code>$map</code>: A <code>data.frame</code> with some information on the variants.</li>
 </ul>
-<p><strong>New!</strong> Package {bigsnpr} now provides functions that directly work on bed files with a few missing values. See new paper “Efficient toolkit implementing..”.</p>
+<p><strong>Note that most of the algorithms of this package don’t handle missing values.</strong> You can use <code><a href="reference/snp_fastImpute.html">snp_fastImpute()</a></code> (taking a few hours for a chip of 15K x 300K) and <code><a href="reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code> (taking a few minutes only) to impute missing values of <em>genotyped</em> variants.</p>
+<p>Package {bigsnpr} also provides functions that directly work on bed files with a few missing values (the <code>bed_*()</code> functions). See paper <a href="https://doi.org/10.1093/bioinformatics/btaa520">“Efficient toolkit implementing..”</a>.</p>
 </div>
 <div id="polygenic-scores" class="section level2">
 <h2 class="hasAnchor">
@@ -151,7 +150,7 @@
 <ul>
 <li><p>Penalized regressions with individual-level data (see <a href="https://doi.org/10.1534/genetics.119.302019">paper</a> and <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html">tutorial</a>)</p></li>
 <li><p>Clumping and Thresholding (C+T) and Stacked C+T (SCT) with summary statistics and individual level data (see <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">paper</a> and <a href="https://privefl.github.io/bigsnpr/articles/SCT.html">tutorial</a>).</p></li>
-<li><p>LDpred2 with summary statistics (see <a href="https://doi.org/10.1101/2020.04.28.066720">preprint</a> and <a href="https://privefl.github.io/bigsnpr/articles/LDpred2.html">tutorial</a>)</p></li>
+<li><p>LDpred2 with summary statistics (see <a href="https://doi.org/10.1093/bioinformatics/btaa1029">paper</a> and <a href="https://privefl.github.io/bigsnpr/articles/LDpred2.html">tutorial</a>)</p></li>
 </ul>
 </div>
 <div id="possible-upcoming-features" class="section level2">
@@ -163,12 +162,12 @@
 </ul>
 <p>You can request some feature by opening an issue.</p>
 </div>
-<div id="bug-report" class="section level2">
+<div id="bug-report--support" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-report" class="anchor"></a>Bug report</h2>
+<a href="#bug-report--support" class="anchor"></a>Bug report / Support</h2>
 <p><a href="https://stackoverflow.com/q/5963269/6103040">How to make a great R reproducible example?</a></p>
 <p>Please open an issue if you find a bug.</p>
-<p>If you want help using {bigstatsr}, please open an issue on <a href="https://github.com/privefl/bigstatsr/issues">{bigstatsr}’s repo</a> or post on Stack Overflow with the tag <em>bigstatsr</em>.</p>
+<p>If you want help using {bigstatsr} (the <code>big_*()</code> functions), please open an issue on <a href="https://github.com/privefl/bigstatsr/issues">{bigstatsr}’s repo</a>, or post on Stack Overflow with the tag <em>bigstatsr</em>.</p>
 <p>I will always redirect you to GitHub issues if you email me, so that others can benefit from our discussion.</p>
 </div>
 <div id="references" class="section level2">
@@ -178,8 +177,10 @@
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/bty185">“Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr.”</a> Bioinformatics 34.16 (2018): 2781-2787.</p></li>
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1534/genetics.119.302019">“Efficient implementation of penalized regression for genetic risk prediction.”</a> Genetics 212.1 (2019): 65-74.</p></li>
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">“Making the most of Clumping and Thresholding for polygenic scores.”</a> The American Journal of Human Genetics 105.6 (2019): 1213-1221.</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa520">“Efficient toolkit implementing best practices for principal component analysis of population genetic data.”</a> Bioinformatics (2020).</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1101/2020.04.28.066720">“LDpred2: better, faster, stronger.”</a> BioRxiv (2020).</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa520">“Efficient toolkit implementing best practices for principal component analysis of population genetic data.”</a> Bioinformatics 36.16 (2020): 4449-4457.</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa1029">“LDpred2: better, faster, stronger.”</a> Bioinformatics 36.22-23 (2020): 5424-5431.</p></li>
+<li><p>Privé, Florian. <a href="(https://doi.org/10.1093/bioinformatics/btab519)">“Optimal linkage disequilibrium splitting.”</a> Bioinformatics 38.1 (2022): 255–256.</p></li>
+<li><p>Privé, Florian. <a href="(https://doi.org/10.1101/2021.10.27.466078)">“Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics.”</a> bioRxiv (2021).</p></li>
 </ul>
 <p><br></p>
 </div>
