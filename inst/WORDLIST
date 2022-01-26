@@ -55,9 +55,11 @@ gc
 ggplot
 GigaScience
 github
+GRM
 GWAS
 gzipped
 hapmap
+HapMap
 heritability
 Hinrichs
 https
@@ -90,11 +92,13 @@ mio
 monomorphic
 monozygotic
 Mychaleckyj
+NaN
 nb
 Neale
 OADP
 OGK
 OMNI
+OpenBLAS
 OpenMP
 parallelization
 parallelize
@@ -138,7 +142,7 @@ Shashaank
 snp
 SNP's
 svds
-Tcrossprod
+tcrossprod
 Tellier
 th
 tibble
