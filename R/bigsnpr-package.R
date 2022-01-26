@@ -37,7 +37,7 @@
 #'
 #' @param is.size.in.bp Deprecated.
 #'
-#' @param obj.bed Object of type `bed`, which is the mapping of some bed file.
+#' @param obj.bed Object of type [bed], which is the mapping of some bed file.
 #'   Use `obj.bed <- bed(bedfile)` to get this object.
 #'
 "_PACKAGE"

@@ -60,9 +60,11 @@ for Linux.}
 \item{...}{
   Arguments passed on to \code{\link[=bed_autoSVD]{bed_autoSVD}}
   \describe{
-    \item{\code{fun.scaling}}{A function that returns a named list of \code{mean} and \code{sd}
-for every column, to scale each of their elements such as followed:
-\deqn{\frac{X_{i,j} - mean_j}{sd_j}.} Default is \code{snp_scaleBinom()}.}
+    \item{\code{fun.scaling}}{A function with parameters \code{X} (or \code{obj.bed}), \code{ind.row} and
+\code{ind.col}, and that returns a data.frame with \verb{$center} and \verb{$scale} for the
+columns corresponding to \code{ind.col}, to scale each of their elements such as followed:
+\deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
+You can also provide your own \code{center} and \code{scale} by using \code{\link[=as_scaling_fun]{as_scaling_fun()}}.}
     \item{\code{roll.size}}{Radius of rolling windows to smooth log-p-values.
 Default is \code{50}.}
     \item{\code{int.min.size}}{Minimum number of consecutive outlier SNPs

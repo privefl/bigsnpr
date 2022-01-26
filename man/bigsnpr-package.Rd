@@ -40,7 +40,7 @@ You may use \link{nb_cores}.}
 
 \item{is.size.in.bp}{Deprecated.}
 
-\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+\item{obj.bed}{Object of type \link{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 }
 \description{

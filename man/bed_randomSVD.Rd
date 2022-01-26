@@ -16,13 +16,14 @@ bed_randomSVD(
 )
 }
 \arguments{
-\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+\item{obj.bed}{Object of type \link{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
-\item{fun.scaling}{A function that returns a named list of
-\code{mean} and \code{sd} for every column, to scale each of their elements
-such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
-Default doesn't use any scaling.}
+\item{fun.scaling}{A function with parameters \code{X}, \code{ind.row} and \code{ind.col},
+and that returns a data.frame with \verb{$center} and \verb{$scale} for the columns
+corresponding to \code{ind.col}, to scale each of their elements such as followed:
+\deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default doesn't use any scaling.
+You can also provide your own \code{center} and \code{scale} by using \code{\link[bigstatsr:as_scaling_fun]{as_scaling_fun()}}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr

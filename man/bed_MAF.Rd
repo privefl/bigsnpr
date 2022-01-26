@@ -12,7 +12,7 @@ bed_MAF(
 )
 }
 \arguments{
-\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+\item{obj.bed}{Object of type \link{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that

@@ -5,7 +5,6 @@
 #' Missing values are replaced by 0 (after centering), as if they
 #'   had been imputed using parameter `center`.
 #'
-#' @param obj.bed A [bed] object.
 #' @inheritParams bigsnpr-package
 #' @inherit bigstatsr::big_cprodVec title params return
 #'
@@ -43,7 +42,6 @@ bed_cprodVec <- function(obj.bed, y.row,
 #' Missing values are replaced by 0 (after centering), as if they
 #'   had been imputed using parameter `center`.
 #'
-#' @param obj.bed A [bed] object.
 #' @inheritParams bigsnpr-package
 #' @inherit bigstatsr::big_prodVec title params return
 #'

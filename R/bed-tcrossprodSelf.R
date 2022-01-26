@@ -1,7 +1,13 @@
 ################################################################################
 
-#' @inherit bigstatsr::big_tcrossprodSelf title description params return details
-#' @inheritParams bigsnpr-package
+#' tcrossprod / GRM
+#'
+#' Compute \eqn{G G^T} from a bed object, with possible filtering and scaling
+#' of `G`. For example, this can be used to compute GRMs.
+#'
+#' @inheritParams bed_autoSVD
+#' @inheritSection bigstatsr::big_tcrossprodSelf Matrix parallelization
+#' @inherit bigstatsr::big_tcrossprodSelf params return
 #'
 #' @export
 #'

@@ -15,7 +15,8 @@ bed_cprodVec(
 )
 }
 \arguments{
-\item{obj.bed}{A \link{bed} object.}
+\item{obj.bed}{Object of type \link{bed}, which is the mapping of some bed file.
+Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
 \item{y.row}{A vector of same size as \code{ind.row}.}
 
@@ -27,11 +28,9 @@ are used. If not specified, all rows are used.\cr
 If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
-\item{center}{Vector of same length of \code{ind.col} to subtract from columns
-of \code{X}.}
+\item{center}{Vector of same length of \code{ind.col} to subtract from columns of \code{X}.}
 
-\item{scale}{Vector of same length of \code{ind.col} to divide from columns
-of \code{X}.}
+\item{scale}{Vector of same length of \code{ind.col} to divide from columns of \code{X}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

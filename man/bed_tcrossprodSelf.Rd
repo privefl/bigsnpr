@@ -2,7 +2,7 @@
 % Please edit documentation in R/bed-tcrossprodSelf.R
 \name{bed_tcrossprodSelf}
 \alias{bed_tcrossprodSelf}
-\title{Tcrossprod}
+\title{tcrossprod / GRM}
 \usage{
 bed_tcrossprodSelf(
   obj.bed,
@@ -13,19 +13,22 @@ bed_tcrossprodSelf(
 )
 }
 \arguments{
-\item{obj.bed}{Object of type \code{bed}, which is the mapping of some bed file.
+\item{obj.bed}{Object of type \link{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
 
-\item{fun.scaling}{A function that returns a named list of
-\code{mean} and \code{sd} for every column, to scale each of their elements
-such as followed: \deqn{\frac{X_{i,j} - mean_j}{sd_j}.}
-Default doesn't use any scaling.}
+\item{fun.scaling}{A function with parameters \code{X} (or \code{obj.bed}), \code{ind.row} and
+\code{ind.col}, and that returns a data.frame with \verb{$center} and \verb{$scale} for the
+columns corresponding to \code{ind.col}, to scale each of their elements such as followed:
+\deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
+You can also provide your own \code{center} and \code{scale} by using \code{\link[=as_scaling_fun]{as_scaling_fun()}}.}
 
-\item{ind.row}{An optional vector of the row indices that are used.
-If not specified, all rows are used. \strong{Don't use negative indices.}}
+\item{ind.row}{An optional vector of the row indices (individuals) that
+are used. If not specified, all rows are used.\cr
+\strong{Don't use negative indices.}}
 
-\item{ind.col}{An optional vector of the column indices that are used.
-If not specified, all columns are used. \strong{Don't use negative indices.}}
+\item{ind.col}{An optional vector of the column indices (SNPs) that are used.
+If not specified, all columns are used.\cr
+\strong{Don't use negative indices.}}
 
 \item{block.size}{Maximum number of columns read at once.
 Default uses \link[bigstatsr]{block_size}.}
@@ -38,9 +41,21 @@ A temporary \link[bigstatsr:FBM-class]{FBM}, with the following two attributes:
 }
 }
 \description{
-Compute \eqn{X.row X.row^T} for a Filebacked Big Matrix \code{X}
-after applying a particular scaling to it.
+Compute \eqn{G G^T} from a bed object, with possible filtering and scaling
+of \code{G}. For example, this can be used to compute GRMs.
 }
+\section{Matrix parallelization}{
+
+
+Large matrix computations are made block-wise and won't be parallelized
+in order to not have to reduce the size of these blocks.
+Instead, you may use \href{https://mran.microsoft.com/open/}{Microsoft R Open}
+or OpenBLAS in order to accelerate these block matrix computations.
+You can also control the number of cores used with
+\code{bigparallelr::set_blas_ncores()}.
+
+}
+
 \examples{
 bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
 obj.bed <- bed(bedfile)
