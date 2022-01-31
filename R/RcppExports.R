@@ -57,6 +57,10 @@ corMat <- function(obj, rowInd, colInd, size, thr, pos, fill_diag, ncores) {
     .Call(`_bigsnpr_corMat`, obj, rowInd, colInd, size, thr, pos, fill_diag, ncores)
 }
 
+corMatCov <- function(obj, rowInd, colInd, Z, size, thr, pos, fill_diag, ncores) {
+    .Call(`_bigsnpr_corMatCov`, obj, rowInd, colInd, Z, size, thr, pos, fill_diag, ncores)
+}
+
 impute <- function(BM, method, ncores) {
     invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
 }

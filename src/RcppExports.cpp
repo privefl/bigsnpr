@@ -237,6 +237,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// corMatCov
+List corMatCov(Environment obj, const IntegerVector& rowInd, const IntegerVector& colInd, const NumericMatrix& Z, double size, const NumericVector& thr, const NumericVector& pos, bool fill_diag, int ncores);
+RcppExport SEXP _bigsnpr_corMatCov(SEXP objSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP ZSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP posSEXP, SEXP fill_diagSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< double >::type size(sizeSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type thr(thrSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type pos(posSEXP);
+    Rcpp::traits::input_parameter< bool >::type fill_diag(fill_diagSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(corMatCov(obj, rowInd, colInd, Z, size, thr, pos, fill_diag, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // impute
 void impute(Environment BM, int method, int ncores);
 RcppExport SEXP _bigsnpr_impute(SEXP BMSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
@@ -540,6 +559,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_snp_colstats", (DL_FUNC) &_bigsnpr_snp_colstats, 4},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 8},
+    {"_bigsnpr_corMatCov", (DL_FUNC) &_bigsnpr_corMatCov, 9},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
     {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 7},
     {"_bigsnpr_ld_scores", (DL_FUNC) &_bigsnpr_ld_scores, 6},
