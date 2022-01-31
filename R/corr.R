@@ -29,22 +29,28 @@ cor0 <- function(Gna,
     size   = size * 1000,
     thr    = pmax(THR, sqrt(thr_r2)),
     pos    = infos.pos,
-    ncores = ncores
+    ncores = ncores,
+    fill_diag = fill.diag
   )
 
   m <- length(ind.col)
-  corr <- Matrix::sparseMatrix(
-    i = unlist(lapply(ind_val, function(.) .$i)),
-    j = rep(1:m, times = sapply(ind_val, function(.) length(.$i))),
-    x = unlist(lapply(ind_val, function(.) .$x)),
-    dims = c(m, m),
-    symmetric = TRUE)
+  # corr <- Matrix::sparseMatrix(
+  #   i = unlist(lapply(ind_val, function(.) .$i)),
+  #   j = rep(1:m, times = sapply(ind_val, function(.) length(.$i))),
+  #   x = unlist(lapply(ind_val, function(.) .$x)),
+  #   dims = c(m, m),
+  #   symmetric = TRUE)
+  corr <- new("dsCMatrix", uplo = "U")
+  corr@Dim <- c(m, m)
+  corr@i <- unlist(lapply(ind_val, function(.) .$i))
+  corr@p <- c(0L, cumsum(sapply(ind_val, function(.) length(.$i))))
+  corr@x <- unlist(lapply(ind_val, function(.) .$x))
 
-  if (fill.diag) diag(corr) <- 1
-  if (corr@uplo == "L" && Matrix::isDiagonal(corr))
-    corr@uplo <- "U"
+  # if (fill.diag) diag(corr) <- 1
+  # if (corr@uplo == "L" && Matrix::isDiagonal(corr))
+  #   corr@uplo <- "U"
 
-  if (anyNA(corr))
+  if (anyNA(corr@x))
     warning2("NA or NaN values in the resulting correlation matrix.")
 
   corr

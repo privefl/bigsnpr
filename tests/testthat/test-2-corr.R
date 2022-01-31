@@ -24,6 +24,7 @@ ind_val <- bigsnpr:::corMat(G,
                             size = size,
                             thr = rep(r, n),
                             pos = seq_along(ind.col),
+                            fill_diag = FALSE,
                             ncores = 2)
 
 list_i <- lapply(ind_val, function(.) .$i)
@@ -33,7 +34,7 @@ i <- unlist(list_i)
 j <- rep(seq_ind, lengths(list_i))
 x <- unlist(lapply(ind_val, function(.) .$x))
 
-corr2 <- Matrix::sparseMatrix(i = i, j = j, x = x ** 2, dims = c(m, m))
+corr2 <- Matrix::sparseMatrix(i = i + 1L, j = j, x = x ** 2, dims = c(m, m))
 
 ################################################################################
 
@@ -99,6 +100,7 @@ test_that("Same correlations as Hmisc (with significance levels)", {
   expect_equal(dim(corr2), c(m, m))
   expect_equal(corr2[ind], true$r[ind])
   expect_equal(2*length(corr2@i), length(ind))
+  expect_identical(diag(corr2), rep(0, m))
 
   # with additional threshold
   corr3 <- snp_cor(G = G,
@@ -110,6 +112,7 @@ test_that("Same correlations as Hmisc (with significance levels)", {
 
   expect_equal(dim(corr3), c(m, m))
   expect_gte(min(corr3@x^2), 0.02)
+  expect_identical(diag(corr3), rep(1, m))
 })
 
 ################################################################################

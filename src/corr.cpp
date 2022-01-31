@@ -13,6 +13,7 @@ List corMat0(C macc,
              double size,
              const NumericVector& thr,
              const NumericVector& pos,
+             bool fill_diag,
              int ncores) {
 
   int n = macc.nrow();
@@ -32,6 +33,10 @@ List corMat0(C macc,
 
       ind.clear();
       val.clear();
+      if (fill_diag) {
+        ind.push_back(j0);
+        val.push_back(1.0);
+      }
 
       // pre-computation
       double xSum0 = 0, xxSum0 = 0;
@@ -75,13 +80,15 @@ List corMat0(C macc,
         double r = num / ::sqrt(deno_x * deno_y);
 
         if (ISNAN(r) || std::abs(r) > thr[nona - 1]) {
-          ind.push_back(j + 1);
+          ind.push_back(j);
           val.push_back(r);
         }
       }
 
       #pragma omp critical
-      res[j0] = List::create(_["i"] = wrap(ind), _["x"] = wrap(val));
+      res[j0] = List::create(
+        _["i"] = rev(as<IntegerVector>(wrap(ind))),
+        _["x"] = rev(as<NumericVector>(wrap(val))));
     }
   }
 
@@ -97,6 +104,7 @@ List corMat(Environment obj,
             double size,
             const NumericVector& thr,
             const NumericVector& pos,
+            bool fill_diag,
             int ncores) {
 
   myassert_size(colInd.size(), pos.size());
@@ -106,11 +114,11 @@ List corMat(Environment obj,
     NumericVector code = clone(as<NumericVector>(obj["code256"]));
     code[is_na(code)] = 3;
     SubBMCode256Acc macc(xpBM, rowInd, colInd, code, 1);
-    return corMat0(macc, size, thr, pos, ncores);
+    return corMat0(macc, size, thr, pos, fill_diag, ncores);
   } else if (obj.exists("bedfile")) {
     XPtr<bed> xp_bed = obj["address"];
     bedAcc macc(xp_bed, rowInd, colInd);
-    return corMat0(macc, size, thr, pos, ncores);
+    return corMat0(macc, size, thr, pos, fill_diag, ncores);
   } else {
     throw Rcpp::exception("Unknown object type.");
   }

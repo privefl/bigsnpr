@@ -1,3 +1,7 @@
+## bigsnpr 1.9.7
+
+- `snp_cor()` and `bed_cor()` now use less memory.
+
 ## bigsnpr 1.9.5
 
 - Remove parameter `info` from `snp_cor()` and `bed_cor()` because this correction is not useful after all.
