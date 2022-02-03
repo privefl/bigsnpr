@@ -144,3 +144,18 @@ test_that("read as random hard calls", {
 })
 
 ################################################################################
+
+test_that("work with duplicated variants or individuals", {
+  G <- snp_attach(snp_readBGEN(
+    bgen_file, tempfile(), list(rep("1_1001_A_G", 3))))$genotypes
+  expect_equal(ncol(G), 3)
+  expect_identical(G[, 1], G[, 2])
+  expect_identical(G[, 1], G[, 3])
+  G2 <- snp_attach(snp_readBGEN(
+    bgen_file, tempfile(), ind_row = rep(1, 3), list(IDs)))$genotypes
+  expect_equal(dim(G2), c(3, length(IDs)))
+  expect_identical(G2[1, ], G2[2, ])
+  expect_identical(G2[1, ], G2[3, ])
+})
+
+################################################################################

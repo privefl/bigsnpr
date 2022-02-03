@@ -36,6 +36,7 @@ snp_readBGI <- function(bgifile, snp_id = NULL) {
   if (is.null(snp_id)) {
 
     dplyr::tbl(db_con, "Variant") %>%
+      dplyr::mutate(file_start_position = as.double(file_start_position)) %>%
       dplyr::collect()
 
   } else {
@@ -44,6 +45,7 @@ snp_readBGI <- function(bgifile, snp_id = NULL) {
     snp_pos <- as.integer(sub("^[[:alnum:]]{2}_([[:digit:]]+)_.+$", "\\1", snp_id))
     info <- dplyr::tbl(db_con, "Variant") %>%
       dplyr::filter(position %in% snp_pos) %>%
+      dplyr::mutate(file_start_position = as.double(file_start_position)) %>%
       dplyr::collect()
 
     # check
@@ -188,7 +190,7 @@ snp_readBGEN <- function(bgenfiles, backingfile, list_snp_id,
       ind.col <- sum(sizes[seq_len(ic - 1)]) + seq_len(sizes[ic])
       varinfo <- read_bgen(
         filename = bgenfiles[ic],
-        offsets  = as.double(info$file_start_position),
+        offsets  = info$file_start_position,
         BM       = G,
         ind_row  = ind_row - 1L,
         ind_col  = ind.col,

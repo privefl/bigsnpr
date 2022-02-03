@@ -1,3 +1,7 @@
+## bigsnpr 1.9.8
+
+- Fix an issue in `snp_readBGI()` when using an outdated version of package {bit64}.
+
 ## bigsnpr 1.9.7
 
 - `snp_cor()` and `bed_cor()` now use less memory.
