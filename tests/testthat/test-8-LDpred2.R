@@ -21,41 +21,71 @@ test_that("sp_colSumsSq_sym() works", {
 test_that("LDpred2 works", {
 
   skip_if(is_cran)
-  skip_if_offline("dropbox.com")
+  skip_if_offline("github.com")
 
-  load(url("https://www.dropbox.com/s/c13uygnjh6yh7vf/to-test-ldpred2.RData?raw=1"))
+  zip <- tempfile(fileext = ".zip")
+  download.file(
+    "https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip",
+    destfile = zip, mode = "wb", quiet = TRUE)
+  unzip(zip, exdir = tempdir())
+  rds <- snp_readBed(file.path(tempdir(), "tmp-data/public-data3.bed"))
+  obj.bigSNP <- snp_attach(rds)
+  G <- obj.bigSNP$genotypes
+  y <- obj.bigSNP$fam$affection
+  POS2 <- obj.bigSNP$map$genetic.dist
+
+  sumstats <- bigreadr::fread2(file.path(tempdir(), "tmp-data/public-data3-sumstats.txt"))
+  sumstats$n_eff <- sumstats$N
+  map <- setNames(obj.bigSNP$map[-3], c("chr", "rsid", "pos", "a1", "a0"))
+  df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)
+
+  tmp <- tempfile(tmpdir = file.path(tempdir(), "tmp-data"))
+
+  for (chr in 1:22) {
+
+    # print(chr)
+
+    ## indices in 'df_beta'
+    ind.chr <- which(df_beta$chr == chr)
+    ## indices in 'G'
+    ind.chr2 <- df_beta$`_NUM_ID_`[ind.chr]
+
+    corr0 <- snp_cor(G, ind.col = ind.chr2, size = 3 / 1000,
+                     infos.pos = POS2[ind.chr2], ncores = 2)
+
+    if (chr == 1) {
+      ld <- Matrix::colSums(corr0^2)
+      corr <- as_SFBM(corr0, tmp, compact = TRUE)
+    } else {
+      ld <- c(ld, Matrix::colSums(corr0^2))
+      corr$add_columns(corr0, nrow(corr))
+    }
+  }
 
   # LD score regression
-  ldsc <- snp_ldsc2(corr, df_beta)
-  corr <- as_SFBM(corr, compact = sample(c(TRUE, FALSE), 1))
+  (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
+                                  sample_size = n_eff, blocks = NULL)))
 
   # LDpred2-inf
   beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = ldsc[["h2"]])
-  r_inf <- cor(beta_inf, true_beta)
-  expect_gt(r_inf, 0.4)
-
-  # Naive PRS
-  expect_lt(cor(df_beta$beta, true_beta), r_inf)
+  pred_inf <- big_prodVec(G, beta_inf, ind.col = df_beta[["_NUM_ID_"]])
+  expect_gt(cor(pred_inf, y), 0.2)
 
   # LDpred2-gibbs
   p_seq <- signif(seq_log(1e-3, 1, length.out = 7), 1)
-  params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]] / 5, sparse = c(FALSE, TRUE))
+  params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE))
   expect_equal(dim(params), c(14, 3))
   beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
-  expect_gt(max(cor(beta_grid, true_beta), na.rm = TRUE), 0.4)
+  pred_grid <- big_prodMat(G, beta_grid, ind.col = df_beta[["_NUM_ID_"]])
+  expect_gt(max(cor(pred_grid, y)), 0.4)
 
   # LDpred2-uncertainty
   expect_error(snp_ldpred2_grid(corr, df_beta, params, return_sampling_betas = TRUE),
                "Only one set of parameters is allowed")
-  beta_sample <- snp_ldpred2_grid(corr, df_beta, params[2, ], num_iter = 200,
+  beta_sample <- snp_ldpred2_grid(corr, df_beta, params[3, ], num_iter = 200,
                                   return_sampling_betas = TRUE)
   expect_equal(dim(beta_sample), c(nrow(df_beta), 200))
-  # if (sd(rowMeans(beta_sample)) < 0.1) {
-  #   ind <- which.max(cor(rowMeans(beta_sample), beta_grid[, 1:7]))
-  #   # expect_true(ind %in% 1:3)
-  #   # not exactly the same, but should be close:
-  #   expect_gt(cor(rowMeans(beta_sample), beta_grid[, ind]), 0.7)
-  # }
+  expect_gt(cor(rowMeans(beta_sample), beta_grid[, 3]), 0.9)
 
   # LDpred2-auto
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
@@ -64,10 +94,12 @@ test_that("LDpred2 works", {
   expect_length(beta_auto, 1)
   mod <- beta_auto[[1]]
   expect_null(dim(mod$beta_est))
-  expect_gt(cor(mod$beta_est, true_beta), 0.3)
-  expect_gt(cor(mod$beta_est_sparse, true_beta), 0.3)
+  pred_auto <- big_prodVec(G, mod$beta_est, ind.col = df_beta[["_NUM_ID_"]])
+
+  expect_gt(cor(pred_auto, y), 0.4)
+  expect_gt(cor(mod$beta_est_sparse, mod$beta_est), 0.9)
   expect_lt(mean(mod$beta_est == 0), 0.001)
-  expect_gt(mean(mod$beta_est_sparse == 0), 0.1)
+  expect_gt(mean(mod$beta_est_sparse == 0), 0.5)
   expect_equal(mod$h2_init, ldsc[["h2"]])
   expect_equal(mod$p_init, 0.1)
   expect_equal(mod$h2_est, mean(tail(mod$path_h2_est, 200)))
@@ -77,13 +109,13 @@ test_that("LDpred2 works", {
   expect_equal(mean(mod$postp_est), mod$p_est, tolerance = 0.01)
   expect_equal(dim(mod$sample_beta), c(ncol(corr), 0))
   beta_hat <- with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))
-  expect_gt(cor(mod$corr_est, beta_hat), 0.9)
+  expect_gt(cor(mod$corr_est, beta_hat), 0.3)
 
   beta_auto2 <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
                                  burn_in = 200, num_iter = 200,
                                  vec_p_init = 1, allow_jump_sign = FALSE)
-  expect_gt(cor(beta_auto2[[1]]$beta_est, true_beta), 0.3)
-  expect_lt(beta_auto2[[1]]$p_est, 0.3)
+  expect_gt(cor(beta_auto2[[1]]$beta_est, mod$beta_est), 0.9)
+  expect_lt(beta_auto2[[1]]$p_est, 0.1)
 
   # Sampling betas
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
@@ -94,11 +126,11 @@ test_that("LDpred2 works", {
   expect_equal(h2_est, beta_auto[[1]]$path_h2_est[seq(210, 400, by = 10)])
 
   # Errors
-  expect_error(snp_ldpred2_inf(corr, df_beta[-1]),
+  expect_error(snp_ldpred2_inf(corr, df_beta[-6]),
                "'df_beta' should have element 'beta'.")
-  expect_error(snp_ldpred2_grid(corr, df_beta[-1], params),
+  expect_error(snp_ldpred2_grid(corr, df_beta[-6], params),
                "'df_beta' should have element 'beta'.")
-  expect_error(snp_ldpred2_auto(corr, df_beta[-1]),
+  expect_error(snp_ldpred2_auto(corr, df_beta[-6]),
                "'df_beta' should have element 'beta'.")
 
   # OpenMP
