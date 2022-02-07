@@ -38,7 +38,7 @@ corr2 <- Matrix::sparseMatrix(i = i + 1L, j = j, x = x ** 2, dims = c(m, m))
 
 ################################################################################
 
-file.ld <- system.file("testdata", "example.ld", package = "bigsnpr")
+file.ld <- test_path("testdata", "example.ld")
 true <- bigreadr::fread2(file.ld)
 snps.ind <- sapply(true[, c("SNP_A", "SNP_B")], match,
                    table = paste0("SNP", ind.col - 1))

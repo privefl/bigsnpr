@@ -11,14 +11,14 @@ skip_if_not_installed("RSQLite")
 # need to write bgen/bgi files because can't have binary files..
 library(magrittr)
 bgen_file <- tempfile(fileext = ".bgen")
-system.file("testdata", "bgen_example.rds", package = "bigsnpr") %>%
+test_path("testdata/bgen_example.rds") %>%
   readRDS() %>% writeBin(bgen_file, useBytes = TRUE)
-system.file("testdata", "bgi_example.rds",  package = "bigsnpr") %>%
+test_path("testdata/bgi_example.rds") %>%
   readRDS() %>% writeBin(paste0(bgen_file, ".bgi"), useBytes = TRUE)
 
-variants <- readRDS(system.file("testdata", "bgen_variants.rds", package = "bigsnpr"))
-dosages  <- readRDS(system.file("testdata", "bgen_dosages.rds",  package = "bigsnpr"))
-snp_info <- readRDS(system.file("testdata", "bgen_varinfo.rds",  package = "bigsnpr"))
+variants <- readRDS(test_path("testdata/bgen_variants.rds"))
+dosages  <- readRDS(test_path("testdata/bgen_dosages.rds"))
+snp_info <- readRDS(test_path("testdata/bgen_varinfo.rds"))
 IDs <- with(variants, paste(1, physical.pos, allele1, allele2, sep = "_"))
 # variants 18 & 19 have identical IDs
 excl <- c(18, 19)

@@ -19,7 +19,7 @@ obj.svd <- snp_autoSVD(G, infos.chr = test$map$chromosome,
 # GWAS
 gwas <- big_univLogReg(G, y01.train = y01, covar.train = obj.svd$u)
 pval <- predict(gwas, log10 = FALSE)
-pval2 <- readRDS(system.file("testdata", "pval.rds", package = "bigsnpr"))
+pval2 <- readRDS(test_path("testdata", "pval.rds"))
 expect_equal(pval, pval2, tolerance = 1e-4)
 
 # clumping
@@ -27,8 +27,7 @@ ind.keep <- snp_clumping(G, infos.chr = test$map$chromosome,
                          S = abs(gwas$score),
                          size = 250, # as PLINK default
                          infos.pos = test$map$physical.pos)
-ind.keep2 <- readRDS(system.file("testdata", "clumping.rds",
-                                 package = "bigsnpr"))
+ind.keep2 <- readRDS(test_path("testdata", "clumping.rds"))
 expect_gt(mean(ind.keep %in% ind.keep2), 0.98)
 
 # PRS
@@ -39,7 +38,7 @@ prs <- snp_PRS(G, betas.keep = gwas$estim[ind.keep],
                lpS.keep = -predict(gwas)[ind.keep],
                thr.list = thrs)
 expect_equal(dim(prs), c(nrow(G), length(thrs)))
-prs2 <- readRDS(system.file("testdata", "scores-PRS.rds", package = "bigsnpr"))
+prs2 <- readRDS(test_path("testdata", "scores-PRS.rds"))
 scores.cor <- sapply(cols_along(prs), function(j) cor(prs[, j], prs2[, j]))
 expect_equal(scores.cor, rep(1, length(thrs)),
              tolerance = 1e-3)
