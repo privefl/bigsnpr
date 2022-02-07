@@ -55,7 +55,7 @@ snp_prodBGEN <- function(bgenfiles, beta, list_snp_id,
   stopifnot(all(ind_row >= 1 & ind_row <= N))
 
   ncores_save <- bigparallelr::set_blas_ncores(ncores)
-  on.exit(bigparallelr::set_blas_ncores(ncores_save), add = TRUE)
+  on.exit(bigparallelr::set_blas_ncores(ncores_save), add = TRUE, after = FALSE)
 
   XY <- matrix(0, length(ind_row), ncol(beta))
 

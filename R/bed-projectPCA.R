@@ -30,7 +30,7 @@ download_1000G <- function(dir, overwrite = FALSE, delete_zip = TRUE) {
     if (overwrite || !file.exists(zip)) {
       utils::download.file("https://ndownloader.figshare.com/files/17838962",
                            destfile = zip, mode = "wb")
-      if (delete_zip) on.exit(unlink(zip), add = TRUE)
+      if (delete_zip) on.exit(unlink(zip), add = TRUE, after = FALSE)
     }
     utils::unzip(zip, exdir = dir)
 

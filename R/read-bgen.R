@@ -31,7 +31,7 @@ snp_readBGI <- function(bgifile, snp_id = NULL) {
 
   # read variant information from index files
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
-  on.exit(RSQLite::dbDisconnect(db_con), add = TRUE)
+  on.exit(RSQLite::dbDisconnect(db_con), add = TRUE, after = FALSE)
 
   if (is.null(snp_id)) {
 

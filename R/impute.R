@@ -30,7 +30,7 @@ imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
                       p.train, n.cor, seed, ncores) {
 
   old <- .Random.seed
-  on.exit(assign(".Random.seed", old, globalenv()), add = TRUE)
+  on.exit(assign(".Random.seed", old, globalenv()), add = TRUE, after = FALSE)
 
   # Do something only if there is still something to do
   if (any(is.na(infos.imp[1, ind.chr]))) {
