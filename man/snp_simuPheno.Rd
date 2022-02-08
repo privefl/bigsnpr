@@ -51,6 +51,6 @@ A list with 3 elements:
 Simulate phenotypes using a linear model. When a prevalence is given, the
 liability threshold is used to convert liabilities to a binary outcome.
 The genetic and environmental liabilities are scaled such that the variance
-of the genetic liability is equality the requested heritability, and the
-variance of the total liability is 1.
+of the genetic liability is exactly equal to the requested heritability, and
+the variance of the total liability is equal to 1.
 }

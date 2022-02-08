@@ -12,7 +12,7 @@ test_that("snp_simuPheno() works", {
   G <- bigsnp$genotypes
 
   ind.row <- sample(nrow(G), 50)
-  simu <- snp_simuPheno(G, 0.2, 20, ind.row = ind.row)
+  simu <- snp_simuPheno(G, 0.2, 20, ind.row = ind.row, ncores = 2)
   expect_length(simu$pheno, 50)
   expect_length(simu$set, 20)
   expect_length(simu$effects, 20)
@@ -20,7 +20,7 @@ test_that("snp_simuPheno() works", {
   expect_equal(var_g, 0.2)
 
   ind.possible <- sample(ncol(G), 50)
-  simu <- snp_simuPheno(G, 0.2, 20, ind.possible = ind.possible)
+  simu <- snp_simuPheno(G, 0.2, 20, ind.possible = ind.possible, ncores = 2)
   expect_length(simu$set, 20)
   expect_length(simu$effects, 20)
   expect_true(all(simu$set %in% ind.possible))

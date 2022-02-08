@@ -6,13 +6,15 @@ scaled_prod <- function(X, ind, ind.row, ind.col, beta) {
               center = ms$center, scale = ms$scale)
 }
 
+################################################################################
+
 #' Simulate phenotypes
 #'
 #' Simulate phenotypes using a linear model. When a prevalence is given, the
 #' liability threshold is used to convert liabilities to a binary outcome.
 #' The genetic and environmental liabilities are scaled such that the variance
-#' of the genetic liability is equality the requested heritability, and the
-#' variance of the total liability is 1.
+#' of the genetic liability is exactly equal to the requested heritability, and
+#' the variance of the total liability is equal to 1.
 #'
 #' @inheritParams bigsnpr-package
 #' @param h2 Heritability.
@@ -34,7 +36,10 @@ snp_simuPheno <- function(G, h2, M, K = NULL,
                           effects.dist = c("gaussian", "laplace"),
                           ncores = 1) {
 
-  set <- sample(ind.possible, size = M)
+  # sample causal variants
+  set <- sort(sample(ind.possible, size = M))
+
+  # sample effect sizes (for causal variants)
   effects <- if (match.arg(effects.dist) == "gaussian") {
     stats::rnorm(M, sd = sqrt(h2 / M))
   } else {
@@ -42,7 +47,7 @@ snp_simuPheno <- function(G, h2, M, K = NULL,
     rmutil::rlaplace(M, s = sqrt(h2 / (2 * M)))
   }
 
-  # simulate genetic liability
+  # compute genetic liability
   gen_liab <- big_apply(G, scaled_prod,
                         a.combine = bigparallelr::plus, ind = seq_along(set),
                         ind.row = ind.row, ind.col = set, beta = effects,
@@ -53,7 +58,7 @@ snp_simuPheno <- function(G, h2, M, K = NULL,
   gen_liab <- gen_liab * coeff1
   stopifnot(all.equal(stats::var(gen_liab), h2))
 
-  # add environmental part + make sure that total variance is 1
+  # add environmental part + make sure that total variance is exactly 1
   env_liab <- stats::rnorm(length(gen_liab), sd = sqrt(1 - h2))
   var_env <- stats::var(env_liab)
   cov_env <- stats::cov(gen_liab, env_liab)
