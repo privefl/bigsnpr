@@ -19,7 +19,6 @@ SystemRequirements: Package 'bigsnpr' includes a few functions that wrap existin
     software such as 'PLINK' <www.cog-genomics.org/plink2>. Functions are provided
     to download these software. Note that these external software might not work
     for some operating systems (e.g. 'PLINK' might not work on Solaris).
-Remotes: privefl/bigstatsr
 Depends:
     R (>= 3.3), 
     bigstatsr (>= 1.5.6)
@@ -54,6 +53,7 @@ Suggests:
     Hmisc,
     pcadapt (>= 4.1),
     quadprog,
+    RhpcBLASctl,
     rmutil,
     RSpectra,
     RSQLite,

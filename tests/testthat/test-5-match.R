@@ -98,7 +98,7 @@ test_that("snp_asGeneticPos() works", {
   expect_gt(res2[3], res2[2])
   expect_lt(res2[3], res2[4])
 
-  skip_if_offline("github.com")
+  skip_if_offline("raw.githubusercontent.com")
   skip_if(is_cran)
 
   info2 <- data.frame(chr = 22, pos = 18206376)

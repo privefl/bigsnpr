@@ -4,6 +4,7 @@ context("OPENMP")
 # Basically, test if any crash..
 
 skip_if(is_cran)
+skip_if(RhpcBLASctl::omp_get_max_threads() < 2)
 
 ################################################################################
 
@@ -160,24 +161,24 @@ test_that("parallel snp_cor() works", {
   rows <- sample(nrow(G), 2 * nrow(G), replace = TRUE)
   cols <- sample(ncol(G), replace = TRUE)
 
-  test <- replicate(5, simplify = FALSE, {
-    snp_cor(G, rows, cols, ncores = 2)
-  })
-  time <- system.time(true <- snp_cor(G, rows, cols, ncores = 1))[3]
-
-  expect_lt(system.time(snp_cor(G, rows, cols, ncores = 2))[3], time)
-  expect_true(all(sapply(test, all.equal, current = true)))
+  time_seq <- system.time(true <- snp_cor(G, rows, cols, ncores = 1))[3]
+  time_parallel <- mean(replicate(5, {
+    time <- system.time(test <- snp_cor(G, rows, cols, ncores = 2))[3]
+    expect_equal(test, true)
+    time
+  }))
+  expect_lt(time_parallel, time_seq)
 
   bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
   obj.bed <- bed(bedfile)
 
-  test <- replicate(5, simplify = FALSE, {
-    bed_cor(obj.bed, rows, cols, ncores = 2)
-  })
-  time <- system.time(true <- bed_cor(obj.bed, rows, cols, ncores = 1))[3]
-
-  expect_lt(system.time(bed_cor(obj.bed, rows, cols, ncores = 2))[3], time)
-  expect_true(all(sapply(test, all.equal, current = true)))
+  time_seq <- system.time(true <- bed_cor(obj.bed, rows, cols, ncores = 1))[3]
+  time_parallel <- mean(replicate(5, {
+    time <- system.time(test <- bed_cor(obj.bed, rows, cols, ncores = 2))[3]
+    expect_equal(test, true)
+    time
+  }))
+  expect_lt(time_parallel, time_seq)
 })
 
 ################################################################################
@@ -188,24 +189,24 @@ test_that("parallel snp_ld_scores() works", {
   rows <- sample(nrow(G), 3 * nrow(G), replace = TRUE)
   cols <- sample(ncol(G), replace = TRUE)
 
-  test <- replicate(5, simplify = FALSE, {
-    snp_ld_scores(G, rows, cols, ncores = 2)
-  })
-  time <- system.time(true <- snp_ld_scores(G, rows, cols, ncores = 1))[3]
-
-  expect_lt(system.time(snp_ld_scores(G, rows, cols, ncores = 2))[3], time)
-  expect_true(all(sapply(test, all.equal, current = true)))
+  time_seq <- system.time(true <- snp_ld_scores(G, rows, cols, ncores = 1))[3]
+  time_parallel <- mean(replicate(5, {
+    time <- system.time(test <- snp_ld_scores(G, rows, cols, ncores = 2))[3]
+    expect_equal(test, true)
+    time
+  }))
+  expect_lt(time_parallel, time_seq)
 
   bedfile <- system.file("extdata", "example.bed", package = "bigsnpr")
   obj.bed <- bed(bedfile)
 
-  test <- replicate(5, simplify = FALSE, {
-    bed_ld_scores(obj.bed, rows, cols, ncores = 2)
-  })
-  time <- system.time(true <- bed_ld_scores(obj.bed, rows, cols, ncores = 1))[3]
-
-  expect_lt(system.time(bed_ld_scores(obj.bed, rows, cols, ncores = 2))[3], time)
-  expect_true(all(sapply(test, all.equal, current = true)))
+  time_seq <- system.time(true <- bed_ld_scores(obj.bed, rows, cols, ncores = 1))[3]
+  time_parallel <- mean(replicate(5, {
+    time <- system.time(test <- bed_ld_scores(obj.bed, rows, cols, ncores = 2))[3]
+    expect_equal(test, true)
+    time
+  }))
+  expect_lt(time_parallel, time_seq)
 })
 
 ################################################################################
