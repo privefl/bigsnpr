@@ -29,6 +29,8 @@ ncores <- function() sample(1:2, 1)
 
 test_that("same as with intermediate FBM", {
 
+  skip_on_covr()
+
   expect_equal(rowSums(array(1:12, c(2, 2, 3)), dims = 2),
                matrix(c(15, 18, 21, 24), 2))
 

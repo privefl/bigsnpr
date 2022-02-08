@@ -128,6 +128,7 @@ test_that("works with multiple files", {
 ################################################################################
 
 test_that("read as random hard calls", {
+  skip_on_covr()
   G <- snp_attach(snp_readBGEN(bgen_file, tempfile(), list(IDs)))$genotypes[]
   all_G <- replicate(50, simplify = FALSE, {
     test <- snp_readBGEN(bgen_file, tempfile(), list(IDs), read_as = "random")
