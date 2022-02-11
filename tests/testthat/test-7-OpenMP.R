@@ -3,6 +3,7 @@
 context("OPENMP")  # Basically, test if any crash..
 
 skip_if(is_cran)
+skip_on_covr()
 skip_if_not(isTRUE(RhpcBLASctl::omp_get_num_procs() > 1))
 
 ################################################################################
