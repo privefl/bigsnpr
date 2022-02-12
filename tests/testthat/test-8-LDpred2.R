@@ -21,6 +21,7 @@ test_that("sp_colSumsSq_sym() works", {
 test_that("LDpred2 works", {
 
   skip_if(is_cran)
+  skip_on_covr()
   skip_if_offline("raw.githubusercontent.com")
 
   zip <- tempfile(fileext = ".zip")
