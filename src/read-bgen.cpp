@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-inline unsigned char sample_from_prob(double p0, double p1) {
+inline unsigned char sample_from_prob_uchar(double p0, double p1) {
   double first = ::unif_rand() * 255 - p0;
   return((first < 0) ? 4 : ((first < p1) ? 5 : 6));
 }
@@ -65,7 +65,7 @@ std::string read_variant(std::ifstream * ptr_stream,
       double f_ij = 4 * p0 + p1;
       af += e_ij;
       num += 255 * f_ij - e_ij * e_ij;
-      ptr_mat[i] = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
+      ptr_mat[i] = dosage ? decode[2 * p0 + p1] : sample_from_prob_uchar(p0, p1);
     }
   }
 

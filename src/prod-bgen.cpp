@@ -9,7 +9,7 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
-inline double sample_from_prob(double p0, double p1) {
+inline double sample_from_prob_dbl(double p0, double p1) {
   double first = ::unif_rand() * 255 - p0;
   return((first < 0) ? 0 : ((first < p1) ? 1 : 2));
 }
@@ -57,7 +57,7 @@ void read_variant(std::ifstream * ptr_stream,
       // probabilities * 255
       unsigned char p0 = buffer_out[i_prblt];
       unsigned char p1 = buffer_out[i_prblt + 1];
-      X(i, j) = dosage ? decode[2 * p0 + p1] : sample_from_prob(p0, p1);
+      X(i, j) = dosage ? decode[2 * p0 + p1] : sample_from_prob_dbl(p0, p1);
     }
   }
 
