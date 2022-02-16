@@ -27,41 +27,28 @@ test_that("LDpred2 works", {
   zip <- tempfile(fileext = ".zip")
   download.file(
     "https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip",
-    destfile = zip, mode = "wb", quiet = TRUE)
+    destfile = zip, mode = "wb", quiet = !interactive())
   unzip(zip, exdir = tempdir())
   rds <- snp_readBed(file.path(tempdir(), "tmp-data/public-data3.bed"))
+
   obj.bigSNP <- snp_attach(rds)
   G <- obj.bigSNP$genotypes
   y <- obj.bigSNP$fam$affection
-  POS2 <- obj.bigSNP$map$genetic.dist
+  POS2 <- obj.bigSNP$map$genetic.dist + 1000 * obj.bigSNP$map$chromosome
 
   sumstats <- bigreadr::fread2(file.path(tempdir(), "tmp-data/public-data3-sumstats.txt"))
   sumstats$n_eff <- sumstats$N
   map <- setNames(obj.bigSNP$map[-3], c("chr", "rsid", "pos", "a1", "a0"))
   df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)
 
-  tmp <- tempfile(tmpdir = file.path(tempdir(), "tmp-data"))
+  tmp <- tempfile(tmpdir = dirname(rds))
 
-  for (chr in 1:22) {
-
-    # print(chr)
-
-    ## indices in 'df_beta'
-    ind.chr <- which(df_beta$chr == chr)
-    ## indices in 'G'
-    ind.chr2 <- df_beta$`_NUM_ID_`[ind.chr]
-
-    corr0 <- snp_cor(G, ind.col = ind.chr2, size = 3 / 1000,
-                     infos.pos = POS2[ind.chr2], ncores = 2)
-
-    if (chr == 1) {
-      ld <- Matrix::colSums(corr0^2)
-      corr <- as_SFBM(corr0, tmp, compact = TRUE)
-    } else {
-      ld <- c(ld, Matrix::colSums(corr0^2))
-      corr$add_columns(corr0, nrow(corr))
-    }
-  }
+  ind_var <- df_beta$`_NUM_ID_`
+  corr0 <- snp_cor(G, ind.col = ind_var, size = 3 / 1000,
+                   infos.pos = POS2[ind_var], ncores = 2)
+  ld <- bigsnpr:::sp_colSumsSq_sym(p = corr0@p, i = corr0@i, x = corr0@x)
+  corr <- as_SFBM(corr0, tmp, compact = TRUE)
+  rm(corr0)
 
   # LD score regression
   (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
