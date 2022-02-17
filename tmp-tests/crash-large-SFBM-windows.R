@@ -2,11 +2,11 @@ corr0 <- readRDS("~/../Downloads/LD_REF/ld-ref/LD_chr1.rds")
 
 library(bigsnpr)
 gc(); file.remove("tmp-data/very_large_corr.sbk")
-corr <- as_SFBM(corr0, "tmp-data/very_large_corr", compact = FALSE)
+corr <- as_SFBM(corr0, "tmp-data/very_large_corr", compact = TRUE)
 
-for (k in seq_len(10)) {
-  print(k)  # crash at k=3
-  corr$add_columns(corr0, nrow(corr))
+for (k in seq_len(20)) {
+  print(k)  # was crashing at k=3 before on Windows
+  print(system.time(corr$add_columns(corr0, nrow(corr))))
 }
 
 log2(corr$nval)

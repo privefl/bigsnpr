@@ -1,3 +1,7 @@
+## bigsparser 0.6
+
+- Use a better strategy for appending to an SFBM (`$add_columns()`).
+
 ## bigsnpr 1.9.8
 
 - Fix an issue in `snp_readBGI()` when using an outdated version of package {bit64}.

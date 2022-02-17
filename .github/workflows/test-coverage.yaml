@@ -27,5 +27,5 @@ jobs:
           extra-packages: covr
 
       - name: Test coverage
-        run: covr::coveralls()
+        run: covr::codecov()
         shell: Rscript {0}
