@@ -1,7 +1,7 @@
 ---
 title: "Computing polygenic scores using LDpred2"
 author: "Florian Privé"
-date: "July 21, 2021"
+date: "February 24, 2022"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -348,4 +348,4 @@ rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 
 - Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger](https://doi.org/10.1093/bioinformatics/btaa1029). *Bioinformatics*, 36(22-23), 5424-5431.
 
-- Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores. *bioRxiv*
+- Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). [Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores](https://doi.org/10.1101/2021.03.29.437510). *bioRxiv*
