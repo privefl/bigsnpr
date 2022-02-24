@@ -14,11 +14,12 @@ Here we show how to compute polygenic risk scores using [LDpred2](https://doi.or
 This tutorial uses fake data for educational purposes only.
 Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
 
-You should also probably look at [the code of the paper](https://github.com/privefl/paper-ldpred2/tree/master/code), particularly at [the code to prepare summary statistics (including performing the quality control presented in the Methods section "Quality control of summary statistics" of the paper)](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R), at [the code to read BGEN files into the data format used by bigsnpr](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62), at [the code to prepare LD matrices](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26) and at [the code to run LDpred2 (genome-wide)](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L34-L118).
+You should also probably look at [the code of the paper](https://github.com/privefl/paper-ldpred2/tree/master/code), particularly at [the code to prepare summary statistics (including performing the quality control presented in the Methods section "Quality control of summary statistics" of the paper)](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R), at [the code to read BGEN files into the data format used by bigsnpr](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62), and at [the code to prepare LD matrices](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26).
 
-In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in PRS-CS and the LDpred2 papers.
-If you do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide an LD reference to be used directly, along with an example script on how to use it at https://doi.org/10.6084/m9.figshare.13034123.
-**Note that before Nov. 16, 2020, there was an error in the conversion of positions between genome builds.**
+In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in the PRS-CS and LDpred2 papers.
+If you do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide an LD reference to be used directly ~~at https://doi.org/10.6084/m9.figshare.13034123~~, along with [an example R script](https://github.com/privefl/paper-ldpred2/blob/master/code/example-with-provided-ldref.R) on how to use it.
+**New:** we now provide a new version of these LD references at https://doi.org/10.6084/m9.figshare.19213299 by forming independent LD blocks in the matrices, which can be useful for robustness and extra speed gains (see [this new preprint](https://doi.org/10.1101/2021.03.29.437510)).
+
 Information about these variants can be retrieved with
 
 ```{r}
@@ -29,8 +30,7 @@ info <- readRDS(runonce::download_file(
 str(info)
 ```
 
-Note that we now recommend to **run LDpred2 genome-wide**, contrary to what was shown in the first versions of this tutorial. The only difference it makes is when building the SFBM (the sparse LD matrix on disk), you need to build it so that it contains all variants genome-wide (see e.g. [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L39-L64) and below).
-
+Note that you should **run LDpred2 genome-wide**; just build the SFBM (the sparse LD matrix on disk) so that it contains all 1M HapMap3 variants genome-wide (see the for-loop below).
 
 
 ## Downloading genotype data and summary statistics
@@ -94,7 +94,7 @@ map <- setNames(obj.bigSNP$map[-3], c("chr", "rsid", "pos", "a1", "a0"))
 df_beta <- snp_match(sumstats, map)
 ```
 
-Here, there is problem with the matching; this is due to different genome builds. You can either convert between builds with `snp_modifyBuild()` (or directly use the converted positions in `info`), or match by rsIDs instead.
+Here, there is problem with the matching; this is due to having different genome builds. You can either convert between builds with `snp_modifyBuild()` (or directly use the converted positions in `info`), or match by rsIDs instead.
 
 ```{r}
 df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)  # use rsid instead of pos
@@ -105,11 +105,12 @@ If no or few variants are actually flipped, you might want to disable the strand
 ## Computing LDpred2 scores genome-wide
 
 **Some quality control on summary statistics is highly recommended (see paper and other tutorial).**
+A new refined QC is described in [this new preprint](https://doi.org/10.1101/2021.03.29.437510).
 
 ### Correlation
 
 First, you need to compute correlations between variants.
-We recommend to use a window size of 3 cM (see [paper](https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173#233620536)).
+We recommend to use a window size of 3 cM (see [the LDpred2 paper](https://doi.org/10.1093/bioinformatics/btaa1029)).
 
 ```{r}
 # POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = NCORES)
@@ -166,11 +167,12 @@ h2_est <- ldsc[["h2"]]
 beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
 ```
 
-
 ```{r}
 pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = df_beta[["_NUM_ID_"]])
 cor(pred_inf, y[ind.test])
 ```
+
+LDpred2-inf would very likely perform worse than the other models presented hereinafter.
 
 
 ### LDpred2(-grid): grid of models
@@ -238,21 +240,23 @@ pred <- big_prodVec(G, best_beta_grid, ind.row = ind.test,
 cor(pred, y[ind.test])
 ```
 
+
 ### LDpred2-auto: automatic model
 
-We recommend to run many chains in parallel with different initial values for `p`.
+We recommend to run many chains in parallel with different initial values for `p`. In [this new preprint](https://doi.org/10.1101/2021.03.29.437510), we have introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
 
 ```{r}
 # takes less than 2 min with 4 cores
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
                                vec_p_init = seq_log(1e-4, 0.5, length.out = 30),
+                               allow_jump_sign = FALSE, shrink_corr = 0.95,
                                ncores = NCORES)
 str(multi_auto, max.level = 1)
 str(multi_auto[[1]], max.level = 1)
 ```
 
-You should verify if the chains "converged". You can look at the path of the chains, as shown below.
-In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112), reproduced below). You can also filter on h2 and p estimates that diverge from the median of the chains.
+You should verify whether the chains "converged". You can look at the path of the chains, as shown below.
+In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112), reproduced below). You can also filter on h2 and p estimates that diverge from the median of the chains (e.g. as in [this code](https://github.com/privefl/UKBB-PGS/blob/main/code/assess-pred-ldpred2.R#L27-L32)).
 
 ```{r}
 library(ggplot2)
@@ -286,6 +290,7 @@ final_pred_auto <- rowMeans(pred_auto[, keep])
 ```{r}
 cor(final_pred_auto, y[ind.test])
 ```
+
 
 ### lassosum2: grid of models
 
@@ -339,6 +344,8 @@ best_grid_overall <-
 rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 ```
 
-## Reference
+## References
 
-Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger](https://doi.org/10.1093/bioinformatics/btaa1029). *Bioinformatics*, 36(22-23), 5424-5431.
+- Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger](https://doi.org/10.1093/bioinformatics/btaa1029). *Bioinformatics*, 36(22-23), 5424-5431.
+
+- Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores. *bioRxiv*
