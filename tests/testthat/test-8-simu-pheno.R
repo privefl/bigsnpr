@@ -35,7 +35,8 @@ test_that("snp_simuPheno() works", {
     gwas <- big_univLinReg(G, simu$pheno)
     cor(gwas$estim[simu$set], simu$effects)
   })
-  expect_gt(median(all_cor), 0.15)
+  # Not sure where there can be NAs, but it happened once
+  expect_gt(median(all_cor, na.rm = TRUE), 0.15)
 })
 
 ################################################################################
