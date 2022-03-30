@@ -1,3 +1,7 @@
+## bigsnpr 1.9.13
+
+- Enforce `scipen = 50` when writing files to turn off scientific format (e.g. for physical positions stored as `double`).
+
 ## bigsparser 0.6
 
 - Use a better strategy for appending to an SFBM (`$add_columns()`).

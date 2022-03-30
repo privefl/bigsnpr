@@ -161,7 +161,7 @@ snp_modifyBuild <- function(info_snp, liftOver, from = "hg18", to = "hg19") {
   BED <- tempfile(fileext = ".BED")
   info_BED <- with(info_snp, data.frame(
     paste0("chr", chr), pos0 = pos - 1L, pos, id = rows_along(info_snp)))
-  bigreadr::fwrite2(info_BED, BED, col.names = FALSE, sep = " ")
+  bigreadr::fwrite2(info_BED, BED, col.names = FALSE, sep = " ", scipen = 50)
 
   # Need chain file
   url <- paste0("ftp://hgdownload.cse.ucsc.edu/goldenPath/", from, "/liftOver/",
