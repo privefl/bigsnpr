@@ -77,8 +77,8 @@ ldpred2_gibbs_one_sampling <- function(corr, beta_hat, beta_init, order, n_vec, 
     .Call(`_bigsnpr_ldpred2_gibbs_one_sampling`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter)
 }
 
-ldpred2_gibbs <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores) {
-    .Call(`_bigsnpr_ldpred2_gibbs`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter, ncores)
+ldpred2_gibbs_one <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter) {
+    .Call(`_bigsnpr_ldpred2_gibbs_one`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter)
 }
 
 multLinReg <- function(obj, ind_row, ind_col, U, ncores = 1L) {

@@ -82,20 +82,25 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 
   if (!return_sampling_betas) {
 
+    bigparallelr::register_parallel(ncores)
+
     # LDpred2-grid models
-    beta_gibbs <- ldpred2_gibbs(
-      corr      = corr,
-      beta_hat  = beta_hat,
-      beta_init = rep(0, length(beta_hat)),
-      order     = seq_along(beta_hat) - 1L,
-      n_vec     = N,
-      h2        = grid_param$h2,
-      p         = grid_param$p,
-      sparse    = grid_param$sparse,
-      burn_in   = burn_in,
-      num_iter  = num_iter,
-      ncores    = ncores
-    )
+    beta_gibbs <- foreach(
+      h2 = grid_param$h2, p = grid_param$p, sparse = grid_param$sparse,
+      .export = "ldpred2_gibbs_one", .combine = "cbind") %dopar% {
+        ldpred2_gibbs_one(
+          corr      = corr,
+          beta_hat  = beta_hat,
+          beta_init = rep(0, length(beta_hat)),
+          order     = seq_along(beta_hat) - 1L,
+          n_vec     = N,
+          h2        = h2,
+          p         = p,
+          sparse    = sparse,
+          burn_in   = burn_in,
+          num_iter  = num_iter
+        )
+      }
 
   } else {
 
@@ -190,7 +195,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   bigparallelr::register_parallel(ncores)
 
   foreach(p_init = vec_p_init,
-          .export = c("ldpred2_gibbs_auto", "ldpred2_gibbs")) %dopar% {
+          .export = c("ldpred2_gibbs_auto", "ldpred2_gibbs_one")) %dopar% {
 
     ldpred_auto <- ldpred2_gibbs_auto(
       corr      = corr,
@@ -207,14 +212,10 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       allow_jump_sign = allow_jump_sign,
       shrink_corr = shrink_corr
     )
-    ldpred_auto$beta_est  <- drop(ldpred_auto$beta_est) * scale
-    ldpred_auto$postp_est <- drop(ldpred_auto$postp_est)
-    ldpred_auto$corr_est  <- drop(ldpred_auto$corr_est)
-    ldpred_auto$h2_init <- h2_init
-    ldpred_auto$p_init  <- p_init
+    ldpred_auto$beta_est <- ldpred_auto$beta_est * scale
 
     if (sparse) {
-      beta_gibbs <- ldpred2_gibbs(
+      beta_gibbs <- ldpred2_gibbs_one(
         corr      = corr,
         beta_hat  = beta_hat,
         beta_init = rep(0, length(beta_hat)),
@@ -224,10 +225,9 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
         p         = ldpred_auto$p_est,
         sparse    = TRUE,
         burn_in   = 50,
-        num_iter  = 100,
-        ncores    = 1
+        num_iter  = 100
       )
-      ldpred_auto$beta_est_sparse <- drop(beta_gibbs) * scale
+      ldpred_auto$beta_est_sparse <- beta_gibbs * scale
     }
 
     ldpred_auto
