@@ -10,6 +10,9 @@ bigsparser::as_SFBM
 #'
 #' LDpred2. Tutorial at \url{https://privefl.github.io/bigsnpr/articles/LDpred2.html}.
 #'
+#' For reproducibility, `set.seed()` can be used to ensure that two runs of
+#' LDpred2 give the exact same results (since v1.10).
+#'
 #' @inheritParams snp_ldsc2
 #' @param corr Sparse correlation matrix as an [SFBM][SFBM-class].
 #'   If `corr` is a dsCMatrix or a dgCMatrix, you can use `as_SFBM(corr)`.
@@ -59,6 +62,8 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
 #'   divergence is detected. If using `return_sampling_betas`, each column
 #'   corresponds to one iteration instead (after burn-in).
 #'
+#' @importFrom doRNG `%dorng%`
+#'
 #' @export
 #'
 #' @rdname LDpred2
@@ -87,7 +92,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
     # LDpred2-grid models
     beta_gibbs <- foreach(
       h2 = grid_param$h2, p = grid_param$p, sparse = grid_param$sparse,
-      .export = "ldpred2_gibbs_one", .combine = "cbind") %dopar% {
+      .export = "ldpred2_gibbs_one", .combine = "cbind") %dorng% {
         ldpred2_gibbs_one(
           corr      = corr,
           beta_hat  = beta_hat,
@@ -195,7 +200,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   bigparallelr::register_parallel(ncores)
 
   foreach(p_init = vec_p_init,
-          .export = c("ldpred2_gibbs_auto", "ldpred2_gibbs_one")) %dopar% {
+          .export = c("ldpred2_gibbs_auto", "ldpred2_gibbs_one")) %dorng% {
 
     ldpred_auto <- ldpred2_gibbs_auto(
       corr      = corr,

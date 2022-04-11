@@ -35,13 +35,11 @@ test_that("LDpred2 works", {
   map <- setNames(obj.bigSNP$map[-3], c("chr", "rsid", "pos", "a1", "a0"))
   df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)
 
-  tmp <- tempfile(tmpdir = dirname(rds))
-
   ind_var <- df_beta$`_NUM_ID_`
   corr0 <- snp_cor(G, ind.col = ind_var, size = 3 / 1000,
                    infos.pos = POS2[ind_var], ncores = 2)
   ld <- bigsnpr:::sp_colSumsSq_sym(p = corr0@p, i = corr0@i, x = corr0@x)
-  corr <- as_SFBM(corr0, tmp, compact = TRUE)
+  corr <- as_SFBM(corr0, compact = sample(c(TRUE, FALSE), 1))
   rm(corr0)
 
   # LD score regression
@@ -115,7 +113,7 @@ test_that("LDpred2 works", {
   expect_error(snp_ldpred2_auto(corr, df_beta[-6]),
                "'df_beta' should have element 'beta'.")
 
-  # OpenMP
+  # Parallelism
   all_beta <- replicate(
     n = 10, simplify = FALSE,
     snp_ldpred2_grid(corr, df_beta, params[c(1, 8), ], ncores = 2))
@@ -125,6 +123,38 @@ test_that("LDpred2 works", {
                      vec_p_init = seq_log(1e-4, 0.9, 6),
                      burn_in = 100, num_iter = 100,
                      sparse = TRUE, ncores = 2))
+
+  # Reproducibility
+
+  set.seed(1)
+  grid1 <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
+  grid2 <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
+  expect_false(identical(grid2, grid1))
+  set.seed(1)
+  grid3 <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
+  expect_identical(grid3, grid1)
+
+  set.seed(1)
+  beta1 <- snp_ldpred2_grid(corr, df_beta, params[3, ], return_sampling_betas = TRUE)
+  set.seed(1)
+  beta2 <- snp_ldpred2_grid(corr, df_beta, params[3, ], return_sampling_betas = TRUE)
+  expect_identical(beta2, beta1)
+
+  set.seed(1)
+  auto1 <- snp_ldpred2_auto(corr, df_beta,
+                            burn_in = 50, num_iter = 100,
+                            h2_init = 0.3, vec_p_init = seq_log(1e-5, 1, 8),
+                            report_step = 5, ncores = 2)
+  set.seed(1)
+  auto2 <- snp_ldpred2_auto(corr, df_beta,
+                            burn_in = 50, num_iter = 100,
+                            h2_init = 0.3, vec_p_init = seq_log(1e-5, 1, 8),
+                            report_step = 5, ncores = 2)
+  expect_identical(auto2, auto1)
+
+  inf1 <- snp_ldpred2_inf(corr, df_beta, h2 = 0.3)
+  inf2 <- snp_ldpred2_inf(corr, df_beta, h2 = 0.3)
+  expect_identical(inf2, inf1)
 })
 
 ################################################################################
