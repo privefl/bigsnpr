@@ -6,12 +6,16 @@ context("LASSOSUM2")
 
 test_that("lassosum2 works", {
 
-  skip_if(is_cran)
+  # skip_if(is_cran)
 
-  unzip(test_path("testdata/public-data3.zip"), exdir = tempdir())
-  rds <- snp_readBed(file.path(tempdir(), "tmp-data/public-data3.bed"))
+  bedfile <- file.path(tempdir(), "tmp-data/public-data3.bed")
+  if (!file.exists(rdsfile <- sub_bed(bedfile, ".rds"))) {
+    unzip(test_path("testdata/public-data3.zip"), exdir = tempdir())
+    rds <- snp_readBed(bedfile)
+    expect_identical(normalizePath(rds), normalizePath(rdsfile))
+  }
 
-  obj.bigSNP <- snp_attach(rds)
+  obj.bigSNP <- snp_attach(rdsfile)
   G <- obj.bigSNP$genotypes
   y <- obj.bigSNP$fam$affection
   POS2 <- obj.bigSNP$map$genetic.dist + 1000 * obj.bigSNP$map$chromosome
@@ -40,7 +44,7 @@ test_that("lassosum2 works", {
 
   beta_grid2 <- snp_lassosum2(corr, df_beta, nlambda = nlam, ncores = 2)
   attr(beta_grid2, "grid_param")$time <- attr(beta_grid, "grid_param")$time <- NULL
-  expect_identical(beta_grid2, beta_grid)
+  expect_identical(beta_grid2, beta_grid)  # no sampling, so reproducible
 
   # Errors
   expect_error(snp_lassosum2(corr, df_beta[-1]),

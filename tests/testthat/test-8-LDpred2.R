@@ -20,12 +20,16 @@ test_that("sp_colSumsSq_sym() works", {
 
 test_that("LDpred2 works", {
 
-  skip_if(is_cran)
+  # skip_if(is_cran)
 
-  unzip(test_path("testdata/public-data3.zip"), exdir = tempdir())
-  rds <- snp_readBed(file.path(tempdir(), "tmp-data/public-data3.bed"))
+  bedfile <- file.path(tempdir(), "tmp-data/public-data3.bed")
+  if (!file.exists(rdsfile <- sub_bed(bedfile, ".rds"))) {
+    unzip(test_path("testdata/public-data3.zip"), exdir = tempdir())
+    rds <- snp_readBed(bedfile)
+    expect_identical(normalizePath(rds), normalizePath(rdsfile))
+  }
 
-  obj.bigSNP <- snp_attach(rds)
+  obj.bigSNP <- snp_attach(rdsfile)
   G <- obj.bigSNP$genotypes
   y <- obj.bigSNP$fam$affection
   POS2 <- obj.bigSNP$map$genetic.dist + 1000 * obj.bigSNP$map$chromosome
@@ -154,7 +158,7 @@ test_that("LDpred2 works", {
 
   inf1 <- snp_ldpred2_inf(corr, df_beta, h2 = 0.3)
   inf2 <- snp_ldpred2_inf(corr, df_beta, h2 = 0.3)
-  expect_identical(inf2, inf1)
+  expect_identical(inf2, inf1)  # no sampling, so reproducible
 })
 
 ################################################################################

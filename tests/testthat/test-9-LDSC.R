@@ -27,6 +27,7 @@ test_that("wlm() works", {
 test_that("snp_ldsc() gives the same result as bulik/ldsc", {
 
   skip_if(is_cran)
+  skip_on_covr()
   skip_if_offline("dropbox.com")
 
   input <- readRDS(url(
