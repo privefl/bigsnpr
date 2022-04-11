@@ -93,10 +93,9 @@ test_that("$perc_kept in snp_ldsplit() is exact", {
 
 test_that("snp_ldsplit() gives consistent results", {
 
-  skip_if(is_cran)
-  skip_if_offline("dropbox.com")
+  # skip_if(is_cran)
 
-  corr <- readRDS(url("https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"))
+  corr <- readRDS(test_path("testdata/spMat.rds"))
 
   res1 <- snp_ldsplit(corr, thr_r2 = runif(1, 0, 0.2),
                       min_size = 10, max_size = 30, max_K = 50)

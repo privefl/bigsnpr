@@ -1,3 +1,9 @@
+## bigsnpr 1.10
+
+- LDpred2-grid does not use OpenMP for parallelism anymore, it now simply uses multiple R processes. 
+
+- LDpred2-grid and LDpred2-auto can now make use of `set.seed()` to get reproducible results. Note that LDpred2-inf and lassosum2 do not use any sampling.
+
 ## bigsnpr 1.9.13
 
 - Enforce `scipen = 50` when writing files to turn off scientific format (e.g. for physical positions stored as `double`).

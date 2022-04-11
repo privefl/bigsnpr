@@ -1,8 +1,7 @@
 /******************************************************************************/
 
-#include <bigstatsr/arma-strict-R-headers.h>
-#include <bigstatsr/utils.h>
 #include <bigsparser/SFBM.h>
+#include <bigstatsr/utils.h>
 
 /******************************************************************************/
 
@@ -10,26 +9,42 @@ inline double square(double x) {
   return x * x;
 }
 
+double dotprod(const NumericVector& X) {
+  int n = X.size();
+  double cp = 0;
+  for (int i = 0; i < n; i++) cp += square(X[i]);
+  return cp;
+}
+
 /******************************************************************************/
 
-arma::vec ldpred2_gibbs_one(XPtr<SFBM> sfbm,
-                            const arma::vec& beta_hat,
-                            const NumericVector& beta_init,
-                            const IntegerVector& order,
-                            const NumericVector& n_vec,
-                            double h2,
-                            double p,
-                            bool sparse,
-                            int burn_in,
-                            int num_iter) {
+// [[Rcpp::export]]
+NumericVector ldpred2_gibbs_one(Environment corr,
+                                const NumericVector& beta_hat,
+                                const NumericVector& beta_init,
+                                const IntegerVector& order,
+                                const NumericVector& n_vec,
+                                double h2,
+                                double p,
+                                bool sparse,
+                                int burn_in,
+                                int num_iter) {
+
+  XPtr<SFBM> sfbm = corr["address"];
 
   int m = beta_hat.size();
-  arma::vec curr_beta(beta_init.begin(), m);
-  arma::vec avg_beta(m, arma::fill::zeros);
+  myassert_size(sfbm->nrow(), m);
+  myassert_size(sfbm->ncol(), m);
+  myassert_size(order.size(), m);
+  myassert_size(beta_init.size(), m);
+  myassert_size(n_vec.size(), m);
+
+  NumericVector curr_beta = Rcpp::clone(beta_init);
+  NumericVector avg_beta(m);
 
   double h2_per_var = h2 / (m * p);
   double inv_odd_p = (1 - p) / p;
-  double gap0 = arma::dot(beta_hat, beta_hat);
+  double gap0 = dotprod(beta_hat);
 
   for (int k = -burn_in; k < num_iter; k++) {
 
@@ -62,53 +77,6 @@ arma::vec ldpred2_gibbs_one(XPtr<SFBM> sfbm,
   }
 
   return avg_beta / num_iter;
-}
-
-/******************************************************************************/
-
-// [[Rcpp::export]]
-arma::mat ldpred2_gibbs(Environment corr,
-                        const NumericVector& beta_hat,
-                        const NumericVector& beta_init,
-                        const IntegerVector& order,
-                        const NumericVector& n_vec,
-                        const NumericVector& h2,
-                        const NumericVector& p,
-                        const LogicalVector& sparse,
-                        int burn_in,
-                        int num_iter,
-                        int ncores) {
-
-  XPtr<SFBM> sfbm = corr["address"];
-
-  int m = beta_hat.size();
-  myassert_size(sfbm->nrow(), m);
-  myassert_size(sfbm->ncol(), m);
-  myassert_size(order.size(), m);
-  myassert_size(beta_init.size(), m);
-  myassert_size(n_vec.size(), m);
-
-  int K = p.size();
-  myassert_size(h2.size(),     K);
-  myassert_size(sparse.size(), K);
-
-  arma::mat res(m, K);
-
-  #pragma omp parallel for schedule(dynamic, 1) num_threads(ncores)
-  for (int k = 0; k < K; k++) {
-
-    // if (k % ncores == 0)
-    //   Rcout << "Starting with params " << k + 1 << " / " << K << std::endl;
-
-    arma::vec res_k = ldpred2_gibbs_one(
-      sfbm, beta_hat, beta_init, order, n_vec,
-      h2[k], p[k], sparse[k], burn_in, num_iter);
-
-    #pragma omp critical
-    res.col(k) = res_k;
-  }
-
-  return res;
 }
 
 /******************************************************************************/

@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.0</span>
       </span>
     </div>
 
@@ -151,6 +151,14 @@
       <small>Source: <a href='https://github.com/privefl/bigsnpr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="bigsnpr-110" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-110" class="anchor"></a>bigsnpr 1.10</h2>
+<ul>
+<li><p>LDpred2-grid does not use OpenMP for parallelism anymore, it now simply uses multiple R processes.</p></li>
+<li><p>LDpred2-grid and LDpred2-auto can now make use of <code><a href="https://rdrr.io/r/base/Random.html">set.seed()</a></code> to get reproducible results. Note that LDpred2-inf and lassosum2 do not use any sampling.</p></li>
+</ul>
+</div>
     <div id="bigsnpr-1913" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsnpr-1913" class="anchor"></a>bigsnpr 1.9.13</h2>
@@ -577,9 +585,9 @@
 <li>Fix error <code>object 'obj.bed' not found</code> in <code><a href="../reference/snp_readBed.html">snp_readBed2()</a></code>.</li>
 </ul>
 </div>
-    <div id="bigsnpr-110" class="section level2">
+    <div id="bigsnpr-110-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bigsnpr-110" class="anchor"></a>bigsnpr 1.1.0</h2>
+<a href="#bigsnpr-110-1" class="anchor"></a>bigsnpr 1.1.0</h2>
 <ul>
 <li>Cope with new read-only option in {bigstatsr} version &gt;= 1.1.</li>
 </ul>

@@ -1,8 +1,7 @@
 /******************************************************************************/
 
-#include <bigstatsr/arma-strict-R-headers.h>
-#include <bigstatsr/utils.h>
 #include <bigsparser/SFBM.h>
+#include <bigstatsr/utils.h>
 
 /******************************************************************************/
 
@@ -11,6 +10,15 @@ const double MIN_H2 = 1e-4;
 
 inline double square(double x) {
   return x * x;
+}
+
+double dotprod2(const NumericVector& X,
+                const NumericVector& Y) {
+  int n = X.size();
+  myassert_size(Y.size(), n);
+  double cp = 0;
+  for (int i = 0; i < n; i++) cp += X[i] * Y[i];
+  return cp;
 }
 
 /******************************************************************************/
@@ -39,17 +47,16 @@ List ldpred2_gibbs_auto(Environment corr,
   myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
 
-  arma::vec curr_beta(beta_init.begin(), m);
-  arma::vec avg_beta(m, arma::fill::zeros), avg_postp(m, arma::fill::zeros);
-  arma::vec avg_beta_hat(m, arma::fill::zeros);
+  NumericVector curr_beta = Rcpp::clone(beta_init);
+  NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m);
 
-  arma::mat sample_beta(m, num_iter / report_step, arma::fill::zeros);
+  NumericMatrix sample_beta(m, num_iter / report_step);
   int ind_report = 0, next_k_reported = burn_in - 1 + report_step;
 
   int num_iter_tot = burn_in + num_iter;
-  std::vector<double> p_est(num_iter_tot), h2_est(num_iter_tot);
+  NumericVector p_est(num_iter_tot), h2_est(num_iter_tot);
 
-  double cur_h2_est = arma::dot(curr_beta, sfbm->prod(curr_beta));
+  double cur_h2_est = dotprod2(curr_beta, sfbm->prod(curr_beta));
   double p = p_init, h2 = h2_init, avg_p = 0, avg_h2 = 0;
 
   for (int k = 0; k < num_iter_tot; k++) {
@@ -112,7 +119,7 @@ List ldpred2_gibbs_auto(Environment corr,
       avg_p  += p;
       avg_h2 += h2;
       if (k == next_k_reported) {
-        sample_beta.col(ind_report++) = curr_beta;
+        sample_beta(_, ind_report++) = curr_beta;
         next_k_reported += report_step;
       }
     }
@@ -132,7 +139,9 @@ List ldpred2_gibbs_auto(Environment corr,
     _["p_est"]       = est_p,
     _["h2_est"]      = est_h2,
     _["path_p_est"]  = p_est,
-    _["path_h2_est"] = h2_est);
+    _["path_h2_est"] = h2_est,
+    _["h2_init"]     = h2_init,
+    _["p_init"]      = p_init);
 }
 
 /******************************************************************************/
