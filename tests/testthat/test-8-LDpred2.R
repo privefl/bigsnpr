@@ -146,12 +146,12 @@ test_that("LDpred2 works", {
 
   set.seed(1)
   auto1 <- snp_ldpred2_auto(corr, df_beta,
-                            burn_in = 50, num_iter = 100,
+                            burn_in = 50, num_iter = 100, sparse = TRUE,
                             h2_init = 0.3, vec_p_init = seq_log(1e-5, 1, 8),
                             report_step = 5, ncores = 2)
   set.seed(1)
   auto2 <- snp_ldpred2_auto(corr, df_beta,
-                            burn_in = 50, num_iter = 100,
+                            burn_in = 50, num_iter = 100, sparse = TRUE,
                             h2_init = 0.3, vec_p_init = seq_log(1e-5, 1, 8),
                             report_step = 5, ncores = 2)
   expect_identical(auto2, auto1)
