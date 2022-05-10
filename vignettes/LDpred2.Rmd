@@ -248,19 +248,18 @@ We recommend to run many chains in parallel with different initial values for `p
 ```{r}
 # takes less than 2 min with 4 cores
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
-                               vec_p_init = seq_log(1e-4, 0.5, length.out = 30),
+                               vec_p_init = seq_log(1e-4, 0.2, length.out = 30),
                                allow_jump_sign = FALSE, shrink_corr = 0.95,
                                ncores = NCORES)
 str(multi_auto, max.level = 1)
 str(multi_auto[[1]], max.level = 1)
 ```
 
-You should verify whether the chains "converged". You can look at the path of the chains, as shown below.
-In the paper, we propose an automatic way to filter bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112), reproduced below). You can also filter on h2 and p estimates that diverge from the median of the chains (e.g. as in [this code](https://github.com/privefl/UKBB-PGS/blob/main/code/assess-pred-ldpred2.R#L27-L32)).
+You can verify whether the chains "converged" by looking at the path of the chains:
 
 ```{r}
 library(ggplot2)
-auto <- multi_auto[[1]]
+auto <- multi_auto[[1]]  # first chain
 plot_grid(
   qplot(y = auto$path_p_est) + 
     theme_bigstatsr() + 
@@ -275,20 +274,22 @@ plot_grid(
 )
 ```
 
+In the LDpred2 paper, we proposed an automatic way of filtering bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112)). We have tested a somewhat equivalent and simpler alternative since, which we recommend here:
+
 ```{r}
-beta_auto <- sapply(multi_auto, function(auto) auto$beta_est)
-pred_auto <- big_prodMat(G, beta_auto, ind.row = ind.test, ind.col = df_beta[["_NUM_ID_"]])
+range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est)))
+keep <- (range > (0.9 * quantile(range, 0.9)))
+```
+
+To get the final effects / predictions (after filtering):
+
+```{r}
+beta_auto <- rowMeans(sapply(multi_auto[keep], function(auto) auto$beta_est))
+pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = df_beta[["_NUM_ID_"]])
 ```
 
 ```{r}
-sc <- apply(pred_auto, 2, sd)
-keep <- abs(sc - median(sc)) < 3 * mad(sc)
-final_beta_auto <- rowMeans(beta_auto[, keep])
-final_pred_auto <- rowMeans(pred_auto[, keep])
-```
-
-```{r}
-cor(final_pred_auto, y[ind.test])
+cor(pred_auto, y[ind.test])
 ```
 
 
