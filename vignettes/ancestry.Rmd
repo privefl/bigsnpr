@@ -1,0 +1,254 @@
+---
+title: "Ancestry proportions and ancestry grouping"
+author: "Florian Privé"
+date: "May 11, 2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 90, max.print = 100)
+knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
+```
+
+
+In this tutorial, we show how to 
+
+- estimate ancestry proportions from both summary statistics (allele frequencies) and individual-level data (for each individual whose genotypes are available)
+
+- assign individuals into groups of "homogeneous" ancestry 
+
+
+## Estimating ancestry proportions from allele frequencies only
+
+This is the primary objective of the method presented in [this preprint](https://doi.org/10.1101/2021.10.27.466078).
+
+For this, let us download some GWAS summary statistics for Epilepsy (supposedly in EUR+EAS+AFR), where the allele frequencies are reported.
+
+```{r}
+DIR <- "../datasets"  # you can replace by e.g. "data" or "tmp-data"
+```
+
+```{r}
+# /!\ This downloads 160 Mb
+gz <- runonce::download_file(
+  "http://www.epigad.org/gwas_ilae2018_16loci/all_epilepsy_METAL.gz",
+  dir = "../datasets")
+readLines(gz, n = 3)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+sumstats <- bigreadr::fread2(
+  gz, select = c("CHR", "BP", "Allele2", "Allele1", "Freq1"),
+  col.names = c("chr", "pos", "a0", "a1", "freq")
+) %>%
+  mutate_at(3:4, toupper)
+```
+
+It is a good idea to filter for the largest per-variant sample sizes (when available..), otherwise this could bias the analyses since ancestry proportions might not be the same for each variant.
+
+Then we need to download the set of reference allele frequencies and corresponding PC loadings (for projection) provided from the paper.
+
+```{r}
+# /!\ This downloads 850 Mb (each)
+all_freq <- bigreadr::fread2(
+  runonce::download_file("https://figshare.com/ndownloader/files/31620968",
+                         dir = DIR, fname = "ref_freqs.csv.gz"))
+projection <- bigreadr::fread2(
+  runonce::download_file("https://figshare.com/ndownloader/files/31620953",
+                         dir = DIR, fname = "projection.csv.gz"))
+```
+
+Then we need to match variants within the summary statistics with the ones from the reference, by chromosome, position and alleles.
+
+```{r}
+library(bigsnpr)
+matched <- snp_match(
+  mutate(sumstats, chr = as.integer(chr), beta = 1),
+  all_freq[1:5]
+) %>%
+  mutate(freq = ifelse(beta < 0, 1 - freq, freq))
+```
+
+Then we can run the main `snp_ancestry_summary()` function. Note that we need to correct for the shrinkage when projecting a new dataset (here the allele frequencies from the GWAS summary statistics) onto the PC space.
+
+```{r}
+correction <- c(1, 1, 1, 1.008, 1.021, 1.034, 1.052, 1.074, 1.099,
+                1.123, 1.15, 1.195, 1.256, 1.321, 1.382, 1.443)
+
+res <- snp_ancestry_summary(
+  freq = matched$freq,
+  info_freq_ref = all_freq[matched$`_NUM_ID_`, -(1:5)],
+  projection = projection[matched$`_NUM_ID_`, -(1:5)],
+  correction = correction
+)
+```
+
+
+Note that some ancestry groups from the reference are very close to one another, and should be merged a posteriori.
+
+```{r}
+group <- colnames(all_freq)[-(1:5)]
+group[group %in% c("Scandinavia", "United Kingdom", "Ireland")]   <- "Europe (North West)"
+group[group %in% c("Europe (South East)", "Europe (North East)")] <- "Europe (East)"
+grp_fct <- factor(group, unique(group))
+
+final_res <- tapply(res, grp_fct, sum)
+round(100 * final_res, 1)
+```
+
+
+## Estimating ancestry proportions from individual-level data
+
+This relies on the same principle as in the previous section, but we use genotypes (divided by 2) instead of allele frequencies. We could run the previous function multiple times (i.e. for each individual), but this would be rather slow, so let us "reimplement" it for matrix of genotypes.
+
+Note that this cannot be used for the UK Biobank and the 1000 Genomes data since they are used in the reference, therefore some of these individuals would not need any correction when projecting onto the PC space.
+
+Let us use the Simons Genome Diversity Project (SGDP) data for demonstration.
+
+```{r}
+prefix <- "https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/variant_set/cteam_extended.v4.maf0.1perc"
+bedfile <- runonce::download_file(paste0(prefix, ".bed"), dir = DIR)
+famfile <- runonce::download_file(paste0(prefix, ".fam"), dir = DIR)
+bim_zip <- runonce::download_file(paste0(prefix, ".bim.zip"), dir = DIR)
+unzip(bim_zip, exdir = DIR, overwrite = FALSE)
+```
+
+Again, we need to match the dataset with the reference.
+
+```{r}
+library(bigsnpr)
+matched <- sub_bed(bedfile, ".bim") %>%
+  bigreadr::fread2(select = c(1, 4:6),
+                   col.names = c("chr", "pos", "a1", "a0")) %>% 
+  mutate(beta = 1) %>%
+  snp_match(all_freq[1:5]) %>%
+  print()
+```
+
+
+Let us read the matched subset of the data and project it onto the PC space.
+
+```{r, include=FALSE}
+file.remove(sub_bed(bedfile, ".bk"))
+file.remove(sub_bed(bedfile, ".rds"))
+```
+
+```{r}
+rds <- snp_readBed2(bedfile, ind.col = matched$`_NUM_ID_.ss`)
+obj.bigsnp <- snp_attach(rds)
+G <- obj.bigsnp$genotypes
+```
+
+```{r}
+hist(nb_na <- big_counts(G)[4, ])
+ind <- which(nb_na < 5)        # further subsetting on missing values
+G2 <- snp_fastImputeSimple(G)  # imputation when % of missing value is small
+```
+
+```{r}
+# project individuals (divided by 2) onto the PC space
+PROJ <- as.matrix(projection[matched$`_NUM_ID_`[ind], -(1:5)])
+all_proj <- big_prodMat(G2, sweep(PROJ, 2, correction / 2, '*'), 
+                        ind.col = ind,
+                        # scaling to get G if beta = 1 and (2 - G) if beta = -1
+                        center = 1 - matched$beta[ind],
+                        scale = matched$beta[ind])
+```
+
+```{r}
+plot(all_proj[, 2:3])
+```
+
+Let us now project the reference allele frequencies, which do not need any correction because these come from the same individuals used to train the PCA.
+
+```{r}
+X <- crossprod(PROJ,
+               as.matrix(all_freq[matched$`_NUM_ID_`[ind], -(1:5)]))
+```
+
+Now we need to solve a quadratic programming problem for each individual.
+
+```{r}
+cp_X_pd <- Matrix::nearPD(crossprod(X), base.matrix = TRUE)
+Amat <- cbind(1, diag(ncol(X)))
+bvec <- c(1, rep(0, ncol(X)))
+
+# solve a QP for each projected individual
+all_res <- apply(all_proj, 1, function(y) {
+  quadprog::solve.QP(
+    Dmat = cp_X_pd$mat,
+    dvec = crossprod(y, X),
+    Amat = Amat,
+    bvec = bvec,
+    meq  = 1
+  )$sol %>% 
+    tapply(grp_fct, sum) %>% 
+    round(7)
+})
+```
+
+Let us compare the results with the reported information on individuals.
+
+```{r}
+fam2 <- bigreadr::fread2("https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/SGDP_metadata.279public.21signedLetter.44Fan.samples.txt")
+fam <- dplyr::left_join(obj.bigsnp$fam, fam2, by = c("sample.ID" = "Sample_ID(Aliases)"))
+fam_info <- fam[c("Region", "Country", "Population_ID")]
+
+cbind.data.frame(fam_info, round(100 * t(all_res), 1)) %>% 
+  rmarkdown::paged_table(list(rows.print = 15, max.print = nrow(fam)))
+```
+
+
+## Ancestry grouping
+
+Similar to the previous section, but we want to assign only one label instead of getting ancestry proportions.
+
+We recommend to use Euclidean distance on the PC space for such purposes, as demonstrated in Supp. Note A of [this paper](https://doi.org/10.1016/j.ajhg.2021.11.008).
+For example, we use this strategy to assign ancestry in the UK Biobank (cf. [this code](https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups)).
+Normally, admixed individuals or from distant populations should not be matched to any of the 21 reference groups.
+
+```{r}
+PC_SGDP <- all_proj
+all_centers <- t(X)
+all_sq_dist <- apply(all_centers, 1, function(one_center) {
+  rowSums(sweep(PC_SGDP, 2, one_center, '-')^2)
+})
+
+THR <- 0.005  # you can adjust this threshold
+thr_sq_dist <- max(dist(all_centers)^2) * THR / 0.16
+
+cluster <- group[
+  apply(all_sq_dist, 1, function(x) {
+    ind <- which.min(x)
+    if (isTRUE(x[ind] < thr_sq_dist)) ind else NA
+  })
+]
+
+table(cluster, exclude = NULL)
+cbind.data.frame(fam_info, Assigned_group = cluster) %>% 
+  rmarkdown::paged_table(list(rows.print = 15, max.print = nrow(fam)))
+```
+
+Using this strategy, we can cluster 240 out of 345 individuals. 
+However, we have some trouble clustering Papuans, people from Central Asia and Siberia, people from some African regions, as well as people from South America.
+
+For individuals from South America, we can use the previous ancestry proportions.
+
+```{r}
+cluster[all_res["South America", ] > 0.9] <- "South America"
+
+table(cluster, exclude = NULL)
+cbind.data.frame(fam_info, Assigned_group = cluster) %>% 
+  rmarkdown::paged_table(list(rows.print = 15, max.print = nrow(fam)))
+```
+
+
+## References
+
+- Privé, Florian (2021). [Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics](https://doi.org/10.1101/2021.10.27.466078). *bioRxiv*
+
+- Privé, Florian, et al. (2022). [Portability of 245 polygenic scores when derived from the UK Biobank and applied to 9 ancestry groups from the same cohort](https://doi.org/10.1016/j.ajhg.2021.11.008). *the American Journal of Human Genetics*

@@ -19,6 +19,8 @@ navbar:
         href: articles/how-to-PCA.html
       - text: "How to capture Population Structure with PCA (directly on PLINK bed files)"
         href: articles/bedpca.html
+      - text: "Ancestry proportions and ancestry grouping"
+        href: articles/ancestry.html
       - text: "Computing polygenic scores using Stacked Clumping and Thresholding (SCT)"
         href: articles/SCT.html
       - text: "Computing polygenic scores using LDpred2"

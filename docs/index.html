@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.0</span>
       </span>
     </div>
 
@@ -62,6 +62,9 @@
     </li>
     <li>
       <a href="articles/bedpca.html">How to capture Population Structure with PCA (directly on PLINK bed files)</a>
+    </li>
+    <li>
+      <a href="articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
       <a href="articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
@@ -119,12 +122,12 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>In R, run</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"privefl/bigsnpr"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"privefl/bigsnpr"</span><span class="op">)</span></code></pre></div>
 <p>or for the CRAN version</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"bigsnpr"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"bigsnpr"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="input-formats" class="section level2">
 <h2 class="hasAnchor">
@@ -157,7 +160,7 @@
 <h2 class="hasAnchor">
 <a href="#possible-upcoming-features" class="anchor"></a>Possible upcoming features</h2>
 <ul>
-<li><p>Multiple imputation for GWAS (https://doi.org/10.1371/journal.pgen.1006091).</p></li>
+<li><p>Multiple imputation for GWAS (<a href="https://doi.org/10.1371/journal.pgen.1006091" class="uri">https://doi.org/10.1371/journal.pgen.1006091</a>).</p></li>
 <li><p>More interactive (visual) QC.</p></li>
 </ul>
 <p>You can request some feature by opening an issue.</p>
@@ -179,8 +182,8 @@
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">“Making the most of Clumping and Thresholding for polygenic scores.”</a> The American Journal of Human Genetics 105.6 (2019): 1213-1221.</p></li>
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa520">“Efficient toolkit implementing best practices for principal component analysis of population genetic data.”</a> Bioinformatics 36.16 (2020): 4449-4457.</p></li>
 <li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa1029">“LDpred2: better, faster, stronger.”</a> Bioinformatics 36.22-23 (2020): 5424-5431.</p></li>
-<li><p>Privé, Florian. <a href="(https://doi.org/10.1093/bioinformatics/btab519)">“Optimal linkage disequilibrium splitting.”</a> Bioinformatics 38.1 (2022): 255–256.</p></li>
-<li><p>Privé, Florian. <a href="(https://doi.org/10.1101/2021.10.27.466078)">“Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics.”</a> bioRxiv (2021).</p></li>
+<li><p>Privé, Florian. <a href="https://doi.org/10.1093/bioinformatics/btab519">“Optimal linkage disequilibrium splitting.”</a> Bioinformatics 38.1 (2022): 255–256.</p></li>
+<li><p>Privé, Florian. <a href="https://doi.org/10.1101/2021.10.27.466078">“Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics.”</a> bioRxiv (2021).</p></li>
 </ul>
 <p><br></p>
 </div>
@@ -224,7 +227,6 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/privefl/bigsnpr/actions"><img src="https://github.com/privefl/bigsnpr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://ci.appveyor.com/project/privefl/bigsnpr"><img src="https://ci.appveyor.com/api/projects/status/github/privefl/bigsnpr?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
 <li><a href="https://codecov.io/github/privefl/bigsnpr"><img src="https://img.shields.io/codecov/c/github/privefl/bigsnpr/master.svg" alt="Coverage Status"></a></li>
 <li><a href="https://CRAN.R-project.org/package=bigsnpr"><img src="http://www.r-pkg.org/badges/version/bigsnpr" alt="CRAN_Status_Badge"></a></li>
 <li><a href="http://dx.doi.org/10.1093/bioinformatics/bty185"><img src="https://zenodo.org/badge/doi/10.1093/bioinformatics/bty185.svg" alt="DOI"></a></li>
@@ -239,7 +241,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
