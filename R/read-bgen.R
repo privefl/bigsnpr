@@ -108,8 +108,9 @@ check_bgen_format <- function(bgenfile) {
 #'
 #' @param bgenfiles Character vector of paths to files with extension ".bgen".
 #'   The corresponding ".bgen.bgi" index files must exist.
-#' @param backingfile The path (without extension) for the backing files
-#'   for the cache of the [bigSNP][bigSNP-class] object.
+#' @param backingfile The path (without extension) for the backing files (".bk"
+#'   and ".rds") that are created by this function for storing the
+#'   [bigSNP][bigSNP-class] object.
 #' @param list_snp_id List (same length as the number of BGEN files) of
 #'  character vector of SNP IDs to read. These should be in the form
 #'  `"<chr>_<pos>_<a1>_<a2>"` (e.g. `"1_88169_C_T"` or `"01_88169_C_T"`).
@@ -126,7 +127,8 @@ check_bgen_format <- function(bgenfile) {
 #'   - as hard calls, randomly sampled based on those probabilities
 #'   (similar to PLINK option '`--hard-call-threshold random`').
 #'
-#' @return The path to the RDS file that stores the `bigSNP` object.
+#' @return The path to the RDS file `<backingfile>.rds` that stores the `bigSNP`
+#' object created by this function.
 #' Note that this function creates one other file which stores the values of
 #' the Filebacked Big Matrix.\cr
 #' __You shouldn't read from BGEN files more than once.__ Instead, use

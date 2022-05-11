@@ -18,8 +18,9 @@ snp_readBGEN(
 \item{bgenfiles}{Character vector of paths to files with extension ".bgen".
 The corresponding ".bgen.bgi" index files must exist.}
 
-\item{backingfile}{The path (without extension) for the backing files
-for the cache of the \link[=bigSNP-class]{bigSNP} object.}
+\item{backingfile}{The path (without extension) for the backing files (".bk"
+and ".rds") that are created by this function for storing the
+\link[=bigSNP-class]{bigSNP} object.}
 
 \item{list_snp_id}{List (same length as the number of BGEN files) of
 character vector of SNP IDs to read. These should be in the form
@@ -44,7 +45,8 @@ are used. If not specified, all rows are used.\cr
 You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
-The path to the RDS file that stores the \code{bigSNP} object.
+The path to the RDS file \verb{<backingfile>.rds} that stores the \code{bigSNP}
+object created by this function.
 Note that this function creates one other file which stores the values of
 the Filebacked Big Matrix.\cr
 \strong{You shouldn't read from BGEN files more than once.} Instead, use
