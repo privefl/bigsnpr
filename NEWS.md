@@ -1,3 +1,7 @@
+## bigsnpr 1.11
+
+- Add two new parameters to `snp_simuPheno()`: `alpha` and `prob`.
+
 ## bigsnpr 1.10
 
 - LDpred2-grid does not use OpenMP for parallelism anymore, it now simply uses multiple R processes. 

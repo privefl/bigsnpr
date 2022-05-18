@@ -9,8 +9,10 @@ snp_simuPheno(
   h2,
   M,
   K = NULL,
+  alpha = -1,
   ind.row = rows_along(G),
   ind.possible = cols_along(G),
+  prob = NULL,
   effects.dist = c("gaussian", "laplace"),
   ncores = 1
 )
@@ -27,11 +29,19 @@ e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{K}{Prevalence. Default is \code{NULL}, giving a continuous trait.}
 
+\item{alpha}{Assumes that the average contribution (e.g. heritability)
+of a SNP of frequency \eqn{p} is proportional to
+\eqn{[2p(1-p)]^{1+\alpha}}. Default is \code{-1}.}
+
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{ind.possible}{Indices of possible causal variants.}
+
+\item{prob}{Vector of probability weights for sampling causal indices.
+It can have 0s (discarded) and is automatically scaled to sum to 1.
+Default is \code{NULL} (all indices have the same probability).}
 
 \item{effects.dist}{Distribution of effects.
 Either \code{"gaussian"} (the default) or \code{"laplace"}.}
@@ -45,6 +55,7 @@ A list with 3 elements:
 \item \verb{$pheno}: vector of phenotypes,
 \item \verb{$set}: indices of causal variants,
 \item \verb{$effects}: effect sizes (of scaled genotypes) corresponding to \code{set}.
+\item \verb{$allelic_effects}: effect sizes, but on the allele scale (0|1|2).
 }
 }
 \description{
