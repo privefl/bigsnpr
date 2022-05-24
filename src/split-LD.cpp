@@ -124,25 +124,28 @@ double get_perc(std::vector<size_t> p,
                 const IntegerVector& i,
                 const IntegerVector& block_num) {
 
-  double count_within = 0, count_all = 0;
-
   int m = p.size() - 1;
+  double count_all = 2 * i.size() - m;  // count the diaginal only once
+  double count_within = 0;
 
   for (int j = 0; j < m; j++) {
 
+    int num_j = block_num[j];
+
     size_t lo = p[j];
     size_t up = p[j + 1];
+    size_t k = lo + 1;  // skip the diagonal
 
-    for (size_t k = lo; k < up; k++) {
-      if (i[k] == j) {
-        count_all++;
+    for (; k < up; k++) {
+      if (block_num[i[k]] == num_j) {
         count_within++;
       } else {
-        count_all += 2;
-        if (block_num[i[k]] == block_num[j]) count_within += 2;
+        break;  // all remaining i have block_num[i] > num_j
       }
     }
   }
+
+  count_within = 2 * count_within + m;
 
   return count_within / count_all;
 }
