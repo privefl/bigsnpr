@@ -1,10 +1,36 @@
 ################################################################################
 
-compute_cost <- function(block_num, corr.tril, thr_r2) {
-  corr.tril %>%
-    methods::as("dgTMatrix") %>%
-    { .@x[block_num[.@i + 1L] != block_num[.@j + 1L]]^2 } %>%
-    { sum(.[. >= thr_r2]) }
+reconstruct_paths <- function(cost_path, min_size, max_size, corr) {
+
+  do.call("rbind", lapply(cols_along(cost_path$C), function(K) {
+
+    cost <- cost_path$C[1, K]
+    if (is.infinite(cost)) return(NULL)
+
+    all_last <- list()
+    j <- 0
+    k <- K
+    repeat {
+      j <- cost_path$best_ind[j + 1L, k]
+      all_last[[length(all_last) + 1L]] <- j
+      if (k == 1) break
+      k <- k - 1L
+    }
+
+    all_last <- unlist(all_last)
+    stopifnot(length(all_last) == K)
+
+    all_size <- diff(c(0, all_last))
+    stopifnot(all(all_size >= min_size & all_size <= max_size))
+
+    tibble::tibble(
+      n_block   = K,
+      cost      = cost,
+      perc_kept = get_perc(corr@p, corr@i, block_num = rep(seq_len(K), all_size)),
+      all_last  = list(all_last),
+      all_size  = list(all_size)
+    )
+  }))
 }
 
 ################################################################################
@@ -34,68 +60,44 @@ compute_cost <- function(block_num, corr.tril, thr_r2) {
 #'   that there are at least 5 and at most 20 blocks. Then, the choice of K depends
 #'   on the application, but a simple solution is to choose the largest K for which
 #'   the cost is lower than some threshold.
+#' @param max_r2 Maximum squared correlation allowed for one pair of variants in
+#'   two different blocks. This is used to make sure that strong correlations are
+#'   not discarded and also to speed up the algorithm. You can use e.g. `0.5`.
 #'
 #' @return A tibble with five columns:
 #'   - `$n_block`: Number of blocks.
 #'   - `$cost`: The sum of squared correlations outside the blocks.
 #'   - `$perc_kept`: Percentage of initial non-zero values kept within the blocks defined.
-#'   - `$block_num`: Resulting block numbers for each variant.
 #'   - `$all_last`: Last index of each block.
 #'   - `$all_size`: Sizes of the blocks.
+#'   - `$block_num`: Resulting block numbers for each variant. This is not reported
+#'     anymore, but can be computed with `rep(seq_len(n_block), all_size)`.
+#'
 #' @export
 #'
 #' @importFrom magrittr %>%
 #'
 #' @example examples/example-split-LD.R
 #'
-snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K) {
+snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K, max_r2) {
 
   m <- ncol(corr)
   stopifnot(min_size >= 1 && max_size <= m)
 
   corr <- Matrix::tril(corr)
 
-  # Precomputing L, E and computing all cost paths
-  cost_path <- corr %>%
-    { get_L(.@p, .@i, .@x, thr_r2 = thr_r2) } %>%
+  # Precomputing L
+  L <- corr %>%
+    { get_L(.@p, .@i, .@x, thr_r2 = thr_r2, max_r2 = max_r2) } %>%
     # L now has an extra column with all 0s for convenience
     { Matrix::sparseMatrix(i = .$i, j = .$j, x = .$x, dims = c(m, m + 1),
-                           triangular = FALSE, index1 = FALSE) } %>%
-    get_C(min_size = min_size, max_size = max_size, K = max_K)
+                           triangular = FALSE, index1 = FALSE) }
+
+  # Precomputing E and computing all cost paths
+  cost_path <- get_C(L, min_size = min_size, max_size = max_size, max_K = max_K)
 
   # Reconstructing paths
-  do.call("rbind", lapply(1:max_K, function(K) {
-
-    cost <- cost_path$C[1, K]
-    if (is.na(cost)) return(NULL)
-
-    all_last <- list()
-    j <- 0
-    k <- K
-    repeat {
-      j <- cost_path$best_ind[j + 1L, k]
-      all_last[[length(all_last) + 1L]] <- j
-      if (k == 1) break
-      k <- k - 1L
-    }
-
-    all_last <- unlist(all_last)
-    stopifnot(length(all_last) == K)
-
-    all_size <- diff(c(0, all_last))
-    stopifnot(all(all_size >= min_size & all_size <= max_size))
-
-    block_num <- rowSums(outer(1:m, all_last, ">")) + 1L
-
-    tibble::tibble(
-      n_block   = length(all_last),
-      cost      = cost,
-      perc_kept = get_perc(corr@p, corr@i, block_num),
-      block_num = list(block_num),
-      all_last  = list(all_last),
-      all_size  = list(all_size)
-    )
-  }))
+  reconstruct_paths(cost_path, min_size, max_size, corr)
 }
 
 ################################################################################

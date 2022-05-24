@@ -109,12 +109,12 @@ sp_colSumsSq_sym <- function(p, i, x) {
     .Call(`_bigsnpr_sp_colSumsSq_sym`, p, i, x)
 }
 
-get_L <- function(p, i, x, thr_r2) {
-    .Call(`_bigsnpr_get_L`, p, i, x, thr_r2)
+get_L <- function(p, i, x, thr_r2, max_r2) {
+    .Call(`_bigsnpr_get_L`, p, i, x, thr_r2, max_r2)
 }
 
-get_C <- function(L, min_size, max_size, K) {
-    .Call(`_bigsnpr_get_C`, L, min_size, max_size, K)
+get_C <- function(L, min_size, max_size, max_K) {
+    .Call(`_bigsnpr_get_C`, L, min_size, max_size, max_K)
 }
 
 get_perc <- function(p, i, block_num) {
