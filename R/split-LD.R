@@ -1,11 +1,11 @@
 ################################################################################
 
-reconstruct_paths <- function(cost_path, min_size, max_size, corr) {
+reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size, max_cost) {
 
   do.call("rbind", lapply(cols_along(cost_path$C), function(K) {
 
     cost <- cost_path$C[1, K]
-    if (is.infinite(cost)) return(NULL)
+    if (cost > max_cost) return(NULL)
 
     all_last <- list()
     j <- 0
@@ -24,9 +24,10 @@ reconstruct_paths <- function(cost_path, min_size, max_size, corr) {
     stopifnot(all(all_size >= min_size & all_size <= max_size))
 
     tibble::tibble(
+      max_size  = max_size,
       n_block   = K,
       cost      = cost,
-      perc_kept = get_perc(corr@p, corr@i, block_num = rep(seq_len(K), all_size)),
+      perc_kept = get_perc(corr.p, corr.i, all_last = all_last - 1L),
       all_last  = list(all_last),
       all_size  = list(all_size)
     )
@@ -52,26 +53,29 @@ reconstruct_paths <- function(cost_path, min_size, max_size, corr) {
 #' @param max_size Maximum number of variants in each block. This is used not to
 #'   have blocks that are too large, e.g. to limit computational and memory
 #'   requirements of applications that would use these blocks. For some long-range
-#'   LD regions, it may be needed to allow for large blocks.
+#'   LD regions, it may be needed to allow for large blocks. You can now provide a
+#'   vector of values to try.
 #' @param max_K Maximum number of blocks to consider. All optimal solutions for K
 #'   from 1 to `max_K` will be returned. Some of these K might not have any corresponding
 #'   solution due to the limitations in size of the blocks. For example, splitting
 #'   10,000 variants in blocks with at least 500 and at most 2000 variants implies
 #'   that there are at least 5 and at most 20 blocks. Then, the choice of K depends
 #'   on the application, but a simple solution is to choose the largest K for which
-#'   the cost is lower than some threshold.
+#'   the cost is lower than some threshold. Default is `500`.
 #' @param max_r2 Maximum squared correlation allowed for one pair of variants in
 #'   two different blocks. This is used to make sure that strong correlations are
-#'   not discarded and also to speed up the algorithm. You can use e.g. `0.5`.
+#'   not discarded and also to speed up the algorithm. Default is `0.3`.
+#' @param max_cost Maximum cost reported. Default is `ncol(corr) / 200`.
 #'
 #' @return A tibble with five columns:
+#'   - `$max_size`: Input parameter, useful when providing a vector of values to try.
 #'   - `$n_block`: Number of blocks.
 #'   - `$cost`: The sum of squared correlations outside the blocks.
 #'   - `$perc_kept`: Percentage of initial non-zero values kept within the blocks defined.
 #'   - `$all_last`: Last index of each block.
 #'   - `$all_size`: Sizes of the blocks.
 #'   - `$block_num`: Resulting block numbers for each variant. This is not reported
-#'     anymore, but can be computed with `rep(seq_len(n_block), all_size)`.
+#'     anymore, but can be computed with `rep(seq_along(all_size), all_size)`.
 #'
 #' @export
 #'
@@ -79,12 +83,18 @@ reconstruct_paths <- function(cost_path, min_size, max_size, corr) {
 #'
 #' @example examples/example-split-LD.R
 #'
-snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K, max_r2) {
+snp_ldsplit <- function(corr, thr_r2, min_size, max_size,
+                        max_K = 500,
+                        max_r2 = 0.3,
+                        max_cost = ncol(corr) / 200) {
 
   m <- ncol(corr)
   stopifnot(min_size >= 1 && max_size <= m)
 
   corr <- Matrix::tril(corr)
+  stopifnot(all(Matrix::diag(corr) != 0))
+
+  max_cost <- min(max_cost, 2 * crossprod(corr@x))  # just to allow max_cost=Inf
 
   # Precomputing L
   L <- corr %>%
@@ -93,11 +103,19 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size, max_K, max_r2) {
     { Matrix::sparseMatrix(i = .$i, j = .$j, x = .$x, dims = c(m, m + 1),
                            triangular = FALSE, index1 = FALSE) }
 
-  # Precomputing E and computing all cost paths
-  cost_path <- get_C(L, min_size = min_size, max_size = max_size, max_K = max_K)
+  corr.p <- as.double(corr@p)
+  corr.i <- corr@i
+  rm(corr)
 
-  # Reconstructing paths
-  reconstruct_paths(cost_path, min_size, max_size, corr)
+  do.call("rbind", lapply(max_size, function(one_max_size) {
+
+    # Precomputing E and computing all cost paths
+    cost_path <- get_C(L, min_size = min_size, max_size = one_max_size,
+                       max_K = max_K, max_cost = max_cost)
+
+    # Reconstructing paths
+    reconstruct_paths(corr.p, corr.i, cost_path, min_size, one_max_size, max_cost)
+  }))
 }
 
 ################################################################################

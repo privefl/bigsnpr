@@ -57,11 +57,10 @@ List get_L(std::vector<size_t> p,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K) {
+List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double max_cost) {
 
   int m = L.n_rows;  // L now has an extra column with all 0s for convenience
   std::vector< std::vector<float> > res_E(m);
-  double max_E = double(m) * m;
 
   // E(i, j) = sum_{p=i}^j L(p, j+1)
 
@@ -73,7 +72,7 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K) {
     for (int row = col; row >= 0; row--) {
 
       e += L(row, col + 1);  // compute E(j, j), then E(j-1, j), etc
-      if (e > max_E) break;
+      if (e > max_cost) break;
       count++;
 
       if (count >= min_size) {
@@ -112,6 +111,8 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K) {
         }
       }
     }
+
+    if (C(0, k) > max_cost && C(0, k) > C(0, k - 1)) break;
   }
 
   return List::create(_["C"] = C, _["best_ind"] = best_ind);
@@ -120,32 +121,36 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
-double get_perc(std::vector<size_t> p,
+double get_perc(const NumericVector& p,  // integers, but possibly very large
                 const IntegerVector& i,
-                const IntegerVector& block_num) {
+                const IntegerVector& all_last) {
 
   int m = p.size() - 1;
   double count_all = 2 * i.size() - m;  // count the diaginal only once
-  double count_within = 0;
+  double count_within = count_all;
+
+  int grp_num = 0;
+  int limit = all_last[grp_num];
 
   for (int j = 0; j < m; j++) {
 
-    int num_j = block_num[j];
+    if (j > limit) {
+      grp_num++;
+      limit = all_last[grp_num];
+    }
 
-    size_t lo = p[j];
-    size_t up = p[j + 1];
-    size_t k = lo + 1;  // skip the diagonal
+    size_t lo = p[j];      // the diagonal -> can skip it
+    size_t up = p[j + 1];  // up > lo because of the diag
 
-    for (; k < up; k++) {
-      if (block_num[i[k]] == num_j) {
-        count_within++;
+    // start by the end to stop early
+    for (size_t k = up - 1; k > lo; k--) {
+      if (i[k] > limit) {
+        count_within -= 2;
       } else {
-        break;  // all remaining i have block_num[i] > num_j
+        break;  // all remaining i are in the block
       }
     }
   }
-
-  count_within = 2 * count_within + m;
 
   return count_within / count_all;
 }

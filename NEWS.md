@@ -1,3 +1,7 @@
+## bigsnpr 1.10.1
+
+- Add two new parameters to `snp_ldsplit()`: `max_r2`, the maximum squared correlation allowed outside blocks, and `max_cost`, the maximum cost of reported solutions (i.e. the sum of all squared correlations outside blocks). Using `max_r2` offers an extra guarantee that the splitting is very good, and makes the function much faster by discarding lots of possible splits. 
+
 ## bigsnpr 1.10
 
 - LDpred2-grid does not use OpenMP for parallelism anymore, it now simply uses multiple R processes. 

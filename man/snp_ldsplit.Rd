@@ -4,7 +4,15 @@
 \alias{snp_ldsplit}
 \title{Independent LD blocks}
 \usage{
-snp_ldsplit(corr, thr_r2, min_size, max_size, max_K)
+snp_ldsplit(
+  corr,
+  thr_r2,
+  min_size,
+  max_size,
+  max_K = 500,
+  max_r2 = 0.3,
+  max_cost = ncol(corr)/200
+)
 }
 \arguments{
 \item{corr}{Sparse correlation matrix. Usually, the output of \code{\link[=snp_cor]{snp_cor()}}.}
@@ -21,7 +29,8 @@ have a disproportionate number of small blocks.}
 \item{max_size}{Maximum number of variants in each block. This is used not to
 have blocks that are too large, e.g. to limit computational and memory
 requirements of applications that would use these blocks. For some long-range
-LD regions, it may be needed to allow for large blocks.}
+LD regions, it may be needed to allow for large blocks. You can now provide a
+vector of values to try.}
 
 \item{max_K}{Maximum number of blocks to consider. All optimal solutions for K
 from 1 to \code{max_K} will be returned. Some of these K might not have any corresponding
@@ -29,17 +38,25 @@ solution due to the limitations in size of the blocks. For example, splitting
 10,000 variants in blocks with at least 500 and at most 2000 variants implies
 that there are at least 5 and at most 20 blocks. Then, the choice of K depends
 on the application, but a simple solution is to choose the largest K for which
-the cost is lower than some threshold.}
+the cost is lower than some threshold. Default is \code{500}.}
+
+\item{max_r2}{Maximum squared correlation allowed for one pair of variants in
+two different blocks. This is used to make sure that strong correlations are
+not discarded and also to speed up the algorithm. Default is \code{0.3}.}
+
+\item{max_cost}{Maximum cost reported. Default is \code{ncol(corr) / 200}.}
 }
 \value{
 A tibble with five columns:
 \itemize{
+\item \verb{$max_size}: Input parameter, useful when providing a vector of values to try.
 \item \verb{$n_block}: Number of blocks.
 \item \verb{$cost}: The sum of squared correlations outside the blocks.
 \item \verb{$perc_kept}: Percentage of initial non-zero values kept within the blocks defined.
-\item \verb{$block_num}: Resulting block numbers for each variant.
 \item \verb{$all_last}: Last index of each block.
 \item \verb{$all_size}: Sizes of the blocks.
+\item \verb{$block_num}: Resulting block numbers for each variant. This is not reported
+anymore, but can be computed with \code{rep(seq_along(all_size), all_size)}.
 }
 }
 \description{
@@ -54,12 +71,50 @@ correlation between these blocks (i.e. everything outside these blocks).
 
   THR_R2 <- 0.01
 
-  (res <- snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 10, max_size = 50, max_K = 50))
+  # You can provide multiple max_size to try
+  # For real data, use e.g. round(seq_log(1000 + ncol(corr) / 30,
+  #                                       5000 + ncol(corr) / 10,
+  #                                       length.out = 6))
+  SEQ <- c(50, 80)
+  (res <- snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 10, max_size = SEQ,
+                      max_K = 50, max_r2 = 0.5, max_cost = Inf))
 
   library(ggplot2)
-  qplot(n_block, cost, data = res) + theme_bw(16) + scale_y_log10()
+  # trade-off cost / number of blocks
+  qplot(n_block, cost, color = factor(max_size, SEQ), data = res) +
+    theme_bw(14) +
+    scale_y_log10() +
+    theme(legend.position = c(0.5, 0.82)) +
+    labs(x = "Number of blocks", color = "Maximum block size",
+         y = "Sum of squared correlations outside blocks")
 
-  all_ind <- head(res$all_last[[6]], -1)
+  # trade-off cost / number of non-zero values
+  qplot(perc_kept, cost, color = factor(max_size, SEQ), data = res) +
+    theme_bw(14) +
+    # scale_y_log10() +
+    theme(legend.position = c(0.6, 0.82)) +
+    labs(x = "Percentage of non-zero values kept", color = "Maximum block size",
+         y = "Sum of squared correlations outside blocks")
+
+  # trade-off cost / sum of squared sizes
+  res$cost2 <- sapply(res$all_size, function(sizes) sum(sizes^2))
+  qplot(cost2, cost, color = factor(max_size, SEQ), data = res) +
+    theme_bw(14) +
+    scale_y_log10() +
+    geom_vline(xintercept = 0)+
+    theme(legend.position = c(0.7, 0.82)) +
+    labs(x = "Sum of squared blocks", color = "Maximum block size",
+         y = "Sum of squared correlations outside blocks")
+
+
+  ## Pick one solution and visualize blocks
+  library(dplyr)
+  all_ind <- res \%>\%
+    filter(cost < 1) \%>\%
+    arrange(perc_kept) \%>\%
+    slice(1) \%>\%
+    print() \%>\%
+    pull(all_last)
 
   ## Transform sparse representation into (i,j,x) triplets
   corrT <- as(corr, "dgTMatrix")
@@ -72,13 +127,14 @@ correlation between these blocks (i.e. everything outside these blocks).
   df$y <- (df$j - df$i) / 2
 
   ggplot(df) +
-    geom_point(aes(i + y, y, color = r2), size = rel(0.5)) +
-    coord_fixed() +
-    scale_color_gradientn(colours = rev(colorRamps::matlab.like2(100))) +
+    geom_point(aes(i + y, y, alpha = r2)) +
     theme_minimal() +
-    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-    geom_vline(xintercept = all_ind + 0.5, linetype = 3) +
-    labs(x = "Position", y = NULL) +
-    scale_alpha(guide = 'none')
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+          strip.background = element_blank(), strip.text.x = element_blank()) +
+    scale_alpha_continuous(range = 0:1) +
+    scale_x_continuous(expand = c(0.02, 0.02), minor_breaks = NULL,
+                       breaks = head(all_ind[[1]], -1) + 0.5) +
+    facet_wrap(~ cut(i + y, 4), scales = "free", ncol = 1) +
+    labs(x = "Position", y = NULL)
 }
 }

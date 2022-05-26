@@ -113,12 +113,12 @@ get_L <- function(p, i, x, thr_r2, max_r2) {
     .Call(`_bigsnpr_get_L`, p, i, x, thr_r2, max_r2)
 }
 
-get_C <- function(L, min_size, max_size, max_K) {
-    .Call(`_bigsnpr_get_C`, L, min_size, max_size, max_K)
+get_C <- function(L, min_size, max_size, max_K, max_cost) {
+    .Call(`_bigsnpr_get_C`, L, min_size, max_size, max_K, max_cost)
 }
 
-get_perc <- function(p, i, block_num) {
-    .Call(`_bigsnpr_get_perc`, p, i, block_num)
+get_perc <- function(p, i, all_last) {
+    .Call(`_bigsnpr_get_perc`, p, i, all_last)
 }
 
 writebina <- function(filename, BM, tab, rowInd, colInd) {
