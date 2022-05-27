@@ -106,6 +106,7 @@ If no or few variants are actually flipped, you might want to disable the strand
 
 **Some quality control on summary statistics is highly recommended (see paper and other tutorial).**
 A new refined QC is described in [this new preprint](https://doi.org/10.1101/2021.03.29.437510).
+See e.g. [the code](https://github.com/privefl/paper-misspec/tree/main/code) that was used to prepare the sumstats there.
 
 ### Correlation
 
