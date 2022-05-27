@@ -89,7 +89,7 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size,
                         max_cost = ncol(corr) / 200) {
 
   m <- ncol(corr)
-  stopifnot(min_size >= 1 && max_size <= m)
+  stopifnot(min_size >= 1 && all(max_size <= m))
 
   corr <- Matrix::tril(corr)
   stopifnot(all(Matrix::diag(corr) != 0))
