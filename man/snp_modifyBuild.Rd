@@ -4,7 +4,13 @@
 \alias{snp_modifyBuild}
 \title{Modify genome build}
 \usage{
-snp_modifyBuild(info_snp, liftOver, from = "hg18", to = "hg19")
+snp_modifyBuild(
+  info_snp,
+  liftOver,
+  from = "hg18",
+  to = "hg19",
+  check_reverse = TRUE
+)
 }
 \arguments{
 \item{info_snp}{A data frame with columns "chr" and "pos".}
@@ -17,6 +23,9 @@ for Linux.}
 \item{from}{Genome build to convert from. Default is \code{hg18}.}
 
 \item{to}{Genome build to convert to. Default is \code{hg19}.}
+
+\item{check_reverse}{Whether to discard positions for which we cannot go back
+to initial values by doing 'from -> to -> from'. Default is \code{TRUE}.}
 }
 \value{
 Input data frame \code{info_snp} with column "pos" in the new build.

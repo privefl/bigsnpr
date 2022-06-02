@@ -1,3 +1,7 @@
+## bigsnpr 1.10.2
+
+- Better `snp_modifyBuild()`: more variants should be mapped + add some QC on the mapping (a position is not mapped to more than one, the chromosome is the same, and possibly check whether we can go back to the initial position -> cf. https://doi.org/10.1093/nargab/lqaa054).
+
 ## bigsnpr 1.10.1
 
 - Add two new parameters to `snp_ldsplit()`: `max_r2`, the maximum squared correlation allowed outside blocks, and `max_cost`, the maximum cost of reported solutions (i.e. the sum of all squared correlations outside blocks). Using `max_r2` offers an extra guarantee that the splitting is very good, and makes the function much faster by discarding lots of possible splits. 
