@@ -87,11 +87,14 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 
   if (!return_sampling_betas) {
 
+    ord <- with(grid_param, order(-p, sparse, -h2))  # large p first
+    grid <- grid_param[ord, ]
+
     bigparallelr::register_parallel(ncores)
 
     # LDpred2-grid models
-    beta_gibbs <- do.call("cbind", foreach(
-      h2 = grid_param$h2, p = grid_param$p, sparse = grid_param$sparse,
+    res_list <- foreach(
+      h2 = grid$h2, p = grid$p, sparse = grid$sparse,
       .export = "ldpred2_gibbs_one") %dorng% {
         ldpred2_gibbs_one(
           corr      = corr,
@@ -105,7 +108,10 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
           burn_in   = burn_in,
           num_iter  = num_iter
         )
-      })
+      }
+
+    inv_ord <- match(seq_along(ord), ord)
+    beta_gibbs <- do.call("cbind", res_list[inv_ord])
 
   } else {
 
@@ -197,10 +203,12 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
+  ord <- order(-vec_p_init)  # large p first
+
   bigparallelr::register_parallel(ncores)
 
-  foreach(p_init = vec_p_init,
-          .export = c("ldpred2_gibbs_auto", "ldpred2_gibbs_one")) %dorng% {
+  FUNs <- c("ldpred2_gibbs_auto", "ldpred2_gibbs_one")
+  res_list <- foreach(p_init = vec_p_init[ord], .export = FUNs) %dorng% {
 
     ldpred_auto <- ldpred2_gibbs_auto(
       corr      = corr,
@@ -237,6 +245,9 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
 
     ldpred_auto
   }
+
+  inv_ord <- match(seq_along(ord), ord)
+  res_list[inv_ord]
 }
 
 ################################################################################
