@@ -90,9 +90,9 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
     bigparallelr::register_parallel(ncores)
 
     # LDpred2-grid models
-    beta_gibbs <- foreach(
+    beta_gibbs <- do.call("cbind", foreach(
       h2 = grid_param$h2, p = grid_param$p, sparse = grid_param$sparse,
-      .export = "ldpred2_gibbs_one", .combine = "cbind") %dorng% {
+      .export = "ldpred2_gibbs_one") %dorng% {
         ldpred2_gibbs_one(
           corr      = corr,
           beta_hat  = beta_hat,
@@ -105,7 +105,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
           burn_in   = burn_in,
           num_iter  = num_iter
         )
-      }
+      })
 
   } else {
 

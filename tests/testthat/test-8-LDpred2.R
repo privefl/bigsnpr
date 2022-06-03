@@ -59,6 +59,7 @@ test_that("LDpred2 works", {
   p_seq <- signif(seq_log(1e-3, 1, length.out = 7), 1)
   params <- expand.grid(p = p_seq, h2 = ldsc[["h2"]], sparse = c(FALSE, TRUE))
   expect_equal(dim(params), c(14, 3))
+  expect_equal(dim(snp_ldpred2_grid(corr, df_beta, params[1, ])), c(nrow(df_beta), 1))
   beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = 2)
   pred_grid <- big_prodMat(G, beta_grid, ind.col = df_beta[["_NUM_ID_"]])
   expect_gt(max(cor(pred_grid, y)), 0.4)
