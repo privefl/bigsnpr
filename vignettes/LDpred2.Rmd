@@ -9,7 +9,11 @@ editor_options:
 
 <center><iframe width="560" height="315" src="https://www.youtube.com/embed/aya8WsNAu6U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
 
+    
+
 Here we show how to compute polygenic risk scores using [LDpred2](https://doi.org/10.1101/2020.04.28.066720).
+
+**New:** if you install {bigsnpr} >= v1.10.4, LDpred2-grid and LDpred2-auto should be much faster for large data.
 
 This tutorial uses fake data for educational purposes only.
 Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
@@ -106,6 +110,7 @@ If no or few variants are actually flipped, you might want to disable the strand
 
 **Some quality control on summary statistics is highly recommended (see paper and other tutorial).**
 A new refined QC is described in [this new preprint](https://doi.org/10.1101/2021.03.29.437510).
+See e.g. [the code](https://github.com/privefl/paper-misspec/tree/main/code) that was used to prepare the sumstats there.
 
 ### Correlation
 

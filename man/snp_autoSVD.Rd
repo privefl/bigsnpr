@@ -123,7 +123,10 @@ Note that to obtain the Principal Components, you must use
 }
 \description{
 Fast truncated SVD with initial pruning and that iteratively removes
-long-range LD regions.
+long-range LD regions. Some variants are removing due to the initial clumping,
+then more and more variants are removed at each iteration. You can access the
+indices of the remaining variants with \verb{attr(*, "subset")}. If some of the
+variants removed are contiguous, the regions are reported in \verb{attr(*, "lrldr")}.
 }
 \details{
 If you don't have any information about SNPs, you can try using
@@ -135,8 +138,9 @@ If you don't have any information about SNPs, you can try using
 }
 \examples{
 ex <- snp_attachExtdata()
+G <- ex$genotypes
 
-obj.svd <- snp_autoSVD(G = ex$genotypes,
+obj.svd <- snp_autoSVD(G,
                        infos.chr = ex$map$chromosome,
                        infos.pos = ex$map$physical.position)
 

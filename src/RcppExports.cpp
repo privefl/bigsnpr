@@ -458,8 +458,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_L
-List get_L(std::vector<size_t> p, const IntegerVector& i, const NumericVector& x, double thr_r2);
-RcppExport SEXP _bigsnpr_get_L(SEXP pSEXP, SEXP iSEXP, SEXP xSEXP, SEXP thr_r2SEXP) {
+List get_L(std::vector<size_t> p, const IntegerVector& i, const NumericVector& x, double thr_r2, double max_r2);
+RcppExport SEXP _bigsnpr_get_L(SEXP pSEXP, SEXP iSEXP, SEXP xSEXP, SEXP thr_r2SEXP, SEXP max_r2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -467,34 +467,36 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type i(iSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type thr_r2(thr_r2SEXP);
-    rcpp_result_gen = Rcpp::wrap(get_L(p, i, x, thr_r2));
+    Rcpp::traits::input_parameter< double >::type max_r2(max_r2SEXP);
+    rcpp_result_gen = Rcpp::wrap(get_L(p, i, x, thr_r2, max_r2));
     return rcpp_result_gen;
 END_RCPP
 }
 // get_C
-List get_C(const arma::sp_mat& L, int min_size, int max_size, int K);
-RcppExport SEXP _bigsnpr_get_C(SEXP LSEXP, SEXP min_sizeSEXP, SEXP max_sizeSEXP, SEXP KSEXP) {
+List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double max_cost);
+RcppExport SEXP _bigsnpr_get_C(SEXP LSEXP, SEXP min_sizeSEXP, SEXP max_sizeSEXP, SEXP max_KSEXP, SEXP max_costSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type L(LSEXP);
     Rcpp::traits::input_parameter< int >::type min_size(min_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type max_size(max_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type K(KSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_C(L, min_size, max_size, K));
+    Rcpp::traits::input_parameter< int >::type max_K(max_KSEXP);
+    Rcpp::traits::input_parameter< double >::type max_cost(max_costSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_C(L, min_size, max_size, max_K, max_cost));
     return rcpp_result_gen;
 END_RCPP
 }
 // get_perc
-double get_perc(std::vector<size_t> p, const IntegerVector& i, const IntegerVector& block_num);
-RcppExport SEXP _bigsnpr_get_perc(SEXP pSEXP, SEXP iSEXP, SEXP block_numSEXP) {
+double get_perc(const NumericVector& p, const IntegerVector& i, const IntegerVector& all_last);
+RcppExport SEXP _bigsnpr_get_perc(SEXP pSEXP, SEXP iSEXP, SEXP all_lastSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::vector<size_t> >::type p(pSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type p(pSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type i(iSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type block_num(block_numSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_perc(p, i, block_num));
+    Rcpp::traits::input_parameter< const IntegerVector& >::type all_last(all_lastSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_perc(p, i, all_last));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -552,8 +554,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
     {"_bigsnpr_sp_colSumsSq_sym", (DL_FUNC) &_bigsnpr_sp_colSumsSq_sym, 3},
-    {"_bigsnpr_get_L", (DL_FUNC) &_bigsnpr_get_L, 4},
-    {"_bigsnpr_get_C", (DL_FUNC) &_bigsnpr_get_C, 4},
+    {"_bigsnpr_get_L", (DL_FUNC) &_bigsnpr_get_L, 5},
+    {"_bigsnpr_get_C", (DL_FUNC) &_bigsnpr_get_C, 5},
     {"_bigsnpr_get_perc", (DL_FUNC) &_bigsnpr_get_perc, 3},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},

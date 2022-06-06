@@ -16,7 +16,10 @@ getIntervals <- function(x, n = 2) {
 #' Truncated SVD while limiting LD
 #'
 #' Fast truncated SVD with initial pruning and that iteratively removes
-#' long-range LD regions.
+#' long-range LD regions. Some variants are removing due to the initial clumping,
+#' then more and more variants are removed at each iteration. You can access the
+#' indices of the remaining variants with `attr(*, "subset")`. If some of the
+#' variants removed are contiguous, the regions are reported in `attr(*, "lrldr")`.
 #'
 #' If you don't have any information about SNPs, you can try using
 #'   - `infos.chr = rep(1, ncol(G))`,
@@ -51,8 +54,9 @@ getIntervals <- function(x, n = 2) {
 #'
 #' @examples
 #' ex <- snp_attachExtdata()
+#' G <- ex$genotypes
 #'
-#' obj.svd <- snp_autoSVD(G = ex$genotypes,
+#' obj.svd <- snp_autoSVD(G,
 #'                        infos.chr = ex$map$chromosome,
 #'                        infos.pos = ex$map$physical.position)
 #'

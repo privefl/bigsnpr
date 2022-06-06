@@ -48,7 +48,7 @@ List ldpred2_gibbs_auto(Environment corr,
   myassert_size(n_vec.size(), m);
 
   NumericVector curr_beta = Rcpp::clone(beta_init);
-  NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m);
+  NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m), dotprods(m);
 
   NumericMatrix sample_beta(m, num_iter / report_step);
   int ind_report = 0, next_k_reported = burn_in - 1 + report_step;
@@ -58,6 +58,7 @@ List ldpred2_gibbs_auto(Environment corr,
 
   double cur_h2_est = dotprod2(curr_beta, sfbm->prod(curr_beta));
   double p = p_init, h2 = h2_init, avg_p = 0, avg_h2 = 0;
+  bool no_jump_sign = !allow_jump_sign;
 
   for (int k = 0; k < num_iter_tot; k++) {
 
@@ -67,7 +68,7 @@ List ldpred2_gibbs_auto(Environment corr,
 
     for (const int& j : order) {
 
-      double dotprod = sfbm->dot_col(j, curr_beta);
+      double dotprod = dotprods[j];  // sfbm->dot_col(j, curr_beta);
       double res_beta_hat_j = beta_hat[j] + shrink_corr * (curr_beta[j] - dotprod);
 
       double C1 = h2_per_var * n_vec[j];
@@ -92,9 +93,9 @@ List ldpred2_gibbs_auto(Environment corr,
 
         double samp_beta = ::Rf_rnorm(C3, C4);
 
-        if (!allow_jump_sign && (samp_beta * prev_beta) < 0) {
+        if (no_jump_sign && (samp_beta * prev_beta) < 0) {
           curr_beta[j] = 0;
-          if (k >= burn_in) {
+          if (k >= burn_in) {  // not sure if I should undo this
             avg_postp[j] -= postp;
             avg_beta[j]  -= C3 * postp;
           }
@@ -108,7 +109,10 @@ List ldpred2_gibbs_auto(Environment corr,
         curr_beta[j] = 0;
       }
 
-      cur_h2_est += diff * (2 * dotprod_shrunk + diff);
+      if (diff != 0) {
+        cur_h2_est += diff * (2 * dotprod_shrunk + diff);
+        dotprods = sfbm->incr_mult_col(j, dotprods, diff);
+      }
     }
 
     p = std::max(::Rf_rbeta(1 + nb_causal, 1 + m - nb_causal), MIN_P);

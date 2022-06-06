@@ -123,7 +123,9 @@
 <iframe width="560" height="315" src="https://www.youtube.com/embed/aya8WsNAu6U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </center>
+<p></p>
 <p>Here we show how to compute polygenic risk scores using <a href="https://doi.org/10.1101/2020.04.28.066720">LDpred2</a>.</p>
+<p><strong>New:</strong> if you install {bigsnpr} >= v1.10.4, LDpred2-grid and LDpred2-auto should be much faster for large data.</p>
 <p>This tutorial uses fake data for educational purposes only. Another tutorial using another dataset can be found at <a href="https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html" class="uri">https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html</a>.</p>
 <p>You should also probably look at <a href="https://github.com/privefl/paper-ldpred2/tree/master/code">the code of the paper</a>, particularly at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R">the code to prepare summary statistics (including performing the quality control presented in the Methods section “Quality control of summary statistics” of the paper)</a>, at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62">the code to read BGEN files into the data format used by bigsnpr</a>, and at <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26">the code to prepare LD matrices</a>.</p>
 <p>In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in the PRS-CS and LDpred2 papers. If you do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide an LD reference to be used directly <del>at <a href="https://doi.org/10.6084/m9.figshare.13034123" class="uri">https://doi.org/10.6084/m9.figshare.13034123</a></del>, along with <a href="https://github.com/privefl/paper-ldpred2/blob/master/code/example-with-provided-ldref.R">an example R script</a> on how to use it. <strong>New:</strong> we now provide a new version of these LD references at <a href="https://doi.org/10.6084/m9.figshare.19213299" class="uri">https://doi.org/10.6084/m9.figshare.19213299</a> by forming independent LD blocks in the matrices, which can be useful for robustness and extra speed gains (see <a href="https://doi.org/10.1101/2021.03.29.437510">this new preprint</a>).</p>
@@ -236,7 +238,7 @@
 <div id="computing-ldpred2-scores-genome-wide" class="section level2">
 <h2 class="hasAnchor">
 <a href="#computing-ldpred2-scores-genome-wide" class="anchor"></a>Computing LDpred2 scores genome-wide</h2>
-<p><strong>Some quality control on summary statistics is highly recommended (see paper and other tutorial).</strong> A new refined QC is described in <a href="https://doi.org/10.1101/2021.03.29.437510">this new preprint</a>.</p>
+<p><strong>Some quality control on summary statistics is highly recommended (see paper and other tutorial).</strong> A new refined QC is described in <a href="https://doi.org/10.1101/2021.03.29.437510">this new preprint</a>. See e.g. <a href="https://github.com/privefl/paper-misspec/tree/main/code">the code</a> that was used to prepare the sumstats there.</p>
 <div id="correlation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#correlation" class="anchor"></a>Correlation</h3>

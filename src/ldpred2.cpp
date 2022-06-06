@@ -40,7 +40,7 @@ NumericVector ldpred2_gibbs_one(Environment corr,
   myassert_size(n_vec.size(), m);
 
   NumericVector curr_beta = Rcpp::clone(beta_init);
-  NumericVector avg_beta(m);
+  NumericVector avg_beta(m), dotprods(m);
 
   double h2_per_var = h2 / (m * p);
   double inv_odd_p = (1 - p) / p;
@@ -52,8 +52,8 @@ NumericVector ldpred2_gibbs_one(Environment corr,
 
     for (const int& j : order) {
 
-      double dotprod = sfbm->dot_col(j, curr_beta);
-      double resid = beta_hat[j] - dotprod;
+      // double dotprod = sfbm->dot_col(j, curr_beta);
+      double resid = beta_hat[j] - dotprods[j];
       gap += resid * resid;
       double res_beta_hat_j = curr_beta[j] + resid;
 
@@ -65,12 +65,15 @@ NumericVector ldpred2_gibbs_one(Environment corr,
       double post_p_j = 1 /
         (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
 
+      double diff = -curr_beta[j];
       if (sparse && (post_p_j < p)) {
         curr_beta[j] = 0;
       } else {
         curr_beta[j] = (post_p_j > ::unif_rand()) ? ::Rf_rnorm(C3, C4) : 0;
         if (k >= 0) avg_beta[j] += C3 * post_p_j;
       }
+      diff += curr_beta[j];
+      if (diff != 0) dotprods = sfbm->incr_mult_col(j, dotprods, diff);
     }
 
     if (gap > gap0) { avg_beta.fill(NA_REAL); return avg_beta; }

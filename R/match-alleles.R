@@ -139,6 +139,8 @@ snp_match <- function(sumstats, info_snp,
 #'   for Linux.
 #' @param from Genome build to convert from. Default is `hg18`.
 #' @param to Genome build to convert to. Default is `hg19`.
+#' @param check_reverse Whether to discard positions for which we cannot go back
+#'   to initial values by doing 'from -> to -> from'. Default is `TRUE`.
 #'
 #' @references
 #' Hinrichs, Angela S., et al. "The UCSC genome browser database: update 2006."
@@ -147,42 +149,56 @@ snp_match <- function(sumstats, info_snp,
 #' @return Input data frame `info_snp` with column "pos" in the new build.
 #' @export
 #'
-snp_modifyBuild <- function(info_snp, liftOver, from = "hg18", to = "hg19") {
+snp_modifyBuild <- function(info_snp, liftOver,
+                            from = "hg18", to = "hg19",
+                            check_reverse = TRUE) {
 
   if (!all(c("chr", "pos") %in% names(info_snp)))
-    stop2("Please use proper names for variables in 'info_snp'. Expected %s.",
-          "'chr' and 'pos'")
+    stop2("Expecting variables 'chr' and 'pos' in input 'info_snp'.")
 
   # Make sure liftOver is executable
   liftOver <- normalizePath(liftOver)
   make_executable(liftOver)
 
   # Need BED UCSC file for liftOver
-  BED <- tempfile(fileext = ".BED")
   info_BED <- with(info_snp, data.frame(
-    paste0("chr", chr), pos0 = pos - 1L, pos, id = rows_along(info_snp)))
-  bigreadr::fwrite2(info_BED, BED, col.names = FALSE, sep = " ", scipen = 50)
+    # sub("^0", "", c("01", 1, 22, "X")) -> "1"  "1"  "22" "X"
+    chrom = paste0("chr", sub("^0", "", chr)),
+    start = pos, end = pos,
+    id = rows_along(info_snp)))
+
+  BED <- tempfile(fileext = ".BED")
+  bigreadr::fwrite2(stats::na.omit(info_BED),
+                    BED, col.names = FALSE, sep = " ", scipen = 50)
 
   # Need chain file
   url <- paste0("ftp://hgdownload.cse.ucsc.edu/goldenPath/", from, "/liftOver/",
                 from, "To", tools::toTitleCase(to), ".over.chain.gz")
   chain <- tempfile(fileext = ".over.chain.gz")
-  utils::download.file(url, destfile = chain)
+  utils::download.file(url, destfile = chain, quiet = TRUE)
 
   # Run liftOver (usage: liftOver oldFile map.chain newFile unMapped)
   lifted <- tempfile(fileext = ".BED")
-  unmapped <- tempfile(fileext = ".txt")
-  system(paste(liftOver, BED, chain, lifted, unmapped))
+  system2(liftOver, c(BED, chain, lifted, tempfile(fileext = ".txt")))
 
-  # readLines(lifted, n = 5)
+  # Read the ones lifter + some QC
   new_pos <- bigreadr::fread2(lifted, nThread = 1)
+  is_bad <- vctrs::vec_duplicate_detect(new_pos$V4) |
+    (new_pos$V1 != info_BED$chrom[new_pos$V4])
+  new_pos <- new_pos[which(!is_bad), ]
 
-  # readLines(unmapped, n = 6)
-  bad <- grep("^#", readLines(unmapped), value = TRUE, invert = TRUE)
-  message2("%d variants have not been mapped.", length(bad))
-
-  info_snp$pos <- NA
+  pos0 <- info_snp$pos
+  info_snp$pos <- NA_integer_
   info_snp$pos[new_pos$V4] <- new_pos$V3
+
+  if (check_reverse) {
+    pos2 <- suppressMessages(
+      Recall(info_snp, liftOver, from = to, to = from, check_reverse = FALSE)$pos)
+    info_snp$pos[pos2 != pos0] <- NA_integer_
+  }
+
+  message2("%d variants have not been mapped.", sum(is.na(info_snp$pos)))
+
   info_snp
 }
 
