@@ -1,3 +1,12 @@
+## bigsnpr 1.10.5
+
+- Slightly change the default parameters of lassosum2: 
+    - `delta` from `c(0.001, 0.005, 0.02, 0.1, 0.6, 3)` to `c(0.001, 0.01, 0.1, 1)`,
+    - `nlambda` from 20 to 30,
+    - `maxiter` from 500 to 1000.
+    
+- Add a penalty multiplicative factor for delta and lambda to regularize variants with smaller GWAS sample sizes more (when they are different, as in meta-analyses with different sets of variants).
+
 ## bigsnpr 1.10.4
 
 - Now use the same updating strategy for residuals in LDpred2 as in lassosum2. This can make LDpred2-grid and LDpred2-auto an order of magnitude faster, especially for small p.
@@ -10,7 +19,7 @@
 
 - Add two new parameters to `snp_ldsplit()`: `max_r2`, the maximum squared correlation allowed outside blocks, and `max_cost`, the maximum cost of reported solutions (i.e. the sum of all squared correlations outside blocks). Using `max_r2` offers an extra guarantee that the splitting is very good, and makes the function much faster by discarding lots of possible splits. 
 
-## bigsnpr 1.10
+## bigsnpr 1.10.0
 
 - LDpred2-grid does not use OpenMP for parallelism anymore, it now simply uses multiple R processes. 
 

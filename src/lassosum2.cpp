@@ -1,8 +1,7 @@
 /******************************************************************************/
 
-#include <bigstatsr/arma-strict-R-headers.h>
-#include <bigstatsr/utils.h>
 #include <bigsparser/SFBM.h>
+#include <bigstatsr/utils.h>
 
 /******************************************************************************/
 
@@ -20,9 +19,9 @@ inline double soft_thres(double z, double l1, double one_plus_l2) {
 
 // [[Rcpp::export]]
 List lassosum2(Environment corr,
-               const arma::vec& beta_hat,
-               double lambda,
-               double delta,
+               const NumericVector& beta_hat,
+               const NumericVector& lambda,
+               const NumericVector& delta_plus_one,
                double dfmax,
                int maxiter,
                double tol) {
@@ -33,10 +32,10 @@ List lassosum2(Environment corr,
   myassert_size(sfbm->nrow(), m);
   myassert_size(sfbm->ncol(), m);
 
-  arma::vec curr_beta(m, arma::fill::zeros), dotprods(m, arma::fill::zeros);
+  NumericVector curr_beta(m), dotprods(m);
 
-  double one_plus_delta = 1 + delta;
-  double gap0 = arma::dot(beta_hat, beta_hat);
+  double gap0 =
+    std::inner_product(beta_hat.begin(), beta_hat.end(), beta_hat.begin(), 0.0);
 
   int k = 0;
   for (; k < maxiter; k++) {
@@ -50,7 +49,7 @@ List lassosum2(Environment corr,
       double resid = beta_hat[j] - dotprods[j];
       gap += resid * resid;
       double u_j = curr_beta[j] + resid;
-      double new_beta_j = soft_thres(u_j, lambda, one_plus_delta);
+      double new_beta_j = soft_thres(u_j, lambda[j], delta_plus_one[j]);
       if (new_beta_j != 0) df++;
 
       double shift = new_beta_j - curr_beta[j];

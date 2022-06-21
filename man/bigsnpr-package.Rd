@@ -59,7 +59,7 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Michael Blum \email{michael.blum@univ-grenoble-alpes.fr} [thesis advisor]
+  \item Michael Blum [thesis advisor]
   \item Hugues Aschard \email{hugues.aschard@pasteur.fr} [thesis advisor]
   \item Bjarni Jóhann Vilhjálmsson \email{bjv@econ.au.dk} [thesis advisor]
 }
