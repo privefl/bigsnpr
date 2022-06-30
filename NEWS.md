@@ -1,3 +1,10 @@
+## bigsnpr 1.10.6
+
+Better `snp_ldsplit()`:
+- also return `$cost2`, the sum of squared sizes of the blocks,
+- for equivalent splits (with the same cost), now return the one that also minimizes cost2,
+- now return unique splits only (e.g. could get equivalent splits with different `max_size`).
+
 ## bigsnpr 1.10.5
 
 - Slightly change the default parameters of lassosum2: 

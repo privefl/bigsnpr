@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.6</span>
       </span>
     </div>
 
@@ -154,6 +154,16 @@
       <small>Source: <a href='https://github.com/privefl/bigsnpr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="bigsnpr-1106" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bigsnpr-1106" class="anchor"></a>bigsnpr 1.10.6</h2>
+<p>Better <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>:</p>
+<ul>
+<li>also return <code>$cost2</code>, the sum of squared sizes of the blocks,</li>
+<li>for equivalent splits (with the same cost), now return the one that also minimizes cost2,</li>
+<li>now return unique splits only (e.g. could get equivalent splits with different <code>max_size</code>).</li>
+</ul>
+</div>
     <div id="bigsnpr-1105" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bigsnpr-1105" class="anchor"></a>bigsnpr 1.10.5</h2>

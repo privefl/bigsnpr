@@ -1,11 +1,15 @@
 ################################################################################
 
-reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size, max_cost) {
+reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size,
+                              max_cost, prev_costs) {
 
   do.call("rbind", lapply(cols_along(cost_path$C), function(K) {
 
     cost <- cost_path$C[1, K]
     if (cost > max_cost) return(NULL)
+    if (cost < prev_costs[K]) {
+      prev_costs[K] <- cost  # change globally because use an FBM
+    } else return(NULL)
 
     all_last <- list()
     j <- 0
@@ -27,6 +31,7 @@ reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size, max
       max_size  = max_size,
       n_block   = K,
       cost      = cost,
+      cost2     = sum(all_size^2),
       perc_kept = get_perc(corr.p, corr.i, all_last = all_last - 1L),
       all_last  = list(all_last),
       all_size  = list(all_size)
@@ -39,8 +44,10 @@ reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size, max
 #' Independent LD blocks
 #'
 #' Split a correlation matrix in blocks as independent as possible.
-#' This will find the splitting in blocks that minimize the sum of squared
+#' This finds the splitting in blocks that minimizes the sum of squared
 #' correlation between these blocks (i.e. everything outside these blocks).
+#' In case of equivalent splits, it then minimizes the sum of squared sizes
+#' of the blocks.
 #'
 #' @param corr Sparse correlation matrix. Usually, the output of [snp_cor()].
 #' @param thr_r2 Threshold under which squared correlations are ignored.
@@ -67,10 +74,11 @@ reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size, max
 #'   not discarded and also to speed up the algorithm. Default is `0.3`.
 #' @param max_cost Maximum cost reported. Default is `ncol(corr) / 200`.
 #'
-#' @return A tibble with five columns:
+#' @return A tibble with seven columns:
 #'   - `$max_size`: Input parameter, useful when providing a vector of values to try.
 #'   - `$n_block`: Number of blocks.
 #'   - `$cost`: The sum of squared correlations outside the blocks.
+#'   - `$cost2`: The sum of squared sizes of the blocks.
 #'   - `$perc_kept`: Percentage of initial non-zero values kept within the blocks defined.
 #'   - `$all_last`: Last index of each block.
 #'   - `$all_size`: Sizes of the blocks.
@@ -94,7 +102,9 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size,
   corr <- Matrix::tril(corr)
   stopifnot(all(Matrix::diag(corr) != 0))
 
-  max_cost <- min(max_cost, 2 * crossprod(corr@x))  # just to allow max_cost=Inf
+  # to allow max_cost=Inf, and *2 to count both tri
+  max_cost <- min(max_cost, crossprod(corr@x) * 2)
+  prev_costs <- FBM(max_K, 1, init = Inf)
 
   # Precomputing L
   L <- corr %>%
@@ -107,14 +117,15 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size,
   corr.i <- corr@i
   rm(corr)
 
-  do.call("rbind", lapply(max_size, function(one_max_size) {
+  do.call("rbind", lapply(sort(max_size), function(one_max_size) {
 
     # Precomputing E and computing all cost paths
     cost_path <- get_C(L, min_size = min_size, max_size = one_max_size,
                        max_K = max_K, max_cost = max_cost)
 
     # Reconstructing paths
-    reconstruct_paths(corr.p, corr.i, cost_path, min_size, one_max_size, max_cost)
+    reconstruct_paths(corr.p, corr.i, cost_path, min_size, one_max_size,
+                      max_cost, prev_costs)
   }))
 }
 

@@ -47,11 +47,12 @@ not discarded and also to speed up the algorithm. Default is \code{0.3}.}
 \item{max_cost}{Maximum cost reported. Default is \code{ncol(corr) / 200}.}
 }
 \value{
-A tibble with five columns:
+A tibble with seven columns:
 \itemize{
 \item \verb{$max_size}: Input parameter, useful when providing a vector of values to try.
 \item \verb{$n_block}: Number of blocks.
 \item \verb{$cost}: The sum of squared correlations outside the blocks.
+\item \verb{$cost2}: The sum of squared sizes of the blocks.
 \item \verb{$perc_kept}: Percentage of initial non-zero values kept within the blocks defined.
 \item \verb{$all_last}: Last index of each block.
 \item \verb{$all_size}: Sizes of the blocks.
@@ -61,30 +62,27 @@ anymore, but can be computed with \code{rep(seq_along(all_size), all_size)}.
 }
 \description{
 Split a correlation matrix in blocks as independent as possible.
-This will find the splitting in blocks that minimize the sum of squared
+This finds the splitting in blocks that minimizes the sum of squared
 correlation between these blocks (i.e. everything outside these blocks).
+In case of equivalent splits, it then minimizes the sum of squared sizes
+of the blocks.
 }
 \examples{
 \dontrun{
 
   corr <- readRDS(url("https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"))
 
-  THR_R2 <- 0.01
-
-  # You can provide multiple max_size to try
-  # For real data, use e.g. round(seq_log(1000 + ncol(corr) / 30,
-  #                                       5000 + ncol(corr) / 10,
-  #                                       length.out = 6))
-  SEQ <- c(50, 80)
-  (res <- snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 10, max_size = SEQ,
-                      max_K = 50, max_r2 = 0.5, max_cost = Inf))
+  THR_R2 <- 0.02
+  m <- ncol(corr)
+  (SEQ <- round(seq_log(m / 30, m / 5, length.out = 10)))
+  (res <- snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 10, max_size = SEQ))
 
   library(ggplot2)
   # trade-off cost / number of blocks
   qplot(n_block, cost, color = factor(max_size, SEQ), data = res) +
     theme_bw(14) +
     scale_y_log10() +
-    theme(legend.position = c(0.5, 0.82)) +
+    theme(legend.position = "top") +
     labs(x = "Number of blocks", color = "Maximum block size",
          y = "Sum of squared correlations outside blocks")
 
@@ -92,17 +90,16 @@ correlation between these blocks (i.e. everything outside these blocks).
   qplot(perc_kept, cost, color = factor(max_size, SEQ), data = res) +
     theme_bw(14) +
     # scale_y_log10() +
-    theme(legend.position = c(0.6, 0.82)) +
+    theme(legend.position = "top") +
     labs(x = "Percentage of non-zero values kept", color = "Maximum block size",
          y = "Sum of squared correlations outside blocks")
 
   # trade-off cost / sum of squared sizes
-  res$cost2 <- sapply(res$all_size, function(sizes) sum(sizes^2))
   qplot(cost2, cost, color = factor(max_size, SEQ), data = res) +
     theme_bw(14) +
     scale_y_log10() +
     geom_vline(xintercept = 0)+
-    theme(legend.position = c(0.7, 0.82)) +
+    theme(legend.position = "top") +
     labs(x = "Sum of squared blocks", color = "Maximum block size",
          y = "Sum of squared correlations outside blocks")
 
@@ -110,10 +107,9 @@ correlation between these blocks (i.e. everything outside these blocks).
   ## Pick one solution and visualize blocks
   library(dplyr)
   all_ind <- res \%>\%
-    filter(cost < 1) \%>\%
-    arrange(perc_kept) \%>\%
-    slice(1) \%>\%
+    arrange(cost2 * sqrt(5 + cost)) \%>\%
     print() \%>\%
+    slice(1) \%>\%
     pull(all_last)
 
   ## Transform sparse representation into (i,j,x) triplets
