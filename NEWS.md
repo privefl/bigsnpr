@@ -1,3 +1,7 @@
+## bigsnpr 1.10.7
+
+- Fix a liftOver error in `snp_modifyBuild()`.
+
 ## bigsnpr 1.10.6
 
 Better `snp_ldsplit()`:
