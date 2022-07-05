@@ -306,7 +306,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs_one_sampling
-arma::mat ldpred2_gibbs_one_sampling(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double h2, double p, bool sparse, int burn_in, int num_iter);
+NumericMatrix ldpred2_gibbs_one_sampling(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double h2, double p, bool sparse, int burn_in, int num_iter);
 RcppExport SEXP _bigsnpr_ldpred2_gibbs_one_sampling(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
