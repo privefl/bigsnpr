@@ -20,16 +20,17 @@ test_that("sp_colSumsSq_sym() works", {
 
 test_that("LDpred2 works", {
 
-  # skip_if(is_cran)
+  skip_if(is_cran)
+  skip_if_offline("raw.githubusercontent.com")
 
+  zip <- tempfile(fileext = ".zip")
+  download.file(
+    "https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data3.zip?raw=true",
+    destfile = zip, mode = "wb")
+  unzip(zip, exdir = tempdir())
   bedfile <- file.path(tempdir(), "tmp-data/public-data3.bed")
-  if (!file.exists(rdsfile <- sub_bed(bedfile, ".rds"))) {
-    unzip(test_path("testdata/public-data3.zip"), exdir = tempdir())
-    rds <- snp_readBed(bedfile)
-    expect_identical(normalizePath(rds), normalizePath(rdsfile))
-  }
 
-  obj.bigSNP <- snp_attach(rdsfile)
+  obj.bigSNP <- snp_attach(snp_readBed(bedfile))
   G <- obj.bigSNP$genotypes
   y <- obj.bigSNP$fam$affection
   POS2 <- obj.bigSNP$map$genetic.dist + 1000 * obj.bigSNP$map$chromosome
