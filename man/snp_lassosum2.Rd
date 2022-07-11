@@ -7,11 +7,11 @@
 snp_lassosum2(
   corr,
   df_beta,
-  delta = signif(seq_log(0.001, 3, 6), 1),
-  nlambda = 20,
+  delta = c(0.001, 0.01, 0.1, 1),
+  nlambda = 30,
   lambda.min.ratio = 0.01,
   dfmax = 2e+05,
-  maxiter = 500,
+  maxiter = 1000,
   tol = 1e-05,
   ncores = 1
 )
@@ -29,10 +29,10 @@ If \code{corr} is a dsCMatrix or a dgCMatrix, you can use \code{as_SFBM(corr)}.}
 }}
 
 \item{delta}{Vector of shrinkage parameters to try (L2-regularization).
-Default is \code{c(0.001, 0.005, 0.02, 0.1, 0.6, 3)}.}
+Default is \code{c(0.001, 0.01, 0.1, 1)}.}
 
 \item{nlambda}{Number of different lambdas to try (L1-regularization).
-Default is \code{20}.}
+Default is \code{30}.}
 
 \item{lambda.min.ratio}{Ratio between last and first lambdas to try.
 Default is \code{0.01}.}
@@ -41,7 +41,7 @@ Default is \code{0.01}.}
 Default is \code{200e3}.}
 
 \item{maxiter}{Maximum number of iterations before convergence.
-Default is \code{500}.}
+Default is \code{1000}.}
 
 \item{tol}{Tolerance parameter for assessing convergence.
 Default is \code{1e-5}.}

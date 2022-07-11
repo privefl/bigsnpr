@@ -6,6 +6,12 @@ using namespace Rcpp;
 
 /******************************************************************************/
 
+inline double square(double x) {
+  return x * x;
+}
+
+/******************************************************************************/
+
 // [[Rcpp::export]]
 List get_L(std::vector<size_t> p,
            const IntegerVector& i,
@@ -86,12 +92,14 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double 
 
   // Computing all minimum costs and corresponding indices
   IntegerMatrix best_ind(m, max_K); best_ind.fill(NA_INTEGER);
-  NumericMatrix C(m, max_K); C.fill(R_PosInf);
+  NumericMatrix C1(m, max_K); C1.fill(R_PosInf);
+  NumericMatrix C2(m, max_K); C2.fill(R_PosInf);
 
   // Only a few indices allow one block only
   for (auto size : seq(min_size, max_size)) {
     best_ind(m - size, 0) = m;
-    C(m - size, 0) = 0;
+    C1(m - size, 0) = 0;
+    C2(m - size, 0) = square(size);
   }
 
   // Iterating over total numbers of blocks allowed
@@ -104,18 +112,25 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double 
       int row = col - min_size + 1;
 
       for (auto it = E_j.begin(); it != E_j.end(); it++, row--) {
-        double cost = double(*it) + C(col + 1, k - 1);
-        if (cost < C(row, k)) {
+        double cost1 = double(*it) + C1(col + 1, k - 1);
+        if (cost1 < C1(row, k)) {
           best_ind(row, k) = col + 1;
-          C(row, k) = cost;
+          C1(row, k) = cost1;
+          C2(row, k) = square(col - row + 1) + C2(col + 1, k - 1);
+        } else if (cost1 == C1(row, k)) {
+          double cost2 = square(col - row + 1) + C2(col + 1, k - 1);
+          if (cost2 < C2(row, k)) {
+            best_ind(row, k) = col + 1;
+            C2(row, k) = cost2;
+          }
         }
       }
     }
 
-    if (C(0, k) > max_cost && C(0, k) > C(0, k - 1)) break;
+    if (C1(0, k) > max_cost && C1(0, k) > C1(0, k - 1)) break;
   }
 
-  return List::create(_["C"] = C, _["best_ind"] = best_ind);
+  return List::create(_["C"] = C1, _["best_ind"] = best_ind);
 }
 
 /******************************************************************************/

@@ -164,8 +164,8 @@ snp_modifyBuild <- function(info_snp, liftOver,
   info_BED <- with(info_snp, data.frame(
     # sub("^0", "", c("01", 1, 22, "X")) -> "1"  "1"  "22" "X"
     chrom = paste0("chr", sub("^0", "", chr)),
-    start = pos, end = pos,
-    id = rows_along(info_snp)))
+    start = pos - 1L, end = pos,
+    id = seq_along(pos)))
 
   BED <- tempfile(fileext = ".BED")
   bigreadr::fwrite2(stats::na.omit(info_BED),

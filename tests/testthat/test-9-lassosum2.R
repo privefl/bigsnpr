@@ -6,11 +6,16 @@ context("LASSOSUM2")
 
 test_that("lassosum2 works", {
 
-  # skip_if(is_cran)
+  skip_if(is_cran)
+  skip_if_offline("raw.githubusercontent.com")
 
   bedfile <- file.path(tempdir(), "tmp-data/public-data3.bed")
   if (!file.exists(rdsfile <- sub_bed(bedfile, ".rds"))) {
-    unzip(test_path("testdata/public-data3.zip"), exdir = tempdir())
+    zip <- tempfile(fileext = ".zip")
+    download.file(
+      "https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data3.zip?raw=true",
+      destfile = zip, mode = "wb")
+    unzip(zip, exdir = tempdir())
     rds <- snp_readBed(bedfile)
     expect_identical(normalizePath(rds), normalizePath(rdsfile))
   }
@@ -34,16 +39,16 @@ test_that("lassosum2 works", {
 
   # lassosum2
   nlam <- sample(8:15, 1)
-  beta_grid <- snp_lassosum2(corr, df_beta, nlambda = nlam, ncores = 2)
+  beta_grid <- snp_lassosum2(corr, df_beta, nlambda = nlam, maxiter = 100, ncores = 2)
   pred_grid <- big_prodMat(G, beta_grid, ind.col = ind_var)
   expect_gt(max(cor(pred_grid, y), na.rm = TRUE), 0.4)
   params <- attr(beta_grid, "grid_param")
-  expect_equal(nrow(params), 6 * nlam)
-  expect_true(all(params$num_iter <= 501))
+  expect_equal(nrow(params), 4 * nlam)
+  expect_true(all(params$num_iter <= 101))
 
-  beta_grid2 <- snp_lassosum2(corr, df_beta, nlambda = nlam, ncores = 2)
+  beta_grid2 <- snp_lassosum2(corr, df_beta, nlambda = nlam, maxiter = 100, ncores = 2)
   attr(beta_grid2, "grid_param")$time <- attr(beta_grid, "grid_param")$time <- NULL
-  expect_identical(beta_grid2, beta_grid)  # no sampling, so reproducible
+  expect_identical(beta_grid2, beta_grid)  # no sampling (deterministic), so reproducible
 
   # Errors
   expect_error(snp_lassosum2(corr, df_beta[-1]),

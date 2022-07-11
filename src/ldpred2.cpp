@@ -5,19 +5,6 @@
 
 /******************************************************************************/
 
-inline double square(double x) {
-  return x * x;
-}
-
-double dotprod(const NumericVector& X) {
-  int n = X.size();
-  double cp = 0;
-  for (int i = 0; i < n; i++) cp += square(X[i]);
-  return cp;
-}
-
-/******************************************************************************/
-
 // [[Rcpp::export]]
 NumericVector ldpred2_gibbs_one(Environment corr,
                                 const NumericVector& beta_hat,
@@ -40,11 +27,13 @@ NumericVector ldpred2_gibbs_one(Environment corr,
   myassert_size(n_vec.size(), m);
 
   NumericVector curr_beta = Rcpp::clone(beta_init);
-  NumericVector avg_beta(m), dotprods(m);
+  NumericVector dotprods  = sfbm->prod(curr_beta);
+  NumericVector avg_beta(m);
 
   double h2_per_var = h2 / (m * p);
   double inv_odd_p = (1 - p) / p;
-  double gap0 = dotprod(beta_hat);
+  double gap0 =
+    std::inner_product(beta_hat.begin(), beta_hat.end(), beta_hat.begin(), 0.0);
 
   for (int k = -burn_in; k < num_iter; k++) {
 
@@ -60,16 +49,16 @@ NumericVector ldpred2_gibbs_one(Environment corr,
       double C1 = h2_per_var * n_vec[j];
       double C2 = 1 / (1 + 1 / C1);
       double C3 = C2 * res_beta_hat_j;
-      double C4 = ::sqrt(C2 / n_vec[j]);
+      double C4 = C2 / n_vec[j];
 
       double post_p_j = 1 /
-        (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
+        (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-C3 * C3 / C4 / 2));
 
       double diff = -curr_beta[j];
       if (sparse && (post_p_j < p)) {
         curr_beta[j] = 0;
       } else {
-        curr_beta[j] = (post_p_j > ::unif_rand()) ? ::Rf_rnorm(C3, C4) : 0;
+        curr_beta[j] = (post_p_j > ::unif_rand()) ? ::Rf_rnorm(C3, ::sqrt(C4)) : 0;
         if (k >= 0) avg_beta[j] += C3 * post_p_j;
       }
       diff += curr_beta[j];

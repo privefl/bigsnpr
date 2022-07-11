@@ -8,17 +8,10 @@
 const double MIN_P  = 1e-5;
 const double MIN_H2 = 1e-4;
 
-inline double square(double x) {
-  return x * x;
-}
+/******************************************************************************/
 
-double dotprod2(const NumericVector& X,
-                const NumericVector& Y) {
-  int n = X.size();
-  myassert_size(Y.size(), n);
-  double cp = 0;
-  for (int i = 0; i < n; i++) cp += X[i] * Y[i];
-  return cp;
+double dotprod2(const NumericVector& X, const NumericVector& Y) {
+  return std::inner_product(X.begin(), X.end(), Y.begin(), 0.0);
 }
 
 /******************************************************************************/
@@ -48,7 +41,8 @@ List ldpred2_gibbs_auto(Environment corr,
   myassert_size(n_vec.size(), m);
 
   NumericVector curr_beta = Rcpp::clone(beta_init);
-  NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m), dotprods(m);
+  NumericVector dotprods  = sfbm->prod(curr_beta);
+  NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m);
 
   NumericMatrix sample_beta(m, num_iter / report_step);
   int ind_report = 0, next_k_reported = burn_in - 1 + report_step;
@@ -56,7 +50,8 @@ List ldpred2_gibbs_auto(Environment corr,
   int num_iter_tot = burn_in + num_iter;
   NumericVector p_est(num_iter_tot), h2_est(num_iter_tot);
 
-  double cur_h2_est = dotprod2(curr_beta, sfbm->prod(curr_beta));
+  double cur_h2_est = shrink_corr * dotprod2(curr_beta, dotprods) +
+    (1 - shrink_corr) * dotprod2(curr_beta, curr_beta);
   double p = p_init, h2 = h2_init, avg_p = 0, avg_h2 = 0;
   bool no_jump_sign = !allow_jump_sign;
 
@@ -74,10 +69,10 @@ List ldpred2_gibbs_auto(Environment corr,
       double C1 = h2_per_var * n_vec[j];
       double C2 = 1 / (1 + 1 / C1);
       double C3 = C2 * res_beta_hat_j;
-      double C4 = ::sqrt(C2 / n_vec[j]);
+      double C4 = C2 / n_vec[j];
 
       double postp = 1 /
-        (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-square(C3 / C4) / 2));
+        (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-C3 * C3 / C4 / 2));
 
       double prev_beta = curr_beta[j];
       double dotprod_shrunk = shrink_corr * dotprod + (1 - shrink_corr) * prev_beta;
@@ -91,7 +86,7 @@ List ldpred2_gibbs_auto(Environment corr,
       double diff = -prev_beta;
       if (postp > ::unif_rand()) {
 
-        double samp_beta = ::Rf_rnorm(C3, C4);
+        double samp_beta = ::Rf_rnorm(C3, ::sqrt(C4));
 
         if (no_jump_sign && (samp_beta * prev_beta) < 0) {
           curr_beta[j] = 0;

@@ -156,14 +156,14 @@ test_that("snp_ldsplit() gives consistent results", {
 
   # can provide multiple 'max_size'
   max_r2 <- runif(1, 0.3, 1)
-  expect_equal(
-    rbind(snp_ldsplit(corr, thr_r2 = 0.02, min_size = 10, max_size = 30,
-                      max_K = 50, max_r2 = max_r2, max_cost = Inf),
-          snp_ldsplit(corr, thr_r2 = 0.02, min_size = 10, max_size = 40,
-                      max_K = 50, max_r2 = max_r2, max_cost = Inf)),
-    snp_ldsplit(corr, thr_r2 = 0.02, min_size = 10, max_size = c(30, 40),
-                max_K = 50, max_r2 = max_r2, max_cost = Inf)
-  )
+  res6 <- snp_ldsplit(corr, thr_r2 = 0.02, min_size = 10, max_size = 30,
+                      max_K = 50, max_r2 = max_r2, max_cost = Inf)
+  res7 <- snp_ldsplit(corr, thr_r2 = 0.02, min_size = 10, max_size = 40,
+                      max_K = 50, max_r2 = max_r2, max_cost = Inf)
+  res67 <- snp_ldsplit(corr, thr_r2 = 0.02, min_size = 10,
+                       max_size = sample(c(30, 40)),
+                       max_K = 50, max_r2 = max_r2, max_cost = Inf)
+  expect_equal(res67[-1], unique(rbind(res6, res7)[-1]))
 })
 
 ################################################################################

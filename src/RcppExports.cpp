@@ -250,19 +250,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // lassosum2
-List lassosum2(Environment corr, const arma::vec& beta_hat, double lambda, double delta, double dfmax, int maxiter, double tol);
-RcppExport SEXP _bigsnpr_lassosum2(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP lambdaSEXP, SEXP deltaSEXP, SEXP dfmaxSEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
+List lassosum2(Environment corr, const NumericVector& beta_hat, const NumericVector& lambda, const NumericVector& delta_plus_one, double dfmax, int maxiter, double tol);
+RcppExport SEXP _bigsnpr_lassosum2(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP lambdaSEXP, SEXP delta_plus_oneSEXP, SEXP dfmaxSEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type beta_hat(beta_hatSEXP);
-    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type delta_plus_one(delta_plus_oneSEXP);
     Rcpp::traits::input_parameter< double >::type dfmax(dfmaxSEXP);
     Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(lassosum2(corr, beta_hat, lambda, delta, dfmax, maxiter, tol));
+    rcpp_result_gen = Rcpp::wrap(lassosum2(corr, beta_hat, lambda, delta_plus_one, dfmax, maxiter, tol));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -306,7 +306,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs_one_sampling
-arma::mat ldpred2_gibbs_one_sampling(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double h2, double p, bool sparse, int burn_in, int num_iter);
+NumericMatrix ldpred2_gibbs_one_sampling(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double h2, double p, bool sparse, int burn_in, int num_iter);
 RcppExport SEXP _bigsnpr_ldpred2_gibbs_one_sampling(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

@@ -4,15 +4,15 @@
 #'
 #' @inheritParams snp_ldpred2_grid
 #' @param delta Vector of shrinkage parameters to try (L2-regularization).
-#'   Default is `c(0.001, 0.005, 0.02, 0.1, 0.6, 3)`.
+#'   Default is `c(0.001, 0.01, 0.1, 1)`.
 #' @param nlambda Number of different lambdas to try (L1-regularization).
-#'   Default is `20`.
+#'   Default is `30`.
 #' @param lambda.min.ratio Ratio between last and first lambdas to try.
 #'   Default is `0.01`.
 #' @param dfmax Maximum number of non-zero effects in the model.
 #'   Default is `200e3`.
 #' @param maxiter Maximum number of iterations before convergence.
-#'   Default is `500`.
+#'   Default is `1000`.
 #' @param tol Tolerance parameter for assessing convergence.
 #'   Default is `1e-5`.
 #'
@@ -23,9 +23,9 @@
 #' @export
 #'
 snp_lassosum2 <- function(corr, df_beta,
-                          delta = signif(seq_log(1e-3, 3, 6), 1),
-                          nlambda = 20, lambda.min.ratio = 0.01,
-                          dfmax = 200e3, maxiter = 500, tol = 1e-5,
+                          delta = c(0.001, 0.01, 0.1, 1),
+                          nlambda = 30, lambda.min.ratio = 0.01,
+                          dfmax = 200e3, maxiter = 1000, tol = 1e-5,
                           ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
@@ -38,7 +38,9 @@ snp_lassosum2 <- function(corr, df_beta,
   scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta / scale
 
-  lambda0 <- max(abs(beta_hat))
+  pf <- sqrt(max(N) / N)
+
+  lambda0 <- max(abs(beta_hat / pf))
   seq_lam <- seq_log(lambda0, lambda.min.ratio * lambda0, nlambda + 1)[-1]
   grid_param <- expand.grid(lambda = seq_lam, delta = delta)
 
@@ -52,13 +54,13 @@ snp_lassosum2 <- function(corr, df_beta,
     time <- system.time(
       # lassosum2 model
       res <- lassosum2(
-        corr     = corr,
-        beta_hat = beta_hat,
-        lambda   = grid_param$lambda[ic],
-        delta    = grid_param$delta[ic],
-        dfmax    = dfmax,
-        maxiter  = maxiter,
-        tol      = tol
+        corr           = corr,
+        beta_hat       = beta_hat,
+        lambda         = pf * grid_param$lambda[ic],
+        delta_plus_one = pf * grid_param$delta[ic] + 1,
+        dfmax          = dfmax,
+        maxiter        = maxiter,
+        tol            = tol
       )
     )
 
