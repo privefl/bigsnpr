@@ -81,7 +81,7 @@ snp_ldsc_rg <- function(ld_score, ld_size, z1, z2, sample_size_1, sample_size_2,
   }
 
   result <- snp_ldsc(ld_score, ld_size, z1*z2,
-                     sample_size = sqrt(sample_size1*sample_size_2),
+                     sample_size = sqrt(sample_size_1*sample_size_2),
                      blocks = blocks,
                      intercept= intercept,
                      chi2_thr2 = chi2_thr2,
