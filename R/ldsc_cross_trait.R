@@ -42,7 +42,7 @@ snp_ldsc_rg <- function(ld_score, ld_size, z1, z2, sample_size_1, sample_size_2,
                      chi2_thr2 = Inf,
                      ncores = 1) {
 
-  assert_length(z1, z2)
+  assert_lengths(z1, z2)
 
   assert_lengths(z1, ld_score)
   assert_one_int(ld_size)
