@@ -14,7 +14,10 @@ snp_ldsc(
   intercept = NULL,
   chi2_thr1 = 30,
   chi2_thr2 = Inf,
-  ncores = 1
+  ncores = 1,
+  step1_index = NULL,
+  allow_neg = FALSE,
+  wt_fun = WEIGHTS_h2
 )
 
 snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ...)

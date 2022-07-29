@@ -5,6 +5,15 @@ WEIGHTS <- function(pred, w_ld) {
   1 / (pred^2 * w_ld)
 }
 
+WEIGHTS_h2 <- function(pred, w_ld){
+ 1 / ((2*pred^2) *w_ld)
+}
+
+WEIGHTS_rg <- function(pred, w_ld, w0){
+  od_w <- w0 + pred^2
+  1 / (od_w*w_ld)
+}
+
 crossprod2 <- function(x, y) drop(base::crossprod(x, y))
 
 # equivalent to stats::lm.wfit(cbind(1, x), y, w)
@@ -68,10 +77,16 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
                      intercept = NULL,
                      chi2_thr1 = 30,
                      chi2_thr2 = Inf,
-                     ncores = 1) {
+                     ncores = 1,
+                     step1_index = NULL,
+                     allow_neg = FALSE,
+                     wt_fun = WEIGHTS_h2) {
 
-  chi2 <- chi2 + 1e-8
-  assert_pos(chi2, strict = TRUE)
+
+  if(!allow_neg){
+    chi2 <- chi2 + 1e-8
+    assert_pos(chi2, strict = TRUE)
+  }
   assert_lengths(chi2, ld_score)
   assert_one_int(ld_size)
 
@@ -87,19 +102,22 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
     #### step 1 ####
 
     step1_int <- if (is.null(intercept)) {
-
-      ind_sub1 <- which(chi2 < chi2_thr1)
+      if(!is.null(step1_index)){
+          ind_sub1 <- step1_index
+      }else{
+          ind_sub1 <- which(chi2 < chi2_thr1)
+      }
       w_ld <- pmax(ld_score[ind_sub1], 1)
       x1 <- (ld_score / ld_size * sample_size)[ind_sub1]
       y1 <- chi2[ind_sub1]
 
       pred0 <- y1
       for (i in 1:100) {
-        pred <- wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$pred
+        pred <- wlm(x1, y1, w = wt_fun(pred0, w_ld))$pred
         if (max(abs(pred - pred0)) < 1e-6) break
         pred0 <- pred
       }
-      wlm(x1, y1, w = WEIGHTS(pred0, w_ld))$intercept
+      wlm(x1, y1, w = wt_fun(pred0, w_ld))$intercept
 
     } else intercept
 
@@ -113,11 +131,11 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 
     pred0 <- y
     for (i in 1:100) {
-      pred <- step1_int + wlm_no_int(x, yp, w = WEIGHTS(pred0, w_ld))$pred
+      pred <- step1_int + wlm_no_int(x, yp, w = wt_fun(pred0, w_ld))$pred
       if (max(abs(pred - pred0)) < 1e-6) break
       pred0 <- pred
     }
-    step2_h2 <- wlm_no_int(x, yp, w = WEIGHTS(pred0, w_ld))$slope
+    step2_h2 <- wlm_no_int(x, yp, w = wt_fun(pred0, w_ld))$slope
 
     c(int = step1_int, h2 = step2_h2)
 
@@ -138,7 +156,8 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
     delete_values <- foreach(ind_rm = c(list(NULL), ind_blocks), .combine = "cbind") %dopar% {
       keep <- which(!seq_along(ld_score) %in% ind_rm)
       snp_ldsc(ld_score[keep], ld_size, chi2[keep], sample_size[keep],
-               NULL, intercept, chi2_thr1, chi2_thr2)
+               NULL, intercept, chi2_thr1, chi2_thr2,
+               1, step1_index, allow_neg , wt_fun)
     }
     estim <- delete_values[, 1]
 
