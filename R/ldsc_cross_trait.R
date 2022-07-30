@@ -40,7 +40,7 @@ snp_ldsc_rg <- function(ld_score, ld_size, z1, z2, sample_size_1, sample_size_2,
                      intercept = NULL,
                      step1_chisq_max = 30,
                      chi2_thr2 = Inf,
-                     ncores = 1) {
+                     ncores = 1, h2_se = FALSE) {
 
   assert_lengths(z1, z2)
 
@@ -58,27 +58,34 @@ snp_ldsc_rg <- function(ld_score, ld_size, z1, z2, sample_size_1, sample_size_2,
   } else {
     assert_lengths(sample_size_2, z2)
   }
+
+
   # First compute heritabilities
+  if(h2_se){
+    if(is.null(blocks)) stop("If h2_se is desired, please provide blocks.\n")
+    h2_blocks <- blocks
+  }else{
+    h2_blocks <- NULL
+  }
+
   h2_1 <- snp_ldsc(ld_score, ld_size, z1^2,
                    sample_size_1,
-                   blocks = NULL,
+                   blocks = h2_blocks,
                    chi2_thr1 = step1_chisq_max,
                    chi2_thr2 = chi2_thr2)
-  pred_h2_1 <- h2_1[1] + h2_1[2]*sample_size_1*ld_score/M
+  pred_h2_1 <- h2_1[["int"]] + h2_1[["h2"]]*sample_size_1*ld_score/ld_size
+
 
   h2_2 <- snp_ldsc(ld_score, ld_size, z2^2,
                    sample_size_2,
-                   blocks = NULL,
+                   blocks = h2_blocks,
                    chi2_thr1 = step1_chisq_max,
                    chi2_thr2 = chi2_thr2)
-  pred_h2_2 <- h2_2[1] + h2_2[2]*sample_size_2*ld_score/M
+  pred_h2_2 <- h2_2[["int"]] + h2_2[["h2"]]*sample_size_2*ld_score/ld_size
+
 
 
   step1_index <- which(z1^2 < step1_chisq_max & z2^2 < step1_chisq_max)
-
-  wt_fun <- function(pred, w_ld){
-    WEIGHTS_rg(pred, w_ld, w0 = pred_h2_1*pred_h2_2)
-  }
 
   result <- snp_ldsc(ld_score, ld_size, z1*z2,
                      sample_size = sqrt(sample_size_1*sample_size_2),
@@ -86,9 +93,29 @@ snp_ldsc_rg <- function(ld_score, ld_size, z1, z2, sample_size_1, sample_size_2,
                      intercept= intercept,
                      chi2_thr2 = chi2_thr2,
                      step1_index = step1_index,
-                     wt_fun = wt_fun,
-                     allow_neg = TRUE)
+                     w0 = pred_h2_1*pred_h2_2,
+                     type = "rg")
+  gencorr <- result[["h2"]]/sqrt(h2_1[["h2"]]*h2_2[["h2"]])
 
-  return(result)
+  res <- c(int = result[["int"]],
+          gencov = result[["h2"]],
+          t1_int = h2_1[["int"]],
+          t2_int = h2_2[["int"]],
+          h2_1 = h2_1[["h2"]],
+          h2_2 = h2_2[["h2"]],
+          gencorr = gencorr)
+  if(!is.null(blocks)){
+    res <- c(res, int_s = result[["int_se"]],
+             gencov_se = result[["h2_se"]])
+  }
+  if(h2_se){
+    res <- c(res,
+             t1_int_se = h2_1[["int_se"]],
+             t2_int_se  = h2_2[["int_se"]],
+             h2_1_se = h2_1[["h2_se"]],
+             h2_2_se = h2_2[["h2_se"]])
+  }
+
+  return(res)
 }
 

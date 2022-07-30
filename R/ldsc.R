@@ -59,6 +59,7 @@ wlm_no_int <- function(x, y, w) {
 #'   Default is `NULL` in `snp_ldsc()` (the intercept is estimated)
 #'   and is `1` in `snp_ldsc2()` (the intercept is fixed to 1).
 #'   This is equivalent to parameter `--intercept-h2`.
+#' @param type,w0,step1_index parameters used when called from snp_ldsc_rg
 #' @inheritParams bigsnpr-package
 #'
 #' @return Vector of 4 values (or only the first 2 if `blocks = NULL`):
@@ -79,13 +80,15 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
                      chi2_thr2 = Inf,
                      ncores = 1,
                      step1_index = NULL,
-                     allow_neg = FALSE,
-                     wt_fun = WEIGHTS_h2) {
+                     type = c("h2", "rg"),
+                     w0= NULL){
 
-
-  if(!allow_neg){
+  type <- match.arg(type)
+  if(type == "h2"){
     chi2 <- chi2 + 1e-8
     assert_pos(chi2, strict = TRUE)
+  }else if(type == "rg"){
+    assert_lengths(w0, chi2)
   }
   assert_lengths(chi2, ld_score)
   assert_one_int(ld_size)
@@ -111,7 +114,13 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
       x1 <- (ld_score / ld_size * sample_size)[ind_sub1]
       y1 <- chi2[ind_sub1]
 
-      pred0 <- y1
+      if(type == "h2"){
+        pred0 <- y1
+        wt_fun <- WEIGHTS_h2
+      }else if(type == "rg"){
+        pred0 <- 1/w0[ind_sub1]
+        wt_fun <- function(pred, w_ld){ WEIGHTS_rg(pred, w_ld, w0 = w0[ind_sub1])}
+      }
       for (i in 1:100) {
         pred <- wlm(x1, y1, w = wt_fun(pred0, w_ld))$pred
         if (max(abs(pred - pred0)) < 1e-6) break
@@ -129,7 +138,13 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
     y <- chi2[ind_sub2]
     yp <- y - step1_int
 
-    pred0 <- y
+    if(type == "h2"){
+      pred0 <- y
+      wt_fun <- WEIGHTS_h2
+    }else if(type == "rg"){
+      pred0 <- 1/w0[ind_sub2]
+      wt_fun <- function(pred, w_ld){ WEIGHTS_rg(pred, w_ld, w0 = w0[ind_sub2])}
+    }
     for (i in 1:100) {
       pred <- step1_int + wlm_no_int(x, yp, w = wt_fun(pred0, w_ld))$pred
       if (max(abs(pred - pred0)) < 1e-6) break
@@ -153,11 +168,13 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 
     bigparallelr::register_parallel(ncores)
 
+    s1i <- NULL
     delete_values <- foreach(ind_rm = c(list(NULL), ind_blocks), .combine = "cbind") %dopar% {
       keep <- which(!seq_along(ld_score) %in% ind_rm)
+      if(!is.null(step1_index)) s1i <- which(keep %in% step1_index)
       snp_ldsc(ld_score[keep], ld_size, chi2[keep], sample_size[keep],
                NULL, intercept, chi2_thr1, chi2_thr2,
-               1, step1_index, allow_neg , wt_fun)
+               1, s1i, type, w0[keep])
     }
     estim <- delete_values[, 1]
 
