@@ -22,6 +22,8 @@
 #' @param intercept You can constrain the intercept to some value (e.g. 0).
 #'   Default is `NULL` (the intercept is estimated).
 #'   Use a value of 0 if you are sure there is no overlap between GWAS samples.
+#' @param intercept_h2_1 Intercept for heritability of trait 1 (default is NULL so the intercept is estimated).
+#' @param intercept_h2_2 Intercept for heritability of trait 2 (default is NULL so the intercept is estimated).
 #' @inheritParams bigsnpr-package
 #'
 #' @return Vector of 4 values (or only the first 2 if `blocks = NULL`):
@@ -38,6 +40,7 @@
 snp_ldsc_rg <- function(ld_score, ld_size, z1, z2, sample_size_1, sample_size_2,
                      blocks = 200,
                      intercept = NULL,
+                     intercept_h2_1 = NULL, intercept_h2_2 = NULL,
                      step1_chisq_max = 30,
                      chi2_thr2 = Inf,
                      ncores = 1, h2_se = FALSE) {
@@ -95,7 +98,13 @@ snp_ldsc_rg <- function(ld_score, ld_size, z1, z2, sample_size_1, sample_size_2,
                      step1_index = step1_index,
                      w0 = pred_h2_1*pred_h2_2,
                      type = "rg")
-  gencorr <- result[["h2"]]/sqrt(h2_1[["h2"]]*h2_2[["h2"]])
+
+  if(h2_1[["h2"]] < 0 | h2_2[["h2"]] < 0){
+    warning("Negative heritability estimates, genetic correlation will be missing.")
+    gencorr <- NA
+  }else{
+    gencorr <- result[["h2"]]/sqrt(h2_1[["h2"]]*h2_2[["h2"]])
+  }
 
   res <- c(int = result[["int"]],
           gencov = result[["h2"]],
