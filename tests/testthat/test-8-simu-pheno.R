@@ -48,15 +48,29 @@ test_that("alpha in snp_simuPheno() works", {
   bigsnp <- snp_attachExtdata()
   G <- bigsnp$genotypes
 
-  simu <- snp_simuPheno(G, 0.2, 500, alpha = -2)
-  sd <- sqrt(big_colstats(G, ind.col = simu$set)$var)
-  cor1 <- pcor(simu$allelic_effects^2, sd, z = NULL)
-  expect_true(all(cor1 < 0))
+  FUN <- function(x, log_var, beta2) {
+    S <- 1 + x[[1]]; sigma2 <- x[[2]]
+    S * sum(log_var) + length(log_var) * log(sigma2) + sum(beta2 / exp(S * log_var)) / sigma2
+  }
 
-  simu2 <- snp_simuPheno(G, 0.2, 500, alpha = 0)
-  sd2 <- sqrt(big_colstats(G, ind.col = simu2$set)$var)
-  cor2 <- pcor(simu2$allelic_effects^2, sd2, z = NULL, alpha = 1e-5)
-  expect_true(cor2[2] < 0 && cor2[3] > 0)
+  DER <- function(x, log_var, beta2) {
+    S <- 1 + x[[1]]; sigma2 <- x[[2]]
+    res1 <- sum(log_var) - sum(log_var * beta2 / exp(S * log_var)) / sigma2
+    res2 <- length(log_var) / sigma2 - sum(beta2 / exp(S * log_var)) / sigma2^2
+    c(res1, res2)
+  }
+
+  SEQ <- seq(-1.5, 0.5, by = 0.05)
+  res <- sapply(SEQ, function(alpha) {
+    simu <- snp_simuPheno(G, 0.2, 500, alpha = alpha)
+    log_var <- log(big_colstats(G, ind.col = simu$set)$var)
+    beta2 <- simu$effects^2
+    optim(par = c(0.2 / 500, 0.5), fn = FUN, gr = DER, method = "L-BFGS-B",
+          lower = c(-2, 0.2 / 5000), upper = c(1, 0.2 / 50),
+          log_var = log_var, beta2 = beta2)$par[1]
+  })
+  # plot(res, SEQ); abline(0, 1, col = "red", lwd = 2)
+  expect_equal(res, SEQ, tolerance = 0.5)
 })
 
 ################################################################################

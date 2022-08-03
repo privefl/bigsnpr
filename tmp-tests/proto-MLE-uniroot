@@ -1,0 +1,122 @@
+
+// Implementing the maximum likelihood estimation used in SBayesS
+// and described in https://doi.org/10.1038/s41467-021-21446-3 (Supp Note 4)
+
+double mle_zero(double s,
+                const NumericVector& curr_beta,
+                const NumericVector& log_var) {
+
+  int m = curr_beta.size();
+  int nb_causal = 0;
+  double sum_a = 0, sum_b = 0, sum_ab = 0;
+  for (int j = 0; j < m; j++) {
+    double beta_j = curr_beta[j];
+    if (beta_j != 0) {
+      double a = log_var[j];
+      double b = beta_j * beta_j / ::exp(s * a);
+      sum_a  += a;
+      sum_b  += b;
+      sum_ab += a * b;
+      nb_causal++;
+    }
+  }
+
+  return sum_a * sum_b / nb_causal - sum_ab;
+}
+
+double mle_eq2(double s,
+               const NumericVector& curr_beta,
+               const NumericVector& log_var) {
+
+  int m = curr_beta.size();
+  int nb_causal = 0;
+  double sum_b = 0;
+  for (int j = 0; j < m; j++) {
+    double beta_j = curr_beta[j];
+    if (beta_j != 0) {
+      sum_b += beta_j * beta_j / ::exp(s * log_var[j]);
+      nb_causal++;
+    }
+  }
+
+  return sum_b / nb_causal;
+}
+
+/******************************************************************************/
+
+// The following code is inspired from the C code of uniroot() [R source]
+// https://github.com/wch/r-source/blob/master/src/library/stats/src/zeroin.c
+
+// [[Rcpp::export]]
+double uniroot_MLE(const NumericVector& curr_beta,  // TODO: use a sparse vector
+                   const NumericVector& log_var,
+                   double ax = -0.5,
+                   double bx = 1.5,
+                   double tol = 1e-5,
+                   int maxit = 20) {
+
+  double a = ax, b = bx;  // start with search limits
+
+  double fa = mle_zero(a, curr_beta, log_var);  if (fa == 0) return a;
+  double fb = mle_zero(b, curr_beta, log_var);  if (fb == 0) return b;
+
+  double c = a, fc = fa;
+
+  while (maxit--) {
+
+    double prev_step = b - a;
+    double p, q;  // the new step is p/q, but the division is delayed
+
+    if (fabs(fc) < fabs(fb)) {
+      // swap data for b to be the best approximation
+      a = b;    b = c;    c = a;
+      fa = fb;  fb = fc;  fc = fa;
+    }
+
+    double actual_tol = 2 * EPSILON * fabs(b) + tol / 2;
+    double new_step = (c - b) / 2;
+
+    if (fabs(new_step) <= actual_tol || fb == 0) return b;
+
+    // decide whether the interpolation can be tried
+    // (when prev_step was large enough and in the right direction)
+    if (fabs(prev_step) >= actual_tol && fabs(fa) > fabs(fb)) {
+
+      double cb = c - b, t1, t2;
+      if (a == c) {
+        // if there are two distinct points only,
+        // only linear interpolation can be applied
+        t1 = fb / fa;
+        p = cb * t1;
+        q = 1 - t1;
+      } else {
+        // inverse quadratic interpolation
+        q  = fa / fc;  t1 = fb / fc;  t2 = fb / fa;
+        p = t2 * (cb * q * (q - t1) - (b - a) * (t1 - 1));
+        q = (q - 1) * (t1 - 1) * (t2 - 1);
+      }
+
+      // make sure p is positive
+      if (p < 0) { p = -p; } else { q = -q; }
+
+      // if b + p/q falls in [b,c] and is not too large, it is accepted
+      // if p/q is too large then the bisection procedure can reduce [b,c] range
+      // to more extent
+      if (p < (0.75 * cb * q - fabs(actual_tol * q) / 2)
+            && p < fabs(prev_step * q / 2))
+        new_step = p / q;
+    }
+
+    // make sure the step is not less than the tolerance
+    if (fabs(new_step) < actual_tol)
+      new_step = (new_step > 0) ? actual_tol : -actual_tol;
+
+    a = b; fa = fb;	 // save the previous approximation
+    b += new_step;  fb = mle_zero(b, curr_beta, log_var);  // step to new approx
+    // make sure 'f' has opposite signs at 'b' and 'c'
+    if (fb * fc > 0) { c = a;  fc = fa; }
+  }
+
+  // when convergence has not been reached yet, return current best solution
+  return (fabs(fb) < fabs(fa)) ? b : a;
+}
