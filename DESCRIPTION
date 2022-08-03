@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.11.0
-Date: 2022-07-11
+Version: 1.11.2
+Date: 2022-08-03
 Authors@R: c(
     person("Florian", "Privé", email = "florian.prive.21@gmail.com", role = c("aut", "cre")),
     person("Michael", "Blum", role = "ths"),

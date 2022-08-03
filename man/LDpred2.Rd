@@ -81,7 +81,8 @@ Disabled when parallelism is used.}
 
 \item{report_step}{Step to report sampling betas (after burn-in and before
 unscaling). Nothing is reported by default. If using \code{num_iter = 200} and
-\code{report_step = 20}, then 10 vectors of betas are reported.}
+\code{report_step = 20}, then 10 vectors of sampling betas are reported
+(as a sparse matrix with 10 columns).}
 
 \item{allow_jump_sign}{Whether to allow for effects sizes to change sign in
 consecutive iterations? Default is \code{TRUE} (normal sampling). You can use
@@ -92,7 +93,7 @@ for accelerating convergence of chains with a large initial value for p.}
 
 \item{shrink_corr}{Shrinkage multiplicative coefficient to apply to off-diagonal
 elements of the correlation matrix. Default is \code{1} (unchanged).
-You can use e.g. \code{0.9}.}
+You can use e.g. \code{0.95} to add a bit of regularization.}
 }
 \value{
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
@@ -109,7 +110,7 @@ corresponds to one iteration instead (after burn-in).
 \item \verb{$corr_est}, the "imputed" correlations between variants and phenotypes,
 which can be used for post-QCing variants by comparing those to
 \code{with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))}
-\item \verb{$sample_beta}: Matrix of sampling betas (see parameter \code{report_step}),
+\item \verb{$sample_beta}: Sparse matrix of sampling betas (see parameter \code{report_step}),
 \emph{not} on the allele scale, for which you need to multiply by
 \code{with(df_beta, sqrt(n_eff * beta_se^2 + beta^2))}
 \item \verb{$postp_est}: vector of posterior probabilities of being causal

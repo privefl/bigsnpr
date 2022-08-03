@@ -112,6 +112,7 @@ test_that("LDpred2 works", {
                                 burn_in = 200, num_iter = 200, report_step = 10)
   bsamp <- beta_auto[[1]]$sample_beta
   expect_equal(dim(bsamp), c(ncol(corr), 20))
+  expect_s4_class(bsamp, "dgCMatrix")
   h2_est <- apply(bsamp, 2, function(x) crossprod(x, bigsparser::sp_prodVec(corr, x)))
   expect_equal(h2_est, beta_auto[[1]]$path_h2_est[seq(210, 400, by = 10)])
 

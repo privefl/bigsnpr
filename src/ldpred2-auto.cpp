@@ -1,5 +1,6 @@
 /******************************************************************************/
 
+#include <bigstatsr/arma-strict-R-headers.h>
 #include <bigsparser/SFBM.h>
 #include <bigstatsr/utils.h>
 
@@ -44,7 +45,7 @@ List ldpred2_gibbs_auto(Environment corr,
   NumericVector dotprods  = sfbm->prod(curr_beta);
   NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m);
 
-  NumericMatrix sample_beta(m, num_iter / report_step);
+  arma::sp_mat sample_beta(m, num_iter / report_step);
   int ind_report = 0, next_k_reported = burn_in - 1 + report_step;
 
   int num_iter_tot = burn_in + num_iter;
@@ -118,7 +119,11 @@ List ldpred2_gibbs_auto(Environment corr,
       avg_p  += p;
       avg_h2 += h2;
       if (k == next_k_reported) {
-        sample_beta(_, ind_report++) = curr_beta;
+        for (int i = 0; i < m; i++) {
+          if (curr_beta[i] != 0)
+            sample_beta(i, ind_report) = curr_beta[i];
+        }
+        ind_report++;
         next_k_reported += report_step;
       }
     }

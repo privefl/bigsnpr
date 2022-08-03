@@ -1,3 +1,7 @@
+## bigsnpr 1.11.2
+
+- Now use a sparse format for sampling betas returned in LDpred2-auto, instead of a dense matrix that could require quite some memory to store.
+
 ## bigsnpr 1.11.0
 
 - Add two new parameters to `snp_simuPheno()`: `alpha` and `prob`.

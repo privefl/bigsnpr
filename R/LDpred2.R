@@ -148,7 +148,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   Disabled when parallelism is used.
 #' @param report_step Step to report sampling betas (after burn-in and before
 #'   unscaling). Nothing is reported by default. If using `num_iter = 200` and
-#'   `report_step = 20`, then 10 vectors of betas are reported.
+#'   `report_step = 20`, then 10 vectors of sampling betas are reported
+#'   (as a sparse matrix with 10 columns).
 #' @param allow_jump_sign Whether to allow for effects sizes to change sign in
 #'   consecutive iterations? Default is `TRUE` (normal sampling). You can use
 #'   `FALSE` to force effects to go through 0 first before changing sign. Setting
@@ -157,7 +158,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   for accelerating convergence of chains with a large initial value for p.
 #' @param shrink_corr Shrinkage multiplicative coefficient to apply to off-diagonal
 #'   elements of the correlation matrix. Default is `1` (unchanged).
-#'   You can use e.g. `0.9`.
+#'   You can use e.g. `0.95` to add a bit of regularization.
 #'
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes (on the allele scale)
@@ -165,7 +166,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   - `$corr_est`, the "imputed" correlations between variants and phenotypes,
 #'     which can be used for post-QCing variants by comparing those to
 #'     `with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))`
-#'   - `$sample_beta`: Matrix of sampling betas (see parameter `report_step`),
+#'   - `$sample_beta`: Sparse matrix of sampling betas (see parameter `report_step`),
 #'     *not* on the allele scale, for which you need to multiply by
 #'     `with(df_beta, sqrt(n_eff * beta_se^2 + beta^2))`
 #'   - `$postp_est`: vector of posterior probabilities of being causal
