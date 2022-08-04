@@ -266,6 +266,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ld_scores_sfbm
+NumericVector ld_scores_sfbm(Rcpp::Environment X, bool compact);
+RcppExport SEXP _bigsnpr_ld_scores_sfbm(SEXP XSEXP, SEXP compactSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Environment >::type X(XSEXP);
+    Rcpp::traits::input_parameter< bool >::type compact(compactSEXP);
+    rcpp_result_gen = Rcpp::wrap(ld_scores_sfbm(X, compact));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ld_scores
 NumericVector ld_scores(Environment obj, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& pos, int ncores);
 RcppExport SEXP _bigsnpr_ld_scores(SEXP objSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP posSEXP, SEXP ncoresSEXP) {
@@ -282,9 +294,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MLE_alpha
+arma::vec& MLE_alpha(arma::vec& par, int nb_causal, const NumericVector& log_var, const NumericVector& curr_beta, bool verbose);
+RcppExport SEXP _bigsnpr_MLE_alpha(SEXP parSEXP, SEXP nb_causalSEXP, SEXP log_varSEXP, SEXP curr_betaSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< int >::type nb_causal(nb_causalSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type log_var(log_varSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type curr_beta(curr_betaSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(MLE_alpha(par, nb_causal, log_var, curr_beta, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ldpred2_gibbs_auto
-List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double p_init, double h2_init, int burn_in, int num_iter, int report_step, bool allow_jump_sign, double shrink_corr, bool verbose);
-RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP report_stepSEXP, SEXP allow_jump_signSEXP, SEXP shrink_corrSEXP, SEXP verboseSEXP) {
+List ldpred2_gibbs_auto(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, const NumericVector& log_var, double p_init, double h2_init, int burn_in, int num_iter, int report_step, bool no_jump_sign, double shrink_corr, double mean_ld, bool verbose);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs_auto(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP log_varSEXP, SEXP p_initSEXP, SEXP h2_initSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP, SEXP report_stepSEXP, SEXP no_jump_signSEXP, SEXP shrink_corrSEXP, SEXP mean_ldSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -293,15 +320,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type order(orderSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type log_var(log_varSEXP);
     Rcpp::traits::input_parameter< double >::type p_init(p_initSEXP);
     Rcpp::traits::input_parameter< double >::type h2_init(h2_initSEXP);
     Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
     Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
     Rcpp::traits::input_parameter< int >::type report_step(report_stepSEXP);
-    Rcpp::traits::input_parameter< bool >::type allow_jump_sign(allow_jump_signSEXP);
+    Rcpp::traits::input_parameter< bool >::type no_jump_sign(no_jump_signSEXP);
     Rcpp::traits::input_parameter< double >::type shrink_corr(shrink_corrSEXP);
+    Rcpp::traits::input_parameter< double >::type mean_ld(mean_ldSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_auto(corr, beta_hat, beta_init, order, n_vec, p_init, h2_init, burn_in, num_iter, report_step, allow_jump_sign, shrink_corr, verbose));
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_auto(corr, beta_hat, beta_init, order, n_vec, log_var, p_init, h2_init, burn_in, num_iter, report_step, no_jump_sign, shrink_corr, mean_ld, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -543,8 +572,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 8},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
     {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 7},
+    {"_bigsnpr_ld_scores_sfbm", (DL_FUNC) &_bigsnpr_ld_scores_sfbm, 2},
     {"_bigsnpr_ld_scores", (DL_FUNC) &_bigsnpr_ld_scores, 6},
-    {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 13},
+    {"_bigsnpr_MLE_alpha", (DL_FUNC) &_bigsnpr_MLE_alpha, 5},
+    {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 15},
     {"_bigsnpr_ldpred2_gibbs_one_sampling", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one_sampling, 10},
     {"_bigsnpr_ldpred2_gibbs_one", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one, 10},
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},

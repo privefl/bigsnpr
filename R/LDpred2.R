@@ -201,8 +201,10 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   assert_pos(h2_init, strict = TRUE)
 
   N <- df_beta$n_eff
-  scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
-  beta_hat <- df_beta$beta / scale
+  sd <- 1 / sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
+  beta_hat <- df_beta$beta * sd
+
+  mean_ld <- mean(ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]])))
 
   ord <- order(-vec_p_init)  # large p first
 
@@ -212,21 +214,30 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   res_list <- foreach(p_init = vec_p_init[ord], .export = FUNs) %dorng% {
 
     ldpred_auto <- ldpred2_gibbs_auto(
-      corr      = corr,
-      beta_hat  = beta_hat,
-      beta_init = rep(0, length(beta_hat)),
-      order     = seq_along(beta_hat) - 1L,
-      n_vec     = N,
-      p_init    = p_init,
-      h2_init   = h2_init,
-      burn_in   = burn_in,
-      num_iter  = num_iter,
-      verbose   = verbose && (ncores == 1),
-      report_step = report_step,
-      allow_jump_sign = allow_jump_sign,
-      shrink_corr = shrink_corr
+      corr         = corr,
+      beta_hat     = beta_hat,
+      beta_init    = rep(0, length(beta_hat)),
+      order        = seq_along(beta_hat) - 1L,
+      n_vec        = N,
+      log_var      = 2 * log(sd),
+      p_init       = p_init,
+      h2_init      = h2_init,
+      burn_in      = burn_in,
+      num_iter     = num_iter,
+      verbose      = verbose && (ncores == 1),
+      report_step  = report_step,
+      no_jump_sign = !allow_jump_sign,
+      shrink_corr  = shrink_corr,
+      mean_ld      = mean_ld
     )
-    ldpred_auto$beta_est <- ldpred_auto$beta_est * scale
+    ldpred_auto$beta_est <- ldpred_auto$beta_est / sd
+
+    ldpred_auto$h2_est    <- mean(tail(ldpred_auto$path_h2_est,    num_iter))
+    ldpred_auto$p_est     <- mean(tail(ldpred_auto$path_p_est,     num_iter))
+    ldpred_auto$alpha_est <- mean(tail(ldpred_auto$path_alpha_est, num_iter))
+
+    ldpred_auto$h2_init <- h2_init
+    ldpred_auto$p_init  <- p_init
 
     if (sparse) {
       beta_gibbs <- ldpred2_gibbs_one(
@@ -241,7 +252,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
         burn_in   = 50,
         num_iter  = 100
       )
-      ldpred_auto$beta_est_sparse <- beta_gibbs * scale
+      ldpred_auto$beta_est_sparse <- beta_gibbs / sd
     }
 
     ldpred_auto

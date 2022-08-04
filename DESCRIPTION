@@ -2,7 +2,7 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.11.3
+Version: 1.11.4
 Date: 2022-08-04
 Authors@R: c(
     person("Florian", "Privé", email = "florian.prive.21@gmail.com", role = c("aut", "cre")),
@@ -43,7 +43,9 @@ LinkingTo:
     bigstatsr,
     Rcpp,
     RcppArmadillo (>= 0.9.600),
-    rmio
+    rmio,
+    roptim (>= 0.1.6)
+Remotes: privefl/roptim
 Suggests:
     bindata,
     covr,

@@ -52,3 +52,8 @@ microbenchmark::microbenchmark(
 #    C  902.8  928.05  980.327  943.30  987.50 1378.7   100
 ### caching does not really help because the other sums take much more time
 ### to compute (because of the exp)
+
+
+Rcpp::sourceCpp('src/ldpred2-auto.cpp')
+x <- c(0, 0.2 / 500); MLE_alpha(x, 500, log_var, simu$effects, TRUE)
+x

@@ -40,6 +40,8 @@ test_that("LDpred2 works", {
   # LD score regression
   (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
                                   sample_size = n_eff, blocks = NULL)))
+  (ldsc2 <- snp_ldsc2(corr, df_beta, intercept = NULL))
+  expect_equal(ldsc2, ldsc)
 
   # LDpred2-inf
   beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = ldsc[["h2"]])
@@ -78,8 +80,9 @@ test_that("LDpred2 works", {
   expect_gt(mean(mod$beta_est_sparse == 0), 0.5)
   expect_equal(mod$h2_init, ldsc[["h2"]])
   expect_equal(mod$p_init, 0.1)
-  expect_equal(mod$h2_est, mean(tail(mod$path_h2_est, 200)))
-  expect_equal(mod$p_est,  mean(tail(mod$path_p_est,  200)))
+  expect_equal(mod$h2_est,     mean(tail(mod$path_h2_est,    200)))
+  expect_equal(mod$p_est,      mean(tail(mod$path_p_est,     200)))
+  expect_equal(mod$alpha_est,  mean(tail(mod$path_alpha_est, 200)))
   expect_length(mod$postp_est, length(mod$beta_est))
   expect_null(dim(mod$postp_est))
   expect_equal(mean(mod$postp_est), mod$p_est, tolerance = 0.01)
