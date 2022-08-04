@@ -60,17 +60,19 @@ test_that("alpha in snp_simuPheno() works", {
     c(res1, res2)
   }
 
-  SEQ <- seq(-1.5, 0.5, by = 0.05)
+  SEQ <- seq(-1.8, 0.8, by = 0.05)
   res <- sapply(SEQ, function(alpha) {
     simu <- snp_simuPheno(G, 0.2, 500, alpha = alpha)
     log_var <- log(big_colstats(G, ind.col = simu$set)$var)
     beta2 <- simu$effects^2
     optim(par = c(0.2 / 500, 0.5), fn = FUN, gr = DER, method = "L-BFGS-B",
-          lower = c(-2, 0.2 / 5000), upper = c(1, 0.2 / 50),
+          lower = c(-1.5, 0.2 / 5000), upper = c(0.5, 0.2 / 50),
           log_var = log_var, beta2 = beta2)$par[1]
   })
   # plot(res, SEQ); abline(0, 1, col = "red", lwd = 2)
   expect_equal(res, SEQ, tolerance = 0.5)
+  expect_true(all(res <= 0.5))
+  expect_true(all(res >= -1.5))
 })
 
 ################################################################################
