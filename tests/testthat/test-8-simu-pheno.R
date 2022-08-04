@@ -65,7 +65,7 @@ test_that("alpha in snp_simuPheno() works", {
     simu <- snp_simuPheno(G, 0.2, 500, alpha = alpha)
     log_var <- log(big_colstats(G, ind.col = simu$set)$var)
     beta2 <- simu$effects^2
-    optim(par = c(0.2 / 500, 0.5), fn = FUN, gr = DER, method = "L-BFGS-B",
+    optim(par = c(-0.5, 0.2 / 500), fn = FUN, gr = DER, method = "L-BFGS-B",
           lower = c(-1.5, 0.2 / 5000), upper = c(0.5, 0.2 / 50),
           log_var = log_var, beta2 = beta2)$par[1]
   })
