@@ -1,3 +1,7 @@
+## bigsnpr 1.11.3
+
+- Can now run `snp_ldsc2()` with `corr` as an SFBM.
+
 ## bigsnpr 1.11.2
 
 - Now use a sparse format for sampling betas returned in LDpred2-auto, instead of a dense matrix that could require quite some memory to store.

@@ -161,7 +161,7 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 
 #' @rdname snp_ldsc
 #'
-#' @param corr Sparse correlation matrix.
+#' @param corr Sparse correlation matrix. Can also be an [SFBM][SFBM-class].
 #' @param df_beta A data frame with 3 columns:
 #'   - `$beta`: effect size estimates
 #'   - `$beta_se`: standard errors of effect size estimates
@@ -192,6 +192,8 @@ snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
 
   ld2 <- if (inherits(corr, "dsCMatrix")) {
     sp_colSumsSq_sym(corr@p, corr@i, corr@x)
+  } else if (inherits(corr, "SFBM")) {
+    ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]]))
   } else {
     Matrix::colSums(corr^2)
   }
