@@ -295,8 +295,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // MLE_alpha
-arma::vec& MLE_alpha(arma::vec& par, int nb_causal, const NumericVector& log_var, const NumericVector& curr_beta, bool verbose);
-RcppExport SEXP _bigsnpr_MLE_alpha(SEXP parSEXP, SEXP nb_causalSEXP, SEXP log_varSEXP, SEXP curr_betaSEXP, SEXP verboseSEXP) {
+arma::vec& MLE_alpha(arma::vec& par, int nb_causal, const NumericVector& log_var, const NumericVector& curr_beta, bool boot, bool verbose);
+RcppExport SEXP _bigsnpr_MLE_alpha(SEXP parSEXP, SEXP nb_causalSEXP, SEXP log_varSEXP, SEXP curr_betaSEXP, SEXP bootSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -304,8 +304,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nb_causal(nb_causalSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type log_var(log_varSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type curr_beta(curr_betaSEXP);
+    Rcpp::traits::input_parameter< bool >::type boot(bootSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(MLE_alpha(par, nb_causal, log_var, curr_beta, verbose));
+    rcpp_result_gen = Rcpp::wrap(MLE_alpha(par, nb_causal, log_var, curr_beta, boot, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -574,7 +575,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 7},
     {"_bigsnpr_ld_scores_sfbm", (DL_FUNC) &_bigsnpr_ld_scores_sfbm, 2},
     {"_bigsnpr_ld_scores", (DL_FUNC) &_bigsnpr_ld_scores, 6},
-    {"_bigsnpr_MLE_alpha", (DL_FUNC) &_bigsnpr_MLE_alpha, 5},
+    {"_bigsnpr_MLE_alpha", (DL_FUNC) &_bigsnpr_MLE_alpha, 6},
     {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 15},
     {"_bigsnpr_ldpred2_gibbs_one_sampling", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one_sampling, 10},
     {"_bigsnpr_ldpred2_gibbs_one", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one, 10},

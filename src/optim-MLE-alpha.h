@@ -15,14 +15,14 @@ public:
   // constructor
   MLE(int nb_causal,
       const NumericVector& log_var,
-      const NumericVector& curr_beta) {
+      const NumericVector& curr_beta,
+      bool boot = false) {
 
     // keep only causals + precompute sum_a (which never changes)
     // S always changes, so it proved useless to cache other sums
     nb = nb_causal;
     a = arma::zeros<arma::vec>(nb);
     b = arma::zeros<arma::vec>(nb);
-    sum_a = 0;
 
     int k = 0;
     int m = curr_beta.size();
@@ -31,12 +31,21 @@ public:
       if (beta_j != 0) {
         a[k] = log_var[j];
         b[k] = beta_j * beta_j;
-        sum_a += a[k];
         k++;
       }
     }
-
     if (k != nb) Rcpp::stop("[BUG] with init of causals in MLE.");
+
+    if (boot) {  // useful to take uncertainty into account
+      arma::uvec ind(nb);
+      for (int k = 0; k < nb; k++)
+        ind[k] = nb * unif_rand();
+
+      a = a(ind);
+      b = b(ind);
+    }
+
+    sum_a = arma::sum(a);
   }
 
   // objective function

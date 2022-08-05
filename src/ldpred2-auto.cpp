@@ -23,9 +23,10 @@ arma::vec& MLE_alpha(arma::vec& par,
                      int nb_causal,
                      const NumericVector& log_var,
                      const NumericVector& curr_beta,
+                     bool boot = false,
                      bool verbose = false) {
 
-  MLE mle(nb_causal, log_var, curr_beta);
+  MLE mle(nb_causal, log_var, curr_beta, boot);
   Roptim<MLE> opt("L-BFGS-B");
   opt.set_lower({-0.5, par[1] / 2});
   opt.set_upper({ 1.5, par[1] * 2});
@@ -140,7 +141,7 @@ List ldpred2_gibbs_auto(Environment corr,
 
     p = std::max(::Rf_rbeta(1 + nb_causal / mean_ld, 1 + (m - nb_causal) / mean_ld), MIN_P);
     h2 = std::max(cur_h2_est, MIN_H2);
-    par_mle = MLE_alpha(par_mle, nb_causal, log_var, curr_beta);
+    par_mle = MLE_alpha(par_mle, nb_causal, log_var, curr_beta, true);
     if (verbose) Rcout <<
       k + 1 << ": " << p << " // " << h2 << " // " <<  par_mle[0] - 1 << std::endl;
 
