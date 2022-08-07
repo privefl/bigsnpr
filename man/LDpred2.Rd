@@ -30,6 +30,7 @@ snp_ldpred2_auto(
   report_step = num_iter + 1L,
   allow_jump_sign = TRUE,
   shrink_corr = 1,
+  alpha_bounds = c(-1.5, 0.5),
   ncores = 1
 )
 }

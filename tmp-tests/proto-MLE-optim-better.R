@@ -55,5 +55,5 @@ microbenchmark::microbenchmark(
 
 
 Rcpp::sourceCpp('src/ldpred2-auto.cpp')
-x <- c(0, 0.2 / 500); MLE_alpha(x, 0:499, log_var, simu$effects, FALSE)
-x
+x <- c(0, 0.2 / 500); MLE_alpha(x, 0:499, log_var, simu$effects, c(-1, 2), FALSE); x
+x <- c(0, 0.2 / 500); MLE_alpha(x, 0:499, log_var, simu$effects, c(0, 0.5), FALSE); x

@@ -193,6 +193,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              report_step = num_iter + 1L,
                              allow_jump_sign = TRUE,
                              shrink_corr = 1,
+                             alpha_bounds = c(-1.5, 0.5),
                              ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
@@ -228,6 +229,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       report_step  = report_step,
       no_jump_sign = !allow_jump_sign,
       shrink_corr  = shrink_corr,
+      alpha_bounds = alpha_bounds + 1,
       mean_ld      = mean_ld
     )
     ldpred_auto$beta_est <- ldpred_auto$beta_est / sd

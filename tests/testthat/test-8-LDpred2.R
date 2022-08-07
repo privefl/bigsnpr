@@ -125,6 +125,17 @@ test_that("LDpred2 works", {
   expect_equal(alpha_est, beta_auto[[1]]$path_alpha_est[seq(210, 400, by = 10)],
                tolerance = 1e-3)
 
+  # alpha bounds
+  beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
+                                burn_in = 200, num_iter = 200,
+                                alpha_bounds = c(-1, -1))
+  expect_equal(beta_auto[[1]]$path_alpha_est, rep(-1, 400))
+  beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
+                                burn_in = 200, num_iter = 200,
+                                alpha_bounds = c(-0.5, 0))
+  expect_true(all(beta_auto[[1]]$path_alpha_est >= -0.5))
+  expect_true(all(beta_auto[[1]]$path_alpha_est <= 0))
+
   # Errors
   expect_error(snp_ldpred2_inf(corr, df_beta[-6]),
                "'df_beta' should have element 'beta'.")
@@ -212,7 +223,7 @@ test_that("bootstrap in MLE works", {
   all_est2 <- replicate(1000, {
     bigsnpr:::MLE_alpha(par = c(-0.5, mean(all_est[2, ])), ind_causal = 0:499,
                         log_var = log_var, curr_beta = simu$effects,
-                        boot = TRUE)[1:2] - 1:0
+                        alpha_bounds = c(-0.5, 1.5), boot = TRUE)[1:2] - 1:0
   })
   Q <- ppoints(10)
   expect_equal(quantile(all_est[1, ], Q), quantile(all_est2[1, ], Q),
