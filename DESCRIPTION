@@ -45,7 +45,7 @@ LinkingTo:
     RcppArmadillo (>= 0.9.600),
     rmio,
     roptim (>= 0.1.6)
-Remotes: privefl/roptim
+Remotes: ypan1988/roptim
 Suggests:
     bindata,
     covr,

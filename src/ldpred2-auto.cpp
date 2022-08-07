@@ -20,13 +20,13 @@ double dotprod2(const NumericVector& X, const NumericVector& Y) {
 
 // [[Rcpp::export]]
 arma::vec& MLE_alpha(arma::vec& par,
-                     int nb_causal,
+                     const std::vector<int>& ind_causal,
                      const NumericVector& log_var,
                      const NumericVector& curr_beta,
                      bool boot = false,
                      bool verbose = false) {
 
-  MLE mle(nb_causal, log_var, curr_beta, boot);
+  MLE mle(ind_causal, log_var, curr_beta, boot);
   Roptim<MLE> opt("L-BFGS-B");
   opt.set_lower({-0.5, par[1] / 2});
   opt.set_upper({ 1.5, par[1] * 2});
@@ -82,12 +82,14 @@ List ldpred2_gibbs_auto(Environment corr,
     (1 - shrink_corr) * dotprod2(curr_beta, curr_beta);
   double p = p_init, h2 = h2_init;
   arma::vec par_mle = {0, h2 / (m * p)};  // (alpha + 1) and sigma2 [init]
+  std::vector<int> ind_causal;
 
   for (int k = 0; k < num_iter_tot; k++) {
 
-    int nb_causal = 0;
     double inv_odd_p = (1 - p) / p;
     double alpha_plus_one = par_mle[0], sigma2 = par_mle[1];
+
+    ind_causal.clear();
 
     for (const int& j : order) {
 
@@ -126,7 +128,7 @@ List ldpred2_gibbs_auto(Environment corr,
         } else {
           curr_beta[j] = samp_beta;
           diff += samp_beta;
-          nb_causal++;
+          ind_causal.push_back(j);
         }
 
       } else {
@@ -139,9 +141,10 @@ List ldpred2_gibbs_auto(Environment corr,
       }
     }
 
+    int nb_causal = ind_causal.size();
     p = std::max(::Rf_rbeta(1 + nb_causal / mean_ld, 1 + (m - nb_causal) / mean_ld), MIN_P);
     h2 = std::max(cur_h2_est, MIN_H2);
-    par_mle = MLE_alpha(par_mle, nb_causal, log_var, curr_beta, true);
+    par_mle = MLE_alpha(par_mle, ind_causal, log_var, curr_beta, true);
     if (verbose) Rcout <<
       k + 1 << ": " << p << " // " << h2 << " // " <<  par_mle[0] - 1 << std::endl;
 
@@ -152,10 +155,8 @@ List ldpred2_gibbs_auto(Environment corr,
 
     // store some sampling betas
     if (k == next_k_reported) {
-      for (int i = 0; i < m; i++) {
-        if (curr_beta[i] != 0)
-          sample_beta(i, ind_report) = curr_beta[i];
-      }
+      for (const int& i : ind_causal)
+        sample_beta(i, ind_report) = curr_beta[i];
       ind_report++;
       next_k_reported += report_step;
     }

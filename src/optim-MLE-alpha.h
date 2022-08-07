@@ -13,36 +13,22 @@ using namespace roptim;
 class MLE : public Functor {
 public:
   // constructor
-  MLE(int nb_causal,
+  MLE(const std::vector<int>& ind_causal,
       const NumericVector& log_var,
       const NumericVector& curr_beta,
       bool boot = false) {
 
     // keep only causals + precompute sum_a (which never changes)
     // S always changes, so it proved useless to cache other sums
-    nb = nb_causal;
+    nb = ind_causal.size();
     a = arma::zeros<arma::vec>(nb);
     b = arma::zeros<arma::vec>(nb);
 
-    int k = 0;
-    int m = curr_beta.size();
-    for (int j = 0; j < m; j++) {
-      double beta_j = curr_beta[j];
-      if (beta_j != 0) {
-        a[k] = log_var[j];
-        b[k] = beta_j * beta_j;
-        k++;
-      }
-    }
-    if (k != nb) Rcpp::stop("[BUG] with init of causals in MLE.");
-
-    if (boot) {  // useful to take uncertainty into account
-      arma::uvec ind(nb);
-      for (int k = 0; k < nb; k++)
-        ind[k] = nb * unif_rand();
-
-      a = a(ind);
-      b = b(ind);
+    for (int k = 0; k < nb; k++) {
+      int k2 = boot ? nb * unif_rand() : k;
+      int j = ind_causal[k2];
+      a[k] = log_var[j];
+      b[k] = curr_beta[j] * curr_beta[j];
     }
 
     sum_a = arma::sum(a);
@@ -74,7 +60,6 @@ public:
       sum_ac += a[k] * c_k;
     }
 
-    gr = arma::zeros<arma::vec>(2);
     gr[0] = sum_a - sum_ac / sigma2;
     gr[1] = (nb - sum_c / sigma2) / sigma2;
   }

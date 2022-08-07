@@ -295,18 +295,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // MLE_alpha
-arma::vec& MLE_alpha(arma::vec& par, int nb_causal, const NumericVector& log_var, const NumericVector& curr_beta, bool boot, bool verbose);
-RcppExport SEXP _bigsnpr_MLE_alpha(SEXP parSEXP, SEXP nb_causalSEXP, SEXP log_varSEXP, SEXP curr_betaSEXP, SEXP bootSEXP, SEXP verboseSEXP) {
+arma::vec& MLE_alpha(arma::vec& par, const std::vector<int>& ind_causal, const NumericVector& log_var, const NumericVector& curr_beta, bool boot, bool verbose);
+RcppExport SEXP _bigsnpr_MLE_alpha(SEXP parSEXP, SEXP ind_causalSEXP, SEXP log_varSEXP, SEXP curr_betaSEXP, SEXP bootSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::vec& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< int >::type nb_causal(nb_causalSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type ind_causal(ind_causalSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type log_var(log_varSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type curr_beta(curr_betaSEXP);
     Rcpp::traits::input_parameter< bool >::type boot(bootSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(MLE_alpha(par, nb_causal, log_var, curr_beta, boot, verbose));
+    rcpp_result_gen = Rcpp::wrap(MLE_alpha(par, ind_causal, log_var, curr_beta, boot, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

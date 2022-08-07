@@ -210,7 +210,7 @@ test_that("bootstrap in MLE works", {
   })
 
   all_est2 <- replicate(1000, {
-    bigsnpr:::MLE_alpha(par = c(-0.5, mean(all_est[2, ])), nb_causal = 500,
+    bigsnpr:::MLE_alpha(par = c(-0.5, mean(all_est[2, ])), ind_causal = 0:499,
                         log_var = log_var, curr_beta = simu$effects,
                         boot = TRUE)[1:2] - 1:0
   })

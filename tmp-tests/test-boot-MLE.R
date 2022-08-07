@@ -27,7 +27,7 @@ all_est <- replicate(200, {
 
 Rcpp::sourceCpp('src/ldpred2-auto.cpp')
 all_est2 <- replicate(200, {
-  MLE_alpha(par = c(-0.5, mean(all_est[2, ])), nb_causal = 500,
+  MLE_alpha(par = c(-0.5, mean(all_est[2, ])), ind_causal = seq_along(log_var) - 1L,
             log_var = log_var, curr_beta = simu$effects,
             boot = TRUE)[1:2] - 1:0
 })
