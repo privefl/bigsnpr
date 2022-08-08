@@ -34,9 +34,25 @@ arma::vec& MLE_alpha(arma::vec& par,
   opt.set_hessian(false);
   opt.control.trace = verbose;
 
+  if (verbose) {
+    arma::vec grad1(2), grad2(2);
+    mle.Gradient(par, grad1);
+    mle.ApproximateGradient(par, grad2);
+
+    Rcout << "-------------------------" << std::endl;
+    Rcout << "Gradient checking" << std::endl;
+    grad1.t().print("analytic:");
+    grad2.t().print("approximate:");
+    Rcout << "-------------------------" << std::endl;
+  }
+
   opt.minimize(mle, par);
 
-  if (verbose) opt.print();
+  if (verbose) {
+    Rcout << "-------------------------" << std::endl;
+    opt.print();
+    Rcout << "-------------------------" << std::endl;
+  }
 
   return par;
 }

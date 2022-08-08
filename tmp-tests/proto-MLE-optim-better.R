@@ -32,14 +32,15 @@ optim(par = c(-0.5, 0.2 / 500), fn = FUN, gr = DER,
       # lower = c(-2, 0.2 / 5000), upper = c(1, 0.2 / 50),
       log_var = log_var, beta2 = beta2)
 
+
 Rcpp::sourceCpp('tmp-tests/proto-MLE-optim-C++.cpp')
 test_MLE(log_var, beta2, c(-1, 0.2 / 500),
          lower = c(-2, 0.2 / 5000), upper = c(1, 0.2 / 50))
 
 
 microbenchmark::microbenchmark(
-  R = optim(par = c(-1, 0.2 / 500), fn = FUN, method = "L-BFGS-B", gr = DER,
-        lower = c(-2, 0.2 / 5000), upper = c(1, 0.2 / 50),
+  R = optim(par = c(-1, 0.002), fn = FUN, method = "L-BFGS-B", gr = DER,
+        lower = c(-2, 0.001), upper = c(1, 0.004),
         log_var = log_var, beta2 = beta2)$par,
   C = test_MLE(log_var, beta2, c(-1, 0.2 / 500),
            lower = c(-2, 0.2 / 5000), upper = c(1, 0.2 / 50))
@@ -55,5 +56,12 @@ microbenchmark::microbenchmark(
 
 
 Rcpp::sourceCpp('src/ldpred2-auto.cpp')
-x <- c(0, 0.2 / 500); MLE_alpha(x, 0:499, log_var, simu$effects, c(-1, 2), FALSE); x
-x <- c(0, 0.2 / 500); MLE_alpha(x, 0:499, log_var, simu$effects, c(0, 0.5), FALSE); x
+MLE_alpha(c(0, 0.002), 0:499, log_var, simu$effects,
+          alpha_bounds = c(-1, 2), boot = FALSE, verbose = TRUE)
+
+microbenchmark::microbenchmark(
+  R = optim(par = c(-1, 0.002), fn = FUN, method = "L-BFGS-B", gr = DER,
+            lower = c(-2, 0.001), upper = c(1, 0.004),
+            log_var = log_var, beta2 = beta2)$par,
+  C = MLE_alpha(c(0, 0.002), 0:499, log_var, simu$effects, c(-1, 2), FALSE)
+)
