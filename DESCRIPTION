@@ -54,6 +54,7 @@ Suggests:
     gaston,
     glue,
     Hmisc,
+    microbenchmark,
     pcadapt (>= 4.1),
     quadprog,
     RhpcBLASctl,

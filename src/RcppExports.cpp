@@ -267,14 +267,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // ld_scores_sfbm
-NumericVector ld_scores_sfbm(Rcpp::Environment X, bool compact);
-RcppExport SEXP _bigsnpr_ld_scores_sfbm(SEXP XSEXP, SEXP compactSEXP) {
+NumericVector ld_scores_sfbm(Rcpp::Environment X, bool compact, int ncores);
+RcppExport SEXP _bigsnpr_ld_scores_sfbm(SEXP XSEXP, SEXP compactSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::Environment >::type X(XSEXP);
     Rcpp::traits::input_parameter< bool >::type compact(compactSEXP);
-    rcpp_result_gen = Rcpp::wrap(ld_scores_sfbm(X, compact));
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(ld_scores_sfbm(X, compact, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -575,7 +576,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 8},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
     {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 7},
-    {"_bigsnpr_ld_scores_sfbm", (DL_FUNC) &_bigsnpr_ld_scores_sfbm, 2},
+    {"_bigsnpr_ld_scores_sfbm", (DL_FUNC) &_bigsnpr_ld_scores_sfbm, 3},
     {"_bigsnpr_ld_scores", (DL_FUNC) &_bigsnpr_ld_scores, 6},
     {"_bigsnpr_MLE_alpha", (DL_FUNC) &_bigsnpr_MLE_alpha, 7},
     {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 16},

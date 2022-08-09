@@ -17,7 +17,7 @@ snp_ldsc(
   ncores = 1
 )
 
-snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ...)
+snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ncores = 1, ...)
 }
 \arguments{
 \item{ld_score}{Vector of LD scores.}

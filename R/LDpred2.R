@@ -205,7 +205,8 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   sd <- 1 / sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
   beta_hat <- df_beta$beta * sd
 
-  mean_ld <- mean(ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]])))
+  mean_ld <- mean(
+    ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]]), ncores = ncores))
 
   ord <- order(-vec_p_init)  # large p first
 

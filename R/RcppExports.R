@@ -65,8 +65,8 @@ lassosum2 <- function(corr, beta_hat, lambda, delta_plus_one, dfmax, maxiter, to
     .Call(`_bigsnpr_lassosum2`, corr, beta_hat, lambda, delta_plus_one, dfmax, maxiter, tol)
 }
 
-ld_scores_sfbm <- function(X, compact) {
-    .Call(`_bigsnpr_ld_scores_sfbm`, X, compact)
+ld_scores_sfbm <- function(X, compact, ncores) {
+    .Call(`_bigsnpr_ld_scores_sfbm`, X, compact, ncores)
 }
 
 ld_scores <- function(obj, rowInd, colInd, size, pos, ncores) {

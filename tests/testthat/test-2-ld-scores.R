@@ -88,11 +88,13 @@ test_that("can compute LD scores directly from an SFBM", {
   ld1 <- bigsnpr:::sp_colSumsSq_sym(corr@p, corr@i, corr@x)
 
   corr2 <- as_SFBM(corr)
-  ld2 <- bigsnpr:::ld_scores_sfbm(corr2, compact = !is.null(corr2[["first_i"]]))
+  ld2 <- bigsnpr:::ld_scores_sfbm(corr2, compact = !is.null(corr2[["first_i"]]),
+                                  ncores = 1)
   expect_equal(ld2, ld1)
 
   corr3 <- as_SFBM(corr, compact = TRUE)
-  ld3 <- bigsnpr:::ld_scores_sfbm(corr3, compact = !is.null(corr3[["first_i"]]))
+  ld3 <- bigsnpr:::ld_scores_sfbm(corr3, compact = !is.null(corr3[["first_i"]]),
+                                  ncores = 1)
   expect_equal(ld3, ld1)
 })
 
