@@ -202,6 +202,7 @@ In practice, we recommend to test multiple values for h2 and p.
 ```
 
 ```{r}
+set.seed(1)  # to get the same result every time
 # takes less than 2 min with 4 cores
 beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 ```
@@ -265,6 +266,7 @@ pcor(pred, y[ind.test], NULL)
 We recommend to run many chains in parallel with different initial values for `p`. In [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136), we have introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
 
 ```{r}
+set.seed(1)  # to get the same result every time
 # takes less than 2 min with 4 cores
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
                                vec_p_init = seq_log(1e-4, 0.2, length.out = 30),
@@ -323,7 +325,7 @@ beta_lassosum2 <- snp_lassosum2(corr, df_beta, ncores = NCORES)
 ```
 
 ```{r}
-params2 <- attr(beta_lassosum2, "grid_param")
+(params2 <- attr(beta_lassosum2, "grid_param"))
 pred_grid2 <- big_prodMat(G, beta_lassosum2, ind.col = df_beta[["_NUM_ID_"]])
 params2$score <- apply(pred_grid2[ind.val, ], 2, function(x) {
   if (all(is.na(x))) return(NA)
