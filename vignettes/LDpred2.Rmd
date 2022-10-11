@@ -13,7 +13,7 @@ editor_options:
 
 Here we show how to compute polygenic risk scores using [LDpred2](https://doi.org/10.1101/2020.04.28.066720).
 
-**New:** if you install {bigsnpr} >= v1.10.4, LDpred2-grid and LDpred2-auto should be much faster for large data.
+**New:** if you install {bigsnpr} >= v1.10.4, LDpred2-grid and LDpred2-auto should be much faster for large data. You can install {bigsnpr} from CRAN using `install.packages("bigsnpr")`, or the latest version from GitHub using `remotes::install_github("privefl/bigsnpr")`.
 
 This tutorial uses fake data for educational purposes only.
 Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
@@ -22,7 +22,7 @@ You should also probably look at [the code of the paper](https://github.com/priv
 
 In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in the PRS-CS and LDpred2 papers.
 If you do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide an LD reference to be used directly ~~at https://doi.org/10.6084/m9.figshare.13034123~~, along with [an example R script](https://github.com/privefl/paper-ldpred2/blob/master/code/example-with-provided-ldref.R) on how to use it.
-**New:** we now provide a new version of these LD references at https://doi.org/10.6084/m9.figshare.19213299 by forming independent LD blocks in the matrices, which can be useful for robustness and extra speed gains (see [this new preprint](https://doi.org/10.1101/2021.03.29.437510)).
+**New:** we now provide a new version of these LD references at https://doi.org/10.6084/m9.figshare.19213299 by forming independent LD blocks in the matrices, which can be useful for robustness and extra speed gains (see [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136)).
 
 Information about these variants can be retrieved with
 
@@ -47,15 +47,19 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
 
 You can download [the tutorial data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip) and unzip files in R. We store those files in a directory called `"tmp-data"` here.
 
-```{r, echo=FALSE, eval=FALSE}
-unzip("data-raw/public-data3.zip")
+```{r}
+# install.packages("runonce")
+zip <- runonce::download_file(
+  "https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip",
+  dir = "tmp-data")
+unzip(zip)
 ```
+
+First, you need to read genotype data from the PLINK files (or BGEN files) as well as the text file containing summary statistics.
 
 ```{r, echo=FALSE}
 unlink(paste0("tmp-data/public-data3", c(".bk", ".rds")))
 ```
-
-First, you need to read genotype data from the PLINK files (or BGEN files) as well as the text file containing summary statistics.
 
 ```{r}
 # Load packages bigsnpr and bigstatsr
@@ -71,7 +75,10 @@ G   <- obj.bigSNP$genotypes
 CHR <- obj.bigSNP$map$chromosome
 POS <- obj.bigSNP$map$physical.pos
 y   <- obj.bigSNP$fam$affection
-NCORES <- nb_cores()
+(NCORES <- nb_cores())
+```
+
+```{r}
 # Read external summary statistics
 sumstats <- bigreadr::fread2("tmp-data/public-data3-sumstats.txt")
 str(sumstats)
@@ -85,10 +92,11 @@ ind.val <- sample(nrow(G), 350)
 ind.test <- setdiff(rows_along(G), ind.val)
 ```
 
+
 ## Matching variants between genotype data and summary statistics 
 
-To match variants contained in genotype data and summary statistics, the variables `"chr"` (chromosome number), `"pos"` (genetic position), `"a0"` (reference allele) and `"a1"` (derived allele) should be available in the summary statistics and in the genotype data. These 4 variables are used to match variants between the two data frames. 
-From the summary statistics, you need to get `"beta"`, `"beta_se"` (standard errors), and `"n_eff"` (effective sample size per variant for GWAS with logistic regression, and just total sample size for continuous traits).
+To match variants contained in genotype data and summary statistics, the variables `"chr"` (chromosome number), `"pos"` (physical genetic position in bp), `"a0"` (reference allele) and `"a1"` (alternative allele) should be available in the summary statistics and in the genotype data. These 4 variables are used to match variants between the two data frames. 
+From the summary statistics, you need to get `"beta"`, `"beta_se"` (standard errors), and `"n_eff"` (the effective sample sizes per variant for a GWAS using logistic regression, and simply the sample size for continuous traits).
 
 ```{r, error=TRUE}
 # sumstats$n_eff <- 4 / (1 / sumstats$n_case + 1 / sumstats$n_control)
@@ -104,12 +112,13 @@ Here, there is problem with the matching; this is due to having different genome
 df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)  # use rsid instead of pos
 ```
 
-If no or few variants are actually flipped, you might want to disable the strand flipping option (`strand_flip = FALSE`).
+If no or few variants are actually flipped, you might want to disable the strand flipping option (`strand_flip = FALSE`) and maybe remove the few that were flipped (errors?).
+
 
 ## Computing LDpred2 scores genome-wide
 
 **Some quality control on summary statistics is highly recommended (see paper and other tutorial).**
-A new refined QC is described in [this new preprint](https://doi.org/10.1101/2021.03.29.437510).
+A new refined QC is described in [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136).
 See e.g. [the code](https://github.com/privefl/paper-misspec/tree/main/code) that was used to prepare the sumstats there.
 
 ### Correlation
@@ -119,7 +128,7 @@ We recommend to use a window size of 3 cM (see [the LDpred2 paper](https://doi.o
 
 ```{r}
 # POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = NCORES)
-# To avoid downloading "large" files, this has been precomputed
+# To avoid downloading "large" files, `POS2` has been precomputed
 POS2 <- obj.bigSNP$map$genetic.dist
 ```
 
@@ -150,19 +159,20 @@ for (chr in 1:22) {
 }
 ```
 
-Note that the "compact" format for SFBMs is quite new. You will need `packageVersion("bigsparser") >= package_version("0.5")`. 
-Make sure to reinstall {bigsnpr} when updating {bigsparser} to this new version (to avoid crashes).
+To use the "compact" format for SFBMs, you need `packageVersion("bigsparser") >= package_version("0.5")`. 
+Make sure to reinstall {bigsnpr} after updating {bigsparser} to this new version (to avoid crashes).
 
 ```{r}
 file.size(corr$sbk) / 1024^3  # file size in GB
 ```
 
-Note that you will need at least the same memory as this file size (to keep it cached for faster processing) + some other memory for all the results returned. If you do not have enough memory, processing will be very slow (because you would read the data from disk all the time). If using the one million HapMap3 variants, requesting 60 GB should be enough.
+Note that you will need at least the same memory as this file size (to keep it cached for faster processing) + some other memory for all the results returned. If you do not have enough memory, processing will be very slow (because you would read the data from disk all the time). If using the one million HapMap3 variants, having 60 GB of memory should be enough.
 
 
 ### LDpred2-inf: infinitesimal model
 
 ```{r}
+# Estimate of h2 from LD Score regression
 (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
                                 sample_size = n_eff, blocks = NULL)))
 h2_est <- ldsc[["h2"]]
@@ -174,10 +184,11 @@ beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = h2_est)
 
 ```{r}
 pred_inf <- big_prodVec(G, beta_inf, ind.row = ind.test, ind.col = df_beta[["_NUM_ID_"]])
-cor(pred_inf, y[ind.test])
+pcor(pred_inf, y[ind.test], NULL)
 ```
 
 LDpred2-inf would very likely perform worse than the other models presented hereinafter.
+We actually recommend not to use it anymore.
 
 
 ### LDpred2(-grid): grid of models
@@ -191,6 +202,7 @@ In practice, we recommend to test multiple values for h2 and p.
 ```
 
 ```{r}
+set.seed(1)  # to get the same result every time
 # takes less than 2 min with 4 cores
 beta_grid <- snp_ldpred2_grid(corr, df_beta, params, ncores = NCORES)
 ```
@@ -229,7 +241,7 @@ params %>%
 
 You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the (linear or logistic) regression of the phenotype by the PRS since we have found it more robust than using the correlation or the AUC. It also enables adjusting for covariates in this step.
 
-Also note that we separate both sparse and non-sparse models to show that their predictive performance are similar (in the paper). In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models.
+Also note that we separate both sparse and non-sparse models to show that their predictive performance are similar (in the paper). In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models. If you do, choose the best sparse one (if it is close enough to the best one).
 
 ```{r}
 best_beta_grid <- params %>%
@@ -237,20 +249,24 @@ best_beta_grid <- params %>%
   # filter(sparse) %>% 
   arrange(desc(score)) %>%
   slice(1) %>%
+  print() %>% 
   pull(id) %>% 
   beta_grid[, .]
+```
 
+```{r}
 pred <- big_prodVec(G, best_beta_grid, ind.row = ind.test,
                     ind.col = df_beta[["_NUM_ID_"]])
-cor(pred, y[ind.test])
+pcor(pred, y[ind.test], NULL)
 ```
 
 
 ### LDpred2-auto: automatic model
 
-We recommend to run many chains in parallel with different initial values for `p`. In [this new preprint](https://doi.org/10.1101/2021.03.29.437510), we have introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
+We recommend to run many chains in parallel with different initial values for `p`. In [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136), we have introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
 
 ```{r}
+set.seed(1)  # to get the same result every time
 # takes less than 2 min with 4 cores
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
                                vec_p_init = seq_log(1e-4, 0.2, length.out = 30),
@@ -282,8 +298,9 @@ plot_grid(
 In the LDpred2 paper, we proposed an automatic way of filtering bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112)). We have tested a somewhat equivalent and simpler alternative since, which we recommend here:
 
 ```{r}
-range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est)))
-keep <- (range > (0.9 * quantile(range, 0.9)))
+# `range` should be between 0 and 1
+(range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est))))
+(keep <- (range > (0.9 * quantile(range, 0.9))))
 ```
 
 To get the final effects / predictions (after filtering):
@@ -294,7 +311,7 @@ pred_auto <- big_prodVec(G, beta_auto, ind.row = ind.test, ind.col = df_beta[["_
 ```
 
 ```{r}
-cor(pred_auto, y[ind.test])
+pcor(pred_auto, y[ind.test], NULL)
 ```
 
 
@@ -308,7 +325,7 @@ beta_lassosum2 <- snp_lassosum2(corr, df_beta, ncores = NCORES)
 ```
 
 ```{r}
-params2 <- attr(beta_lassosum2, "grid_param")
+(params2 <- attr(beta_lassosum2, "grid_param"))
 pred_grid2 <- big_prodMat(G, beta_lassosum2, ind.col = df_beta[["_NUM_ID_"]])
 params2$score <- apply(pred_grid2[ind.val, ], 2, function(x) {
   if (all(is.na(x))) return(NA)
@@ -334,12 +351,14 @@ library(dplyr)
 best_grid_lassosum2 <- params2 %>%
   mutate(id = row_number()) %>%
   arrange(desc(score)) %>%
+  print() %>% 
   slice(1) %>%
   pull(id) %>% 
   beta_lassosum2[, .]
 ```
 
 ```{r}
+# Choose the best among all LDpred2-grid and lassosum2 models
 best_grid_overall <- 
   `if`(max(params2$score, na.rm = TRUE) > max(params$score, na.rm = TRUE),
        best_grid_lassosum2, best_beta_grid)
@@ -354,4 +373,4 @@ rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 
 - Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger](https://doi.org/10.1093/bioinformatics/btaa1029). *Bioinformatics*, 36(22-23), 5424-5431.
 
-- Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). [Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores](https://doi.org/10.1101/2021.03.29.437510). *bioRxiv*
+- Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). [Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores](https://doi.org/10.1016/j.xhgg.2022.100136). *Human Genetics and Genomics Advances*, 3(4), 100136.
