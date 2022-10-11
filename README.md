@@ -1,6 +1,6 @@
 <!-- badges: start -->
 [![R build status](https://github.com/privefl/bigsnpr/workflows/R-CMD-check/badge.svg)](https://github.com/privefl/bigsnpr/actions)
-[![Coverage Status](https://img.shields.io/codecov/c/github/privefl/bigsnpr/master.svg)](https://codecov.io/github/privefl/bigsnpr)
+[![Codecov test coverage](https://codecov.io/gh/privefl/bigsnpr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/privefl/bigsnpr?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bigsnpr)](https://CRAN.R-project.org/package=bigsnpr)
 [![DOI](https://zenodo.org/badge/doi/10.1093/bioinformatics/bty185.svg)](http://dx.doi.org/10.1093/bioinformatics/bty185)
 <!-- badges: end -->

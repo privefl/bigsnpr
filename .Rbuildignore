@@ -24,3 +24,4 @@
 ^cleanup$
 ^code_of_conduct\.md$
 ^\.github$
+^codecov\.yml$
