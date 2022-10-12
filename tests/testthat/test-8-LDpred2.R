@@ -4,20 +4,6 @@ context("LDPRED2")
 
 ################################################################################
 
-test_that("sp_colSumsSq_sym() works", {
-
-  replicate(100, {
-
-    N <- 300
-    spmat <- Matrix::rsparsematrix(N, N, 0.1, symmetric = TRUE)
-    expect_equal(sp_colSumsSq_sym(spmat@p, spmat@i, spmat@x),
-                 Matrix::colSums(spmat^2))
-  })
-
-})
-
-################################################################################
-
 test_that("LDpred2 works", {
 
   skip_if(is_cran)
@@ -54,6 +40,8 @@ test_that("LDpred2 works", {
   # LD score regression
   (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
                                   sample_size = n_eff, blocks = NULL)))
+  (ldsc2 <- snp_ldsc2(corr, df_beta, intercept = NULL))
+  expect_equal(ldsc2, ldsc)
 
   # LDpred2-inf
   beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = ldsc[["h2"]])
@@ -92,8 +80,9 @@ test_that("LDpred2 works", {
   expect_gt(mean(mod$beta_est_sparse == 0), 0.5)
   expect_equal(mod$h2_init, ldsc[["h2"]])
   expect_equal(mod$p_init, 0.1)
-  expect_equal(mod$h2_est, mean(tail(mod$path_h2_est, 200)))
-  expect_equal(mod$p_est,  mean(tail(mod$path_p_est,  200)))
+  expect_equal(mod$h2_est,     mean(tail(mod$path_h2_est,    200)))
+  expect_equal(mod$p_est,      mean(tail(mod$path_p_est,     200)))
+  expect_equal(mod$alpha_est,  mean(tail(mod$path_alpha_est, 200)))
   expect_length(mod$postp_est, length(mod$beta_est))
   expect_null(dim(mod$postp_est))
   expect_equal(mean(mod$postp_est), mod$p_est, tolerance = 0.01)
@@ -112,8 +101,20 @@ test_that("LDpred2 works", {
                                 burn_in = 200, num_iter = 200, report_step = 10)
   bsamp <- beta_auto[[1]]$sample_beta
   expect_equal(dim(bsamp), c(ncol(corr), 20))
+  expect_s4_class(bsamp, "dgCMatrix")
   h2_est <- apply(bsamp, 2, function(x) crossprod(x, bigsparser::sp_prodVec(corr, x)))
   expect_equal(h2_est, beta_auto[[1]]$path_h2_est[seq(210, 400, by = 10)])
+
+  # alpha bounds
+  beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
+                                burn_in = 200, num_iter = 200,
+                                alpha_bounds = c(-1, -1))
+  expect_equal(beta_auto[[1]]$path_alpha_est, rep(-1, 400))
+  beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
+                                burn_in = 200, num_iter = 200,
+                                alpha_bounds = c(-0.5, 0))
+  expect_true(all(beta_auto[[1]]$path_alpha_est >= -0.5))
+  expect_true(all(beta_auto[[1]]$path_alpha_est <= 0))
 
   # Errors
   expect_error(snp_ldpred2_inf(corr, df_beta[-6]),
@@ -165,6 +166,61 @@ test_that("LDpred2 works", {
   inf1 <- snp_ldpred2_inf(corr, df_beta, h2 = 0.3)
   inf2 <- snp_ldpred2_inf(corr, df_beta, h2 = 0.3)
   expect_identical(inf2, inf1)  # no sampling, so reproducible
+})
+
+################################################################################
+
+test_that("MLE_alpha works", {
+
+  skip_if(is_cran)
+
+  bigsnp <- snp_attachExtdata()
+  G <- bigsnp$genotypes
+
+  FUN <- function(x, log_var, beta2) {
+    S <- 1 + x[[1]]; sigma2 <- x[[2]]
+    S * sum(log_var) + length(log_var) * log(sigma2) + sum(beta2 / exp(S * log_var)) / sigma2
+  }
+
+  DER <- function(x, log_var, beta2) {
+    S <- 1 + x[[1]]; sigma2 <- x[[2]]
+    res1 <- sum(log_var) - sum(log_var * beta2 / exp(S * log_var)) / sigma2
+    res2 <- length(log_var) / sigma2 - sum(beta2 / exp(S * log_var)) / sigma2^2
+    c(res1, res2)
+  }
+
+  alpha <- 0
+  simu <- snp_simuPheno(G, 0.2, 500, alpha = alpha)
+  log_var <- log(big_colstats(G, ind.col = simu$set)$var)
+  beta2 <- simu$effects^2
+
+  # without bootstrap
+  res1 <- optim(par = c(-0.5, 0.2 / 500), fn = FUN, gr = DER, method = "L-BFGS-B",
+                lower = c(-1.5, 0.2 / 5000), upper = c(0.5, 0.2 / 50),
+                log_var = log_var, beta2 = beta2)$par
+  res2 <- bigsnpr:::MLE_alpha(par = c(-0.5, res1[2] * runif(1, 0.7, 1.4)),
+                              log_var = log_var, curr_beta = simu$effects,
+                              ind_causal = 0:499, alpha_bounds = c(-0.5, 1.5))
+  expect_equal(res2[1:2] - 1:0, res1, tolerance = 1e-4)
+
+  # with bootstrap
+  all_est <- replicate(1000, {
+    ind <- sample(500, replace = TRUE)
+    optim(par = c(-0.5, 0.2 / 500), fn = FUN, gr = DER, method = "L-BFGS-B",
+          lower = c(-1.5, 0.2 / 5000), upper = c(0.5, 0.2 / 50),
+          log_var = log_var[ind], beta2 = beta2[ind])$par
+  })
+
+  all_est2 <- replicate(1000, {
+    bigsnpr:::MLE_alpha(par = c(-0.5, mean(all_est[2, ])), ind_causal = 0:499,
+                        log_var = log_var, curr_beta = simu$effects,
+                        alpha_bounds = c(-0.5, 1.5), boot = TRUE)[1:2] - 1:0
+  })
+  Q <- ppoints(10)
+  expect_equal(quantile(all_est[1, ], Q), quantile(all_est2[1, ], Q),
+               tolerance = 0.1)
+  expect_equal(quantile(all_est[2, ], Q), quantile(all_est2[2, ], Q),
+               tolerance = 0.1)
 })
 
 ################################################################################

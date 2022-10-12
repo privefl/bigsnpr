@@ -154,6 +154,7 @@ bed <- function(bedfile) new(Class = "bed", bedfile = bedfile)
 #' @return Dimensions of `x`.
 #'
 #' @name bed-methods
+#' @keywords internal
 NULL
 
 ################################################################################

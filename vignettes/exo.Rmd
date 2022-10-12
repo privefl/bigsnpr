@@ -21,7 +21,10 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png', dpi = 95)
 Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. I store those files in a directory called `"tmp-data"` here.
 
 ```{r, echo=FALSE, eval=FALSE}
-unzip("data-raw/public-data.zip")
+zip <- runonce::download_file(
+  "https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip",
+  dir = "tmp-data")
+unzip(zip)
 ```
 
 ```{r, echo=FALSE}

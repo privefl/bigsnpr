@@ -74,7 +74,8 @@ reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size,
 #'   not discarded and also to speed up the algorithm. Default is `0.3`.
 #' @param max_cost Maximum cost reported. Default is `ncol(corr) / 200`.
 #'
-#' @return A tibble with seven columns:
+#' @return Either `NULL` when no block splitting satisfies the conditions,
+#'   or a tibble with seven columns:
 #'   - `$max_size`: Input parameter, useful when providing a vector of values to try.
 #'   - `$n_block`: Number of blocks.
 #'   - `$cost`: The sum of squared correlations outside the blocks.

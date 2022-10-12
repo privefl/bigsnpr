@@ -300,7 +300,7 @@ In the LDpred2 paper, we proposed an automatic way of filtering bad chains by co
 ```{r}
 # `range` should be between 0 and 1
 (range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est))))
-(keep <- (range > (0.9 * quantile(range, 0.9))))
+(keep <- (range > (0.95 * quantile(range, 0.95))))
 ```
 
 To get the final effects / predictions (after filtering):
@@ -363,6 +363,71 @@ best_grid_overall <-
   `if`(max(params2$score, na.rm = TRUE) > max(params$score, na.rm = TRUE),
        best_grid_lassosum2, best_beta_grid)
 ```
+
+## Inference with LDpred2-auto
+
+LDpred2-auto has been very recently extended and improved to allow for estimating $h^2$, $p$, and $\alpha$, a third parameter that controls how expected effect sizes relate to minor allele frequencies. The new model assumed by LDpred2-auto is
+\begin{equation}
+\beta_j = S_j \gamma_j \sim \left\{
+\begin{array}{ll}
+\mathcal N \big( 0,~\sigma_\beta^2 \cdot (S_j^2)^{(\alpha + 1)} \big) & \mbox{with probability $p$,} \\
+0 & \mbox{otherwise,}
+\end{array}
+\right.
+\end{equation}
+where $p$ is the proportion of causal variants, $h^2$ the (SNP) heritability, $\boldsymbol{\gamma}$ the effect sizes on the allele scale, $\boldsymbol{S}$ the standard deviations of the genotypes, and $\boldsymbol{\beta}$ the effects of the scaled genotypes.
+
+Parameters $h^2$, $p$, and $\alpha$ (and 95% CIs) can be estimated using:
+```{r}
+coef_shrink <- 0.95
+multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
+                               vec_p_init = seq_log(1e-4, 0.2, length.out = 50),
+                               burn_in = 500, num_iter = 500, report_step = 20,
+                               allow_jump_sign = FALSE, shrink_corr = coef_shrink,
+                               ncores = NCORES)
+(range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est))))
+(keep <- which(range > (0.95 * quantile(range, 0.95, na.rm = TRUE)) & range < 3))
+```
+
+```{r}
+all_h2 <- sapply(multi_auto[keep], function(auto) tail(auto$path_h2_est, 500))
+quantile(all_h2, c(0.5, 0.025, 0.975))
+all_p <- sapply(multi_auto[keep], function(auto) tail(auto$path_p_est, 500))
+quantile(all_p, c(0.5, 0.025, 0.975))
+all_alpha <- sapply(multi_auto[keep], function(auto) tail(auto$path_alpha_est, 500))
+quantile(all_alpha, c(0.5, 0.025, 0.975))
+```
+
+Predictive performance $r^2$ can also be inferred from the Gibbs sampler:
+```{r}
+bsamp <- lapply(multi_auto[keep], function(auto) auto$sample_beta)
+all_r2 <- do.call("cbind", lapply(seq_along(bsamp), function(ic) {
+  b1 <- bsamp[[ic]]
+  Rb1 <- apply(b1, 2, function(x)
+    coef_shrink * bigsparser::sp_prodVec(corr, x) + (1 - coef_shrink) * x)
+  b2 <- do.call("cbind", bsamp[-ic])
+  b2Rb1 <- as.matrix(Matrix::crossprod(b2, Rb1))
+}))
+quantile(all_r2, c(0.5, 0.025, 0.975))
+```
+
+To compare to
+```{r}
+beta_auto <- rowMeans(sapply(multi_auto[keep], function(auto) auto$beta_est))
+pred_auto <- big_prodVec(G, beta_auto, ind.col = df_beta[["_NUM_ID_"]])
+pcor(pred_auto, y, NULL)^2
+```
+
+These are not exactly the same, which we attribute to the small number of variants used in this fake data.
+
+We can also get per-variant probabilities of being causal (for fine-mapping purposes)
+```{r}
+postp <- rowMeans(sapply(multi_auto[keep], function(auto) auto$postp_est))
+qplot(y = postp, alpha = I(0.2)) + theme_bigstatsr()
+```
+
+You can also infer local per-block or per-annotation $h^2$ following the code [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/run-ldpred2-ukbb.R#L158-L165) and [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/height-meta-1600k.R#L170-L216).
+
 
 ```{r}
 # Some cleaning

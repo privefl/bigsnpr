@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.10.8
-Date: 2022-07-05
+Version: 1.11.4
+Date: 2022-10-12
 Authors@R: c(
     person("Florian", "Privé", email = "florian.prive.21@gmail.com", role = c("aut", "cre")),
     person("Michael", "Blum", role = "ths"),
@@ -20,8 +20,8 @@ SystemRequirements: A few functions from package 'bigsnpr' wrap existing
     provided to download these software. Note that these external software might 
     not work for some operating systems (e.g. 'PLINK' might not work on Solaris).
 Depends:
-    R (>= 3.3), 
-    bigstatsr (>= 1.5.6)
+    R (>= 3.4), 
+    bigstatsr (>= 1.5.11)
 Imports:
     bigassertr (>= 0.1.3),
     bigparallelr,
@@ -36,6 +36,7 @@ Imports:
     Matrix,
     methods,
     Rcpp,
+    runonce (>= 0.2.3),
     stats,
     vctrs
 LinkingTo:
@@ -43,7 +44,9 @@ LinkingTo:
     bigstatsr,
     Rcpp,
     RcppArmadillo (>= 0.9.600),
-    rmio
+    rmio,
+    roptim (>= 0.1.6)
+Remotes: privefl/bigstatsr
 Suggests:
     bindata,
     covr,
@@ -52,13 +55,13 @@ Suggests:
     gaston,
     glue,
     Hmisc,
+    microbenchmark,
     pcadapt (>= 4.1),
     quadprog,
     RhpcBLASctl,
     rmutil,
     RSpectra,
     RSQLite,
-    runonce,
     R.utils,
     spelling, 
     testthat,

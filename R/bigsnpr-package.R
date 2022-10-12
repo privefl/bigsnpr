@@ -40,6 +40,7 @@
 #' @param obj.bed Object of type [bed], which is the mapping of some bed file.
 #'   Use `obj.bed <- bed(bedfile)` to get this object.
 #'
+#' @keywords internal
 "_PACKAGE"
 
 ################################################################################

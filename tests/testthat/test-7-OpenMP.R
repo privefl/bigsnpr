@@ -211,6 +211,37 @@ test_that("parallel snp_ld_scores() works", {
 
 ################################################################################
 
+test_that("parallel ld_scores_sfbm() works", {
+
+  bigsnp <- snp_attachExtdata()
+  G <- bigsnp$genotypes
+
+  corr <- snp_cor(G, size = 100, ncores = 2)
+  ld1 <- bigsnpr:::sp_colSumsSq_sym(corr@p, corr@i, corr@x)
+
+  corr2 <- as_SFBM(corr)
+  replicate(50, {
+    ld2 <- bigsnpr:::ld_scores_sfbm(corr2, compact = FALSE, ncores = 2)
+    expect_equal(ld2, ld1)
+  })
+
+  corr3 <- as_SFBM(corr, compact = TRUE)
+  replicate(50, {
+    ld3 <- bigsnpr:::ld_scores_sfbm(corr3, compact = TRUE, ncores = 2)
+    expect_equal(ld3, ld1)
+  })
+
+  time_seq <- microbenchmark::microbenchmark(
+    bigsnpr:::ld_scores_sfbm(corr2, compact = FALSE, ncores = 1)
+  )$time
+  time_par <- microbenchmark::microbenchmark(
+    bigsnpr:::ld_scores_sfbm(corr2, compact = FALSE, ncores = 2)
+  )$time
+  expect_lt(median(time_par), median(time_seq))
+})
+
+################################################################################
+
 test_that("parallel bed_counts() works", {
 
   bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")

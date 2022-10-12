@@ -17,7 +17,7 @@ snp_ldsc(
   ncores = 1
 )
 
-snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ...)
+snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ncores = 1, ...)
 }
 \arguments{
 \item{ld_score}{Vector of LD scores.}
@@ -48,7 +48,7 @@ This is equivalent to parameter \code{--two-step}.}
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}
 
-\item{corr}{Sparse correlation matrix.}
+\item{corr}{Sparse correlation matrix. Can also be an \link[=SFBM-class]{SFBM}.}
 
 \item{df_beta}{A data frame with 3 columns:
 \itemize{

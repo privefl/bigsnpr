@@ -2,6 +2,7 @@
 
 #' CODE_012: code genotype calls (3) and missing values.
 #' @rdname snp_codes
+#' @keywords internal
 #' @export
 CODE_012 <- c(0, 1, 2, rep(NA, 253))
 

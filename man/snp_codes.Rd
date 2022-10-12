@@ -30,3 +30,4 @@ CODE_IMPUTE_PRED: code genotype calls and missing values (4),
 and imputed calls (3).
 }
 \keyword{datasets}
+\keyword{internal}

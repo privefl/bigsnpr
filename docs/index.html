@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.10.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
       </span>
     </div>
 
@@ -42,7 +44,7 @@
   <a href="reference/index.html">Manual</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
      
     <span class="caret"></span>
@@ -80,14 +82,14 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://privefl.github.io/about.html">
+  <a href="https://privefl.github.io/about.html" class="external-link">
     <span class="fa fa-user"></span>
      
     About
   </a>
 </li>
 <li>
-  <a href="https://github.com/privefl/bigsnpr">
+  <a href="https://github.com/privefl/bigsnpr" class="external-link">
     <span class="fa fa-github fa"></span>
      
   </a>
@@ -112,80 +114,79 @@
   <div class="contents col-md-9">
 
 
-<div id="bigsnpr" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#bigsnpr" class="anchor"></a>bigsnpr</h1></div>
-<p>{bigsnpr} is an R package for the analysis of massive SNP arrays, primarily designed for human genetics. It enhances the features of <a href="https://privefl.github.io/bigstatsr/">package {bigstatsr}</a> for the purpose of analyzing genotype data.</p>
-<p><a href="https://privefl.github.io/bigsnpr/articles/demo.html">Quick demo</a></p>
-<p><a href="https://privefl.github.io/bigsnpr/reference/index.html"><strong>LIST OF FEATURES</strong></a></p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level1">
+<div class="page-header"><h1 id="bigsnpr">bigsnpr<a class="anchor" aria-label="anchor" href="#bigsnpr"></a>
+</h1></div>
+<p>{bigsnpr} is an R package for the analysis of massive SNP arrays, primarily designed for human genetics. It enhances the features of <a href="https://privefl.github.io/bigstatsr/" class="external-link">package {bigstatsr}</a> for the purpose of analyzing genotype data.</p>
+<p><a href="https://privefl.github.io/bigsnpr/articles/demo.html" class="external-link">Quick demo</a></p>
+<p><a href="https://privefl.github.io/bigsnpr/reference/index.html" class="external-link"><strong>LIST OF FEATURES</strong></a></p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>In R, run</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"privefl/bigsnpr"</span><span class="op">)</span></code></pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"privefl/bigsnpr"</span><span class="op">)</span></code></pre></div>
 <p>or for the CRAN version</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"bigsnpr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"bigsnpr"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="input-formats" class="section level2">
-<h2 class="hasAnchor">
-<a href="#input-formats" class="anchor"></a>Input formats</h2>
+<div class="section level2">
+<h2 id="input-formats">Input formats<a class="anchor" aria-label="anchor" href="#input-formats"></a>
+</h2>
 <p>This package reads <em>bed</em>/<em>bim</em>/<em>fam</em> files (PLINK preferred format) using functions <code><a href="reference/snp_readBed.html">snp_readBed()</a></code> and <code><a href="reference/snp_readBed.html">snp_readBed2()</a></code>. Before reading into this package’s special format, quality control and conversion can be done using PLINK, which can be called directly from R using <code><a href="reference/snp_plinkQC.html">snp_plinkQC()</a></code> and <code><a href="reference/snp_plinkKINGQC.html">snp_plinkKINGQC()</a></code>.</p>
 <p>This package can also read <strong>UK Biobank BGEN files</strong> using function <code><a href="reference/snp_readBGEN.html">snp_readBGEN()</a></code>. This function takes around 40 minutes to read 1M variants for 400K individuals using 15 cores.</p>
 <p>This package uses a class called <code>bigSNP</code> for representing SNP data. A <code>bigSNP</code> object is a list with some elements:</p>
 <ul>
 <li>
-<code>$genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html"><code>FBM.code256</code></a>. Rows are samples and columns are variants. This stores genotype calls or <strong>dosages</strong> (rounded to 2 decimal places).</li>
+<code>$genotypes</code>: A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html" class="external-link"><code>FBM.code256</code></a>. Rows are samples and columns are variants. This stores genotype calls or <strong>dosages</strong> (rounded to 2 decimal places).</li>
 <li>
 <code>$fam</code>: A <code>data.frame</code> with some information on the individuals.</li>
 <li>
 <code>$map</code>: A <code>data.frame</code> with some information on the variants.</li>
 </ul>
 <p><strong>Note that most of the algorithms of this package don’t handle missing values.</strong> You can use <code><a href="reference/snp_fastImpute.html">snp_fastImpute()</a></code> (taking a few hours for a chip of 15K x 300K) and <code><a href="reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code> (taking a few minutes only) to impute missing values of <em>genotyped</em> variants.</p>
-<p>Package {bigsnpr} also provides functions that directly work on bed files with a few missing values (the <code>bed_*()</code> functions). See paper <a href="https://doi.org/10.1093/bioinformatics/btaa520">“Efficient toolkit implementing..”</a>.</p>
+<p>Package {bigsnpr} also provides functions that directly work on bed files with a few missing values (the <code>bed_*()</code> functions). See paper <a href="https://doi.org/10.1093/bioinformatics/btaa520" class="external-link">“Efficient toolkit implementing..”</a>.</p>
 </div>
-<div id="polygenic-scores" class="section level2">
-<h2 class="hasAnchor">
-<a href="#polygenic-scores" class="anchor"></a>Polygenic scores</h2>
+<div class="section level2">
+<h2 id="polygenic-scores">Polygenic scores<a class="anchor" aria-label="anchor" href="#polygenic-scores"></a>
+</h2>
 <p>Polygenic scores are one of the main focus of this package. There are 3 main methods currently available:</p>
 <ul>
-<li><p>Penalized regressions with individual-level data (see <a href="https://doi.org/10.1534/genetics.119.302019">paper</a> and <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html">tutorial</a>)</p></li>
-<li><p>Clumping and Thresholding (C+T) and Stacked C+T (SCT) with summary statistics and individual level data (see <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">paper</a> and <a href="https://privefl.github.io/bigsnpr/articles/SCT.html">tutorial</a>).</p></li>
-<li><p>LDpred2 with summary statistics (see <a href="https://doi.org/10.1093/bioinformatics/btaa1029">paper</a> and <a href="https://privefl.github.io/bigsnpr/articles/LDpred2.html">tutorial</a>)</p></li>
+<li><p>Penalized regressions with individual-level data (see <a href="https://doi.org/10.1534/genetics.119.302019" class="external-link">paper</a> and <a href="https://privefl.github.io/bigstatsr/articles/penalized-regressions.html" class="external-link">tutorial</a>)</p></li>
+<li><p>Clumping and Thresholding (C+T) and Stacked C+T (SCT) with summary statistics and individual level data (see <a href="https://doi.org/10.1016/j.ajhg.2019.11.001" class="external-link">paper</a> and <a href="https://privefl.github.io/bigsnpr/articles/SCT.html" class="external-link">tutorial</a>).</p></li>
+<li><p>LDpred2 with summary statistics (see <a href="https://doi.org/10.1093/bioinformatics/btaa1029" class="external-link">paper</a> and <a href="https://privefl.github.io/bigsnpr/articles/LDpred2.html" class="external-link">tutorial</a>)</p></li>
 </ul>
 </div>
-<div id="possible-upcoming-features" class="section level2">
-<h2 class="hasAnchor">
-<a href="#possible-upcoming-features" class="anchor"></a>Possible upcoming features</h2>
+<div class="section level2">
+<h2 id="possible-upcoming-features">Possible upcoming features<a class="anchor" aria-label="anchor" href="#possible-upcoming-features"></a>
+</h2>
 <ul>
-<li><p>Multiple imputation for GWAS (<a href="https://doi.org/10.1371/journal.pgen.1006091" class="uri">https://doi.org/10.1371/journal.pgen.1006091</a>).</p></li>
+<li><p>Multiple imputation for GWAS (<a href="https://doi.org/10.1371/journal.pgen.1006091" class="external-link uri">https://doi.org/10.1371/journal.pgen.1006091</a>).</p></li>
 <li><p>More interactive (visual) QC.</p></li>
 </ul>
 <p>You can request some feature by opening an issue.</p>
 </div>
-<div id="bug-report--support" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bug-report--support" class="anchor"></a>Bug report / Support</h2>
-<p><a href="https://stackoverflow.com/q/5963269/6103040">How to make a great R reproducible example?</a></p>
+<div class="section level2">
+<h2 id="bug-report--support">Bug report / Support<a class="anchor" aria-label="anchor" href="#bug-report--support"></a>
+</h2>
+<p><a href="https://stackoverflow.com/q/5963269/6103040" class="external-link">How to make a great R reproducible example?</a></p>
 <p>Please open an issue if you find a bug.</p>
-<p>If you want help using {bigstatsr} (the <code>big_*()</code> functions), please open an issue on <a href="https://github.com/privefl/bigstatsr/issues">{bigstatsr}’s repo</a>, or post on Stack Overflow with the tag <em>bigstatsr</em>.</p>
+<p>If you want help using {bigstatsr} (the <code>big_*()</code> functions), please open an issue on <a href="https://github.com/privefl/bigstatsr/issues" class="external-link">{bigstatsr}’s repo</a>, or post on Stack Overflow with the tag <em>bigstatsr</em>.</p>
 <p>I will always redirect you to GitHub issues if you email me, so that others can benefit from our discussion.</p>
 </div>
-<div id="references" class="section level2">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <ul>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/bty185">“Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr.”</a> Bioinformatics 34.16 (2018): 2781-2787.</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1534/genetics.119.302019">“Efficient implementation of penalized regression for genetic risk prediction.”</a> Genetics 212.1 (2019): 65-74.</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1016/j.ajhg.2019.11.001">“Making the most of Clumping and Thresholding for polygenic scores.”</a> The American Journal of Human Genetics 105.6 (2019): 1213-1221.</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa520">“Efficient toolkit implementing best practices for principal component analysis of population genetic data.”</a> Bioinformatics 36.16 (2020): 4449-4457.</p></li>
-<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa1029">“LDpred2: better, faster, stronger.”</a> Bioinformatics 36.22-23 (2020): 5424-5431.</p></li>
-<li><p>Privé, Florian. <a href="https://doi.org/10.1093/bioinformatics/btab519">“Optimal linkage disequilibrium splitting.”</a> Bioinformatics 38.1 (2022): 255–256.</p></li>
-<li><p>Privé, Florian. <a href="https://doi.org/10.1101/2021.10.27.466078">“Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics.”</a> bioRxiv (2021).</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/bty185" class="external-link">“Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr.”</a> <em>Bioinformatics</em> 34.16 (2018): 2781-2787.</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1534/genetics.119.302019" class="external-link">“Efficient implementation of penalized regression for genetic risk prediction.”</a> <em>Genetics</em> 212.1 (2019): 65-74.</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1016/j.ajhg.2019.11.001" class="external-link">“Making the most of Clumping and Thresholding for polygenic scores.”</a> <em>The American Journal of Human Genetics</em> 105.6 (2019): 1213-1221.</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa520" class="external-link">“Efficient toolkit implementing best practices for principal component analysis of population genetic data.”</a> <em>Bioinformatics</em> 36.16 (2020): 4449-4457.</p></li>
+<li><p>Privé, Florian, et al. <a href="https://doi.org/10.1093/bioinformatics/btaa1029" class="external-link">“LDpred2: better, faster, stronger.”</a> <em>Bioinformatics</em> 36.22-23 (2020): 5424-5431.</p></li>
+<li><p>Privé, Florian. <a href="https://doi.org/10.1093/bioinformatics/btab519" class="external-link">“Optimal linkage disequilibrium splitting.”</a> <em>Bioinformatics</em> 38.1 (2022): 255–256.</p></li>
+<li><p>Privé, Florian. <a href="https://doi.org/10.1093/bioinformatics/btac348" class="external-link">“Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics.”</a> <em>Bioinformatics</em> 38.13 (2022): 3477-3480.</p></li>
 </ul>
-<p><br></p>
 </div>
 </div>
 
@@ -193,55 +194,59 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=bigsnpr">https://​cloud.r-project.org/​package=bigsnpr</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/privefl/bigsnpr/">https://​github.com/​privefl/​bigsnpr/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/privefl/bigsnpr/issues">https://​github.com/​privefl/​bigsnpr/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
-</ul>
-</div>
-<div class="citation">
-<h2>Citation</h2>
-<ul class="list-unstyled">
-<li><a href="authors.html">Citing bigsnpr</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Florian Privé <br><small class="roles"> Author, maintainer </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="https://cloud.r-project.org/package=bigsnpr" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/privefl/bigsnpr/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/privefl/bigsnpr/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/privefl/bigsnpr/actions"><img src="https://github.com/privefl/bigsnpr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/github/privefl/bigsnpr"><img src="https://img.shields.io/codecov/c/github/privefl/bigsnpr/master.svg" alt="Coverage Status"></a></li>
-<li><a href="https://CRAN.R-project.org/package=bigsnpr"><img src="http://www.r-pkg.org/badges/version/bigsnpr" alt="CRAN_Status_Badge"></a></li>
-<li><a href="http://dx.doi.org/10.1093/bioinformatics/bty185"><img src="https://zenodo.org/badge/doi/10.1093/bioinformatics/bty185.svg" alt="DOI"></a></li>
+<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing bigsnpr</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Florian Privé <br><small class="roles"> Author, maintainer </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/privefl/bigsnpr/actions" class="external-link"><img src="https://github.com/privefl/bigsnpr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://app.codecov.io/gh/privefl/bigsnpr?branch=master" class="external-link"><img src="https://codecov.io/gh/privefl/bigsnpr/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://CRAN.R-project.org/package=bigsnpr" class="external-link"><img src="http://www.r-pkg.org/badges/version/bigsnpr" alt="CRAN_Status_Badge"></a></li>
+<li><a href="http://dx.doi.org/10.1093/bioinformatics/bty185" class="external-link"><img src="https://zenodo.org/badge/doi/10.1093/bioinformatics/bty185.svg" alt="DOI"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Florian Privé.</p>
+  <p></p>
+<p>Developed by Florian Privé.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -249,6 +254,8 @@
 
   
 
+
+  
 
   </body>
 </html>

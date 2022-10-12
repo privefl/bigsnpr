@@ -80,6 +80,7 @@ List corMat0(C macc,
         double r = num / ::sqrt(deno_x * deno_y);
 
         if (ISNAN(r) || std::abs(r) > thr[nona - 1]) {
+          if (r > 1) { r = 1; } else if (r < -1) { r = -1; }  // e.g. 1.000...04
           ind.push_back(j);
           val.push_back(r);
         }

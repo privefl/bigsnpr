@@ -161,13 +161,13 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 
 #' @rdname snp_ldsc
 #'
-#' @param corr Sparse correlation matrix.
+#' @param corr Sparse correlation matrix. Can also be an [SFBM][SFBM-class].
 #' @param df_beta A data frame with 3 columns:
 #'   - `$beta`: effect size estimates
 #'   - `$beta_se`: standard errors of effect size estimates
 #'   - `$n_eff`: sample size when estimating `beta`
 #'     (in the case of binary traits, this is `4 / (1 / n_control + 1 / n_case)`)
-#' @inheritDotParams snp_ldsc chi2_thr1 chi2_thr2 ncores
+#' @inheritDotParams snp_ldsc chi2_thr1 chi2_thr2
 #'
 #' @export
 #'
@@ -184,7 +184,11 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 #' snp_ldsc2(corr, df_beta)
 #' snp_ldsc2(corr, df_beta, blocks = 20, intercept = NULL)
 #'
-snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
+snp_ldsc2 <- function(corr, df_beta,
+                      blocks = NULL,
+                      intercept = 1,
+                      ncores = 1,
+                      ...) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
@@ -192,6 +196,8 @@ snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
 
   ld2 <- if (inherits(corr, "dsCMatrix")) {
     sp_colSumsSq_sym(corr@p, corr@i, corr@x)
+  } else if (inherits(corr, "SFBM")) {
+    ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]]), ncores = ncores)
   } else {
     Matrix::colSums(corr^2)
   }
@@ -203,6 +209,7 @@ snp_ldsc2 <- function(corr, df_beta, blocks = NULL, intercept = 1, ...) {
     sample_size = df_beta$n_eff,
     blocks      = blocks,
     intercept   = intercept,
+    ncores      = ncores,
     ...
   )
 }

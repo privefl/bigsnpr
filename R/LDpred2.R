@@ -148,7 +148,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   Disabled when parallelism is used.
 #' @param report_step Step to report sampling betas (after burn-in and before
 #'   unscaling). Nothing is reported by default. If using `num_iter = 200` and
-#'   `report_step = 20`, then 10 vectors of betas are reported.
+#'   `report_step = 20`, then 10 vectors of sampling betas are reported
+#'   (as a sparse matrix with 10 columns).
 #' @param allow_jump_sign Whether to allow for effects sizes to change sign in
 #'   consecutive iterations? Default is `TRUE` (normal sampling). You can use
 #'   `FALSE` to force effects to go through 0 first before changing sign. Setting
@@ -157,7 +158,9 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   for accelerating convergence of chains with a large initial value for p.
 #' @param shrink_corr Shrinkage multiplicative coefficient to apply to off-diagonal
 #'   elements of the correlation matrix. Default is `1` (unchanged).
-#'   You can use e.g. `0.9`.
+#'   You can use e.g. `0.95` to add a bit of regularization.
+#' @param alpha_bounds Boundaries for the estimates of \eqn{\alpha}.
+#'   Default is `c(-1.5, 0.5)`. You can use the same value twice to fix \eqn{\alpha}.
 #'
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes (on the allele scale)
@@ -165,7 +168,7 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   - `$corr_est`, the "imputed" correlations between variants and phenotypes,
 #'     which can be used for post-QCing variants by comparing those to
 #'     `with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))`
-#'   - `$sample_beta`: Matrix of sampling betas (see parameter `report_step`),
+#'   - `$sample_beta`: Sparse matrix of sampling betas (see parameter `report_step`),
 #'     *not* on the allele scale, for which you need to multiply by
 #'     `with(df_beta, sqrt(n_eff * beta_se^2 + beta^2))`
 #'   - `$postp_est`: vector of posterior probabilities of being causal
@@ -192,6 +195,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              report_step = num_iter + 1L,
                              allow_jump_sign = TRUE,
                              shrink_corr = 1,
+                             alpha_bounds = c(-1.5, 0.5),
                              ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
@@ -200,8 +204,11 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   assert_pos(h2_init, strict = TRUE)
 
   N <- df_beta$n_eff
-  scale <- sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
-  beta_hat <- df_beta$beta / scale
+  sd <- 1 / sqrt(N * df_beta$beta_se^2 + df_beta$beta^2)
+  beta_hat <- df_beta$beta * sd
+
+  mean_ld <- mean(
+    ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]]), ncores = ncores))
 
   ord <- order(-vec_p_init)  # large p first
 
@@ -211,21 +218,31 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   res_list <- foreach(p_init = vec_p_init[ord], .export = FUNs) %dorng% {
 
     ldpred_auto <- ldpred2_gibbs_auto(
-      corr      = corr,
-      beta_hat  = beta_hat,
-      beta_init = rep(0, length(beta_hat)),
-      order     = seq_along(beta_hat) - 1L,
-      n_vec     = N,
-      p_init    = p_init,
-      h2_init   = h2_init,
-      burn_in   = burn_in,
-      num_iter  = num_iter,
-      verbose   = verbose && (ncores == 1),
-      report_step = report_step,
-      allow_jump_sign = allow_jump_sign,
-      shrink_corr = shrink_corr
+      corr         = corr,
+      beta_hat     = beta_hat,
+      beta_init    = rep(0, length(beta_hat)),
+      order        = seq_along(beta_hat) - 1L,
+      n_vec        = N,
+      log_var      = 2 * log(sd),
+      p_init       = p_init,
+      h2_init      = h2_init,
+      burn_in      = burn_in,
+      num_iter     = num_iter,
+      verbose      = verbose && (ncores == 1),
+      report_step  = report_step,
+      no_jump_sign = !allow_jump_sign,
+      shrink_corr  = shrink_corr,
+      alpha_bounds = alpha_bounds + 1,
+      mean_ld      = mean_ld
     )
-    ldpred_auto$beta_est <- ldpred_auto$beta_est * scale
+    ldpred_auto$beta_est <- ldpred_auto$beta_est / sd
+
+    ldpred_auto$h2_est    <- mean(tail(ldpred_auto$path_h2_est,    num_iter))
+    ldpred_auto$p_est     <- mean(tail(ldpred_auto$path_p_est,     num_iter))
+    ldpred_auto$alpha_est <- mean(tail(ldpred_auto$path_alpha_est, num_iter))
+
+    ldpred_auto$h2_init <- h2_init
+    ldpred_auto$p_init  <- p_init
 
     if (sparse) {
       beta_gibbs <- ldpred2_gibbs_one(
@@ -240,7 +257,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
         burn_in   = 50,
         num_iter  = 100
       )
-      ldpred_auto$beta_est_sparse <- beta_gibbs * scale
+      ldpred_auto$beta_est_sparse <- beta_gibbs / sd
     }
 
     ldpred_auto

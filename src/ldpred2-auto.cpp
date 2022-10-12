@@ -1,12 +1,14 @@
 /******************************************************************************/
 
+#include <bigstatsr/arma-strict-R-headers.h>
 #include <bigsparser/SFBM.h>
 #include <bigstatsr/utils.h>
+#include "optim-MLE-alpha.h"
 
 /******************************************************************************/
 
 const double MIN_P  = 1e-5;
-const double MIN_H2 = 1e-4;
+const double MIN_H2 = 1e-3;
 
 /******************************************************************************/
 
@@ -17,18 +19,62 @@ double dotprod2(const NumericVector& X, const NumericVector& Y) {
 /******************************************************************************/
 
 // [[Rcpp::export]]
+arma::vec& MLE_alpha(arma::vec& par,
+                     const std::vector<int>& ind_causal,
+                     const NumericVector& log_var,
+                     const NumericVector& curr_beta,
+                     const NumericVector& alpha_bounds,
+                     bool boot = false,
+                     bool verbose = false) {
+
+  MLE mle(ind_causal, log_var, curr_beta, boot);
+  Roptim<MLE> opt("L-BFGS-B");
+  opt.set_lower({alpha_bounds[0], par[1] / 2});
+  opt.set_upper({alpha_bounds[1], par[1] * 2});
+  opt.set_hessian(false);
+  opt.control.trace = verbose;
+
+  if (verbose) {
+    arma::vec grad1(2), grad2(2);
+    mle.Gradient(par, grad1);
+    mle.ApproximateGradient(par, grad2);
+
+    Rcout << "-------------------------" << std::endl;
+    Rcout << "Gradient checking" << std::endl;
+    grad1.t().print("analytic:");
+    grad2.t().print("approximate:");
+    Rcout << "-------------------------" << std::endl;
+  }
+
+  opt.minimize(mle, par);
+
+  if (verbose) {
+    Rcout << "-------------------------" << std::endl;
+    opt.print();
+    Rcout << "-------------------------" << std::endl;
+  }
+
+  return par;
+}
+
+/******************************************************************************/
+
+// [[Rcpp::export]]
 List ldpred2_gibbs_auto(Environment corr,
                         const NumericVector& beta_hat,
                         const NumericVector& beta_init,
                         const IntegerVector& order,
                         const NumericVector& n_vec,
+                        const NumericVector& log_var,
                         double p_init,
                         double h2_init,
                         int burn_in,
                         int num_iter,
                         int report_step,
-                        bool allow_jump_sign,
+                        bool no_jump_sign,
                         double shrink_corr,
+                        const NumericVector& alpha_bounds,
+                        double mean_ld = 1,
                         bool verbose = false) {
 
   XPtr<SFBM> sfbm = corr["address"];
@@ -44,29 +90,32 @@ List ldpred2_gibbs_auto(Environment corr,
   NumericVector dotprods  = sfbm->prod(curr_beta);
   NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m);
 
-  NumericMatrix sample_beta(m, num_iter / report_step);
-  int ind_report = 0, next_k_reported = burn_in - 1 + report_step;
+  arma::sp_mat sample_beta(m, num_iter / report_step);
+  int ind_report = 0, next_k_reported = burn_in + report_step - 1;
 
   int num_iter_tot = burn_in + num_iter;
-  NumericVector p_est(num_iter_tot), h2_est(num_iter_tot);
+  NumericVector p_est(num_iter_tot), h2_est(num_iter_tot), alpha_est(num_iter_tot);
 
   double cur_h2_est = shrink_corr * dotprod2(curr_beta, dotprods) +
     (1 - shrink_corr) * dotprod2(curr_beta, curr_beta);
-  double p = p_init, h2 = h2_init, avg_p = 0, avg_h2 = 0;
-  bool no_jump_sign = !allow_jump_sign;
+  double p = std::max(p_init, MIN_P), h2 = std::max(h2_init, MIN_H2);
+  arma::vec par_mle = {0, h2 / (m * p)};  // (alpha + 1) and sigma2 [init]
+  std::vector<int> ind_causal;
 
   for (int k = 0; k < num_iter_tot; k++) {
 
-    int nb_causal = 0;
-    double h2_per_var = h2 / (m * p);
     double inv_odd_p = (1 - p) / p;
+    double alpha_plus_one = par_mle[0], sigma2 = par_mle[1];
+
+    ind_causal.clear();
 
     for (const int& j : order) {
 
       double dotprod = dotprods[j];  // sfbm->dot_col(j, curr_beta);
       double res_beta_hat_j = beta_hat[j] + shrink_corr * (curr_beta[j] - dotprod);
 
-      double C1 = h2_per_var * n_vec[j];
+      double scale_freq = ::exp(alpha_plus_one * log_var[j]);
+      double C1 = scale_freq * sigma2 * n_vec[j];
       double C2 = 1 / (1 + 1 / C1);
       double C3 = C2 * res_beta_hat_j;
       double C4 = C2 / n_vec[j];
@@ -90,14 +139,14 @@ List ldpred2_gibbs_auto(Environment corr,
 
         if (no_jump_sign && (samp_beta * prev_beta) < 0) {
           curr_beta[j] = 0;
-          if (k >= burn_in) {  // not sure if I should undo this
-            avg_postp[j] -= postp;
-            avg_beta[j]  -= C3 * postp;
-          }
+          // if (k >= burn_in) {  // not sure if I should undo this
+          //   avg_postp[j] -= postp;
+          //   avg_beta[j]  -= C3 * postp;
+          // }
         } else {
           curr_beta[j] = samp_beta;
           diff += samp_beta;
-          nb_causal++;
+          ind_causal.push_back(j);
         }
 
       } else {
@@ -110,37 +159,36 @@ List ldpred2_gibbs_auto(Environment corr,
       }
     }
 
-    p = std::max(::Rf_rbeta(1 + nb_causal, 1 + m - nb_causal), MIN_P);
+    int nb_causal = ind_causal.size();
+    p = std::max(::Rf_rbeta(1 + nb_causal / mean_ld, 1 + (m - nb_causal) / mean_ld), MIN_P);
     h2 = std::max(cur_h2_est, MIN_H2);
-    if (verbose) Rcout << k + 1 << ": " << p << " // " << h2 << std::endl;
+    par_mle = MLE_alpha(par_mle, ind_causal, log_var, curr_beta, alpha_bounds, true);
+    if (verbose) Rcout <<
+      k + 1 << ": " << p << " // " << h2 << " // " <<  par_mle[0] - 1 << std::endl;
 
-    if (k >= burn_in) {
-      avg_p  += p;
-      avg_h2 += h2;
-      if (k == next_k_reported) {
-        sample_beta(_, ind_report++) = curr_beta;
-        next_k_reported += report_step;
-      }
-    }
+    // path of parameters
     p_est[k]  = p;
     h2_est[k] = h2;
+    alpha_est[k] = par_mle[0] - 1;
+
+    // store some sampling betas
+    if (k == next_k_reported) {
+      for (const int& i : ind_causal) {
+        sample_beta(i, ind_report) = curr_beta[i];
+      }
+      ind_report++;
+      next_k_reported += report_step;
+    }
   }
 
-  double est_p  = avg_p  / num_iter;
-  double est_h2 = avg_h2 / num_iter;
-  if (verbose) Rcout << "Overall: " << est_p << " // " << est_h2 << std::endl;
-
   return List::create(
-    _["beta_est"]    = avg_beta     / num_iter,
-    _["postp_est"]   = avg_postp    / num_iter,
-    _["corr_est"]    = avg_beta_hat / num_iter,
-    _["sample_beta"] = sample_beta,
-    _["p_est"]       = est_p,
-    _["h2_est"]      = est_h2,
-    _["path_p_est"]  = p_est,
-    _["path_h2_est"] = h2_est,
-    _["h2_init"]     = h2_init,
-    _["p_init"]      = p_init);
+    _["beta_est"]       = avg_beta     / num_iter,
+    _["postp_est"]      = avg_postp    / num_iter,
+    _["corr_est"]       = avg_beta_hat / num_iter,
+    _["sample_beta"]    = sample_beta,
+    _["path_p_est"]     = p_est,
+    _["path_h2_est"]    = h2_est,
+    _["path_alpha_est"] = alpha_est);
 }
 
 /******************************************************************************/

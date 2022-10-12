@@ -1,5 +1,5 @@
-#ifndef CLUMPING_UTILS_HPP
-#define CLUMPING_UTILS_HPP
+#ifndef CLUMPING_UTILS_H
+#define CLUMPING_UTILS_H
 
 /******************************************************************************/
 
@@ -44,4 +44,4 @@ inline std::vector<int>& which_to_check(int j0,
 
 /******************************************************************************/
 
-#endif // CLUMPING_UTILS_HPP
+#endif // CLUMPING_UTILS_H
