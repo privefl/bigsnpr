@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
       </span>
     </div>
 
@@ -41,7 +43,7 @@
   <a href="../reference/index.html">Manual</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
      
     <span class="caret"></span>
@@ -63,6 +65,9 @@
       <a href="../articles/bedpca.html">How to capture Population Structure with PCA (directly on PLINK bed files)</a>
     </li>
     <li>
+      <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
+    </li>
+    <li>
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
@@ -76,21 +81,21 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://privefl.github.io/about.html">
-    <span class="fas fa-user"></span>
+  <a href="https://privefl.github.io/about.html" class="external-link">
+    <span class="fa fa-user"></span>
      
     About
   </a>
 </li>
 <li>
-  <a href="https://github.com/privefl/bigsnpr">
-    <span class="fas fa-github fa"></span>
+  <a href="https://github.com/privefl/bigsnpr" class="external-link">
+    <span class="fa fa-github fa"></span>
      
   </a>
 </li>
 <li>
   <a href="../news/index.html">
-    <span class="fas fa-newspaper-o fa"></span>
+    <span class="fa fa-newspaper-o fa"></span>
      
   </a>
 </li>
@@ -104,162 +109,159 @@
 
       
 
-      </header><script src="demo_files/header-attrs/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Demonstration of packages bigsnpr and bigstatsr</h1>
-                        <h4 class="author">Florian Privé</h4>
+                        <h4 data-toc-skip class="author">Florian Privé</h4>
             
-            <h4 class="date">June 28, 2018</h4>
+            <h4 data-toc-skip class="date">June 28, 2018</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/master/vignettes/demo.Rmd"><code>vignettes/demo.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/HEAD/vignettes/demo.Rmd" class="external-link"><code>vignettes/demo.Rmd</code></a></small>
       <div class="hidden name"><code>demo.Rmd</code></div>
 
     </div>
 
     
     
-<div id="get-genotype-file" class="section level2">
-<h2 class="hasAnchor">
-<a href="#get-genotype-file" class="anchor"></a>Get genotype file</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># Get the example bedfile from package bigsnpr</span>
-<span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></pre></div>
+<div class="section level2">
+<h2 id="get-genotype-file">Get genotype file<a class="anchor" aria-label="anchor" href="#get-genotype-file"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Get the example bedfile from package bigsnpr</span>
+<span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="read-from-the-plink-files" class="section level2">
-<h2 class="hasAnchor">
-<a href="#read-from-the-plink-files" class="anchor"></a>Read from the PLINK files</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co"># Load packages bigsnpr and bigstatsr</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://privefl.github.io/bigsnpr/">bigsnpr</a></span><span class="op">)</span></pre></div>
-<pre><code>## Loading required package: bigstatsr</code></pre>
-<pre><code>## Warning: package 'bigstatsr' was built under R version 3.6.3</code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># Read from bed/bim/fam, it will create new files.</span>
+<div class="section level2">
+<h2 id="read-from-the-plink-files">Read from the PLINK files<a class="anchor" aria-label="anchor" href="#read-from-the-plink-files"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Load packages bigsnpr and bigstatsr</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://privefl.github.io/bigsnpr/" class="external-link">bigsnpr</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Loading required package: bigstatsr</span></code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Read from bed/bim/fam, it will create new files.</span>
 <span class="co"># Let's put them in an temporary directory for this demo.</span>
-<span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bedfile</span>, backingfile <span class="op">=</span> <span class="va">tmpfile</span><span class="op">)</span></pre></div>
-<pre><code>## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpqmX1fH\\file3f042fe95634.rds"</code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="co"># Attach the "bigSNP" object in R session</span>
-<span class="va">obj.bigSNP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">tmpfile</span>, <span class="st">".rds"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bedfile</span>, backingfile <span class="op">=</span> <span class="va">tmpfile</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmpq0u9fg\\file39e0465f20da.rds"</span></code></pre>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Attach the "bigSNP" object in R session</span>
+<span class="va">obj.bigSNP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmpfile</span>, <span class="st">".rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># See how it looks like</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">obj.bigSNP</span>, max.level <span class="op">=</span> <span class="fl">2</span>, strict.width <span class="op">=</span> <span class="st">"cut"</span><span class="op">)</span></pre></div>
-<pre><code>## List of 3
-##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"..
-##   ..and 26 methods, of which 12 are  possibly relevant:
-##   ..  add_columns, as.FBM, bm, bm.desc, check_dimensions,
-##   ..  check_write_permissions, copy#envRefClass, initialize,
-##   ..  initialize#FBM, save, show#envRefClass, show#FBM
-##  $ fam      :'data.frame':   517 obs. of  6 variables:
-##   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...
-##   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...
-##   ..$ paternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
-##   ..$ maternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
-##   ..$ sex        : int [1:517] 0 0 0 0 0 0 0 0 0 0 ...
-##   ..$ affection  : int [1:517] 1 1 2 1 1 1 1 1 1 1 ...
-##  $ map      :'data.frame':   4542 obs. of  6 variables:
-##   ..$ chromosome  : int [1:4542] 1 1 1 1 1 1 1 1 1 1 ...
-##   ..$ marker.ID   : chr [1:4542] "SNP0" "SNP1" "SNP2" "SNP3" ...
-##   ..$ genetic.dist: int [1:4542] 0 0 0 0 0 0 0 0 0 0 ...
-##   ..$ physical.pos: int [1:4542] 112 1098 2089 3107 4091 5091 6..
-##   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...
-##   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...
-##  - attr(*, "class")= chr "bigSNP"</code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="co"># Get aliases for useful slots</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">obj.bigSNP</span>, max.level <span class="op">=</span> <span class="fl">2</span>, strict.width <span class="op">=</span> <span class="st">"cut"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## List of 3</span>
+<span class="co">##  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"..</span>
+<span class="co">##   ..and 26 methods, of which 12 are  possibly relevant:</span>
+<span class="co">##   ..  add_columns, as.FBM, bm, bm.desc, check_dimensions,</span>
+<span class="co">##   ..  check_write_permissions, copy#envRefClass, initialize,</span>
+<span class="co">##   ..  initialize#FBM, save, show#envRefClass, show#FBM</span>
+<span class="co">##  $ fam      :'data.frame':   517 obs. of  6 variables:</span>
+<span class="co">##   ..$ family.ID  : chr [1:517] "POP1" "POP1" "POP1" "POP1" ...</span>
+<span class="co">##   ..$ sample.ID  : chr [1:517] "IND0" "IND1" "IND2" "IND3" ...</span>
+<span class="co">##   ..$ paternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="co">##   ..$ maternal.ID: int [1:517] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="co">##   ..$ sex        : int [1:517] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="co">##   ..$ affection  : int [1:517] 1 1 2 1 1 1 1 1 1 1 ...</span>
+<span class="co">##  $ map      :'data.frame':   4542 obs. of  6 variables:</span>
+<span class="co">##   ..$ chromosome  : int [1:4542] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="co">##   ..$ marker.ID   : chr [1:4542] "SNP0" "SNP1" "SNP2" "SNP3" ...</span>
+<span class="co">##   ..$ genetic.dist: int [1:4542] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="co">##   ..$ physical.pos: int [1:4542] 112 1098 2089 3107 4091 5091 6..</span>
+<span class="co">##   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...</span>
+<span class="co">##   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...</span>
+<span class="co">##  - attr(*, "class")= chr "bigSNP"</span></code></pre>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Get aliases for useful slots</span>
 <span class="va">G</span>   <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">genotypes</span>
 <span class="va">CHR</span> <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span>
 <span class="va">POS</span> <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.pos</span>
 <span class="co"># Check some counts for the 10 first SNPs</span>
-<span class="fu">big_counts</span><span class="op">(</span><span class="va">G</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></pre></div>
-<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-## 0     226  325  309  346  158  215  395  134  143   159
-## 1     228  171  171  151  246  236  112  269  250   235
-## 2      63   21   37   20  113   66   10  114  124   123
-## &lt;NA&gt;    0    0    0    0    0    0    0    0    0     0</code></pre>
+<span class="fu"><a href="https://rdrr.io/pkg/bigstatsr/man/big_counts.html" class="external-link">big_counts</a></span><span class="op">(</span><span class="va">G</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]</span>
+<span class="co">## 0     226  325  309  346  158  215  395  134  143   159</span>
+<span class="co">## 1     228  171  171  151  246  236  112  269  250   235</span>
+<span class="co">## 2      63   21   37   20  113   66   10  114  124   123</span>
+<span class="co">## &lt;NA&gt;    0    0    0    0    0    0    0    0    0     0</span></code></pre>
 </div>
-<div id="principal-component-analysis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#principal-component-analysis" class="anchor"></a>Principal Component Analysis</h2>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="co"># Half of the cores you have on your computer</span>
-<span class="va">NCORES</span> <span class="op">&lt;-</span> <span class="fu">nb_cores</span><span class="op">(</span><span class="op">)</span>
+<div class="section level2">
+<h2 id="principal-component-analysis">Principal Component Analysis<a class="anchor" aria-label="anchor" href="#principal-component-analysis"></a>
+</h2>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Half of the cores you have on your computer</span>
+<span class="va">NCORES</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/nb_cores.html" class="external-link">nb_cores</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co"># Exclude Long-Range Linkage Disequilibrium Regions of the human genome</span>
 <span class="co"># based on an online table. </span>
-<span class="va">ind.excl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bed_clumping.html">snp_indLRLDR</a></span><span class="op">(</span>infos.chr <span class="op">=</span> <span class="va">CHR</span>, infos.pos <span class="op">=</span> <span class="va">POS</span><span class="op">)</span>
+<span class="va">ind.excl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_clumping.html">snp_indLRLDR</a></span><span class="op">(</span>infos.chr <span class="op">=</span> <span class="va">CHR</span>, infos.pos <span class="op">=</span> <span class="va">POS</span><span class="op">)</span>
 <span class="co"># Use clumping (on the MAF) to keep SNPs weakly correlated with each other.</span>
 <span class="co"># See https://privefl.github.io/bigsnpr/articles/pruning-vs-clumping.html</span>
 <span class="co"># to know why I prefer using clumping than standard pruning.</span>
-<span class="va">ind.keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bed_clumping.html">snp_clumping</a></span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>,
+<span class="va">ind.keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_clumping.html">snp_clumping</a></span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>,
                          exclude <span class="op">=</span> <span class="va">ind.excl</span>,
                          ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span>
 <span class="co"># Get the first 10 PCs, corresponding to pruned SNPs</span>
-<span class="va">obj.svd</span> <span class="op">&lt;-</span> <span class="fu">big_randomSVD</span><span class="op">(</span><span class="va">G</span>, fun.scaling <span class="op">=</span> <span class="fu"><a href="../reference/snp_scaleBinom.html">snp_scaleBinom</a></span><span class="op">(</span><span class="op">)</span>,
+<span class="va">obj.svd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigstatsr/man/big_randomSVD.html" class="external-link">big_randomSVD</a></span><span class="op">(</span><span class="va">G</span>, fun.scaling <span class="op">=</span> <span class="fu"><a href="../reference/snp_scaleBinom.html">snp_scaleBinom</a></span><span class="op">(</span><span class="op">)</span>,
                          ind.col <span class="op">=</span> <span class="va">ind.keep</span>,
                          ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span>
 <span class="co"># As `obj.svd` has a class and a method `plot`.</span>
 <span class="co"># Scree plot by default</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">obj.svd</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">obj.svd</span><span class="op">)</span></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-3-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="co"># Score (PCs) plot</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">obj.svd</span>, type <span class="op">=</span> <span class="st">"scores"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Score (PCs) plot</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">obj.svd</span>, type <span class="op">=</span> <span class="st">"scores"</span><span class="op">)</span></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-3-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="co"># As plot returns an ggplot2 object, you can easily modify it.</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># As plot returns an ggplot2 object, you can easily modify it.</span>
 <span class="co"># For example, you can add colors based on the population.</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></pre></div>
-<pre><code>## Warning: package 'ggplot2' was built under R version 3.6.3</code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">obj.svd</span>, type <span class="op">=</span> <span class="st">"scores"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"POP1"</span>, <span class="st">"POP2"</span>, <span class="st">"POP3"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">143</span>, <span class="fl">167</span>, <span class="fl">207</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Population"</span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">obj.svd</span>, type <span class="op">=</span> <span class="st">"scores"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POP1"</span>, <span class="st">"POP2"</span>, <span class="st">"POP3"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">143</span>, <span class="fl">167</span>, <span class="fl">207</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Population"</span><span class="op">)</span></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-3-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 </div>
-<div id="genome-wide-association-study" class="section level2">
-<h2 class="hasAnchor">
-<a href="#genome-wide-association-study" class="anchor"></a>Genome-Wide Association Study</h2>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="co"># Fit a logistic model between the phenotype and each SNP separately</span>
+<div class="section level2">
+<h2 id="genome-wide-association-study">Genome-Wide Association Study<a class="anchor" aria-label="anchor" href="#genome-wide-association-study"></a>
+</h2>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Fit a logistic model between the phenotype and each SNP separately</span>
 <span class="co"># while adding PCs as covariates to each model</span>
 <span class="va">y01</span> <span class="op">&lt;-</span> <span class="va">obj.bigSNP</span><span class="op">$</span><span class="va">fam</span><span class="op">$</span><span class="va">affection</span> <span class="op">-</span> <span class="fl">1</span>
-<span class="va">obj.gwas</span> <span class="op">&lt;-</span> <span class="fu">big_univLogReg</span><span class="op">(</span><span class="va">G</span>, y01.train <span class="op">=</span> <span class="va">y01</span>,
+<span class="va">obj.gwas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigstatsr/man/big_univLogReg.html" class="external-link">big_univLogReg</a></span><span class="op">(</span><span class="va">G</span>, y01.train <span class="op">=</span> <span class="va">y01</span>,
                            covar.train <span class="op">=</span> <span class="va">obj.svd</span><span class="op">$</span><span class="va">u</span>,
                            ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span>
 <span class="co"># Q-Q plot of the object</span>
-<span class="fu"><a href="../reference/snp_qq.html">snp_qq</a></span><span class="op">(</span><span class="va">obj.gwas</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/snp_qq.html">snp_qq</a></span><span class="op">(</span><span class="va">obj.gwas</span><span class="op">)</span></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-4-1.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="co"># You can easily apply genomic control to this object</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># You can easily apply genomic control to this object</span>
 <span class="va">obj.gwas.gc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_gc.html">snp_gc</a></span><span class="op">(</span><span class="va">obj.gwas</span><span class="op">)</span>
 <span class="co"># Redo the Q-Q plot</span>
-<span class="fu"><a href="../reference/snp_qq.html">snp_qq</a></span><span class="op">(</span><span class="va">obj.gwas.gc</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/snp_qq.html">snp_qq</a></span><span class="op">(</span><span class="va">obj.gwas.gc</span><span class="op">)</span></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-4-2.png" width="692.708333333333" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="co"># Manhattan plot, not quite sexy because there are only 1 chromosome here</span>
-<span class="fu"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span><span class="op">(</span><span class="va">obj.gwas.gc</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>, infos.pos <span class="op">=</span> <span class="va">POS</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Manhattan plot, not quite sexy because there are only 1 chromosome here</span>
+<span class="fu"><a href="../reference/snp_manhattan.html">snp_manhattan</a></span><span class="op">(</span><span class="va">obj.gwas.gc</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>, infos.pos <span class="op">=</span> <span class="va">POS</span><span class="op">)</span></code></pre></div>
 <p><img src="demo_files/figure-html/unnamed-chunk-4-3.png" width="692.708333333333" style="display: block; margin: auto;"></p>
 </div>
-<div id="joint-prs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#joint-prs" class="anchor"></a>Joint PRS</h2>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="co"># Divide the indices in training/test sets</span>
-<span class="va">ind.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span>
-<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span>
+<div class="section level2">
+<h2 id="joint-prs">Joint PRS<a class="anchor" aria-label="anchor" href="#joint-prs"></a>
+</h2>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Divide the indices in training/test sets</span>
+<span class="va">ind.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span>
+<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span>
 <span class="co"># Train the model</span>
-<span class="va">cmsa.logit</span> <span class="op">&lt;-</span> <span class="fu">big_spLogReg</span><span class="op">(</span>X <span class="op">=</span> <span class="va">G</span>, y01.train <span class="op">=</span> <span class="va">y01</span><span class="op">[</span><span class="va">ind.train</span><span class="op">]</span>, 
+<span class="va">cmsa.logit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigstatsr/man/big_spLogReg.html" class="external-link">big_spLogReg</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">G</span>, y01.train <span class="op">=</span> <span class="va">y01</span><span class="op">[</span><span class="va">ind.train</span><span class="op">]</span>, 
                            ind.train <span class="op">=</span> <span class="va">ind.train</span>, 
                            covar.train <span class="op">=</span> <span class="va">obj.svd</span><span class="op">$</span><span class="va">u</span><span class="op">[</span><span class="va">ind.train</span>, <span class="op">]</span>,
-                           alphas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.001</span><span class="op">)</span>,
+                           alphas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.001</span><span class="op">)</span>,
                            ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span>
 <span class="co"># Get predictions for the test set</span>
-<span class="va">preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">cmsa.logit</span>, X <span class="op">=</span> <span class="va">G</span>, ind.row <span class="op">=</span> <span class="va">ind.test</span>, 
+<span class="va">preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">cmsa.logit</span>, X <span class="op">=</span> <span class="va">G</span>, ind.row <span class="op">=</span> <span class="va">ind.test</span>, 
                  covar.row <span class="op">=</span> <span class="va">obj.svd</span><span class="op">$</span><span class="va">u</span><span class="op">[</span><span class="va">ind.test</span>, <span class="op">]</span><span class="op">)</span>
 <span class="co"># Check AUC</span>
-<span class="fu">AUC</span><span class="op">(</span><span class="va">preds</span>, <span class="va">y01</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></pre></div>
-<pre><code>## [1] 0.7790941</code></pre>
+<span class="fu"><a href="https://rdrr.io/pkg/bigstatsr/man/AUC.html" class="external-link">AUC</a></span><span class="op">(</span><span class="va">preds</span>, <span class="va">y01</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] 0.8263514</span></code></pre>
 </div>
   </div>
 
@@ -274,11 +276,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Florian Privé.</p>
+  <p></p>
+<p>Developed by Florian Privé.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -286,6 +290,8 @@
 
   
 
+
+  
 
   </body>
 </html>

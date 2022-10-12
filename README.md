@@ -81,18 +81,16 @@ I will always redirect you to GitHub issues if you email me, so that others can 
 
 ## References
 
-- Privé, Florian, et al. ["Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr."](https://doi.org/10.1093/bioinformatics/bty185) Bioinformatics 34.16 (2018): 2781-2787.
+- Privé, Florian, et al. ["Efficient analysis of large-scale genome-wide data with two R packages: bigstatsr and bigsnpr."](https://doi.org/10.1093/bioinformatics/bty185) *Bioinformatics* 34.16 (2018): 2781-2787.
 
-- Privé, Florian, et al. ["Efficient implementation of penalized regression for genetic risk prediction."](https://doi.org/10.1534/genetics.119.302019) Genetics 212.1 (2019): 65-74.
+- Privé, Florian, et al. ["Efficient implementation of penalized regression for genetic risk prediction."](https://doi.org/10.1534/genetics.119.302019) *Genetics* 212.1 (2019): 65-74.
 
-- Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) The American Journal of Human Genetics 105.6 (2019): 1213-1221.
+- Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) *The American Journal of Human Genetics* 105.6 (2019): 1213-1221.
 
-- Privé, Florian, et al. ["Efficient toolkit implementing best practices for principal component analysis of population genetic data."](https://doi.org/10.1093/bioinformatics/btaa520) Bioinformatics 36.16 (2020): 4449-4457.
+- Privé, Florian, et al. ["Efficient toolkit implementing best practices for principal component analysis of population genetic data."](https://doi.org/10.1093/bioinformatics/btaa520) *Bioinformatics* 36.16 (2020): 4449-4457.
 
-- Privé, Florian, et al. ["LDpred2: better, faster, stronger."](https://doi.org/10.1093/bioinformatics/btaa1029) Bioinformatics 36.22-23 (2020): 5424-5431.
+- Privé, Florian, et al. ["LDpred2: better, faster, stronger."](https://doi.org/10.1093/bioinformatics/btaa1029) *Bioinformatics* 36.22-23 (2020): 5424-5431.
 
-- Privé, Florian. ["Optimal linkage disequilibrium splitting."](https://doi.org/10.1093/bioinformatics/btab519) Bioinformatics 38.1 (2022): 255–256.
+- Privé, Florian. ["Optimal linkage disequilibrium splitting."](https://doi.org/10.1093/bioinformatics/btab519) *Bioinformatics* 38.1 (2022): 255–256.
 
-- Privé, Florian. ["Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics."](https://doi.org/10.1101/2021.10.27.466078) bioRxiv (2021).
-
-<br>
+- Privé, Florian. ["Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics."](https://doi.org/10.1093/bioinformatics/btac348) *Bioinformatics* 38.13 (2022): 3477-3480.

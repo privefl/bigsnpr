@@ -23,32 +23,74 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
 
 
 ```{r preprocess, include=FALSE}
+# install.packages("runonce")
+zip <- runonce::download_file(
+  "https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip",
+  dir = "tmp-data")
+unzip(zip)
+
+
+## ---- echo=FALSE---------------------------------------------------------
+unlink(paste0("tmp-data/public-data3", c(".bk", ".rds")))
+
+
+## ------------------------------------------------------------------------
+# Load packages bigsnpr and bigstatsr
 library(bigsnpr)
-obj.bigSNP <- snp_attach("tmp-data/public-data.rds")
-map <- obj.bigSNP$map[-(2:3)]
-names(map) <- c("chr", "pos", "a0", "a1")
-
+# Read from bed/bim/fam, it generates .bk and .rds files.
+snp_readBed("tmp-data/public-data3.bed")
+# Attach the "bigSNP" object in R session
+obj.bigSNP <- snp_attach("tmp-data/public-data3.rds")
+# See how the file looks like
+str(obj.bigSNP, max.level = 2, strict.width = "cut")
 # Get aliases for useful slots
-G <- obj.bigSNP$genotypes
-NCORES <- nb_cores()
+G   <- obj.bigSNP$genotypes
+CHR <- obj.bigSNP$map$chromosome
+POS <- obj.bigSNP$map$physical.pos
+y   <- obj.bigSNP$fam$affection
+(NCORES <- nb_cores())
 
+
+## ------------------------------------------------------------------------
 # Read external summary statistics
-sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
-sumstats$n_eff <- 4 / (1 / sumstats$n_case + 1 / sumstats$n_control)
-sumstats$n_case <- sumstats$n_control <- NULL
-names(sumstats) <- c("chr", "rsid", "pos", "a0", "a1", "beta", "beta_se", "p", "n_eff")
-info_snp <- snp_match(sumstats, map, strand_flip = FALSE)
+sumstats <- bigreadr::fread2("tmp-data/public-data3-sumstats.txt")
+str(sumstats)
 
-## indices in info_snp
-ind.chr <- which(info_snp$chr == 2)         
-df_beta <- info_snp[ind.chr, c("beta", "beta_se", "n_eff")]
-## indices in G
-ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]   
 
-# correlation 
-corr0 <- readRDS("tmp-data/corr_ldpred2_tutorial.rds")
+## ------------------------------------------------------------------------
+set.seed(1)
+ind.val <- sample(nrow(G), 350)
+ind.test <- setdiff(rows_along(G), ind.val)
+
+sumstats$n_eff <- sumstats$N
+map <- setNames(obj.bigSNP$map[-3], c("chr", "rsid", "pos", "a1", "a0"))
+df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)  # use rsid instead of pos
+
+
+## ------------------------------------------------------------------------
+POS2 <- obj.bigSNP$map$genetic.dist
 tmp <- tempfile(tmpdir = "tmp-data")
-corr <- as_SFBM(corr0, tmp)
+
+for (chr in 1:22) {
+  
+  # print(chr)
+  
+  ## indices in 'df_beta'
+  ind.chr <- which(df_beta$chr == chr)
+  ## indices in 'G'
+  ind.chr2 <- df_beta$`_NUM_ID_`[ind.chr]
+  
+  corr0 <- snp_cor(G, ind.col = ind.chr2, size = 3 / 1000,
+                   infos.pos = POS2[ind.chr2], ncores = NCORES)
+  
+  if (chr == 1) {
+    ld <- Matrix::colSums(corr0^2)
+    corr <- as_SFBM(corr0, tmp, compact = TRUE)
+  } else {
+    ld <- c(ld, Matrix::colSums(corr0^2))
+    corr$add_columns(corr0, nrow(corr))
+  }
+}
 ```
 
 ## Approximating the posterior distribution of genetic value
@@ -60,7 +102,7 @@ An individual's genetic value is their genotype vector multipled by the causal e
 Note that, when using `return_sampling_betas = TRUE`, you must supply one set of parameters only, i.e. `best_param` must be a data frame with exactly 1 row (otherwise it will raise an error).
 
 ```{r}
-best_param <- data.frame(p = 0.0018, h2 = 0.1146, sparse = FALSE)
+best_param <- data.frame(p = 0.01, h2 = 0.2, sparse = FALSE)
 ```
 ```{r}
 posterior_beta_samples <- snp_ldpred2_grid(
@@ -72,7 +114,7 @@ dim(posterior_beta_samples)
 Posterior samples of the individual's genetic value are then obtained by multiplying their genotype with the posterior samples of $\boldsymbol{\beta}$.
 
 ```{r}
-posterior_gv_samples <- big_prodMat(G, posterior_beta_samples, ind.col = ind.chr2)
+posterior_gv_samples <- big_prodMat(G, posterior_beta_samples, ind.col = df_beta[["_NUM_ID_"]])
 dim(posterior_gv_samples)
 ```
 
@@ -120,4 +162,3 @@ To get for all individuals:
 means <- rowMeans(posterior_gv_samples)
 limits <- t(apply(posterior_gv_samples, 1, quantile, probs = c(bound, 1 - bound)))
 ```
-

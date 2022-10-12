@@ -47,6 +47,7 @@ reference:
       - snp_readBed2
       - snp_writeBed
       - snp_readBGEN
+      - snp_readBGI
       - snp_attach
       - snp_attachExtdata
   - title: "QC / relatedness / imputation"
@@ -72,6 +73,7 @@ reference:
       - snp_ld_scores
       - snp_ldsc
       - snp_ldsplit
+      - LD.wiki34
   - title: "Polygenic scores"
     contents:
       - snp_match

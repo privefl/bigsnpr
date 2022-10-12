@@ -22,3 +22,4 @@ Methods for the bed class
 Dimension methods for class \code{bed}.
 Methods \code{nrow()} and \code{ncol()} are automatically defined with \code{dim()}.
 }
+\keyword{internal}

@@ -364,11 +364,6 @@ best_grid_overall <-
        best_grid_lassosum2, best_beta_grid)
 ```
 
-```{r}
-# Some cleaning
-rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
-```
-
 ## Inference with LDpred2-auto
 
 LDpred2-auto has been very recently extended and improved to allow for estimating $h^2$, $p$, and $\alpha$, a third parameter that controls how expected effect sizes relate to minor allele frequencies. The new model assumed by LDpred2-auto is
@@ -433,6 +428,11 @@ qplot(y = postp, alpha = I(0.2)) + theme_bigstatsr()
 
 You can also infer local per-block or per-annotation $h^2$ following the code [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/run-ldpred2-ukbb.R#L158-L165) and [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/height-meta-1600k.R#L170-L216).
 
+
+```{r}
+# Some cleaning
+rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
+```
 
 ## References
 

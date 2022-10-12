@@ -36,6 +36,7 @@ Imports:
     Matrix,
     methods,
     Rcpp,
+    runonce (>= 0.2.3),
     stats,
     vctrs
 LinkingTo:
@@ -61,7 +62,6 @@ Suggests:
     rmutil,
     RSpectra,
     RSQLite,
-    runonce,
     R.utils,
     spelling, 
     testthat,
