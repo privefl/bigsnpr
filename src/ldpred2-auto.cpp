@@ -98,7 +98,7 @@ List ldpred2_gibbs_auto(Environment corr,
 
   double cur_h2_est = shrink_corr * dotprod2(curr_beta, dotprods) +
     (1 - shrink_corr) * dotprod2(curr_beta, curr_beta);
-  double p = p_init, h2 = h2_init;
+  double p = std::max(p_init, MIN_P), h2 = std::max(h2_init, MIN_H2);
   arma::vec par_mle = {0, h2 / (m * p)};  // (alpha + 1) and sigma2 [init]
   std::vector<int> ind_causal;
 
@@ -173,8 +173,9 @@ List ldpred2_gibbs_auto(Environment corr,
 
     // store some sampling betas
     if (k == next_k_reported) {
-      for (const int& i : ind_causal)
+      for (const int& i : ind_causal) {
         sample_beta(i, ind_report) = curr_beta[i];
+      }
       ind_report++;
       next_k_reported += report_step;
     }

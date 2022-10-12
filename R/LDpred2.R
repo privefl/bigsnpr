@@ -159,6 +159,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @param shrink_corr Shrinkage multiplicative coefficient to apply to off-diagonal
 #'   elements of the correlation matrix. Default is `1` (unchanged).
 #'   You can use e.g. `0.95` to add a bit of regularization.
+#' @param alpha_bounds Boundaries for the estimates of \eqn{\alpha}.
+#'   Default is `c(-1.5, 0.5)`. You can use the same value twice to fix \eqn{\alpha}.
 #'
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes (on the allele scale)

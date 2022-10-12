@@ -16,7 +16,10 @@ test_that("snp_simuPheno() works", {
   expect_length(simu$pheno, 50)
   expect_length(simu$set, 20)
   expect_length(simu$effects, 20)
-  var_g <- drop(var(scale(G[ind.row, simu$set]) %*% simu$effects))
+  gen_part <- scale(G[ind.row, simu$set]) %*% simu$effects
+  expect_equal(bigsnpr:::center_vec(G[ind.row, simu$set] %*% simu$allelic_effects),
+               gen_part)
+  var_g <- drop(var(gen_part))
   expect_equal(var_g, 0.2)
 
   ind.possible <- sample(ncol(G), 50)

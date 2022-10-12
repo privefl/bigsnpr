@@ -190,7 +190,7 @@ test_that("LDpred2 works", {
 
 ################################################################################
 
-test_that("bootstrap in MLE works", {
+test_that("MLE_alpha works", {
 
   skip_if(is_cran)
 
@@ -213,6 +213,17 @@ test_that("bootstrap in MLE works", {
   simu <- snp_simuPheno(G, 0.2, 500, alpha = alpha)
   log_var <- log(big_colstats(G, ind.col = simu$set)$var)
   beta2 <- simu$effects^2
+
+  # without bootstrap
+  res1 <- optim(par = c(-0.5, 0.2 / 500), fn = FUN, gr = DER, method = "L-BFGS-B",
+                lower = c(-1.5, 0.2 / 5000), upper = c(0.5, 0.2 / 50),
+                log_var = log_var, beta2 = beta2)$par
+  res2 <- bigsnpr:::MLE_alpha(par = c(-0.5, res1[2] * runif(1, 0.7, 1.4)),
+                              log_var = log_var, curr_beta = simu$effects,
+                              ind_causal = 0:499, alpha_bounds = c(-0.5, 1.5))
+  expect_equal(res2[1:2] - 1:0, res1, tolerance = 1e-4)
+
+  # with bootstrap
   all_est <- replicate(1000, {
     ind <- sample(500, replace = TRUE)
     optim(par = c(-0.5, 0.2 / 500), fn = FUN, gr = DER, method = "L-BFGS-B",
