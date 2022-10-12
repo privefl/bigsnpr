@@ -105,26 +105,6 @@ test_that("LDpred2 works", {
   h2_est <- apply(bsamp, 2, function(x) crossprod(x, bigsparser::sp_prodVec(corr, x)))
   expect_equal(h2_est, beta_auto[[1]]$path_h2_est[seq(210, 400, by = 10)])
 
-  FUN <- function(x, log_var, beta2) {
-    S <- 1 + x[[1]]; sigma2 <- x[[2]]
-    S * sum(log_var) + length(log_var) * log(sigma2) + sum(beta2 / exp(S * log_var)) / sigma2
-  }
-  DER <- function(x, log_var, beta2) {
-    S <- 1 + x[[1]]; sigma2 <- x[[2]]
-    res1 <- sum(log_var) - sum(log_var * beta2 / exp(S * log_var)) / sigma2
-    res2 <- length(log_var) / sigma2 - sum(beta2 / exp(S * log_var)) / sigma2^2
-    c(res1, res2)
-  }
-  log_var <- with(df_beta, -log(n_eff * beta_se^2 + beta^2))
-  alpha_est <- apply(bsamp, 2, function(x) {
-    ind <- which(x != 0)
-    optim(par = c(-0.5, 0.2 / 500), fn = FUN, gr = DER, method = "L-BFGS-B",
-          lower = c(-1.5, 0.2 / 5000), upper = c(0.5, 0.2 / 50),
-          log_var = log_var[ind], beta2 = x[ind]^2)$par[1]
-  })
-  expect_equal(alpha_est, beta_auto[[1]]$path_alpha_est[seq(210, 400, by = 10)],
-               tolerance = 1e-3)
-
   # alpha bounds
   beta_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = ldsc[["h2"]],
                                 burn_in = 200, num_iter = 200,

@@ -96,8 +96,8 @@ for accelerating convergence of chains with a large initial value for p.}
 elements of the correlation matrix. Default is \code{1} (unchanged).
 You can use e.g. \code{0.95} to add a bit of regularization.}
 
-\item{alpha_bounds}{Boundaries for the estimates of $\alpha$.
-Default is \code{c(-1.5, 0.5)}. You can use the same value twice to fix $\alpha$.}
+\item{alpha_bounds}{Boundaries for the estimates of \eqn{\alpha}.
+Default is \code{c(-1.5, 0.5)}. You can use the same value twice to fix \eqn{\alpha}.}
 }
 \value{
 \code{snp_ldpred2_inf}: A vector of effects, assuming an infinitesimal model.
