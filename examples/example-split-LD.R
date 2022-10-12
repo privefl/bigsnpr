@@ -2,10 +2,16 @@
 
   corr <- readRDS(url("https://www.dropbox.com/s/65u96jf7y32j2mj/spMat.rds?raw=1"))
 
+  # adjust `THR_R2` depending on sample size used to compute corr
+  # use e.g. 0.05 for small sample sizes, and 0.01 for large sample sizes
   THR_R2 <- 0.02
   m <- ncol(corr)
   (SEQ <- round(seq_log(m / 30, m / 5, length.out = 10)))
+  # replace `min_size` by e.g. 100 for larger data
   (res <- snp_ldsplit(corr, thr_r2 = THR_R2, min_size = 10, max_size = SEQ))
+
+  # add the variant block IDs corresponding to each split
+  res$block_num <- lapply(res$all_size, function(.) rep(seq_along(.), .))
 
   library(ggplot2)
   # trade-off cost / number of blocks
