@@ -1,49 +1,75 @@
 ---
-title: "Computing polygenic scores using LDpred2"
+title: "Polygenic scores and inference using LDpred2"
 author: "Florian Privé"
-date: "February 24, 2022"
+date: "October 14, 2022"
 output: html_document
 editor_options: 
   chunk_output_type: console
 ---
 
+Here I show how to compute polygenic scores using [LDpred2](https://doi.org/10.1093/bioinformatics/btaa1029), as well as inferring genetic architecture parameters with LDpred2-auto.
+
+Here is a (slightly outdated) video of me going through the tutorial and explaining the different steps:
+
 <center><iframe width="560" height="315" src="https://www.youtube.com/embed/aya8WsNAu6U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
 
-    
 
-Here we show how to compute polygenic risk scores using [LDpred2](https://doi.org/10.1101/2020.04.28.066720).
+## Installation
 
-**New:** if you install {bigsnpr} >= v1.10.4, LDpred2-grid and LDpred2-auto should be much faster for large data. You can install {bigsnpr} from CRAN using `install.packages("bigsnpr")`, or the latest version from GitHub using `remotes::install_github("privefl/bigsnpr")`.
+In R, run
 
-This tutorial uses fake data for educational purposes only.
-Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
+```r
+# install.packages("remotes")
+remotes::install_github("privefl/bigsnpr")
+```
 
-You should also probably look at [the code of the paper](https://github.com/privefl/paper-ldpred2/tree/master/code), particularly at [the code to prepare summary statistics (including performing the quality control presented in the Methods section "Quality control of summary statistics" of the paper)](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R), at [the code to read BGEN files into the data format used by bigsnpr](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62), and at [the code to prepare LD matrices](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26).
+or for the CRAN version
 
-In practice, until we find a better set of variants, we recommend using the HapMap3 variants used in the PRS-CS and LDpred2 papers.
-If you do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide an LD reference to be used directly ~~at https://doi.org/10.6084/m9.figshare.13034123~~, along with [an example R script](https://github.com/privefl/paper-ldpred2/blob/master/code/example-with-provided-ldref.R) on how to use it.
-**New:** we now provide a new version of these LD references at https://doi.org/10.6084/m9.figshare.19213299 by forming independent LD blocks in the matrices, which can be useful for robustness and extra speed gains (see [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136)).
+```r
+install.packages("bigsnpr")
+```
 
-Information about these variants can be retrieved with
+- If you install {bigsnpr} >= v1.10.4, LDpred2-grid and LDpred2-auto should be much faster for large data.
+
+- if you install {bigsnpr} >= v1.11.4, there is a new version LDpred2-auto that was validated for inferring parameters of genetic architectures (cf. at the end of this tutorial).
+
+
+## Which set of variants to use?
+
+We previously recommended to use a set of 1,054,330 HapMap3 variants for LDpred2, because they provide a good coverage of the genome and are generally well imputed and available in most studies.
+In [this preprint](https://doi.org/10.1101/2022.10.10.511629), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 now.
+
+You should use these sets of variants only when your data is imputed so that the overlap is good. If you only have access to a chip of genotyped variants, you should use these. In that case, you should compute the LD information yourself (as done for the tutorial data below).
+
+If you use HM3/HM3+ variants with European summary statistics and do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide LD matrices to be used directly:
+
+- for [HapMap3+ variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.21305061) (now recommended in [this preprint](https://doi.org/10.1101/2022.10.10.511629))
+- for [HapMap3 variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.19213299) (previously recommended in [this paper](https://doi.org/10.1016/j.xhgg.2022.100136))
+- along with an [example R script](https://github.com/privefl/paper-ldpred2/blob/master/code/example-with-provided-ldref.R) on how to use them
+
+Note that forming independent LD blocks in LD matrices can be useful for robustness and extra speed gains (see [this paper](https://doi.org/10.1016/j.xhgg.2022.100136)).
+
+Information about the HapMap3+ variants can be retrieved with
 
 ```{r}
-# $pos is in build GRCh37 / hg19, but we provide positions in 3 other builds 
+# $pos is in build GRCh37 / hg19, but we provide positions in 2 other builds
 info <- readRDS(runonce::download_file(
-  "https://ndownloader.figshare.com/files/25503788",
-  dir = "tmp-data", fname = "map_hm3_ldpred2.rds"))
+  "https://figshare.com/ndownloader/files/37802721",
+  dir = "tmp-data", fname = "map_hm3_plus.rds"))
 str(info)
 ```
 
-Note that you should **run LDpred2 genome-wide**; just build the SFBM (the sparse LD matrix on disk) so that it contains all 1M HapMap3 variants genome-wide (see the for-loop below).
 
-
-## Downloading genotype data and summary statistics
+## Downloading genotype data and summary statistics for the tutorial
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE, width = 75, max.print = 30)
 knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
 knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
 ```
+
+This tutorial uses fake data for educational purposes only.
+Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
 
 You can download [the tutorial data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip) and unzip files in R. We store those files in a directory called `"tmp-data"` here.
 
@@ -84,7 +110,8 @@ sumstats <- bigreadr::fread2("tmp-data/public-data3-sumstats.txt")
 str(sumstats)
 ```
 
-We split the genotype data using part of the data to choose hyper-parameters and another part of the data to evaluate statistical properties of polygenic risk score such as AUC. Here we consider that there are 350 individuals to be used as validation set to tune hyper-parameters for LDpred2-grid. The other 153 individuals are used as test set to evaluate the final models.
+We split the individuals from the genotype data into "validation" (to choose best-performing hyper-parameters) and "test" (to evaluate final polygenic scores).
+Here we consider that there are 350 individuals to be used as validation set to tune hyper-parameters for LDpred2-grid and lassosum2. The other 153 individuals are used as test set to evaluate the final models.
 
 ```{r}
 set.seed(1)
@@ -115,11 +142,34 @@ df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)  # use rsid instead of 
 If no or few variants are actually flipped, you might want to disable the strand flipping option (`strand_flip = FALSE`) and maybe remove the few that were flipped (errors?).
 
 
+## Quality control of GWAS summary statistics
+
+**Some quality control on summary statistics is highly recommended.**
+A refined QC is described in [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136).
+See e.g. [the code](https://github.com/privefl/paper-misspec/tree/main/code) that was used to prepare the sumstats there.
+
+Most of the QC recommended for LDpred2 consists in computing 
+\begin{equation}
+\text{sd}(G_j) \approx \dfrac{\text{sd}(y)}{\sqrt{n_j ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}} ~,
+\end{equation}
+where $\hat{\gamma}_j$ is the marginal GWAS effect size of variant $j$, $n_j$ is the GWAS sample size associated with variant $j$, $y$ is the vector of phenotypes and ${G}_j$ is the vector of genotypes for variant $j$.
+
+Note that, for a binary trait for which logistic regression is used, we have instead
+\begin{equation}\label{eq:approx-sd-log}
+\text{sd}(G_j) \approx \dfrac{2}{\sqrt{n_j^\text{eff} ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2}} ~,
+\end{equation}
+where $n_j^\text{eff} = \frac{4}{1 / n_j^\text{cases} + 1 / n_j^\text{controls}}$.
+
+Then, these standard deviations of genotypes inferred from GWAS summary statistics can be compared to $\sqrt{2 \cdot f_j \cdot (1 - f_j) \cdot \text{INFO}_j}$, where $f_j$ is the allele frequency of variant $j$ and $\text{INFO}_j$ is used to correct for the reduced variance of imputed dosages.
+
+In the equation for continuous traits, we can estimate $\text{sd}(y)$ by the first percentile of $\sqrt{0.5 \left(n_j ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2\right)}$, where the first percentile approximates the minimum and is robust to outliers.
+In practice, a consistent deviation between these two estimates of standard deviations (from summary statistics and from allele frequencies) can also be explained by using wrong estimates for $n_j$ or $n_j^\text{eff}$.
+
+
 ## Computing LDpred2 scores genome-wide
 
-**Some quality control on summary statistics is highly recommended (see paper and other tutorial).**
-A new refined QC is described in [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136).
-See e.g. [the code](https://github.com/privefl/paper-misspec/tree/main/code) that was used to prepare the sumstats there.
+Note that you should **run LDpred2 genome-wide**.
+Just build the SFBM (the sparse LD matrix on disk) so that it contains selected variants for all chromosomes at once (see the for-loop below).
 
 ### Correlation
 
@@ -127,12 +177,13 @@ First, you need to compute correlations between variants.
 We recommend to use a window size of 3 cM (see [the LDpred2 paper](https://doi.org/10.1093/bioinformatics/btaa1029)).
 
 ```{r}
+# To convert physical positions (in bp) to genetic positions (in cM), use
 # POS2 <- snp_asGeneticPos(CHR, POS, dir = "tmp-data", ncores = NCORES)
-# To avoid downloading "large" files, `POS2` has been precomputed
+# To avoid downloading "large" files, `POS2` has been precomputed here
 POS2 <- obj.bigSNP$map$genetic.dist
 ```
 
-We create the on-disk sparse genome-wide correlation matrix on-the-fly:
+Let us create the on-disk sparse genome-wide correlation matrix on-the-fly:
 
 ```{r}
 tmp <- tempfile(tmpdir = "tmp-data")
@@ -239,9 +290,9 @@ params %>%
   slice(1:10)
 ```
 
-You can then choose the best model according to your preferred criterion (e.g. max AUC). Here, we use the Z-Score from the (linear or logistic) regression of the phenotype by the PRS since we have found it more robust than using the correlation or the AUC. It also enables adjusting for covariates in this step.
+You can then choose the best model according to your preferred criterion (e.g. max AUC or $r^2$). Here, we use the Z-Score from the (linear or logistic) regression of the phenotype by the PRS since we have found it more robust than using the correlation or the AUC. It also enables adjusting for covariates in this step.
 
-Also note that we separate both sparse and non-sparse models to show that their predictive performance are similar (in the paper). In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models. If you do, choose the best sparse one (if it is close enough to the best one).
+Also note that we separate both sparse and non-sparse models to show that their predictive performance are similar (in the original LDpred2 paper). In practice, if you do not really care about sparsity, you could choose the best LDpred2-grid model among all sparse and non-sparse models. If you do, choose the best sparse one (if it is close enough to the best one).
 
 ```{r}
 best_beta_grid <- params %>%
@@ -263,7 +314,9 @@ pcor(pred, y[ind.test], NULL)
 
 ### LDpred2-auto: automatic model
 
-We recommend to run many chains in parallel with different initial values for `p`. In [this new paper](https://doi.org/10.1016/j.xhgg.2022.100136), we have introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
+Contrary to LDpred2-grid, LDpred2-auto does not need a validation set because it can directly infer values for hyper-parameters $h^2$ and $p$.
+We recommend to run many chains in parallel with different initial values for `p`, which will be used for QC afterwards. 
+In [this paper](https://doi.org/10.1016/j.xhgg.2022.100136), we have also introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
 
 ```{r}
 set.seed(1)  # to get the same result every time
@@ -295,15 +348,15 @@ plot_grid(
 )
 ```
 
-In the LDpred2 paper, we proposed an automatic way of filtering bad chains by comparing the scale of the resulting predictions (see [this code](https://github.com/privefl/paper-ldpred2/blob/master/code/run-ldpred2-gwide.R#L108-L112)). We have tested a somewhat equivalent and simpler alternative since, which we recommend here:
+In the LDpred2 paper, we proposed an automatic way of filtering bad chains by comparing the scale of the resulting predictions. We have tested a somewhat equivalent and simpler alternative since, which we recommend here:
 
 ```{r}
-# `range` should be between 0 and 1
+# `range` should be between 0 and 2
 (range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est))))
 (keep <- (range > (0.95 * quantile(range, 0.95))))
 ```
 
-To get the final effects / predictions (after filtering):
+To get the final effects / predictions, **you should only use chains that pass this filtering**:
 
 ```{r}
 beta_auto <- rowMeans(sapply(multi_auto[keep], function(auto) auto$beta_est))
@@ -366,6 +419,12 @@ best_grid_overall <-
 
 ## Inference with LDpred2-auto
 
+Here, you need `packageVersion("bigsnpr") >= package_version("1.11.4")`. Here is [the accompanying preprint](https://doi.org/10.1101/2022.10.10.511629).
+
+```{r, echo=FALSE, out.width="80%", fig.cap="Overview of what LDpred2-auto can now provide"}
+knitr::include_graphics("https://pbs.twimg.com/media/Fe7ZaIEWYAIklM7?format=png")
+```
+
 LDpred2-auto has been very recently extended and improved to allow for estimating $h^2$, $p$, and $\alpha$, a third parameter that controls how expected effect sizes relate to minor allele frequencies. The new model assumed by LDpred2-auto is
 \begin{equation}
 \beta_j = S_j \gamma_j \sim \left\{
@@ -411,23 +470,24 @@ all_r2 <- do.call("cbind", lapply(seq_along(bsamp), function(ic) {
 quantile(all_r2, c(0.5, 0.025, 0.975))
 ```
 
-To compare to
+and compared to
 ```{r}
 beta_auto <- rowMeans(sapply(multi_auto[keep], function(auto) auto$beta_est))
 pred_auto <- big_prodVec(G, beta_auto, ind.col = df_beta[["_NUM_ID_"]])
 pcor(pred_auto, y, NULL)^2
 ```
 
-These are not exactly the same, which we attribute to the small number of variants used in this fake data.
+These are not exactly the same, which we attribute to the small number of variants used in this tutorial data.
 
-We can also get per-variant probabilities of being causal (for fine-mapping purposes)
-```{r}
+You can also get per-variant probabilities of being causal (for fine-mapping purposes)
+```{r, out.width="90%"}
 postp <- rowMeans(sapply(multi_auto[keep], function(auto) auto$postp_est))
 qplot(y = postp, alpha = I(0.2)) + theme_bigstatsr()
 ```
 
 You can also infer local per-block or per-annotation $h^2$ following the code [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/run-ldpred2-ukbb.R#L158-L165) and [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/height-meta-1600k.R#L170-L216).
 
+***
 
 ```{r}
 # Some cleaning
@@ -439,3 +499,5 @@ rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 - Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger](https://doi.org/10.1093/bioinformatics/btaa1029). *Bioinformatics*, 36(22-23), 5424-5431.
 
 - Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). [Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores](https://doi.org/10.1016/j.xhgg.2022.100136). *Human Genetics and Genomics Advances*, 3(4), 100136.
+
+- Privé, F., Albiñana, C., Pasaniuc, B., & Vilhjálmsson, B. J. (2022). [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1101/2022.10.10.511629). *bioRxiv*.

@@ -23,7 +23,7 @@ navbar:
         href: articles/ancestry.html
       - text: "Computing polygenic scores using Stacked Clumping and Thresholding (SCT)"
         href: articles/SCT.html
-      - text: "Computing polygenic scores using LDpred2"
+      - text: "Polygenic scores and inference using LDpred2"
         href: articles/LDpred2.html
       - text: "Estimating uncertainty in polygenic scores using LDpred2"
         href: articles/prs_uncertainty.html
