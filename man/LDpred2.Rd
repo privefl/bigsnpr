@@ -111,20 +111,24 @@ corresponds to one iteration instead (after burn-in).
 \itemize{
 \item \verb{$beta_est}: vector of effect sizes (on the allele scale)
 \item \verb{$beta_est_sparse} (only when \code{sparse = TRUE}): sparse vector of effect sizes
+\item \verb{$postp_est}: vector of posterior probabilities of being causal
 \item \verb{$corr_est}, the "imputed" correlations between variants and phenotypes,
 which can be used for post-QCing variants by comparing those to
 \code{with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))}
-\item \verb{$sample_beta}: Sparse matrix of sampling betas (see parameter \code{report_step}),
+\item \verb{$sample_beta}: sparse matrix of sampling betas (see parameter \code{report_step}),
 \emph{not} on the allele scale, for which you need to multiply by
 \code{with(df_beta, sqrt(n_eff * beta_se^2 + beta^2))}
-\item \verb{$postp_est}: vector of posterior probabilities of being causal
-\item \verb{$p_est}: estimate of p, the proportion of causal variants
-\item \verb{$h2_est}: estimate of the (SNP) heritability (also see \link{coef_to_liab})
 \item \verb{$path_p_est}: full path of p estimates (including burn-in);
 useful to check convergence of the iterative algorithm
 \item \verb{$path_h2_est}: full path of h2 estimates (including burn-in);
 useful to check convergence of the iterative algorithm
-\item \verb{$h2_init} and \verb{$p_init}, input parameters for convenience
+\item \verb{$path_alpha_est}: full path of alpha estimates (including burn-in);
+useful to check convergence of the iterative algorithm
+\item \verb{$h2_est}: estimate of the (SNP) heritability (also see \link{coef_to_liab})
+\item \verb{$p_est}: estimate of p, the proportion of causal variants
+\item \verb{$alpha_est}: estimate of alpha, the parameter controlling the
+relationship between allele frequencies and expected effect sizes
+\item \verb{$h2_init} and \verb{$p_init}: input parameters, for convenience
 }
 }
 \description{

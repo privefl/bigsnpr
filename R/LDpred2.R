@@ -165,20 +165,24 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
 #'   - `$beta_est`: vector of effect sizes (on the allele scale)
 #'   - `$beta_est_sparse` (only when `sparse = TRUE`): sparse vector of effect sizes
+#'   - `$postp_est`: vector of posterior probabilities of being causal
 #'   - `$corr_est`, the "imputed" correlations between variants and phenotypes,
 #'     which can be used for post-QCing variants by comparing those to
 #'     `with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))`
-#'   - `$sample_beta`: Sparse matrix of sampling betas (see parameter `report_step`),
+#'   - `$sample_beta`: sparse matrix of sampling betas (see parameter `report_step`),
 #'     *not* on the allele scale, for which you need to multiply by
 #'     `with(df_beta, sqrt(n_eff * beta_se^2 + beta^2))`
-#'   - `$postp_est`: vector of posterior probabilities of being causal
-#'   - `$p_est`: estimate of p, the proportion of causal variants
-#'   - `$h2_est`: estimate of the (SNP) heritability (also see [coef_to_liab])
 #'   - `$path_p_est`: full path of p estimates (including burn-in);
 #'     useful to check convergence of the iterative algorithm
 #'   - `$path_h2_est`: full path of h2 estimates (including burn-in);
 #'     useful to check convergence of the iterative algorithm
-#'   - `$h2_init` and `$p_init`, input parameters for convenience
+#'   - `$path_alpha_est`: full path of alpha estimates (including burn-in);
+#'     useful to check convergence of the iterative algorithm
+#'   - `$h2_est`: estimate of the (SNP) heritability (also see [coef_to_liab])
+#'   - `$p_est`: estimate of p, the proportion of causal variants
+#'   - `$alpha_est`: estimate of alpha, the parameter controlling the
+#'     relationship between allele frequencies and expected effect sizes
+#'   - `$h2_init` and `$p_init`: input parameters, for convenience
 #'
 #' @import foreach
 #'
