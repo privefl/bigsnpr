@@ -20,10 +20,10 @@
 
 ## bigsnpr 1.10.6
 
-Better `snp_ldsplit()`:
-- also return `$cost2`, the sum of squared sizes of the blocks,
-- for equivalent splits (with the same cost), now return the one that also minimizes cost2,
-- now return unique splits only (e.g. could get equivalent splits with different `max_size`).
+- Better `snp_ldsplit()`:
+    - also return `$cost2`, the sum of squared sizes of the blocks,
+    - for equivalent splits (with the same cost), now return the one that also minimizes cost2,
+    - now return unique splits only (e.g. could get equivalent splits with different `max_size`).
 
 ## bigsnpr 1.10.5
 
@@ -137,11 +137,8 @@ Better `snp_ldsplit()`:
 ## bigsnpr 1.8.2
 
 - Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:
-
     - add parameter `shrink_corr` to shrink off-diagonal elements of the LD matrix,
-    
     - add parameter `num_iter_change` to control when starting to shrink the variants that change sign too much,
-    
     - also return `corr_est`, the "imputed" correlations between variants and phenotypes, which can be used for post-QCing variants by comparing those to `beta / sqrt(n_eff * beta_se^2 + beta^2)`.
 
 ## bigsnpr 1.8.0
@@ -424,7 +421,7 @@ Better `snp_ldsplit()`:
 
 ## bigsnpr 0.2.5
 
-- **This package won't be on CRAN**.
+- **This package won't be on CRAN**. (Okay, it has been back on CRAN since; I was just pissed at BR :D)
 
 ## bigsnpr 0.2.4
 

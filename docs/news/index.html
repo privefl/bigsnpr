@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -108,8 +108,10 @@
 <ul><li>Fix a liftOver error in <code><a href="../reference/snp_modifyBuild.html">snp_modifyBuild()</a></code>.</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.6" id="bigsnpr-1106">bigsnpr 1.10.6<a class="anchor" aria-label="anchor" href="#bigsnpr-1106"></a></h2>
-<p>Better <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>: - also return <code>$cost2</code>, the sum of squared sizes of the blocks, - for equivalent splits (with the same cost), now return the one that also minimizes cost2, - now return unique splits only (e.g. could get equivalent splits with different <code>max_size</code>).</p>
-</div>
+<ul><li>Better <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>:<ul><li>also return <code>$cost2</code>, the sum of squared sizes of the blocks,</li>
+<li>for equivalent splits (with the same cost), now return the one that also minimizes cost2,</li>
+<li>now return unique splits only (e.g. could get equivalent splits with different <code>max_size</code>).</li>
+</ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.5" id="bigsnpr-1105">bigsnpr 1.10.5<a class="anchor" aria-label="anchor" href="#bigsnpr-1105"></a></h2>
 <ul><li>Slightly change the default parameters of lassosum2:<ul><li>
@@ -201,11 +203,9 @@
 <ul><li>New compact format for SFBMs which should be really useful for LDpred2 (should require about half of memory and be twice as fast). The only thing that you need to change is <code>as_SFBM(corr0, compact = TRUE)</code>. Make sure to reinstall {bigsnpr} after updating to {bigsparser} v0.5.</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.2" id="bigsnpr-182">bigsnpr 1.8.2<a class="anchor" aria-label="anchor" href="#bigsnpr-182"></a></h2>
-<ul><li>
-<p>Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:</p>
-<ul><li><p>add parameter <code>shrink_corr</code> to shrink off-diagonal elements of the LD matrix,</p></li>
-<li><p>add parameter <code>num_iter_change</code> to control when starting to shrink the variants that change sign too much,</p></li>
-<li><p>also return <code>corr_est</code>, the “imputed” correlations between variants and phenotypes, which can be used for post-QCing variants by comparing those to <code>beta / sqrt(n_eff * beta_se^2 + beta^2)</code>.</p></li>
+<ul><li>Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:<ul><li>add parameter <code>shrink_corr</code> to shrink off-diagonal elements of the LD matrix,</li>
+<li>add parameter <code>num_iter_change</code> to control when starting to shrink the variants that change sign too much,</li>
+<li>also return <code>corr_est</code>, the “imputed” correlations between variants and phenotypes, which can be used for post-QCing variants by comparing those to <code>beta / sqrt(n_eff * beta_se^2 + beta^2)</code>.</li>
 </ul></li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.0" id="bigsnpr-180">bigsnpr 1.8.0<a class="anchor" aria-label="anchor" href="#bigsnpr-180"></a></h2>
@@ -429,7 +429,7 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.5" id="bigsnpr-025">bigsnpr 0.2.5<a class="anchor" aria-label="anchor" href="#bigsnpr-025"></a></h2>
 <ul><li>
-<strong>This package won’t be on CRAN</strong>.</li></ul></div>
+<strong>This package won’t be on CRAN</strong>. (Okay, it has been back on CRAN since; I was just pissed at BR :D)</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.4" id="bigsnpr-024">bigsnpr 0.2.4<small>2018-02-01</small><a class="anchor" aria-label="anchor" href="#bigsnpr-024"></a></h2>
 <ul><li>No longer download PLINK automatically (because it is a CRAN policy violation).</li></ul></div>
