@@ -144,11 +144,17 @@
 <li><p>If you install {bigsnpr} &gt;= v1.10.4, LDpred2-grid and LDpred2-auto should be much faster for large data.</p></li>
 <li><p>if you install {bigsnpr} &gt;= v1.11.4, there is a new version LDpred2-auto that was validated for inferring parameters of genetic architectures (cf. at the end of this tutorial).</p></li>
 </ul>
-<!-- You should also probably look at [the code of the paper](https://github.com/privefl/paper-ldpred2/tree/master/code), particularly at [the code to prepare summary statistics (including performing the quality control presented in the Methods section "Quality control of summary statistics" of the paper)](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-sumstats.R), at [the code to read BGEN files into the data format used by bigsnpr](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62), and at [the code to prepare LD matrices](https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-corr-spmat.R#L1-L26). -->
 </div>
 <div class="section level2">
 <h2 id="which-set-of-variants-to-use">Which set of variants to use?<a class="anchor" aria-label="anchor" href="#which-set-of-variants-to-use"></a>
 </h2>
+<p>To run LDpred2, you need</p>
+<ul>
+<li>GWAS summary statistics with marginal effect sizes, their standard errors, and the corresponding sample size(s),</li>
+<li>an LD (correlation) matrix computed from individuals of the same genetic ancestry as individuals used in the GWAS,</li>
+<li>individual-level data for tuning hyper-parameters (when using LDpred2-grid or lassosum2) and for testing the final models.</li>
+</ul>
+<p>You need to restrict to genetic variants in common between all these datasets.</p>
 <p>We previously recommended to use a set of 1,054,330 HapMap3 variants for LDpred2, because they provide a good coverage of the genome and are generally well imputed and available in most studies. In <a href="https://doi.org/10.1101/2022.10.10.511629" class="external-link">this preprint</a>, we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 now.</p>
 <p>You should use these sets of variants only when your data is imputed so that the overlap is good. If you only have access to a chip of genotyped variants, you should use these. In that case, you should compute the LD information yourself (as done for the tutorial data below).</p>
 <p>If you use HM3/HM3+ variants with European summary statistics and do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide LD matrices to be used directly:</p>
@@ -249,7 +255,7 @@
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="va">ind.val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">350</span><span class="op">)</span>
-<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></code></pre></div>
+<span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="matching-variants-between-genotype-data-and-summary-statistics">Matching variants between genotype data and summary statistics<a class="anchor" aria-label="anchor" href="#matching-variants-between-genotype-data-and-summary-statistics"></a>
@@ -504,7 +510,7 @@
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"h2"</span><span class="op">)</span>,
   ncol <span class="op">=</span> <span class="fl">1</span>, align <span class="op">=</span> <span class="st">"hv"</span>
 <span class="op">)</span></code></pre></div>
-<p><img src="LDpred2_files/figure-html/unnamed-chunk-23-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="LDpred2_files/figure-html/unnamed-chunk-23-1.png" width="90%" style="display: block; margin: auto;"></p>
 <p>In the LDpred2 paper, we proposed an automatic way of filtering bad chains by comparing the scale of the resulting predictions. We have tested a somewhat equivalent and simpler alternative since, which we recommend here:</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># `range` should be between 0 and 2</span>
@@ -538,10 +544,10 @@
 <pre><code><span class="co">##       lambda delta num_iter time  sparsity</span>
 <span class="co">## 1 0.06111003 0.001        2 0.00 0.9998897</span>
 <span class="co">## 2 0.05241382 0.001        3 0.00 0.9997133</span>
-<span class="co">## 3 0.04495512 0.001        4 0.01 0.9995368</span>
+<span class="co">## 3 0.04495512 0.001        4 0.00 0.9995368</span>
 <span class="co">## 4 0.03855782 0.001        7 0.00 0.9992501</span>
-<span class="co">## 5 0.03307088 0.001        8 0.02 0.9984119</span>
-<span class="co">## 6 0.02836476 0.001       13 0.02 0.9971105</span>
+<span class="co">## 5 0.03307088 0.001        8 0.00 0.9984119</span>
+<span class="co">## 6 0.02836476 0.001       13 0.01 0.9971105</span>
 <span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 114 rows ]</span></code></pre>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pred_grid2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodMat.html" class="external-link">big_prodMat</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_lassosum2</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
@@ -562,7 +568,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Warning: Removed 10 rows containing missing values (geom_point).</span></code></pre>
 <pre><code><span class="co">## Warning: Removed 10 row(s) containing missing values (geom_path).</span></code></pre>
-<p><img src="LDpred2_files/figure-html/unnamed-chunk-29-1.png" width="700" style="display: block; margin: auto;"></p>
+<p><img src="LDpred2_files/figure-html/unnamed-chunk-29-1.png" width="90%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="va">best_grid_lassosum2</span> <span class="op">&lt;-</span> <span class="va">params2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -573,10 +579,10 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
   <span class="va">beta_lassosum2</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></code></pre></div>
 <pre><code><span class="co">##       lambda delta num_iter time  sparsity    score id</span>
-<span class="co">## 1 0.02086632 0.001       21 0.03 0.9864570 9.715332  8</span>
-<span class="co">## 2 0.02086632 0.010       20 0.03 0.9864790 9.709724 38</span>
+<span class="co">## 1 0.02086632 0.001       21 0.02 0.9864570 9.715332  8</span>
+<span class="co">## 2 0.02086632 0.010       20 0.01 0.9864790 9.709724 38</span>
 <span class="co">## 3 0.02086632 0.100       16 0.02 0.9862364 9.667190 68</span>
-<span class="co">## 4 0.02432834 0.001       19 0.01 0.9942652 9.404453  7</span>
+<span class="co">## 4 0.02432834 0.001       19 0.02 0.9942652 9.404453  7</span>
 <span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Choose the best among all LDpred2-grid and lassosum2 models</span>
@@ -668,8 +674,8 @@ Overview of what LDpred2-auto can now provide
 <code class="sourceCode R"><span class="co"># Some cleaning</span>
 <span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span>
-<span class="co">## Ncells  3869525 206.7    6951108 371.3  6951108 371.3</span>
-<span class="co">## Vcells 43290103 330.3   75138540 573.3 75135333 573.3</span></code></pre>
+<span class="co">## Ncells  3875471 207.0    6951411 371.3  6951411 371.3</span>
+<span class="co">## Vcells 43302682 330.4   80431529 613.7 80429752 613.7</span></code></pre>
 <pre><code><span class="co">## [1] TRUE</span></code></pre>
 </div>
 <div class="section level2">

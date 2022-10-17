@@ -36,6 +36,14 @@ install.packages("bigsnpr")
 
 ## Which set of variants to use?
 
+To run LDpred2, you need 
+
+- GWAS summary statistics with marginal effect sizes, their standard errors, and the corresponding sample size(s),
+- an LD (correlation) matrix computed from individuals of the same genetic ancestry as individuals used in the GWAS,
+- individual-level data for tuning hyper-parameters (when using LDpred2-grid or lassosum2) and for testing the final models.
+
+You need to restrict to genetic variants in common between all these datasets.
+
 We previously recommended to use a set of 1,054,330 HapMap3 variants for LDpred2, because they provide a good coverage of the genome and are generally well imputed and available in most studies.
 In [this preprint](https://doi.org/10.1101/2022.10.10.511629), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 now.
 
@@ -65,7 +73,7 @@ str(info)
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE, width = 75, max.print = 30)
 knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
-knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png')
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png', out.width = "90%")
 ```
 
 This tutorial uses fake data for educational purposes only.
@@ -269,7 +277,7 @@ params$score <- apply(pred_grid[ind.val, ], 2, function(x) {
 
 Note that missing values represent models that diverged substantially.
 
-```{r, out.width="90%", fig.asp=0.5}
+```{r, fig.asp=0.5}
 library(ggplot2)
 ggplot(params, aes(x = p, y = score, color = as.factor(h2))) +
   theme_bigstatsr() +
@@ -437,7 +445,7 @@ LDpred2-auto has been very recently extended and improved to allow for estimatin
 where $p$ is the proportion of causal variants, $h^2$ the (SNP) heritability, $\boldsymbol{\gamma}$ the effect sizes on the allele scale, $\boldsymbol{S}$ the standard deviations of the genotypes, and $\boldsymbol{\beta}$ the effects of the scaled genotypes.
 
 Parameters $h^2$, $p$, and $\alpha$ (and 95% CIs) can be estimated using:
-```{r}
+```{r, cache=TRUE}
 coef_shrink <- 0.95
 multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
                                vec_p_init = seq_log(1e-4, 0.2, length.out = 50),
@@ -480,7 +488,7 @@ pcor(pred_auto, y, NULL)^2
 These are not exactly the same, which we attribute to the small number of variants used in this tutorial data.
 
 You can also get per-variant probabilities of being causal (for fine-mapping purposes)
-```{r, out.width="90%"}
+```{r}
 postp <- rowMeans(sapply(multi_auto[keep], function(auto) auto$postp_est))
 qplot(y = postp, alpha = I(0.2)) + theme_bigstatsr()
 ```
