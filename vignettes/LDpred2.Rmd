@@ -7,6 +7,12 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 75, max.print = 30)
+knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png', out.width = "90%")
+```
+
 Here I show how to compute polygenic scores using [LDpred2](https://doi.org/10.1093/bioinformatics/btaa1029), as well as inferring genetic architecture parameters with LDpred2-auto.
 
 Here is a (slightly outdated) video of me going through the tutorial and explaining the different steps:
@@ -53,7 +59,7 @@ If you use HM3/HM3+ variants with European summary statistics and do not have en
 
 - for [HapMap3+ variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.21305061) (now recommended in [this preprint](https://doi.org/10.1101/2022.10.10.511629))
 - for [HapMap3 variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.19213299) (previously recommended in [this paper](https://doi.org/10.1016/j.xhgg.2022.100136))
-- along with an [example R script](https://github.com/privefl/paper-ldpred2/blob/master/code/example-with-provided-ldref.R) on how to use them
+- along with an [example R script](https://github.com/privefl/paper-infer/blob/main/code/example-with-provided-LD.R) on how to use them
 
 Note that forming independent LD blocks in LD matrices can be useful for robustness and extra speed gains (see [this paper](https://doi.org/10.1016/j.xhgg.2022.100136)).
 
@@ -69,12 +75,6 @@ str(info)
 
 
 ## Downloading genotype data and summary statistics for the tutorial
-
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, width = 75, max.print = 30)
-knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
-knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png', out.width = "90%")
-```
 
 This tutorial uses fake data for educational purposes only.
 Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
