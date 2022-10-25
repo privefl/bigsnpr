@@ -107,8 +107,5 @@ snp_clumping(fake$genotypes, infos.chr = fake$map$chromosome)
 
 ## Conclusion
 
-So, pruning removes SNPs in a way that may leave regions of the genome with no representative SNP at all.
-
-<!-- ## Acknowledgements  -->
-
-<!-- I thank Michael G.B. Blum and Hugues Aschard, my two thesis supervisors, for thoughtful comments. -->
+Pruning removes SNPs in a way that may leave regions of the genome with no representative SNP at all.
+Clumping is similar to pruning when sorting by descending MAF, but does not have this issue, and should therefore be preferred.
