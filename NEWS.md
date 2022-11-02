@@ -1,3 +1,7 @@
+## bigsnpr 1.11.5
+
+- Autocomplete PLINK builds to be downloaded (fix #383).
+
 ## bigsnpr 1.11.4
 
 - Extend and improve LDpred2-auto to allow for estimating $h^2$, $p$, and $\alpha$, a new third parameter that controls how expected effect sizes relate to minor allele frequencies.

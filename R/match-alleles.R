@@ -157,8 +157,7 @@ snp_modifyBuild <- function(info_snp, liftOver,
     stop2("Expecting variables 'chr' and 'pos' in input 'info_snp'.")
 
   # Make sure liftOver is executable
-  liftOver <- normalizePath(liftOver)
-  make_executable(liftOver)
+  liftOver <- make_executable(normalizePath(liftOver))
 
   # Need BED UCSC file for liftOver
   info_BED <- with(info_snp, data.frame(

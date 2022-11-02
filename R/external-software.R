@@ -2,6 +2,7 @@
 
 make_executable <- function(exe) {
   Sys.chmod(exe, mode = (file.info(exe)$mode | "111"))
+  exe
 }
 
 system_verbose <- function(..., verbose) {
@@ -63,9 +64,11 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
     pattern = ".*(http[s]*://s3.amazonaws.com/plink1-assets/plink_.+?\\.zip).*"
   )
   plink.builds <- data.frame(
-    url = sub("^http://", "https://", plink.names),
-    OS = c(rep("Unix", 2), "Mac", rep("Windows", 2)),
-    arch = c(64, 32, 64, 64, 32),
+    url  = sub("^http://", "https://", plink.names),
+    OS = ifelse(grepl("linux", plink.names), "Unix",
+                ifelse(grepl("mac", plink.names), "Mac",
+                       ifelse(grepl("win", plink.names), "Windows", NA_character_))),
+    arch = ifelse(grepl("i686|win32", plink.names), 32, 64),
     stringsAsFactors = FALSE
   )
 
@@ -77,9 +80,8 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
   PLINK <- utils::unzip(plink.zip,
                         files = basename(PLINK),
                         exdir = dirname(PLINK))
-  make_executable(PLINK)
 
-  PLINK
+  make_executable(PLINK)
 }
 
 ################################################################################
@@ -111,24 +113,35 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE,
   )
   plink.builds <- data.frame(
     url  = sub("^http://", "https://", plink.names),
-    OS   = c(rep("Unix", 3),      rep("Mac", 2),  rep("Windows", 3)),
-    arch = c(64, 64, 32,          64, 64,         64, 64, 32),
-    avx2 = c(TRUE, FALSE, FALSE,  TRUE, FALSE,    TRUE, FALSE, FALSE),
+    OS = ifelse(grepl("linux", plink.names), "Unix",
+                ifelse(grepl("mac", plink.names), "Mac",
+                       ifelse(grepl("win", plink.names), "Windows", NA_character_))),
+    arch = ifelse(grepl("i686|win32", plink.names), 32, 64),
+    avx2 = grepl("avx2", plink.names),
     stringsAsFactors = FALSE
   )
 
   myArch <- 8 * .Machine$sizeof.pointer
-  if (myArch == 32) AVX2 <- FALSE
   url <- subset(plink.builds, OS == myOS & arch == myArch & avx2 == AVX2)[["url"]]
+
+  if (length(url) == 0)
+    url <- subset(plink.builds, OS == myOS & arch == myArch & !avx2)[["url"]]
+
+  if (length(url) == 0)
+    stop2("No PLINK build found. Please report.")
+
+  if (length(url) > 1) {
+    message2("Multiple PLINK builds found. Using the first one.")
+    url <- url[1]
+  }
 
   plink.zip <- tempfile(fileext = ".zip")
   utils::download.file(url, destfile = plink.zip, quiet = !verbose)
   PLINK2 <- utils::unzip(plink.zip,
                          files = basename(PLINK2),
                          exdir = dirname(PLINK2))
-  make_executable(PLINK2)
 
-  PLINK2
+  make_executable(PLINK2)
 }
 
 ################################################################################
@@ -157,12 +170,10 @@ download_beagle <- function(dir = tempdir()) {
   )
 
   beagle <- file.path(dir, jar)
-  if (!file.exists(beagle)) {
+  if (!file.exists(beagle))
     utils::download.file(paste0(url, jar), destfile = beagle)
-    make_executable(beagle)
-  }
 
-  beagle
+  make_executable(beagle)
 }
 
 ################################################################################
