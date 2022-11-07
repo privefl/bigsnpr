@@ -20,20 +20,21 @@
 #'
 download_1000G <- function(dir, overwrite = FALSE, delete_zip = TRUE) {
 
-  assert_dir(dir <- sub("/$", "", dir))
+  dir <- sub("/$", "", dir)
+  assert_dir(dir)
+
   files_unzipped <- file.path(dir, paste0("1000G_phase3_common_norel",
                                           c(".bed", ".bim", ".fam", ".fam2")))
 
   if (overwrite || !all(file.exists(files_unzipped))) {
 
-    zip <- file.path(dir, "1000G_phase3_common_norel.zip")
-    if (overwrite || !file.exists(zip)) {
-      utils::download.file("https://ndownloader.figshare.com/files/17838962",
-                           destfile = zip, mode = "wb")
-      if (delete_zip) on.exit(unlink(zip), add = TRUE, after = FALSE)
-    }
-    utils::unzip(zip, exdir = dir)
+    zip <- runonce::download_file(
+      "https://ndownloader.figshare.com/files/17838962",
+      dir = dir, fname = "1000G_phase3_common_norel.zip", overwrite = overwrite)
 
+    if (delete_zip) on.exit(unlink(zip), add = TRUE, after = FALSE)
+
+    utils::unzip(zip, exdir = dir)
   }
 
   files_unzipped[1]
