@@ -102,9 +102,9 @@ check_bgen_format <- function(bgenfile) {
 #' with the ones at \url{https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998}.
 #'
 #' You can look at some example code from my papers on how to use this function:
+#' - \url{https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R}
 #' - \url{https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62}
 #' - \url{https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75}
-#' - \url{https://github.com/privefl/UKBiobank/blob/master/10-get-dosages.R}
 #'
 #' @param bgenfiles Character vector of paths to files with extension ".bgen".
 #'   The corresponding ".bgen.bgi" index files must exist.
@@ -118,8 +118,10 @@ check_bgen_format <- function(bgenfile) {
 #'  **This function assumes that these IDs are uniquely identifying variants.**
 #' @param bgi_dir Directory of index files. Default is the same as `bgenfiles`.
 #' @param ind_row An optional vector of the row indices (individuals) that
-#'   are used. If not specified, all rows are used.\cr
-#'   **Don't use negative indices.**
+#'   are used. If not specified, all rows are used. **Don't use negative indices.**
+#'   You can access the sample IDs corresponding to the genotypes from the *.sample*
+#'   file, and use e.g. `match()` to get indices corresponding to the ones you want.
+#'
 #' @param ncores Number of cores used. Default doesn't use parallelism.
 #'   You may use [nb_cores()].
 #' @param read_as How to read BGEN probabilities? Currently implemented:
@@ -128,9 +130,13 @@ check_bgen_format <- function(bgenfile) {
 #'   (similar to PLINK option '`--hard-call-threshold random`').
 #'
 #' @return The path to the RDS file `<backingfile>.rds` that stores the `bigSNP`
-#' object created by this function.
-#' Note that this function creates one other file which stores the values of
-#' the Filebacked Big Matrix.\cr
+#'   object created by this function. Note that this function creates another
+#'   file (*.bk*) which stores the values of the FBM (`$genotypes`). The `$map`
+#'   component of the `bigSNP` object stores some information on the variants
+#'   (including allele frequencies and INFO scores computed from the probabilities).
+#'   However, it does not have a `$fam` component; you should use the individual
+#'   IDs in the *.sample* file (filtered with `ind_row`) to add external information
+#'   on the individuals.\cr
 #' __You shouldn't read from BGEN files more than once.__ Instead, use
 #' [snp_attach] to load the "bigSNP" object in any R session from backing files.
 #'

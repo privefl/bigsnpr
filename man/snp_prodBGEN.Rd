@@ -28,8 +28,9 @@ If you have one BGEN file only, just wrap your vector of IDs with \code{list()}.
 \strong{This function assumes that these IDs are uniquely identifying variants.}}
 
 \item{ind_row}{An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.\cr
-\strong{Don't use negative indices.}}
+are used. If not specified, all rows are used. \strong{Don't use negative indices.}
+You can access the sample IDs corresponding to the genotypes from the \emph{.sample}
+file, and use e.g. \code{match()} to get indices corresponding to the ones you want.}
 
 \item{bgi_dir}{Directory of index files. Default is the same as \code{bgenfiles}.}
 

@@ -7,11 +7,7 @@
 seq_log(from, to, length.out)
 }
 \arguments{
-\item{from}{the starting and (maximal) end values of the
-    sequence.  Of length \code{1} unless just \code{from} is supplied as
-    an unnamed argument.}
-
-\item{to}{the starting and (maximal) end values of the
+\item{from, to}{the starting and (maximal) end values of the
     sequence.  Of length \code{1} unless just \code{from} is supplied as
     an unnamed argument.}
 

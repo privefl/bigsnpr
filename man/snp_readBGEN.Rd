@@ -29,8 +29,9 @@ If you have one BGEN file only, just wrap your vector of IDs with \code{list()}.
 \strong{This function assumes that these IDs are uniquely identifying variants.}}
 
 \item{ind_row}{An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.\cr
-\strong{Don't use negative indices.}}
+are used. If not specified, all rows are used. \strong{Don't use negative indices.}
+You can access the sample IDs corresponding to the genotypes from the \emph{.sample}
+file, and use e.g. \code{match()} to get indices corresponding to the ones you want.}
 
 \item{bgi_dir}{Directory of index files. Default is the same as \code{bgenfiles}.}
 
@@ -46,9 +47,13 @@ You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
 The path to the RDS file \verb{<backingfile>.rds} that stores the \code{bigSNP}
-object created by this function.
-Note that this function creates one other file which stores the values of
-the Filebacked Big Matrix.\cr
+object created by this function. Note that this function creates another
+file (\emph{.bk}) which stores the values of the FBM (\verb{$genotypes}). The \verb{$map}
+component of the \code{bigSNP} object stores some information on the variants
+(including allele frequencies and INFO scores computed from the probabilities).
+However, it does not have a \verb{$fam} component; you should use the individual
+IDs in the \emph{.sample} file (filtered with \code{ind_row}) to add external information
+on the individuals.\cr
 \strong{You shouldn't read from BGEN files more than once.} Instead, use
 \link{snp_attach} to load the "bigSNP" object in any R session from backing files.
 }
@@ -72,8 +77,8 @@ with the ones at \url{https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998}.
 
 You can look at some example code from my papers on how to use this function:
 \itemize{
+\item \url{https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R}
 \item \url{https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62}
 \item \url{https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75}
-\item \url{https://github.com/privefl/UKBiobank/blob/master/10-get-dosages.R}
 }
 }
