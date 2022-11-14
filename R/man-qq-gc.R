@@ -73,16 +73,16 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
   # get plot
   lpval <- stats::predict(gwas)[ord]
   cond <- is.null(npoints)
-  ind <- `if`(cond, seq_along(lpval), head(order(lpval), npoints))
+  ind <- if (cond) seq_along(lpval) else head(order(lpval), npoints)
   ymin <- -lpval[tail(ind, 1)]
-  subtitle <- substitute(expression((values >= val)), list(val = signif(ymin)))
+  subtitle <- paste0("(values \u2265 ", signif(ymin), ")")  # \u2265: >=
   p <- ggplot(data.frame(pos = all.pos, lp = -lpval)[ind, ], aes(pos, lp)) +
     geom_point(color = all.colors[ind]) +
     scale_x_continuous(breaks = label.pos, labels = labels,
                        limits = range(all.pos)) +
     labs(title = "Manhattan Plot", x = "Chromosome",
          y = expression(-log[10](italic("p-value"))),
-         subtitle = `if`(cond, NULL, eval(subtitle))) +
+         subtitle = `if`(cond, NULL, subtitle)) +
     theme_bigstatsr(size.rel = coeff)
 
   p$plot_env <- emptyenv()

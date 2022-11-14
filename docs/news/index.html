@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.7</span>
       </span>
     </div>
 
@@ -92,32 +92,45 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.11.7" id="bigsnpr-1117">bigsnpr 1.11.7<a class="anchor" aria-label="anchor" href="#bigsnpr-1117"></a></h2>
+<ul><li>Fix font rendering issue of <code>&gt;=</code> in subtitle of <code><a href="../reference/snp_manhattan.html">snp_manhattan()</a></code>.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.5" id="bigsnpr-1115">bigsnpr 1.11.5<a class="anchor" aria-label="anchor" href="#bigsnpr-1115"></a></h2>
-<ul><li>Autocomplete PLINK builds to be downloaded (fix <a href="https://github.com/privefl/bigsnpr/issues/383" class="external-link">#383</a>).</li></ul></div>
+<ul><li>Autocomplete PLINK builds to be downloaded (fix <a href="https://github.com/privefl/bigsnpr/issues/383" class="external-link">#383</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.4" id="bigsnpr-1114">bigsnpr 1.11.4<small>2022-10-21</small><a class="anchor" aria-label="anchor" href="#bigsnpr-1114"></a></h2>
-<ul><li>Extend and improve LDpred2-auto to allow for estimating <span class="math inline"><em>h</em><sup>2</sup></span>, <span class="math inline"><em>p</em></span>, and <span class="math inline"><em>α</em></span>, a new third parameter that controls how expected effect sizes relate to minor allele frequencies.</li></ul></div>
+<ul><li>Extend and improve LDpred2-auto to allow for estimating <span class="math inline"><em>h</em><sup>2</sup></span>, <span class="math inline"><em>p</em></span>, and <span class="math inline"><em>α</em></span>, a new third parameter that controls how expected effect sizes relate to minor allele frequencies.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.3" id="bigsnpr-1113">bigsnpr 1.11.3<a class="anchor" aria-label="anchor" href="#bigsnpr-1113"></a></h2>
-<ul><li>Can now run <code><a href="../reference/snp_ldsc.html">snp_ldsc2()</a></code> with <code>corr</code> as an SFBM.</li></ul></div>
+<ul><li>Can now run <code><a href="../reference/snp_ldsc.html">snp_ldsc2()</a></code> with <code>corr</code> as an SFBM.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.2" id="bigsnpr-1112">bigsnpr 1.11.2<a class="anchor" aria-label="anchor" href="#bigsnpr-1112"></a></h2>
-<ul><li>Now use a sparse format for sampling betas returned in LDpred2-auto, instead of a dense matrix that could require quite some memory to store.</li></ul></div>
+<ul><li>Now use a sparse format for sampling betas returned in LDpred2-auto, instead of a dense matrix that could require quite some memory to store.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.11.0" id="bigsnpr-1110">bigsnpr 1.11.0<a class="anchor" aria-label="anchor" href="#bigsnpr-1110"></a></h2>
-<ul><li>Add two new parameters to <code><a href="../reference/snp_simuPheno.html">snp_simuPheno()</a></code>: <code>alpha</code> and <code>prob</code>.</li></ul></div>
+<ul><li>Add two new parameters to <code><a href="../reference/snp_simuPheno.html">snp_simuPheno()</a></code>: <code>alpha</code> and <code>prob</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.7" id="bigsnpr-1107">bigsnpr 1.10.7<a class="anchor" aria-label="anchor" href="#bigsnpr-1107"></a></h2>
-<ul><li>Fix a liftOver error in <code><a href="../reference/snp_modifyBuild.html">snp_modifyBuild()</a></code>.</li></ul></div>
+<ul><li>Fix a liftOver error in <code><a href="../reference/snp_modifyBuild.html">snp_modifyBuild()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.6" id="bigsnpr-1106">bigsnpr 1.10.6<a class="anchor" aria-label="anchor" href="#bigsnpr-1106"></a></h2>
-<ul><li>Better <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>:<ul><li>also return <code>$cost2</code>, the sum of squared sizes of the blocks,</li>
+<ul><li>Better <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>:
+<ul><li>also return <code>$cost2</code>, the sum of squared sizes of the blocks,</li>
 <li>for equivalent splits (with the same cost), now return the one that also minimizes cost2,</li>
 <li>now return unique splits only (e.g. could get equivalent splits with different <code>max_size</code>).</li>
-</ul></li></ul></div>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.5" id="bigsnpr-1105">bigsnpr 1.10.5<a class="anchor" aria-label="anchor" href="#bigsnpr-1105"></a></h2>
-<ul><li>Slightly change the default parameters of lassosum2:<ul><li>
+<ul><li>Slightly change the default parameters of lassosum2:
+<ul><li>
 <code>delta</code> from <code>c(0.001, 0.005, 0.02, 0.1, 0.6, 3)</code> to <code>c(0.001, 0.01, 0.1, 1)</code>,</li>
 <li>
 <code>nlambda</code> from 20 to 30,</li>
@@ -128,13 +141,16 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.4" id="bigsnpr-1104">bigsnpr 1.10.4<a class="anchor" aria-label="anchor" href="#bigsnpr-1104"></a></h2>
-<ul><li>Now use the same updating strategy for residuals in LDpred2 as in lassosum2. This can make LDpred2-grid and LDpred2-auto an order of magnitude faster, especially for small p.</li></ul></div>
+<ul><li>Now use the same updating strategy for residuals in LDpred2 as in lassosum2. This can make LDpred2-grid and LDpred2-auto an order of magnitude faster, especially for small p.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.2" id="bigsnpr-1102">bigsnpr 1.10.2<a class="anchor" aria-label="anchor" href="#bigsnpr-1102"></a></h2>
-<ul><li>Better <code><a href="../reference/snp_modifyBuild.html">snp_modifyBuild()</a></code>: more variants should be mapped + add some QC on the mapping (a position is not mapped to more than one, the chromosome is the same, and possibly check whether we can go back to the initial position -&gt; cf. <a href="https://doi.org/10.1093/nargab/lqaa054" class="external-link uri">https://doi.org/10.1093/nargab/lqaa054</a>).</li></ul></div>
+<ul><li>Better <code><a href="../reference/snp_modifyBuild.html">snp_modifyBuild()</a></code>: more variants should be mapped + add some QC on the mapping (a position is not mapped to more than one, the chromosome is the same, and possibly check whether we can go back to the initial position -&gt; cf. <a href="https://doi.org/10.1093/nargab/lqaa054" class="external-link uri">https://doi.org/10.1093/nargab/lqaa054</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.1" id="bigsnpr-1101">bigsnpr 1.10.1<a class="anchor" aria-label="anchor" href="#bigsnpr-1101"></a></h2>
-<ul><li>Add two new parameters to <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>: <code>max_r2</code>, the maximum squared correlation allowed outside blocks, and <code>max_cost</code>, the maximum cost of reported solutions (i.e. the sum of all squared correlations outside blocks). Using <code>max_r2</code> offers an extra guarantee that the splitting is very good, and makes the function much faster by discarding lots of possible splits.</li></ul></div>
+<ul><li>Add two new parameters to <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>: <code>max_r2</code>, the maximum squared correlation allowed outside blocks, and <code>max_cost</code>, the maximum cost of reported solutions (i.e. the sum of all squared correlations outside blocks). Using <code>max_r2</code> offers an extra guarantee that the splitting is very good, and makes the function much faster by discarding lots of possible splits.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.10.0" id="bigsnpr-1100">bigsnpr 1.10.0<a class="anchor" aria-label="anchor" href="#bigsnpr-1100"></a></h2>
 <ul><li><p>LDpred2-grid does not use OpenMP for parallelism anymore, it now simply uses multiple R processes.</p></li>
@@ -142,17 +158,21 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.13" id="bigsnpr-1913">bigsnpr 1.9.13<a class="anchor" aria-label="anchor" href="#bigsnpr-1913"></a></h2>
-<ul><li>Enforce <code>scipen = 50</code> when writing files to turn off scientific format (e.g. for physical positions stored as <code>double</code>).</li></ul></div>
+<ul><li>Enforce <code>scipen = 50</code> when writing files to turn off scientific format (e.g. for physical positions stored as <code>double</code>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.12" id="bigsnpr-1912--bigsparser-06">bigsnpr 1.9.12 &amp; bigsparser 0.6<a class="anchor" aria-label="anchor" href="#bigsnpr-1912--bigsparser-06"></a></h2>
-<ul><li>Use a better strategy for appending to an SFBM (<code>$add_columns()</code>).</li></ul></div>
+<ul><li>Use a better strategy for appending to an SFBM (<code>$add_columns()</code>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.8" id="bigsnpr-198">bigsnpr 1.9.8<a class="anchor" aria-label="anchor" href="#bigsnpr-198"></a></h2>
-<ul><li>Fix an issue in <code><a href="../reference/snp_readBGI.html">snp_readBGI()</a></code> when using an outdated version of package {bit64}.</li></ul></div>
+<ul><li>Fix an issue in <code><a href="../reference/snp_readBGI.html">snp_readBGI()</a></code> when using an outdated version of package {bit64}.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.7" id="bigsnpr-197">bigsnpr 1.9.7<a class="anchor" aria-label="anchor" href="#bigsnpr-197"></a></h2>
 <ul><li>
-<code><a href="../reference/snp_cor.html">snp_cor()</a></code> and <code><a href="../reference/snp_cor.html">bed_cor()</a></code> now use less memory.</li></ul></div>
+<code><a href="../reference/snp_cor.html">snp_cor()</a></code> and <code><a href="../reference/snp_cor.html">bed_cor()</a></code> now use less memory.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.5" id="bigsnpr-195">bigsnpr 1.9.5<a class="anchor" aria-label="anchor" href="#bigsnpr-195"></a></h2>
 <ul><li><p>Remove parameter <code>info</code> from <code><a href="../reference/snp_cor.html">snp_cor()</a></code> and <code><a href="../reference/snp_cor.html">bed_cor()</a></code> because this correction is not useful after all.</p></li>
@@ -160,13 +180,16 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.4" id="bigsnpr-194">bigsnpr 1.9.4<a class="anchor" aria-label="anchor" href="#bigsnpr-194"></a></h2>
-<ul><li>You can now return information on all variants with <code><a href="../reference/snp_readBGI.html">snp_readBGI()</a></code>.</li></ul></div>
+<ul><li>You can now return information on all variants with <code><a href="../reference/snp_readBGI.html">snp_readBGI()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.3" id="bigsnpr-193">bigsnpr 1.9.3<a class="anchor" aria-label="anchor" href="#bigsnpr-193"></a></h2>
-<ul><li>Fix <code><a href="../reference/snp_manhattan.html">snp_manhattan()</a></code> when non-ordered (chr, pos) are provided.</li></ul></div>
+<ul><li>Fix <code><a href="../reference/snp_manhattan.html">snp_manhattan()</a></code> when non-ordered (chr, pos) are provided.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.2" id="bigsnpr-192">bigsnpr 1.9.2<a class="anchor" aria-label="anchor" href="#bigsnpr-192"></a></h2>
-<ul><li>Enhance function <code><a href="../reference/snp_ancestry_summary.html">snp_ancestry_summary()</a></code> by allowing to estimate ancestry proportions after PCA projection (instead of directly using the allele frequencies).</li></ul></div>
+<ul><li>Enhance function <code><a href="../reference/snp_ancestry_summary.html">snp_ancestry_summary()</a></code> by allowing to estimate ancestry proportions after PCA projection (instead of directly using the allele frequencies).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.1" id="bigsnpr-191">bigsnpr 1.9.1<a class="anchor" aria-label="anchor" href="#bigsnpr-191"></a></h2>
 <ul><li><p>Add function <code><a href="../reference/snp_cor.html">bed_cor()</a></code> (similar to <code><a href="../reference/snp_cor.html">snp_cor()</a></code> but with bed files/objects directly).</p></li>
@@ -174,28 +197,36 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.0" id="bigsnpr-190">bigsnpr 1.9.0<a class="anchor" aria-label="anchor" href="#bigsnpr-190"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_ancestry_summary.html">snp_ancestry_summary()</a></code> to estimate ancestry proportions from a cohort using only its summary allele frequencies.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_ancestry_summary.html">snp_ancestry_summary()</a></code> to estimate ancestry proportions from a cohort using only its summary allele frequencies.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.11" id="bigsnpr-1811">bigsnpr 1.8.11<a class="anchor" aria-label="anchor" href="#bigsnpr-1811"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_scaleBinom.html">snp_scaleAlpha()</a></code>, which is similar to <code><a href="../reference/snp_scaleBinom.html">snp_scaleBinom()</a></code>, but has a parameter <code>alpha</code> that controls the relation between the scaling and the allele frequencies.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_scaleBinom.html">snp_scaleAlpha()</a></code>, which is similar to <code><a href="../reference/snp_scaleBinom.html">snp_scaleBinom()</a></code>, but has a parameter <code>alpha</code> that controls the relation between the scaling and the allele frequencies.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.10" id="bigsnpr-1810">bigsnpr 1.8.10<a class="anchor" aria-label="anchor" href="#bigsnpr-1810"></a></h2>
-<ul><li>Function <code><a href="../reference/snp_cor.html">snp_cor()</a></code> now also uses the upper triangle (<code>@uplo = "U"</code>) when the sparse correlation matrix is diagonal, so that it is easier to use with e.g. <code><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html" class="external-link">as_SFBM()</a></code>.</li></ul></div>
+<ul><li>Function <code><a href="../reference/snp_cor.html">snp_cor()</a></code> now also uses the upper triangle (<code>@uplo = "U"</code>) when the sparse correlation matrix is diagonal, so that it is easier to use with e.g. <code><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html" class="external-link">as_SFBM()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.9" id="bigsnpr-189">bigsnpr 1.8.9<a class="anchor" aria-label="anchor" href="#bigsnpr-189"></a></h2>
-<ul><li>Add parameter <code>type</code> in <code><a href="../reference/snp_asGeneticPos.html">snp_asGeneticPos()</a></code> to also be able to use interpolated genetic maps from <a href="https://github.com/joepickrell/1000-genomes-genetic-maps/tree/master/interpolated_from_hapmap" class="external-link">here</a>.</li></ul></div>
+<ul><li>Add parameter <code>type</code> in <code><a href="../reference/snp_asGeneticPos.html">snp_asGeneticPos()</a></code> to also be able to use interpolated genetic maps from <a href="https://github.com/joepickrell/1000-genomes-genetic-maps/tree/master/interpolated_from_hapmap" class="external-link">here</a>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.8" id="bigsnpr-188">bigsnpr 1.8.8<a class="anchor" aria-label="anchor" href="#bigsnpr-188"></a></h2>
-<ul><li>Add parameter <code>return_flip_and_rev</code> to <code><a href="../reference/snp_match.html">snp_match()</a></code> for whether to return internal boolean variables <code>"_FLIP_"</code> and <code>"_REV_"</code>.</li></ul></div>
+<ul><li>Add parameter <code>return_flip_and_rev</code> to <code><a href="../reference/snp_match.html">snp_match()</a></code> for whether to return internal boolean variables <code>"_FLIP_"</code> and <code>"_REV_"</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.7" id="bigsnpr-187">bigsnpr 1.8.7<a class="anchor" aria-label="anchor" href="#bigsnpr-187"></a></h2>
-<ul><li>Add <code>$perc_kept</code> in the output of <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>, the percentage of initial non-zero values kept within the blocks defined.</li></ul></div>
+<ul><li>Add <code>$perc_kept</code> in the output of <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>, the percentage of initial non-zero values kept within the blocks defined.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.6" id="bigsnpr-186">bigsnpr 1.8.6<a class="anchor" aria-label="anchor" href="#bigsnpr-186"></a></h2>
-<ul><li>Faster <code><a href="../reference/snp_prodBGEN.html">snp_prodBGEN()</a></code>.</li></ul></div>
+<ul><li>Faster <code><a href="../reference/snp_prodBGEN.html">snp_prodBGEN()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.5" id="bigsnpr-185">bigsnpr 1.8.5<a class="anchor" aria-label="anchor" href="#bigsnpr-185"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_prodBGEN.html">snp_prodBGEN()</a></code> to compute a matrix product between BGEN files and a matrix (or a vector). This removes the need to read an intermediate FBM object with <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> to compute the product. Moreover, when using dosages, they are not rounded to two decimal places anymore.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_prodBGEN.html">snp_prodBGEN()</a></code> to compute a matrix product between BGEN files and a matrix (or a vector). This removes the need to read an intermediate FBM object with <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> to compute the product. Moreover, when using dosages, they are not rounded to two decimal places anymore.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.4" id="bigsnpr-184">bigsnpr 1.8.4<a class="anchor" aria-label="anchor" href="#bigsnpr-184"></a></h2>
 <ul><li><p>Trade new parameter <code>num_iter_change</code> for a simpler <code>allow_jump_sign</code>.</p></li>
@@ -203,13 +234,16 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.3" id="bigsnpr-183--bigsparser-05">bigsnpr 1.8.3 &amp; bigsparser 0.5<a class="anchor" aria-label="anchor" href="#bigsnpr-183--bigsparser-05"></a></h2>
-<ul><li>New compact format for SFBMs which should be really useful for LDpred2 (should require about half of memory and be twice as fast). The only thing that you need to change is <code>as_SFBM(corr0, compact = TRUE)</code>. Make sure to reinstall {bigsnpr} after updating to {bigsparser} v0.5.</li></ul></div>
+<ul><li>New compact format for SFBMs which should be really useful for LDpred2 (should require about half of memory and be twice as fast). The only thing that you need to change is <code>as_SFBM(corr0, compact = TRUE)</code>. Make sure to reinstall {bigsnpr} after updating to {bigsparser} v0.5.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.2" id="bigsnpr-182">bigsnpr 1.8.2<a class="anchor" aria-label="anchor" href="#bigsnpr-182"></a></h2>
-<ul><li>Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:<ul><li>add parameter <code>shrink_corr</code> to shrink off-diagonal elements of the LD matrix,</li>
+<ul><li>Prepare for incoming paper on (among other things) improved robustness of LDpred2-auto:
+<ul><li>add parameter <code>shrink_corr</code> to shrink off-diagonal elements of the LD matrix,</li>
 <li>add parameter <code>num_iter_change</code> to control when starting to shrink the variants that change sign too much,</li>
 <li>also return <code>corr_est</code>, the “imputed” correlations between variants and phenotypes, which can be used for post-QCing variants by comparing those to <code>beta / sqrt(n_eff * beta_se^2 + beta^2)</code>.</li>
-</ul></li></ul></div>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.0" id="bigsnpr-180">bigsnpr 1.8.0<a class="anchor" aria-label="anchor" href="#bigsnpr-180"></a></h2>
 <ul><li><p>Replace parameter <code>s</code> by <code>delta</code> in <code><a href="../reference/snp_lassosum2.html">snp_lassosum2()</a></code>. This new parameter <code>delta</code> better reflects that the lassosum model also uses L2-regularization (therefore, elastic-net regularization).</p></li>
@@ -217,46 +251,60 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.4" id="bigsnpr-174">bigsnpr 1.7.4<a class="anchor" aria-label="anchor" href="#bigsnpr-174"></a></h2>
-<ul><li>Now use a better formula for computing standard errors in <code><a href="../reference/snp_ldsc.html">snp_ldsc()</a></code> when using blocks with different sizes.</li></ul></div>
+<ul><li>Now use a better formula for computing standard errors in <code><a href="../reference/snp_ldsc.html">snp_ldsc()</a></code> when using blocks with different sizes.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.3" id="bigsnpr-173">bigsnpr 1.7.3<a class="anchor" aria-label="anchor" href="#bigsnpr-173"></a></h2>
-<ul><li>Add parameter <code>info</code> to <code><a href="../reference/snp_cor.html">snp_cor()</a></code> to correct correlations when they are computed from imputed dosage data.</li></ul></div>
+<ul><li>Add parameter <code>info</code> to <code><a href="../reference/snp_cor.html">snp_cor()</a></code> to correct correlations when they are computed from imputed dosage data.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.2" id="bigsnpr-172">bigsnpr 1.7.2<a class="anchor" aria-label="anchor" href="#bigsnpr-172"></a></h2>
-<ul><li>Function <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> now also returns frequencies and imputation INFO scores.</li></ul></div>
+<ul><li>Function <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> now also returns frequencies and imputation INFO scores.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.1" id="bigsnpr-171">bigsnpr 1.7.1<a class="anchor" aria-label="anchor" href="#bigsnpr-171"></a></h2>
-<ul><li>Add parameter <code>rsid</code> to <code><a href="../reference/snp_asGeneticPos.html">snp_asGeneticPos()</a></code> to also allow matching with rsIDs.</li></ul></div>
+<ul><li>Add parameter <code>rsid</code> to <code><a href="../reference/snp_asGeneticPos.html">snp_asGeneticPos()</a></code> to also allow matching with rsIDs.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.0" id="bigsnpr-170">bigsnpr 1.7.0<a class="anchor" aria-label="anchor" href="#bigsnpr-170"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_lassosum2.html">snp_lassosum2()</a></code> to train the lassosum models using the exact same input data as LDpred2.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_lassosum2.html">snp_lassosum2()</a></code> to train the lassosum models using the exact same input data as LDpred2.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.7" id="bigsnpr-167">bigsnpr 1.6.7<a class="anchor" aria-label="anchor" href="#bigsnpr-167"></a></h2>
-<ul><li>Add parameter <code>report_step</code> in <code><a href="../reference/LDpred2.html">snp_ldpred2_auto()</a></code> to report some of the internal sampling betas.</li></ul></div>
+<ul><li>Add parameter <code>report_step</code> in <code><a href="../reference/LDpred2.html">snp_ldpred2_auto()</a></code> to report some of the internal sampling betas.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.6" id="bigsnpr-166">bigsnpr 1.6.6<a class="anchor" aria-label="anchor" href="#bigsnpr-166"></a></h2>
-<ul><li>Fix crash in <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> when using BGEN files containing <code>~</code>.</li></ul></div>
+<ul><li>Fix crash in <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> when using BGEN files containing <code>~</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.5" id="bigsnpr-165">bigsnpr 1.6.5<a class="anchor" aria-label="anchor" href="#bigsnpr-165"></a></h2>
-<ul><li>Add parameter <code>thr_r2</code> in <code><a href="../reference/snp_cor.html">snp_cor()</a></code>.</li></ul></div>
+<ul><li>Add parameter <code>thr_r2</code> in <code><a href="../reference/snp_cor.html">snp_cor()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.4" id="bigsnpr-164">bigsnpr 1.6.4<a class="anchor" aria-label="anchor" href="#bigsnpr-164"></a></h2>
-<ul><li>Remove penalization in <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>. Instead, report the best splits for a range of numbers of blocks desired.</li></ul></div>
+<ul><li>Remove penalization in <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code>. Instead, report the best splits for a range of numbers of blocks desired.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.3" id="bigsnpr-163">bigsnpr 1.6.3<a class="anchor" aria-label="anchor" href="#bigsnpr-163"></a></h2>
-<ul><li>Penalization in <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code> now makes more sense. Also fix a small bug that prevented splitting the last block in some cases.</li></ul></div>
+<ul><li>Penalization in <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code> now makes more sense. Also fix a small bug that prevented splitting the last block in some cases.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.2" id="bigsnpr-162">bigsnpr 1.6.2<a class="anchor" aria-label="anchor" href="#bigsnpr-162"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code> for optimally splitting variants in nearly independent blocks of LD.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_ldsplit.html">snp_ldsplit()</a></code> for optimally splitting variants in nearly independent blocks of LD.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.1" id="bigsnpr-161">bigsnpr 1.6.1<small>2021-01-11</small><a class="anchor" aria-label="anchor" href="#bigsnpr-161"></a></h2>
-<ul><li>Add option <code>file.type = "--gzvcf"</code> for using gzipped VCF in <code><a href="../reference/snp_plinkQC.html">snp_plinkQC()</a></code>.</li></ul></div>
+<ul><li>Add option <code>file.type = "--gzvcf"</code> for using gzipped VCF in <code><a href="../reference/snp_plinkQC.html">snp_plinkQC()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.6.0" id="bigsnpr-160">bigsnpr 1.6.0<a class="anchor" aria-label="anchor" href="#bigsnpr-160"></a></h2>
-<ul><li>Finally remove function <code>snp_assocBGEN()</code>; prefer reading small parts with <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> as a temporary <code>bigSNP</code> object and do the association test with e.g. <code>big_univLinReg()</code>.</li></ul></div>
+<ul><li>Finally remove function <code>snp_assocBGEN()</code>; prefer reading small parts with <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> as a temporary <code>bigSNP</code> object and do the association test with e.g. <code>big_univLinReg()</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.7" id="bigsnpr-157">bigsnpr 1.5.7<a class="anchor" aria-label="anchor" href="#bigsnpr-157"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_thr_correct.html">snp_thr_correct()</a></code> for correcting for winner’s curse in summary statistics when using p-value thresholding.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_thr_correct.html">snp_thr_correct()</a></code> for correcting for winner’s curse in summary statistics when using p-value thresholding.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.6" id="bigsnpr-156">bigsnpr 1.5.6<a class="anchor" aria-label="anchor" href="#bigsnpr-156"></a></h2>
 <ul><li><p>Use a better formula for the scale in LDpred2, useful when there are some variants with very large effects (e.g. explaining more than 10% phenotypic variance).</p></li>
@@ -264,7 +312,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.5" id="bigsnpr-155">bigsnpr 1.5.5<a class="anchor" aria-label="anchor" href="#bigsnpr-155"></a></h2>
-<ul><li>Add option <code>return_sampling_betas</code> in <code><a href="../reference/LDpred2.html">snp_ldpred2_grid()</a></code> to return all sampling betas (after burn-in), which is useful for assessing the uncertainty of the PRS at the individual level (see <a href="https://doi.org/10.1101/2020.11.30.403188" class="external-link uri">https://doi.org/10.1101/2020.11.30.403188</a>).</li></ul></div>
+<ul><li>Add option <code>return_sampling_betas</code> in <code><a href="../reference/LDpred2.html">snp_ldpred2_grid()</a></code> to return all sampling betas (after burn-in), which is useful for assessing the uncertainty of the PRS at the individual level (see <a href="https://doi.org/10.1101/2020.11.30.403188" class="external-link uri">https://doi.org/10.1101/2020.11.30.403188</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.4" id="bigsnpr-154--bigsparser-041">bigsnpr 1.5.4 &amp; bigsparser 0.4.1<a class="anchor" aria-label="anchor" href="#bigsnpr-154--bigsparser-041"></a></h2>
 <ul><li><p>Faster cross-product with an SFBM, which should make all LDpred2 models faster.</p></li>
@@ -272,19 +321,24 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.1" id="bigsnpr-151">bigsnpr 1.5.1<a class="anchor" aria-label="anchor" href="#bigsnpr-151"></a></h2>
-<ul><li>Add multiple checks in <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> to make sure of the expected format.</li></ul></div>
+<ul><li>Add multiple checks in <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> to make sure of the expected format.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.5.0" id="bigsnpr-150">bigsnpr 1.5.0<a class="anchor" aria-label="anchor" href="#bigsnpr-150"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_fst.html">snp_fst()</a></code> for computing Fst.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_fst.html">snp_fst()</a></code> for computing Fst.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.11" id="bigsnpr-1411">bigsnpr 1.4.11<a class="anchor" aria-label="anchor" href="#bigsnpr-1411"></a></h2>
-<ul><li>Workaround for error <code>could not find function "ldpred2_gibbs_auto"</code>.</li></ul></div>
+<ul><li>Workaround for error <code>could not find function "ldpred2_gibbs_auto"</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.9" id="bigsnpr-149--bigsparser-040">bigsnpr 1.4.9 &amp; bigsparser 0.4.0<a class="anchor" aria-label="anchor" href="#bigsnpr-149--bigsparser-040"></a></h2>
-<ul><li>Can now directly do <code>as_SFBM(corr0)</code> instead of <code>bigsparser::as_SFBM(as(corr0, "dgCMatrix"))</code>. This should also use less memory and be faster.</li></ul></div>
+<ul><li>Can now directly do <code>as_SFBM(corr0)</code> instead of <code>bigsparser::as_SFBM(as(corr0, "dgCMatrix"))</code>. This should also use less memory and be faster.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.8" id="bigsnpr-148">bigsnpr 1.4.8<a class="anchor" aria-label="anchor" href="#bigsnpr-148"></a></h2>
-<ul><li>Add option <code>sparse</code> to enable getting also a sparse solution in LDpred2-auto.</li></ul></div>
+<ul><li>Add option <code>sparse</code> to enable getting also a sparse solution in LDpred2-auto.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.7" id="bigsnpr-147--bigsparser-030">bigsnpr 1.4.7 &amp; bigsparser 0.3.0<a class="anchor" aria-label="anchor" href="#bigsnpr-147--bigsparser-030"></a></h2>
 <ul><li><p>Faster <code><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html" class="external-link">as_SFBM()</a></code>.</p></li>
@@ -292,10 +346,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.6" id="bigsnpr-146">bigsnpr 1.4.6<a class="anchor" aria-label="anchor" href="#bigsnpr-146"></a></h2>
-<ul><li>Fasten <code><a href="../reference/snp_match.html">snp_match()</a></code>. Also now remove duplicates by default.</li></ul></div>
+<ul><li>Fasten <code><a href="../reference/snp_match.html">snp_match()</a></code>. Also now remove duplicates by default.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.3" id="bigsnpr-143">bigsnpr 1.4.3<a class="anchor" aria-label="anchor" href="#bigsnpr-143"></a></h2>
-<ul><li>Fix a bug when using very large correlation matrices in LDpred2 (although we do not recommend to do so).</li></ul></div>
+<ul><li>Fix a bug when using very large correlation matrices in LDpred2 (although we do not recommend to do so).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.2" id="bigsnpr-142">bigsnpr 1.4.2<a class="anchor" aria-label="anchor" href="#bigsnpr-142"></a></h2>
 <ul><li><p>All 3 LDpred2 functions now use an SFBM as input format for the correlation matrix.</p></li>
@@ -304,7 +360,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.1" id="bigsnpr-141">bigsnpr 1.4.1<a class="anchor" aria-label="anchor" href="#bigsnpr-141"></a></h2>
-<ul><li>Change default of parameter <code>alpha</code> of function <code><a href="../reference/snp_cor.html">snp_cor()</a></code> to <code>1</code>.</li></ul></div>
+<ul><li>Change default of parameter <code>alpha</code> of function <code><a href="../reference/snp_cor.html">snp_cor()</a></code> to <code>1</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.0" id="bigsnpr-140">bigsnpr 1.4.0<a class="anchor" aria-label="anchor" href="#bigsnpr-140"></a></h2>
 <ul><li><p>Add functions <code><a href="../reference/LDpred2.html">snp_ldpred2_inf()</a></code>, <code><a href="../reference/LDpred2.html">snp_ldpred2_grid()</a></code> and <code><a href="../reference/LDpred2.html">snp_ldpred2_auto()</a></code> for running the new LDpred2-inf, LDpred2-grid and LDpred2-auto.</p></li>
@@ -314,7 +371,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3.1" id="bigsnpr-131">bigsnpr 1.3.1<a class="anchor" aria-label="anchor" href="#bigsnpr-131"></a></h2>
-<ul><li>Also use OpenMP for the parallelization of <code><a href="../reference/snp_pcadapt.html">snp_pcadapt()</a></code>, <code><a href="../reference/snp_pcadapt.html">bed_pcadapt()</a></code>, <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> and <code><a href="../reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code>.</li></ul></div>
+<ul><li>Also use OpenMP for the parallelization of <code><a href="../reference/snp_pcadapt.html">snp_pcadapt()</a></code>, <code><a href="../reference/snp_pcadapt.html">bed_pcadapt()</a></code>, <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> and <code><a href="../reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.3.0" id="bigsnpr-130">bigsnpr 1.3.0<small>2020-03-09</small><a class="anchor" aria-label="anchor" href="#bigsnpr-130"></a></h2>
 <ul><li><p>Parallelization of clumping algorithms has been modified. Before, chromosomes were imputed in parallel. Now, chromosomes are processed sequentially, but computations within each chromosome are performed in parallel thanks to OpenMP. This should prevent major slowdowns for very large samples sizes (due to swapping).</p></li>
@@ -327,25 +385,32 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.5" id="bigsnpr-125">bigsnpr 1.2.5<a class="anchor" aria-label="anchor" href="#bigsnpr-125"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_subset.html">snp_subset()</a></code> as alias of method <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> for subsetting <code>bigSNP</code> objects.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_subset.html">snp_subset()</a></code> as alias of method <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> for subsetting <code>bigSNP</code> objects.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.4" id="bigsnpr-124">bigsnpr 1.2.4<a class="anchor" aria-label="anchor" href="#bigsnpr-124"></a></h2>
-<ul><li>Use new class <code>bed_light</code> internally to make parallel algorithms faster because they have to transfer less data to clusters. Also define differently functions used in <code>big_parallelize()</code> for the same reason.</li></ul></div>
+<ul><li>Use new class <code>bed_light</code> internally to make parallel algorithms faster because they have to transfer less data to clusters. Also define differently functions used in <code>big_parallelize()</code> for the same reason.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.0" id="bigsnpr-120">bigsnpr 1.2.0<a class="anchor" aria-label="anchor" href="#bigsnpr-120"></a></h2>
-<ul><li>Use the new implementation of robust OGK Mahalanobis distance in {bigutilsr}.</li></ul></div>
+<ul><li>Use the new implementation of robust OGK Mahalanobis distance in {bigutilsr}.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.1" id="bigsnpr-111">bigsnpr 1.1.1<a class="anchor" aria-label="anchor" href="#bigsnpr-111"></a></h2>
-<ul><li>Fix error <code>object 'obj.bed' not found</code> in <code><a href="../reference/snp_readBed.html">snp_readBed2()</a></code>.</li></ul></div>
+<ul><li>Fix error <code>object 'obj.bed' not found</code> in <code><a href="../reference/snp_readBed.html">snp_readBed2()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.0" id="bigsnpr-110">bigsnpr 1.1.0<a class="anchor" aria-label="anchor" href="#bigsnpr-110"></a></h2>
-<ul><li>Cope with new read-only option in {bigstatsr} version &gt;= 1.1.</li></ul></div>
+<ul><li>Cope with new read-only option in {bigstatsr} version &gt;= 1.1.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.2" id="bigsnpr-102">bigsnpr 1.0.2<a class="anchor" aria-label="anchor" href="#bigsnpr-102"></a></h2>
-<ul><li>Add option <code>backingfile</code> to <code><a href="../reference/snp_subset.html">subset.bigSNP()</a></code>.</li></ul></div>
+<ul><li>Add option <code>backingfile</code> to <code><a href="../reference/snp_subset.html">subset.bigSNP()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1" id="bigsnpr-101">bigsnpr 1.0.1<a class="anchor" aria-label="anchor" href="#bigsnpr-101"></a></h2>
-<ul><li>Add option <code>byrow</code> to <code><a href="../reference/bed_counts.html">bed_counts()</a></code>.</li></ul></div>
+<ul><li>Add option <code>byrow</code> to <code><a href="../reference/bed_counts.html">bed_counts()</a></code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.0" id="bigsnpr-100">bigsnpr 1.0.0<a class="anchor" aria-label="anchor" href="#bigsnpr-100"></a></h2>
 <ul><li>
@@ -375,13 +440,16 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.12.0" id="bigsnpr-0120">bigsnpr 0.12.0<a class="anchor" aria-label="anchor" href="#bigsnpr-0120"></a></h2>
-<ul><li>Add <code><a href="../reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code>: fast imputation via mode, mean or sampling according to allele frequencies.</li></ul></div>
+<ul><li>Add <code><a href="../reference/snp_fastImputeSimple.html">snp_fastImputeSimple()</a></code>: fast imputation via mode, mean or sampling according to allele frequencies.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.11.3" id="bigsnpr-0113">bigsnpr 0.11.3<a class="anchor" aria-label="anchor" href="#bigsnpr-0113"></a></h2>
-<ul><li>Fix a bug in <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> that could not handle duplicated variants or individuals.</li></ul></div>
+<ul><li>Fix a bug in <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> that could not handle duplicated variants or individuals.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.11.1" id="bigsnpr-0111">bigsnpr 0.11.1<a class="anchor" aria-label="anchor" href="#bigsnpr-0111"></a></h2>
-<ul><li>When using <code><a href="../reference/SCT.html">snp_grid_PRS()</a></code>, it now stores not only the FBM, but also the input parameters as attributes (the whole result basically).</li></ul></div>
+<ul><li>When using <code><a href="../reference/SCT.html">snp_grid_PRS()</a></code>, it now stores not only the FBM, but also the input parameters as attributes (the whole result basically).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.11.0" id="bigsnpr-0110">bigsnpr 0.11.0<a class="anchor" aria-label="anchor" href="#bigsnpr-0110"></a></h2>
 <ul><li><p>Add 3 SCT functions <code>snp_grid_*()</code> to improve from Clumping and Thresholding (preprint coming soon).</p></li>
@@ -389,10 +457,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.2" id="bigsnpr-0102">bigsnpr 0.10.2<a class="anchor" aria-label="anchor" href="#bigsnpr-0102"></a></h2>
-<ul><li>Parameter <code>is.size.in.bp</code> is deprecated.</li></ul></div>
+<ul><li>Parameter <code>is.size.in.bp</code> is deprecated.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.1" id="bigsnpr-0101">bigsnpr 0.10.1<a class="anchor" aria-label="anchor" href="#bigsnpr-0101"></a></h2>
-<ul><li>Add parameter <code>read_as</code> for <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code>. It is now possible to sample BGEN probabilities as random hard calls using <code>read_as = "random"</code>. Default remains reading probabilities as dosages.</li></ul></div>
+<ul><li>Add parameter <code>read_as</code> for <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code>. It is now possible to sample BGEN probabilities as random hard calls using <code>read_as = "random"</code>. Default remains reading probabilities as dosages.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.0" id="bigsnpr-0100">bigsnpr 0.10.0<a class="anchor" aria-label="anchor" href="#bigsnpr-0100"></a></h2>
 <ul><li><p>For memory-mapping, now use <em>mio</em> instead of <em>boost</em>.</p></li>
@@ -401,16 +471,20 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.0" id="bigsnpr-090">bigsnpr 0.9.0<a class="anchor" aria-label="anchor" href="#bigsnpr-090"></a></h2>
-<ul><li>When reading bed files, switch reading of Os and 2s to be consistent with other software.</li></ul></div>
+<ul><li>When reading bed files, switch reading of Os and 2s to be consistent with other software.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.2" id="bigsnpr-082">bigsnpr 0.8.2<a class="anchor" aria-label="anchor" href="#bigsnpr-082"></a></h2>
-<ul><li>Add function <code>snp_assocBGEN()</code> for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.</li></ul></div>
+<ul><li>Add function <code>snp_assocBGEN()</code> for computing quick association tests from BGEN files. Could be useful for quick screening of useful SNPs to read in bigSNP format. This function might be improved in the future.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.1" id="bigsnpr-081">bigsnpr 0.8.1<a class="anchor" aria-label="anchor" href="#bigsnpr-081"></a></h2>
-<ul><li>Change url to download PLINK 1.9.</li></ul></div>
+<ul><li>Change url to download PLINK 1.9.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.0" id="bigsnpr-080">bigsnpr 0.8.0<a class="anchor" aria-label="anchor" href="#bigsnpr-080"></a></h2>
-<ul><li>Add function <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> to read UK Biobank BGEN files in <code>bigSNP</code> format.</li></ul></div>
+<ul><li>Add function <code><a href="../reference/snp_readBGEN.html">snp_readBGEN()</a></code> to read UK Biobank BGEN files in <code>bigSNP</code> format.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7.0" id="bigsnpr-070">bigsnpr 0.7.0<a class="anchor" aria-label="anchor" href="#bigsnpr-070"></a></h2>
 <ul><li><p>Add parameter <code>is.size.in.bp</code> to <code><a href="../reference/snp_autoSVD.html">snp_autoSVD()</a></code> for the clumping part.</p></li>
@@ -418,24 +492,30 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6" id="bigsnpr-06">bigsnpr 0.6<a class="anchor" aria-label="anchor" href="#bigsnpr-06"></a></h2>
-<ul><li>Keep up with {bigstatsr}.</li></ul></div>
+<ul><li>Keep up with {bigstatsr}.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.1" id="bigsnpr-031">bigsnpr 0.3.1<a class="anchor" aria-label="anchor" href="#bigsnpr-031"></a></h2>
-<ul><li>Provide function <code>snp_gene</code> (as a gist) to get genes corresponding to ‘rs’ SNP IDs thanks to package {rsnps} from rOpenSci. See README.</li></ul></div>
+<ul><li>Provide function <code>snp_gene</code> (as a gist) to get genes corresponding to ‘rs’ SNP IDs thanks to package {rsnps} from rOpenSci. See README.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.0" id="bigsnpr-030">bigsnpr 0.3.0<a class="anchor" aria-label="anchor" href="#bigsnpr-030"></a></h2>
 <ul><li>
-<strong>Package {bigsnpr} is published in <a href="http://dx.doi.org/10.1093/bioinformatics/bty185" class="external-link">Bioinformatics</a></strong>.</li></ul></div>
+<strong>Package {bigsnpr} is published in <a href="http://dx.doi.org/10.1093/bioinformatics/bty185" class="external-link">Bioinformatics</a></strong>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.7" id="bigsnpr-027">bigsnpr 0.2.7<a class="anchor" aria-label="anchor" href="#bigsnpr-027"></a></h2>
-<ul><li>Faster defaults + possibility to estimate correlations based on a subset of individuals for <code>snp_fastImpute</code>. Also store information in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the <em>Bioinformatics</em> paper were <code>alpha = 0.02</code> and <code>size = 500</code> (instead of <code>1e-4</code> and <code>200</code> now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).</li></ul></div>
+<ul><li>Faster defaults + possibility to estimate correlations based on a subset of individuals for <code>snp_fastImpute</code>. Also store information in an FBM (instead of a data frame) so that imputation can be done by parts (you can stop the imputation by killing the R processes and come back to it later). Note that the defaults used in the <em>Bioinformatics</em> paper were <code>alpha = 0.02</code> and <code>size = 500</code> (instead of <code>1e-4</code> and <code>200</code> now, respectively). These new defaults are more stringent on the SNPs that are used, which makes the imputation faster (30 min instead of 42-48 min), without impacting accuracy (still 4.7-4.8% of errors).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.5" id="bigsnpr-025">bigsnpr 0.2.5<a class="anchor" aria-label="anchor" href="#bigsnpr-025"></a></h2>
 <ul><li>
-<strong>This package won’t be on CRAN</strong>. (Okay, it has been back on CRAN since; I was just pissed at BR :D)</li></ul></div>
+<strong>This package won’t be on CRAN</strong>. (Okay, it has been back on CRAN since; I was just pissed at BR :D)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.4" id="bigsnpr-024">bigsnpr 0.2.4<small>2018-02-01</small><a class="anchor" aria-label="anchor" href="#bigsnpr-024"></a></h2>
-<ul><li>No longer download PLINK automatically (because it is a CRAN policy violation).</li></ul></div>
+<ul><li>No longer download PLINK automatically (because it is a CRAN policy violation).</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

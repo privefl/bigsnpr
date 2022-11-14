@@ -1,3 +1,7 @@
+## bigsnpr 1.11.7
+
+- Fix font rendering issue of `>=` in subtitle of `snp_manhattan()`.
+
 ## bigsnpr 1.11.5
 
 - Autocomplete PLINK builds to be downloaded (fix #383).
