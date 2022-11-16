@@ -29,11 +29,11 @@ snp_plinkRmSamples(
 You should have one column for family IDs and one for sample IDs.
 }}
 
-\item{col.family.ID}{Index of the column containing the
-family IDs to match with those of the study. Default is the second one.}
+\item{col.family.ID}{Index of the column containing the family IDs to match
+with those of the study. Default is the first one.}
 
-\item{col.sample.ID}{Index of the column containing the
-sample IDs to match with those of the study. Default is the first one.}
+\item{col.sample.ID}{Index of the column containing the sample IDs to match
+with those of the study. Default is the second one.}
 
 \item{...}{Any additional parameter to pass to \code{\link[bigreadr:fread2]{bigreadr::fread2()}}.
 Particularly, option \code{header = FALSE} is sometimes needed.}

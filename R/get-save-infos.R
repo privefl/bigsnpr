@@ -31,30 +31,30 @@ snp_save <- function(x, version = NULL) {
 #' - A `data.frame`,
 #' - A character vector of file names where to find at the information you want.
 #'   You should have one column for family IDs and one for sample IDs.
-#' @param col.sample.ID Index of the column containing the
-#' sample IDs to match with those of the study. Default is the first one.
-#' @param col.family.ID Index of the column containing the
-#' family IDs to match with those of the study. Default is the second one.
+#' @param col.family.ID Index of the column containing the family IDs to match
+#'   with those of the study. Default is the first one.
+#' @param col.sample.ID Index of the column containing the sample IDs to match
+#'   with those of the study. Default is the second one.
 #' @param col.infos Indices of the column containing the information you want.
-#' Default is all but the first and the second columns.
-#' @param pair.sep Separator used for concatenation family and sample IDs
-#' in order to match easier. Default is `"-_-"`.
+#'   Default is all but the first and the second columns.
+#' @param pair.sep Separator used for concatenation of family and sample IDs to
+#'   make unique IDs for matching between the two datasets. Default is `"-_-"`.
 #' @param ... Any additional parameter to pass to [bigreadr::fread2()].
-#' Particularly, option `header = FALSE` is sometimes needed.
+#'   Particularly, option `header = FALSE` is sometimes needed.
 #'
 #' @return The requested information as a `data.frame`.
 #'
 #' @examples
 #' test <- snp_attachExtdata()
-#' # Just after reading
-#' rle(test$fam$family.ID)
+#' table(test$fam$family.ID)
+#'
 #' # Get populations clusters from external files
 #' files <- system.file("extdata", paste0("cluster", 1:3), package = "bigsnpr")
 #' bigreadr::fread2(files[1])
-#' # need header option
-#' bigreadr::fread2(files[1], header = FALSE)
+#' bigreadr::fread2(files[1], header = FALSE)  # need header option here
+#'
 #' infos <- snp_getSampleInfos(test, files, header = FALSE)
-#' rle(infos[[1]])
+#' table(infos[[1]])
 #'
 #' @seealso [list.files]
 #'
