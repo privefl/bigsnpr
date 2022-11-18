@@ -1,3 +1,7 @@
+## bigsnpr 1.11.8
+
+- Detect strong divergence in LDpred2-auto, and return missing values in that case.
+
 ## bigsnpr 1.11.7
 
 - Fix font rendering issue of `>=` in subtitle of `snp_manhattan()`.

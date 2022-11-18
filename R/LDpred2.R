@@ -163,7 +163,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   Default is `c(-1.5, 0.5)`. You can use the same value twice to fix \eqn{\alpha}.
 #'
 #' @return `snp_ldpred2_auto`: A list (over `vec_p_init`) of lists with
-#'   - `$beta_est`: vector of effect sizes (on the allele scale)
+#'   - `$beta_est`: vector of effect sizes (on the allele scale); note that
+#'     missing values are returned when strong divergence is detected
 #'   - `$beta_est_sparse` (only when `sparse = TRUE`): sparse vector of effect sizes
 #'   - `$postp_est`: vector of posterior probabilities of being causal
 #'   - `$corr_est`, the "imputed" correlations between variants and phenotypes,
@@ -248,7 +249,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
     ldpred_auto$h2_init <- h2_init
     ldpred_auto$p_init  <- p_init
 
-    if (sparse) {
+    if (sparse && !is.na(ldpred_auto$h2_est)) {
       beta_gibbs <- ldpred2_gibbs_one(
         corr      = corr,
         beta_hat  = beta_hat,

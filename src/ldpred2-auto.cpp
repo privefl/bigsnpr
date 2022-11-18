@@ -94,24 +94,29 @@ List ldpred2_gibbs_auto(Environment corr,
   int ind_report = 0, next_k_reported = burn_in + report_step - 1;
 
   int num_iter_tot = burn_in + num_iter;
-  NumericVector p_est(num_iter_tot), h2_est(num_iter_tot), alpha_est(num_iter_tot);
+  NumericVector p_est(num_iter_tot, NA_REAL), h2_est(num_iter_tot, NA_REAL), alpha_est(num_iter_tot, NA_REAL);
 
   double cur_h2_est = shrink_corr * dotprod2(curr_beta, dotprods) +
     (1 - shrink_corr) * dotprod2(curr_beta, curr_beta);
   double p = std::max(p_init, MIN_P), h2 = std::max(h2_init, MIN_H2);
   arma::vec par_mle = {0, h2 / (m * p)};  // (alpha + 1) and sigma2 [init]
+  double gap0 = dotprod2(beta_hat, beta_hat);
+
   std::vector<int> ind_causal;
 
   for (int k = 0; k < num_iter_tot; k++) {
 
     double inv_odd_p = (1 - p) / p;
     double alpha_plus_one = par_mle[0], sigma2 = par_mle[1];
+    double gap = 0;
 
     ind_causal.clear();
 
     for (const int& j : order) {
 
       double dotprod = dotprods[j];  // sfbm->dot_col(j, curr_beta);
+      double resid = beta_hat[j] - dotprod;
+      gap += resid * resid;
       double res_beta_hat_j = beta_hat[j] + shrink_corr * (curr_beta[j] - dotprod);
 
       double scale_freq = ::exp(alpha_plus_one * log_var[j]);
@@ -157,6 +162,11 @@ List ldpred2_gibbs_auto(Environment corr,
         cur_h2_est += diff * (2 * dotprod_shrunk + diff);
         dotprods = sfbm->incr_mult_col(j, dotprods, diff);
       }
+    }
+
+    if (gap > gap0) {
+      avg_beta.fill(NA_REAL); avg_postp.fill(NA_REAL); avg_beta_hat.fill(NA_REAL);
+      break;
     }
 
     int nb_causal = ind_causal.size();

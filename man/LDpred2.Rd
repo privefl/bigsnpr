@@ -109,7 +109,8 @@ corresponds to one iteration instead (after burn-in).
 
 \code{snp_ldpred2_auto}: A list (over \code{vec_p_init}) of lists with
 \itemize{
-\item \verb{$beta_est}: vector of effect sizes (on the allele scale)
+\item \verb{$beta_est}: vector of effect sizes (on the allele scale); note that
+missing values are returned when strong divergence is detected
 \item \verb{$beta_est_sparse} (only when \code{sparse = TRUE}): sparse vector of effect sizes
 \item \verb{$postp_est}: vector of posterior probabilities of being causal
 \item \verb{$corr_est}, the "imputed" correlations between variants and phenotypes,
