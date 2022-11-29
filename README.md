@@ -16,7 +16,7 @@ To get you started:
 
 - List of functions [from bigsnpr](https://privefl.github.io/bigsnpr/reference/index.html) and [from bigstatsr](https://privefl.github.io/bigstatsr/reference/index.html)
 
-- [Extended documentation with more examples](https://privefl.github.io/bigsnpr-extdoc/)
+- [Extended documentation with more examples](https://privefl.github.io/bigsnpr-extdoc/) + [course recording](https://youtu.be/7VxBT5A_AcA)
 
 
 ## Installation
