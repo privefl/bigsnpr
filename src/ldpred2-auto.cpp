@@ -73,6 +73,7 @@ List ldpred2_gibbs_auto(Environment corr,
                         int report_step,
                         bool no_jump_sign,
                         double shrink_corr,
+                        bool use_mle,
                         const NumericVector& alpha_bounds,
                         double mean_ld = 1,
                         bool verbose = false) {
@@ -119,7 +120,7 @@ List ldpred2_gibbs_auto(Environment corr,
       gap += resid * resid;
       double res_beta_hat_j = beta_hat[j] + shrink_corr * (curr_beta[j] - dotprod);
 
-      double scale_freq = ::exp(alpha_plus_one * log_var[j]);
+      double scale_freq = use_mle ? ::exp(alpha_plus_one * log_var[j]) : 1;
       double C1 = scale_freq * sigma2 * n_vec[j];
       double C2 = 1 / (1 + 1 / C1);
       double C3 = C2 * res_beta_hat_j;
@@ -172,14 +173,19 @@ List ldpred2_gibbs_auto(Environment corr,
     int nb_causal = ind_causal.size();
     p = std::max(::Rf_rbeta(1 + nb_causal / mean_ld, 1 + (m - nb_causal) / mean_ld), MIN_P);
     h2 = std::max(cur_h2_est, MIN_H2);
-    par_mle = MLE_alpha(par_mle, ind_causal, log_var, curr_beta, alpha_bounds, true);
+    if (use_mle) {
+      par_mle = MLE_alpha(par_mle, ind_causal, log_var, curr_beta, alpha_bounds, true);
+    } else {
+      par_mle[1] = h2 / (m * p);
+    }
+
     if (verbose) Rcout <<
       k + 1 << ": " << p << " // " << h2 << " // " <<  par_mle[0] - 1 << std::endl;
 
     // path of parameters
     p_est[k]  = p;
     h2_est[k] = h2;
-    alpha_est[k] = par_mle[0] - 1;
+    if (use_mle) alpha_est[k] = par_mle[0] - 1;
 
     // store some sampling betas
     if (k == next_k_reported) {

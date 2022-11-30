@@ -159,6 +159,11 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #' @param shrink_corr Shrinkage multiplicative coefficient to apply to off-diagonal
 #'   elements of the correlation matrix. Default is `1` (unchanged).
 #'   You can use e.g. `0.95` to add a bit of regularization.
+#' @param use_MLE Whether to use maximum likelihood estimation (MLE) to estimate
+#'   alpha and the variance component (since v1.11.4), or assume that alpha is
+#'   -1 and estimate the variance of (scaled) effects as h2/(m*p), as it was
+#'   done in earlier versions of LDpred2-auto (e.g. in v1.10.8). Default is `TRUE`,
+#'   which should provide a better model fit, but might also be less robust.
 #' @param alpha_bounds Boundaries for the estimates of \eqn{\alpha}.
 #'   Default is `c(-1.5, 0.5)`. You can use the same value twice to fix \eqn{\alpha}.
 #'
@@ -200,6 +205,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              report_step = num_iter + 1L,
                              allow_jump_sign = TRUE,
                              shrink_corr = 1,
+                             use_MLE = TRUE,
                              alpha_bounds = c(-1.5, 0.5),
                              ncores = 1) {
 
@@ -237,6 +243,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       report_step  = report_step,
       no_jump_sign = !allow_jump_sign,
       shrink_corr  = shrink_corr,
+      use_mle      = use_MLE,
       alpha_bounds = alpha_bounds + 1,
       mean_ld      = mean_ld
     )

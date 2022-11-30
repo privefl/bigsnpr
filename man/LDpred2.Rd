@@ -30,6 +30,7 @@ snp_ldpred2_auto(
   report_step = num_iter + 1L,
   allow_jump_sign = TRUE,
   shrink_corr = 1,
+  use_MLE = TRUE,
   alpha_bounds = c(-1.5, 0.5),
   ncores = 1
 )
@@ -95,6 +96,12 @@ for accelerating convergence of chains with a large initial value for p.}
 \item{shrink_corr}{Shrinkage multiplicative coefficient to apply to off-diagonal
 elements of the correlation matrix. Default is \code{1} (unchanged).
 You can use e.g. \code{0.95} to add a bit of regularization.}
+
+\item{use_MLE}{Whether to use maximum likelihood estimation (MLE) to estimate
+alpha and the variance component (since v1.11.4), or assume that alpha is
+-1 and estimate the variance of (scaled) effects as h2/(m*p), as it was
+done in earlier versions of LDpred2-auto (e.g. in v1.10.8). Default is \code{TRUE},
+which should provide a better model fit, but might also be less robust.}
 
 \item{alpha_bounds}{Boundaries for the estimates of \eqn{\alpha}.
 Default is \code{c(-1.5, 0.5)}. You can use the same value twice to fix \eqn{\alpha}.}
