@@ -92,12 +92,14 @@ download_plink <- function(dir = tempdir(), overwrite = FALSE, verbose = TRUE) {
 #'
 #' @param AVX2 Whether to download the AVX2 version? This is only available for
 #'   64 bits architectures. Default is `TRUE`.
+#' @param ARM Whether to download an ARM version. Default is `FALSE`.
+#' @param AMD Whether to download an AMD version. Default is `FALSE`.
 #'
 #' @export
 #'
 #' @rdname download_plink
 #'
-download_plink2 <- function(dir = tempdir(), AVX2 = TRUE,
+download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, ARM = FALSE, AMD = FALSE,
                             overwrite = FALSE, verbose = TRUE) {
 
   assert_dir(dir)
@@ -118,20 +120,24 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE,
                        ifelse(grepl("win", plink.names), "Windows", NA_character_))),
     arch = ifelse(grepl("i686|win32", plink.names), 32, 64),
     avx2 = grepl("avx2", plink.names),
+    arm  = grepl("arm",  plink.names),
+    amd  = grepl("amd",  plink.names),
     stringsAsFactors = FALSE
   )
 
   myArch <- 8 * .Machine$sizeof.pointer
-  url <- subset(plink.builds, OS == myOS & arch == myArch & avx2 == AVX2)[["url"]]
+  url <- subset(plink.builds, OS == myOS & arch == myArch &
+                  avx2 == AVX2 & arm == ARM & amd == AMD)[["url"]]
 
   if (length(url) == 0)
-    url <- subset(plink.builds, OS == myOS & arch == myArch & !avx2)[["url"]]
+    url <- subset(plink.builds, OS == myOS & arch == myArch &
+                    !avx2 & arm == ARM & amd == AMD)[["url"]]
 
   if (length(url) == 0)
-    stop2("No PLINK build found. Please report.")
+    stop2("No corresponding PLINK build found.")
 
   if (length(url) > 1) {
-    message2("Multiple PLINK builds found. Using the first one.")
+    message2("Multiple PLINK builds found; using the first one.")
     url <- url[1]
   }
 

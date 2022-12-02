@@ -10,6 +10,8 @@ download_plink(dir = tempdir(), overwrite = FALSE, verbose = TRUE)
 download_plink2(
   dir = tempdir(),
   AVX2 = TRUE,
+  ARM = FALSE,
+  AMD = FALSE,
   overwrite = FALSE,
   verbose = TRUE
 )
@@ -24,6 +26,10 @@ Default is a temporary directory.}
 
 \item{AVX2}{Whether to download the AVX2 version? This is only available for
 64 bits architectures. Default is \code{TRUE}.}
+
+\item{ARM}{Whether to download an ARM version. Default is \code{FALSE}.}
+
+\item{AMD}{Whether to download an AMD version. Default is \code{FALSE}.}
 }
 \value{
 The path of the downloaded PLINK executable.

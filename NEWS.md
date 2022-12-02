@@ -1,3 +1,7 @@
+## bigsnpr 1.11.10
+
+- Add other architectures (AMD / ARM) as options for PLINK2.
+
 ## bigsnpr 1.11.9
 
 - Add option `use_MLE` in LDpred2-auto to allow, when using `FALSE`, for running LDpred2-auto as in previous versions (e.g. v1.10.8), which did not include alpha in the model. Default is `TRUE`.
