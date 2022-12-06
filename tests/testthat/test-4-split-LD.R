@@ -37,7 +37,8 @@ test_that("get_L() and get_C() work", {
   # E[3, 3] <- sum(corr[  3,   4]^2)
 
   path_cost1 <- bigsnpr:::get_C(L2, min_size = 1, max_size = 4,
-                                max_K = 5, max_cost = Inf)
+                                max_K = 5, max_cost = Inf,
+                                pos_scaled = rep(0, ncol(corr)))
   # one block remaining
   expect_identical(path_cost1$best_ind[, 1], rep(4L, 4))
   expect_identical(path_cost1$C[, 1], rep(0, 4))
@@ -56,7 +57,8 @@ test_that("get_L() and get_C() work", {
 
   # must use two blocks of two
   path_cost2 <- bigsnpr:::get_C(L2, min_size = 2, max_size = 2,
-                                max_K = 3, max_cost = Inf)
+                                max_K = 3, max_cost = Inf,
+                                pos_scaled = rep(1, ncol(corr)))
   # one block remaining
   expect_identical(path_cost2$best_ind[, 1], c(NA, NA, 4L, NA))
   expect_identical(path_cost2$C[, 1], c(Inf, Inf, 0, Inf))
@@ -68,7 +70,8 @@ test_that("get_L() and get_C() work", {
   expect_identical(path_cost2$C[, 3], rep(Inf, 4))
 
   path_cost3 <- bigsnpr:::get_C(L2, min_size = 1, max_size = 3,
-                                max_K = 3, max_cost = Inf)
+                                max_K = 3, max_cost = Inf,
+                                pos_scaled = seq(0, 1, length.out = ncol(corr)))
   # one block remaining
   expect_identical(path_cost3$best_ind[, 1], c(NA, 4L, 4L, 4L))
   expect_identical(path_cost3$C[, 1], c(Inf, 0, 0, 0))
@@ -78,6 +81,37 @@ test_that("get_L() and get_C() work", {
   # three blocks remaining
   expect_identical(path_cost3$best_ind[, 3], c(1L, 2L, NA, NA))
   expect_equal(path_cost3$C[, 3], c(1.11, 1.10, Inf, Inf), tolerance = 1e-6)
+
+  # pos_scaled works
+  expect_null(snp_ldsplit(corr, thr_r2 = 0, max_r2 = 1, min_size = 1,
+                          max_size = 3, max_K = 3, max_cost = Inf,
+                          pos_scaled = cols_along(corr) * 2))
+
+  test <- snp_ldsplit(corr, thr_r2 = 0, max_r2 = 1, min_size = 1,
+                      max_size = 3, max_K = 4, max_cost = Inf,
+                      pos_scaled = cols_along(corr) * 2)
+  expect_equal(nrow(test), 1)
+
+  path_cost4 <- bigsnpr:::get_C(L2, min_size = 1, max_size = 3,
+                                max_K = 4, max_cost = Inf,
+                                pos_scaled = cols_along(corr) * 2)
+
+
+  # one block remaining
+  expect_identical(path_cost4$best_ind[, 1], c(NA, NA, NA, 4L))
+  expect_identical(path_cost4$C[, 1], c(Inf, Inf, Inf, 0))
+  # two blocks remaining
+  err <- corr[3, 4]^2
+  expect_identical(path_cost4$best_ind[, 2], c(NA, NA, 3L, NA))
+  expect_equal(path_cost4$C[, 2], c(Inf, Inf, err, Inf))
+  # three blocks remaining
+  err <- err + sum(corr[2, 3:4]^2)
+  expect_identical(path_cost4$best_ind[, 3], c(NA, 2L, NA, NA))
+  expect_equal(path_cost4$C[, 3], c(Inf, err, Inf, Inf), tolerance = 1e-6)
+  # four blocks remaining
+  err <- err + sum(corr[1, 2:4]^2)
+  expect_identical(path_cost4$best_ind[, 4], c(1L, NA, NA, NA))
+  expect_equal(path_cost4$C[, 4], c(err, Inf, Inf, Inf), tolerance = 1e-6)
 })
 
 ################################################################################

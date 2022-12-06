@@ -1,3 +1,7 @@
+## bigsnpr 1.11.12
+
+- Add new parameter `pos_scaled` to `snp_ldsplit()`.
+
 ## bigsnpr 1.11.11
 
 - Fix C++ code that used integers to store the positions for clumping.

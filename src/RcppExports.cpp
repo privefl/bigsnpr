@@ -512,8 +512,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // get_C
-List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double max_cost);
-RcppExport SEXP _bigsnpr_get_C(SEXP LSEXP, SEXP min_sizeSEXP, SEXP max_sizeSEXP, SEXP max_KSEXP, SEXP max_costSEXP) {
+List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double max_cost, const NumericVector& pos_scaled);
+RcppExport SEXP _bigsnpr_get_C(SEXP LSEXP, SEXP min_sizeSEXP, SEXP max_sizeSEXP, SEXP max_KSEXP, SEXP max_costSEXP, SEXP pos_scaledSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -522,7 +522,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type max_size(max_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type max_K(max_KSEXP);
     Rcpp::traits::input_parameter< double >::type max_cost(max_costSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_C(L, min_size, max_size, max_K, max_cost));
+    Rcpp::traits::input_parameter< const NumericVector& >::type pos_scaled(pos_scaledSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_C(L, min_size, max_size, max_K, max_cost, pos_scaled));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -596,7 +597,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
     {"_bigsnpr_sp_colSumsSq_sym", (DL_FUNC) &_bigsnpr_sp_colSumsSq_sym, 3},
     {"_bigsnpr_get_L", (DL_FUNC) &_bigsnpr_get_L, 5},
-    {"_bigsnpr_get_C", (DL_FUNC) &_bigsnpr_get_C, 5},
+    {"_bigsnpr_get_C", (DL_FUNC) &_bigsnpr_get_C, 6},
     {"_bigsnpr_get_perc", (DL_FUNC) &_bigsnpr_get_perc, 3},
     {"_bigsnpr_writebina", (DL_FUNC) &_bigsnpr_writebina, 5},
     {"_bigsnpr_testWrite", (DL_FUNC) &_bigsnpr_testWrite, 2},

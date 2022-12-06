@@ -73,6 +73,10 @@ reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size,
 #'   two different blocks. This is used to make sure that strong correlations are
 #'   not discarded and also to speed up the algorithm. Default is `0.3`.
 #' @param max_cost Maximum cost reported. Default is `ncol(corr) / 200`.
+#' @param pos_scaled Vector of positions. The positions should be scaled so that
+#'   limits of a block must be separated by a distance of 1 at the maximum. E.g.
+#'   if the positions are in base pairs (bp), and you want a maximum distance of
+#'   10 Mbp, you need to provide the vector of positions divided by 10e6.
 #'
 #' @return Either `NULL` when no block splitting satisfies the conditions,
 #'   or a tibble with seven columns:
@@ -95,10 +99,12 @@ reconstruct_paths <- function(corr.p, corr.i, cost_path, min_size, max_size,
 snp_ldsplit <- function(corr, thr_r2, min_size, max_size,
                         max_K = 500,
                         max_r2 = 0.3,
-                        max_cost = ncol(corr) / 200) {
+                        max_cost = ncol(corr) / 200,
+                        pos_scaled = rep(0, ncol(corr))) {
 
   m <- ncol(corr)
   stopifnot(min_size >= 1 && all(max_size <= m))
+  assert_lengths(pos_scaled, cols_along(corr))
 
   corr <- Matrix::tril(corr)
   stopifnot(all(Matrix::diag(corr) != 0))
@@ -122,7 +128,8 @@ snp_ldsplit <- function(corr, thr_r2, min_size, max_size,
 
     # Precomputing E and computing all cost paths
     cost_path <- get_C(L, min_size = min_size, max_size = one_max_size,
-                       max_K = max_K, max_cost = max_cost)
+                       max_K = max_K, max_cost = max_cost,
+                       pos_scaled = pos_scaled)
 
     # Reconstructing paths
     reconstruct_paths(corr.p, corr.i, cost_path, min_size, one_max_size,

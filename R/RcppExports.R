@@ -121,8 +121,8 @@ get_L <- function(p, i, x, thr_r2, max_r2) {
     .Call(`_bigsnpr_get_L`, p, i, x, thr_r2, max_r2)
 }
 
-get_C <- function(L, min_size, max_size, max_K, max_cost) {
-    .Call(`_bigsnpr_get_C`, L, min_size, max_size, max_K, max_cost)
+get_C <- function(L, min_size, max_size, max_K, max_cost, pos_scaled) {
+    .Call(`_bigsnpr_get_C`, L, min_size, max_size, max_K, max_cost, pos_scaled)
 }
 
 get_perc <- function(p, i, all_last) {

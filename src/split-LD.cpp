@@ -63,7 +63,12 @@ List get_L(std::vector<size_t> p,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double max_cost) {
+List get_C(const arma::sp_mat& L,
+           int min_size,
+           int max_size,
+           int max_K,
+           double max_cost,
+           const NumericVector& pos_scaled) {
 
   int m = L.n_rows;  // L now has an extra column with all 0s for convenience
   std::vector< std::vector<float> > res_E(m);
@@ -74,8 +79,11 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double 
 
     double e = 0;
     int count = 0;
+    double pos_min = pos_scaled[col] - 1;
 
     for (int row = col; row >= 0; row--) {
+
+      if (pos_scaled[row] < pos_min) break;
 
       e += L(row, col + 1);  // compute E(j, j), then E(j-1, j), etc
       if (e > max_cost) break;
@@ -96,10 +104,13 @@ List get_C(const arma::sp_mat& L, int min_size, int max_size, int max_K, double 
   NumericMatrix C2(m, max_K); C2.fill(R_PosInf);
 
   // Only a few indices allow one block only
+  double pos_min = pos_scaled[m - 1] - 1;
   for (auto size : seq(min_size, max_size)) {
-    best_ind(m - size, 0) = m;
-    C1(m - size, 0) = 0;
-    C2(m - size, 0) = square(size);
+    int row = m - size;
+    if (pos_scaled[row] < pos_min) break;
+    best_ind(row, 0) = m;
+    C1(row, 0) = 0;
+    C2(row, 0) = square(size);
   }
 
   // Iterating over total numbers of blocks allowed

@@ -11,7 +11,8 @@ snp_ldsplit(
   max_size,
   max_K = 500,
   max_r2 = 0.3,
-  max_cost = ncol(corr)/200
+  max_cost = ncol(corr)/200,
+  pos_scaled = rep(0, ncol(corr))
 )
 }
 \arguments{
@@ -45,6 +46,11 @@ two different blocks. This is used to make sure that strong correlations are
 not discarded and also to speed up the algorithm. Default is \code{0.3}.}
 
 \item{max_cost}{Maximum cost reported. Default is \code{ncol(corr) / 200}.}
+
+\item{pos_scaled}{Vector of positions. The positions should be scaled so that
+limits of a block must be separated by a distance of 1 at the maximum. E.g.
+if the positions are in base pairs (bp), and you want a maximum distance of
+10 Mbp, you need to provide the vector of positions divided by 10e6.}
 }
 \value{
 Either \code{NULL} when no block splitting satisfies the conditions,
