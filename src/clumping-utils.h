@@ -19,8 +19,8 @@ inline std::vector<int>& which_to_check(int j0,
   ind_to_check.clear();
   int m = pos.size();
 
-  int pos_min = pos[j0] - size;
-  int pos_max = pos[j0] + size;
+  double pos_min = pos[j0] - size;
+  double pos_max = pos[j0] + size;
   bool not_min = true;
   bool not_max = true;
 

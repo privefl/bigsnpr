@@ -18,7 +18,7 @@ NumericMatrix dist_kNN(const NumericVector& x,
     // Rcout << i << ":";
 
     for (int k = 0; k < nfirst; k++) min_dist[k] = R_PosInf;
-    int pos_max = 0;
+    double pos_max = 0;
     double d_max = R_PosInf;
 
     bool go_up = true, go_down = true;

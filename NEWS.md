@@ -1,3 +1,7 @@
+## bigsnpr 1.11.11
+
+- Fix C++ code that used integers to store the positions for clumping.
+
 ## bigsnpr 1.11.10
 
 - Add other architectures (AMD / ARM) as options for PLINK2.

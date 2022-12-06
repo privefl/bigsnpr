@@ -27,6 +27,13 @@ expect_true(all(CHR0[ind.keep0] == 2))
 
 CHR <- bigSNP$map$chromosome
 ind.keep <- snp_clumping(G, infos.chr = CHR, infos.pos = POS)
+ind.keep2 <- snp_clumping(G, infos.chr = CHR,
+                          infos.pos = POS * 1e6, size = 500 * 1e6)
+expect_identical(ind.keep2, ind.keep)
+ind.keep3 <- snp_clumping(G, infos.chr = CHR,
+                          infos.pos = POS / 1e6, size = 500 / 1e6)
+expect_identical(ind.keep3, ind.keep)
+
 obj.svd <- big_randomSVD(G, fun.scaling = snp_scaleBinom(), ind.col = ind.keep)
 
 # Try on bed file directly (still no missing value)
