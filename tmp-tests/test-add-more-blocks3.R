@@ -85,7 +85,8 @@ ind_keep <- foreach(j = 1:K, .combine = "rbind") %do% {
 
 corr3 <- Matrix::sparseMatrix(
   i = ind_keep[[1]], j = ind_keep[[2]], x = corr2[as.matrix(ind_keep)],
-  dims = dim(corr2), index1 = TRUE, repr = 'C', symmetric = FALSE)
+  dims = dim(corr2), index1 = TRUE, symmetric = FALSE)
+class(corr3)
 Matrix::isSymmetric(corr3)
 
 corr4 <- as(Matrix::drop0(corr3), "symmetricMatrix")
@@ -107,3 +108,21 @@ ggplot(corr_to_df(corr2, ind2), aes(i, j, alpha = r2)) +
   geom_hline(yintercept = res[res %in% ind2] + 0.5, linetype = 3, color = "red") +
   scale_color_gradient(low = "#FFFFFF", high = "#000000", guide = "none") +
   scale_alpha(guide = "none")
+
+RSpectra::eigs(corr0, k = 2)$values
+# 106.13132  83.42977
+RSpectra::eigs(corr0, k = 2, sigma = -0.05)$values
+# -0.007954082 -0.009787068
+
+RSpectra::eigs(corr4, k = 2)$values
+# 104.45772  76.84316
+RSpectra::eigs(corr4, k = 2, sigma = -10)$values
+# -1.234222 -1.261020
+
+
+prec <- solve(corr0[1:5, 1:5])
+(pcor <- -cov2cor(prec))
+diag(pcor) <- 1
+corr0[1:5, 1:5]
+(pcor2 <- corpcor::cor2pcor(corr0[1:5, 1:5]))
+all.equal(pcor, pcor2)

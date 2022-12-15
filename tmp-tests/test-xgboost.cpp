@@ -13,13 +13,14 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 List test_xgboost(const List& params, const NumericMatrix& X, const NumericVector& y) {
-  // Obtaining namespace of Matrix package
-  Environment pkg = Environment::namespace_env("xgboost");
 
-  // Picking up Matrix() function from Matrix package
-  Function xgb_cv = pkg["xgb.cv"];
+  // Obtaining namespace of package
+  // Environment pkg = ;
 
-  // Executing Matrix( m, sparse = TRIE )
+  // Picking up function from package
+  Function xgb_cv = Environment::namespace_env("xgboost")["xgb.cv"];
+
+  // Executing function
   return xgb_cv(params, X, 20, 10, y, NA_REAL, true);
 }
 
@@ -40,5 +41,6 @@ test <- agaricus.test
 mod <- xgboost::xgb.cv(list(), train$data, 20, 10, train$label, prediction = TRUE)
 mod$pred
 plot(mod$pred, train$label)
-test_xgboost(list(), as.matrix(train$data), train$label)$pred
+mod2 <- test_xgboost(list(), as.matrix(train$data), train$label)
+predict(mod2, as.matrix(test$data))
 */
