@@ -18,14 +18,24 @@ Matrix::solve(inv_corr, id)  # a bit slow the first time
 Matrix::solve(inv_corr, id)  # fast the second time
 str(inv_corr)  # because now store some SPdCholesky decomp
 
+
 object.size(sol$wi) / object.size(inv_corr) # x1.9 -> but also not very small anymore..
 
 # can be made a but faster when not using a sparse matrix
 inv_corr2 <- as(inv_corr, "dgCMatrix")  # not stored as symmetric
 
+str(id2 <- as(id, "dgCMatrix"))
+
+chol <- as(Matrix::chol(inv_corr), "dgCMatrix")
+Matrix::nnzero(chol) / length(chol)
+object.size(sol$wi) / object.size(chol) # x1.9
+
+
 microbenchmark::microbenchmark(
-  Matrix::solve(inv_corr, id),
-  Matrix::solve(inv_corr2, id),
+  Matrix::solve(inv_corr, id)[, 1],
+  Matrix::solve(inv_corr2, id)[, 1],
+  Matrix::solve(inv_corr, id2)[, 1],
+  Matrix::solve(inv_corr2, id2)[, 1],
   times = 10,
   check = "equal"
 )
