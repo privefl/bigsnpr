@@ -258,7 +258,7 @@ test_that("ind.corr works", {
   corr <- as_SFBM(corr0, compact = sample(c(TRUE, FALSE), 1))
   rm(corr0)
 
-    ind.sub <- sample(ncol(corr), 30e3)
+  ind.sub <- sample(ncol(corr), 30e3)
 
   # LDpred2-gibbs
   p_seq <- signif(seq_log(1e-3, 1, length.out = 7), 1)
@@ -296,6 +296,15 @@ test_that("ind.corr works", {
                                  h2_init = 0.3, sparse = TRUE, shrink_corr = 0.95,
                                  burn_in = 100, num_iter = 100)
   expect_equal(beta_auto2, beta_auto)
+
+  # LD Score regression
+  ld <- Matrix::colSums(corr[]^2)
+  ldsc <- snp_ldsc(ld_score = ld[ind.sub], ld_size = ncol(corr),
+                   chi2 = with(df_beta[ind.sub, ], (beta / beta_se)^2),
+                   sample_size = df_beta$N[ind.sub])
+  ldsc2 <- snp_ldsc2(corr, ind.beta = ind.sub, df_beta[ind.sub, ],
+                     intercept = NULL, blocks = 200)
+  expect_equal(ldsc2, ldsc)
 })
 
 ################################################################################

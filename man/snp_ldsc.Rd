@@ -17,7 +17,15 @@ snp_ldsc(
   ncores = 1
 )
 
-snp_ldsc2(corr, df_beta, blocks = NULL, intercept = 1, ncores = 1, ...)
+snp_ldsc2(
+  corr,
+  df_beta,
+  blocks = NULL,
+  intercept = 1,
+  ncores = 1,
+  ind.beta = cols_along(corr),
+  ...
+)
 }
 \arguments{
 \item{ld_score}{Vector of LD scores.}
@@ -57,6 +65,8 @@ You may use \link{nb_cores}.}
 \item \verb{$n_eff}: sample size when estimating \code{beta}
 (in the case of binary traits, this is \code{4 / (1 / n_control + 1 / n_case)})
 }}
+
+\item{ind.beta}{Indices in \code{corr} corresponding to \code{df_beta}. Default is all.}
 
 \item{...}{
   Arguments passed on to \code{\link[=snp_ldsc]{snp_ldsc}}

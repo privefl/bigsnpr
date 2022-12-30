@@ -167,6 +167,7 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 #'   - `$beta_se`: standard errors of effect size estimates
 #'   - `$n_eff`: sample size when estimating `beta`
 #'     (in the case of binary traits, this is `4 / (1 / n_control + 1 / n_case)`)
+#' @param ind.beta Indices in `corr` corresponding to `df_beta`. Default is all.
 #' @inheritDotParams snp_ldsc chi2_thr1 chi2_thr2
 #'
 #' @export
@@ -188,22 +189,24 @@ snp_ldsc2 <- function(corr, df_beta,
                       blocks = NULL,
                       intercept = 1,
                       ncores = 1,
+                      ind.beta = cols_along(corr),
                       ...) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
-  assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
+  assert_lengths(ind.beta, rows_along(df_beta))
+  stopifnot(all(ind.beta %in% cols_along(corr)))
   assert_pos(df_beta$beta_se, strict = TRUE)
 
-  ld2 <- if (inherits(corr, "dsCMatrix")) {
+  full_ld <- if (inherits(corr, "dsCMatrix")) {
     sp_colSumsSq_sym(corr@p, corr@i, corr@x)
   } else if (inherits(corr, "SFBM")) {
-    ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]]), ncores = ncores)
+    ld_scores_sfbm(corr, ind_sub = cols_along(corr) - 1L, ncores = ncores)
   } else {
     Matrix::colSums(corr^2)
   }
 
   snp_ldsc(
-    ld_score    = ld2,
+    ld_score    = full_ld[ind.beta],
     ld_size     = ncol(corr),
     chi2        = (df_beta$beta / df_beta$beta_se)^2,
     sample_size = df_beta$n_eff,
