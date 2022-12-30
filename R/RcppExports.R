@@ -81,12 +81,12 @@ ldpred2_gibbs_auto <- function(corr, beta_hat, beta_init, order, n_vec, log_var,
     .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, beta_init, order, n_vec, log_var, p_init, h2_init, burn_in, num_iter, report_step, no_jump_sign, shrink_corr, use_mle, alpha_bounds, mean_ld, verbose)
 }
 
-ldpred2_gibbs_one_sampling <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter) {
-    .Call(`_bigsnpr_ldpred2_gibbs_one_sampling`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter)
+ldpred2_gibbs_one_sampling <- function(corr, beta_hat, n_vec, ind_sub, h2, p, sparse, burn_in, num_iter) {
+    .Call(`_bigsnpr_ldpred2_gibbs_one_sampling`, corr, beta_hat, n_vec, ind_sub, h2, p, sparse, burn_in, num_iter)
 }
 
-ldpred2_gibbs_one <- function(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter) {
-    .Call(`_bigsnpr_ldpred2_gibbs_one`, corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter)
+ldpred2_gibbs_one <- function(corr, beta_hat, n_vec, ind_sub, h2, p, sparse, burn_in, num_iter) {
+    .Call(`_bigsnpr_ldpred2_gibbs_one`, corr, beta_hat, n_vec, ind_sub, h2, p, sparse, burn_in, num_iter)
 }
 
 multLinReg <- function(obj, ind_row, ind_col, U, ncores = 1L) {

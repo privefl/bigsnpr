@@ -8,9 +8,8 @@
 // [[Rcpp::export]]
 NumericVector ldpred2_gibbs_one(Environment corr,
                                 const NumericVector& beta_hat,
-                                const NumericVector& beta_init,
-                                const IntegerVector& order,
                                 const NumericVector& n_vec,
+                                const IntegerVector& ind_sub,
                                 double h2,
                                 double p,
                                 bool sparse,
@@ -20,15 +19,10 @@ NumericVector ldpred2_gibbs_one(Environment corr,
   XPtr<SFBM> sfbm = corr["address"];
 
   int m = beta_hat.size();
-  myassert_size(sfbm->nrow(), m);
-  myassert_size(sfbm->ncol(), m);
-  myassert_size(order.size(), m);
-  myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
-
-  NumericVector curr_beta = Rcpp::clone(beta_init);
-  NumericVector dotprods  = sfbm->prod(curr_beta);
-  NumericVector avg_beta(m);
+  NumericVector curr_beta(m), avg_beta(m);  // only for the subset
+  int m2 = sfbm->ncol();
+  NumericVector dotprods(m2);  // for the full corr
 
   double h2_per_var = h2 / (m * p);
   double inv_odd_p = (1 - p) / p;
@@ -39,10 +33,10 @@ NumericVector ldpred2_gibbs_one(Environment corr,
 
     double gap = 0;
 
-    for (const int& j : order) {
+    for (int j = 0; j < m; j++) {
 
-      // double dotprod = sfbm->dot_col(j, curr_beta);
-      double resid = beta_hat[j] - dotprods[j];
+      int j2 = ind_sub[j];
+      double resid = beta_hat[j] - dotprods[j2];
       gap += resid * resid;
       double res_beta_hat_j = curr_beta[j] + resid;
 
@@ -59,10 +53,10 @@ NumericVector ldpred2_gibbs_one(Environment corr,
         curr_beta[j] = 0;
       } else {
         curr_beta[j] = (post_p_j > ::unif_rand()) ? ::Rf_rnorm(C3, ::sqrt(C4)) : 0;
+        diff += curr_beta[j];
         if (k >= 0) avg_beta[j] += C3 * post_p_j;
       }
-      diff += curr_beta[j];
-      if (diff != 0) dotprods = sfbm->incr_mult_col(j, dotprods, diff);
+      if (diff != 0) dotprods = sfbm->incr_mult_col(j2, dotprods, diff);
     }
 
     if (gap > gap0) { avg_beta.fill(NA_REAL); return avg_beta; }

@@ -15,8 +15,6 @@
 #'   Default is `1000`.
 #' @param tol Tolerance parameter for assessing convergence.
 #'   Default is `1e-5`.
-#' @param ind.corr Indices to "subset" `corr`, as if this was run with
-#'   `corr[ind.corr, ind.corr]` instead.
 #'
 #' @return A matrix of effect sizes, one vector (column) for each row in
 #'   `attr(<res>, "grid_param")`. Missing values are returned when strong
@@ -62,7 +60,7 @@ snp_lassosum2 <- function(corr, df_beta,
         beta_hat       = beta_hat,
         lambda         = pf * grid_param$lambda[ic],
         delta_plus_one = pf * grid_param$delta[ic] + 1,
-        ind_sub        = ind.corr,
+        ind_sub        = ind.corr - 1L,
         dfmax          = dfmax,
         maxiter        = maxiter,
         tol            = tol

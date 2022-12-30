@@ -51,6 +51,8 @@ snp_ldpred2_inf <- function(corr, df_beta, h2) {
 #' @param burn_in Number of burn-in iterations.
 #' @param num_iter Number of iterations after burn-in.
 #' @inheritParams bigsnpr-package
+#' @param ind.corr Indices to "subset" `corr`, as if this was run with
+#'   `corr[ind.corr, ind.corr]` instead. No subsetting by default.
 #' @param return_sampling_betas Whether to return all sampling betas (after
 #'   burn-in)? This is useful for assessing the uncertainty of the PRS at the
 #'   individual level (see \doi{10.1101/2020.11.30.403188}).
@@ -72,11 +74,13 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
                              burn_in = 50,
                              num_iter = 100,
                              ncores = 1,
-                             return_sampling_betas = FALSE) {
+                             return_sampling_betas = FALSE,
+                             ind.corr = cols_along(corr)) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_df_with_names(grid_param, c("p", "h2", "sparse"))
-  assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
+  assert_lengths(ind.corr, rows_along(df_beta))
+  stopifnot(all(ind.corr %in% cols_along(corr)))
   assert_pos(df_beta$beta_se, strict = TRUE)
   assert_pos(grid_param$h2, strict = TRUE)
   assert_cores(ncores)
@@ -97,16 +101,15 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
       h2 = grid$h2, p = grid$p, sparse = grid$sparse,
       .export = "ldpred2_gibbs_one") %dorng% {
         ldpred2_gibbs_one(
-          corr      = corr,
-          beta_hat  = beta_hat,
-          beta_init = rep(0, length(beta_hat)),
-          order     = seq_along(beta_hat) - 1L,
-          n_vec     = N,
-          h2        = h2,
-          p         = p,
-          sparse    = sparse,
-          burn_in   = burn_in,
-          num_iter  = num_iter
+          corr     = corr,
+          beta_hat = beta_hat,
+          n_vec    = N,
+          ind_sub  = ind.corr - 1L,
+          h2       = h2,
+          p        = p,
+          sparse   = sparse,
+          burn_in  = burn_in,
+          num_iter = num_iter
         )
       }
 
@@ -120,16 +123,15 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 
     # All sampling betas for one LDpred2 model (useful for uncertainty assessment)
     beta_gibbs <- ldpred2_gibbs_one_sampling(
-      corr      = corr,
-      beta_hat  = beta_hat,
-      beta_init = rep(0, length(beta_hat)),
-      order     = seq_along(beta_hat) - 1L,
-      n_vec     = N,
-      h2        = grid_param$h2,
-      p         = grid_param$p,
-      sparse    = grid_param$sparse,
-      burn_in   = burn_in,
-      num_iter  = num_iter
+      corr     = corr,
+      beta_hat = beta_hat,
+      n_vec    = N,
+      ind_sub  = ind.corr - 1L,
+      h2       = grid_param$h2,
+      p        = grid_param$p,
+      sparse   = grid_param$sparse,
+      burn_in  = burn_in,
+      num_iter = num_iter
     )
 
   }

@@ -48,7 +48,7 @@ Default is \code{1000}.}
 Default is \code{1e-5}.}
 
 \item{ind.corr}{Indices to "subset" \code{corr}, as if this was run with
-\code{corr[ind.corr, ind.corr]} instead.}
+\code{corr[ind.corr, ind.corr]} instead. No subsetting by default.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

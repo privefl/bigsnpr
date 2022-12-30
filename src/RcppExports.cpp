@@ -346,42 +346,40 @@ BEGIN_RCPP
 END_RCPP
 }
 // ldpred2_gibbs_one_sampling
-NumericMatrix ldpred2_gibbs_one_sampling(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double h2, double p, bool sparse, int burn_in, int num_iter);
-RcppExport SEXP _bigsnpr_ldpred2_gibbs_one_sampling(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP) {
+NumericMatrix ldpred2_gibbs_one_sampling(Environment corr, const NumericVector& beta_hat, const NumericVector& n_vec, const IntegerVector& ind_sub, double h2, double p, bool sparse, int burn_in, int num_iter);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs_one_sampling(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP n_vecSEXP, SEXP ind_subSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type order(orderSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_sub(ind_subSEXP);
     Rcpp::traits::input_parameter< double >::type h2(h2SEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< bool >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
     Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
-    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_one_sampling(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter));
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_one_sampling(corr, beta_hat, n_vec, ind_sub, h2, p, sparse, burn_in, num_iter));
     return rcpp_result_gen;
 END_RCPP
 }
 // ldpred2_gibbs_one
-NumericVector ldpred2_gibbs_one(Environment corr, const NumericVector& beta_hat, const NumericVector& beta_init, const IntegerVector& order, const NumericVector& n_vec, double h2, double p, bool sparse, int burn_in, int num_iter);
-RcppExport SEXP _bigsnpr_ldpred2_gibbs_one(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP beta_initSEXP, SEXP orderSEXP, SEXP n_vecSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP) {
+NumericVector ldpred2_gibbs_one(Environment corr, const NumericVector& beta_hat, const NumericVector& n_vec, const IntegerVector& ind_sub, double h2, double p, bool sparse, int burn_in, int num_iter);
+RcppExport SEXP _bigsnpr_ldpred2_gibbs_one(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP n_vecSEXP, SEXP ind_subSEXP, SEXP h2SEXP, SEXP pSEXP, SEXP sparseSEXP, SEXP burn_inSEXP, SEXP num_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type beta_init(beta_initSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type order(orderSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type n_vec(n_vecSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_sub(ind_subSEXP);
     Rcpp::traits::input_parameter< double >::type h2(h2SEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< bool >::type sparse(sparseSEXP);
     Rcpp::traits::input_parameter< int >::type burn_in(burn_inSEXP);
     Rcpp::traits::input_parameter< int >::type num_iter(num_iterSEXP);
-    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_one(corr, beta_hat, beta_init, order, n_vec, h2, p, sparse, burn_in, num_iter));
+    rcpp_result_gen = Rcpp::wrap(ldpred2_gibbs_one(corr, beta_hat, n_vec, ind_sub, h2, p, sparse, burn_in, num_iter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -588,8 +586,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_ld_scores", (DL_FUNC) &_bigsnpr_ld_scores, 6},
     {"_bigsnpr_MLE_alpha", (DL_FUNC) &_bigsnpr_MLE_alpha, 7},
     {"_bigsnpr_ldpred2_gibbs_auto", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_auto, 17},
-    {"_bigsnpr_ldpred2_gibbs_one_sampling", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one_sampling, 10},
-    {"_bigsnpr_ldpred2_gibbs_one", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one, 10},
+    {"_bigsnpr_ldpred2_gibbs_one_sampling", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one_sampling, 9},
+    {"_bigsnpr_ldpred2_gibbs_one", (DL_FUNC) &_bigsnpr_ldpred2_gibbs_one, 9},
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},
     {"_bigsnpr_extract_submat_bgen", (DL_FUNC) &_bigsnpr_extract_submat_bgen, 8},
     {"_bigsnpr_prod_bgen2", (DL_FUNC) &_bigsnpr_prod_bgen2, 10},

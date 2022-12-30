@@ -15,7 +15,8 @@ snp_ldpred2_grid(
   burn_in = 50,
   num_iter = 100,
   ncores = 1,
-  return_sampling_betas = FALSE
+  return_sampling_betas = FALSE,
+  ind.corr = cols_along(corr)
 )
 
 snp_ldpred2_auto(
@@ -69,6 +70,9 @@ burn-in)? This is useful for assessing the uncertainty of the PRS at the
 individual level (see \doi{10.1101/2020.11.30.403188}).
 Default is \code{FALSE} (only returns the averaged final vectors of betas).
 If \code{TRUE}, only one set of parameters is allowed.}
+
+\item{ind.corr}{Indices to "subset" \code{corr}, as if this was run with
+\code{corr[ind.corr, ind.corr]} instead. No subsetting by default.}
 
 \item{h2_init}{Heritability estimate for initialization.}
 

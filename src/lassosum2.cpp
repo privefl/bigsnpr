@@ -46,7 +46,7 @@ List lassosum2(Environment corr,
 
     for (int j = 0; j < m; j++) {
 
-      int j2 = ind_sub[j] - 1;
+      int j2 = ind_sub[j];
       double resid = beta_hat[j] - dotprods[j2];
       gap += resid * resid;
       double u_j = curr_beta[j] + resid;
