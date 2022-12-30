@@ -12,7 +12,8 @@ utils::globalVariables(c("ic", "f", "lp", "LD.wiki34", "OS", "arch", "avx2",
                          "chromosome", "position", "allele1", "allele2",
                          "marker.ID", "rsid", "chr", "pos", "p_init",
                          "df_af", ".", "FREQ", "ID", "INFO", "ind_rm",
-                         "file_start_position", "h2", "p", "sparse"))
+                         "file_start_position", "h2", "p", "sparse",
+                         "arm", "amd"))
 
 ################################################################################
 

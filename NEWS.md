@@ -1,3 +1,9 @@
+## bigsnpr 1.12.0
+
+- Add new parameter `ind.corr` to `snp_lassosum2()`, `snp_ldpred2_grid()` and `snp_ldpred2_auto()` to be able to use a subset of `corr` without making a copy of it.
+
+- Add new parameter `ind.beta` to `snp_ldsc2()` to use a subset of the full LD scores corresponding to `df_beta`.
+
 ## bigsnpr 1.11.12
 
 - Add new parameter `pos_scaled` to `snp_ldsplit()`.
