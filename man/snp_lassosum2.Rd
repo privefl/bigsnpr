@@ -13,6 +13,7 @@ snp_lassosum2(
   dfmax = 2e+05,
   maxiter = 1000,
   tol = 1e-05,
+  ind.corr = cols_along(corr),
   ncores = 1
 )
 }
@@ -45,6 +46,9 @@ Default is \code{1000}.}
 
 \item{tol}{Tolerance parameter for assessing convergence.
 Default is \code{1e-5}.}
+
+\item{ind.corr}{Indices to "subset" \code{corr}, as if this was run with
+\code{corr[ind.corr, ind.corr]} instead.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \link{nb_cores}.}

@@ -61,8 +61,8 @@ impute <- function(BM, method, ncores) {
     invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
 }
 
-lassosum2 <- function(corr, beta_hat, lambda, delta_plus_one, dfmax, maxiter, tol) {
-    .Call(`_bigsnpr_lassosum2`, corr, beta_hat, lambda, delta_plus_one, dfmax, maxiter, tol)
+lassosum2 <- function(corr, beta_hat, lambda, delta_plus_one, ind_sub, dfmax, maxiter, tol) {
+    .Call(`_bigsnpr_lassosum2`, corr, beta_hat, lambda, delta_plus_one, ind_sub, dfmax, maxiter, tol)
 }
 
 ld_scores_sfbm <- function(X, compact, ncores) {

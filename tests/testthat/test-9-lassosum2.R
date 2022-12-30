@@ -50,6 +50,16 @@ test_that("lassosum2 works", {
   attr(beta_grid2, "grid_param")$time <- attr(beta_grid, "grid_param")$time <- NULL
   expect_identical(beta_grid2, beta_grid)  # no sampling (deterministic), so reproducible
 
+  # ind.corr
+  ind.sub <- sample(ncol(corr), 30e3)
+  beta_grid2 <- snp_lassosum2(as_SFBM(corr[ind.sub, ind.sub]), df_beta[ind.sub, ],
+                              nlambda = nlam, maxiter = 50, ncores = 2)
+  beta_grid3 <- snp_lassosum2(corr, df_beta[ind.sub, ], ind.corr = ind.sub,
+                              nlambda = nlam, maxiter = 50, ncores = 2)
+  expect_equal(beta_grid2, beta_grid3, check.attributes = FALSE)
+  # plot(attr(beta_grid2, "grid_param")$time, attr(beta_grid3, "grid_param")$time)
+  # lm(attr(beta_grid3, "grid_param")$time ~ attr(beta_grid2, "grid_param")$time + 0)$coef[[1]]
+
   # Errors
   expect_error(snp_lassosum2(corr, df_beta[-1]),
                "'df_beta' should have element 'beta'.")

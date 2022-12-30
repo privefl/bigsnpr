@@ -255,8 +255,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // lassosum2
-List lassosum2(Environment corr, const NumericVector& beta_hat, const NumericVector& lambda, const NumericVector& delta_plus_one, double dfmax, int maxiter, double tol);
-RcppExport SEXP _bigsnpr_lassosum2(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP lambdaSEXP, SEXP delta_plus_oneSEXP, SEXP dfmaxSEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
+List lassosum2(Environment corr, const NumericVector& beta_hat, const NumericVector& lambda, const NumericVector& delta_plus_one, const IntegerVector& ind_sub, double dfmax, int maxiter, double tol);
+RcppExport SEXP _bigsnpr_lassosum2(SEXP corrSEXP, SEXP beta_hatSEXP, SEXP lambdaSEXP, SEXP delta_plus_oneSEXP, SEXP ind_subSEXP, SEXP dfmaxSEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -264,10 +264,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type beta_hat(beta_hatSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< const NumericVector& >::type delta_plus_one(delta_plus_oneSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_sub(ind_subSEXP);
     Rcpp::traits::input_parameter< double >::type dfmax(dfmaxSEXP);
     Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(lassosum2(corr, beta_hat, lambda, delta_plus_one, dfmax, maxiter, tol));
+    rcpp_result_gen = Rcpp::wrap(lassosum2(corr, beta_hat, lambda, delta_plus_one, ind_sub, dfmax, maxiter, tol));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -582,7 +583,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 8},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
-    {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 7},
+    {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 8},
     {"_bigsnpr_ld_scores_sfbm", (DL_FUNC) &_bigsnpr_ld_scores_sfbm, 3},
     {"_bigsnpr_ld_scores", (DL_FUNC) &_bigsnpr_ld_scores, 6},
     {"_bigsnpr_MLE_alpha", (DL_FUNC) &_bigsnpr_MLE_alpha, 7},

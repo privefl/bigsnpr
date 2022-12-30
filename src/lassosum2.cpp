@@ -1,7 +1,7 @@
 /******************************************************************************/
 
 #include <bigsparser/SFBM.h>
-#include <bigstatsr/utils.h>
+using namespace Rcpp;
 
 /******************************************************************************/
 
@@ -22,6 +22,7 @@ List lassosum2(Environment corr,
                const NumericVector& beta_hat,
                const NumericVector& lambda,
                const NumericVector& delta_plus_one,
+               const IntegerVector& ind_sub,
                double dfmax,
                int maxiter,
                double tol) {
@@ -29,10 +30,9 @@ List lassosum2(Environment corr,
   XPtr<SFBM> sfbm = corr["address"];
 
   int m = beta_hat.size();
-  myassert_size(sfbm->nrow(), m);
-  myassert_size(sfbm->ncol(), m);
-
-  NumericVector curr_beta(m), dotprods(m);
+  NumericVector curr_beta(m);  // only for the subset
+  int m2 = sfbm->ncol();
+  NumericVector dotprods(m2);  // for the full corr
 
   double gap0 =
     std::inner_product(beta_hat.begin(), beta_hat.end(), beta_hat.begin(), 0.0);
@@ -46,7 +46,8 @@ List lassosum2(Environment corr,
 
     for (int j = 0; j < m; j++) {
 
-      double resid = beta_hat[j] - dotprods[j];
+      int j2 = ind_sub[j] - 1;
+      double resid = beta_hat[j] - dotprods[j2];
       gap += resid * resid;
       double u_j = curr_beta[j] + resid;
       double new_beta_j = soft_thres(u_j, lambda[j], delta_plus_one[j]);
@@ -56,7 +57,7 @@ List lassosum2(Environment corr,
       if (shift != 0) {
         if (conv && std::abs(shift) > tol) conv = false;
         curr_beta[j] = new_beta_j;
-        dotprods = sfbm->incr_mult_col(j, dotprods, shift);
+        dotprods = sfbm->incr_mult_col(j2, dotprods, shift);
       }
     }
 
