@@ -5,23 +5,9 @@
 #' @importFrom bigassertr assert_lengths assert_sorted assert_args
 #' @importFrom bigassertr assert_noexist assert_exist assert_dir assert_ext
 #' @importFrom bigassertr assert_type assert_class assert_package
+#' @importFrom bigassertr assert_df_with_names
 #' @importFrom bigparallelr assert_cores
 assert_noNA <- bigstatsr:::assert_noNA
-
-################################################################################
-
-assert_df_with_names <- function(df, names) {
-
-  df_varname <- deparse(substitute(df))
-
-  if (!is.data.frame(df))
-    stop2("'%s' is not a data frame.", df_varname)
-
-  for (name in names) {
-    if (is.null(df[[name]]))
-      stop2("'%s' should have element '%s'.", df_varname, name)
-  }
-}
 
 ################################################################################
 
