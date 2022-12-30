@@ -215,27 +215,30 @@ test_that("parallel ld_scores_sfbm() works", {
 
   bigsnp <- snp_attachExtdata()
   G <- bigsnp$genotypes
+  ind <- sample(ncol(G), 2000)
+  ind_cpp <- ind - 1L
 
-  corr <- snp_cor(G, size = 100, ncores = 2)
+  corr0 <- snp_cor(G, size = 100, ncores = 2)
+  corr <- corr0[ind, ind]
   ld1 <- bigsnpr:::sp_colSumsSq_sym(corr@p, corr@i, corr@x)
 
-  corr2 <- as_SFBM(corr)
+  corr2 <- as_SFBM(corr0)
   replicate(50, {
-    ld2 <- bigsnpr:::ld_scores_sfbm(corr2, compact = FALSE, ncores = 2)
+    ld2 <- bigsnpr:::ld_scores_sfbm(corr2, ind_sub = ind_cpp, ncores = 2)
     expect_equal(ld2, ld1)
   })
 
-  corr3 <- as_SFBM(corr, compact = TRUE)
+  corr3 <- as_SFBM(corr0, compact = TRUE)
   replicate(50, {
-    ld3 <- bigsnpr:::ld_scores_sfbm(corr3, compact = TRUE, ncores = 2)
+    ld3 <- bigsnpr:::ld_scores_sfbm(corr3, ind_sub = ind_cpp, ncores = 2)
     expect_equal(ld3, ld1)
   })
 
   time_seq <- microbenchmark::microbenchmark(
-    bigsnpr:::ld_scores_sfbm(corr2, compact = FALSE, ncores = 1)
+    bigsnpr:::ld_scores_sfbm(corr2, ind_sub = ind_cpp, ncores = 1)
   )$time
   time_par <- microbenchmark::microbenchmark(
-    bigsnpr:::ld_scores_sfbm(corr2, compact = FALSE, ncores = 2)
+    bigsnpr:::ld_scores_sfbm(corr2, ind_sub = ind_cpp, ncores = 2)
   )$time
   expect_lt(median(time_par), median(time_seq))
 })

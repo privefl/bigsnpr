@@ -83,18 +83,17 @@ test_that("can compute LD scores directly from an SFBM", {
 
   bigsnp <- snp_attachExtdata()
   G <- bigsnp$genotypes
+  ind <- sample(ncol(G), 2000)
 
-  corr <- snp_cor(G, size = 100, ncores = 2)
+  corr0 <- snp_cor(G, size = 100, ncores = 2)
+  corr <- corr0[ind, ind]
   ld1 <- bigsnpr:::sp_colSumsSq_sym(corr@p, corr@i, corr@x)
 
-  corr2 <- as_SFBM(corr)
-  ld2 <- bigsnpr:::ld_scores_sfbm(corr2, compact = !is.null(corr2[["first_i"]]),
-                                  ncores = 1)
+  ld2 <- bigsnpr:::ld_scores_sfbm(as_SFBM(corr0), ind_sub = ind - 1L, ncores = 1)
   expect_equal(ld2, ld1)
 
-  corr3 <- as_SFBM(corr, compact = TRUE)
-  ld3 <- bigsnpr:::ld_scores_sfbm(corr3, compact = !is.null(corr3[["first_i"]]),
-                                  ncores = 1)
+  ld3 <- bigsnpr:::ld_scores_sfbm(as_SFBM(corr0, compact = TRUE),
+                                  ind_sub = ind - 1L, ncores = 1)
   expect_equal(ld3, ld1)
 })
 

@@ -33,6 +33,7 @@ snp_ldpred2_auto(
   shrink_corr = 1,
   use_MLE = TRUE,
   alpha_bounds = c(-1.5, 0.5),
+  ind.corr = cols_along(corr),
   ncores = 1
 )
 }

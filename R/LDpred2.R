@@ -209,10 +209,12 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              shrink_corr = 1,
                              use_MLE = TRUE,
                              alpha_bounds = c(-1.5, 0.5),
+                             ind.corr = cols_along(corr),
                              ncores = 1) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
-  assert_lengths(rows_along(corr), cols_along(corr), rows_along(df_beta))
+  assert_lengths(ind.corr, rows_along(df_beta))
+  stopifnot(all(ind.corr %in% cols_along(corr)))
   assert_pos(df_beta$beta_se, strict = TRUE)
   assert_pos(h2_init, strict = TRUE)
 
@@ -221,7 +223,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
   beta_hat <- df_beta$beta * sd
 
   mean_ld <- mean(
-    ld_scores_sfbm(corr, compact = !is.null(corr[["first_i"]]), ncores = ncores))
+    ld_scores_sfbm(corr, ind_sub = ind.corr - 1L, ncores = ncores))
 
   ord <- order(-vec_p_init)  # large p first
 
@@ -233,10 +235,9 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
     ldpred_auto <- ldpred2_gibbs_auto(
       corr         = corr,
       beta_hat     = beta_hat,
-      beta_init    = rep(0, length(beta_hat)),
-      order        = seq_along(beta_hat) - 1L,
       n_vec        = N,
       log_var      = 2 * log(sd),
+      ind_sub      = ind.corr - 1L,
       p_init       = p_init,
       h2_init      = h2_init,
       burn_in      = burn_in,
@@ -260,16 +261,15 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
 
     if (sparse && !is.na(ldpred_auto$h2_est)) {
       beta_gibbs <- ldpred2_gibbs_one(
-        corr      = corr,
-        beta_hat  = beta_hat,
-        beta_init = rep(0, length(beta_hat)),
-        order     = seq_along(beta_hat) - 1L,
-        n_vec     = N,
-        h2        = ldpred_auto$h2_est,
-        p         = ldpred_auto$p_est,
-        sparse    = TRUE,
-        burn_in   = 50,
-        num_iter  = 100
+        corr     = corr,
+        beta_hat = beta_hat,
+        n_vec    = N,
+        ind_sub  = ind.corr - 1L,
+        h2       = ldpred_auto$h2_est,
+        p        = ldpred_auto$p_est,
+        sparse   = TRUE,
+        burn_in  = 50,
+        num_iter = 100
       )
       ldpred_auto$beta_est_sparse <- beta_gibbs / sd
     }

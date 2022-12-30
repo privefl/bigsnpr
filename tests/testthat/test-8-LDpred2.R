@@ -285,6 +285,17 @@ test_that("ind.corr works", {
                                  df_beta[ind.sub, ], params[3, ],
                                  return_sampling_betas = TRUE)
   expect_equal(beta_grid2, beta_grid)
+
+  # LDpred2-auto
+  set.seed(1)
+  beta_auto <- snp_ldpred2_auto(as_SFBM(corr[ind.sub, ind.sub]), df_beta[ind.sub, ],
+                                h2_init = 0.3, sparse = TRUE, shrink_corr = 0.95,
+                                burn_in = 100, num_iter = 100)
+  set.seed(1)
+  beta_auto2 <- snp_ldpred2_auto(corr, ind.corr = ind.sub, df_beta[ind.sub, ],
+                                 h2_init = 0.3, sparse = TRUE, shrink_corr = 0.95,
+                                 burn_in = 100, num_iter = 100)
+  expect_equal(beta_auto2, beta_auto)
 })
 
 ################################################################################

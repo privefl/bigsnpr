@@ -62,10 +62,9 @@ arma::vec& MLE_alpha(arma::vec& par,
 // [[Rcpp::export]]
 List ldpred2_gibbs_auto(Environment corr,
                         const NumericVector& beta_hat,
-                        const NumericVector& beta_init,
-                        const IntegerVector& order,
                         const NumericVector& n_vec,
                         const NumericVector& log_var,
+                        const IntegerVector& ind_sub,
                         double p_init,
                         double h2_init,
                         int burn_in,
@@ -81,14 +80,11 @@ List ldpred2_gibbs_auto(Environment corr,
   XPtr<SFBM> sfbm = corr["address"];
 
   int m = beta_hat.size();
-  myassert_size(sfbm->nrow(), m);
-  myassert_size(sfbm->ncol(), m);
-  myassert_size(order.size(), m);
-  myassert_size(beta_init.size(), m);
   myassert_size(n_vec.size(), m);
+  NumericVector curr_beta(m);  // only for the subset
+  int m2 = sfbm->ncol();
+  NumericVector dotprods(m2);  // for the full corr
 
-  NumericVector curr_beta = Rcpp::clone(beta_init);
-  NumericVector dotprods  = sfbm->prod(curr_beta);
   NumericVector avg_beta(m), avg_postp(m), avg_beta_hat(m);
 
   arma::sp_mat sample_beta(m, num_iter / report_step);
@@ -97,8 +93,7 @@ List ldpred2_gibbs_auto(Environment corr,
   int num_iter_tot = burn_in + num_iter;
   NumericVector p_est(num_iter_tot, NA_REAL), h2_est(num_iter_tot, NA_REAL), alpha_est(num_iter_tot, NA_REAL);
 
-  double cur_h2_est = shrink_corr * dotprod2(curr_beta, dotprods) +
-    (1 - shrink_corr) * dotprod2(curr_beta, curr_beta);
+  double cur_h2_est = 0;
   double p = std::max(p_init, MIN_P), h2 = std::max(h2_init, MIN_H2);
   arma::vec par_mle = {0, h2 / (m * p)};  // (alpha + 1) and sigma2 [init]
   double gap0 = dotprod2(beta_hat, beta_hat);
@@ -113,9 +108,10 @@ List ldpred2_gibbs_auto(Environment corr,
 
     ind_causal.clear();
 
-    for (const int& j : order) {
+    for (int j = 0; j < m; j++) {
 
-      double dotprod = dotprods[j];  // sfbm->dot_col(j, curr_beta);
+      int j2 = ind_sub[j];
+      double dotprod = dotprods[j2];
       double resid = beta_hat[j] - dotprod;
       gap += resid * resid;
       double res_beta_hat_j = beta_hat[j] + shrink_corr * (curr_beta[j] - dotprod);
@@ -161,7 +157,7 @@ List ldpred2_gibbs_auto(Environment corr,
 
       if (diff != 0) {
         cur_h2_est += diff * (2 * dotprod_shrunk + diff);
-        dotprods = sfbm->incr_mult_col(j, dotprods, diff);
+        dotprods = sfbm->incr_mult_col(j2, dotprods, diff);
       }
     }
 
