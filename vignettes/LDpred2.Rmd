@@ -329,10 +329,11 @@ In [this paper](https://doi.org/10.1016/j.xhgg.2022.100136), we have also introd
 ```{r}
 set.seed(1)  # to get the same result every time
 # takes less than 2 min with 4 cores
-multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
-                               vec_p_init = seq_log(1e-4, 0.2, length.out = 30),
-                               allow_jump_sign = FALSE, shrink_corr = 0.95,
-                               ncores = NCORES)
+multi_auto <- snp_ldpred2_auto(
+  corr, df_beta, h2_init = h2_est,
+  vec_p_init = seq_log(1e-4, 0.2, length.out = 30), ncores = NCORES,
+  # use_MLE = FALSE,  # uncomment if you have convergence issues (need v1.11.9)
+  allow_jump_sign = FALSE, shrink_corr = 0.95)
 str(multi_auto, max.level = 1)
 str(multi_auto[[1]], max.level = 1)
 ```
