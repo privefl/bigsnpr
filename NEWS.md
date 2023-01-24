@@ -1,3 +1,7 @@
+## bigsnpr 1.12.1
+
+- Use a safer detection of strong divergences in LDpred2 and lassosum2.
+
 ## bigsnpr 1.12.0
 
 - Add new parameter `ind.corr` to `snp_lassosum2()`, `snp_ldpred2_grid()` and `snp_ldpred2_auto()` to be able to use a subset of `corr` without making a copy of it.

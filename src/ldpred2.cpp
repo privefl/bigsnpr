@@ -26,7 +26,7 @@ NumericVector ldpred2_gibbs_one(Environment corr,
 
   double h2_per_var = h2 / (m * p);
   double inv_odd_p = (1 - p) / p;
-  double gap0 =
+  double gap0 = 2 *
     std::inner_product(beta_hat.begin(), beta_hat.end(), beta_hat.begin(), 0.0);
 
   for (int k = -burn_in; k < num_iter; k++) {
@@ -36,9 +36,7 @@ NumericVector ldpred2_gibbs_one(Environment corr,
     for (int j = 0; j < m; j++) {
 
       int j2 = ind_sub[j];
-      double resid = beta_hat[j] - dotprods[j2];
-      gap += resid * resid;
-      double res_beta_hat_j = curr_beta[j] + resid;
+      double res_beta_hat_j = beta_hat[j] - (dotprods[j2] - curr_beta[j]);
 
       double C1 = h2_per_var * n_vec[j];
       double C2 = 1 / (1 + 1 / C1);
@@ -52,8 +50,13 @@ NumericVector ldpred2_gibbs_one(Environment corr,
       if (sparse && (post_p_j < p)) {
         curr_beta[j] = 0;
       } else {
-        curr_beta[j] = (post_p_j > ::unif_rand()) ? ::Rf_rnorm(C3, ::sqrt(C4)) : 0;
-        diff += curr_beta[j];
+        if (post_p_j > ::unif_rand()) {
+          curr_beta[j] = ::Rf_rnorm(C3, ::sqrt(C4));
+          diff += curr_beta[j];
+          gap += curr_beta[j] * curr_beta[j];
+        } else {
+          curr_beta[j] = 0;
+        }
         if (k >= 0) avg_beta[j] += C3 * post_p_j;
       }
       if (diff != 0) dotprods = sfbm->incr_mult_col(j2, dotprods, diff);

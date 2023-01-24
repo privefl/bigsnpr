@@ -34,7 +34,7 @@ List lassosum2(Environment corr,
   int m2 = sfbm->ncol();
   NumericVector dotprods(m2);  // for the full corr
 
-  double gap0 =
+  double gap0 = 2 *
     std::inner_product(beta_hat.begin(), beta_hat.end(), beta_hat.begin(), 0.0);
 
   int k = 0;
@@ -47,11 +47,12 @@ List lassosum2(Environment corr,
     for (int j = 0; j < m; j++) {
 
       int j2 = ind_sub[j];
-      double resid = beta_hat[j] - dotprods[j2];
-      gap += resid * resid;
-      double u_j = curr_beta[j] + resid;
+      double u_j = beta_hat[j] - (dotprods[j2] - curr_beta[j]);
       double new_beta_j = soft_thres(u_j, lambda[j], delta_plus_one[j]);
-      if (new_beta_j != 0) df++;
+      if (new_beta_j != 0) {
+        gap += new_beta_j * new_beta_j;
+        df++;
+      }
 
       double shift = new_beta_j - curr_beta[j];
       if (shift != 0) {

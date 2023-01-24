@@ -12,12 +12,6 @@ const double MIN_H2 = 1e-3;
 
 /******************************************************************************/
 
-double dotprod2(const NumericVector& X, const NumericVector& Y) {
-  return std::inner_product(X.begin(), X.end(), Y.begin(), 0.0);
-}
-
-/******************************************************************************/
-
 // [[Rcpp::export]]
 arma::vec& MLE_alpha(arma::vec& par,
                      const std::vector<int>& ind_causal,
@@ -96,7 +90,9 @@ List ldpred2_gibbs_auto(Environment corr,
   double cur_h2_est = 0;
   double p = std::max(p_init, MIN_P), h2 = std::max(h2_init, MIN_H2);
   arma::vec par_mle = {0, h2 / (m * p)};  // (alpha + 1) and sigma2 [init]
-  double gap0 = dotprod2(beta_hat, beta_hat);
+
+  double gap0 = 2 *
+    std::inner_product(beta_hat.begin(), beta_hat.end(), beta_hat.begin(), 0.0);
 
   std::vector<int> ind_causal;
 
@@ -112,9 +108,7 @@ List ldpred2_gibbs_auto(Environment corr,
 
       int j2 = ind_sub[j];
       double dotprod = dotprods[j2];
-      double resid = beta_hat[j] - dotprod;
-      gap += resid * resid;
-      double res_beta_hat_j = beta_hat[j] + shrink_corr * (curr_beta[j] - dotprod);
+      double res_beta_hat_j = beta_hat[j] - shrink_corr * (dotprod - curr_beta[j]);
 
       double scale_freq = use_mle ? ::exp(alpha_plus_one * log_var[j]) : 1;
       double C1 = scale_freq * sigma2 * n_vec[j];
@@ -149,6 +143,7 @@ List ldpred2_gibbs_auto(Environment corr,
           curr_beta[j] = samp_beta;
           diff += samp_beta;
           ind_causal.push_back(j);
+          gap += samp_beta * samp_beta;
         }
 
       } else {
