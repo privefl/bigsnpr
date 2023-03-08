@@ -30,12 +30,13 @@ flip_strand <- function(allele) {
 #' @param match.min.prop Minimum proportion of variants in the smallest data
 #'   to be matched, otherwise stops with an error. Default is `20%`.
 #' @param return_flip_and_rev Whether to return internal boolean variables
-#'   `"_FLIP_"` and `"_REV_"` (whether the alleles were flipped and/or reversed).
-#'   Default is `FALSE`. Values in column `$beta` are multiplied by -1 for
-#'   variants with alleles reversed.
+#'   `"_FLIP_"` (whether the alleles must be flipped: A <--> T & C <--> G,
+#'   because on the opposite strand) and `"_REV_"` (whether alleles must be
+#'   swapped: `$a0` <--> `$a1`, in which case corresponding `$beta` are multiplied
+#'   by -1). Default is `FALSE`.
 #'
 #' @return A single data frame with matched variants. Values in column `$beta`
-#'   are multiplied by -1 for variants with alleles reversed.
+#'   are multiplied by -1 for variants with alleles reversed (i.e. swapped).
 #' @export
 #'
 #' @seealso [snp_modifyBuild]

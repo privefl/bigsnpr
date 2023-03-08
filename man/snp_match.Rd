@@ -32,13 +32,14 @@ Default is \code{TRUE}.}
 to be matched, otherwise stops with an error. Default is \verb{20\%}.}
 
 \item{return_flip_and_rev}{Whether to return internal boolean variables
-\code{"_FLIP_"} and \code{"_REV_"} (whether the alleles were flipped and/or reversed).
-Default is \code{FALSE}. Values in column \verb{$beta} are multiplied by -1 for
-variants with alleles reversed.}
+\code{"_FLIP_"} (whether the alleles must be flipped: A <--> T & C <--> G,
+because on the opposite strand) and \code{"_REV_"} (whether alleles must be
+swapped: \verb{$a0} <--> \verb{$a1}, in which case corresponding \verb{$beta} are multiplied
+by -1). Default is \code{FALSE}.}
 }
 \value{
 A single data frame with matched variants. Values in column \verb{$beta}
-are multiplied by -1 for variants with alleles reversed.
+are multiplied by -1 for variants with alleles reversed (i.e. swapped).
 }
 \description{
 Match alleles between summary statistics and SNP information.
