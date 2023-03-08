@@ -40,6 +40,9 @@ by -1). Default is \code{FALSE}.}
 \value{
 A single data frame with matched variants. Values in column \verb{$beta}
 are multiplied by -1 for variants with alleles reversed (i.e. swapped).
+New variable \code{"_NUM_ID_.ss"} returns the corresponding row indices of the
+input \code{sumstats} (first argument of this function), and \code{"_NUM_ID_"}
+corresponding to the input \code{info_snp} (second argument).
 }
 \description{
 Match alleles between summary statistics and SNP information.

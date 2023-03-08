@@ -37,6 +37,9 @@ flip_strand <- function(allele) {
 #'
 #' @return A single data frame with matched variants. Values in column `$beta`
 #'   are multiplied by -1 for variants with alleles reversed (i.e. swapped).
+#'   New variable `"_NUM_ID_.ss"` returns the corresponding row indices of the
+#'   input `sumstats` (first argument of this function), and `"_NUM_ID_"`
+#'   corresponding to the input `info_snp` (second argument).
 #' @export
 #'
 #' @seealso [snp_modifyBuild]
