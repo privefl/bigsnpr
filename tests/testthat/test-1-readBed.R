@@ -87,3 +87,28 @@ test_that("snp_readBed2() works", {
 })
 
 ################################################################################
+
+test_that("bed accessors work", {
+
+  bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")
+  bed <- bed(bedfile)
+  expect_type(bed[], "integer")
+  expect_true(all(bed[] %in% c(0:2, NA)))
+
+  ind.row <- sample(nrow(bed), nrow(bed) / 2, replace = TRUE)
+  ind.col <- sample(ncol(bed), ncol(bed) / 2, replace = TRUE)
+
+  rds <- snp_readBed2(bedfile, backingfile = tempfile(), ind.row, ind.col)
+  G <- snp_attach(rds)$genotypes[]
+  expect_equal(bed[ind.row, ind.col], G)
+  expect_equal(bed[ind.row, ind.col[1]], G[, 1])
+  expect_equal(bed[ind.row, ind.col[1], drop = FALSE], G[, 1, drop = FALSE])
+  expect_equal(bed[ind.row[2], ind.col], G[2, ])
+  expect_equal(bed[ind.row[2], ind.col, drop = FALSE], G[2, , drop = FALSE])
+  expect_equal(dim(bed[-(1:5), ind.col]), c(nrow(bed) - 5, length(ind.col)))
+  expect_equal(bed[c(TRUE, FALSE), ind.col], bed[][c(TRUE, FALSE), ind.col])
+  expect_equal(bed[ind.row, c(TRUE, FALSE, FALSE)],
+               bed[,][ind.row, c(TRUE, FALSE, FALSE)])
+})
+
+################################################################################

@@ -100,30 +100,6 @@ arma::Mat<int> bed_row_counts_cpp(Environment obj_bed,
 /******************************************************************************/
 
 // [[Rcpp::export]]
-NumericMatrix read_bed_scaled(Environment obj_bed,
-                              const IntegerVector& ind_row,
-                              const IntegerVector& ind_col,
-                              const NumericVector& center,
-                              const NumericVector& scale) {
-
-  XPtr<bed> xp_bed = obj_bed["address"];
-  bedAccScaled macc_bed(xp_bed, ind_row, ind_col, center, scale);
-
-  size_t n = macc_bed.nrow();
-  size_t m = macc_bed.ncol();
-
-  NumericMatrix res(n, m);
-
-  for (size_t j = 0; j < m; j++)
-    for (size_t i = 0; i < n; i++)
-      res(i, j) = macc_bed(i, j);
-
-  return res;
-}
-
-/******************************************************************************/
-
-// [[Rcpp::export]]
 List prod_and_rowSumsSq(Environment obj_bed,
                         const IntegerVector& ind_row,
                         const IntegerVector& ind_col,

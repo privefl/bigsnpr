@@ -1,3 +1,7 @@
+## bigsnpr 1.12.2
+
+- Implement matrix accessors `[,]` for bed objects.
+
 ## bigsnpr 1.12.1
 
 - Use a safer detection of strong divergences in LDpred2 and lassosum2.

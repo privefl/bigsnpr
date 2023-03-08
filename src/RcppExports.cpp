@@ -66,21 +66,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// read_bed_scaled
-NumericMatrix read_bed_scaled(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale);
-RcppExport SEXP _bigsnpr_read_bed_scaled(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
-    rcpp_result_gen = Rcpp::wrap(read_bed_scaled(obj_bed, ind_row, ind_col, center, scale));
-    return rcpp_result_gen;
-END_RCPP
-}
 // prod_and_rowSumsSq
 List prod_and_rowSumsSq(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericMatrix& V);
 RcppExport SEXP _bigsnpr_prod_and_rowSumsSq(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP VSEXP) {
@@ -94,6 +79,34 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type V(VSEXP);
     rcpp_result_gen = Rcpp::wrap(prod_and_rowSumsSq(obj_bed, ind_row, ind_col, center, scale, V));
+    return rcpp_result_gen;
+END_RCPP
+}
+// read_bed
+IntegerMatrix read_bed(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col);
+RcppExport SEXP _bigsnpr_read_bed(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_bed(obj_bed, ind_row, ind_col));
+    return rcpp_result_gen;
+END_RCPP
+}
+// read_bed_scaled
+NumericMatrix read_bed_scaled(Environment obj_bed, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale);
+RcppExport SEXP _bigsnpr_read_bed_scaled(SEXP obj_bedSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj_bed(obj_bedSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_bed_scaled(obj_bed, ind_row, ind_col, center, scale));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -569,8 +582,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_bed_colstats", (DL_FUNC) &_bigsnpr_bed_colstats, 4},
     {"_bigsnpr_bed_col_counts_cpp", (DL_FUNC) &_bigsnpr_bed_col_counts_cpp, 4},
     {"_bigsnpr_bed_row_counts_cpp", (DL_FUNC) &_bigsnpr_bed_row_counts_cpp, 4},
-    {"_bigsnpr_read_bed_scaled", (DL_FUNC) &_bigsnpr_read_bed_scaled, 5},
     {"_bigsnpr_prod_and_rowSumsSq", (DL_FUNC) &_bigsnpr_prod_and_rowSumsSq, 6},
+    {"_bigsnpr_read_bed", (DL_FUNC) &_bigsnpr_read_bed, 3},
+    {"_bigsnpr_read_bed_scaled", (DL_FUNC) &_bigsnpr_read_bed_scaled, 5},
     {"_bigsnpr_bed_pMatVec4", (DL_FUNC) &_bigsnpr_bed_pMatVec4, 7},
     {"_bigsnpr_bed_cpMatVec4", (DL_FUNC) &_bigsnpr_bed_cpMatVec4, 7},
     {"_bigsnpr_bed_clumping_chr", (DL_FUNC) &_bigsnpr_bed_clumping_chr, 12},
