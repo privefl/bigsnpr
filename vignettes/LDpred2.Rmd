@@ -1,7 +1,7 @@
 ---
 title: "Polygenic scores and inference using LDpred2"
 author: "Florian Privé"
-date: "October 14, 2022"
+date: "June 8, 2023"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -51,7 +51,7 @@ To run LDpred2, you need
 You need to restrict to genetic variants in common between all these datasets.
 
 We previously recommended to use a set of 1,054,330 HapMap3 variants for LDpred2, because they provide a good coverage of the genome and are generally well imputed and available in most studies.
-In [this preprint](https://doi.org/10.1101/2022.10.10.511629), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 now.
+In [this preprint](https://doi.org/10.1101/2022.10.10.511629), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 when power is sufficient.
 
 You should use these sets of variants only when your data is imputed so that the overlap is good. If you only have access to a chip of genotyped variants, you should use these. In that case, you should compute the LD information yourself (as done for the tutorial data below).
 
@@ -70,6 +70,16 @@ Information about the HapMap3+ variants can be retrieved with
 info <- readRDS(runonce::download_file(
   "https://figshare.com/ndownloader/files/37802721",
   dir = "tmp-data", fname = "map_hm3_plus.rds"))
+str(info)
+```
+
+Information about the HapMap3 variants can be retrieved with
+
+```{r}
+# $pos is in build GRCh37 / hg19, but we provide positions in 3 other builds
+info <- readRDS(runonce::download_file(
+  "https://figshare.com/ndownloader/files/36360900",
+  dir = "tmp-data", fname = "map_hm3.rds"))
 str(info)
 ```
 
@@ -327,13 +337,15 @@ We recommend to run many chains in parallel with different initial values for `p
 In [this paper](https://doi.org/10.1016/j.xhgg.2022.100136), we have also introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
 
 ```{r}
+coef_shrink <- 0.95  # reduce this up to 0.4 if you have some (large) mismatch with the LD ref
+
 set.seed(1)  # to get the same result every time
 # takes less than 2 min with 4 cores
 multi_auto <- snp_ldpred2_auto(
   corr, df_beta, h2_init = h2_est,
   vec_p_init = seq_log(1e-4, 0.2, length.out = 30), ncores = NCORES,
-  # use_MLE = FALSE,  # uncomment if you have convergence issues (need v1.11.9)
-  allow_jump_sign = FALSE, shrink_corr = 0.95)
+  # use_MLE = FALSE,  # uncomment if you have convergence issues or when power is low (need v1.11.9)
+  allow_jump_sign = FALSE, shrink_corr = coef_shrink)
 str(multi_auto, max.level = 1)
 str(multi_auto[[1]], max.level = 1)
 ```
@@ -362,7 +374,7 @@ In the LDpred2 paper, we proposed an automatic way of filtering bad chains by co
 ```{r}
 # `range` should be between 0 and 2
 (range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est))))
-(keep <- (range > (0.95 * quantile(range, 0.95))))
+(keep <- which(range > (0.95 * quantile(range, 0.95, na.rm = TRUE))))
 ```
 
 To get the final effects / predictions, **you should only use chains that pass this filtering**:
@@ -447,14 +459,21 @@ where $p$ is the proportion of causal variants, $h^2$ the (SNP) heritability, $\
 
 Parameters $h^2$, $p$, and $\alpha$ (and 95% CIs) can be estimated using:
 ```{r, cache=TRUE}
-coef_shrink <- 0.95
-multi_auto <- snp_ldpred2_auto(corr, df_beta, h2_init = h2_est,
-                               vec_p_init = seq_log(1e-4, 0.2, length.out = 50),
-                               burn_in = 500, num_iter = 500, report_step = 20,
-                               allow_jump_sign = FALSE, shrink_corr = coef_shrink,
-                               ncores = NCORES)
+# reduce this up to 0.4 if you have some (large) mismatch with the LD ref
+# /!\ but the inference of h2 and p might be biased if you do this (see preprint)
+coef_shrink <- 0.95  
+
+multi_auto <- snp_ldpred2_auto(
+  corr, df_beta, h2_init = h2_est,
+  vec_p_init = seq_log(1e-4, 0.2, length.out = 50), ncores = NCORES,
+  burn_in = 500, num_iter = 500, report_step = 20,
+  # use_MLE = FALSE,  # uncomment if you have convergence issues or when power is low (need v1.11.9)
+  allow_jump_sign = FALSE, shrink_corr = coef_shrink)
+```
+
+```{r}
 (range <- sapply(multi_auto, function(auto) diff(range(auto$corr_est))))
-(keep <- which(range > (0.95 * quantile(range, 0.95, na.rm = TRUE)) & range < 3))
+(keep <- which(range > (0.95 * quantile(range, 0.95, na.rm = TRUE))))
 ```
 
 ```{r}
@@ -509,4 +528,4 @@ rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 
 - Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). [Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores](https://doi.org/10.1016/j.xhgg.2022.100136). *Human Genetics and Genomics Advances*, 3(4), 100136.
 
-- Privé, F., Albiñana, C., Pasaniuc, B., & Vilhjálmsson, B. J. (2022). [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1101/2022.10.10.511629). *bioRxiv*.
+- Privé, F., Albiñana, C., Arbel, J., Pasaniuc, B., & Vilhjálmsson, B. J. (2022). [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1101/2022.10.10.511629). *bioRxiv*.
