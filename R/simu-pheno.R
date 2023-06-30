@@ -43,7 +43,8 @@ snp_simuPheno <- function(G, h2, M,
                           ncores = 1) {
 
   # sample causal variants
-  set <- sort(sample(ind.possible, size = M, prob = prob, replace = FALSE))
+  ind <- sample.int(length(ind.possible), size = M, prob = prob, replace = FALSE)
+  set <- sort(ind.possible[ind])
 
   # variance of genotypes
   sd <- sqrt(

@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
-Version: 1.12.2
-Date: 2023-03-08
+Version: 1.12.3
+Date: 2023-06-30
 Authors@R: c(
     person("Florian", "Privé", email = "florian.prive.21@gmail.com", role = c("aut", "cre")),
     person("Michael", "Blum", role = "ths"),
@@ -66,7 +66,7 @@ Suggests:
     testthat,
     tibble,
     xgboost
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr/
 BugReports: https://github.com/privefl/bigsnpr/issues

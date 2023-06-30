@@ -1,3 +1,7 @@
+## bigsnpr 1.12.3
+
+- Fix sampling issue of `snp_simuPheno()` when `length(ind.possible)` is 1.
+
 ## bigsnpr 1.12.2
 
 - Implement matrix accessors `[,]` for bed objects.

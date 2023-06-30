@@ -23,6 +23,9 @@ test_that("snp_simuPheno() works", {
   expect_equal(var_g, 0.2)
 
   ind.possible <- sample(ncol(G), 50)
+  simu0 <- snp_simuPheno(G, 0.2, 1, ind.possible = ind.possible[1])
+  expect_identical(simu0$set, ind.possible[1])
+
   simu <- snp_simuPheno(G, 0.2, 20, ind.possible = ind.possible, ncores = 2)
   expect_length(simu$set, 20)
   expect_length(simu$effects, 20)
