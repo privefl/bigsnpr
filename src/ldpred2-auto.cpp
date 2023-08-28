@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-const double MIN_P  = 1e-5;
+// const double MIN_P  = 1e-5;
 const double MIN_H2 = 1e-3;
 
 /******************************************************************************/
@@ -67,6 +67,7 @@ List ldpred2_gibbs_auto(Environment corr,
                         bool no_jump_sign,
                         double shrink_corr,
                         bool use_mle,
+                        const NumericVector& p_bounds,
                         const NumericVector& alpha_bounds,
                         double mean_ld = 1,
                         bool verbose = false) {
@@ -88,7 +89,8 @@ List ldpred2_gibbs_auto(Environment corr,
   NumericVector p_est(num_iter_tot, NA_REAL), h2_est(num_iter_tot, NA_REAL), alpha_est(num_iter_tot, NA_REAL);
 
   double cur_h2_est = 0;
-  double p = std::max(p_init, MIN_P), h2 = std::max(h2_init, MIN_H2);
+  double h2 = std::max(h2_init, MIN_H2);
+  double p = std::min(std::max(p_bounds[0], p_init), p_bounds[1]);
   arma::vec par_mle = {0, h2 / (m * p)};  // (alpha + 1) and sigma2 [init]
 
   double gap0 = 2 *
@@ -162,7 +164,8 @@ List ldpred2_gibbs_auto(Environment corr,
     }
 
     int nb_causal = ind_causal.size();
-    p = std::max(::Rf_rbeta(1 + nb_causal / mean_ld, 1 + (m - nb_causal) / mean_ld), MIN_P);
+    p = ::Rf_rbeta(1 + nb_causal / mean_ld, 1 + (m - nb_causal) / mean_ld);
+    p = std::min(std::max(p_bounds[0], p), p_bounds[1]);
     h2 = std::max(cur_h2_est, MIN_H2);
     if (use_mle) {
       par_mle = MLE_alpha(par_mle, ind_causal, log_var, curr_beta, alpha_bounds, true);

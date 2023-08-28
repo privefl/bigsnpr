@@ -166,6 +166,8 @@ snp_ldpred2_grid <- function(corr, df_beta, grid_param,
 #'   -1 and estimate the variance of (scaled) effects as h2/(m*p), as it was
 #'   done in earlier versions of LDpred2-auto (e.g. in v1.10.8). Default is `TRUE`,
 #'   which should provide a better model fit, but might also be less robust.
+#' @param p_bounds Boundaries for the estimates of p (the polygenicity).
+#'   Default is `c(1e-5, 1)`. You can use the same value twice to fix p.
 #' @param alpha_bounds Boundaries for the estimates of \eqn{\alpha}.
 #'   Default is `c(-1.5, 0.5)`. You can use the same value twice to fix \eqn{\alpha}.
 #'
@@ -208,6 +210,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
                              allow_jump_sign = TRUE,
                              shrink_corr = 1,
                              use_MLE = TRUE,
+                             p_bounds = c(1e-5, 1),
                              alpha_bounds = c(-1.5, 0.5),
                              ind.corr = cols_along(corr),
                              ncores = 1) {
@@ -247,6 +250,7 @@ snp_ldpred2_auto <- function(corr, df_beta, h2_init,
       no_jump_sign = !allow_jump_sign,
       shrink_corr  = shrink_corr,
       use_mle      = use_MLE,
+      p_bounds     = p_bounds,
       alpha_bounds = alpha_bounds + 1,
       mean_ld      = mean_ld
     )

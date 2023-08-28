@@ -308,3 +308,53 @@ test_that("ind.corr works", {
 })
 
 ################################################################################
+
+test_that("p_bounds works in LDpred2-auto", {
+
+  skip_if(is_cran)
+  skip_if_offline("raw.githubusercontent.com")
+
+  bedfile <- file.path(tempdir(), "tmp-data/public-data3.bed")
+  if (!file.exists(rdsfile <- sub_bed(bedfile, ".rds"))) {
+    zip <- tempfile(fileext = ".zip")
+    download.file(
+      "https://github.com/privefl/bigsnpr/blob/master/data-raw/public-data3.zip?raw=true",
+      destfile = zip, mode = "wb")
+    unzip(zip, exdir = tempdir())
+    rds <- snp_readBed(bedfile)
+    expect_identical(normalizePath(rds), normalizePath(rdsfile))
+  }
+
+  obj.bigSNP <- snp_attach(rdsfile)
+  G <- obj.bigSNP$genotypes
+  y <- obj.bigSNP$fam$affection
+  POS2 <- obj.bigSNP$map$genetic.dist + 1000 * obj.bigSNP$map$chromosome
+
+  sumstats <- bigreadr::fread2(file.path(tempdir(), "tmp-data/public-data3-sumstats.txt"))
+  sumstats$n_eff <- sumstats$N
+  map <- setNames(obj.bigSNP$map[-3], c("chr", "rsid", "pos", "a1", "a0"))
+  df_beta <- snp_match(sumstats, map, join_by_pos = FALSE)
+
+  ind_var <- df_beta$`_NUM_ID_`
+  corr0 <- snp_cor(G, ind.col = ind_var, size = 3 / 1000,
+                   infos.pos = POS2[ind_var], ncores = 2)
+  corr <- as_SFBM(corr0, compact = sample(c(TRUE, FALSE), 1))
+  rm(corr0)
+
+  # LDpred2-auto with bounds for p
+  p_bounds <- sort(10^runif(2, -5, 0))
+  beta_auto <- snp_ldpred2_auto(corr, df_beta, p_bounds = p_bounds,
+                                h2_init = 0.3, shrink_corr = 0.95,
+                                burn_in = 100, num_iter = 100)
+  all_p_est <- beta_auto[[1]]$path_p_est
+  sapply(all_p_est, function(p_est) expect_gte(p_est, p_bounds[1]))
+  sapply(all_p_est, function(p_est) expect_lte(p_est, p_bounds[2]))
+
+
+  beta_auto2 <- snp_ldpred2_auto(corr, df_beta, p_bounds = p_bounds[c(1, 1)],
+                                 h2_init = 0.3, shrink_corr = 0.95,
+                                 burn_in = 100, num_iter = 100)
+  sapply(beta_auto2[[1]]$path_p_est, function(p_est) expect_equal(p_est, p_bounds[1]))
+})
+
+################################################################################

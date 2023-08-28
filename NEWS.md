@@ -1,3 +1,7 @@
+## bigsnpr 1.12.4
+
+- Add parameter `p_bounds` in LDpred2-auto to provide bounds for the estimate of the polygenicity p.
+
 ## bigsnpr 1.12.3
 
 - Fix sampling issue of `snp_simuPheno()` when `length(ind.possible)` is 1.

@@ -32,6 +32,7 @@ snp_ldpred2_auto(
   allow_jump_sign = TRUE,
   shrink_corr = 1,
   use_MLE = TRUE,
+  p_bounds = c(1e-05, 1),
   alpha_bounds = c(-1.5, 0.5),
   ind.corr = cols_along(corr),
   ncores = 1
@@ -107,6 +108,9 @@ alpha and the variance component (since v1.11.4), or assume that alpha is
 -1 and estimate the variance of (scaled) effects as h2/(m*p), as it was
 done in earlier versions of LDpred2-auto (e.g. in v1.10.8). Default is \code{TRUE},
 which should provide a better model fit, but might also be less robust.}
+
+\item{p_bounds}{Boundaries for the estimates of p (the polygenicity).
+Default is \code{c(1e-5, 1)}. You can use the same value twice to fix p.}
 
 \item{alpha_bounds}{Boundaries for the estimates of \eqn{\alpha}.
 Default is \code{c(-1.5, 0.5)}. You can use the same value twice to fix \eqn{\alpha}.}

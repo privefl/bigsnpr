@@ -81,8 +81,8 @@ MLE_alpha <- function(par, ind_causal, log_var, curr_beta, alpha_bounds, boot = 
     .Call(`_bigsnpr_MLE_alpha`, par, ind_causal, log_var, curr_beta, alpha_bounds, boot, verbose)
 }
 
-ldpred2_gibbs_auto <- function(corr, beta_hat, n_vec, log_var, ind_sub, p_init, h2_init, burn_in, num_iter, report_step, no_jump_sign, shrink_corr, use_mle, alpha_bounds, mean_ld = 1, verbose = FALSE) {
-    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, n_vec, log_var, ind_sub, p_init, h2_init, burn_in, num_iter, report_step, no_jump_sign, shrink_corr, use_mle, alpha_bounds, mean_ld, verbose)
+ldpred2_gibbs_auto <- function(corr, beta_hat, n_vec, log_var, ind_sub, p_init, h2_init, burn_in, num_iter, report_step, no_jump_sign, shrink_corr, use_mle, p_bounds, alpha_bounds, mean_ld = 1, verbose = FALSE) {
+    .Call(`_bigsnpr_ldpred2_gibbs_auto`, corr, beta_hat, n_vec, log_var, ind_sub, p_init, h2_init, burn_in, num_iter, report_step, no_jump_sign, shrink_corr, use_mle, p_bounds, alpha_bounds, mean_ld, verbose)
 }
 
 ldpred2_gibbs_one_sampling <- function(corr, beta_hat, n_vec, ind_sub, h2, p, sparse, burn_in, num_iter) {
