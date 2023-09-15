@@ -18,7 +18,7 @@ Download PLINK 2.0 from https://www.cog-genomics.org/plink/2.0/."><!-- mathjax -
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@ Download PLINK 2.0 from https://www.cog-genomics.org/plink/2.0/."><!-- mathjax -
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -99,14 +99,16 @@ Download PLINK 2.0 from https://www.cog-genomics.org/plink/2.0/."><!-- mathjax -
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">download_plink</span><span class="op">(</span>dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu">download_plink2</span><span class="op">(</span>
-  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,
-  AVX2 <span class="op">=</span> <span class="cn">TRUE</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">download_plink</span><span class="op">(</span>dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">download_plink2</span><span class="op">(</span></span>
+<span>  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  AVX2 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ARM <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  AMD <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -127,6 +129,14 @@ Default is a temporary directory.</p></dd>
 <dt>AVX2</dt>
 <dd><p>Whether to download the AVX2 version? This is only available for
 64 bits architectures. Default is <code>TRUE</code>.</p></dd>
+
+
+<dt>ARM</dt>
+<dd><p>Whether to download an ARM version. Default is <code>FALSE</code>.</p></dd>
+
+
+<dt>AMD</dt>
+<dd><p>Whether to download an AMD version. Default is <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div id="value">

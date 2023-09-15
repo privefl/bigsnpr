@@ -19,7 +19,7 @@ had been imputed using parameter center.'><!-- mathjax --><script src="https://c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@ had been imputed using parameter center.'><!-- mathjax --><script src="https://c
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -101,15 +101,15 @@ had been imputed using parameter <code>center</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bed_prodVec</span><span class="op">(</span>
-  <span class="va">obj.bed</span>,
-  <span class="va">y.col</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  center <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.col</span><span class="op">)</span><span class="op">)</span>,
-  scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.col</span><span class="op">)</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bed_prodVec</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  <span class="va">y.col</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  center <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.col</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.col</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -143,7 +143,7 @@ If not specified, all columns are used.<br><strong>Don't use negative indices.</
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -155,13 +155,13 @@ You may use nb_cores.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">y.col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">bed_prodVec</span><span class="op">(</span><span class="va">obj.bed</span>, <span class="va">y.col</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">y.col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">bed_prodVec</span><span class="op">(</span><span class="va">obj.bed</span>, <span class="va">y.col</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  num [1:517] 2841 2916 2842 2835 2872 ...</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

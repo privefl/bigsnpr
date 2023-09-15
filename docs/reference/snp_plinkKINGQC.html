@@ -18,7 +18,7 @@ be found at https://www.cog-genomics.org/plink/2.0/distance#king_cutoff."><!-- m
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@ be found at https://www.cog-genomics.org/plink/2.0/distance#king_cutoff."><!-- m
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -99,16 +99,16 @@ be found at <a href="https://www.cog-genomics.org/plink/2.0/distance#king_cutoff
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_plinkKINGQC</span><span class="op">(</span>
-  <span class="va">plink2.path</span>,
-  <span class="va">bedfile.in</span>,
-  bedfile.out <span class="op">=</span> <span class="cn">NULL</span>,
-  thr.king <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="op">-</span><span class="fl">3.5</span>,
-  make.bed <span class="op">=</span> <span class="cn">TRUE</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>,
-  extra.options <span class="op">=</span> <span class="st">""</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_plinkKINGQC</span><span class="op">(</span></span>
+<span>  <span class="va">plink2.path</span>,</span>
+<span>  <span class="va">bedfile.in</span>,</span>
+<span>  bedfile.out <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  thr.king <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="op">-</span><span class="fl">3.5</span>,</span>
+<span>  make.bed <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  extra.options <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -144,7 +144,7 @@ Otherwise, returns a table with coefficients of related pairs.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>extra.options</dt>
@@ -174,19 +174,19 @@ association studies." Bioinformatics 26, no. 22 (2010): 2867-2873.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">plink2</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_plink.html">download_plink2</a></span><span class="op">(</span>AVX2 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">bedfile2</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkKINGQC</span><span class="op">(</span><span class="va">plink2</span>, <span class="va">bedfile</span>,</span>
-<span class="r-in">                            bedfile.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span>,</span>
-<span class="r-in">                            ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">df_rel</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkKINGQC</span><span class="op">(</span><span class="va">plink2</span>, <span class="va">bedfile</span>, make.bed <span class="op">=</span> <span class="cn">FALSE</span>, ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">df_rel</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">plink2</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_plink.html">download_plink2</a></span><span class="op">(</span>AVX2 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">bedfile2</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkKINGQC</span><span class="op">(</span><span class="va">plink2</span>, <span class="va">bedfile</span>,</span></span>
+<span class="r-in"><span>                            bedfile.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                            ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">df_rel</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkKINGQC</span><span class="op">(</span><span class="va">plink2</span>, <span class="va">bedfile</span>, make.bed <span class="op">=</span> <span class="cn">FALSE</span>, ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">df_rel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

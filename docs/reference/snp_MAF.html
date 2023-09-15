@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,13 +97,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_MAF</span><span class="op">(</span>
-  <span class="va">G</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  nploidy <span class="op">=</span> <span class="fl">2</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_MAF</span><span class="op">(</span></span>
+<span>  <span class="va">G</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  nploidy <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -131,7 +131,7 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -143,10 +143,10 @@ You may use nb_cores.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">obj.bigsnp</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">maf</span> <span class="op">&lt;-</span> <span class="fu">snp_MAF</span><span class="op">(</span><span class="va">obj.bigsnp</span><span class="op">$</span><span class="va">genotypes</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">obj.bigsnp</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">maf</span> <span class="op">&lt;-</span> <span class="fu">snp_MAF</span><span class="op">(</span><span class="va">obj.bigsnp</span><span class="op">$</span><span class="va">genotypes</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  num [1:4542] 0.342 0.206 0.237 0.185 0.456 ...</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

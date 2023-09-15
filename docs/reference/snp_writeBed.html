@@ -18,7 +18,7 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs."><!-- mathjax --
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@ This will use the slot code rounded to write 0s, 1s, 2s or NAs."><!-- mathjax --
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -99,7 +99,7 @@ This will use the slot <code>code</code> <strong>rounded</strong> to write 0s, 1
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_writeBed</span><span class="op">(</span><span class="va">x</span>, <span class="va">bedfile</span>, ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_writeBed</span><span class="op">(</span><span class="va">x</span>, <span class="va">bedfile</span>, ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -131,35 +131,35 @@ If not specified, all columns are used.<br><strong>Don't use negative indices.</
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">17</span></span>
-<span class="r-in"><span class="va">M</span> <span class="op">&lt;-</span> <span class="fl">911</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">fake</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_fake.html">snp_fake</a></span><span class="op">(</span><span class="va">N</span>, <span class="va">M</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">fake</span><span class="op">$</span><span class="va">genotypes</span></span>
-<span class="r-in"><span class="va">G</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">as.raw</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Write the object as a bed/bim/fam object</span></span>
-<span class="r-in"><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">bed</span> <span class="op">&lt;-</span> <span class="fu">snp_writeBed</span><span class="op">(</span><span class="va">fake</span>, <span class="va">tmp</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read this new file for the first time</span></span>
-<span class="r-in"><span class="va">rds</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bed</span>, backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Attach object in R session</span></span>
-<span class="r-in"><span class="va">fake2</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Same content</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">fake</span><span class="op">$</span><span class="va">genotypes</span><span class="op">[</span><span class="op">]</span>, <span class="va">fake2</span><span class="op">$</span><span class="va">genotypes</span><span class="op">[</span><span class="op">]</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">17</span></span></span>
+<span class="r-in"><span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fl">911</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">fake</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_fake.html">snp_fake</a></span><span class="op">(</span><span class="va">N</span>, <span class="va">M</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">fake</span><span class="op">$</span><span class="va">genotypes</span></span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">as.raw</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Write the object as a bed/bim/fam object</span></span></span>
+<span class="r-in"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">bed</span> <span class="op">&lt;-</span> <span class="fu">snp_writeBed</span><span class="op">(</span><span class="va">fake</span>, <span class="va">tmp</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Read this new file for the first time</span></span></span>
+<span class="r-in"><span><span class="va">rds</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bed</span>, backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Attach object in R session</span></span></span>
+<span class="r-in"><span><span class="va">fake2</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same content</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">fake</span><span class="op">$</span><span class="va">genotypes</span><span class="op">[</span><span class="op">]</span>, <span class="va">fake2</span><span class="op">$</span><span class="va">genotypes</span><span class="op">[</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">fake</span><span class="op">$</span><span class="va">fam</span>, <span class="va">fake2</span><span class="op">$</span><span class="va">fam</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">fake</span><span class="op">$</span><span class="va">fam</span>, <span class="va">fake2</span><span class="op">$</span><span class="va">fam</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">fake</span><span class="op">$</span><span class="va">map</span>, <span class="va">fake2</span><span class="op">$</span><span class="va">map</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">fake</span><span class="op">$</span><span class="va">map</span>, <span class="va">fake2</span><span class="op">$</span><span class="va">map</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Two different backingfiles</span></span>
-<span class="r-in"><span class="va">fake</span><span class="op">$</span><span class="va">genotypes</span><span class="op">$</span><span class="va">backingfile</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4qNGV2\\file664281f899.bk"</span>
-<span class="r-in"><span class="va">fake2</span><span class="op">$</span><span class="va">genotypes</span><span class="op">$</span><span class="va">backingfile</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4qNGV2\\file6643b3411e0.bk"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Two different backingfiles</span></span></span>
+<span class="r-in"><span><span class="va">fake</span><span class="op">$</span><span class="va">genotypes</span><span class="op">$</span><span class="va">backingfile</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file3528111647b6.bk"</span>
+<span class="r-in"><span><span class="va">fake2</span><span class="op">$</span><span class="va">genotypes</span><span class="op">$</span><span class="va">backingfile</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file35284a44155.bk"</span>
 </code></pre></div>
     </div>
   </div>

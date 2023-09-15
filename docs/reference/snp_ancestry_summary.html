@@ -18,7 +18,7 @@ using snp_match() (and to reverse frequencies correspondingly)."><!-- mathjax --
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@ using snp_match() (and to reverse frequencies correspondingly)."><!-- mathjax --
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -99,7 +99,7 @@ using <code><a href="snp_match.html">snp_match()</a></code> (and to reverse freq
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_ancestry_summary</span><span class="op">(</span><span class="va">freq</span>, <span class="va">info_freq_ref</span>, <span class="va">projection</span>, <span class="va">correction</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_ancestry_summary</span><span class="op">(</span><span class="va">freq</span>, <span class="va">info_freq_ref</span>, <span class="va">projection</span>, <span class="va">correction</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -131,51 +131,51 @@ project allele frequencies.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># GWAS summary statistics for Epilepsy (supposedly in EUR+EAS+AFR)</span></span>
-<span class="r-in"><span class="va">gz</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"http://www.epigad.org/gwas_ilae2018_16loci/all_epilepsy_METAL.gz"</span>,</span>
-<span class="r-in">  dir <span class="op">=</span> <span class="st">"tmp-data"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">gz</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sumstats</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">gz</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CHR"</span>, <span class="st">"BP"</span>, <span class="st">"Allele2"</span>, <span class="st">"Allele1"</span>, <span class="st">"Freq1"</span><span class="op">)</span>,</span>
-<span class="r-in">  col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chr"</span>, <span class="st">"pos"</span>, <span class="st">"a0"</span>, <span class="st">"a1"</span>, <span class="st">"freq"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate_all.html" class="external-link">mutate_at</a></span><span class="op">(</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, <span class="va">toupper</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># It is a good idea to filter for similar per-variant N (when available..)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">all_freq</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620968"</span>,</span>
-<span class="r-in">                         dir <span class="op">=</span> <span class="st">"tmp-data"</span>, fname <span class="op">=</span> <span class="st">"ref_freqs.csv.gz"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">projection</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620953"</span>,</span>
-<span class="r-in">                         dir <span class="op">=</span> <span class="st">"tmp-data"</span>, fname <span class="op">=</span> <span class="st">"projection.csv.gz"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_match.html">snp_match</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">sumstats</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">chr</span><span class="op">)</span>, beta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="va">all_freq</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
-<span class="r-in">  return_flip_and_rev <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>freq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">`_REV_`</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">freq</span>, <span class="va">freq</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">snp_ancestry_summary</span><span class="op">(</span></span>
-<span class="r-in">  freq <span class="op">=</span> <span class="va">matched</span><span class="op">$</span><span class="va">freq</span>,</span>
-<span class="r-in">  info_freq_ref <span class="op">=</span> <span class="va">all_freq</span><span class="op">[</span><span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_`</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>,</span>
-<span class="r-in">  projection <span class="op">=</span> <span class="va">projection</span><span class="op">[</span><span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_`</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>,</span>
-<span class="r-in">  correction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1.008</span>, <span class="fl">1.021</span>, <span class="fl">1.034</span>, <span class="fl">1.052</span>, <span class="fl">1.074</span>, <span class="fl">1.099</span>,</span>
-<span class="r-in">                 <span class="fl">1.123</span>, <span class="fl">1.15</span>, <span class="fl">1.195</span>, <span class="fl">1.256</span>, <span class="fl">1.321</span>, <span class="fl">1.382</span>, <span class="fl">1.443</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Some ancestry groups are very close to each other, and should be merged</span></span>
-<span class="r-in"><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">all_freq</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">group</span><span class="op">[</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scandinavia"</span>, <span class="st">"United Kingdom"</span>, <span class="st">"Ireland"</span><span class="op">)</span><span class="op">]</span>   <span class="op">&lt;-</span> <span class="st">"Europe (North West)"</span></span>
-<span class="r-in"><span class="va">group</span><span class="op">[</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Europe (South East)"</span>, <span class="st">"Europe (North East)"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Europe (East)"</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">res</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">group</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span>, <span class="va">sum</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># GWAS summary statistics for Epilepsy (supposedly in EUR+EAS+AFR)</span></span></span>
+<span class="r-in"><span><span class="va">gz</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"http://www.epigad.org/gwas_ilae2018_16loci/all_epilepsy_METAL.gz"</span>,</span></span>
+<span class="r-in"><span>  dir <span class="op">=</span> <span class="st">"tmp-data"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">gz</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sumstats</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">gz</span>, select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CHR"</span>, <span class="st">"BP"</span>, <span class="st">"Allele2"</span>, <span class="st">"Allele1"</span>, <span class="st">"Freq1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chr"</span>, <span class="st">"pos"</span>, <span class="st">"a0"</span>, <span class="st">"a1"</span>, <span class="st">"freq"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_at</a></span><span class="op">(</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, <span class="va">toupper</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># It is a good idea to filter for similar per-variant N (when available..)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">all_freq</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620968"</span>,</span></span>
+<span class="r-in"><span>                         dir <span class="op">=</span> <span class="st">"tmp-data"</span>, fname <span class="op">=</span> <span class="st">"ref_freqs.csv.gz"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">projection</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620953"</span>,</span></span>
+<span class="r-in"><span>                         dir <span class="op">=</span> <span class="st">"tmp-data"</span>, fname <span class="op">=</span> <span class="st">"projection.csv.gz"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_match.html">snp_match</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">sumstats</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">chr</span><span class="op">)</span>, beta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="va">all_freq</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  return_flip_and_rev <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>freq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">`_REV_`</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">freq</span>, <span class="va">freq</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">snp_ancestry_summary</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  freq <span class="op">=</span> <span class="va">matched</span><span class="op">$</span><span class="va">freq</span>,</span></span>
+<span class="r-in"><span>  info_freq_ref <span class="op">=</span> <span class="va">all_freq</span><span class="op">[</span><span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_`</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  projection <span class="op">=</span> <span class="va">projection</span><span class="op">[</span><span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_`</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  correction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1.008</span>, <span class="fl">1.021</span>, <span class="fl">1.034</span>, <span class="fl">1.052</span>, <span class="fl">1.074</span>, <span class="fl">1.099</span>,</span></span>
+<span class="r-in"><span>                 <span class="fl">1.123</span>, <span class="fl">1.15</span>, <span class="fl">1.195</span>, <span class="fl">1.256</span>, <span class="fl">1.321</span>, <span class="fl">1.382</span>, <span class="fl">1.443</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Some ancestry groups are very close to each other, and should be merged</span></span></span>
+<span class="r-in"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">all_freq</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">group</span><span class="op">[</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scandinavia"</span>, <span class="st">"United Kingdom"</span>, <span class="st">"Ireland"</span><span class="op">)</span><span class="op">]</span>   <span class="op">&lt;-</span> <span class="st">"Europe (North West)"</span></span></span>
+<span class="r-in"><span><span class="va">group</span><span class="op">[</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Europe (South East)"</span>, <span class="st">"Europe (North East)"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Europe (East)"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">res</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">group</span>, <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span>, <span class="va">sum</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

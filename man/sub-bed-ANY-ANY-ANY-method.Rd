@@ -31,3 +31,4 @@ obj.bed[1:5, 1:2]
 typeof(obj.bed[1, 1])
 
 }
+\keyword{internal}

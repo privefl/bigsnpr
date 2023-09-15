@@ -1,4 +1,4 @@
-pandoc: 2.11.2
+pandoc: 3.1.1
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
@@ -9,5 +9,5 @@ articles:
   prs_uncertainty: prs_uncertainty.html
   pruning-vs-clumping: pruning-vs-clumping.html
   SCT: SCT.html
-last_built: 2022-10-12T12:14Z
+last_built: 2023-09-15T07:41Z
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,23 +97,23 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_ld_scores</span><span class="op">(</span>
-  <span class="va">Gna</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">Gna</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">Gna</span><span class="op">)</span>,
-  size <span class="op">=</span> <span class="fl">500</span>,
-  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="fu">bed_ld_scores</span><span class="op">(</span>
-  <span class="va">obj.bed</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  size <span class="op">=</span> <span class="fl">500</span>,
-  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_ld_scores</span><span class="op">(</span></span>
+<span>  <span class="va">Gna</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">Gna</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">Gna</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">bed_ld_scores</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -148,7 +148,7 @@ Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>obj.bed</dt>
@@ -166,10 +166,10 @@ correlations with the neighboring variants (including itself).</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">(</span><span class="va">ld</span> <span class="op">&lt;-</span> <span class="fu">snp_ld_scores</span><span class="op">(</span><span class="va">G</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">ld</span> <span class="op">&lt;-</span> <span class="fu">snp_ld_scores</span><span class="op">(</span><span class="va">G</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    [1] 2.483941 2.172068 3.263946 2.183188 2.429795 2.398690 2.014529 2.356609</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    [9] 2.366944 2.372684 2.027740 3.122179 2.133183 2.172548 2.519639 2.021563</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [17] 2.314697 2.037480 2.782503 1.924502 2.041895 2.750078 2.725187 2.169489</span>
@@ -295,7 +295,7 @@ correlations with the neighboring variants (including itself).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [977] 2.125852 2.688518 2.066812 2.608774 1.973150 2.460382 3.143638 2.161306</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [985] 2.275365 2.691380 2.095852 2.184302 1.932129 2.283432 1.921477 2.031262</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [993] 2.189533 2.309769 2.133190 2.042262 2.274570 2.483920 2.067305 2.216358</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

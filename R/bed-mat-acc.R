@@ -51,6 +51,7 @@ bed_accessor <- function(x, i, j, ..., drop = TRUE) {
 #'   Default is `TRUE`.
 #'
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' bedfile <- system.file("extdata", "example-missing.bed", package = "bigsnpr")

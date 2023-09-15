@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,13 +97,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bed_counts</span><span class="op">(</span>
-  <span class="va">obj.bed</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  byrow <span class="op">=</span> <span class="cn">FALSE</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bed_counts</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  byrow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -130,7 +130,7 @@ Default is <code>FALSE</code> (count by variant).</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -142,23 +142,23 @@ You may use nb_cores.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example-missing.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">bed_counts</span><span class="op">(</span><span class="va">obj.bed</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example-missing.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">bed_counts</span><span class="op">(</span><span class="va">obj.bed</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0     183  177  170  165  155</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       8   16   21   26   39</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       0    0    1    4    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;NA&gt;    9    7    8    5    4</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">bed_counts</span><span class="op">(</span><span class="va">obj.bed</span>, ind.row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">bed_counts</span><span class="op">(</span><span class="va">obj.bed</span>, ind.row <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0     492  275  316  271  346</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       0  211  157   94   98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       0    0   18  117   39</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;NA&gt;    8   14    9   18   17</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,15 +97,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_PRS</span><span class="op">(</span>
-  <span class="va">G</span>,
-  <span class="va">betas.keep</span>,
-  ind.test <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  ind.keep <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  same.keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.keep</span><span class="op">)</span><span class="op">)</span>,
-  lpS.keep <span class="op">=</span> <span class="cn">NULL</span>,
-  thr.list <span class="op">=</span> <span class="fl">0</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_PRS</span><span class="op">(</span></span>
+<span>  <span class="va">G</span>,</span>
+<span>  <span class="va">betas.keep</span>,</span>
+<span>  ind.test <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  ind.keep <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  same.keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.keep</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  lpS.keep <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  thr.list <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -157,14 +157,14 @@ columns correspond to <code>thr.list</code>.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">big_copy</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">genotypes</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">CHR</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">POS</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.position</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">y01</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">fam</span><span class="op">$</span><span class="va">affection</span> <span class="op">-</span> <span class="fl">1</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># PCA -&gt; covariables</span></span>
-<span class="r-in"><span class="va">obj.svd</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_autoSVD.html">snp_autoSVD</a></span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>, infos.pos <span class="op">=</span> <span class="va">POS</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">big_copy</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">genotypes</span>, ind.col <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">CHR</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">POS</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.position</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">y01</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">fam</span><span class="op">$</span><span class="va">affection</span> <span class="op">-</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># PCA -&gt; covariables</span></span></span>
+<span class="r-in"><span><span class="va">obj.svd</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_autoSVD.html">snp_autoSVD</a></span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>, infos.pos <span class="op">=</span> <span class="va">POS</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 952 SNPs.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Discarding 0 variant with MAC &lt; 10.</span>
@@ -178,43 +178,45 @@ columns correspond to <code>thr.list</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0 outlier variant detected..</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># train and test set</span></span>
-<span class="r-in"><span class="va">ind.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span> <span class="co"># 117</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># GWAS</span></span>
-<span class="r-in"><span class="va">gwas.train</span> <span class="op">&lt;-</span> <span class="fu">big_univLogReg</span><span class="op">(</span><span class="va">G</span>, y01.train <span class="op">=</span> <span class="va">y01</span><span class="op">[</span><span class="va">ind.train</span><span class="op">]</span>,</span>
-<span class="r-in">                             ind.train <span class="op">=</span> <span class="va">ind.train</span>,</span>
-<span class="r-in">                             covar.train <span class="op">=</span> <span class="va">obj.svd</span><span class="op">$</span><span class="va">u</span><span class="op">[</span><span class="va">ind.train</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># clumping</span></span>
-<span class="r-in"><span class="va">ind.keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_clumping.html">snp_clumping</a></span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>,</span>
-<span class="r-in">                         ind.row <span class="op">=</span> <span class="va">ind.train</span>,</span>
-<span class="r-in">                         S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">gwas.train</span><span class="op">$</span><span class="va">score</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># -log10(p-values) and thresolding</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lpS.keep</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">gwas.train</span><span class="op">)</span><span class="op">[</span><span class="va">ind.keep</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># train and test set</span></span></span>
+<span class="r-in"><span><span class="va">ind.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span> <span class="co"># 117</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># GWAS</span></span></span>
+<span class="r-in"><span><span class="va">gwas.train</span> <span class="op">&lt;-</span> <span class="fu">big_univLogReg</span><span class="op">(</span><span class="va">G</span>, y01.train <span class="op">=</span> <span class="va">y01</span><span class="op">[</span><span class="va">ind.train</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                             ind.train <span class="op">=</span> <span class="va">ind.train</span>,</span></span>
+<span class="r-in"><span>                             covar.train <span class="op">=</span> <span class="va">obj.svd</span><span class="op">$</span><span class="va">u</span><span class="op">[</span><span class="va">ind.train</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># clumping</span></span></span>
+<span class="r-in"><span><span class="va">ind.keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_clumping.html">snp_clumping</a></span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">CHR</span>,</span></span>
+<span class="r-in"><span>                         ind.row <span class="op">=</span> <span class="va">ind.train</span>,</span></span>
+<span class="r-in"><span>                         S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">gwas.train</span><span class="op">$</span><span class="va">score</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># -log10(p-values) and thresolding</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lpS.keep</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">gwas.train</span><span class="op">)</span><span class="op">[</span><span class="va">ind.keep</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.000058 0.127537 0.339442 0.470071 0.663226 6.312297 </span>
-<span class="r-in"><span class="va">thrs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nb.pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">thrs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">thr</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">lpS.keep</span> <span class="op">&gt;</span> <span class="va">thr</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># PRS</span></span>
-<span class="r-in"><span class="va">prs</span> <span class="op">&lt;-</span> <span class="fu">snp_PRS</span><span class="op">(</span><span class="va">G</span>, betas.keep <span class="op">=</span> <span class="va">gwas.train</span><span class="op">$</span><span class="va">estim</span><span class="op">[</span><span class="va">ind.keep</span><span class="op">]</span>,</span>
-<span class="r-in">               ind.test <span class="op">=</span> <span class="va">ind.test</span>,</span>
-<span class="r-in">               ind.keep <span class="op">=</span> <span class="va">ind.keep</span>,</span>
-<span class="r-in">               lpS.keep <span class="op">=</span> <span class="va">lpS.keep</span>,</span>
-<span class="r-in">               thr.list <span class="op">=</span> <span class="va">thrs</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># AUC as a function of the number of predictors</span></span>
-<span class="r-in"><span class="va">aucs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">prs</span>, <span class="fl">2</span>, <span class="va">AUC</span>, target <span class="op">=</span> <span class="va">y01</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/qplot.html" class="external-link">qplot</a></span><span class="op">(</span><span class="va">nb.pred</span>, <span class="va">aucs</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_continuous.html" class="external-link">scale_x_log10</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="va">nb.pred</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Number of predictors"</span>, y <span class="op">=</span> <span class="st">"AUC"</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu">theme_bigstatsr</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">thrs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nb.pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">thrs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">thr</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">lpS.keep</span> <span class="op">&gt;</span> <span class="va">thr</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># PRS</span></span></span>
+<span class="r-in"><span><span class="va">prs</span> <span class="op">&lt;-</span> <span class="fu">snp_PRS</span><span class="op">(</span><span class="va">G</span>, betas.keep <span class="op">=</span> <span class="va">gwas.train</span><span class="op">$</span><span class="va">estim</span><span class="op">[</span><span class="va">ind.keep</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>               ind.test <span class="op">=</span> <span class="va">ind.test</span>,</span></span>
+<span class="r-in"><span>               ind.keep <span class="op">=</span> <span class="va">ind.keep</span>,</span></span>
+<span class="r-in"><span>               lpS.keep <span class="op">=</span> <span class="va">lpS.keep</span>,</span></span>
+<span class="r-in"><span>               thr.list <span class="op">=</span> <span class="va">thrs</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># AUC as a function of the number of predictors</span></span></span>
+<span class="r-in"><span><span class="va">aucs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">prs</span>, <span class="fl">2</span>, <span class="va">AUC</span>, target <span class="op">=</span> <span class="va">y01</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>package 'ggplot2' was built under R version 4.2.3</span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html" class="external-link">qplot</a></span><span class="op">(</span><span class="va">nb.pred</span>, <span class="va">aucs</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_log10</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="va">nb.pred</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Number of predictors"</span>, y <span class="op">=</span> <span class="st">"AUC"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">theme_bigstatsr</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`qplot()` was deprecated in ggplot2 3.4.0.</span>
 <span class="r-plt img"><img src="snp_PRS-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

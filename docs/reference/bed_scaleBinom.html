@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,12 +97,12 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bed_scaleBinom</span><span class="op">(</span>
-  <span class="va">obj.bed</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bed_scaleBinom</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -124,7 +124,7 @@ If not specified, all columns are used.<br><strong>Don't use negative indices.</
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -142,21 +142,21 @@ You may use nb_cores.</p></dd>
     <h2>References</h2>
     <p>This scaling is widely used for SNP arrays.
 Patterson N, Price AL, Reich D (2006). Population Structure and Eigenanalysis.
-PLoS Genet 2(12): e190. doi: <a href="https://doi.org/10.1371/journal.pgen.0020190" class="external-link">10.1371/journal.pgen.0020190</a>
+PLoS Genet 2(12): e190. <a href="https://doi.org/10.1371/journal.pgen.0020190" class="external-link">doi:10.1371/journal.pgen.0020190</a>
 .</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example-missing.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">bed_scaleBinom</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example-missing.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">bed_scaleBinom</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	500 obs. of  2 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ center: num  0.0419 0.0829 0.1198 0.1744 0.2194 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ scale : num  0.203 0.282 0.336 0.399 0.442 ...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="bed_randomSVD.html">bed_randomSVD</a></span><span class="op">(</span><span class="va">obj.bed</span>, <span class="va">bed_scaleBinom</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="bed_randomSVD.html">bed_randomSVD</a></span><span class="op">(</span><span class="va">obj.bed</span>, <span class="va">bed_scaleBinom</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ d     : num [1:10] 145.8 105.8 89.8 80 68.8 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ u     : num [1:200, 1:10] -0.10613 -0.03125 -0.02387 -0.00184 -0.0563 ...</span>
@@ -166,7 +166,7 @@ PLoS Genet 2(12): e190. doi: <a href="https://doi.org/10.1371/journal.pgen.00201
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ center: num [1:500] 0.0419 0.0829 0.1198 0.1744 0.2194 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ scale : num [1:500] 0.203 0.282 0.336 0.399 0.442 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr "big_SVD"</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

@@ -19,7 +19,7 @@ different parameters for clumping and thresholding."><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@ different parameters for clumping and thresholding."><!-- mathjax --><script src
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -101,42 +101,42 @@ different parameters for clumping and thresholding.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_grid_clumping</span><span class="op">(</span>
-  <span class="va">G</span>,
-  <span class="va">infos.chr</span>,
-  <span class="va">infos.pos</span>,
-  <span class="va">lpS</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  grid.thr.r2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">0.95</span><span class="op">)</span>,
-  grid.base.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">500</span><span class="op">)</span>,
-  infos.imp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span>,
-  grid.thr.imp <span class="op">=</span> <span class="fl">1</span>,
-  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span>,
-  exclude <span class="op">=</span> <span class="cn">NULL</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="fu">snp_grid_PRS</span><span class="op">(</span>
-  <span class="va">G</span>,
-  <span class="va">all_keep</span>,
-  <span class="va">betas</span>,
-  <span class="va">lpS</span>,
-  n_thr_lpS <span class="op">=</span> <span class="fl">50</span>,
-  grid.lpS.thr <span class="op">=</span> <span class="fl">0.9999</span> <span class="op">*</span> <span class="fu"><a href="seq_log.html">seq_log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">lpS</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">lpS</span>, na.rm <span class="op">=</span>
-    <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">n_thr_lpS</span><span class="op">)</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"float"</span>, <span class="st">"double"</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="fu">snp_grid_stacking</span><span class="op">(</span>
-  <span class="va">multi_PRS</span>,
-  <span class="va">y.train</span>,
-  alphas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.01</span>, <span class="fl">1e-04</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_grid_clumping</span><span class="op">(</span></span>
+<span>  <span class="va">G</span>,</span>
+<span>  <span class="va">infos.chr</span>,</span>
+<span>  <span class="va">infos.pos</span>,</span>
+<span>  <span class="va">lpS</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  grid.thr.r2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
+<span>  grid.base.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">500</span><span class="op">)</span>,</span>
+<span>  infos.imp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  grid.thr.imp <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">snp_grid_PRS</span><span class="op">(</span></span>
+<span>  <span class="va">G</span>,</span>
+<span>  <span class="va">all_keep</span>,</span>
+<span>  <span class="va">betas</span>,</span>
+<span>  <span class="va">lpS</span>,</span>
+<span>  n_thr_lpS <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  grid.lpS.thr <span class="op">=</span> <span class="fl">0.9999</span> <span class="op">*</span> <span class="fu"><a href="seq_log.html">seq_log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">lpS</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">lpS</span>, na.rm <span class="op">=</span></span>
+<span>    <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">n_thr_lpS</span><span class="op">)</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"float"</span>, <span class="st">"double"</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">snp_grid_stacking</span><span class="op">(</span></span>
+<span>  <span class="va">multi_PRS</span>,</span>
+<span>  <span class="va">y.train</span>,</span>
+<span>  alphas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.01</span>, <span class="fl">1e-04</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -200,7 +200,7 @@ annotations. Default just makes one group with all variants.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>all_keep</dt>

@@ -19,7 +19,7 @@ using its method-of-moments."><!-- mathjax --><script src="https://cdnjs.cloudfl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@ using its method-of-moments."><!-- mathjax --><script src="https://cdnjs.cloudfl
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -101,17 +101,17 @@ using its method-of-moments.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_plinkIBDQC</span><span class="op">(</span>
-  <span class="va">plink.path</span>,
-  <span class="va">bedfile.in</span>,
-  bedfile.out <span class="op">=</span> <span class="cn">NULL</span>,
-  pi.hat <span class="op">=</span> <span class="fl">0.08</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>,
-  pruning.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">0.2</span><span class="op">)</span>,
-  do.blind.QC <span class="op">=</span> <span class="cn">TRUE</span>,
-  extra.options <span class="op">=</span> <span class="st">""</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_plinkIBDQC</span><span class="op">(</span></span>
+<span>  <span class="va">plink.path</span>,</span>
+<span>  <span class="va">bedfile.in</span>,</span>
+<span>  bedfile.out <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pi.hat <span class="op">=</span> <span class="fl">0.08</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  pruning.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
+<span>  do.blind.QC <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  extra.options <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -136,7 +136,7 @@ to be excluded. Default is <code>0.08</code>.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>pruning.args</dt>
@@ -175,7 +175,7 @@ then the path of the input bedfile is returned.</p>
     <p>Chang, Christopher C, Carson C Chow, Laurent CAM Tellier,
 Shashaank Vattikuti, Shaun M Purcell, and James J Lee. 2015.
 <em>Second-generation PLINK: rising to the challenge of larger and richer
-datasets.</em> GigaScience 4 (1): 7. doi: <a href="https://doi.org/10.1186/s13742-015-0047-8" class="external-link">10.1186/s13742-015-0047-8</a>
+datasets.</em> GigaScience 4 (1): 7. <a href="https://doi.org/10.1186/s13742-015-0047-8" class="external-link">doi:10.1186/s13742-015-0047-8</a>
 .</p>
     </div>
     <div id="see-also">
@@ -185,27 +185,27 @@ datasets.</em> GigaScience 4 (1): 7. doi: <a href="https://doi.org/10.1186/s1374
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">plink</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_plink.html">download_plink</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkIBDQC</span><span class="op">(</span><span class="va">plink</span>, <span class="va">bedfile</span>,</span>
-<span class="r-in">                          bedfile.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span>,</span>
-<span class="r-in">                          ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">df_rel</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkIBDQC</span><span class="op">(</span><span class="va">plink</span>, <span class="va">bedfile</span>, do.blind.QC <span class="op">=</span> <span class="cn">FALSE</span>, ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">df_rel</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/qplot.html" class="external-link">qplot</a></span><span class="op">(</span><span class="va">Z0</span>, <span class="va">Z1</span>, data <span class="op">=</span> <span class="va">df_rel</span>, col <span class="op">=</span> <span class="va">RT</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/qplot.html" class="external-link">qplot</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">PI_HAT</span>, data <span class="op">=</span> <span class="va">df_rel</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0.2</span>, color <span class="op">=</span> <span class="st">"blue"</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="snp_plinkRmSamples.html">snp_plinkRmSamples</a></span><span class="op">(</span><span class="va">plink</span>, <span class="va">bedfile</span>,</span>
-<span class="r-in">                   bedfile.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span>,</span>
-<span class="r-in">                   df.or.files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">df_rel</span>, <span class="va">PI_HAT</span> <span class="op">&gt;</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">plink</span> <span class="op">&lt;-</span> <span class="fu"><a href="download_plink.html">download_plink</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkIBDQC</span><span class="op">(</span><span class="va">plink</span>, <span class="va">bedfile</span>,</span></span>
+<span class="r-in"><span>                          bedfile.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                          ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">df_rel</span> <span class="op">&lt;-</span> <span class="fu">snp_plinkIBDQC</span><span class="op">(</span><span class="va">plink</span>, <span class="va">bedfile</span>, do.blind.QC <span class="op">=</span> <span class="cn">FALSE</span>, ncores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">df_rel</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html" class="external-link">qplot</a></span><span class="op">(</span><span class="va">Z0</span>, <span class="va">Z1</span>, data <span class="op">=</span> <span class="va">df_rel</span>, col <span class="op">=</span> <span class="va">RT</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html" class="external-link">qplot</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">PI_HAT</span>, data <span class="op">=</span> <span class="va">df_rel</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0.2</span>, color <span class="op">=</span> <span class="st">"blue"</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="snp_plinkRmSamples.html">snp_plinkRmSamples</a></span><span class="op">(</span><span class="va">plink</span>, <span class="va">bedfile</span>,</span></span>
+<span class="r-in"><span>                   bedfile.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bed"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   df.or.files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">df_rel</span>, <span class="va">PI_HAT</span> <span class="op">&gt;</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

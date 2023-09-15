@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,7 +97,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_fake</span><span class="op">(</span><span class="va">n</span>, <span class="va">m</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_fake</span><span class="op">(</span><span class="va">n</span>, <span class="va">m</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -121,7 +121,7 @@ with missing values.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">(</span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">snp_fake</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">(</span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">snp_fake</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genotypes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A Filebacked Big Matrix of type 'code 256' with 5 rows and 12 columns.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -135,42 +135,42 @@ with missing values.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $map</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    chromosome marker.ID genetic.dist physical.pos allele1 allele2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           1     snp_1            0         1000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1           1     snp_1            0         1000       T       C</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2           1     snp_2            0         2000       C       T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3           1     snp_3            0         3000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           1     snp_4            0         4000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           1     snp_5            0         5000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           1     snp_4            0         4000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           1     snp_5            0         5000       T       C</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6           1     snp_6            0         6000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           1     snp_7            0         7000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           1     snp_8            0         8000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           1     snp_9            0         9000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10          1    snp_10            0        10000       T       C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7           1     snp_7            0         7000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8           1     snp_8            0         8000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9           1     snp_9            0         9000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10          1    snp_10            0        10000       C       T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11          1    snp_11            0        11000       C       T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12          1    snp_12            0        12000       T       C</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "bigSNP"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The genotype Filebackeg Big Matrix is initialized with missing values</span></span>
-<span class="r-in"><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span></span>
-<span class="r-in"><span class="va">G</span><span class="op">[</span><span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The genotype Filebackeg Big Matrix is initialized with missing values</span></span></span>
+<span class="r-in"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span></span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">[</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Modify the genotype `big.matrix`</span></span>
-<span class="r-in"><span class="va">G</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">as.raw</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G</span><span class="op">[</span><span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Modify the genotype `big.matrix`</span></span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">as.raw</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">[</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    0    0    0    0    1    2    0    2   NA     2     0     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    0    2    0   NA    0    0    1    1    1    NA     2     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    1    2    0    2    0    0    1   NA    1     2     1     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    0    0   NA   NA   NA    0    1    2    1    NA     2     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    1   NA   NA   NA    2    0    0    0   NA     1     1     0</span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    1    1    0   NA    1   NA   NA   NA    1    NA     1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    2   NA    0   NA    2    0    2    2   NA     1     2     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   NA    2    2   NA    1   NA   NA    1    1     0     0     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    1    0    2   NA   NA    2    2    1   NA     1    NA     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    0    0    2    1    1    1   NA    2   NA     1     1    NA</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

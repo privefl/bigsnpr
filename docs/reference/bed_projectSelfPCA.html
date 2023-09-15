@@ -18,7 +18,7 @@ to other individuals from the same dataset."><!-- mathjax --><script src="https:
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@ to other individuals from the same dataset."><!-- mathjax --><script src="https:
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -99,13 +99,13 @@ to other individuals from the same dataset.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bed_projectSelfPCA</span><span class="op">(</span>
-  <span class="va">obj.svd</span>,
-  <span class="va">obj.bed</span>,
-  <span class="va">ind.row</span>,
-  ind.col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">obj.svd</span>, <span class="st">"subset"</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bed_projectSelfPCA</span><span class="op">(</span></span>
+<span>  <span class="va">obj.svd</span>,</span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  <span class="va">ind.row</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">obj.svd</span>, <span class="st">"subset"</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -133,7 +133,7 @@ Otherwise (e.g. if <a href="bed_randomSVD.html">bed_randomSVD</a> was used), you
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">

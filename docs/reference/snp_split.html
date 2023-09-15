@@ -18,7 +18,7 @@ on each SNP, independently."><!-- mathjax --><script src="https://cdnjs.cloudfla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@ on each SNP, independently."><!-- mathjax --><script src="https://cdnjs.cloudfla
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -99,7 +99,7 @@ on each SNP, independently.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_split</span><span class="op">(</span><span class="va">infos.chr</span>, <span class="va">FUN</span>, <span class="va">combine</span>, ncores <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_split</span><span class="op">(</span><span class="va">infos.chr</span>, <span class="va">FUN</span>, <span class="va">combine</span>, ncores <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -127,7 +127,7 @@ used to process numeric data. By default, the results are returned in a list.</p
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>...</dt>
@@ -148,9 +148,9 @@ to each part (chromosome) and finally combine the results.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># parallelize over chromosomes made easy</span></span>
-<span class="r-in"><span class="co"># examples of functions from this package</span></span>
-<span class="r-in"><span class="va">snp_pruning</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># parallelize over chromosomes made easy</span></span></span>
+<span class="r-in"><span><span class="co"># examples of functions from this package</span></span></span>
+<span class="r-in"><span><span class="va">snp_pruning</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (G, infos.chr, ind.row = rows_along(G), size = 49, is.size.in.bp = FALSE, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     infos.pos = NULL, thr.r2 = 0.2, exclude = NULL, nploidy = 2, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ncores = 1) </span>
@@ -158,9 +158,9 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     stop2("Pruning is deprecated; please use clumping (on MAF) instead..\n%s", </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         "See why at https://bit.ly/2uKo3MN.")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000000ea0b5c8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000018d82d7f4d8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
-<span class="r-in"><span class="va">snp_clumping</span></span>
+<span class="r-in"><span><span class="va">snp_clumping</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (G, infos.chr, ind.row = rows_along(G), S = NULL, thr.r2 = 0.2, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     size = 100/thr.r2, infos.pos = NULL, is.size.in.bp = NULL, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     exclude = NULL, ncores = 1) </span>
@@ -177,9 +177,9 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 thr.r2, ncores)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         }), use.names = FALSE))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000000c46c950&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000018dfc3166d8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
-<span class="r-in"><span class="va">snp_fastImpute</span></span>
+<span class="r-in"><span><span class="va">snp_fastImpute</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (Gna, infos.chr, alpha = 1e-04, size = 200, p.train = 0.8, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n.cor = nrow(Gna), seed = NA, ncores = 1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
@@ -195,9 +195,9 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     infos.imp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000000e8d8a68&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000018d82a88460&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

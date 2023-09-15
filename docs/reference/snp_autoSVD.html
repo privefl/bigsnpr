@@ -21,7 +21,7 @@ variants removed are contiguous, the regions are reported in attr(*, "lrldr").'>
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -57,7 +57,7 @@ variants removed are contiguous, the regions are reported in attr(*, "lrldr").'>
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -105,42 +105,42 @@ variants removed are contiguous, the regions are reported in <code>attr(*, "lrld
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_autoSVD</span><span class="op">(</span>
-  <span class="va">G</span>,
-  <span class="va">infos.chr</span>,
-  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  fun.scaling <span class="op">=</span> <span class="fu"><a href="snp_scaleBinom.html">snp_scaleBinom</a></span><span class="op">(</span><span class="op">)</span>,
-  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,
-  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,
-  k <span class="op">=</span> <span class="fl">10</span>,
-  roll.size <span class="op">=</span> <span class="fl">50</span>,
-  int.min.size <span class="op">=</span> <span class="fl">20</span>,
-  alpha.tukey <span class="op">=</span> <span class="fl">0.05</span>,
-  min.mac <span class="op">=</span> <span class="fl">10</span>,
-  max.iter <span class="op">=</span> <span class="fl">5</span>,
-  is.size.in.bp <span class="op">=</span> <span class="cn">NULL</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">bed_autoSVD</span><span class="op">(</span>
-  <span class="va">obj.bed</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  fun.scaling <span class="op">=</span> <span class="va">bed_scaleBinom</span>,
-  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,
-  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,
-  k <span class="op">=</span> <span class="fl">10</span>,
-  roll.size <span class="op">=</span> <span class="fl">50</span>,
-  int.min.size <span class="op">=</span> <span class="fl">20</span>,
-  alpha.tukey <span class="op">=</span> <span class="fl">0.05</span>,
-  min.mac <span class="op">=</span> <span class="fl">10</span>,
-  max.iter <span class="op">=</span> <span class="fl">5</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_autoSVD</span><span class="op">(</span></span>
+<span>  <span class="va">G</span>,</span>
+<span>  <span class="va">infos.chr</span>,</span>
+<span>  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  fun.scaling <span class="op">=</span> <span class="fu"><a href="snp_scaleBinom.html">snp_scaleBinom</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  roll.size <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  int.min.size <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  alpha.tukey <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  min.mac <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  max.iter <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  is.size.in.bp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">bed_autoSVD</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  fun.scaling <span class="op">=</span> <span class="va">bed_scaleBinom</span>,</span>
+<span>  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  roll.size <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  int.min.size <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  alpha.tukey <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  min.mac <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  max.iter <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -229,7 +229,7 @@ Default is <code>5</code>.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>verbose</dt>
@@ -253,7 +253,7 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></dd>
 <li><p><code>center</code>, the centering vector,</p></li>
 <li><p><code>scale</code>, the scaling vector.</p></li>
 </ul><p>Note that to obtain the Principal Components, you must use
-<a href="https://rdrr.io/pkg/bigstatsr/man/predict.big_SVD.html" class="external-link">predict</a> on the result. See examples.</p>
+<a href="https://privefl.github.io/bigstatsr/reference/predict.big_SVD.html" class="external-link">predict</a> on the result. See examples.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -264,12 +264,12 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ex</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">ex</span><span class="op">$</span><span class="va">genotypes</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">obj.svd</span> <span class="op">&lt;-</span> <span class="fu">snp_autoSVD</span><span class="op">(</span><span class="va">G</span>,</span>
-<span class="r-in">                       infos.chr <span class="op">=</span> <span class="va">ex</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span>,</span>
-<span class="r-in">                       infos.pos <span class="op">=</span> <span class="va">ex</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.position</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ex</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">ex</span><span class="op">$</span><span class="va">genotypes</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">obj.svd</span> <span class="op">&lt;-</span> <span class="fu">snp_autoSVD</span><span class="op">(</span><span class="va">G</span>,</span></span>
+<span class="r-in"><span>                       infos.chr <span class="op">=</span> <span class="va">ex</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span>,</span></span>
+<span class="r-in"><span>                       infos.pos <span class="op">=</span> <span class="va">ex</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.position</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Phase of clumping (on MAF) at r^2 &gt; 0.2.. keep 4270 SNPs.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Discarding 0 variant with MAC &lt; 10.</span>
@@ -279,8 +279,8 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0 outlier variant detected..</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converged!</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">obj.svd</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">obj.svd</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ d     : num [1:10] 235.4 148 105.5 96.4 94.9 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ u     : num [1:517, 1:10] 0.0801 0.0798 0.0646 0.0781 0.0818 ...</span>
@@ -295,7 +295,7 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Chr  : int(0) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Start: int(0) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Stop : int(0) </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

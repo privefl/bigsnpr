@@ -28,7 +28,7 @@ human genome.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -64,7 +64,7 @@ human genome.
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -116,43 +116,43 @@ human genome.</p></li>
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bed_clumping</span><span class="op">(</span>
-  <span class="va">obj.bed</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  S <span class="op">=</span> <span class="cn">NULL</span>,
-  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,
-  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,
-  exclude <span class="op">=</span> <span class="cn">NULL</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="fu">snp_clumping</span><span class="op">(</span>
-  <span class="va">G</span>,
-  <span class="va">infos.chr</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  S <span class="op">=</span> <span class="cn">NULL</span>,
-  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,
-  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,
-  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,
-  is.size.in.bp <span class="op">=</span> <span class="cn">NULL</span>,
-  exclude <span class="op">=</span> <span class="cn">NULL</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="fu">snp_pruning</span><span class="op">(</span>
-  <span class="va">G</span>,
-  <span class="va">infos.chr</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,
-  size <span class="op">=</span> <span class="fl">49</span>,
-  is.size.in.bp <span class="op">=</span> <span class="cn">FALSE</span>,
-  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,
-  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,
-  exclude <span class="op">=</span> <span class="cn">NULL</span>,
-  nploidy <span class="op">=</span> <span class="fl">2</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span>
-
-<span class="fu">snp_indLRLDR</span><span class="op">(</span><span class="va">infos.chr</span>, <span class="va">infos.pos</span>, LD.regions <span class="op">=</span> <span class="va">LD.wiki34</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bed_clumping</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  S <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">snp_clumping</span><span class="op">(</span></span>
+<span>  <span class="va">G</span>,</span>
+<span>  <span class="va">infos.chr</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  S <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">100</span><span class="op">/</span><span class="va">thr.r2</span>,</span>
+<span>  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  is.size.in.bp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">snp_pruning</span><span class="op">(</span></span>
+<span>  <span class="va">G</span>,</span>
+<span>  <span class="va">infos.chr</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">49</span>,</span>
+<span>  is.size.in.bp <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  infos.pos <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  thr.r2 <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nploidy <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">snp_indLRLDR</span><span class="op">(</span><span class="va">infos.chr</span>, <span class="va">infos.pos</span>, LD.regions <span class="op">=</span> <span class="va">LD.wiki34</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -196,7 +196,7 @@ can be for thresholding with respect to p-values associated with <code>S</code>.
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>G</dt>
@@ -243,23 +243,23 @@ parameter of <code>snp_clumping()</code>.</p></li>
     <h2>References</h2>
     <p>Price AL, Weale ME, Patterson N, et al.
 Long-Range LD Can Confound Genome Scans in Admixed Populations.
-Am J Hum Genet. 2008;83(1):132-135. doi: <a href="https://doi.org/10.1016/j.ajhg.2008.06.005" class="external-link">10.1016/j.ajhg.2008.06.005</a></p>
+Am J Hum Genet. 2008;83(1):132-135. <a href="https://doi.org/10.1016/j.ajhg.2008.06.005" class="external-link">doi:10.1016/j.ajhg.2008.06.005</a></p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># clumping (prioritizing higher MAF)</span></span>
-<span class="r-in"><span class="va">ind.keep</span> <span class="op">&lt;-</span> <span class="fu">snp_clumping</span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span>,</span>
-<span class="r-in">                         infos.pos <span class="op">=</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.pos</span>,</span>
-<span class="r-in">                         thr.r2 <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># keep most of them -&gt; not much LD in this simulated dataset</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.keep</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># clumping (prioritizing higher MAF)</span></span></span>
+<span class="r-in"><span><span class="va">ind.keep</span> <span class="op">&lt;-</span> <span class="fu">snp_clumping</span><span class="op">(</span><span class="va">G</span>, infos.chr <span class="op">=</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">chromosome</span>,</span></span>
+<span class="r-in"><span>                         infos.pos <span class="op">=</span> <span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">physical.pos</span>,</span></span>
+<span class="r-in"><span>                         thr.r2 <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># keep most of them -&gt; not much LD in this simulated dataset</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ind.keep</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7919419</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

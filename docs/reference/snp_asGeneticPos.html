@@ -19,7 +19,7 @@ to interpolate physical positions (in bp) to genetic positions (in cM)."><!-- ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@ to interpolate physical positions (in bp) to genetic positions (in cM)."><!-- ma
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -101,14 +101,14 @@ to interpolate physical positions (in bp) to genetic positions (in cM).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_asGeneticPos</span><span class="op">(</span>
-  <span class="va">infos.chr</span>,
-  <span class="va">infos.pos</span>,
-  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>,
-  rsid <span class="op">=</span> <span class="cn">NULL</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OMNI"</span>, <span class="st">"hapmap"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_asGeneticPos</span><span class="op">(</span></span>
+<span>  <span class="va">infos.chr</span>,</span>
+<span>  <span class="va">infos.pos</span>,</span>
+<span>  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OMNI"</span>, <span class="st">"hapmap"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -127,12 +127,12 @@ Typically <code>&lt;bigSNP&gt;$map$physical.pos</code>.</p></dd>
 <dt>dir</dt>
 <dd><p>Directory where to download and decompress files.
 Default is <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code>. Directly use <em>uncompressed</em> files there if already
-present. You can use <code><a href="https://rdrr.io/pkg/R.utils/man/compressFile.html" class="external-link">R.utils::gunzip()</a></code> to uncompress local files.</p></dd>
+present. You can use <code><a href="https://henrikbengtsson.github.io/R.utils/reference/compressFile.html" class="external-link">R.utils::gunzip()</a></code> to uncompress local files.</p></dd>
 
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>rsid</dt>

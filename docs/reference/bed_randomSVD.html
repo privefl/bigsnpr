@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,16 +97,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bed_randomSVD</span><span class="op">(</span>
-  <span class="va">obj.bed</span>,
-  fun.scaling <span class="op">=</span> <span class="va">bed_scaleBinom</span>,
-  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,
-  k <span class="op">=</span> <span class="fl">10</span>,
-  tol <span class="op">=</span> <span class="fl">1e-04</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bed_randomSVD</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed</span>,</span>
+<span>  fun.scaling <span class="op">=</span> <span class="va">bed_scaleBinom</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  tol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -121,7 +121,7 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></dd>
 and that returns a data.frame with <code>$center</code> and <code>$scale</code> for the columns
 corresponding to <code>ind.col</code>, to scale each of their elements such as followed:
 $$\frac{X_{i,j} - center_j}{scale_j}.$$ Default doesn't use any scaling.
-You can also provide your own <code>center</code> and <code>scale</code> by using <code><a href="https://rdrr.io/pkg/bigstatsr/man/as_scaling_fun.html" class="external-link">as_scaling_fun()</a></code>.</p></dd>
+You can also provide your own <code>center</code> and <code>scale</code> by using <code><a href="https://privefl.github.io/bigstatsr/reference/as_scaling_fun.html" class="external-link">as_scaling_fun()</a></code>.</p></dd>
 
 
 <dt>ind.row</dt>
@@ -149,7 +149,7 @@ If not specified, all columns are used.<br><strong>Don't use negative indices.</
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -164,15 +164,15 @@ You may use nb_cores.</p></dd>
 <li><p><code>center</code>, the centering vector,</p></li>
 <li><p><code>scale</code>, the scaling vector.</p></li>
 </ul><p>Note that to obtain the Principal Components, you must use
-<a href="https://rdrr.io/pkg/bigstatsr/man/predict.big_SVD.html" class="external-link">predict</a> on the result. See examples.</p>
+<a href="https://privefl.github.io/bigstatsr/reference/predict.big_SVD.html" class="external-link">predict</a> on the result. See examples.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">bed_randomSVD</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj.bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="bed-class.html">bed</a></span><span class="op">(</span><span class="va">bedfile</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">bed_randomSVD</span><span class="op">(</span><span class="va">obj.bed</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ d     : num [1:10] 245.4 153.1 108.9 99.9 97.9 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ u     : num [1:517, 1:10] 0.0788 0.0804 0.0644 0.0777 0.0838 ...</span>
@@ -182,7 +182,7 @@ You may use nb_cores.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ center: num [1:4542] 0.685 0.412 0.474 0.369 0.913 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ scale : num [1:4542] 0.671 0.572 0.601 0.549 0.704 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr "big_SVD"</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

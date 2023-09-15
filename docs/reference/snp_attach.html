@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,7 +97,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_attach</span><span class="op">(</span><span class="va">rdsfile</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_attach</span><span class="op">(</span><span class="va">rdsfile</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -120,16 +120,16 @@ the two (".bk" and ".rds") backing files to another directory.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">(</span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:/Users/au639593/Documents/R/win-library/3.6/bigsnpr/extdata/example.bed"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Reading the bedfile and storing the data in temporary directory</span></span>
-<span class="r-in"><span class="va">rds</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bedfile</span>, backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Loading the data from backing files</span></span>
-<span class="r-in"><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">snp_attach</span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">(</span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:/Users/au639593/AppData/Local/Temp/RtmpYXOijp/temp_libpath24e05c2562a6/bigsnpr/extdata/example.bed"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Reading the bedfile and storing the data in temporary directory</span></span></span>
+<span class="r-in"><span><span class="va">rds</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bedfile</span>, backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Loading the data from backing files</span></span></span>
+<span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">snp_attach</span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ genotypes:Reference class 'FBM.code256' [package "bigstatsr"] with 16 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ extptr      :&lt;externalptr&gt; </span>
@@ -138,12 +138,12 @@ the two (".bk" and ".rds") backing files to another directory.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ncol        : int 4542</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type        : Named int 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr "unsigned char"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4qNGV2\\file6645af24744.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file35284c136c5d.bk"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_read_only: logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address     :&lt;externalptr&gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address_rw  :&lt;externalptr&gt; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4qNGV2\\file6645af24744.bk"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\Rtmp4qNGV2\\file6645af24744.rds"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file35284c136c5d.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file35284c136c5d.rds"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_saved    : logi TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_chr    : chr "unsigned char"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_size   : int 1</span>
@@ -168,9 +168,9 @@ the two (".bk" and ".rds") backing files to another directory.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ allele1     : chr [1:4542] "A" "T" "T" "T" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ allele2     : chr [1:4542] "T" "A" "A" "A" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr "bigSNP"</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  517 4542</span>
-<span class="r-in"><span class="va">G</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    0    0    2    0    1    1    0    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    1    0    1    0    0    1    0    2</span>

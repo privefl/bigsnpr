@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,15 +97,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_getSampleInfos</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">df.or.files</span>,
-  col.family.ID <span class="op">=</span> <span class="fl">1</span>,
-  col.sample.ID <span class="op">=</span> <span class="fl">2</span>,
-  col.infos <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,
-  pair.sep <span class="op">=</span> <span class="st">"-_-"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_getSampleInfos</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">df.or.files</span>,</span>
+<span>  col.family.ID <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  col.sample.ID <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  col.infos <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  pair.sep <span class="op">=</span> <span class="st">"-_-"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -122,13 +122,13 @@ You should have one column for family IDs and one for sample IDs.</p></li>
 
 
 <dt>col.family.ID</dt>
-<dd><p>Index of the column containing the
-family IDs to match with those of the study. Default is the second one.</p></dd>
+<dd><p>Index of the column containing the family IDs to match
+with those of the study. Default is the first one.</p></dd>
 
 
 <dt>col.sample.ID</dt>
-<dd><p>Index of the column containing the
-sample IDs to match with those of the study. Default is the first one.</p></dd>
+<dd><p>Index of the column containing the sample IDs to match
+with those of the study. Default is the second one.</p></dd>
 
 
 <dt>col.infos</dt>
@@ -137,8 +137,8 @@ Default is all but the first and the second columns.</p></dd>
 
 
 <dt>pair.sep</dt>
-<dd><p>Separator used for concatenation family and sample IDs
-in order to match easier. Default is <code>"-_-"</code>.</p></dd>
+<dd><p>Separator used for concatenation of family and sample IDs to
+make unique IDs for matching between the two datasets. Default is <code>"-_-"</code>.</p></dd>
 
 
 <dt>...</dt>
@@ -159,15 +159,17 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Just after reading</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rle.html" class="external-link">rle</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">fam</span><span class="op">$</span><span class="va">family.ID</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Run Length Encoding</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   lengths: int [1:19] 34 28 15 35 31 25 30 35 35 20 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   values : chr [1:19] "POP1" "POP2" "POP3" "POP4" "POP5" "POP6" "POP7" "POP8" "POP9" ...</span>
-<span class="r-in"><span class="co"># Get populations clusters from external files</span></span>
-<span class="r-in"><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cluster"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span><span class="va">files</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">fam</span><span class="op">$</span><span class="va">family.ID</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  POP1 POP10 POP11 POP12 POP13 POP14 POP15 POP16 POP17 POP18 POP19  POP2  POP3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    34    20    22    25    31    25    32    33    26    16    19    28    15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  POP4  POP5  POP6  POP7  POP8  POP9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    35    31    25    30    35    35 </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get populations clusters from external files</span></span></span>
+<span class="r-in"><span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cluster"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span><span class="va">files</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     POP1   IND0 POP-1-5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   POP1   IND1 POP-1-5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   POP1   IND2 POP-1-5</span>
@@ -311,8 +313,7 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 140 POP5 IND140 POP-1-5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 141 POP5 IND141 POP-1-5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 142 POP5 IND142 POP-1-5</span>
-<span class="r-in"><span class="co"># need header option</span></span>
-<span class="r-in"><span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span><span class="va">files</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, header <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span><span class="va">files</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, header <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># need header option here</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       V1     V2      V3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   POP1   IND0 POP-1-5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   POP1   IND1 POP-1-5</span>
@@ -457,12 +458,13 @@ Particularly, option <code>header = FALSE</code> is sometimes needed.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 141 POP5 IND140 POP-1-5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 142 POP5 IND141 POP-1-5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 143 POP5 IND142 POP-1-5</span>
-<span class="r-in"><span class="va">infos</span> <span class="op">&lt;-</span> <span class="fu">snp_getSampleInfos</span><span class="op">(</span><span class="va">test</span>, <span class="va">files</span>, header <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rle.html" class="external-link">rle</a></span><span class="op">(</span><span class="va">infos</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Run Length Encoding</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   lengths: int [1:3] 143 167 207</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   values : chr [1:3] "POP-1-5" "POP-6-11" "POP-12-19"</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">infos</span> <span class="op">&lt;-</span> <span class="fu">snp_getSampleInfos</span><span class="op">(</span><span class="va">test</span>, <span class="va">files</span>, header <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">infos</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   POP-1-5 POP-12-19  POP-6-11 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       143       207       167 </span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

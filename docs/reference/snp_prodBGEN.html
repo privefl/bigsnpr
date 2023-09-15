@@ -20,7 +20,7 @@ places anymore."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ places anymore."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -103,16 +103,16 @@ places anymore.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_prodBGEN</span><span class="op">(</span>
-  <span class="va">bgenfiles</span>,
-  <span class="va">beta</span>,
-  <span class="va">list_snp_id</span>,
-  ind_row <span class="op">=</span> <span class="cn">NULL</span>,
-  bgi_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">bgenfiles</span><span class="op">)</span>,
-  read_as <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dosage"</span>, <span class="st">"random"</span><span class="op">)</span>,
-  block_size <span class="op">=</span> <span class="fl">1000</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_prodBGEN</span><span class="op">(</span></span>
+<span>  <span class="va">bgenfiles</span>,</span>
+<span>  <span class="va">beta</span>,</span>
+<span>  <span class="va">list_snp_id</span>,</span>
+<span>  ind_row <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bgi_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">bgenfiles</span><span class="op">)</span>,</span>
+<span>  read_as <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dosage"</span>, <span class="st">"random"</span><span class="op">)</span>,</span>
+<span>  block_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -136,7 +136,9 @@ If you have one BGEN file only, just wrap your vector of IDs with <code><a href=
 
 <dt>ind_row</dt>
 <dd><p>An optional vector of the row indices (individuals) that
-are used. If not specified, all rows are used.<br><strong>Don't use negative indices.</strong></p></dd>
+are used. If not specified, all rows are used. <strong>Don't use negative indices.</strong>
+You can access the sample IDs corresponding to the genotypes from the <em>.sample</em>
+file, and use e.g. <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match()</a></code> to get indices corresponding to the ones you want.</p></dd>
 
 
 <dt>bgi_dir</dt>

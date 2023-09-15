@@ -20,7 +20,7 @@ save these modifications in the corresponding ".rds" backing file.'><!-- mathjax
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ save these modifications in the corresponding ".rds" backing file.'><!-- mathjax
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -103,7 +103,7 @@ save these modifications in the corresponding ".rds" backing file.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_save</span><span class="op">(</span><span class="va">x</span>, version <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_save</span><span class="op">(</span><span class="va">x</span>, version <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -127,14 +127,14 @@ save these modifications in the corresponding ".rds" backing file.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Reading example</span></span>
-<span class="r-in"><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># I can add whatever I want to an S3 class</span></span>
-<span class="r-in"><span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">`p-values`</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Reading example</span></span></span>
+<span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># I can add whatever I want to an S3 class</span></span></span>
+<span class="r-in"><span><span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">$</span><span class="va">`p-values`</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">map</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	4542 obs. of  7 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ chromosome  : int  1 1 1 1 1 1 1 1 1 1 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ marker.ID   : chr  "SNP0" "SNP1" "SNP2" "SNP3" ...</span>
@@ -143,11 +143,11 @@ save these modifications in the corresponding ".rds" backing file.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ allele1     : chr  "A" "T" "T" "T" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ allele2     : chr  "T" "A" "A" "A" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ p-values    : num  0.266 0.372 0.573 0.908 0.202 ...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Reading again</span></span>
-<span class="r-in"><span class="va">rds</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span><span class="op">$</span><span class="va">rds</span></span>
-<span class="r-in"><span class="va">test2</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test2</span><span class="op">$</span><span class="va">map</span><span class="op">)</span> <span class="co"># new slot wasn't saved</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Reading again</span></span></span>
+<span class="r-in"><span><span class="va">rds</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">genotypes</span><span class="op">$</span><span class="va">rds</span></span></span>
+<span class="r-in"><span><span class="va">test2</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test2</span><span class="op">$</span><span class="va">map</span><span class="op">)</span> <span class="co"># new slot wasn't saved</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	4542 obs. of  6 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ chromosome  : int  1 1 1 1 1 1 1 1 1 1 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ marker.ID   : chr  "SNP0" "SNP1" "SNP2" "SNP3" ...</span>
@@ -155,13 +155,13 @@ save these modifications in the corresponding ".rds" backing file.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ physical.pos: int  112 1098 2089 3107 4091 5091 6107 7103 8090 9074 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ allele1     : chr  "A" "T" "T" "T" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ allele2     : chr  "T" "A" "A" "A" ...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Save it</span></span>
-<span class="r-in"><span class="fu">snp_save</span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Reading again</span></span>
-<span class="r-in"><span class="va">test3</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test3</span><span class="op">$</span><span class="va">map</span><span class="op">)</span> <span class="co"># it is saved now</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Save it</span></span></span>
+<span class="r-in"><span><span class="fu">snp_save</span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Reading again</span></span></span>
+<span class="r-in"><span><span class="va">test3</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test3</span><span class="op">$</span><span class="va">map</span><span class="op">)</span> <span class="co"># it is saved now</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	4542 obs. of  7 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ chromosome  : int  1 1 1 1 1 1 1 1 1 1 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ marker.ID   : chr  "SNP0" "SNP1" "SNP2" "SNP3" ...</span>
@@ -170,15 +170,15 @@ save these modifications in the corresponding ".rds" backing file.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ allele1     : chr  "A" "T" "T" "T" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ allele2     : chr  "T" "A" "A" "A" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ p-values    : num  0.266 0.372 0.573 0.908 0.202 ...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The complicated code of this function</span></span>
-<span class="r-in"><span class="va">snp_save</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The complicated code of this function</span></span></span>
+<span class="r-in"><span><span class="va">snp_save</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (x, version = NULL) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     saveRDS(x, file = x$genotypes$rds, version = version)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     invisible(x)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000000a1e9400&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000018d82afdb80&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
 </code></pre></div>
     </div>

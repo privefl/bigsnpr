@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,33 +97,37 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_ldpred2_inf</span><span class="op">(</span><span class="va">corr</span>, <span class="va">df_beta</span>, <span class="va">h2</span><span class="op">)</span>
-
-<span class="fu">snp_ldpred2_grid</span><span class="op">(</span>
-  <span class="va">corr</span>,
-  <span class="va">df_beta</span>,
-  <span class="va">grid_param</span>,
-  burn_in <span class="op">=</span> <span class="fl">50</span>,
-  num_iter <span class="op">=</span> <span class="fl">100</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>,
-  return_sampling_betas <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="fu">snp_ldpred2_auto</span><span class="op">(</span>
-  <span class="va">corr</span>,
-  <span class="va">df_beta</span>,
-  <span class="va">h2_init</span>,
-  vec_p_init <span class="op">=</span> <span class="fl">0.1</span>,
-  burn_in <span class="op">=</span> <span class="fl">500</span>,
-  num_iter <span class="op">=</span> <span class="fl">200</span>,
-  sparse <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>,
-  report_step <span class="op">=</span> <span class="va">num_iter</span> <span class="op">+</span> <span class="fl">1L</span>,
-  allow_jump_sign <span class="op">=</span> <span class="cn">TRUE</span>,
-  shrink_corr <span class="op">=</span> <span class="fl">1</span>,
-  alpha_bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>, <span class="fl">0.5</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_ldpred2_inf</span><span class="op">(</span><span class="va">corr</span>, <span class="va">df_beta</span>, <span class="va">h2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">snp_ldpred2_grid</span><span class="op">(</span></span>
+<span>  <span class="va">corr</span>,</span>
+<span>  <span class="va">df_beta</span>,</span>
+<span>  <span class="va">grid_param</span>,</span>
+<span>  burn_in <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  num_iter <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  return_sampling_betas <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ind.corr <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">corr</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">snp_ldpred2_auto</span><span class="op">(</span></span>
+<span>  <span class="va">corr</span>,</span>
+<span>  <span class="va">df_beta</span>,</span>
+<span>  <span class="va">h2_init</span>,</span>
+<span>  vec_p_init <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  burn_in <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  num_iter <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  sparse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  report_step <span class="op">=</span> <span class="va">num_iter</span> <span class="op">+</span> <span class="fl">1L</span>,</span>
+<span>  allow_jump_sign <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  shrink_corr <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  use_MLE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  p_bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-05</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  alpha_bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>  ind.corr <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -136,8 +140,15 @@ If <code>corr</code> is a dsCMatrix or a dgCMatrix, you can use <code>as_SFBM(co
 <dt>df_beta</dt>
 <dd><p>A data frame with 3 columns:</p><ul><li><p><code>$beta</code>: effect size estimates</p></li>
 <li><p><code>$beta_se</code>: standard errors of effect size estimates</p></li>
-<li><p><code>$n_eff</code>: sample size when estimating <code>beta</code>
-(in the case of binary traits, this is <code>4 / (1 / n_control + 1 / n_case)</code>)</p></li>
+<li><p><code>$n_eff</code>: either tha GWAS sample size(s) when estimating <code>beta</code> for a
+continuous trait, or in the case of a binary trait, this is
+<code>4 / (1 / n_control + 1 / n_case)</code>; in the case of a meta-analysis, you
+should sum the effective sample sizes of each study instead of using the
+total numbers of cases and controls, see <a href="https://doi.org/10.1016/j.biopsych.2022.05.029" class="external-link">doi:10.1016/j.biopsych.2022.05.029</a>
+;
+when using a mixed model, the effective sample size needs to be adjusted
+as well, see <a href="https://doi.org/10.1016/j.xhgg.2022.100136" class="external-link">doi:10.1016/j.xhgg.2022.100136</a>
+.</p></li>
 </ul></dd>
 
 
@@ -163,16 +174,21 @@ They can be run in parallel by changing <code>ncores</code>.</p></li>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 
 <dt>return_sampling_betas</dt>
 <dd><p>Whether to return all sampling betas (after
 burn-in)? This is useful for assessing the uncertainty of the PRS at the
-individual level (see doi: <a href="https://doi.org/10.1101/2020.11.30.403188" class="external-link">10.1101/2020.11.30.403188</a>
+individual level (see <a href="https://doi.org/10.1101/2020.11.30.403188" class="external-link">doi:10.1101/2020.11.30.403188</a>
 ).
 Default is <code>FALSE</code> (only returns the averaged final vectors of betas).
 If <code>TRUE</code>, only one set of parameters is allowed.</p></dd>
+
+
+<dt>ind.corr</dt>
+<dd><p>Indices to "subset" <code>corr</code>, as if this was run with
+<code>corr[ind.corr, ind.corr]</code> instead. No subsetting by default.</p></dd>
 
 
 <dt>h2_init</dt>
@@ -216,6 +232,19 @@ elements of the correlation matrix. Default is <code>1</code> (unchanged).
 You can use e.g. <code>0.95</code> to add a bit of regularization.</p></dd>
 
 
+<dt>use_MLE</dt>
+<dd><p>Whether to use maximum likelihood estimation (MLE) to estimate
+alpha and the variance component (since v1.11.4), or assume that alpha is
+-1 and estimate the variance of (scaled) effects as h2/(m*p), as it was
+done in earlier versions of LDpred2-auto (e.g. in v1.10.8). Default is <code>TRUE</code>,
+which should provide a better model fit, but might also be less robust.</p></dd>
+
+
+<dt>p_bounds</dt>
+<dd><p>Boundaries for the estimates of p (the polygenicity).
+Default is <code>c(1e-5, 1)</code>. You can use the same value twice to fix p.</p></dd>
+
+
 <dt>alpha_bounds</dt>
 <dd><p>Boundaries for the estimates of \(\alpha\).
 Default is <code>c(-1.5, 0.5)</code>. You can use the same value twice to fix \(\alpha\).</p></dd>
@@ -234,22 +263,27 @@ divergence is detected. If using <code>return_sampling_betas</code>, each column
 corresponds to one iteration instead (after burn-in).</p>
 
 
-<p><code>snp_ldpred2_auto</code>: A list (over <code>vec_p_init</code>) of lists with</p><ul><li><p><code>$beta_est</code>: vector of effect sizes (on the allele scale)</p></li>
+<p><code>snp_ldpred2_auto</code>: A list (over <code>vec_p_init</code>) of lists with</p><ul><li><p><code>$beta_est</code>: vector of effect sizes (on the allele scale); note that
+missing values are returned when strong divergence is detected</p></li>
 <li><p><code>$beta_est_sparse</code> (only when <code>sparse = TRUE</code>): sparse vector of effect sizes</p></li>
+<li><p><code>$postp_est</code>: vector of posterior probabilities of being causal</p></li>
 <li><p><code>$corr_est</code>, the "imputed" correlations between variants and phenotypes,
 which can be used for post-QCing variants by comparing those to
 <code>with(df_beta, beta / sqrt(n_eff * beta_se^2 + beta^2))</code></p></li>
-<li><p><code>$sample_beta</code>: Sparse matrix of sampling betas (see parameter <code>report_step</code>),
+<li><p><code>$sample_beta</code>: sparse matrix of sampling betas (see parameter <code>report_step</code>),
 <em>not</em> on the allele scale, for which you need to multiply by
 <code>with(df_beta, sqrt(n_eff * beta_se^2 + beta^2))</code></p></li>
-<li><p><code>$postp_est</code>: vector of posterior probabilities of being causal</p></li>
-<li><p><code>$p_est</code>: estimate of p, the proportion of causal variants</p></li>
-<li><p><code>$h2_est</code>: estimate of the (SNP) heritability (also see <a href="coef_to_liab.html">coef_to_liab</a>)</p></li>
 <li><p><code>$path_p_est</code>: full path of p estimates (including burn-in);
 useful to check convergence of the iterative algorithm</p></li>
 <li><p><code>$path_h2_est</code>: full path of h2 estimates (including burn-in);
 useful to check convergence of the iterative algorithm</p></li>
-<li><p><code>$h2_init</code> and <code>$p_init</code>, input parameters for convenience</p></li>
+<li><p><code>$path_alpha_est</code>: full path of alpha estimates (including burn-in);
+useful to check convergence of the iterative algorithm</p></li>
+<li><p><code>$h2_est</code>: estimate of the (SNP) heritability (also see <a href="coef_to_liab.html">coef_to_liab</a>)</p></li>
+<li><p><code>$p_est</code>: estimate of p, the proportion of causal variants</p></li>
+<li><p><code>$alpha_est</code>: estimate of alpha, the parameter controlling the
+relationship between allele frequencies and expected effect sizes</p></li>
+<li><p><code>$h2_init</code> and <code>$p_init</code>: input parameters, for convenience</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,17 +97,18 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_lassosum2</span><span class="op">(</span>
-  <span class="va">corr</span>,
-  <span class="va">df_beta</span>,
-  delta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span>,
-  nlambda <span class="op">=</span> <span class="fl">30</span>,
-  lambda.min.ratio <span class="op">=</span> <span class="fl">0.01</span>,
-  dfmax <span class="op">=</span> <span class="fl">2e+05</span>,
-  maxiter <span class="op">=</span> <span class="fl">1000</span>,
-  tol <span class="op">=</span> <span class="fl">1e-05</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_lassosum2</span><span class="op">(</span></span>
+<span>  <span class="va">corr</span>,</span>
+<span>  <span class="va">df_beta</span>,</span>
+<span>  delta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  nlambda <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  lambda.min.ratio <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span>  dfmax <span class="op">=</span> <span class="fl">2e+05</span>,</span>
+<span>  maxiter <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  tol <span class="op">=</span> <span class="fl">1e-05</span>,</span>
+<span>  ind.corr <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -120,8 +121,15 @@ If <code>corr</code> is a dsCMatrix or a dgCMatrix, you can use <code>as_SFBM(co
 <dt>df_beta</dt>
 <dd><p>A data frame with 3 columns:</p><ul><li><p><code>$beta</code>: effect size estimates</p></li>
 <li><p><code>$beta_se</code>: standard errors of effect size estimates</p></li>
-<li><p><code>$n_eff</code>: sample size when estimating <code>beta</code>
-(in the case of binary traits, this is <code>4 / (1 / n_control + 1 / n_case)</code>)</p></li>
+<li><p><code>$n_eff</code>: either tha GWAS sample size(s) when estimating <code>beta</code> for a
+continuous trait, or in the case of a binary trait, this is
+<code>4 / (1 / n_control + 1 / n_case)</code>; in the case of a meta-analysis, you
+should sum the effective sample sizes of each study instead of using the
+total numbers of cases and controls, see <a href="https://doi.org/10.1016/j.biopsych.2022.05.029" class="external-link">doi:10.1016/j.biopsych.2022.05.029</a>
+;
+when using a mixed model, the effective sample size needs to be adjusted
+as well, see <a href="https://doi.org/10.1016/j.xhgg.2022.100136" class="external-link">doi:10.1016/j.xhgg.2022.100136</a>
+.</p></li>
 </ul></dd>
 
 
@@ -155,9 +163,14 @@ Default is <code>1000</code>.</p></dd>
 Default is <code>1e-5</code>.</p></dd>
 
 
+<dt>ind.corr</dt>
+<dd><p>Indices to "subset" <code>corr</code>, as if this was run with
+<code>corr[ind.corr, ind.corr]</code> instead. No subsetting by default.</p></dd>
+
+
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">

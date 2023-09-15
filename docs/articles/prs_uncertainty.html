@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -71,7 +71,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -112,8 +112,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Estimating uncertainty in polygenic scores using LDpred2</h1>
-                        <h4 data-toc-skip class="author">Yi Ding and colleagues</h4>
+      <h1 data-toc-skip>Estimating uncertainty in polygenic scores using
+LDpred2</h1>
+                        <h4 data-toc-skip class="author">Yi Ding and
+colleagues</h4>
             
             <h4 data-toc-skip class="date">March 26, 2021</h4>
       
@@ -125,83 +127,120 @@
     
     
 <hr>
-<p>Here we show how to estimate the full posterior distribution of genetic value using LDpred2 as described in <a href="https://doi.org/10.1101/2020.11.30.403188" class="external-link">Large uncertainty in individual PRS estimation impacts PRS-based risk stratification</a>.</p>
-<p>This tutorial assumes that you have already tuned the hyperparameters using grid search. Please refer to <a href="https://privefl.github.io/bigsnpr/articles/LDpred2.html" class="external-link">Computing polygenic scores using LDpred2</a> for tutorials on data preprocessing and LDpred2-grid.</p>
+<p>Here we show how to estimate the full posterior distribution of
+genetic value using LDpred2 as described in <a href="https://doi.org/10.1101/2020.11.30.403188" class="external-link">Large uncertainty in
+individual PRS estimation impacts PRS-based risk stratification</a>.</p>
+<p>This tutorial assumes that you have already tuned the hyperparameters
+using grid search. Please refer to <a href="https://privefl.github.io/bigsnpr/articles/LDpred2.html" class="external-link">Computing
+polygenic scores using LDpred2</a> for tutorials on data preprocessing
+and LDpred2-grid.</p>
 <div class="section level2">
 <h2 id="approximating-the-posterior-distribution-of-genetic-value">Approximating the posterior distribution of genetic value<a class="anchor" aria-label="anchor" href="#approximating-the-posterior-distribution-of-genetic-value"></a>
 </h2>
-<p>Given the set of tuned hyperparameters (see above), we want to approximate the full posterior distribution of an individual’s genetic value, <span class="math inline">\(\small{GV_i = \mathrm{\bf{x}}_i^T \boldsymbol\beta}\)</span>. From the posterior, one can obtain the <strong>posterior mean</strong>, <span class="math inline">\(\small{\widehat{PRS}_i \equiv \mathbb{E}(GV_i|\mathrm{Data})}\)</span>, and various metrics of uncertainty such as the <strong>posterior variance</strong>, <span class="math inline">\(\small{var(GV_i|\mathrm{Data})}\)</span>, where <span class="math inline">\(\small{GV_i}\)</span> is the genetic value of individual <span class="math inline">\(i\)</span> and <span class="math inline">\(\mathrm{\small{Data}}\)</span> refers to a given GWAS, and <strong><span class="math inline">\(\rho\)</span>-credible interval</strong>, the interval within which the individual’s genetic value falls with probability <span class="math inline">\(\rho\)</span>.</p>
-<p>An individual’s genetic value is their genotype vector multipled by the causal effect vector. We therefore need to obtain MCMC samples from the posterior of the causal effects. This is done by supplying the tuned hyperparameters (<code>best_param</code> in the example below) to <code>snp_ldpred2_grid</code> and setting <code>return_sampling_betas = TRUE</code>. In the example below, we return 500 MCMC samples from the posterior of the causal effects with the option <code>num_iter = 500</code>.</p>
-<p>Note that, when using <code>return_sampling_betas = TRUE</code>, you must supply one set of parameters only, i.e. <code>best_param</code> must be a data frame with exactly 1 row (otherwise it will raise an error).</p>
+<p>Given the set of tuned hyperparameters (see above), we want to
+approximate the full posterior distribution of an individual’s genetic
+value, <span class="math inline">\(\small{GV_i = \mathrm{\bf{x}}_i^T
+\boldsymbol\beta}\)</span>. From the posterior, one can obtain the
+<strong>posterior mean</strong>, <span class="math inline">\(\small{\widehat{PRS}_i \equiv
+\mathbb{E}(GV_i|\mathrm{Data})}\)</span>, and various metrics of
+uncertainty such as the <strong>posterior variance</strong>, <span class="math inline">\(\small{var(GV_i|\mathrm{Data})}\)</span>, where
+<span class="math inline">\(\small{GV_i}\)</span> is the genetic value
+of individual <span class="math inline">\(i\)</span> and <span class="math inline">\(\mathrm{\small{Data}}\)</span> refers to a given
+GWAS, and <strong><span class="math inline">\(\rho\)</span>-credible
+interval</strong>, the interval within which the individual’s genetic
+value falls with probability <span class="math inline">\(\rho\)</span>.</p>
+<p>An individual’s genetic value is their genotype vector multipled by
+the causal effect vector. We therefore need to obtain MCMC samples from
+the posterior of the causal effects. This is done by supplying the tuned
+hyperparameters (<code>best_param</code> in the example below) to
+<code>snp_ldpred2_grid</code> and setting
+<code>return_sampling_betas = TRUE</code>. In the example below, we
+return 500 MCMC samples from the posterior of the causal effects with
+the option <code>num_iter = 500</code>.</p>
+<p>Note that, when using <code>return_sampling_betas = TRUE</code>, you
+must supply one set of parameters only, i.e. <code>best_param</code>
+must be a data frame with exactly 1 row (otherwise it will raise an
+error).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">best_param</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.01</span>, h2 <span class="op">=</span> <span class="fl">0.2</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">best_param</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.01</span>, h2 <span class="op">=</span> <span class="fl">0.2</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">posterior_beta_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_grid</a></span><span class="op">(</span>
-  <span class="va">corr</span>, <span class="va">df_beta</span>, <span class="va">best_param</span>,
-  return_sampling_betas <span class="op">=</span> <span class="cn">TRUE</span>, num_iter <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">posterior_beta_samples</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 45337   500</span></code></pre>
-<p>Posterior samples of the individual’s genetic value are then obtained by multiplying their genotype with the posterior samples of <span class="math inline">\(\boldsymbol{\beta}\)</span>.</p>
+<code class="sourceCode R"><span><span class="va">posterior_beta_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_grid</a></span><span class="op">(</span></span>
+<span>  <span class="va">corr</span>, <span class="va">df_beta</span>, <span class="va">best_param</span>,</span>
+<span>  return_sampling_betas <span class="op">=</span> <span class="cn">TRUE</span>, num_iter <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">posterior_beta_samples</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 45337   500</span></span></code></pre>
+<p>Posterior samples of the individual’s genetic value are then obtained
+by multiplying their genotype with the posterior samples of <span class="math inline">\(\boldsymbol{\beta}\)</span>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">posterior_gv_samples</span> <span class="op">&lt;-</span> <span class="fu">big_prodMat</span><span class="op">(</span><span class="va">G</span>, <span class="va">posterior_beta_samples</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 503 500</span></code></pre>
-<p>The autocorrelation is generally weak, otherwise, you can perform some thinning.</p>
+<code class="sourceCode R"><span><span class="va">posterior_gv_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodMat.html" class="external-link">big_prodMat</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">posterior_beta_samples</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 503 500</span></span></code></pre>
+<p>The autocorrelation is generally weak, otherwise, you can perform
+some thinning.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/acf.html" class="external-link">acf</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, lag.max <span class="op">=</span> <span class="fl">10</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">acf</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/acf.html" class="external-link">acf</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>, lag.max <span class="op">=</span> <span class="fl">10</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">acf</span></span></code></pre></div>
 <p><img src="prs_uncertainty_files/figure-html/unnamed-chunk-4-1.png" width="700" style="display: block; margin: auto;"></p>
-<pre><code><span class="co">## , , 1</span>
-<span class="co">## </span>
-<span class="co">##               [,1]</span>
-<span class="co">##  [1,]  1.000000000</span>
-<span class="co">##  [2,]  0.124746441</span>
-<span class="co">##  [3,]  0.108593634</span>
-<span class="co">##  [4,]  0.048078430</span>
-<span class="co">##  [5,]  0.008082020</span>
-<span class="co">##  [6,]  0.002583350</span>
-<span class="co">##  [7,] -0.013405861</span>
-<span class="co">##  [8,] -0.029479457</span>
-<span class="co">##  [9,]  0.004941942</span>
-<span class="co">## [10,] -0.002931033</span>
-<span class="co">## [11,] -0.002058727</span></code></pre>
+<pre><code><span><span class="co">## , , 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##               [,1]</span></span>
+<span><span class="co">##  [1,]  1.000000000</span></span>
+<span><span class="co">##  [2,]  0.124746441</span></span>
+<span><span class="co">##  [3,]  0.108593634</span></span>
+<span><span class="co">##  [4,]  0.048078430</span></span>
+<span><span class="co">##  [5,]  0.008082020</span></span>
+<span><span class="co">##  [6,]  0.002583350</span></span>
+<span><span class="co">##  [7,] -0.013405861</span></span>
+<span><span class="co">##  [8,] -0.029479457</span></span>
+<span><span class="co">##  [9,]  0.004941942</span></span>
+<span><span class="co">## [10,] -0.002931033</span></span>
+<span><span class="co">## [11,] -0.002058727</span></span></code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/acf.html" class="external-link">acf</a></span><span class="op">(</span><span class="va">x</span>, lag.max <span class="op">=</span> <span class="fl">10</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">acf</span>
-<span class="op">}</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1]  1.000000000  0.099738287  0.032833478  0.038316768 -0.006360946</span>
-<span class="co">##  [6]  0.011291062  0.011917135  0.008185207  0.009776595 -0.008539467</span>
-<span class="co">## [11]  0.034323505</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/acf.html" class="external-link">acf</a></span><span class="op">(</span><span class="va">x</span>, lag.max <span class="op">=</span> <span class="fl">10</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">acf</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1]  1.000000000  0.099738287  0.032833478  0.038316768 -0.006360946</span></span>
+<span><span class="co">##  [6]  0.011291062  0.011917135  0.008185207  0.009776595 -0.008539467</span></span>
+<span><span class="co">## [11]  0.034323505</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="estimating-the-posterior-mean-and-posterior-variance">Estimating the posterior mean and posterior variance<a class="anchor" aria-label="anchor" href="#estimating-the-posterior-mean-and-posterior-variance"></a>
 </h2>
-<p>From the posterior samples of genetic value (see above), we can compute summary statistics such as the posterior mean and posterior variance. The posterior mean can be interpreted as the individual’s polygenic (risk) score, i.e. <span class="math inline">\(\small{\widehat{PRS}_i \equiv \mathbb{E}(GV_i|\mathrm{Data})}\)</span>. The posterior variance, <span class="math inline">\(\small{var(GV_i|\mathrm{Data})}\)</span>, is one metric of uncertainty; credible intervals are discussed below.</p>
+<p>From the posterior samples of genetic value (see above), we can
+compute summary statistics such as the posterior mean and posterior
+variance. The posterior mean can be interpreted as the individual’s
+polygenic (risk) score, i.e. <span class="math inline">\(\small{\widehat{PRS}_i \equiv
+\mathbb{E}(GV_i|\mathrm{Data})}\)</span>. The posterior variance, <span class="math inline">\(\small{var(GV_i|\mathrm{Data})}\)</span>, is one
+metric of uncertainty; credible intervals are discussed below.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="va">posterior_gv_samples</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>
-<span class="va">posterior_gv_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span>
-<span class="va">posterior_gv_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="va">posterior_gv_samples</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
+<span><span class="va">posterior_gv_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></span>
+<span><span class="va">posterior_gv_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="constructing-credible-intervals-of-genetic-value">Constructing credible intervals of genetic value<a class="anchor" aria-label="anchor" href="#constructing-credible-intervals-of-genetic-value"></a>
 </h2>
-<p>Another way to quantify uncertainty in an individual’s polygenic score is by constructing a <span class="math inline">\(\rho\)</span>-credible interval of the individual’s genetic value, i.e. the range of values that contains the individual’s true genetic value with probability <span class="math inline">\(\rho\)</span>.</p>
-<p>The example below demonstrates how one can obtain a 95% credible interval of the individual’s genetic value.</p>
+<p>Another way to quantify uncertainty in an individual’s polygenic
+score is by constructing a <span class="math inline">\(\rho\)</span>-credible interval of the
+individual’s genetic value, i.e. the range of values that contains the
+individual’s true genetic value with probability <span class="math inline">\(\rho\)</span>.</p>
+<p>The example below demonstrates how one can obtain a 95% credible
+interval of the individual’s genetic value.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0.95</span>
-<span class="va">bound</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>
-<span class="va">samples</span> <span class="op">&lt;-</span> <span class="va">posterior_gv_samples</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>
-<span class="va">mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span>
-<span class="va">lower_ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">samples</span>, <span class="va">bound</span><span class="op">)</span>
-<span class="va">upper_ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">samples</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">bound</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">samples</span>, main <span class="op">=</span> <span class="st">"Posterior distribution of genetic value"</span>, xlab <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> 
-<span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">lower_ci</span>, <span class="va">mean</span>, <span class="va">upper_ci</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Credible Interval"</span>, <span class="st">"PRS"</span><span class="op">)</span>,
-       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, cex <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0.95</span></span>
+<span><span class="va">bound</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span></span>
+<span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="va">posterior_gv_samples</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
+<span><span class="va">mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></span>
+<span><span class="va">lower_ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">samples</span>, <span class="va">bound</span><span class="op">)</span></span>
+<span><span class="va">upper_ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">samples</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">bound</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">samples</span>, main <span class="op">=</span> <span class="st">"Posterior distribution of genetic value"</span>, xlab <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">lower_ci</span>, <span class="va">mean</span>, <span class="va">upper_ci</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Credible Interval"</span>, <span class="st">"PRS"</span><span class="op">)</span>,</span>
+<span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, cex <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="prs_uncertainty_files/figure-html/unnamed-chunk-6-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>To get for all individuals:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">means</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span><span class="op">)</span>
-<span class="va">limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span>, <span class="fl">1</span>, <span class="va">quantile</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bound</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">bound</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">means</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span><span class="op">)</span></span>
+<span><span class="va">limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">posterior_gv_samples</span>, <span class="fl">1</span>, <span class="va">quantile</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bound</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">bound</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>
 

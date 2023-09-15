@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,23 +97,23 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bed_projectPCA</span><span class="op">(</span>
-  <span class="va">obj.bed.ref</span>,
-  <span class="va">obj.bed.new</span>,
-  k <span class="op">=</span> <span class="fl">10</span>,
-  ind.row.new <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed.new</span><span class="op">)</span>,
-  ind.row.ref <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed.ref</span><span class="op">)</span>,
-  ind.col.ref <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed.ref</span><span class="op">)</span>,
-  strand_flip <span class="op">=</span> <span class="cn">TRUE</span>,
-  join_by_pos <span class="op">=</span> <span class="cn">TRUE</span>,
-  match.min.prop <span class="op">=</span> <span class="fl">0.5</span>,
-  build.new <span class="op">=</span> <span class="st">"hg19"</span>,
-  build.ref <span class="op">=</span> <span class="st">"hg19"</span>,
-  liftOver <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bed_projectPCA</span><span class="op">(</span></span>
+<span>  <span class="va">obj.bed.ref</span>,</span>
+<span>  <span class="va">obj.bed.new</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  ind.row.new <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed.new</span><span class="op">)</span>,</span>
+<span>  ind.row.ref <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">obj.bed.ref</span><span class="op">)</span>,</span>
+<span>  ind.col.ref <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">obj.bed.ref</span><span class="op">)</span>,</span>
+<span>  strand_flip <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  join_by_pos <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  match.min.prop <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  build.new <span class="op">=</span> <span class="st">"hg19"</span>,</span>
+<span>  build.ref <span class="op">=</span> <span class="st">"hg19"</span>,</span>
+<span>  liftOver <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -225,7 +225,7 @@ I recommend that you provide the positions if available.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">

@@ -18,7 +18,7 @@ This does not remove ambiguous alleles."><!-- mathjax --><script src="https://cd
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@ This does not remove ambiguous alleles."><!-- mathjax --><script src="https://cd
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -99,7 +99,7 @@ This does not remove ambiguous alleles."><!-- mathjax --><script src="https://cd
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">same_ref</span><span class="op">(</span><span class="va">ref1</span>, <span class="va">alt1</span>, <span class="va">ref2</span>, <span class="va">alt2</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">same_ref</span><span class="op">(</span><span class="va">ref1</span>, <span class="va">alt1</span>, <span class="va">ref2</span>, <span class="va">alt2</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -135,10 +135,10 @@ ambiguous matching (e.g. matching A/C and A/G).</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">same_ref</span><span class="op">(</span>ref1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"T"</span>, <span class="st">"G"</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span class="r-in">         alt1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="st">"T"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
-<span class="r-in">         ref2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
-<span class="r-in">         alt2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="st">"G"</span>, <span class="st">"G"</span>, <span class="st">"G"</span>, <span class="st">"A"</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">same_ref</span><span class="op">(</span>ref1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"T"</span>, <span class="st">"G"</span>, <span class="cn">NA</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         alt1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="st">"T"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"A"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         ref2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"C"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         alt2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="st">"G"</span>, <span class="st">"G"</span>, <span class="st">"G"</span>, <span class="st">"A"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE    NA  TRUE FALSE    NA</span>
 </code></pre></div>
     </div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
-      <a href="../articles/LDpred2.html">Computing polygenic scores using LDpred2</a>
+      <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
@@ -97,11 +97,11 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">snp_fastImputeSimple</span><span class="op">(</span>
-  <span class="va">Gna</span>,
-  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mode"</span>, <span class="st">"mean0"</span>, <span class="st">"mean2"</span>, <span class="st">"random"</span><span class="op">)</span>,
-  ncores <span class="op">=</span> <span class="fl">1</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_fastImputeSimple</span><span class="op">(</span></span>
+<span>  <span class="va">Gna</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mode"</span>, <span class="st">"mean0"</span>, <span class="st">"mean2"</span>, <span class="st">"random"</span><span class="op">)</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -120,7 +120,7 @@ You can have missing values in these data.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use nb_cores.</p></dd>
+You may use <code>nb_cores()</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -136,9 +136,9 @@ You may use nb_cores.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">bigsnp</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="st">"example-missing.bed"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">bigsnp</span><span class="op">$</span><span class="va">genotypes</span></span>
-<span class="r-in"><span class="va">G</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># some missing values</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bigsnp</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_attachExtdata.html">snp_attachExtdata</a></span><span class="op">(</span><span class="st">"example-missing.bed"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">bigsnp</span><span class="op">$</span><span class="va">genotypes</span></span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># some missing values</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] NA NA  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  0  1  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [26]  0  0  0  0  1  0  1  0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  0  1  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [51]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0</span>
@@ -147,15 +147,15 @@ You may use nb_cores.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [126]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0 NA  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [151]  1  0  0  0  0  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  1  0  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [176]  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  0  0</span>
-<span class="r-in"><span class="va">G2</span> <span class="op">&lt;-</span> <span class="fu">snp_fastImputeSimple</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">G2</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># no missing values anymore</span></span>
+<span class="r-in"><span><span class="va">G2</span> <span class="op">&lt;-</span> <span class="fu">snp_fastImputeSimple</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">G2</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># no missing values anymore</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [38] 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [75] 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [112] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [149] 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [186] 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0</span>
-<span class="r-in"><span class="va">G</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># imputed, but still returning missing values</span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># imputed, but still returning missing values</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] NA NA  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  0  1  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [26]  0  0  0  0  1  0  1  0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  0  1  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [51]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0</span>
@@ -164,22 +164,22 @@ You may use nb_cores.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [126]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0 NA  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [151]  1  0  0  0  0  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  1  0  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [176]  0  0  0  0  0  0 NA  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  0  0</span>
-<span class="r-in"><span class="va">G</span><span class="op">$</span><span class="fu">copy</span><span class="op">(</span>code <span class="op">=</span> <span class="va">CODE_IMPUTE_PRED</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># need to decode imputed values</span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">$</span><span class="fu">copy</span><span class="op">(</span>code <span class="op">=</span> <span class="va">CODE_IMPUTE_PRED</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># need to decode imputed values</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [38] 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [75] 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [112] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [149] 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [186] 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">G</span><span class="op">$</span><span class="fu">copy</span><span class="op">(</span>code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">253</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># "imputation" by 0</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">G</span><span class="op">$</span><span class="fu">copy</span><span class="op">(</span>code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">253</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>  <span class="co"># "imputation" by 0</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [38] 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [75] 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [112] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [149] 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [186] 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
