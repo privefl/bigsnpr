@@ -46,8 +46,13 @@ If \code{corr} is a dsCMatrix or a dgCMatrix, you can use \code{as_SFBM(corr)}.}
 \itemize{
 \item \verb{$beta}: effect size estimates
 \item \verb{$beta_se}: standard errors of effect size estimates
-\item \verb{$n_eff}: sample size when estimating \code{beta}
-(in the case of binary traits, this is \code{4 / (1 / n_control + 1 / n_case)})
+\item \verb{$n_eff}: either tha GWAS sample size(s) when estimating \code{beta} for a
+continuous trait, or in the case of a binary trait, this is
+\code{4 / (1 / n_control + 1 / n_case)}; in the case of a meta-analysis, you
+should sum the effective sample sizes of each study instead of using the
+total numbers of cases and controls, see \doi{10.1016/j.biopsych.2022.05.029};
+when using a mixed model, the effective sample size needs to be adjusted
+as well, see \doi{10.1016/j.xhgg.2022.100136}.
 }}
 
 \item{h2}{Heritability estimate.}
@@ -65,7 +70,7 @@ They can be run in parallel by changing \code{ncores}.
 \item{num_iter}{Number of iterations after burn-in.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 
 \item{return_sampling_betas}{Whether to return all sampling betas (after
 burn-in)? This is useful for assessing the uncertainty of the PRS at the

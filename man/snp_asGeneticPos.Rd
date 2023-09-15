@@ -26,7 +26,7 @@ Default is \code{tempdir()}. Directly use \emph{uncompressed} files there if alr
 present. You can use \code{\link[R.utils:compressFile]{R.utils::gunzip()}} to uncompress local files.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 
 \item{rsid}{If providing rsIDs, the matching is performed using those
 (instead of positions) and variants not matched are interpolated using

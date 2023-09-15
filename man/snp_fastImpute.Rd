@@ -38,7 +38,7 @@ Default uses them all.}
 \item{seed}{An integer, for reproducibility. Default doesn't use seeds.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
 An \link{FBM} with

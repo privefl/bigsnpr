@@ -47,7 +47,7 @@ Default is \code{NULL} (all indices have the same probability).}
 Either \code{"gaussian"} (the default) or \code{"laplace"}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
 A list with 3 elements:

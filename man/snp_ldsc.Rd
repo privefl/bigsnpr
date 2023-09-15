@@ -54,7 +54,7 @@ This is equivalent to parameter \code{--two-step}.}
 \item{chi2_thr2}{Threshold on \code{chi2} in step 2. Default is \code{Inf} (none).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 
 \item{corr}{Sparse correlation matrix. Can also be an \link[=SFBM-class]{SFBM}.}
 
@@ -62,8 +62,13 @@ You may use \link{nb_cores}.}
 \itemize{
 \item \verb{$beta}: effect size estimates
 \item \verb{$beta_se}: standard errors of effect size estimates
-\item \verb{$n_eff}: sample size when estimating \code{beta}
-(in the case of binary traits, this is \code{4 / (1 / n_control + 1 / n_case)})
+\item \verb{$n_eff}: either tha GWAS sample size(s) when estimating \code{beta} for a
+continuous trait, or in the case of a binary trait, this is
+\code{4 / (1 / n_control + 1 / n_case)}; in the case of a meta-analysis, you
+should sum the effective sample sizes of each study instead of using the
+total numbers of cases and controls, see \doi{10.1016/j.biopsych.2022.05.029};
+when using a mixed model, the effective sample size needs to be adjusted
+as well, see \doi{10.1016/j.xhgg.2022.100136}.
 }}
 
 \item{ind.beta}{Indices in \code{corr} corresponding to \code{df_beta}. Default is all.}

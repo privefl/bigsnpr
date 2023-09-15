@@ -23,7 +23,7 @@ and 'rbind' can combine vectors into a matrix. The values '+' and '*' can be
 used to process numeric data. By default, the results are returned in a list.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 
 \item{...}{Extra arguments to be passed to \code{FUN}.}
 }

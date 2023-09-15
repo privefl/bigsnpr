@@ -83,7 +83,7 @@ annotations. Default just makes one group with all variants.}
 \item{exclude}{Vector of SNP indices to exclude anyway.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 
 \item{all_keep}{Output of \code{snp_grid_clumping()} (indices passing clumping).}
 

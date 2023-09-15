@@ -28,7 +28,7 @@ If not specified, all columns are used.\cr
 Default is \code{FALSE} (count by variant).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
 A matrix of with 4 rows and \code{length(ind.col)} columns.

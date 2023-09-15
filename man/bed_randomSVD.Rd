@@ -41,7 +41,7 @@ If not specified, all columns are used.\cr
 \item{verbose}{Should some progress be printed? Default is \code{FALSE}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
 A named list (an S3 class "big_SVD") of
