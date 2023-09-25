@@ -143,3 +143,107 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
 }
 
 ################################################################################
+
+#' Download a genetic map
+#'
+#' @param type Which genetic map to download. The hg19 ones are downloaded from
+#' \url{https://github.com/joepickrell/1000-genomes-genetic-maps/} while the
+#' hg38 is downloaded from
+#' \url{https://alkesgroup.broadinstitute.org/Eagle/downloads/tables/}.
+#' @param dir Directory where to download and decompress files.
+#' @inheritParams bigsnpr-package
+#'
+#' @return A data frame with 3 columns: `chr`, `pos`, and `pos_cM`.
+#' @export
+#'
+#' @rdname snp_asGeneticPos2
+#'
+download_genetic_map <- function(type = c("hg19_OMNI", "hg19_hapmap", "hg38_price"),
+                                 dir, ncores = 1) {
+
+  assert_package("R.utils")
+
+  type <- match.arg(type)
+
+  if (grepl("hg19", type)) {
+
+    path <- c(hg19_OMNI   = "interpolated_OMNI",
+              hg19_hapmap = "interpolated_from_hapmap")[type]
+
+    bigparallelr::register_parallel(ncores)
+
+    foreach(chr = 1:22, .combine = "rbind") %dopar% {
+
+      basename <- paste0("chr", chr, `if`(type == "hg19_OMNI", ".OMNI", ""),
+                         ".interpolated_genetic_map")
+      mapfile <- file.path(dir, basename)
+
+      if (!file.exists(mapfile)) {
+        url <- paste0("https://github.com/joepickrell/1000-genomes-genetic-maps/",
+                      "raw/master/", path, "/", basename, ".gz")
+        gzfile <- paste0(mapfile, ".gz")
+        utils::download.file(url, destfile = gzfile, quiet = TRUE)
+        R.utils::gunzip(gzfile)
+      }
+
+      cbind(chr = chr,
+            bigreadr::fread2(mapfile, showProgress = FALSE, nThread = 1,
+                             select = 2:3, col.names = c("pos", "pos_cM")))
+    }
+
+  } else if (type == "hg38_price") {
+
+    mapfile <- file.path(dir, "genetic_map_hg38_withX.txt")
+
+    if (!file.exists(mapfile)) {
+      url <- "https://storage.googleapis.com/broad-alkesgroup-public/Eagle/downloads/tables/genetic_map_hg38_withX.txt.gz"
+      gzfile <- paste0(mapfile, ".gz")
+      utils::download.file(url, destfile = gzfile, quiet = TRUE)
+      R.utils::gunzip(gzfile)
+    }
+
+    bigreadr::fread2(mapfile, showProgress = FALSE, nThread = ncores,
+                     select = c(1, 2, 4), col.names = c("chr", "pos", "pos_cM"))
+
+  }
+
+}
+
+################################################################################
+
+#' Interpolate to genetic positions
+#'
+#' This function uses linear interpolation, whereas `snp_asGeneticPos()` uses
+#' nearest neighbors.
+#'
+#' @inheritParams bigsnpr-package
+#' @param genetic_map A data frame with 3 columns: `chr`, `pos`, and `pos_cM`.
+#'   You can get it using [download_genetic_map()].
+#'
+#' @return The new vector of genetic positions.
+#' @export
+#'
+snp_asGeneticPos2 <- function(infos.chr, infos.pos, genetic_map) {
+
+  assert_lengths(infos.chr, infos.pos)
+  assert_df_with_names(genetic_map, c("chr", "pos", "pos_cM"))
+
+  genetic_map <- split(genetic_map, genetic_map$chr)
+
+  new_pos <- rep(NA_real_, length(infos.chr))
+
+  ind_chr <- split(seq_along(infos.chr), infos.chr)
+  for (chr in names(ind_chr)) {
+    ind.chr <- ind_chr[[chr]]
+    ref <- genetic_map[[chr]]
+    if (is.null(ref)) stop2("Chromosome '%s' not found in `genetic_map`.", chr)
+    keep_unique <- !duplicated(ref$pos)
+    new_pos[ind.chr] <- stats::approx(
+      x = ref$pos[keep_unique], y = ref$pos_cM[keep_unique],
+      xout = infos.pos[ind.chr], rule = 2)$y
+  }
+
+  new_pos
+}
+
+################################################################################

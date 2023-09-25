@@ -111,6 +111,35 @@ test_that("snp_asGeneticPos() works", {
 
 ################################################################################
 
+test_that("snp_asGeneticPos2() works", {
+
+  info <- data.frame(
+    chr = rep(1L, 5L),
+    pos = c(853954L, 854250L, 864938L, 870645L, 873558L))
+
+  map <- data.frame(
+    chr = 1,
+    pos = c(853954L, 854250L, 870645L, 873558L),
+    pos_cM = c(0.194323402834, 0.194576977815, 0.202835640491, 0.203874368612))
+
+  res1 <- snp_asGeneticPos2(info$chr, info$pos, genetic_map = map)
+  expect_equal(res1[-3], map$pos_cM[c(1, 2, 3, 4)])
+  expect_equal(res1[3],  map$pos_cM[3], tolerance = 0.01)
+
+  # if outside limits, just use boundaries
+  res2 <- snp_asGeneticPos2(c(1, 1), c(0, 1e6), genetic_map = map)
+  expect_equal(res2, range(map$pos_cM))
+
+  # some errors
+  expect_error(snp_asGeneticPos2(c(1, 1), c(0, 1e6), genetic_map = map[1:2]),
+               "'genetic_map' should have element 'pos_cM'.")
+  expect_error(snp_asGeneticPos2(c(2, 2), c(0, 1e6), genetic_map = map),
+               "Chromosome '2' not found in `genetic_map`.")
+
+})
+
+################################################################################
+
 test_that("snp_ancestry_summary() works (with no projection here)", {
 
   X <- matrix(rbeta(4000, 1, 3), ncol = 4)

@@ -1,3 +1,7 @@
+## bigsnpr 1.12.5
+
+- Add function `snp_asGeneticPos2()` (and `download_genetic_map()`) where you can provide any reference genetic map as a data frame. This function uses linear interpolation to transform physical positions (in bp) to genetic positions (in cM).
+
 ## bigsnpr 1.12.4
 
 - Add parameter `p_bounds` in LDpred2-auto to provide bounds for the estimate of the polygenicity p.
