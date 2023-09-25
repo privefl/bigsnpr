@@ -165,7 +165,7 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 #' @param df_beta A data frame with 3 columns:
 #'   - `$beta`: effect size estimates
 #'   - `$beta_se`: standard errors of effect size estimates
-#'   - `$n_eff`: either tha GWAS sample size(s) when estimating `beta` for a
+#'   - `$n_eff`: either GWAS sample size(s) when estimating `beta` for a
 #'     continuous trait, or in the case of a binary trait, this is
 #'     `4 / (1 / n_control + 1 / n_case)`; in the case of a meta-analysis, you
 #'     should sum the effective sample sizes of each study instead of using the

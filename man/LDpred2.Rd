@@ -46,7 +46,7 @@ If \code{corr} is a dsCMatrix or a dgCMatrix, you can use \code{as_SFBM(corr)}.}
 \itemize{
 \item \verb{$beta}: effect size estimates
 \item \verb{$beta_se}: standard errors of effect size estimates
-\item \verb{$n_eff}: either tha GWAS sample size(s) when estimating \code{beta} for a
+\item \verb{$n_eff}: either GWAS sample size(s) when estimating \code{beta} for a
 continuous trait, or in the case of a binary trait, this is
 \code{4 / (1 / n_control + 1 / n_case)}; in the case of a meta-analysis, you
 should sum the effective sample sizes of each study instead of using the
