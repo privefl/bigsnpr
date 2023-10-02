@@ -68,7 +68,7 @@ This function is designed to read UK Biobank imputation files. This assumes
 that variants have been compressed with zlib, that there are only 2 possible
 alleles, and that each probability is stored on 8 bits. For example, if you
 use \emph{qctool} to generate your own BGEN files, please make sure you are using
-options '\verb{-ofiletype bgen_v1.2 -bgen-bits 8}'.
+options '\verb{-ofiletype bgen_v1.2 -bgen-bits 8 -assume-chromosome}'.
 
 If the format is not the expected one, this will result in an error or even
 a crash of your R session. Another common source of error is due to corrupted
