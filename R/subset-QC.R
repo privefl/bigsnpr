@@ -31,26 +31,35 @@
 #' str(snp_attach(rdsfile2))
 #'
 snp_subset <- function(x,
-                       ind.row = rows_along(x$fam),
-                       ind.col = rows_along(x$map),
+                       ind.row = rows_along(x$genotypes),
+                       ind.col = cols_along(x$genotypes),
                        backingfile = NULL) {
 
+  G <- x$genotypes
 
   # Support for negative indices
-  ind.row <- rows_along(x$fam)[ind.row]
-  ind.col <- rows_along(x$map)[ind.col]
+  ind.row <- rows_along(G)[ind.row]
+  ind.col <- cols_along(G)[ind.col]
 
   check_args()
 
-  # https://stackoverflow.com/q/19565621/6103040
-  new_fam <- x$fam[ind.row, , drop = FALSE]
-  rownames(new_fam) <- rows_along(new_fam)
-  new_map <- x$map[ind.col, , drop = FALSE]
-  rownames(new_map) <- rows_along(new_map)
+  if (is.null(x$fam)) {
+    new_fam <- NULL
+  } else {
+    # https://stackoverflow.com/q/19565621/6103040
+    new_fam <- x$fam[ind.row, , drop = FALSE]
+    rownames(new_fam) <- rows_along(new_fam)
+  }
+
+  if (is.null(x$map)) {
+    new_map <- NULL
+  } else {
+    new_map <- x$map[ind.col, , drop = FALSE]
+    rownames(new_map) <- rows_along(new_map)
+  }
 
   if (is.null(backingfile)) backingfile <- getNewFile(x, "sub")
 
-  G <- x$genotypes
   # Create new FBM and fill it
   G2 <- FBM.code256(
     nrow = length(ind.row),
@@ -63,9 +72,7 @@ snp_subset <- function(x,
   replaceSNP(G2, G, rowInd = ind.row, colInd = ind.col)
 
   # Create the bigSNP object
-  snp.list <- structure(list(genotypes = G2,
-                             fam = new_fam,
-                             map = new_map),
+  snp.list <- structure(list(genotypes = G2, fam = new_fam, map = new_map),
                         class = "bigSNP")
 
   # save it and return the path of the saved object

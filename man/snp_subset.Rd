@@ -7,8 +7,8 @@
 \usage{
 snp_subset(
   x,
-  ind.row = rows_along(x$fam),
-  ind.col = rows_along(x$map),
+  ind.row = rows_along(x$genotypes),
+  ind.col = cols_along(x$genotypes),
   backingfile = NULL
 )
 

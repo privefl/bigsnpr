@@ -67,3 +67,20 @@ test_that("backing files' names", {
 })
 
 ################################################################################
+
+test_that("Can subset without $fam or $map", {
+
+  test4 <- test
+  test4$fam <- NULL
+  test5 <- snp_attach(snp_subset(test4, ind.col = 1:10))
+  expect_null(test5$fam)
+  expect_identical(test5$map, test$map[1:10, ])
+
+  test6 <- test
+  test6$map <- NULL
+  test7 <- snp_attach(snp_subset(test6, ind.row = -(1:10)))
+  expect_null(test7$map)
+  expect_equal(test7$fam, test$fam[-(1:10), ], check.attributes = FALSE)
+})
+
+################################################################################
