@@ -19,7 +19,7 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-
+    
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.6</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -83,20 +83,20 @@
 <li>
   <a href="https://privefl.github.io/about.html" class="external-link">
     <span class="fa fa-user"></span>
-
+     
     About
   </a>
 </li>
 <li>
   <a href="https://github.com/privefl/bigsnpr" class="external-link">
     <span class="fa fa-github fa"></span>
-
+     
   </a>
 </li>
 <li>
   <a href="../news/index.html">
     <span class="fa fa-newspaper-o fa"></span>
-
+     
   </a>
 </li>
       </ul>
@@ -107,7 +107,7 @@
 </div>
 <!--/.navbar -->
 
-
+      
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -116,19 +116,20 @@
 LDpred2</h1>
                         <h4 data-toc-skip class="author">Florian
 Privé</h4>
-
+            
             <h4 data-toc-skip class="date">June 8, 2023</h4>
-
+      
       <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/HEAD/vignettes/LDpred2.Rmd" class="external-link"><code>vignettes/LDpred2.Rmd</code></a></small>
       <div class="hidden name"><code>LDpred2.Rmd</code></div>
 
     </div>
 
-
-
+    
+    
 <p>Here I show how to compute polygenic scores using <a href="https://doi.org/10.1093/bioinformatics/btaa1029" class="external-link">LDpred2</a>, as
 well as inferring genetic architecture parameters with LDpred2-auto.</p>
-<p><b>Please be careful about the spelling; you should write LDpred2, not LDPred2!</b></p>
+<p><strong>Please be careful about the spelling; you should write
+LDpred2, not LDPred2!</strong></p>
 <p>Here is a (slightly outdated) video of me going through the tutorial
 and explaining the different steps:</p>
 <center>
@@ -313,7 +314,7 @@ the final models.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">ind.val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">350</span><span class="op">)</span></span>
-<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="matching-variants-between-genotype-data-and-summary-statistics">Matching variants between genotype data and summary statistics<a class="anchor" aria-label="anchor" href="#matching-variants-between-genotype-data-and-summary-statistics"></a>
@@ -728,8 +729,8 @@ regularization).</p>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity    score id</span></span>
 <span><span class="co">## 1 0.02086632 0.001       21 0.02 0.9864570 9.715332  8</span></span>
 <span><span class="co">## 2 0.02086632 0.010       20 0.02 0.9864790 9.709724 38</span></span>
-<span><span class="co">## 3 0.02086632 0.100       16 0.00 0.9862364 9.667190 68</span></span>
-<span><span class="co">## 4 0.02432834 0.001       19 0.03 0.9942652 9.404453  7</span></span>
+<span><span class="co">## 3 0.02086632 0.100       16 0.02 0.9862364 9.667190 68</span></span>
+<span><span class="co">## 4 0.02432834 0.001       19 0.00 0.9942652 9.404453  7</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Choose the best among all LDpred2-grid and lassosum2 models</span></span>
@@ -746,7 +747,7 @@ regularization).</p>
 Here is <a href="https://doi.org/10.1101/2022.10.10.511629" class="external-link">the
 accompanying preprint</a>.</p>
 <div class="figure" style="text-align: center">
-<embed src="https://raw.githubusercontent.com/privefl/paper-infer/main/overview.pdf" title="Overview of what LDpred2-auto can now provide" width="80%" type="application/pdf"></embed><p class="caption">
+<img src="https://raw.githubusercontent.com/privefl/paper-infer/main/overview.svg" alt="Overview of what LDpred2-auto can now provide" width="80%"><p class="caption">
 Overview of what LDpred2-auto can now provide
 </p>
 </div>
@@ -842,8 +843,8 @@ and <a href="https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d
 <code class="sourceCode R"><span><span class="co"># Some cleaning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span></span>
-<span><span class="co">## Ncells  3822838 204.2    7125004 380.6  7125004 380.6</span></span>
-<span><span class="co">## Vcells 40740163 310.9   77355311 590.2 77351850 590.2</span></span></code></pre>
+<span><span class="co">## Ncells  3818628 204.0    7126365 380.6  7126365 380.6</span></span>
+<span><span class="co">## Vcells 40730363 310.8   71317106 544.2 71317106 544.2</span></span></code></pre>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -889,10 +890,10 @@ architecture and predictive ability with LDpred2-auto</a>.
       </footer>
 </div>
 
+  
 
 
-
-
+  
 
   </body>
 </html>

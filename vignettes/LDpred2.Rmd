@@ -448,7 +448,7 @@ best_grid_overall <-
 Here, you need `packageVersion("bigsnpr") >= package_version("1.11.4")`. Here is [the accompanying preprint](https://doi.org/10.1101/2022.10.10.511629).
 
 ```{r, echo=FALSE, out.width="80%", fig.cap="Overview of what LDpred2-auto can now provide"}
-knitr::include_graphics("https://raw.githubusercontent.com/privefl/paper-infer/main/overview.pdf")
+knitr::include_graphics("https://raw.githubusercontent.com/privefl/paper-infer/main/overview.svg")
 ```
 
 LDpred2-auto has been very recently extended and improved to allow for estimating $h^2$, $p$, and $\alpha$, a third parameter that controls how expected effect sizes relate to minor allele frequencies. The new model assumed by LDpred2-auto is
