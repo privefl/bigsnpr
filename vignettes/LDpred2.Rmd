@@ -53,13 +53,13 @@ To run LDpred2, you need
 You need to restrict to genetic variants in common between all these datasets.
 
 We previously recommended to use a set of 1,054,330 HapMap3 variants for LDpred2, because they provide a good coverage of the genome and are generally well imputed and available in most studies.
-In [this preprint](https://doi.org/10.1101/2022.10.10.511629), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 when power is sufficient.
+In [this paper](https://doi.org/10.1016/j.ajhg.2023.10.010), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 when power is sufficient.
 
 You should use these sets of variants only when your data is imputed so that the overlap is good. If you only have access to a chip of genotyped variants, you should use these. In that case, you should compute the LD information yourself (as done for the tutorial data below).
 
 If you use HM3/HM3+ variants with European summary statistics and do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide LD matrices to be used directly:
 
-- for [HapMap3+ variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.21305061) (now recommended in [this preprint](https://doi.org/10.1101/2022.10.10.511629))
+- for [HapMap3+ variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.21305061) (from [this paper](https://doi.org/10.1016/j.ajhg.2023.10.010))
 - for [HapMap3 variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.19213299) (previously recommended in [this paper](https://doi.org/10.1016/j.xhgg.2022.100136))
 - along with an [example R script](https://github.com/privefl/paper-infer/blob/main/code/example-with-provided-LD.R) on how to use them
 
@@ -206,6 +206,15 @@ POS2 <- obj.bigSNP$map$genetic.dist
 # Use `snp_asGeneticPos()` in your analyses
 ```
 
+Before computing the LD matrices, let us filter out variants with small minor allele frequencies (MAFs):
+
+```{r}
+ind.row <- rows_along(G)
+maf <- snp_MAF(G, ind.row = ind.row, ind.col = df_beta$`_NUM_ID_`, ncores = NCORES)
+maf_thr <- 1 / sqrt(length(ind.row))  # threshold I like to use
+df_beta <- df_beta[maf > maf_thr, ]
+```
+
 Let us create the on-disk sparse genome-wide correlation matrix on-the-fly:
 
 ```{r}
@@ -220,6 +229,9 @@ for (chr in 1:22) {
   ## indices in 'G'
   ind.chr2 <- df_beta$`_NUM_ID_`[ind.chr]
   
+  # here we compute LD matrices ourselves, BUT
+  # we recall that we provide pre-computed LD matrices that are 
+  # usually much better (larger N, LD blocks for robustness, etc)
   corr0 <- snp_cor(G, ind.col = ind.chr2, size = 3 / 1000,
                    infos.pos = POS2[ind.chr2], ncores = NCORES)
   
@@ -443,9 +455,10 @@ best_grid_overall <-
        best_grid_lassosum2, best_beta_grid)
 ```
 
+
 ## Inference with LDpred2-auto
 
-Here, you need `packageVersion("bigsnpr") >= package_version("1.11.4")`. Here is [the accompanying preprint](https://doi.org/10.1101/2022.10.10.511629).
+Here, you need `packageVersion("bigsnpr") >= package_version("1.11.4")`. Here is [the accompanying paper](https://doi.org/10.1016/j.ajhg.2023.10.010).
 
 ```{r, echo=FALSE, out.width="80%", fig.cap="Overview of what LDpred2-auto can now provide"}
 knitr::include_graphics("https://raw.githubusercontent.com/privefl/paper-infer/main/overview.svg")
@@ -465,7 +478,7 @@ where $p$ is the proportion of causal variants, $h^2$ the (SNP) heritability, $\
 Parameters $h^2$, $p$, and $\alpha$ (and 95% CIs) can be estimated using:
 ```{r, cache=TRUE}
 # reduce this up to 0.4 if you have some (large) mismatch with the LD ref
-# /!\ but the inference of h2 and p might be biased if you do this (see preprint)
+# /!\ but the inference of h2 and p might be biased if you do this (see paper)
 coef_shrink <- 0.95  
 
 multi_auto <- snp_ldpred2_auto(
@@ -527,10 +540,11 @@ You can also infer local per-block or per-annotation $h^2$ following the code [h
 rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 ```
 
+
 ## References
 
 - Privé, F., Arbel, J., & Vilhjálmsson, B. J. (2020). [LDpred2: better, faster, stronger](https://doi.org/10.1093/bioinformatics/btaa1029). *Bioinformatics*, 36(22-23), 5424-5431.
 
 - Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). [Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores](https://doi.org/10.1016/j.xhgg.2022.100136). *Human Genetics and Genomics Advances*, 3(4), 100136.
 
-- Privé, F., Albiñana, C., Arbel, J., Pasaniuc, B., & Vilhjálmsson, B. J. (2022). [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1101/2022.10.10.511629). *bioRxiv*.
+- Privé, F., Albiñana, C., Arbel, J., Pasaniuc, B., & Vilhjálmsson, B. J. (2022). [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1016/j.ajhg.2023.10.010). *The American Journal of Human Genetics*, 110(12), 2042-2055.
