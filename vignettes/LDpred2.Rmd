@@ -15,6 +15,8 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png', out.width 
 
 Here I show how to compute polygenic scores using [LDpred2](https://doi.org/10.1093/bioinformatics/btaa1029), as well as inferring genetic architecture parameters with LDpred2-auto.
 
+If you have to write a standalone LDpred2 command line script, have a look at [this example written by two LDpred2 users](https://github.com/comorment/containers/tree/main/scripts/pgs/LDpred2).
+
 **Please be careful about the spelling; you should write LDpred2, not LDPred2!**
 
 Here is a (slightly outdated) video of me going through the tutorial and explaining the different steps:

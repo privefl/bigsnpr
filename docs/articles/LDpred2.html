@@ -128,6 +128,9 @@ Privé</h4>
     
 <p>Here I show how to compute polygenic scores using <a href="https://doi.org/10.1093/bioinformatics/btaa1029" class="external-link">LDpred2</a>, as
 well as inferring genetic architecture parameters with LDpred2-auto.</p>
+<p>If you have to write a standalone LDpred2 command line script, have a
+look at <a href="https://github.com/comorment/containers/tree/main/scripts/pgs/LDpred2" class="external-link">this
+example written by two LDpred2 users</a>.</p>
 <p><strong>Please be careful about the spelling; you should write
 LDpred2, not LDPred2!</strong></p>
 <p>Here is a (slightly outdated) video of me going through the tutorial
@@ -700,11 +703,11 @@ regularization).</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">params2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">beta_lassosum2</span>, <span class="st">"grid_param"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity</span></span>
 <span><span class="co">## 1 0.06111003 0.001        2 0.00 0.9998895</span></span>
-<span><span class="co">## 2 0.05241382 0.001        3 0.00 0.9997128</span></span>
-<span><span class="co">## 3 0.04495512 0.001        4 0.00 0.9995361</span></span>
-<span><span class="co">## 4 0.03855782 0.001        7 0.01 0.9992489</span></span>
-<span><span class="co">## 5 0.03307088 0.001        8 0.00 0.9984095</span></span>
-<span><span class="co">## 6 0.02836476 0.001       13 0.02 0.9971061</span></span>
+<span><span class="co">## 2 0.05241382 0.001        3 0.01 0.9997128</span></span>
+<span><span class="co">## 3 0.04495512 0.001        4 0.02 0.9995361</span></span>
+<span><span class="co">## 4 0.03855782 0.001        7 0.00 0.9992489</span></span>
+<span><span class="co">## 5 0.03307088 0.001        8 0.02 0.9984095</span></span>
+<span><span class="co">## 6 0.02836476 0.001       13 0.00 0.9971061</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 114 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred_grid2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodMat.html" class="external-link">big_prodMat</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_lassosum2</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -736,10 +739,10 @@ regularization).</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="va">beta_lassosum2</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity    score id</span></span>
-<span><span class="co">## 1 0.02086632 0.001       21 0.02 0.9864584 9.715472  8</span></span>
-<span><span class="co">## 2 0.02086632 0.010       20 0.01 0.9864805 9.709865 38</span></span>
-<span><span class="co">## 3 0.02086632 0.100       16 0.01 0.9862375 9.667334 68</span></span>
-<span><span class="co">## 4 0.02432834 0.001       19 0.00 0.9942564 9.404453  7</span></span>
+<span><span class="co">## 1 0.02086632 0.001       21 0.03 0.9864584 9.715472  8</span></span>
+<span><span class="co">## 2 0.02086632 0.010       20 0.02 0.9864805 9.709865 38</span></span>
+<span><span class="co">## 3 0.02086632 0.100       16 0.02 0.9862375 9.667334 68</span></span>
+<span><span class="co">## 4 0.02432834 0.001       19 0.01 0.9942564 9.404453  7</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Choose the best among all LDpred2-grid and lassosum2 models</span></span>
@@ -852,8 +855,8 @@ and <a href="https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d
 <code class="sourceCode R"><span><span class="co"># Some cleaning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span></span>
-<span><span class="co">## Ncells  3845321 205.4    7181461 383.6  7181461 383.6</span></span>
-<span><span class="co">## Vcells 40809775 311.4   77394024 590.5 77392740 590.5</span></span></code></pre>
+<span><span class="co">## Ncells  3840272 205.1    7181462 383.6  7181462 383.6</span></span>
+<span><span class="co">## Vcells 40798905 311.3   71391298 544.7 71390910 544.7</span></span></code></pre>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 <div class="section level2">
