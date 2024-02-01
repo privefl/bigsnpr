@@ -185,7 +185,10 @@ where $n_j^\text{eff} = \frac{4}{1 / n_j^\text{cases} + 1 / n_j^\text{controls}}
 Then, these standard deviations of genotypes inferred from GWAS summary statistics can be compared to $\sqrt{2 \cdot f_j \cdot (1 - f_j) \cdot \text{INFO}_j}$, where $f_j$ is the allele frequency of variant $j$ and $\text{INFO}_j$ is used to correct for the reduced variance of imputed dosages.
 
 In the equation for continuous traits, we can estimate $\text{sd}(y)$ by the first percentile of $\sqrt{0.5 \left(n_j ~ \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2\right)}$, where the first percentile approximates the minimum and is robust to outliers.
+
 In practice, a consistent deviation between these two estimates of standard deviations (from summary statistics and from allele frequencies) can also be explained by using wrong estimates for $n_j$ or $n_j^\text{eff}$.
+This is for example the case when computing $N^\text{eff}$ from the total number of cases and controls from a meta-analysis (cf. [this paper](https://doi.org/10.1016/j.biopsych.2022.05.029)). 
+In that case, you can estimate the overall $N^\text{eff}$ using e.g. `quantile(8 / df_beta$beta_se^2, 0.999)`.
 
 
 ## Computing LDpred2 scores genome-wide
@@ -265,6 +268,8 @@ Note that you will need at least the same memory as this file size (to keep it c
                                 sample_size = n_eff, blocks = NULL)))
 ldsc_h2_est <- ldsc[["h2"]]
 ```
+
+Note that parameter `ld_size` from `snp_ldsc()` is the initial number of variants used to compute the LD scores, and should be equal to `nrow(info)` instead of `length(ld)` when using the pre-computed LD scores `info$ld`.
 
 ```{r}
 beta_inf <- snp_ldpred2_inf(corr, df_beta, h2 = ldsc_h2_est)

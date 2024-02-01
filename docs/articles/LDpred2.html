@@ -382,10 +382,15 @@ reduced variance of imputed dosages.</p>
 <p>In the equation for continuous traits, we can estimate <span class="math inline">\(\text{sd}(y)\)</span> by the first percentile of
 <span class="math inline">\(\sqrt{0.5 \left(n_j ~
 \text{se}(\hat{\gamma}_j)^2 + \hat{\gamma}_j^2\right)}\)</span>, where
-the first percentile approximates the minimum and is robust to outliers.
-In practice, a consistent deviation between these two estimates of
+the first percentile approximates the minimum and is robust to
+outliers.</p>
+<p>In practice, a consistent deviation between these two estimates of
 standard deviations (from summary statistics and from allele
-frequencies) can also be explained by using wrong estimates for <span class="math inline">\(n_j\)</span> or <span class="math inline">\(n_j^\text{eff}\)</span>.</p>
+frequencies) can also be explained by using wrong estimates for <span class="math inline">\(n_j\)</span> or <span class="math inline">\(n_j^\text{eff}\)</span>. This is for example the
+case when computing <span class="math inline">\(N^\text{eff}\)</span>
+from the total number of cases and controls from a meta-analysis (cf. <a href="https://doi.org/10.1016/j.biopsych.2022.05.029" class="external-link">this paper</a>).
+In that case, you can estimate the overall <span class="math inline">\(N^\text{eff}\)</span> using
+e.g. <code>quantile(8 / df_beta$beta_se^2, 0.999)</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="computing-ldpred2-scores-genome-wide">Computing LDpred2 scores genome-wide<a class="anchor" aria-label="anchor" href="#computing-ldpred2-scores-genome-wide"></a>
@@ -468,6 +473,11 @@ be enough.</p>
 <span><span class="co">## 0.9506599 0.2965952</span></span></code></pre>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ldsc_h2_est</span> <span class="op">&lt;-</span> <span class="va">ldsc</span><span class="op">[[</span><span class="st">"h2"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<p>Note that parameter <code>ld_size</code> from <code><a href="../reference/snp_ldsc.html">snp_ldsc()</a></code>
+is the initial number of variants used to compute the LD scores, and
+should be equal to <code>nrow(info)</code> instead of
+<code>length(ld)</code> when using the pre-computed LD scores
+<code>info$ld</code>.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">beta_inf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_inf</a></span><span class="op">(</span><span class="va">corr</span>, <span class="va">df_beta</span>, h2 <span class="op">=</span> <span class="va">ldsc_h2_est</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
@@ -703,8 +713,8 @@ regularization).</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">params2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">beta_lassosum2</span>, <span class="st">"grid_param"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity</span></span>
 <span><span class="co">## 1 0.06111003 0.001        2 0.00 0.9998895</span></span>
-<span><span class="co">## 2 0.05241382 0.001        3 0.01 0.9997128</span></span>
-<span><span class="co">## 3 0.04495512 0.001        4 0.02 0.9995361</span></span>
+<span><span class="co">## 2 0.05241382 0.001        3 0.00 0.9997128</span></span>
+<span><span class="co">## 3 0.04495512 0.001        4 0.00 0.9995361</span></span>
 <span><span class="co">## 4 0.03855782 0.001        7 0.00 0.9992489</span></span>
 <span><span class="co">## 5 0.03307088 0.001        8 0.02 0.9984095</span></span>
 <span><span class="co">## 6 0.02836476 0.001       13 0.00 0.9971061</span></span>
@@ -739,10 +749,10 @@ regularization).</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="va">beta_lassosum2</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity    score id</span></span>
-<span><span class="co">## 1 0.02086632 0.001       21 0.03 0.9864584 9.715472  8</span></span>
-<span><span class="co">## 2 0.02086632 0.010       20 0.02 0.9864805 9.709865 38</span></span>
+<span><span class="co">## 1 0.02086632 0.001       21 0.02 0.9864584 9.715472  8</span></span>
+<span><span class="co">## 2 0.02086632 0.010       20 0.01 0.9864805 9.709865 38</span></span>
 <span><span class="co">## 3 0.02086632 0.100       16 0.02 0.9862375 9.667334 68</span></span>
-<span><span class="co">## 4 0.02432834 0.001       19 0.01 0.9942564 9.404453  7</span></span>
+<span><span class="co">## 4 0.02432834 0.001       19 0.02 0.9942564 9.404453  7</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Choose the best among all LDpred2-grid and lassosum2 models</span></span>
@@ -855,8 +865,8 @@ and <a href="https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d
 <code class="sourceCode R"><span><span class="co"># Some cleaning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span></span>
-<span><span class="co">## Ncells  3840272 205.1    7181462 383.6  7181462 383.6</span></span>
-<span><span class="co">## Vcells 40798905 311.3   71391298 544.7 71390910 544.7</span></span></code></pre>
+<span><span class="co">## Ncells  3840043 205.1    7181468 383.6  7181468 383.6</span></span>
+<span><span class="co">## Vcells 40798600 311.3   71391521 544.7 71390597 544.7</span></span></code></pre>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 <div class="section level2">
