@@ -102,9 +102,8 @@ check_bgen_format <- function(bgenfile) {
 #' with the ones at \url{https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998}.
 #'
 #' You can look at some example code from my papers on how to use this function:
+#' - \url{https://github.com/privefl/paper-infer/blob/main/code/prepare-geno-simu.R}
 #' - \url{https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R}
-#' - \url{https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62}
-#' - \url{https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75}
 #'
 #' @param bgenfiles Character vector of paths to files with extension ".bgen".
 #'   The corresponding ".bgen.bgi" index files must exist.

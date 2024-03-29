@@ -77,8 +77,7 @@ with the ones at \url{https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998}.
 
 You can look at some example code from my papers on how to use this function:
 \itemize{
+\item \url{https://github.com/privefl/paper-infer/blob/main/code/prepare-geno-simu.R}
 \item \url{https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R}
-\item \url{https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62}
-\item \url{https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75}
 }
 }
