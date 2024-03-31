@@ -22,8 +22,8 @@ The corresponding ".bgen.bgi" index files must exist.}
 and ".rds") that are created by this function for storing the
 \link[=bigSNP-class]{bigSNP} object.}
 
-\item{list_snp_id}{List (same length as the number of BGEN files) of
-character vector of SNP IDs to read. These should be in the form
+\item{list_snp_id}{List of character vectors of SNP IDs to read, with one
+vector per BGEN file. Each SNP ID should be in the form
 \code{"<chr>_<pos>_<a1>_<a2>"} (e.g. \code{"1_88169_C_T"} or \code{"01_88169_C_T"}).
 If you have one BGEN file only, just wrap your vector of IDs with \code{list()}.
 \strong{This function assumes that these IDs are uniquely identifying variants.}}
@@ -47,13 +47,15 @@ You may use \code{\link[=nb_cores]{nb_cores()}}.}
 }
 \value{
 The path to the RDS file \verb{<backingfile>.rds} that stores the \code{bigSNP}
-object created by this function. Note that this function creates another
-file (\emph{.bk}) which stores the values of the FBM (\verb{$genotypes}). The \verb{$map}
-component of the \code{bigSNP} object stores some information on the variants
-(including allele frequencies and INFO scores computed from the probabilities).
+object created by this function.\cr
+Note that this function creates another file (\emph{.bk}) which stores the values
+of the FBM (\verb{$genotypes}). The rows corresponds to the order of \code{ind_row};
+the columns to the order of \code{list_snp_id}. The \verb{$map} component of the
+\code{bigSNP} object stores some information on the variants (including allele
+frequencies and INFO scores computed from the imputation probabilities).
 However, it does not have a \verb{$fam} component; you should use the individual
-IDs in the \emph{.sample} file (filtered with \code{ind_row}) to add external information
-on the individuals.\cr
+IDs in the \emph{.sample} file (filtered with \code{ind_row}) to add external
+information on the individuals.\cr
 \strong{You shouldn't read from BGEN files more than once.} Instead, use
 \link{snp_attach} to load the "bigSNP" object in any R session from backing files.
 }
@@ -62,7 +64,7 @@ Function to read the UK Biobank BGEN files into a \link[=bigSNP-class]{bigSNP}.
 }
 \details{
 For more information on this format, please visit
-\href{https://bitbucket.org/gavinband/bgen/}{BGEN webpage}.
+\href{https://code.enkre.net/bgen}{BGEN webpage}.
 
 This function is designed to read UK Biobank imputation files. This assumes
 that variants have been compressed with zlib, that there are only 2 possible
