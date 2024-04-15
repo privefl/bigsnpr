@@ -24,7 +24,8 @@
 #'
 snp_modifyBuild <- function(info_snp, liftOver,
                             from = "hg18", to = "hg19",
-                            check_reverse = TRUE) {
+                            check_reverse = TRUE,
+                            local.chain = NULL) {
 
   if (!all(c("chr", "pos") %in% names(info_snp)))
     stop2("Expecting variables 'chr' and 'pos' in input 'info_snp'.")
@@ -44,10 +45,16 @@ snp_modifyBuild <- function(info_snp, liftOver,
                     BED, col.names = FALSE, sep = " ", scipen = 50)
 
   # Need chain file
-  url <- paste0("ftp://hgdownload.cse.ucsc.edu/goldenPath/", from, "/liftOver/",
-                from, "To", tools::toTitleCase(to), ".over.chain.gz")
-  chain <- tempfile(fileext = ".over.chain.gz")
-  utils::download.file(url, destfile = chain, quiet = TRUE)
+  if (is.null(local.chain) || !file.exists(local.chain)) {
+    url <- paste0("https://hgdownload.soe.ucsc.edu/goldenPath/", from, "/liftOver/",
+                  from, "To", tools::toTitleCase(to), ".over.chain.gz")
+    message(paste0("Downloading from ", url))
+    local.chain <- tempfile(fileext = ".over.chain.gz")
+    utils::download.file(url, destfile = local.chain, quiet = TRUE)
+  } else {
+    message("Using the local chain file")
+  }
+  chain <- local.chain
 
   # Run liftOver (usage: liftOver oldFile map.chain newFile unMapped)
   lifted <- tempfile(fileext = ".BED")
