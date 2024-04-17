@@ -1,3 +1,7 @@
+## bigsnpr 1.12.7
+
+- In function `snp_modifyBuild()`, fix a ftp broken link, and add the possibility to use a local chain file specified by the new parameter `local_file`.
+
 ## bigsnpr 1.12.6
 
 - Fix issue with `snp_subset()` when either `$fam` or `$map` are missing.
