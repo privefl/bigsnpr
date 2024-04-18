@@ -1,6 +1,6 @@
 ## bigsnpr 1.12.7
 
-- In function `snp_modifyBuild()`, fix a ftp broken link, and add the possibility to use a local chain file specified by the new parameter `local_file`.
+- In function `snp_modifyBuild()`, fix a ftp broken link, and add the possibility to use a local chain file specified by the new parameter `local_chain`.
 
 ## bigsnpr 1.12.6
 
