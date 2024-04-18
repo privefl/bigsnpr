@@ -14,6 +14,10 @@
 #' @param to Genome build to convert to. Default is `hg19`.
 #' @param check_reverse Whether to discard positions for which we cannot go back
 #'   to initial values by doing 'from -> to -> from'. Default is `TRUE`.
+#' @param local_chain Local chain file (e.g. `hg18ToHg19.over.chain.gz`) to use
+#'   instead of downloading one from parameters `from` and `to` (the default).
+#'   You can download one such file from e.g.
+#'   \url{https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/}.
 #'
 #' @references
 #' Hinrichs, Angela S., et al. "The UCSC genome browser database: update 2006."
@@ -24,7 +28,8 @@
 #'
 snp_modifyBuild <- function(info_snp, liftOver,
                             from = "hg18", to = "hg19",
-                            check_reverse = TRUE) {
+                            check_reverse = TRUE,
+                            local_chain = NULL) {
 
   if (!all(c("chr", "pos") %in% names(info_snp)))
     stop2("Expecting variables 'chr' and 'pos' in input 'info_snp'.")
@@ -44,10 +49,15 @@ snp_modifyBuild <- function(info_snp, liftOver,
                     BED, col.names = FALSE, sep = " ", scipen = 50)
 
   # Need chain file
-  url <- paste0("ftp://hgdownload.cse.ucsc.edu/goldenPath/", from, "/liftOver/",
-                from, "To", tools::toTitleCase(to), ".over.chain.gz")
-  chain <- tempfile(fileext = ".over.chain.gz")
-  utils::download.file(url, destfile = chain, quiet = TRUE)
+  if (is.null(local_chain)) {
+    url <- paste0("https://hgdownload.soe.ucsc.edu/goldenPath/", from, "/liftOver/",
+                  from, "To", tools::toTitleCase(to), ".over.chain.gz")
+    chain <- tempfile(fileext = ".over.chain.gz")
+    utils::download.file(url, destfile = chain, quiet = TRUE)
+  } else {
+    assert_exist(local_chain)
+    chain <- local_chain
+  }
 
   # Run liftOver (usage: liftOver oldFile map.chain newFile unMapped)
   lifted <- tempfile(fileext = ".BED")

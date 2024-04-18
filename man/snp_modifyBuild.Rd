@@ -9,7 +9,8 @@ snp_modifyBuild(
   liftOver,
   from = "hg18",
   to = "hg19",
-  check_reverse = TRUE
+  check_reverse = TRUE,
+  local_chain = NULL
 )
 }
 \arguments{
@@ -26,6 +27,11 @@ for Linux.}
 
 \item{check_reverse}{Whether to discard positions for which we cannot go back
 to initial values by doing 'from -> to -> from'. Default is \code{TRUE}.}
+
+\item{local_chain}{Local chain file (e.g. \code{hg18ToHg19.over.chain.gz}) to use
+instead of downloading one from parameters \code{from} and \code{to} (the default).
+You can download one such file from e.g.
+\url{https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/}.}
 }
 \value{
 Input data frame \code{info_snp} with column "pos" in the new build.
