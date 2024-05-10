@@ -11,15 +11,23 @@
 #' @param projection Matrix of "loadings" for each variant/PC to be used to
 #'   project allele frequencies.
 #' @param correction Coefficients to correct for shrinkage when projecting.
+#' @param min_cor Minimum correlation between observed and predicted frequencies.
+#'   Default is 0.4. When correlation is lower, an error is returned.
+#'   For individual genotypes, this should be larger than 0.6.
+#'   For allele frequencies, this should be larger than 0.9.
 #'
-#' @return vector of coefficients representing the ancestry proportions.
+#' @return Vector of coefficients representing the ancestry proportions.
+#'   Also (as attributes) `cor_each`, the correlation between input
+#'   frequencies and each reference frequencies, and `cor_pred`, the correlation
+#'   between input and predicted frequencies.
 #' @export
 #'
 #' @importFrom stats cor
 #'
 #' @example examples/example-ancestry-summary.R
 #'
-snp_ancestry_summary <- function(freq, info_freq_ref, projection, correction) {
+snp_ancestry_summary <- function(freq, info_freq_ref, projection, correction,
+                                 min_cor = 0.4) {
 
   assert_package("quadprog")
   assert_nona(freq)
@@ -51,10 +59,16 @@ snp_ancestry_summary <- function(freq, info_freq_ref, projection, correction) {
   )
 
   cor_pred <- drop(cor(drop(X0 %*% res$solution), freq))
+  if (cor_pred < min_cor)
+    stop2("Correlation between frequencies is too low: %.3f; %s",
+          cor_pred, "check matching between variants.")
   if (cor_pred < 0.99)
     warning2("The solution does not perfectly match the frequencies.")
 
-  setNames(round(res$solution, 7), colnames(info_freq_ref))
+  structure(round(res$solution, 7),
+            names = colnames(info_freq_ref),
+            cor_each = drop(cor(X0, freq)),
+            cor_pred = cor_pred)
 }
 
 ################################################################################

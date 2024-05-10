@@ -1,3 +1,7 @@
+## bigsnpr 1.12.8
+
+- In function `snp_ancestry_summary()`, now also report correlations between input frequencies and each reference frequencies as well as predicted frequencies. Also add a new parameter `min_cor` to error when the latter correlation is too small.
+
 ## bigsnpr 1.12.7
 
 - In function `snp_modifyBuild()`, fix a ftp broken link, and add the possibility to use a local chain file specified by the new parameter `local_chain`.

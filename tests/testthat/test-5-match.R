@@ -146,13 +146,19 @@ test_that("snp_ancestry_summary() works (with no projection here)", {
   prop <- c(0.2, 0.1, 0.6, 0.1)
   y <- X %*% prop
   res <- snp_ancestry_summary(y, X, Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)))
-  expect_equal(res, prop)
+  expect_equal(res, prop, check.attributes = FALSE)
+  expect_equal(attr(res, "cor_pred"), 1)
 
   expect_warning(res2 <- snp_ancestry_summary(
     y, X[, -1], Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X))),
     "The solution does not perfectly match the frequencies.")
   expect_true(all(res2 > prop[-1]))
-  expect_equal(res2, prop[-1], tolerance = 0.1)
+  expect_equal(res2, prop[-1], tolerance = 0.1, check.attributes = FALSE)
+  expect_equal(attr(res2, "cor_pred"), drop(cor(y, X[, -1] %*% res2)))
+
+  expect_error(res3 <- snp_ancestry_summary(
+    y, X[, -3], Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)), min_cor = 0.6),
+    "Correlation between frequencies is too low:")
 })
 
 ################################################################################

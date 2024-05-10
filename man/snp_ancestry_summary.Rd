@@ -4,7 +4,13 @@
 \alias{snp_ancestry_summary}
 \title{Estimation of ancestry proportions}
 \usage{
-snp_ancestry_summary(freq, info_freq_ref, projection, correction)
+snp_ancestry_summary(
+  freq,
+  info_freq_ref,
+  projection,
+  correction,
+  min_cor = 0.4
+)
 }
 \arguments{
 \item{freq}{Vector of frequencies from which to estimate ancestry proportions.}
@@ -16,9 +22,17 @@ be used as reference (one population per column).}
 project allele frequencies.}
 
 \item{correction}{Coefficients to correct for shrinkage when projecting.}
+
+\item{min_cor}{Minimum correlation between observed and predicted frequencies.
+Default is 0.4. When correlation is lower, an error is returned.
+For individual genotypes, this should be larger than 0.6.
+For allele frequencies, this should be larger than 0.9.}
 }
 \value{
-vector of coefficients representing the ancestry proportions.
+Vector of coefficients representing the ancestry proportions.
+Also (as attributes) \code{cor_each}, the correlation between input
+frequencies and each reference frequencies, and \code{cor_pred}, the correlation
+between input and predicted frequencies.
 }
 \description{
 Estimation of ancestry proportions. Make sure to match summary statistics
