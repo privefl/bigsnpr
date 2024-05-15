@@ -18,6 +18,10 @@
 #'   instead of downloading one from parameters `from` and `to` (the default).
 #'   You can download one such file from e.g.
 #'   \url{https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/}.
+#'   Provide a vector of two when using `check_reverse`.
+#' @param base_url From where to download the chain files. Default is
+#'   \url{"https://hgdownload.soe.ucsc.edu/goldenPath/"}. You can also try
+#'   replacing `https` by `http`, and/or `soe` by `cse`.
 #'
 #' @references
 #' Hinrichs, Angela S., et al. "The UCSC genome browser database: update 2006."
@@ -29,7 +33,8 @@
 snp_modifyBuild <- function(info_snp, liftOver,
                             from = "hg18", to = "hg19",
                             check_reverse = TRUE,
-                            local_chain = NULL) {
+                            local_chain = NULL,
+                            base_url = "https://hgdownload.soe.ucsc.edu/goldenPath/") {
 
   if (!all(c("chr", "pos") %in% names(info_snp)))
     stop2("Expecting variables 'chr' and 'pos' in input 'info_snp'.")
@@ -50,13 +55,13 @@ snp_modifyBuild <- function(info_snp, liftOver,
 
   # Need chain file
   if (is.null(local_chain)) {
-    url <- paste0("https://hgdownload.soe.ucsc.edu/goldenPath/", from, "/liftOver/",
+    url <- paste0(base_url, from, "/liftOver/",
                   from, "To", tools::toTitleCase(to), ".over.chain.gz")
     chain <- tempfile(fileext = ".over.chain.gz")
     utils::download.file(url, destfile = chain, quiet = TRUE)
   } else {
-    assert_exist(local_chain)
-    chain <- local_chain
+    chain <- local_chain[[1]]
+    assert_exist(chain)
   }
 
   # Run liftOver (usage: liftOver oldFile map.chain newFile unMapped)
@@ -75,7 +80,9 @@ snp_modifyBuild <- function(info_snp, liftOver,
 
   if (check_reverse) {
     pos2 <- suppressMessages(
-      Recall(info_snp, liftOver, from = to, to = from, check_reverse = FALSE)$pos)
+      Recall(info_snp, liftOver, from = to, to = from, check_reverse = FALSE,
+             local_chain = local_chain[[2]], base_url = base_url)$pos
+    )
     info_snp$pos[pos2 != pos0] <- NA_integer_
   }
 

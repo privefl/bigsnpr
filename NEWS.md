@@ -1,3 +1,7 @@
+## bigsnpr 1.12.9
+
+- In function `snp_modifyBuild()`, you can now provide `local_chain` as a vector of two, for when using `check_reverse`. You can now also modify the `base_url` from where to download the chain files.
+
 ## bigsnpr 1.12.8
 
 - In function `snp_ancestry_summary()`, now also report correlations between input frequencies and each reference frequencies as well as predicted frequencies. Also add a new parameter `min_cor` to error when the latter correlation is too small.

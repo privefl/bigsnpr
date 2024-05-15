@@ -10,7 +10,8 @@ snp_modifyBuild(
   from = "hg18",
   to = "hg19",
   check_reverse = TRUE,
-  local_chain = NULL
+  local_chain = NULL,
+  base_url = "https://hgdownload.soe.ucsc.edu/goldenPath/"
 )
 }
 \arguments{
@@ -31,7 +32,12 @@ to initial values by doing 'from -> to -> from'. Default is \code{TRUE}.}
 \item{local_chain}{Local chain file (e.g. \code{hg18ToHg19.over.chain.gz}) to use
 instead of downloading one from parameters \code{from} and \code{to} (the default).
 You can download one such file from e.g.
-\url{https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/}.}
+\url{https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/}.
+Provide a vector of two when using \code{check_reverse}.}
+
+\item{base_url}{From where to download the chain files. Default is
+\url{"https://hgdownload.soe.ucsc.edu/goldenPath/"}. You can also try
+replacing \code{https} by \code{http}, and/or \code{soe} by \code{cse}.}
 }
 \value{
 Input data frame \code{info_snp} with column "pos" in the new build.
