@@ -36,7 +36,7 @@ You can download one such file from e.g.
 Provide a vector of two when using \code{check_reverse}.}
 
 \item{base_url}{From where to download the chain files. Default is
-\url{"https://hgdownload.soe.ucsc.edu/goldenPath/"}. You can also try
+\code{"https://hgdownload.soe.ucsc.edu/goldenPath/"}. You can also try
 replacing \code{https} by \code{http}, and/or \code{soe} by \code{cse}.}
 }
 \value{

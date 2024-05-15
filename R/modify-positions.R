@@ -20,7 +20,7 @@
 #'   \url{https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/}.
 #'   Provide a vector of two when using `check_reverse`.
 #' @param base_url From where to download the chain files. Default is
-#'   \url{"https://hgdownload.soe.ucsc.edu/goldenPath/"}. You can also try
+#'   `"https://hgdownload.soe.ucsc.edu/goldenPath/"`. You can also try
 #'   replacing `https` by `http`, and/or `soe` by `cse`.
 #'
 #' @references
