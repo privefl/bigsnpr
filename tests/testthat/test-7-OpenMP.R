@@ -183,6 +183,28 @@ test_that("parallel snp_cor() works", {
 
 ################################################################################
 
+test_that("parallel snp_corInd() works", {
+
+  test <- snp_attachExtdata()
+  G <- test$genotypes
+  m <- ncol(G)
+
+  replicate(5, {
+    keep <- Matrix::rsparsematrix(m, m, 0.05, symmetric = TRUE) != 0
+    ind <- Matrix::which(keep, arr.ind = TRUE)
+    list_ind <- split(ind[, 1], factor(1:m)[ind[, 2]])
+
+    corr <- bigsnpr:::snp_corInd(G, list_ind = list_ind, ncores = 2)
+    ind2 <- Matrix::which(corr != 0, arr.ind = TRUE)
+    expect_equal(nrow(vctrs::vec_set_difference(ind2, ind)), 0)
+    diff <- vctrs::vec_set_difference(ind, ind2)
+    expect_equal(apply(diff, 1, function(ind) cor(G[, ind[1]], G[, ind[2]])),
+                 rep(0, nrow(diff)))
+  })
+})
+
+################################################################################
+
 test_that("parallel snp_ld_scores() works", {
 
   G <- snp_attachExtdata()$genotypes

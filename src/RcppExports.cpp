@@ -237,6 +237,22 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// corMatInd
+NumericVector corMatInd(Environment obj, const IntegerVector& rowInd, const IntegerVector& colInd, const std::vector<size_t>& P, const std::vector<int>& I, int ncores);
+RcppExport SEXP _bigsnpr_corMatInd(SEXP objSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP PSEXP, SEXP ISEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type rowInd(rowIndSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type colInd(colIndSEXP);
+    Rcpp::traits::input_parameter< const std::vector<size_t>& >::type P(PSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type I(ISEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(corMatInd(obj, rowInd, colInd, P, I, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // corMat
 List corMat(Environment obj, const IntegerVector& rowInd, const IntegerVector& colInd, double size, const NumericVector& thr, const NumericVector& pos, bool fill_diag, int ncores);
 RcppExport SEXP _bigsnpr_corMat(SEXP objSEXP, SEXP rowIndSEXP, SEXP colIndSEXP, SEXP sizeSEXP, SEXP thrSEXP, SEXP posSEXP, SEXP fill_diagSEXP, SEXP ncoresSEXP) {
@@ -252,6 +268,33 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type fill_diag(fill_diagSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
     rcpp_result_gen = Rcpp::wrap(corMat(obj, rowInd, colInd, size, thr, pos, fill_diag, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// any_overlap
+bool any_overlap(const std::vector<size_t>& P, const std::vector<int>& I, int j1, int j2);
+RcppExport SEXP _bigsnpr_any_overlap(SEXP PSEXP, SEXP ISEXP, SEXP j1SEXP, SEXP j2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<size_t>& >::type P(PSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type I(ISEXP);
+    Rcpp::traits::input_parameter< int >::type j1(j1SEXP);
+    Rcpp::traits::input_parameter< int >::type j2(j2SEXP);
+    rcpp_result_gen = Rcpp::wrap(any_overlap(P, I, j1, j2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// find_indirect_corr
+ListOf<IntegerVector> find_indirect_corr(const std::vector<size_t>& P, const std::vector<int>& I, int ncores);
+RcppExport SEXP _bigsnpr_find_indirect_corr(SEXP PSEXP, SEXP ISEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<size_t>& >::type P(PSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type I(ISEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_indirect_corr(P, I, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -593,7 +636,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_clumping_chr", (DL_FUNC) &_bigsnpr_clumping_chr, 12},
     {"_bigsnpr_snp_colstats", (DL_FUNC) &_bigsnpr_snp_colstats, 4},
     {"_bigsnpr_replaceSNP", (DL_FUNC) &_bigsnpr_replaceSNP, 4},
+    {"_bigsnpr_corMatInd", (DL_FUNC) &_bigsnpr_corMatInd, 6},
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 8},
+    {"_bigsnpr_any_overlap", (DL_FUNC) &_bigsnpr_any_overlap, 4},
+    {"_bigsnpr_find_indirect_corr", (DL_FUNC) &_bigsnpr_find_indirect_corr, 3},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
     {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 8},
     {"_bigsnpr_ld_scores_sfbm", (DL_FUNC) &_bigsnpr_ld_scores_sfbm, 3},

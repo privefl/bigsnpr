@@ -57,8 +57,20 @@ replaceSNP <- function(BM, BM2, rowInd, colInd) {
     invisible(.Call(`_bigsnpr_replaceSNP`, BM, BM2, rowInd, colInd))
 }
 
+corMatInd <- function(obj, rowInd, colInd, P, I, ncores) {
+    .Call(`_bigsnpr_corMatInd`, obj, rowInd, colInd, P, I, ncores)
+}
+
 corMat <- function(obj, rowInd, colInd, size, thr, pos, fill_diag, ncores) {
     .Call(`_bigsnpr_corMat`, obj, rowInd, colInd, size, thr, pos, fill_diag, ncores)
+}
+
+any_overlap <- function(P, I, j1, j2) {
+    .Call(`_bigsnpr_any_overlap`, P, I, j1, j2)
+}
+
+find_indirect_corr <- function(P, I, ncores) {
+    .Call(`_bigsnpr_find_indirect_corr`, P, I, ncores)
 }
 
 impute <- function(BM, method, ncores) {
