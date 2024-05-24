@@ -84,13 +84,18 @@ get_list <- function(mat) {
   unname(split(ind[, "row"], factor(cols_along(test))[ind[, "col"]]))
 }
 
+get_list2 <- function(mat) {
+  nb_by_col <- diff(mat@p)
+  unname(split(mat@i + 1L, rep(factor(seq_along(nb_by_col)), nb_by_col)))
+}
+
 microbenchmark::microbenchmark(
   bigsnpr:::find_indirect_corr(corr_T@p, corr_T@i, ncores = 2),
   get_list(corr_T %*% corr_T),
   get_list(Matrix::crossprod(corr_T)),
   get_list(Matrix::tcrossprod(corr_T)),
-  times = 5,
-  check = "equal"
+  get_list2(Matrix::crossprod(corr_T)),
+  times = 5#, check = "equal"
 )
 # Unit: milliseconds
 #                                                         expr       min        lq

@@ -7,11 +7,6 @@ snp_corInd <- function(Gna, list_ind,
 
   assert_lengths(list_ind, ind.col)
 
-  list_ind <- lapply(seq_along(list_ind), function(k) {
-    ind <- list_ind[[k]]
-    unique(sort(ind[k >= ind])) - 1L
-  })
-
   corr <- new("dsCMatrix", uplo = "U")
   m <- length(list_ind)
   corr@Dim <- c(m, m)
@@ -32,6 +27,23 @@ snp_corInd <- function(Gna, list_ind,
     warning2("NA or NaN values in the resulting correlation matrix.")
 
   corr
+}
+
+################################################################################
+
+# /!\ @i indices are 0-based
+list_non_zero <- function(spmat) {
+  nb_by_col <- diff(spmat@p)
+  J <- rep(factor(seq_along(nb_by_col)), nb_by_col)
+  unname( split(spmat@i, J) )
+}
+
+find_indirect_corr2 <- function(spmat, thr_r2) {
+  spmat %>%
+    Matrix::drop0(tol = sqrt(thr_r2)) %>%
+    { . != 0 } %>%
+    Matrix::crossprod() %>%
+    list_non_zero()
 }
 
 ################################################################################
@@ -69,15 +81,11 @@ snp_cor_extendedThr <- function(Gna, thr_r2, infos.pos, size,
   corr <- snp_cor(Gna, thr_r2 = thr_r2, infos.pos = infos.pos, size = size,
                   ind.row = ind.row, ind.col = ind.col, ncores = ncores)
 
-  ind <- Matrix::which(corr != 0, arr.ind = TRUE)
-  prev_list_keep <- split(ind[, "row"], factor(cols_along(corr))[ind[, "col"]])
-  rm(ind)
+  prev_list_keep <- list_non_zero(corr)
 
   repeat {
-    corr_T <- corr %>%
-      Matrix::drop0(tol = sqrt(thr_r2)) %>%
-      methods::as("generalMatrix")
-    new_list_keep <- find_indirect_corr(corr_T@p, corr_T@i, ncores = ncores)
+
+    new_list_keep <- find_indirect_corr2(corr, thr_r2)
 
     for (k in seq_along(prev_list_keep)) {
       diff_ind <- setdiff(new_list_keep[[k]], prev_list_keep[[k]])

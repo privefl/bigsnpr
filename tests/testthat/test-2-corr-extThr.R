@@ -17,15 +17,22 @@ test_that("snp_cor_extendedThr (no subset) works", {
 
     THR <- runif(1, 0.01, 0.5)
     SIZE <- round(runif(1, 100, 2000))
-    test <- snp_cor_extendedThr(G, thr_r2 = THR, infos.pos = POS, size = SIZE, ncores = NCORES)
+    test <- snp_cor_extendedThr(G, thr_r2 = THR, infos.pos = POS, size = SIZE, ncores = 2)
 
     corr_T <- as(Matrix::drop0(test, tol = sqrt(THR)), "generalMatrix")
-    list_keep <- bigsnpr:::find_indirect_corr(corr_T@p, corr_T@i, ncores = NCORES)
+    list_keep <- bigsnpr:::find_indirect_corr(corr_T@p, corr_T@i, ncores = 2)
     overlap <- Matrix::which((corr_T %*% corr_T) != 0, arr.ind = TRUE)
     check_list <- split(overlap[, "row"], factor(cols_along(G))[overlap[, "col"]])
 
     expect_equal(list_keep, unname(check_list))
     expect_equal(test[overlap], corr0[overlap])
+
+    list_keep2 <- bigsnpr:::find_indirect_corr2(test, THR)
+    check_list2 <- lapply(seq_along(check_list), function(k) {
+      ind <- check_list[[k]]
+      ind[ind <= k] - 1L
+    })
+    expect_equal(list_keep2, check_list2)
 
     NULL
   })
@@ -49,10 +56,10 @@ test_that("snp_cor_extendedThr (no subset) works", {
     G2 <- big_copy(G, ind.row = ind.row, ind.col = ind.col)
     G2[1, ] <- 3  # setting as missing, will not be used
     test0 <- snp_cor_extendedThr(G2, thr_r2 = THR, infos.pos = POS[ind.col],
-                                 size = SIZE, ncores = NCORES)
+                                 size = SIZE, ncores = 2)
 
     test <- snp_cor_extendedThr(G, thr_r2 = THR, infos.pos = POS[ind.col],
-                                size = SIZE, ncores = NCORES,
+                                size = SIZE, ncores = 2,
                                 ind.row = ind.row[-1], ind.col = ind.col)
 
     expect_equal(test, test0)

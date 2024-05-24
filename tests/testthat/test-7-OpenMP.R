@@ -194,6 +194,11 @@ test_that("parallel snp_corInd() works", {
     ind <- Matrix::which(keep, arr.ind = TRUE)
     list_ind <- split(ind[, 1], factor(1:m)[ind[, 2]])
 
+    list_ind <- lapply(seq_along(list_ind), function(k) {
+      ind <- list_ind[[k]]
+      ind[ind <= k] - 1L
+    })
+
     corr <- bigsnpr:::snp_corInd(G, list_ind = list_ind, ncores = 2)
     ind2 <- Matrix::which(corr != 0, arr.ind = TRUE)
     expect_equal(nrow(vctrs::vec_set_difference(ind2, ind)), 0)
