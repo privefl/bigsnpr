@@ -73,6 +73,18 @@ find_indirect_corr <- function(P, I, ncores) {
     .Call(`_bigsnpr_find_indirect_corr`, P, I, ncores)
 }
 
+find_ld_friends <- function(corr, j, keep, thr) {
+    .Call(`_bigsnpr_find_ld_friends`, corr, j, keep, thr)
+}
+
+test_ld_scores <- function(corr, ord, ind, keep, thr) {
+    invisible(.Call(`_bigsnpr_test_ld_scores`, corr, ord, ind, keep, thr))
+}
+
+cor2cov_inplace <- function(x, sd) {
+    .Call(`_bigsnpr_cor2cov_inplace`, x, sd)
+}
+
 impute <- function(BM, method, ncores) {
     invisible(.Call(`_bigsnpr_impute`, BM, method, ncores))
 }

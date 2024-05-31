@@ -3,7 +3,7 @@ Package: bigsnpr
 Type: Package
 Title: Analysis of Massive SNP Arrays
 Version: 1.13.0
-Date: 2024-05-22
+Date: 2024-05-31
 Authors@R: c(
     person("Florian", "Privé", email = "florian.prive.21@gmail.com", role = c("aut", "cre")),
     person("Michael", "Blum", role = "ths"),
@@ -25,7 +25,7 @@ Depends:
 Imports:
     bigassertr (>= 0.1.6),
     bigparallelr,
-    bigsparser (>= 0.6),
+    bigsparser (>= 0.7.1),
     bigreadr,
     bigutilsr (>= 0.3.3),
     data.table (>= 1.12.4),
@@ -70,3 +70,4 @@ RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 URL: https://privefl.github.io/bigsnpr/
 BugReports: https://github.com/privefl/bigsnpr/issues
+Remotes: privefl/bigsparser

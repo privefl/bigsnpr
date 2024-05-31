@@ -298,6 +298,46 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// find_ld_friends
+List find_ld_friends(Environment corr, int j, LogicalVector& keep, const NumericVector& thr);
+RcppExport SEXP _bigsnpr_find_ld_friends(SEXP corrSEXP, SEXP jSEXP, SEXP keepSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
+    Rcpp::traits::input_parameter< int >::type j(jSEXP);
+    Rcpp::traits::input_parameter< LogicalVector& >::type keep(keepSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type thr(thrSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_ld_friends(corr, j, keep, thr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_ld_scores
+void test_ld_scores(Environment corr, const IntegerVector& ord, const IntegerVector& ind, LogicalVector& keep, const NumericVector& thr);
+RcppExport SEXP _bigsnpr_test_ld_scores(SEXP corrSEXP, SEXP ordSEXP, SEXP indSEXP, SEXP keepSEXP, SEXP thrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type corr(corrSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ord(ordSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind(indSEXP);
+    Rcpp::traits::input_parameter< LogicalVector& >::type keep(keepSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type thr(thrSEXP);
+    test_ld_scores(corr, ord, ind, keep, thr);
+    return R_NilValue;
+END_RCPP
+}
+// cor2cov_inplace
+NumericMatrix& cor2cov_inplace(NumericMatrix& x, const NumericVector& sd);
+RcppExport SEXP _bigsnpr_cor2cov_inplace(SEXP xSEXP, SEXP sdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type sd(sdSEXP);
+    rcpp_result_gen = Rcpp::wrap(cor2cov_inplace(x, sd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // impute
 void impute(Environment BM, int method, int ncores);
 RcppExport SEXP _bigsnpr_impute(SEXP BMSEXP, SEXP methodSEXP, SEXP ncoresSEXP) {
@@ -640,6 +680,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_corMat", (DL_FUNC) &_bigsnpr_corMat, 8},
     {"_bigsnpr_any_overlap", (DL_FUNC) &_bigsnpr_any_overlap, 4},
     {"_bigsnpr_find_indirect_corr", (DL_FUNC) &_bigsnpr_find_indirect_corr, 3},
+    {"_bigsnpr_find_ld_friends", (DL_FUNC) &_bigsnpr_find_ld_friends, 4},
+    {"_bigsnpr_test_ld_scores", (DL_FUNC) &_bigsnpr_test_ld_scores, 5},
+    {"_bigsnpr_cor2cov_inplace", (DL_FUNC) &_bigsnpr_cor2cov_inplace, 2},
     {"_bigsnpr_impute", (DL_FUNC) &_bigsnpr_impute, 3},
     {"_bigsnpr_lassosum2", (DL_FUNC) &_bigsnpr_lassosum2, 8},
     {"_bigsnpr_ld_scores_sfbm", (DL_FUNC) &_bigsnpr_ld_scores_sfbm, 3},
