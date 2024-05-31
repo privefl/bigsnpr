@@ -116,7 +116,7 @@ snp_autoSVD <- function(G,
   }
 
   iter <- 0L
-  LRLDR <- LD.wiki34[0, 1:3]
+  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer())
   repeat {
     printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
@@ -263,7 +263,7 @@ bed_autoSVD <- function(obj.bed,
   }
 
   iter <- 0L
-  LRLDR <- LD.wiki34[0, 1:3]
+  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer())
   repeat {
     printf2("\nIteration %d:\n", iter <- iter + 1L)
     printf2("Computing SVD..\n")
