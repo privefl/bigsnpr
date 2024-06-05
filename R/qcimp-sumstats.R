@@ -52,7 +52,7 @@ snp_qcimp_sumstats <- function(corr, df_beta, sd0,
   assert_nona(df_beta)
   assert_nona(sd0)
 
-  keep <- !removed
+  keep <- !removed | is.na(removed)
 
   sd <- with(df_beta, 1 / sqrt(n_eff * beta_se^2 + beta^2))
   opt_scaling <- stats::optimize(
@@ -92,6 +92,10 @@ snp_qcimp_sumstats <- function(corr, df_beta, sd0,
 
       FUNs <- c("find_ld_friends", "test_ld_scores", "cor2cov_inplace")
       all_res_this <- foreach(id_current = id_this, .export = FUNs) %dopar% {
+
+        # make sure use local copies before C++
+        keep[1] <- keep[1]
+        keep_high[1] <- FALSE
 
         # all LD friends of current
         high_ld <- find_ld_friends(corr, id_current - 1L, keep, thr)

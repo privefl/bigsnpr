@@ -56,7 +56,7 @@ void test_ld_scores(Environment corr,
                     const IntegerVector& ord,
                     const IntegerVector& ind,
                     LogicalVector& keep,
-                    const NumericVector& thr) {
+                    double thr) {
 
   Rcpp::XPtr<SFBM> sfbm = corr["address"];
   if (sfbm->is_compact()) Rcpp::stop("This does not work with a compact SFBM");
@@ -76,11 +76,11 @@ void test_ld_scores(Environment corr,
       if (keep[i_k]) {
         double x_k = data[k + 1];
         ld_score += square(x_k);
-        if (ld_score > thr[o]) break;
+        if (ld_score > thr) break;
       }
     }
 
-    if (ld_score <= thr[o]) keep[j] = true;
+    if (ld_score <= thr) keep[j] = true;
   }
 }
 

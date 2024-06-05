@@ -60,6 +60,10 @@ test_that("snp_qcimp_sumstats() works", {
   expect_gte(min(res2$r2_max, na.rm = TRUE), 0.2)
   expect_lte(max(res2$r2_imp, na.rm = TRUE), 1)
   expect_lte(max(res2$r2_max, na.rm = TRUE), 1)
+
+  # The algorithm should be deterministic
+  expect_equal(snp_qcimp_sumstats(corr, df_beta,  sd0 = sd0), res)
+  expect_equal(snp_qcimp_sumstats(corr, df_beta2, sd0 = sd0), res2)
 })
 
 ################################################################################

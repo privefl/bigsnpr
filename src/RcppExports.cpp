@@ -313,7 +313,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_ld_scores
-void test_ld_scores(Environment corr, const IntegerVector& ord, const IntegerVector& ind, LogicalVector& keep, const NumericVector& thr);
+void test_ld_scores(Environment corr, const IntegerVector& ord, const IntegerVector& ind, LogicalVector& keep, double thr);
 RcppExport SEXP _bigsnpr_test_ld_scores(SEXP corrSEXP, SEXP ordSEXP, SEXP indSEXP, SEXP keepSEXP, SEXP thrSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -321,7 +321,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type ord(ordSEXP);
     Rcpp::traits::input_parameter< const IntegerVector& >::type ind(indSEXP);
     Rcpp::traits::input_parameter< LogicalVector& >::type keep(keepSEXP);
-    Rcpp::traits::input_parameter< const NumericVector& >::type thr(thrSEXP);
+    Rcpp::traits::input_parameter< double >::type thr(thrSEXP);
     test_ld_scores(corr, ord, ind, keep, thr);
     return R_NilValue;
 END_RCPP
