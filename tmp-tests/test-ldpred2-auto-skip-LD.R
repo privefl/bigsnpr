@@ -56,6 +56,9 @@ corr2 <- as.matrix(corr0)
 
 m <- length(beta_hat)
 
+set.seed(1)
+shrink_corr <- 0.2
+# corr2 <- shrink_corr * corr2; diag(corr2) <- 1; shrink_corr <- 1
 {
   curr_beta <- dotprods <- avg_beta <- avg_postp <- avg_beta_hat <-
     rep(0, m)
@@ -65,8 +68,7 @@ m <- length(beta_hat)
   cur_h2_est <- 0
   p <- p_init
   h2 <- h2_init
-  gap0 <- crossprod(beta_hat)
-  shrink_corr <- 0.95
+  gap0 <- 2 * crossprod(beta_hat)
 
   for (k in seq_len(num_iter_tot)) {
 
@@ -127,20 +129,22 @@ m <- length(beta_hat)
     p = rbeta(1, 1 + nb_causal / mean_ld, 1 + (m - nb_causal) / mean_ld)
     h2 = cur_h2_est
     all.equal(dotprods, drop(corr2 %*% curr_beta))
-    print(c(h2, crossprod(curr_beta, shrink_corr * dotprods + (1 - shrink_corr) * curr_beta)))
+    print(c(h2, crossprod(curr_beta, dotprods),
+            crossprod(curr_beta, shrink_corr * dotprods + (1 - shrink_corr) * curr_beta)))
 
     print(c(k, p, h2))
     p_est[k]  = p;
     h2_est[k] = h2;
   }
 }
+# 200.0000000   0.0384922   0.2537328
+# 200.0000000   0.0384922   0.2537328
 
 plot(p_est, log = "y", pch = 20); abline(h = M / m, col = "red")
 plot(h2_est, pch = 20); abline(h = 0.1, col = "red")
 
 pred <- big_prodVec(G, avg_beta, ind.row = ind.val)
-cor(pred, y[ind.val])^2 # 6.1%
-# using the normal corr leads to divergence
+cor(pred, y[ind.val])^2 # 0.03766447 // 0.03766447
 
 
 ## Better account for LD?
@@ -158,7 +162,7 @@ num_iter2 <- round(num_iter / mean(1 / ld))
   p <- p_init
   h2 <- h2_init
   gap0 <- crossprod(beta_hat)
-  shrink_corr <- 0.99
+  shrink_corr <- 0.1
 
   for (k in seq_len(num_iter_tot)) {
 
