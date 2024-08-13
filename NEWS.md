@@ -1,3 +1,7 @@
+## bigsnpr 1.12.10
+
+- In function `snp_ancestry_summary()`, add parameter `sum_to_one` to optionally allows for ancestry coefficients to have a sum lower than 1 (when `FALSE`; default is `TRUE`).
+
 ## bigsnpr 1.12.9
 
 - In function `snp_modifyBuild()`, you can now provide `local_chain` as a vector of two, for when using `check_reverse`. You can now also modify the `base_url` from where to download the chain files.
