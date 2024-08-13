@@ -16,6 +16,7 @@ List ldpred2_gibbs_auto(Environment corr,
                         const NumericVector& beta_hat,
                         const NumericVector& n_vec,
                         const IntegerVector& ind_sub,
+                        const NumericVector& delta,
                         double p_init,
                         double h2_init,
                         int burn_in,
@@ -60,7 +61,9 @@ List ldpred2_gibbs_auto(Environment corr,
 
       int j2 = ind_sub[j];
       double dotprod = dotprods[j2];
-      double res_beta_hat_j = beta_hat[j] - shrink_corr * (dotprod - curr_beta[j]);
+      double delta_j = delta[j];
+      double res_beta_hat_j =
+        (beta_hat[j] - shrink_corr * (dotprod - curr_beta[j])) / (1 + delta_j);
 
       double C1 = sigma2 * n_vec[j];
       double C2 = 1 / (1 + 1 / C1);
@@ -71,7 +74,8 @@ List ldpred2_gibbs_auto(Environment corr,
         (1 + inv_odd_p * ::sqrt(1 + C1) * ::exp(-C3 * C3 / C4 / 2));
 
       double prev_beta = curr_beta[j];
-      double dotprod_shrunk = shrink_corr * dotprod + (1 - shrink_corr) * prev_beta;
+      double dotprod_shrunk =
+        shrink_corr * dotprod + (1 + delta_j - shrink_corr) * prev_beta;
 
       if (k >= burn_in) {
         avg_postp[j]    += postp;
@@ -98,7 +102,7 @@ List ldpred2_gibbs_auto(Environment corr,
       }
 
       if (diff != 0) {
-        cur_h2_est += diff * (2 * dotprod_shrunk + diff);
+        cur_h2_est += diff * (2 * dotprod_shrunk + diff * (1 + delta_j));
         dotprods = sfbm->incr_mult_col(j2, dotprods, diff);
       }
     }
