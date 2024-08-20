@@ -69,7 +69,7 @@ columns corresponding to \code{ind.col}, to scale each of their elements such as
 \deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
 You can also provide your own \code{center} and \code{scale} by using \code{\link[=as_scaling_fun]{as_scaling_fun()}}.}
 
-\item{thr.r2}{Threshold over the squared correlation between two SNPs.
+\item{thr.r2}{Threshold over the squared correlation between two variants.
 Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
 
 \item{size}{For one SNP, window size around this SNP to compute correlations.
@@ -84,7 +84,7 @@ I recommend that you provide the positions if available.}
 \item{roll.size}{Radius of rolling windows to smooth log-p-values.
 Default is \code{50}.}
 
-\item{int.min.size}{Minimum number of consecutive outlier SNPs
+\item{int.min.size}{Minimum number of consecutive outlier variants
 in order to be reported as long-range LD region. Default is \code{20}.}
 
 \item{alpha.tukey}{Default is \code{0.1}. The type-I error rate in outlier
@@ -129,11 +129,11 @@ indices of the remaining variants with \verb{attr(*, "subset")}. If some of the
 variants removed are contiguous, the regions are reported in \verb{attr(*, "lrldr")}.
 }
 \details{
-If you don't have any information about SNPs, you can try using
+If you don't have any information about variants, you can try using
 \itemize{
 \item \code{infos.chr = rep(1, ncol(G))},
-\item \code{size = ncol(G)} (if SNPs are not sorted),
-\item \code{roll.size = 0} (if SNPs are not sorted).
+\item \code{size = ncol(G)} (if variants are not sorted),
+\item \code{roll.size = 0} (if variants are not sorted).
 }
 }
 \examples{

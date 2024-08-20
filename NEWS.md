@@ -1,3 +1,7 @@
+## bigsnpr 1.12.11
+
+- In functions `snp_autoSVD()` and `bed_autoSVD()`, now perform the MAC thresholding before the clumping step. This reordering should not change results, but this should be faster now.
+
 ## bigsnpr 1.12.10
 
 - In function `snp_ancestry_summary()`, add parameter `sum_to_one` to optionally allows for ancestry coefficients to have a sum lower than 1 (when `FALSE`; default is `TRUE`).

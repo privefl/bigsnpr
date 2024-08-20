@@ -21,10 +21,10 @@ getIntervals <- function(x, n = 2) {
 #' indices of the remaining variants with `attr(*, "subset")`. If some of the
 #' variants removed are contiguous, the regions are reported in `attr(*, "lrldr")`.
 #'
-#' If you don't have any information about SNPs, you can try using
+#' If you don't have any information about variants, you can try using
 #'   - `infos.chr = rep(1, ncol(G))`,
-#'   - `size = ncol(G)` (if SNPs are not sorted),
-#'   - `roll.size = 0` (if SNPs are not sorted).
+#'   - `size = ncol(G)` (if variants are not sorted),
+#'   - `roll.size = 0` (if variants are not sorted).
 #'
 #' @inheritParams bigsnpr-package
 #' @inheritParams snp_clumping
@@ -37,10 +37,10 @@ getIntervals <- function(x, n = 2) {
 #'   **This algorithm should be used to compute a few singular vectors/values.**
 #' @param roll.size Radius of rolling windows to smooth log-p-values.
 #'   Default is `50`.
-#' @param int.min.size Minimum number of consecutive outlier SNPs
+#' @param int.min.size Minimum number of consecutive outlier variants
 #'   in order to be reported as long-range LD region. Default is `20`.
 #' @param verbose Output some information on the iterations? Default is `TRUE`.
-#' @param thr.r2 Threshold over the squared correlation between two SNPs.
+#' @param thr.r2 Threshold over the squared correlation between two variants.
 #'   Default is `0.2`. Use `NA` if you want to skip the clumping step.
 #' @param alpha.tukey Default is `0.1`. The type-I error rate in outlier
 #'   detection (that is further corrected for multiple testing).
@@ -90,29 +90,28 @@ snp_autoSVD <- function(G,
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
-  # First clumping
-  if (is.na(thr.r2)) {
-    printf2("\nSkipping clumping.\n")
-    ind.keep <- ind.col
-  } else {
-    printf2("\nPhase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
-    ind.keep <- snp_clumping(G, infos.chr,
-                             ind.row = ind.row,
-                             exclude = setdiff(cols_along(G), ind.col),
-                             thr.r2 = thr.r2,
-                             size = size,
-                             infos.pos = infos.pos,
-                             ncores = ncores)
-    printf2("keep %d SNPs.\n", length(ind.keep))
-  }
-
   if (min.mac > 0) {
-    maf <- snp_MAF(G, ind.row, ind.keep, ncores = ncores)
+    maf <- snp_MAF(G, ind.row, ind.col, ncores = ncores)
     min.maf <- min.mac / (2 * length(ind.row))
     mac.nok <- (maf < min.maf)
     printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
             `if`(sum(mac.nok) > 1, "s", ""), min.mac)
-    ind.keep <- ind.keep[!mac.nok]
+    ind.keep <- ind.col[!mac.nok]
+  }
+
+  # First clumping
+  if (is.na(thr.r2)) {
+    printf2("\nSkipping clumping.\n")
+  } else {
+    printf2("\nPhase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
+    ind.keep <- snp_clumping(G, infos.chr,
+                             ind.row = ind.row,
+                             exclude = setdiff(cols_along(G), ind.keep),
+                             thr.r2 = thr.r2,
+                             size = size,
+                             infos.pos = infos.pos,
+                             ncores = ncores)
+    printf2("keep %d variants.\n", length(ind.keep))
   }
 
   iter <- 0L
@@ -239,27 +238,26 @@ bed_autoSVD <- function(obj.bed,
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
+  if (min.mac > 0) {
+    mac <- bed_MAF(obj.bed, ind.row, ind.col, ncores = ncores)$mac
+    mac.nok <- (mac < min.mac)
+    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
+            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
+    ind.keep <- ind.col[!mac.nok]
+  }
+
   # First clumping
   if (is.na(thr.r2)) {
     printf2("\nSkipping clumping.\n")
-    ind.keep <- ind.col
   } else {
     printf2("\nPhase of clumping (on MAC) at r^2 > %s.. ", thr.r2)
     ind.keep <- bed_clumping(obj.bed,
                              ind.row = ind.row,
-                             exclude = setdiff(cols_along(obj.bed), ind.col),
+                             exclude = setdiff(cols_along(obj.bed), ind.keep),
                              thr.r2 = thr.r2,
                              size = size,
                              ncores = ncores)
     printf2("keep %d variants.\n", length(ind.keep))
-  }
-
-  if (min.mac > 0) {
-    mac <- bed_MAF(obj.bed, ind.row, ind.keep, ncores = ncores)$mac
-    mac.nok <- (mac < min.mac)
-    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
-            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
-    ind.keep <- ind.keep[!mac.nok]
   }
 
   iter <- 0L
