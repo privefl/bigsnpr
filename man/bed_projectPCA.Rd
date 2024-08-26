@@ -87,7 +87,7 @@ I recommend that you provide the positions if available.}
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 A list of 3 elements:

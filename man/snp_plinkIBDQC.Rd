@@ -28,7 +28,7 @@ appending \code{"_norel"} to \code{prefix.in} (\code{bedfile.in} without extensi
 to be excluded. Default is \code{0.08}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{pruning.args}{A vector of 2 pruning parameters, respectively
 the window size (in variant count) and the pairwise $r^2$ threshold

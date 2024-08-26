@@ -30,7 +30,7 @@ If not specified, all columns are used.\cr
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 A vector of MAFs, corresponding to \code{ind.col}.

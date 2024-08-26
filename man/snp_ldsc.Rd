@@ -54,7 +54,7 @@ This is equivalent to parameter \code{--two-step}.}
 \item{chi2_thr2}{Threshold on \code{chi2} in step 2. Default is \code{Inf} (none).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{corr}{Sparse correlation matrix. Can also be an \link[=SFBM-class]{SFBM}.}
 

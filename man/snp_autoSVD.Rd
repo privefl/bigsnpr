@@ -99,7 +99,7 @@ Default is \code{5}.}
 \item{is.size.in.bp}{Deprecated.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 

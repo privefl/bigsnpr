@@ -70,7 +70,7 @@ They can be run in parallel by changing \code{ncores}.
 \item{num_iter}{Number of iterations after burn-in.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{return_sampling_betas}{Whether to return all sampling betas (after
 burn-in)? This is useful for assessing the uncertainty of the PRS at the

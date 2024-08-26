@@ -32,7 +32,7 @@ If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.

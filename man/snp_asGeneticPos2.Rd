@@ -22,7 +22,7 @@ hg38 is downloaded from
 \item{dir}{Directory where to download and decompress files.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{infos.chr}{Vector of integers specifying each SNP's chromosome.\cr
 Typically \verb{<bigSNP>$map$chromosome}.}

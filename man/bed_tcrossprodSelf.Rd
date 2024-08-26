@@ -48,11 +48,11 @@ of \code{G}. For example, this can be used to compute GRMs.
 
 
 Large matrix computations are made block-wise and won't be parallelized
-in order to not have to reduce the size of these blocks.
-Instead, you may use \href{https://mran.microsoft.com/open/}{Microsoft R Open}
+in order to not have to reduce the size of these blocks. Instead, you can use
+the \href{https://forum.posit.co/t/intel-mkl-integration-to-r-on-windows/176071}{MKL}
 or OpenBLAS in order to accelerate these block matrix computations.
-You can also control the number of cores used with
-\code{bigparallelr::set_blas_ncores()}.
+You can control the number of cores used by these optimized matrix libraries
+with \code{bigparallelr::set_blas_ncores()}.
 
 }
 

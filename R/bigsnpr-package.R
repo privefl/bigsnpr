@@ -33,7 +33,7 @@
 #' **Don't use negative indices.**
 #'
 #' @param ncores Number of cores used. Default doesn't use parallelism.
-#'   You may use [nb_cores()].
+#'   You may use [bigstatsr::nb_cores()].
 #'
 #' @param is.size.in.bp Deprecated.
 #'

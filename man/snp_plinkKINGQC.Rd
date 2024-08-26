@@ -36,7 +36,7 @@ second-degree relations as well, etc.}
 Otherwise, returns a table with coefficients of related pairs.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{extra.options}{Other options to be passed to PLINK2 as a string.}
 
