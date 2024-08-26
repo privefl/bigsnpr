@@ -97,6 +97,8 @@ snp_autoSVD <- function(G,
     printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
             `if`(sum(mac.nok) > 1, "s", ""), min.mac)
     ind.keep <- ind.col[!mac.nok]
+  } else {
+    stop2("You cannot use variants with no variation; set min.mac > 0.")
   }
 
   # First clumping
@@ -115,9 +117,10 @@ snp_autoSVD <- function(G,
   }
 
   iter <- 0L
-  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer())
+  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer(), Iter = integer())
   repeat {
-    printf2("\nIteration %d:\n", iter <- iter + 1L)
+    iter <- iter + 1L
+    printf2("\nIteration %d:\n", iter)
     printf2("Computing SVD..\n")
     # SVD
     obj.svd <- big_randomSVD(G,
@@ -158,10 +161,11 @@ snp_autoSVD <- function(G,
         for (i in rows_along(ind.range)) {
           seq.range <- seq2(ind.range[i, ])
           seq.range.chr <- infos.chr[ind.keep[seq.range]]
-          chr <- stats::median(seq.range.chr)  ## to get mode
-          in.chr <- (infos.chr[ind.keep[seq.range]] == chr)
+          chr <- names(sort(table(seq.range.chr), decreasing = TRUE)[1])  ## mode
+          in.chr <- (seq.range.chr == chr)
           range.in.chr <- range(infos.pos[ind.keep[seq.range[in.chr]]])
-          LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)
+          LRLDR[nrow(LRLDR) + 1L, ] <-
+            data.frame(seq.range.chr[in.chr][1], range.in.chr[1], range.in.chr[2], iter)
         }
       }
     } else {
@@ -244,6 +248,8 @@ bed_autoSVD <- function(obj.bed,
     printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
             `if`(sum(mac.nok) > 1, "s", ""), min.mac)
     ind.keep <- ind.col[!mac.nok]
+  } else {
+    stop2("You cannot use variants with no variation; set min.mac > 0.")
   }
 
   # First clumping
@@ -261,9 +267,10 @@ bed_autoSVD <- function(obj.bed,
   }
 
   iter <- 0L
-  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer())
+  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer(), Iter = integer())
   repeat {
-    printf2("\nIteration %d:\n", iter <- iter + 1L)
+    iter <- iter + 1L
+    printf2("\nIteration %d:\n", iter)
     printf2("Computing SVD..\n")
     # SVD
     obj.svd <- bed_randomSVD(obj.bed,
@@ -304,10 +311,11 @@ bed_autoSVD <- function(obj.bed,
         for (i in rows_along(ind.range)) {
           seq.range <- seq2(ind.range[i, ])
           seq.range.chr <- infos.chr[ind.keep[seq.range]]
-          chr <- stats::median(seq.range.chr)  ## to get mode
-          in.chr <- (infos.chr[ind.keep[seq.range]] == chr)
+          chr <- names(sort(table(seq.range.chr), decreasing = TRUE)[1])  ## mode
+          in.chr <- (seq.range.chr == chr)
           range.in.chr <- range(infos.pos[ind.keep[seq.range[in.chr]]])
-          LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)
+          LRLDR[nrow(LRLDR) + 1L, ] <-
+            data.frame(seq.range.chr[in.chr][1], range.in.chr[1], range.in.chr[2], iter)
         }
       }
     } else {

@@ -1,3 +1,9 @@
+## bigsnpr 1.12.12
+
+- Minor improvements to `snp_autoSVD()` and `bed_autoSVD()`: 
+    - error when `min.mac = 0`,
+    - return a better `attr(, "lrldr")`.
+
 ## bigsnpr 1.12.11
 
 - In functions `snp_autoSVD()` and `bed_autoSVD()`, now perform the MAC thresholding before the clumping step. This reordering should not change results, but this should be faster now.
