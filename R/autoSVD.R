@@ -139,7 +139,7 @@ snp_autoSVD <- function(G,
     S.col <- sqrt(bigutilsr::dist_ogk(obj.svd$v))
     # roll mean to get only consecutive outliers (by chromosome)
     ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
-    S2.col <- double(length(S.col))
+    S2.col <- rep(NA_real_, length(S.col))
     for (ind in ind.split)
       S2.col[ind] <- bigutilsr::rollmean(S.col[ind], roll.size)
     S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
@@ -149,8 +149,6 @@ snp_autoSVD <- function(G,
 
     # Stop or continue?
     if (length(ind.col.excl) > 0) {
-
-      ind.keep <- ind.keep[-ind.col.excl]
 
       # Detection of long-range LD regions
       if (!is.null(infos.pos)) {
@@ -168,6 +166,9 @@ snp_autoSVD <- function(G,
             data.frame(seq.range.chr[in.chr][1], range.in.chr[1], range.in.chr[2], iter)
         }
       }
+
+      ind.keep <- ind.keep[-ind.col.excl]
+
     } else {
       printf2("\nConverged!\n")
       break
@@ -289,7 +290,7 @@ bed_autoSVD <- function(obj.bed,
     S.col <- sqrt(bigutilsr::dist_ogk(obj.svd$v))
     # roll mean to get only consecutive outliers (by chromosome)
     ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
-    S2.col <- double(length(S.col))
+    S2.col <- rep(NA_real_, length(S.col))
     for (ind in ind.split)
       S2.col[ind] <- bigutilsr::rollmean(S.col[ind], roll.size)
     S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
@@ -299,8 +300,6 @@ bed_autoSVD <- function(obj.bed,
 
     # Stop or continue?
     if (length(ind.col.excl) > 0) {
-
-      ind.keep <- ind.keep[-ind.col.excl]
 
       # Detection of long-range LD regions
       if (!is.null(infos.pos)) {
@@ -318,6 +317,9 @@ bed_autoSVD <- function(obj.bed,
             data.frame(seq.range.chr[in.chr][1], range.in.chr[1], range.in.chr[2], iter)
         }
       }
+
+      ind.keep <- ind.keep[-ind.col.excl]
+
     } else {
       printf2("\nConverged!\n")
       break
