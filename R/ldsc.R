@@ -161,7 +161,7 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 
 #' @rdname snp_ldsc
 #'
-#' @param corr Sparse correlation matrix. Can also be an [SFBM][SFBM-class].
+#' @param corr Sparse correlation matrix. Can also be an [SFBM][bigsparser::SFBM-class].
 #' @param df_beta A data frame with 3 columns:
 #'   - `$beta`: effect size estimates
 #'   - `$beta_se`: standard errors of effect size estimates

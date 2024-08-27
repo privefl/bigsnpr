@@ -4,11 +4,11 @@
 #' @useDynLib bigsnpr, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #'
-#' @param G A [FBM.code256][FBM.code256-class]
+#' @param G A [FBM.code256][bigstatsr::FBM.code256-class]
 #' (typically `<bigSNP>$genotypes`).\cr
 #' **You shouldn't have missing values.** Also, remember to do quality control,
 #' e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.
-#' @param Gna A [FBM.code256][FBM.code256-class]
+#' @param Gna A [FBM.code256][bigstatsr::FBM.code256-class]
 #' (typically `<bigSNP>$genotypes`).\cr
 #' You can have missing values in these data.
 #'

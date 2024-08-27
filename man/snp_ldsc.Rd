@@ -56,7 +56,7 @@ This is equivalent to parameter \code{--two-step}.}
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
-\item{corr}{Sparse correlation matrix. Can also be an \link[=SFBM-class]{SFBM}.}
+\item{corr}{Sparse correlation matrix. Can also be an \link[bigsparser:SFBM-class]{SFBM}.}
 
 \item{df_beta}{A data frame with 3 columns:
 \itemize{

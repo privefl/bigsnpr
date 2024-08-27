@@ -24,7 +24,7 @@ bed_ld_scores(
 )
 }
 \arguments{
-\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
+\item{Gna}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 

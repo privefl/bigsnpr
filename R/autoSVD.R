@@ -32,7 +32,7 @@ getIntervals <- function(x, n = 2) {
 #'   `ind.col`, and that returns a data.frame with `$center` and `$scale` for the
 #'   columns corresponding to `ind.col`, to scale each of their elements such as followed:
 #'   \deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
-#'   You can also provide your own `center` and `scale` by using [as_scaling_fun()].
+#'   You can also provide your own `center` and `scale` by using [bigstatsr::as_scaling_fun()].
 #' @param k Number of singular vectors/values to compute. Default is `10`.
 #'   **This algorithm should be used to compute a few singular vectors/values.**
 #' @param roll.size Radius of rolling windows to smooth log-p-values.

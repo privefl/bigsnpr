@@ -45,7 +45,7 @@ snp_grid_stacking(
 )
 }
 \arguments{
-\item{G}{A \link[=FBM.code256-class]{FBM.code256}
+\item{G}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
@@ -107,12 +107,12 @@ we store it on disk. Default uses a temporary file.}
 \item{multi_PRS}{Output of \code{snp_grid_PRS()}.}
 
 \item{y.train}{Vector of phenotypes. If there are two levels (binary 0/1),
-it uses \code{\link[=big_spLogReg]{big_spLogReg()}} for stacking, otherwise \code{\link[=big_spLinReg]{big_spLinReg()}}.}
+it uses \code{\link[bigstatsr:big_spLogReg]{bigstatsr::big_spLogReg()}} for stacking, otherwise \code{\link[bigstatsr:big_spLinReg]{bigstatsr::big_spLinReg()}}.}
 
-\item{alphas}{Vector of values for grid-search. See \code{\link[=big_spLogReg]{big_spLogReg()}}.
+\item{alphas}{Vector of values for grid-search. See \code{\link[bigstatsr:big_spLogReg]{bigstatsr::big_spLogReg()}}.
 Default for this function is \code{c(1, 0.01, 0.0001)}.}
 
-\item{...}{Other parameters to be passed to \code{\link[=big_spLogReg]{big_spLogReg()}}. For example,
+\item{...}{Other parameters to be passed to \code{\link[bigstatsr:big_spLogReg]{bigstatsr::big_spLogReg()}}. For example,
 using \code{covar.train}, you can add covariates in the model with all C+T scores.
 You can also use \code{pf.covar} if you do not want to penalize these covariates.}
 }

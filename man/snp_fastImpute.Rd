@@ -16,7 +16,7 @@ snp_fastImpute(
 )
 }
 \arguments{
-\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
+\item{Gna}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
@@ -41,7 +41,7 @@ Default uses them all.}
 You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
-An \link{FBM} with
+An \link[bigstatsr:FBM-class]{FBM} with
 \itemize{
 \item the proportion of missing values by SNP (first row),
 \item the estimated proportion of imputation errors by SNP (second row).

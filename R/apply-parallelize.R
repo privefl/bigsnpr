@@ -21,7 +21,7 @@
 #' used to process numeric data. By default, the results are returned in a list.
 #' @param ... Extra arguments to be passed to `FUN`.
 #'
-#' @return The result of [foreach].
+#' @return The result of [foreach::foreach].
 #' @export
 #' @import foreach
 #'

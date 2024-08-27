@@ -20,7 +20,7 @@ Use \code{obj.bed <- bed(bedfile)} to get this object.}
 \code{ind.col}, and that returns a data.frame with \verb{$center} and \verb{$scale} for the
 columns corresponding to \code{ind.col}, to scale each of their elements such as followed:
 \deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
-You can also provide your own \code{center} and \code{scale} by using \code{\link[=as_scaling_fun]{as_scaling_fun()}}.}
+You can also provide your own \code{center} and \code{scale} by using \code{\link[bigstatsr:as_scaling_fun]{bigstatsr::as_scaling_fun()}}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr

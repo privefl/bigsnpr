@@ -6,12 +6,12 @@
 \alias{bigsnpr-package}
 \title{bigsnpr: Analysis of Massive SNP Arrays}
 \arguments{
-\item{G}{A \link[=FBM.code256-class]{FBM.code256}
+\item{G}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
-\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
+\item{Gna}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 

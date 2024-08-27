@@ -14,8 +14,8 @@ prodVecRev <- function(G, betas.col, same.col, ind.row, ind.col) {
 #'
 #' @inheritParams bigsnpr-package
 #' @param betas.keep Numeric vector of weights associated with each SNP
-#'   corresponding to `ind.keep`.
-#'   You may want to see [big_univLinReg] or [big_univLogReg].
+#'   corresponding to `ind.keep`. You may want to see [bigstatsr::big_univLinReg]
+#'   or [bigstatsr::big_univLogReg].
 #' @param ind.test The individuals on whom to project the scores. Default uses all.
 #' @param ind.keep Column (SNP) indices to use (if using clumping, the
 #'   output of [snp_clumping]). Default doesn't clump.

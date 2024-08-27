@@ -28,7 +28,7 @@ You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 \item{...}{Extra arguments to be passed to \code{FUN}.}
 }
 \value{
-The result of \link{foreach}.
+The result of \link[foreach:foreach]{foreach::foreach}.
 }
 \description{
 A Split-Apply-Combine strategy to parallelize the evaluation of a function

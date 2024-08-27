@@ -123,7 +123,7 @@ imputeChr <- function(X, X2, infos.imp, ind.chr, alpha, size,
 #'   Default uses them all.
 #' @param seed An integer, for reproducibility. Default doesn't use seeds.
 #'
-#' @return An [FBM] with
+#' @return An [FBM][bigstatsr::FBM-class] with
 #' - the proportion of missing values by SNP (first row),
 #' - the estimated proportion of imputation errors by SNP (second row).
 #' @export

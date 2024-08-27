@@ -14,7 +14,7 @@ bigsparser::as_SFBM
 #' LDpred2 give the exact same results (since v1.10).
 #'
 #' @inheritParams snp_ldsc2
-#' @param corr Sparse correlation matrix as an [SFBM][SFBM-class].
+#' @param corr Sparse correlation matrix as an [SFBM][bigsparser::SFBM-class].
 #'   If `corr` is a dsCMatrix or a dgCMatrix, you can use `as_SFBM(corr)`.
 #' @param h2 Heritability estimate.
 #'
