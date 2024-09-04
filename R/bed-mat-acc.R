@@ -62,4 +62,8 @@ bed_accessor <- function(x, i, j, ..., drop = TRUE) {
 #'
 setMethod('[', signature(x = "bed"), bed_accessor)
 
+#' @export
+#' @keywords internal
+setMethod('[', signature(x = "bed_light"), bed_accessor)
+
 ################################################################################

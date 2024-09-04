@@ -1,3 +1,7 @@
+## bigsnpr 1.12.13
+
+- Can now use matrix accessors for class `bed_light` as well.
+
 ## bigsnpr 1.12.12
 
 - Minor improvements to `snp_autoSVD()` and `bed_autoSVD()`: 
