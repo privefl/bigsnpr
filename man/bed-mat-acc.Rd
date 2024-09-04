@@ -2,9 +2,12 @@
 % Please edit documentation in R/bed-mat-acc.R
 \name{[,bed,ANY,ANY,ANY-method}
 \alias{[,bed,ANY,ANY,ANY-method}
+\alias{[,bed_light,ANY,ANY,ANY-method}
 \title{Accessor methods for class \code{bed}.}
 \usage{
 \S4method{[}{bed,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{bed_light,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{x}{A \link[=bed-class]{bed} object.}
