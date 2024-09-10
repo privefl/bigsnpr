@@ -45,7 +45,9 @@ getIntervals <- function(x, n = 2) {
 #' @param alpha.tukey Default is `0.1`. The type-I error rate in outlier
 #'   detection (that is further corrected for multiple testing).
 #' @param min.mac Minimum minor allele count (MAC) for variants to be included.
-#'   Default is `10`.
+#'   Default is `10`. Can actually be higher because of `min.maf`.
+#' @param min.maf Minimum minor allele frequency (MAF) for variants to be included.
+#'   Default is `0.02`. Can actually be higher because of `min.mac`.
 #' @param max.iter Maximum number of iterations of outlier detection.
 #'   Default is `5`.
 #'
@@ -75,6 +77,7 @@ snp_autoSVD <- function(G,
                         int.min.size = 20,
                         alpha.tukey = 0.05,
                         min.mac = 10,
+                        min.maf = 0.02,
                         max.iter = 5,
                         is.size.in.bp = NULL,
                         ncores = 1,
@@ -90,15 +93,15 @@ snp_autoSVD <- function(G,
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
-  if (min.mac > 0) {
+  if (min.mac > 0 && min.maf > 0) {
     maf <- snp_MAF(G, ind.row, ind.col, ncores = ncores)
-    min.maf <- min.mac / (2 * length(ind.row))
-    mac.nok <- (maf < min.maf)
-    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
-            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
-    ind.keep <- ind.col[!mac.nok]
+    maf.nok <- (maf < max(min.maf, min.mac / (2 * length(ind.row))))
+    printf2("Discarding %d variant%s with MAC < %s or MAF < %s.\n",
+            sum(maf.nok), `if`(sum(maf.nok) > 1, "s", ""), min.mac, min.maf)
+    ind.keep <- ind.col[!maf.nok]
   } else {
-    stop2("You cannot use variants with no variation; set min.mac > 0.")
+    stop2("You cannot use variants with no variation; %s",
+          "set min.mac > 0 and min.maf > 0.")
   }
 
   # First clumping
@@ -231,6 +234,7 @@ bed_autoSVD <- function(obj.bed,
                         int.min.size = 20,
                         alpha.tukey = 0.05,
                         min.mac = 10,
+                        min.maf = 0.02,
                         max.iter = 5,
                         ncores = 1,
                         verbose = TRUE) {
@@ -243,14 +247,15 @@ bed_autoSVD <- function(obj.bed,
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
-  if (min.mac > 0) {
-    mac <- bed_MAF(obj.bed, ind.row, ind.col, ncores = ncores)$mac
-    mac.nok <- (mac < min.mac)
-    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
-            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
-    ind.keep <- ind.col[!mac.nok]
+  if (min.mac > 0 && min.maf > 0) {
+    info <- bed_MAF(obj.bed, ind.row, ind.col, ncores = ncores)
+    maf.nok <- (info$mac < min.mac | info$maf < min.maf)
+    printf2("Discarding %d variant%s with MAC < %s or MAF < %s.\n",
+            sum(maf.nok), `if`(sum(maf.nok) > 1, "s", ""), min.mac, min.maf)
+    ind.keep <- ind.col[!maf.nok]
   } else {
-    stop2("You cannot use variants with no variation; set min.mac > 0.")
+    stop2("You cannot use variants with no variation; %s",
+          "set min.mac > 0 and min.maf > 0.")
   }
 
   # First clumping

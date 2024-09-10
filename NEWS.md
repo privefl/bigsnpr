@@ -1,3 +1,7 @@
+## bigsnpr 1.12.14
+
+- Add a new `min.maf = 0.02` parameter to `snp_autoSVD()` and `bed_autoSVD()`. Then variants are now discarded when they have either a small MAC or a small MAF.
+
 ## bigsnpr 1.12.13
 
 - Can now use matrix accessors for class `bed_light` as well.

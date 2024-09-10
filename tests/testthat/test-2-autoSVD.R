@@ -10,6 +10,8 @@ CHR <- test$map$chromosome
 POS <- test$map$physical.pos / 10
 POS2 <- round(POS + 1)
 
+obj.bed <- bed(snp_writeBed(test, bedfile = tempfile(fileext = ".bed")))
+
 ################################################################################
 
 test_that("snp_autoSVD() works", {
@@ -65,8 +67,6 @@ test_that("snp_autoSVD() works", {
 
 test_that("bed_autoSVD() works", {
 
-  obj.bed <- bed(snp_writeBed(test, bedfile = tempfile(fileext = ".bed")))
-
   expect_error(bed_autoSVD(obj.bed, min.mac = 0), "no variation; set min.mac > 0")
   expect_output(bed_autoSVD(obj.bed, thr.r2 = NA), "Skipping clumping.")
 
@@ -93,6 +93,31 @@ test_that("bed_autoSVD() works", {
   expect_output(
     bed_autoSVD(obj.bed, alpha.tukey = 0.999999999, roll.size = 0, verbose = TRUE),
     "Maximum number of iterations reached.")
+})
+
+################################################################################
+
+test_that("MAC/MAF thresholds work", {
+
+  info <- bed_MAF(obj.bed)
+
+  replicate(10, {
+
+    min.mac <- sample(1:40, size = 1)
+    min.maf <- runif(n = 1, min = 0.01, max = 0.1)
+
+    obj.svd1 <- snp_autoSVD(G, CHR, size = 5, min.mac = min.mac, min.maf = min.maf,
+                            thr.r2 = NA, max.iter = 0, verbose = FALSE)
+    ind1 <- attr(obj.svd1, "subset")
+    expect_true(all(info$maf[ind1] >= min.maf))
+    expect_true(all(info$mac[ind1] >= min.mac))
+
+    obj.svd2 <- bed_autoSVD(obj.bed, min.mac = min.mac, min.maf = min.maf,
+                            thr.r2 = NA, max.iter = 0, verbose = FALSE)
+    ind2 <- attr(obj.svd2, "subset")
+    expect_true(all(info$maf[ind2] >= min.maf))
+    expect_true(all(info$mac[ind2] >= min.mac))
+  })
 })
 
 ################################################################################

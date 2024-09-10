@@ -74,7 +74,9 @@ Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
     \item{\code{alpha.tukey}}{Default is \code{0.1}. The type-I error rate in outlier
 detection (that is further corrected for multiple testing).}
     \item{\code{min.mac}}{Minimum minor allele count (MAC) for variants to be included.
-Default is \code{10}.}
+Default is \code{10}. Can actually be higher because of \code{min.maf}.}
+    \item{\code{min.maf}}{Minimum minor allele frequency (MAF) for variants to be included.
+Default is \code{0.02}. Can actually be higher because of \code{min.mac}.}
     \item{\code{max.iter}}{Maximum number of iterations of outlier detection.
 Default is \code{5}.}
     \item{\code{size}}{For one SNP, window size around this SNP to compute correlations.

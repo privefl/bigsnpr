@@ -19,6 +19,7 @@ snp_autoSVD(
   int.min.size = 20,
   alpha.tukey = 0.05,
   min.mac = 10,
+  min.maf = 0.02,
   max.iter = 5,
   is.size.in.bp = NULL,
   ncores = 1,
@@ -37,6 +38,7 @@ bed_autoSVD(
   int.min.size = 20,
   alpha.tukey = 0.05,
   min.mac = 10,
+  min.maf = 0.02,
   max.iter = 5,
   ncores = 1,
   verbose = TRUE
@@ -91,7 +93,10 @@ in order to be reported as long-range LD region. Default is \code{20}.}
 detection (that is further corrected for multiple testing).}
 
 \item{min.mac}{Minimum minor allele count (MAC) for variants to be included.
-Default is \code{10}.}
+Default is \code{10}. Can actually be higher because of \code{min.maf}.}
+
+\item{min.maf}{Minimum minor allele frequency (MAF) for variants to be included.
+Default is \code{0.02}. Can actually be higher because of \code{min.mac}.}
 
 \item{max.iter}{Maximum number of iterations of outlier detection.
 Default is \code{5}.}
