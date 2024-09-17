@@ -71,13 +71,13 @@ ggplot() +
 plot_grid(plotlist = lapply(7:10, function(k) {
   plot(obj.svd, type = "scores", scores = 2 * k - 1:0, coeff = 0.6) +
     aes(color = S) +
-    scale_colour_viridis_c()
+    scale_colour_viridis_c(direction = -1)
 }), scale = 0.95)
 
 plot_grid(plotlist = lapply(7:10, function(k) {
   plot(obj.svd, type = "scores", scores = 2 * k - 1:0, coeff = 0.6) +
-    aes(color = S > 0.5) +  # threshold based on histogram
-    scale_colour_viridis_d()
+    aes(color = S > 0.6) +  # threshold based on histogram
+    scale_colour_viridis_d(direction = -1)
 }), scale = 0.95)
 ```
 
@@ -86,7 +86,7 @@ plot_grid(plotlist = lapply(7:10, function(k) {
 We recompute PCA without outliers, starting with the previous set of variants kept (we can therefore skip the initial clumping step).
 
 ```{r}
-ind.row <- ind.norel[S < 0.5]
+ind.row <- ind.norel[S < 0.6]
 ind.col <- attr(obj.svd, "subset")
 obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row, 
                         ind.col = ind.col, thr.r2 = NA,
@@ -127,3 +127,5 @@ points(PCs[-ind.row, 7:8], pch = 20, col = "blue")
 ```
 
 ## References
+
+- Privé, F., Luu, K., Blum, M. G., McGrath, J. J., & Vilhjálmsson, B. J. (2020). [Efficient toolkit implementing best practices for principal component analysis of population genetic data.](https://doi.org/10.1093/bioinformatics/btaa520) *Bioinformatics*, 36(16), 4449-4457.
