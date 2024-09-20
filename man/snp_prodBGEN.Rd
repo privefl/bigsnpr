@@ -45,7 +45,7 @@ file, and use e.g. \code{match()} to get indices corresponding to the ones you w
 Default is \code{1000}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 The product \code{bgen_data[ind_row, 'list_snp_id'] \%*\% beta}.

@@ -601,7 +601,7 @@ snp_plinkKINGQC <- function(plink2.path,
 #' @param plink.options Other options to be passed to PLINK as a string. More
 #'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
 #' @param ncores Number of cores used. Default doesn't use parallelism.
-#'   You may use [nb_cores].
+#'   You may use [bigstatsr::nb_cores()].
 #'
 #' @references Browning, Brian L., and Sharon R. Browning.
 #' "Genotype imputation with millions of reference samples."

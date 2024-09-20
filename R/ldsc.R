@@ -173,7 +173,6 @@ snp_ldsc <- function(ld_score, ld_size, chi2, sample_size,
 #'     when using a mixed model, the effective sample size needs to be adjusted
 #'     as well, see \doi{10.1016/j.xhgg.2022.100136}.
 #' @param ind.beta Indices in `corr` corresponding to `df_beta`. Default is all.
-#' @inheritDotParams snp_ldsc chi2_thr1 chi2_thr2
 #'
 #' @export
 #'
@@ -195,7 +194,8 @@ snp_ldsc2 <- function(corr, df_beta,
                       intercept = 1,
                       ncores = 1,
                       ind.beta = cols_along(corr),
-                      ...) {
+                      chi2_thr1 = 30,
+                      chi2_thr2 = Inf) {
 
   assert_df_with_names(df_beta, c("beta", "beta_se", "n_eff"))
   assert_lengths(ind.beta, rows_along(df_beta))
@@ -218,7 +218,8 @@ snp_ldsc2 <- function(corr, df_beta,
     blocks      = blocks,
     intercept   = intercept,
     ncores      = ncores,
-    ...
+    chi2_thr1   = chi2_thr1,
+    chi2_thr2   = chi2_thr2
   )
 }
 

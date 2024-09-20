@@ -43,7 +43,7 @@ file, and use e.g. \code{match()} to get indices corresponding to the ones you w
 }}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 The path to the RDS file \verb{<backingfile>.rds} that stores the \code{bigSNP}

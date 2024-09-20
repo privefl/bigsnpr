@@ -11,11 +11,11 @@ snp_split(infos.chr, FUN, combine, ncores = 1, ...)
 Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{FUN}{The function to be applied. It must take a
-\link[=FBM.code256-class]{FBM.code256} as first argument and \code{ind.chr},
+\link[bigstatsr:FBM.code256-class]{FBM.code256} as first argument and \code{ind.chr},
 an another argument to provide subsetting over SNPs.
 You can access the number of the chromosome by using \code{attr(ind.chr, "chr")}.}
 
-\item{combine}{function that is used by \link{foreach} to process the tasks
+\item{combine}{function that is used by \link[foreach:foreach]{foreach::foreach} to process the tasks
 results as they generated. This can be specified as either a function or a
 non-empty character string naming the function. Specifying 'c' is useful
 for concatenating the results into a vector, for example. The values 'cbind'

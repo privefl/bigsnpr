@@ -14,10 +14,7 @@ download_genetic_map(
 snp_asGeneticPos2(infos.chr, infos.pos, genetic_map)
 }
 \arguments{
-\item{type}{Which genetic map to download. The hg19 ones are downloaded from
-\url{https://github.com/joepickrell/1000-genomes-genetic-maps/} while the
-hg38 is downloaded from
-\url{https://alkesgroup.broadinstitute.org/Eagle/downloads/tables/}.}
+\item{type}{Which genetic map to download.}
 
 \item{dir}{Directory where to download and decompress files.}
 
@@ -42,4 +39,10 @@ The new vector of genetic positions.
 \description{
 This function uses linear interpolation, whereas \code{snp_asGeneticPos()} uses
 nearest neighbors.
+}
+\details{
+The hg19 genetic maps are downloaded from
+\url{https://github.com/joepickrell/1000-genomes-genetic-maps/}
+while the hg38 one is downloaded from
+\verb{https://alkesgroup.broadinstitute.org/Eagle/downloads/tables/}.
 }
