@@ -28,7 +28,7 @@ human genome.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -196,11 +196,11 @@ can be for thresholding with respect to p-values associated with <code>S</code>.
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use <code>nb_cores()</code>.</p></dd>
+You may use <code><a href="https://privefl.github.io/bigstatsr/reference/reexports.html" class="external-link">bigstatsr::nb_cores()</a></code>.</p></dd>
 
 
 <dt>G</dt>
-<dd><p>A FBM.code256
+<dd><p>A <a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html" class="external-link">FBM.code256</a>
 (typically <code>&lt;bigSNP&gt;$genotypes</code>).<br><strong>You shouldn't have missing values.</strong> Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.</p></dd>
 
@@ -227,8 +227,7 @@ Default is <code>2</code>, which corresponds to diploidy, such as for the human 
 
 <dt>LD.regions</dt>
 <dd><p>A <code>data.frame</code> with columns "Chr", "Start" and "Stop".
-Default use the table of 34 long-range LD regions that you can find
-<a href="https://goo.gl/0Ou7uI" class="external-link">there</a>.</p></dd>
+Default use <a href="LD.wiki34.html">LD.wiki34</a>.</p></dd>
 
 </dl></div>
     <div id="value">

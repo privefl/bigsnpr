@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -176,8 +176,7 @@ ones from the reference, by chromosome, position and alleles.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://privefl.github.io/bigsnpr/" class="external-link">bigsnpr</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: bigstatsr</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: package 'bigstatsr' was built under R version 4.2.3</span></span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_match.html">snp_match</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">sumstats</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">chr</span><span class="op">)</span>, beta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="va">all_freq</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
@@ -190,7 +189,7 @@ ones from the reference, by chromosome, position and alleles.</p>
 function. Note that we need to correct for the shrinkage when projecting
 a new dataset (here the allele frequencies from the GWAS summary
 statistics) onto the PC space.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">correction</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1.008</span>, <span class="fl">1.021</span>, <span class="fl">1.034</span>, <span class="fl">1.052</span>, <span class="fl">1.074</span>, <span class="fl">1.099</span>,</span>
 <span>                <span class="fl">1.123</span>, <span class="fl">1.15</span>, <span class="fl">1.195</span>, <span class="fl">1.256</span>, <span class="fl">1.321</span>, <span class="fl">1.382</span>, <span class="fl">1.443</span><span class="op">)</span></span>
 <span></span>
@@ -202,7 +201,7 @@ statistics) onto the PC space.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Note that some ancestry groups from the reference are very close to
 one another, and should be merged a posteriori.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">all_freq</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">group</span><span class="op">[</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scandinavia"</span>, <span class="st">"United Kingdom"</span>, <span class="st">"Ireland"</span><span class="op">)</span><span class="op">]</span>   <span class="op">&lt;-</span> <span class="st">"Europe (North West)"</span></span>
 <span><span class="va">group</span><span class="op">[</span><span class="va">group</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Europe (South East)"</span>, <span class="st">"Europe (North East)"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Europe (East)"</span></span>
@@ -235,16 +234,16 @@ individuals would not need any correction when projecting onto the PC
 space.</p>
 <p>Let us use the Simons Genome Diversity Project (SGDP) data for
 demonstration.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prefix</span> <span class="op">&lt;-</span> <span class="st">"https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/variant_set/cteam_extended.v4.maf0.1perc"</span></span>
 <span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".bed"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
 <span><span class="va">famfile</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".fam"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
 <span><span class="va">bim_zip</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".bim.zip"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">bim_zip</span>, exdir <span class="op">=</span> <span class="va">DIR</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in unzip(bim_zip, exdir = DIR, overwrite = FALSE): not overwriting file '../</span></span>
-<span><span class="co">## datasets/cteam_extended.v4.maf0.1perc.bim</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in unzip(bim_zip, exdir = DIR, overwrite = FALSE): not overwriting file</span></span>
+<span><span class="co">## '../datasets/cteam_extended.v4.maf0.1perc.bim</span></span></code></pre>
 <p>Again, we need to match the dataset with the reference.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://privefl.github.io/bigsnpr/" class="external-link">bigsnpr</a></span><span class="op">)</span></span>
 <span><span class="va">matched</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sub_bed.html">sub_bed</a></span><span class="op">(</span><span class="va">bedfile</span>, <span class="st">".bim"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span>select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span>,</span>
@@ -271,17 +270,17 @@ demonstration.</p>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 4030032 rows ]</span></span></code></pre>
 <p>Let us read the matched subset of the data and project it onto the PC
 space.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_readBed.html">snp_readBed2</a></span><span class="op">(</span><span class="va">bedfile</span>, ind.col <span class="op">=</span> <span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_.ss`</span><span class="op">)</span></span>
 <span><span class="va">obj.bigsnp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="va">rds</span><span class="op">)</span></span>
 <span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">obj.bigsnp</span><span class="op">$</span><span class="va">genotypes</span></span></code></pre></div>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">nb_na</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_counts.html" class="external-link">big_counts</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ancestry_files/figure-html/unnamed-chunk-12-1.png" width="700" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">nb_na</span> <span class="op">&lt;</span> <span class="fl">5</span><span class="op">)</span>        <span class="co"># further subsetting on missing values</span></span>
 <span><span class="va">G2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_fastImputeSimple.html">snp_fastImputeSimple</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>  <span class="co"># imputation when % of missing value is small</span></span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># project individuals (divided by 2) onto the PC space</span></span>
 <span><span class="va">PROJ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">projection</span><span class="op">[</span><span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_`</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">all_proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodMat.html" class="external-link">big_prodMat</a></span><span class="op">(</span><span class="va">G2</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">PROJ</span>, <span class="fl">2</span>, <span class="va">correction</span> <span class="op">/</span> <span class="fl">2</span>, <span class="st">'*'</span><span class="op">)</span>, </span>
@@ -289,18 +288,18 @@ space.</p>
 <span>                        <span class="co"># scaling to get G if beta = 1 and (2 - G) if beta = -1</span></span>
 <span>                        center <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">matched</span><span class="op">$</span><span class="va">beta</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span>,</span>
 <span>                        scale <span class="op">=</span> <span class="va">matched</span><span class="op">$</span><span class="va">beta</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">all_proj</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ancestry_files/figure-html/unnamed-chunk-14-1.png" width="700" style="display: block; margin: auto;"></p>
 <p>Let us now project the reference allele frequencies, which do not
 need any correction because these come from the same individuals used to
 train the PCA.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">crossprod</a></span><span class="op">(</span><span class="va">PROJ</span>,</span>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">all_freq</span><span class="op">[</span><span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_`</span><span class="op">[</span><span class="va">ind</span><span class="op">]</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now we need to solve a quadratic programming problem for each
 individual.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cp_X_pd</span> <span class="op">&lt;-</span> <span class="fu">Matrix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/nearPD.html" class="external-link">nearPD</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">crossprod</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>, base.matrix <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">Amat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">bvec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -319,7 +318,7 @@ individual.</p>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>Let us compare the results with the reported information on
 individuals.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fam2</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span><span class="st">"https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/SGDP_metadata.279public.21signedLetter.44Fan.samples.txt"</span><span class="op">)</span></span>
 <span><span class="va">fam</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">obj.bigsnp</span><span class="op">$</span><span class="va">fam</span>, <span class="va">fam2</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample.ID"</span> <span class="op">=</span> <span class="st">"Sample_ID(Aliases)"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fam_info</span> <span class="op">&lt;-</span> <span class="va">fam</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Region"</span>, <span class="st">"Country"</span>, <span class="st">"Population_ID"</span><span class="op">)</span><span class="op">]</span></span>
@@ -343,7 +342,7 @@ example, we use this strategy to assign ancestry in the UK Biobank
 (cf. <a href="https://github.com/privefl/UKBB-PGS#code-to-reproduce-ancestry-groups" class="external-link">this
 code</a>). Normally, admixed individuals or from distant populations
 should not be matched to any of the 21 reference groups.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">PC_SGDP</span> <span class="op">&lt;-</span> <span class="va">all_proj</span></span>
 <span><span class="va">all_centers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
 <span><span class="va">all_sq_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">all_centers</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">one_center</span><span class="op">)</span> <span class="op">{</span></span>
@@ -372,7 +371,7 @@ should not be matched to any of the 21 reference groups.</p>
 <span><span class="co">##                  32                  17                   8                   1 </span></span>
 <span><span class="co">##           Sri Lanka                &lt;NA&gt; </span></span>
 <span><span class="co">##                  18                 105</span></span></code></pre>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind.data.frame</a></span><span class="op">(</span><span class="va">fam_info</span>, Assigned_group <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/paged_table.html" class="external-link">paged_table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>rows.print <span class="op">=</span> <span class="fl">15</span>, max.print <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">fam</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -386,7 +385,7 @@ Asia and Siberia, people from some African regions, as well as people
 from South America.</p>
 <p>For individuals from South America, we can use the previous ancestry
 proportions.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster</span><span class="op">[</span><span class="va">all_res</span><span class="op">[</span><span class="st">"South America"</span>, <span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0.9</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"South America"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">cluster</span>, exclude <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
@@ -401,7 +400,7 @@ proportions.</p>
 <span><span class="co">##                  32                  17                   8                  25 </span></span>
 <span><span class="co">##           Sri Lanka                &lt;NA&gt; </span></span>
 <span><span class="co">##                  18                  81</span></span></code></pre>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind.data.frame</a></span><span class="op">(</span><span class="va">fam_info</span>, Assigned_group <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/paged_table.html" class="external-link">paged_table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>rows.print <span class="op">=</span> <span class="fl">15</span>, max.print <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">fam</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">

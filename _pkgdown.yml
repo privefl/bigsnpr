@@ -99,6 +99,7 @@ reference:
       - snp_prodBGEN
       - snp_match
       - snp_asGeneticPos
+      - snp_asGeneticPos2
       - snp_ancestry_summary
       - snp_simuPheno
       - snp_modifyBuild

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -133,7 +133,7 @@ If not specified, all columns are used.<br><strong>Don't use negative indices.</
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use <code>nb_cores()</code>.</p></dd>
+You may use <code><a href="https://privefl.github.io/bigstatsr/reference/reexports.html" class="external-link">bigstatsr::nb_cores()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -160,7 +160,7 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href="snp_
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">(</span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:/Users/au639593/AppData/Local/Temp/RtmpYXOijp/temp_libpath24e05c2562a6/bigsnpr/extdata/example.bed"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:/Users/au639593/AppData/Local/Temp/RtmpCcuoXf/temp_libpath50e85e914cf4/bigsnpr/extdata/example.bed"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Reading the bedfile and storing the data in temporary directory</span></span></span>
 <span class="r-in"><span><span class="va">rds</span> <span class="op">&lt;-</span> <span class="fu">snp_readBed</span><span class="op">(</span><span class="va">bedfile</span>, backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -177,12 +177,12 @@ to convert from a VCF file, use the <code>--vcf</code> option. See <a href="snp_
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ncol        : int 4542</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type        : Named int 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr "unsigned char"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352846c15bce.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c3eb6b0a.bk"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_read_only: logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address     :&lt;externalptr&gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address_rw  :&lt;externalptr&gt; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352846c15bce.bk"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352846c15bce.rds"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c3eb6b0a.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c3eb6b0a.rds"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_saved    : logi TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_chr    : chr "unsigned char"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_size   : int 1</span>

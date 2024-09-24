@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@ the two (".bk" and ".rds") backing files to another directory.</p>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">(</span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example.bed"</span>, package <span class="op">=</span> <span class="st">"bigsnpr"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:/Users/au639593/AppData/Local/Temp/RtmpYXOijp/temp_libpath24e05c2562a6/bigsnpr/extdata/example.bed"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "C:/Users/au639593/AppData/Local/Temp/RtmpCcuoXf/temp_libpath50e85e914cf4/bigsnpr/extdata/example.bed"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Reading the bedfile and storing the data in temporary directory</span></span></span>
 <span class="r-in"><span><span class="va">rds</span> <span class="op">&lt;-</span> <span class="fu"><a href="snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bedfile</span>, backingfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -138,12 +138,12 @@ the two (".bk" and ".rds") backing files to another directory.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ncol        : int 4542</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type        : Named int 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr "unsigned char"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file35284c136c5d.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c1312c29.bk"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_read_only: logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address     :&lt;externalptr&gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address_rw  :&lt;externalptr&gt; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file35284c136c5d.bk"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file35284c136c5d.rds"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c1312c29.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c1312c29.rds"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_saved    : logi TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_chr    : chr "unsigned char"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_size   : int 1</span>

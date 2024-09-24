@@ -46,6 +46,9 @@
     <loc>/reference/bed-class.html</loc>
   </url>
   <url>
+    <loc>/reference/bed-mat-acc.html</loc>
+  </url>
+  <url>
     <loc>/reference/bed-methods.html</loc>
   </url>
   <url>
@@ -119,6 +122,9 @@
   </url>
   <url>
     <loc>/reference/snp_asGeneticPos.html</loc>
+  </url>
+  <url>
+    <loc>/reference/snp_asGeneticPos2.html</loc>
   </url>
   <url>
     <loc>/reference/snp_attach.html</loc>

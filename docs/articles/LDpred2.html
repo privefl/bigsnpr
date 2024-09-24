@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -316,7 +316,7 @@ the final models.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">ind.val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">350</span><span class="op">)</span></span>
-<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="matching-variants-between-genotype-data-and-summary-statistics">Matching variants between genotype data and summary statistics<a class="anchor" aria-label="anchor" href="#matching-variants-between-genotype-data-and-summary-statistics"></a>
@@ -713,11 +713,11 @@ regularization).</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">params2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">beta_lassosum2</span>, <span class="st">"grid_param"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity</span></span>
 <span><span class="co">## 1 0.06111003 0.001        2 0.00 0.9998895</span></span>
-<span><span class="co">## 2 0.05241382 0.001        3 0.00 0.9997128</span></span>
+<span><span class="co">## 2 0.05241382 0.001        3 0.02 0.9997128</span></span>
 <span><span class="co">## 3 0.04495512 0.001        4 0.00 0.9995361</span></span>
 <span><span class="co">## 4 0.03855782 0.001        7 0.00 0.9992489</span></span>
 <span><span class="co">## 5 0.03307088 0.001        8 0.02 0.9984095</span></span>
-<span><span class="co">## 6 0.02836476 0.001       13 0.00 0.9971061</span></span>
+<span><span class="co">## 6 0.02836476 0.001       13 0.02 0.9971061</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 114 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred_grid2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodMat.html" class="external-link">big_prodMat</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_lassosum2</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -736,8 +736,10 @@ regularization).</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"GLM Z-Score"</span>, color <span class="op">=</span> <span class="st">"delta"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: Removed 10 rows containing missing values (`geom_point()`).</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Removed 10 rows containing missing values (`geom_line()`).</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Removed 10 rows containing missing values or values outside the scale</span></span>
+<span><span class="co">## range (`geom_point()`).</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Removed 10 rows containing missing values or values outside the scale</span></span>
+<span><span class="co">## range (`geom_line()`).</span></span></code></pre>
 <p><img src="LDpred2_files/figure-html/unnamed-chunk-31-1.png" width="90%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -749,10 +751,10 @@ regularization).</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="va">beta_lassosum2</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity    score id</span></span>
-<span><span class="co">## 1 0.02086632 0.001       21 0.02 0.9864584 9.715472  8</span></span>
-<span><span class="co">## 2 0.02086632 0.010       20 0.01 0.9864805 9.709865 38</span></span>
-<span><span class="co">## 3 0.02086632 0.100       16 0.02 0.9862375 9.667334 68</span></span>
-<span><span class="co">## 4 0.02432834 0.001       19 0.02 0.9942564 9.404453  7</span></span>
+<span><span class="co">## 1 0.02086632 0.001       21 0.03 0.9864584 9.715472  8</span></span>
+<span><span class="co">## 2 0.02086632 0.010       20 0.03 0.9864805 9.709865 38</span></span>
+<span><span class="co">## 3 0.02086632 0.100       16 0.01 0.9862375 9.667334 68</span></span>
+<span><span class="co">## 4 0.02432834 0.001       19 0.01 0.9942564 9.404453  7</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Choose the best among all LDpred2-grid and lassosum2 models</span></span>
@@ -865,8 +867,8 @@ and <a href="https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d
 <code class="sourceCode R"><span><span class="co"># Some cleaning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span></span>
-<span><span class="co">## Ncells  3840043 205.1    7181468 383.6  7181468 383.6</span></span>
-<span><span class="co">## Vcells 40798600 311.3   71391521 544.7 71390597 544.7</span></span></code></pre>
+<span><span class="co">## Ncells  3895939 208.1    7147978 381.8  7147978 381.8</span></span>
+<span><span class="co">## Vcells 40890231 312.0   71390344 544.7 71389651 544.7</span></span></code></pre>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 <div class="section level2">

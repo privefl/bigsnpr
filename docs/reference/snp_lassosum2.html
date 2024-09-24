@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -114,14 +114,14 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>corr</dt>
-<dd><p>Sparse correlation matrix as an SFBM.
+<dd><p>Sparse correlation matrix as an <a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html" class="external-link">SFBM</a>.
 If <code>corr</code> is a dsCMatrix or a dgCMatrix, you can use <code>as_SFBM(corr)</code>.</p></dd>
 
 
 <dt>df_beta</dt>
 <dd><p>A data frame with 3 columns:</p><ul><li><p><code>$beta</code>: effect size estimates</p></li>
 <li><p><code>$beta_se</code>: standard errors of effect size estimates</p></li>
-<li><p><code>$n_eff</code>: either tha GWAS sample size(s) when estimating <code>beta</code> for a
+<li><p><code>$n_eff</code>: either GWAS sample size(s) when estimating <code>beta</code> for a
 continuous trait, or in the case of a binary trait, this is
 <code>4 / (1 / n_control + 1 / n_case)</code>; in the case of a meta-analysis, you
 should sum the effective sample sizes of each study instead of using the
@@ -170,7 +170,7 @@ Default is <code>1e-5</code>.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use <code>nb_cores()</code>.</p></dd>
+You may use <code><a href="https://privefl.github.io/bigstatsr/reference/reexports.html" class="external-link">bigstatsr::nb_cores()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
