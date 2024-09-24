@@ -94,8 +94,7 @@ Typically \verb{<bigSNP>$map$physical.pos}.}
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 
 \item{LD.regions}{A \code{data.frame} with columns "Chr", "Start" and "Stop".
-Default use the table of 34 long-range LD regions that you can find
-\href{https://goo.gl/0Ou7uI}{there}.}
+Default use \link{LD.wiki34}.}
 }
 \value{
 \itemize{

@@ -2,11 +2,20 @@
 % Please edit documentation in R/bed-projectPCA.R
 \name{bed_projectSelfPCA}
 \alias{bed_projectSelfPCA}
+\alias{snp_projectSelfPCA}
 \title{Projecting PCA}
 \usage{
 bed_projectSelfPCA(
   obj.svd,
   obj.bed,
+  ind.row,
+  ind.col = attr(obj.svd, "subset"),
+  ncores = 1
+)
+
+snp_projectSelfPCA(
+  obj.svd,
+  G,
   ind.row,
   ind.col = attr(obj.svd, "subset"),
   ncores = 1
@@ -28,6 +37,9 @@ Otherwise (e.g. if \link{bed_randomSVD} was used), you have to pass \code{ind.co
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
 You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
+
+\item{G}{The \link[bigstatsr:FBM.code256-class]{FBM.code256} that was used to
+compute \code{obj.svd}.}
 }
 \value{
 A list of 3 elements:

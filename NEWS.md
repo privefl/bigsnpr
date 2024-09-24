@@ -1,3 +1,7 @@
+## bigsnpr 1.12.16
+
+- Add function `snp_projectSelfPCA()` (only `bed_projectSelfPCA()` existed).
+
 ## bigsnpr 1.12.14
 
 - Add a new `min.maf = 0.02` parameter to `snp_autoSVD()` and `bed_autoSVD()`. Then variants are now discarded when they have either a small MAC or a small MAF.

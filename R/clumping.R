@@ -156,8 +156,8 @@ snp_pruning <- function(G, infos.chr,
 
 #' Long-range LD regions
 #'
-#' 34 long-range Linkage Disequilibrium (LD) regions for the human genome
-#' based on some [wiki table](https://goo.gl/0Ou7uI).
+#' 34 long-range Linkage Disequilibrium (LD) regions for the human genome based on
+#' [this wiki table](https://genome.sph.umich.edu/wiki/Regions_of_high_linkage_disequilibrium_(LD)).
 #'
 #' @format A data frame with 34 rows (regions) and 4 variables:
 #' - `Chr`: region's chromosome
@@ -167,8 +167,7 @@ snp_pruning <- function(G, infos.chr,
 "LD.wiki34"
 
 #' @param LD.regions A `data.frame` with columns "Chr", "Start" and "Stop".
-#' Default use the table of 34 long-range LD regions that you can find
-#' [there](https://goo.gl/0Ou7uI).
+#' Default use [LD.wiki34].
 #'
 #' @import foreach
 #' @export

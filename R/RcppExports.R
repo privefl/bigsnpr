@@ -105,6 +105,10 @@ prod_bgen2 <- function(filename, offsets, XY, Y, ind_row, decode, dosage, N, max
     .Call(`_bigsnpr_prod_bgen2`, filename, offsets, XY, Y, ind_row, decode, dosage, N, max_size, ncores)
 }
 
+prod_and_rowSumsSq2 <- function(BM, ind_row, ind_col, center, scale, V) {
+    .Call(`_bigsnpr_prod_and_rowSumsSq2`, BM, ind_row, ind_col, center, scale, V)
+}
+
 read_bgen <- function(filename, offsets, BM, ind_row, ind_col, decode, dosage, N, ncores) {
     .Call(`_bigsnpr_read_bgen`, filename, offsets, BM, ind_row, ind_col, decode, dosage, N, ncores)
 }

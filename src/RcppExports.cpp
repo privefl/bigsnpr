@@ -449,6 +449,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// prod_and_rowSumsSq2
+List prod_and_rowSumsSq2(Environment BM, const IntegerVector& ind_row, const IntegerVector& ind_col, const NumericVector& center, const NumericVector& scale, const NumericMatrix& V);
+RcppExport SEXP _bigsnpr_prod_and_rowSumsSq2(SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP VSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Environment >::type BM(BMSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_row(ind_rowSEXP);
+    Rcpp::traits::input_parameter< const IntegerVector& >::type ind_col(ind_colSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type center(centerSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type scale(scaleSEXP);
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type V(VSEXP);
+    rcpp_result_gen = Rcpp::wrap(prod_and_rowSumsSq2(BM, ind_row, ind_col, center, scale, V));
+    return rcpp_result_gen;
+END_RCPP
+}
 // read_bgen
 List read_bgen(std::string filename, const NumericVector& offsets, const Environment& BM, const IntegerVector& ind_row, const IntegerVector& ind_col, const RawVector& decode, bool dosage, int N, int ncores);
 RcppExport SEXP _bigsnpr_read_bgen(SEXP filenameSEXP, SEXP offsetsSEXP, SEXP BMSEXP, SEXP ind_rowSEXP, SEXP ind_colSEXP, SEXP decodeSEXP, SEXP dosageSEXP, SEXP NSEXP, SEXP ncoresSEXP) {
@@ -605,6 +621,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_bigsnpr_multLinReg", (DL_FUNC) &_bigsnpr_multLinReg, 5},
     {"_bigsnpr_extract_submat_bgen", (DL_FUNC) &_bigsnpr_extract_submat_bgen, 8},
     {"_bigsnpr_prod_bgen2", (DL_FUNC) &_bigsnpr_prod_bgen2, 10},
+    {"_bigsnpr_prod_and_rowSumsSq2", (DL_FUNC) &_bigsnpr_prod_and_rowSumsSq2, 6},
     {"_bigsnpr_read_bgen", (DL_FUNC) &_bigsnpr_read_bgen, 9},
     {"_bigsnpr_readbina", (DL_FUNC) &_bigsnpr_readbina, 3},
     {"_bigsnpr_readbina2", (DL_FUNC) &_bigsnpr_readbina2, 5},
