@@ -1,3 +1,7 @@
+## bigsnpr 1.12.17
+
+- Now properly errors when `ncol(G) != length(infos.chr)` in `snp_clumping()`. Also when `nrow(gwas) != length(infos.chr)` in `snp_manhattan()`.
+
 ## bigsnpr 1.12.16
 
 - Add function `snp_projectSelfPCA()` (only `bed_projectSelfPCA()` existed).

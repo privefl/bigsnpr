@@ -70,11 +70,13 @@ snp_clumping <- function(G, infos.chr,
                          ncores = 1) {
 
   check_args()
+  assert_lengths(infos.chr, cols_along(G))
 
   if (!missing(is.size.in.bp))
     warning2("Parameter 'is.size.in.bp' is deprecated.")
 
-  if (!is.null(S)) assert_lengths(infos.chr, S)
+  if (!is.null(infos.pos)) assert_lengths(infos.pos, infos.chr)
+  if (!is.null(S)) assert_lengths(S, infos.chr)
 
   ind.noexcl <- setdiff(seq_along(infos.chr), exclude)
 
