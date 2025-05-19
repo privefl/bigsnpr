@@ -18,7 +18,7 @@ of G. For example, this can be used to compute GRMs."><!-- mathjax --><script sr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@ Use <code>obj.bed &lt;- bed(bedfile)</code> to get this object.</p></dd>
 <code>ind.col</code>, and that returns a data.frame with <code>$center</code> and <code>$scale</code> for the
 columns corresponding to <code>ind.col</code>, to scale each of their elements such as followed:
 $$\frac{X_{i,j} - center_j}{scale_j}.$$ Default uses binomial scaling.
-You can also provide your own <code>center</code> and <code>scale</code> by using <code>as_scaling_fun()</code>.</p></dd>
+You can also provide your own <code>center</code> and <code>scale</code> by using <code><a href="https://privefl.github.io/bigstatsr/reference/as_scaling_fun.html" class="external-link">bigstatsr::as_scaling_fun()</a></code>.</p></dd>
 
 
 <dt>ind.row</dt>
@@ -151,11 +151,11 @@ Default uses <a href="https://privefl.github.io/bigstatsr/reference/block_size.h
 
 
 <p>Large matrix computations are made block-wise and won't be parallelized
-in order to not have to reduce the size of these blocks.
-Instead, you may use <a href="https://mran.microsoft.com/open/" class="external-link">Microsoft R Open</a>
+in order to not have to reduce the size of these blocks. Instead, you can use
+the <a href="https://forum.posit.co/t/intel-mkl-integration-to-r-on-windows/176071" class="external-link">MKL</a>
 or OpenBLAS in order to accelerate these block matrix computations.
-You can also control the number of cores used with
-<code><a href="https://rdrr.io/pkg/bigparallelr/man/get_blas_ncores.html" class="external-link">bigparallelr::set_blas_ncores()</a></code>.</p>
+You can control the number of cores used by these optimized matrix libraries
+with <code><a href="https://rdrr.io/pkg/bigparallelr/man/get_blas_ncores.html" class="external-link">bigparallelr::set_blas_ncores()</a></code>.</p>
     </div>
 
     <div id="ref-examples">

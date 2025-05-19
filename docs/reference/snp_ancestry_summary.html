@@ -18,7 +18,7 @@ using snp_match() (and to reverse frequencies correspondingly)."><!-- mathjax --
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ using snp_match() (and to reverse frequencies correspondingly)."><!-- mathjax --
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Estimation of ancestry proportions</h1>
-    <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/HEAD/R/match-alleles.R" class="external-link"><code>R/match-alleles.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/HEAD/R/ancestry-summary.R" class="external-link"><code>R/ancestry-summary.R</code></a></small>
     <div class="hidden name"><code>snp_ancestry_summary.Rd</code></div>
     </div>
 
@@ -99,7 +99,14 @@ using <code><a href="snp_match.html">snp_match()</a></code> (and to reverse freq
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_ancestry_summary</span><span class="op">(</span><span class="va">freq</span>, <span class="va">info_freq_ref</span>, <span class="va">projection</span>, <span class="va">correction</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_ancestry_summary</span><span class="op">(</span></span>
+<span>  <span class="va">freq</span>,</span>
+<span>  <span class="va">info_freq_ref</span>,</span>
+<span>  <span class="va">projection</span>,</span>
+<span>  <span class="va">correction</span>,</span>
+<span>  min_cor <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>  sum_to_one <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -121,12 +128,27 @@ project allele frequencies.</p></dd>
 <dt>correction</dt>
 <dd><p>Coefficients to correct for shrinkage when projecting.</p></dd>
 
+
+<dt>min_cor</dt>
+<dd><p>Minimum correlation between observed and predicted frequencies.
+Default is 0.4. When correlation is lower, an error is returned.
+For individual genotypes, this should be larger than 0.6.
+For allele frequencies, this should be larger than 0.9.</p></dd>
+
+
+<dt>sum_to_one</dt>
+<dd><p>Whether to force ancestry coefficients to sum to 1?
+Default is <code>TRUE</code> (otherwise, the sum can be lower than 1).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>vector of coefficients representing the ancestry proportions.</p>
+<p>Vector of coefficients representing the ancestry proportions.
+Also (as attributes) <code>cor_each</code>, the correlation between input
+frequencies and each reference frequencies, and <code>cor_pred</code>, the correlation
+between input and predicted frequencies.</p>
     </div>
 
     <div id="ref-examples">

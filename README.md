@@ -1,7 +1,7 @@
 <!-- badges: start -->
 [![R build status](https://github.com/privefl/bigsnpr/workflows/R-CMD-check/badge.svg)](https://github.com/privefl/bigsnpr/actions)
 [![Codecov test coverage](https://codecov.io/gh/privefl/bigsnpr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/privefl/bigsnpr?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/bigsnpr)](https://CRAN.R-project.org/package=bigsnpr)
+[![CRAN status](https://www.r-pkg.org/badges/version/bigsnpr)](https://CRAN.R-project.org/package=bigsnpr)
 [![DOI](https://zenodo.org/badge/doi/10.1093/bioinformatics/bty185.svg)](http://dx.doi.org/10.1093/bioinformatics/bty185)
 <!-- badges: end -->
  
@@ -60,7 +60,7 @@ Polygenic scores are one of the main focus of this package. There are 3 main met
 
 - Clumping and Thresholding (C+T) and Stacked C+T (SCT) with summary statistics and individual level data (see [paper](https://doi.org/10.1016/j.ajhg.2019.11.001) and [tutorial](https://privefl.github.io/bigsnpr/articles/SCT.html)).
 
-- LDpred2 with summary statistics (see [paper](https://doi.org/10.1093/bioinformatics/btaa1029) and [tutorial](https://privefl.github.io/bigsnpr/articles/LDpred2.html))
+- LDpred2 with summary statistics (see [paper](https://doi.org/10.1093/bioinformatics/btaa1029) and [tutorial](https://privefl.github.io/bigsnpr/articles/LDpred2.html)), and lassosum2
 
 
 ## Possible upcoming features
@@ -99,4 +99,6 @@ I will always redirect you to GitHub issues if you email me, so that others can 
 
 - Privé, Florian. ["Using the UK Biobank as a global reference of worldwide populations: application to measuring ancestry diversity from GWAS summary statistics."](https://doi.org/10.1093/bioinformatics/btac348) *Bioinformatics* 38.13 (2022): 3477-3480.
 
-- Privé, Florian, et al. [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1101/2022.10.10.511629). *bioRxiv* (2022).
+- Privé, Florian, et al. ["Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores."](https://doi.org/10.1016/j.xhgg.2022.100136) *Human Genetics and Genomics Advances* 3.4 (2022).
+
+- Privé, Florian, et al. [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1101/2022.10.10.511629). *The American Journal of Human Genetics* 110.12 (2023): 2042-2055.

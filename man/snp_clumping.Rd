@@ -74,9 +74,9 @@ can be used to exclude long-range LD regions (see Price2008). Another use
 can be for thresholding with respect to p-values associated with \code{S}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
-\item{G}{A \link[=FBM.code256-class]{FBM.code256}
+\item{G}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
@@ -94,8 +94,7 @@ Typically \verb{<bigSNP>$map$physical.pos}.}
 Default is \code{2}, which corresponds to diploidy, such as for the human genome.}
 
 \item{LD.regions}{A \code{data.frame} with columns "Chr", "Start" and "Stop".
-Default use the table of 34 long-range LD regions that you can find
-\href{https://goo.gl/0Ou7uI}{there}.}
+Default use \link{LD.wiki34}.}
 }
 \value{
 \itemize{

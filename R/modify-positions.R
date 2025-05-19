@@ -163,15 +163,18 @@ snp_asGeneticPos <- function(infos.chr, infos.pos, dir = tempdir(), ncores = 1,
 
 #' Download a genetic map
 #'
-#' @param type Which genetic map to download. The hg19 ones are downloaded from
-#' \url{https://github.com/joepickrell/1000-genomes-genetic-maps/} while the
-#' hg38 is downloaded from
-#' \url{https://alkesgroup.broadinstitute.org/Eagle/downloads/tables/}.
+#' @param type Which genetic map to download.
 #' @param dir Directory where to download and decompress files.
 #' @inheritParams bigsnpr-package
 #'
 #' @return A data frame with 3 columns: `chr`, `pos`, and `pos_cM`.
 #' @export
+#'
+#' @details
+#' The hg19 genetic maps are downloaded from
+#' \url{https://github.com/joepickrell/1000-genomes-genetic-maps/}
+#' while the hg38 one is downloaded from
+#' `https://alkesgroup.broadinstitute.org/Eagle/downloads/tables/`.
 #'
 #' @rdname snp_asGeneticPos2
 #'

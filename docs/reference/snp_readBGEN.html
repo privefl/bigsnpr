@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -122,8 +122,8 @@ and ".rds") that are created by this function for storing the
 
 
 <dt>list_snp_id</dt>
-<dd><p>List (same length as the number of BGEN files) of
-character vector of SNP IDs to read. These should be in the form
+<dd><p>List of character vectors of SNP IDs to read, with one
+vector per BGEN file. Each SNP ID should be in the form
 <code>"&lt;chr&gt;_&lt;pos&gt;_&lt;a1&gt;_&lt;a2&gt;"</code> (e.g. <code>"1_88169_C_T"</code> or <code>"01_88169_C_T"</code>).
 If you have one BGEN file only, just wrap your vector of IDs with <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>.
 <strong>This function assumes that these IDs are uniquely identifying variants.</strong></p></dd>
@@ -149,7 +149,7 @@ file, and use e.g. <code><a href="https://rdrr.io/r/base/match.html" class="exte
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use <code>nb_cores()</code>.</p></dd>
+You may use <code><a href="https://privefl.github.io/bigstatsr/reference/reexports.html" class="external-link">bigstatsr::nb_cores()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -159,15 +159,17 @@ You may use <code>nb_cores()</code>.</p></dd>
 <p>The path to the RDS file <code>&lt;backingfile&gt;.rds</code> that stores the <code>bigSNP</code></p>
 
 
-<p>object created by this function. Note that this function creates another
-file (<em>.bk</em>) which stores the values of the FBM (<code>$genotypes</code>). The <code>$map</code></p>
+<p>object created by this function.<br></p>
 
 
-<p>component of the <code>bigSNP</code> object stores some information on the variants
-(including allele frequencies and INFO scores computed from the probabilities).
+<p>Note that this function creates another file (<em>.bk</em>) which stores the values
+of the FBM (<code>$genotypes</code>). The rows corresponds to the order of <code>ind_row</code>;
+the columns to the order of <code>list_snp_id</code>. The <code>$map</code> component of the
+<code>bigSNP</code> object stores some information on the variants (including allele
+frequencies and INFO scores computed from the imputation probabilities).
 However, it does not have a <code>$fam</code> component; you should use the individual
-IDs in the <em>.sample</em> file (filtered with <code>ind_row</code>) to add external information
-on the individuals.<br></p>
+IDs in the <em>.sample</em> file (filtered with <code>ind_row</code>) to add external
+information on the individuals.<br></p>
 
 
 <p><strong>You shouldn't read from BGEN files more than once.</strong> Instead, use
@@ -176,19 +178,18 @@ on the individuals.<br></p>
     <div id="details">
     <h2>Details</h2>
     <p>For more information on this format, please visit
-<a href="https://bitbucket.org/gavinband/bgen/" class="external-link">BGEN webpage</a>.</p>
+<a href="https://code.enkre.net/bgen" class="external-link">BGEN webpage</a>.</p>
 <p>This function is designed to read UK Biobank imputation files. This assumes
 that variants have been compressed with zlib, that there are only 2 possible
 alleles, and that each probability is stored on 8 bits. For example, if you
 use <em>qctool</em> to generate your own BGEN files, please make sure you are using
-options '<code>-ofiletype bgen_v1.2 -bgen-bits 8</code>'.</p>
+options '<code>-ofiletype bgen_v1.2 -bgen-bits 8 -assume-chromosome</code>'.</p>
 <p>If the format is not the expected one, this will result in an error or even
 a crash of your R session. Another common source of error is due to corrupted
 files; e.g. if using UK Biobank files, compare the result of <code><a href="https://rdrr.io/r/tools/md5sum.html" class="external-link">tools::md5sum()</a></code>
 with the ones at <a href="https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998" class="external-link">https://biobank.ndph.ox.ac.uk/ukb/refer.cgi?id=998</a>.</p>
-<p>You can look at some example code from my papers on how to use this function:</p><ul><li><p><a href="https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R" class="external-link">https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R</a></p></li>
-<li><p><a href="https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62" class="external-link">https://github.com/privefl/paper-ldpred2/blob/master/code/prepare-genotypes.R#L1-L62</a></p></li>
-<li><p><a href="https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75" class="external-link">https://github.com/privefl/paper4-bedpca/blob/master/code/missing-values-UKBB.R#L34-L75</a></p></li>
+<p>You can look at some example code from my papers on how to use this function:</p><ul><li><p><a href="https://github.com/privefl/paper-infer/blob/main/code/prepare-geno-simu.R" class="external-link">https://github.com/privefl/paper-infer/blob/main/code/prepare-geno-simu.R</a></p></li>
+<li><p><a href="https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R" class="external-link">https://github.com/privefl/paper-misspec/blob/main/code/prepare-genotypes.R</a></p></li>
 </ul></div>
 
   </div>

@@ -54,6 +54,14 @@ pred2 <- unlist(by(proj$OADP_proj[ind.test, 2:3],   pop[ind.test], geom_med))
 expect_gt(sum(ref^2), sum(pred1^2))
 expect_lt(sum((ref - pred2)^2), sum((ref - pred1)^2))
 
+G <- snp_attach(snp_readBed(obj.bed$bedfile, backingfile = tempfile()))$genotypes
+proj.2 <- snp_projectSelfPCA(obj.svd, G, ind.row = ind.test,
+                             ind.col = cols_along(G), ncores = 2)
+expect_identical(proj.2$obj.svd.ref, proj$obj.svd.ref)
+expect_equal(proj.2$simple_proj, proj$simple_proj[ind.test, ])
+expect_equal(proj.2$OADP_proj,   proj$OADP_proj[ind.test, ])
+
+
 proj2 <- bed_projectPCA(obj.bed, obj.bed,
                         ind.row.new = ind.test,
                         ind.row.ref = ind.row,

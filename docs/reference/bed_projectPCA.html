@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -182,18 +182,18 @@ for Linux.</p></dd>
 <code>ind.col</code>, and that returns a data.frame with <code>$center</code> and <code>$scale</code> for the
 columns corresponding to <code>ind.col</code>, to scale each of their elements such as followed:
 $$\frac{X_{i,j} - center_j}{scale_j}.$$ Default uses binomial scaling.
-You can also provide your own <code>center</code> and <code>scale</code> by using <code>as_scaling_fun()</code>.</p></dd>
+You can also provide your own <code>center</code> and <code>scale</code> by using <code><a href="https://privefl.github.io/bigstatsr/reference/as_scaling_fun.html" class="external-link">bigstatsr::as_scaling_fun()</a></code>.</p></dd>
 
     <dt><code>roll.size</code></dt>
 <dd><p>Radius of rolling windows to smooth log-p-values.
 Default is <code>50</code>.</p></dd>
 
     <dt><code>int.min.size</code></dt>
-<dd><p>Minimum number of consecutive outlier SNPs
+<dd><p>Minimum number of consecutive outlier variants
 in order to be reported as long-range LD region. Default is <code>20</code>.</p></dd>
 
     <dt><code>thr.r2</code></dt>
-<dd><p>Threshold over the squared correlation between two SNPs.
+<dd><p>Threshold over the squared correlation between two variants.
 Default is <code>0.2</code>. Use <code>NA</code> if you want to skip the clumping step.</p></dd>
 
     <dt><code>alpha.tukey</code></dt>
@@ -202,7 +202,11 @@ detection (that is further corrected for multiple testing).</p></dd>
 
     <dt><code>min.mac</code></dt>
 <dd><p>Minimum minor allele count (MAC) for variants to be included.
-Default is <code>10</code>.</p></dd>
+Default is <code>10</code>. Can actually be higher because of <code>min.maf</code>.</p></dd>
+
+    <dt><code>min.maf</code></dt>
+<dd><p>Minimum minor allele frequency (MAF) for variants to be included.
+Default is <code>0.02</code>. Can actually be higher because of <code>min.mac</code>.</p></dd>
 
     <dt><code>max.iter</code></dt>
 <dd><p>Maximum number of iterations of outlier detection.
@@ -225,7 +229,7 @@ I recommend that you provide the positions if available.</p></dd>
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use <code>nb_cores()</code>.</p></dd>
+You may use <code><a href="https://privefl.github.io/bigstatsr/reference/reexports.html" class="external-link">bigstatsr::nb_cores()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">

@@ -11,11 +11,11 @@ snp_split(infos.chr, FUN, combine, ncores = 1, ...)
 Typically \verb{<bigSNP>$map$chromosome}.}
 
 \item{FUN}{The function to be applied. It must take a
-\link[=FBM.code256-class]{FBM.code256} as first argument and \code{ind.chr},
+\link[bigstatsr:FBM.code256-class]{FBM.code256} as first argument and \code{ind.chr},
 an another argument to provide subsetting over SNPs.
 You can access the number of the chromosome by using \code{attr(ind.chr, "chr")}.}
 
-\item{combine}{function that is used by \link{foreach} to process the tasks
+\item{combine}{function that is used by \link[foreach:foreach]{foreach::foreach} to process the tasks
 results as they generated. This can be specified as either a function or a
 non-empty character string naming the function. Specifying 'c' is useful
 for concatenating the results into a vector, for example. The values 'cbind'
@@ -23,12 +23,12 @@ and 'rbind' can combine vectors into a matrix. The values '+' and '*' can be
 used to process numeric data. By default, the results are returned in a list.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{...}{Extra arguments to be passed to \code{FUN}.}
 }
 \value{
-The result of \link{foreach}.
+The result of \link[foreach:foreach]{foreach::foreach}.
 }
 \description{
 A Split-Apply-Combine strategy to parallelize the evaluation of a function

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -99,8 +99,8 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">snp_subset</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">fam</span><span class="op">)</span>,</span>
-<span>  ind.col <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">map</span><span class="op">)</span>,</span>
+<span>  ind.row <span class="op">=</span> <span class="fu">rows_along</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">genotypes</span><span class="op">)</span>,</span>
+<span>  ind.col <span class="op">=</span> <span class="fu">cols_along</span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">genotypes</span><span class="op">)</span>,</span>
 <span>  backingfile <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -164,12 +164,12 @@ to the prefix of the input bigSNP backing files.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ncol        : int 4542</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type        : Named int 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr "unsigned char"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85.bk"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_read_only: logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address     :&lt;externalptr&gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address_rw  :&lt;externalptr&gt; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff.bk"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff.rds"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85.rds"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_saved    : logi TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_chr    : chr "unsigned char"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_size   : int 1</span>
@@ -206,12 +206,12 @@ to the prefix of the input bigSNP backing files.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ncol        : int 50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type        : Named int 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr "unsigned char"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff_sub1.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85_sub1.bk"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_read_only: logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address     :&lt;externalptr&gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address_rw  :&lt;externalptr&gt; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff_sub1.bk"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff_sub1.rds"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85_sub1.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85_sub1.rds"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_saved    : logi TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_chr    : chr "unsigned char"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_size   : int 1</span>
@@ -248,12 +248,12 @@ to the prefix of the input bigSNP backing files.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ncol        : int 4492</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type        : Named int 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr "unsigned char"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff_sub2.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ backingfile : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85_sub2.bk"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_read_only: logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address     :&lt;externalptr&gt; </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ address_rw  :&lt;externalptr&gt; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff_sub2.bk"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpoXbdzU\\file352843c79ff_sub2.rds"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ bk          : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85_sub2.bk"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ rds         : chr "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpITJXCm\\file5f8c66ca6c85_sub2.rds"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ is_saved    : logi TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_chr    : chr "unsigned char"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type_size   : int 1</span>

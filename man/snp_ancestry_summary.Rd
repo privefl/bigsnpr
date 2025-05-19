@@ -9,7 +9,8 @@ snp_ancestry_summary(
   info_freq_ref,
   projection,
   correction,
-  min_cor = 0.4
+  min_cor = 0.4,
+  sum_to_one = TRUE
 )
 }
 \arguments{
@@ -27,6 +28,9 @@ project allele frequencies.}
 Default is 0.4. When correlation is lower, an error is returned.
 For individual genotypes, this should be larger than 0.6.
 For allele frequencies, this should be larger than 0.9.}
+
+\item{sum_to_one}{Whether to force ancestry coefficients to sum to 1?
+Default is \code{TRUE} (otherwise, the sum can be lower than 1).}
 }
 \value{
 Vector of coefficients representing the ancestry proportions.

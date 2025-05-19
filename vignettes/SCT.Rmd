@@ -169,7 +169,7 @@ grid2 <- attr(all_keep, "grid") %>%
 s <- nrow(grid2)
 grid2$auc <- big_apply(multi_PRS, a.FUN = function(X, ind, s, y.train) {
   # Sum over all chromosomes, for the same C+T parameters
-  single_PRS <- rowSums(X[, ind + s * (0:2)])  ## replace by 0:21 in real data
+  single_PRS <- rowSums(X[, ind + s * (0:2)])  ## REPLACE (0:2) BY (0:21) IN REAL DATA
   bigstatsr::AUC(single_PRS, y.train)
 }, ind = 1:s, s = s, y.train = y[ind.train],
 a.combine = 'c', block.size = 1, ncores = NCORES)
@@ -182,15 +182,44 @@ max_prs <- grid2 %>% arrange(desc(auc)) %>% slice(1:10) %>% print() %>% slice(1)
 ```{r}
 ind.keep <- unlist(purrr::map(all_keep, max_prs$id))
 sum(lpval[ind.keep] > max_prs$thr.lp)
-AUCBoot(
-  snp_PRS(G, beta[ind.keep], ind.test = ind.test, ind.keep = ind.keep,
-          lpS.keep = lpval[ind.keep], thr.list = max_prs$thr.lp),
-  y[ind.test]
-)
+final_PRS <- snp_PRS(G, beta[ind.keep], ind.test = ind.test, ind.keep = ind.keep,
+          lpS.keep = lpval[ind.keep], thr.list = max_prs$thr.lp)
+AUCBoot(final_PRS, y[ind.test])
 ```
 
 For this example, the best C+T predictions provides an AUC of 67% whereas stacking, which should be preferred, provides an AUC of 68.5%.
 
-### Reference
+
+## Alternative to AUC
+
+You can also perform statistical tests instead of using the AUC to get the best performing score. It can then be applied to both continuous traits (with `lm(...)`) and binary traits (with `glm(..., family = "binomial")`) and you can also add covariates in the model such as age, sex, PCs, etc.
+
+```{r}
+covar <- NULL  ## REPLACE IF YOU WANT TO USE COVARIATES
+
+grid2$score <- big_apply(multi_PRS, a.FUN = function(X, ind, s, y.train, covar.train) {
+  # Sum over all chromosomes, for the same C+T parameters
+  single_PRS <- rowSums(X[, ind + s * (0:2)])  ## ## REPLACE (0:2) BY (0:21) IN REAL DATA
+  formula <- `if`(is.null(covar.train), y.train ~ single_PRS, y.train ~ single_PRS + covar.train)
+  mod <- glm(formula, family = "binomial")
+  summary(mod)$coef["single_PRS", 3]
+}, ind = 1:s, s = s, y.train = y[ind.train], covar.train = covar[ind.train, ],
+a.combine = 'c', block.size = 1, ncores = NCORES)
+```
+
+```{r}
+ggplot(grid2, aes(auc, score)) + 
+  geom_point() + 
+  theme_bigstatsr()
+```
+
+For assessing the final model when the phenotype is continuous, you can use `pcor()`, which computes partial correlations (and 95% CI) where you can adjust for covariates.
+
+```{r}
+pcor(final_PRS, y[ind.test], covar[ind.test, ])
+```
+
+
+## Reference
 
 Privé, Florian, et al. ["Making the most of Clumping and Thresholding for polygenic scores."](https://doi.org/10.1016/j.ajhg.2019.11.001) Am J Hum Genet (2019).

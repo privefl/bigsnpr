@@ -21,6 +21,10 @@ test_that("Scales work", {
 
 POS <- bigSNP$map$physical.pos
 CHR0 <- sort(rep_len(1:2, ncol(G)))
+expect_error(snp_clumping(G, infos.chr = CHR0[1:5], infos.pos = POS),
+             "Incompatibility between dimensions")
+expect_error(snp_clumping(G, infos.chr = CHR0, infos.pos = POS[1:5]),
+             "Incompatibility between dimensions")
 ind.keep0 <- snp_clumping(G, infos.chr = CHR0, infos.pos = POS,
                           exclude = which(CHR0 == 1))
 expect_true(all(CHR0[ind.keep0] == 2))

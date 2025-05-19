@@ -4,11 +4,17 @@
 \alias{bed-methods}
 \alias{dim,bed-method}
 \alias{length,bed-method}
+\alias{dim,bed_light-method}
+\alias{length,bed_light-method}
 \title{Methods for the bed class}
 \usage{
 \S4method{dim}{bed}(x)
 
 \S4method{length}{bed}(x)
+
+\S4method{dim}{bed_light}(x)
+
+\S4method{length}{bed_light}(x)
 }
 \arguments{
 \item{x}{Object of type \code{bed}.}

@@ -18,7 +18,7 @@ on each SNP, independently."><!-- mathjax --><script src="https://cdnjs.cloudfla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -111,13 +111,13 @@ Typically <code>&lt;bigSNP&gt;$map$chromosome</code>.</p></dd>
 
 <dt>FUN</dt>
 <dd><p>The function to be applied. It must take a
-FBM.code256 as first argument and <code>ind.chr</code>,
+<a href="https://privefl.github.io/bigstatsr/reference/FBM.code256-class.html" class="external-link">FBM.code256</a> as first argument and <code>ind.chr</code>,
 an another argument to provide subsetting over SNPs.
 You can access the number of the chromosome by using <code>attr(ind.chr, "chr")</code>.</p></dd>
 
 
 <dt>combine</dt>
-<dd><p>function that is used by foreach to process the tasks
+<dd><p>function that is used by <a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach::foreach</a> to process the tasks
 results as they generated. This can be specified as either a function or a
 non-empty character string naming the function. Specifying 'c' is useful
 for concatenating the results into a vector, for example. The values 'cbind'
@@ -127,7 +127,7 @@ used to process numeric data. By default, the results are returned in a list.</p
 
 <dt>ncores</dt>
 <dd><p>Number of cores used. Default doesn't use parallelism.
-You may use <code>nb_cores()</code>.</p></dd>
+You may use <code><a href="https://privefl.github.io/bigstatsr/reference/reexports.html" class="external-link">bigstatsr::nb_cores()</a></code>.</p></dd>
 
 
 <dt>...</dt>
@@ -138,7 +138,7 @@ You may use <code>nb_cores()</code>.</p></dd>
     <h2>Value</h2>
     
 
-<p>The result of foreach.</p>
+<p>The result of <a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach::foreach</a>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -158,7 +158,7 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     stop2("Pruning is deprecated; please use clumping (on MAF) instead..\n%s", </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         "See why at https://bit.ly/2uKo3MN.")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000018d82d7f4d8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000001b46088c570&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
 <span class="r-in"><span><span class="va">snp_clumping</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (G, infos.chr, ind.row = rows_along(G), S = NULL, thr.r2 = 0.2, </span>
@@ -177,7 +177,7 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 thr.r2, ncores)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         }), use.names = FALSE))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000018dfc3166d8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000001b466b21ec8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
 <span class="r-in"><span><span class="va">snp_fastImpute</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (Gna, infos.chr, alpha = 1e-04, size = 200, p.train = 0.8, </span>
@@ -195,7 +195,7 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     infos.imp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x0000018d82a88460&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000001b4604673c8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

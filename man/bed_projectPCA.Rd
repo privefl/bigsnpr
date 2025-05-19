@@ -64,17 +64,19 @@ for Linux.}
 \code{ind.col}, and that returns a data.frame with \verb{$center} and \verb{$scale} for the
 columns corresponding to \code{ind.col}, to scale each of their elements such as followed:
 \deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
-You can also provide your own \code{center} and \code{scale} by using \code{\link[=as_scaling_fun]{as_scaling_fun()}}.}
+You can also provide your own \code{center} and \code{scale} by using \code{\link[bigstatsr:as_scaling_fun]{bigstatsr::as_scaling_fun()}}.}
     \item{\code{roll.size}}{Radius of rolling windows to smooth log-p-values.
 Default is \code{50}.}
-    \item{\code{int.min.size}}{Minimum number of consecutive outlier SNPs
+    \item{\code{int.min.size}}{Minimum number of consecutive outlier variants
 in order to be reported as long-range LD region. Default is \code{20}.}
-    \item{\code{thr.r2}}{Threshold over the squared correlation between two SNPs.
+    \item{\code{thr.r2}}{Threshold over the squared correlation between two variants.
 Default is \code{0.2}. Use \code{NA} if you want to skip the clumping step.}
     \item{\code{alpha.tukey}}{Default is \code{0.1}. The type-I error rate in outlier
 detection (that is further corrected for multiple testing).}
     \item{\code{min.mac}}{Minimum minor allele count (MAC) for variants to be included.
-Default is \code{10}.}
+Default is \code{10}. Can actually be higher because of \code{min.maf}.}
+    \item{\code{min.maf}}{Minimum minor allele frequency (MAF) for variants to be included.
+Default is \code{0.02}. Can actually be higher because of \code{min.mac}.}
     \item{\code{max.iter}}{Maximum number of iterations of outlier detection.
 Default is \code{5}.}
     \item{\code{size}}{For one SNP, window size around this SNP to compute correlations.
@@ -87,7 +89,7 @@ I recommend that you provide the positions if available.}
 \item{verbose}{Output some information on the iterations? Default is \code{TRUE}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 A list of 3 elements:

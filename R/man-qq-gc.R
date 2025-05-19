@@ -8,7 +8,8 @@
 #' use `plot` instead.
 #'
 #' @param gwas A `mhtest` object with the p-values associated with each SNP.
-#' Typically, the output of [big_univLinReg], [big_univLogReg] or [snp_pcadapt].
+#' Typically, the output of [bigstatsr::big_univLinReg], [bigstatsr::big_univLogReg]
+#' or [snp_pcadapt].
 #' @inheritParams bigsnpr-package
 #' @param colors Colors used for each chromosome (they are recycled).
 #' Default is an alternation of black and gray.
@@ -44,6 +45,7 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
                           coeff = 1) {
 
   check_args(infos.chr = "")
+  assert_lengths(infos.chr, infos.pos, rows_along(gwas))
 
   # get ordering
   ord <- order(infos.chr, infos.pos)

@@ -111,7 +111,7 @@ download_plink2 <- function(dir = tempdir(), AVX2 = TRUE, ARM = FALSE, AMD = FAL
   plink.names <- get_pattern(
     x = readLines("https://www.cog-genomics.org/plink/2.0/"),
     # http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20190527.zip
-    pattern = ".*(http[s]*://s3.amazonaws.com/plink2-assets/plink2_.+?\\.zip).*"
+    pattern = ".*(http[s]*://s3.amazonaws.com/plink2-assets/.*?plink2_.+?\\.zip).*"
   )
   plink.builds <- data.frame(
     url  = sub("^http://", "https://", plink.names),
@@ -601,7 +601,7 @@ snp_plinkKINGQC <- function(plink2.path,
 #' @param plink.options Other options to be passed to PLINK as a string. More
 #'   options can be found at \url{https://www.cog-genomics.org/plink2/filter}.
 #' @param ncores Number of cores used. Default doesn't use parallelism.
-#'   You may use [nb_cores].
+#'   You may use [bigstatsr::nb_cores()].
 #'
 #' @references Browning, Brian L., and Sharon R. Browning.
 #' "Genotype imputation with millions of reference samples."

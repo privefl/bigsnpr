@@ -122,7 +122,7 @@ check_bgen_format <- function(bgenfile) {
 #'   file, and use e.g. `match()` to get indices corresponding to the ones you want.
 #'
 #' @param ncores Number of cores used. Default doesn't use parallelism.
-#'   You may use [nb_cores()].
+#'   You may use [bigstatsr::nb_cores()].
 #' @param read_as How to read BGEN probabilities? Currently implemented:
 #'   - as dosages (rounded to two decimal places), the default,
 #'   - as hard calls, randomly sampled based on those probabilities

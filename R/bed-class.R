@@ -208,3 +208,14 @@ bed_light_RC <- methods::setRefClass(
 )
 
 ################################################################################
+
+# TODO: should probably make bed inherit from bed_light, but much work..
+#' @rdname bed-methods
+#' @export
+setMethod("dim",    signature(x = "bed_light"), function(x) c(x$nrow, x$ncol))
+
+#' @rdname bed-methods
+#' @export
+setMethod("length", signature(x = "bed_light"), function(x) prod(dim(x) + 0))
+
+################################################################################

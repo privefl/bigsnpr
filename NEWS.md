@@ -1,3 +1,37 @@
+## bigsnpr 1.12.18
+
+- Cope with new PLINK2 URLs in `download_plink2()`.
+
+## bigsnpr 1.12.17
+
+- Now properly errors when `ncol(G) != length(infos.chr)` in `snp_clumping()`. Also when `nrow(gwas) != length(infos.chr)` in `snp_manhattan()`.
+
+## bigsnpr 1.12.16
+
+- Add function `snp_projectSelfPCA()` (only `bed_projectSelfPCA()` existed).
+
+## bigsnpr 1.12.14
+
+- Add a new `min.maf = 0.02` parameter to `snp_autoSVD()` and `bed_autoSVD()`. Then variants are now discarded when they have either a small MAC or a small MAF.
+
+## bigsnpr 1.12.13
+
+- Can now use matrix accessors for class `bed_light` as well.
+
+## bigsnpr 1.12.12
+
+- Minor improvements to `snp_autoSVD()` and `bed_autoSVD()`: 
+    - error when `min.mac = 0`,
+    - return a better `attr(, "lrldr")`.
+
+## bigsnpr 1.12.11
+
+- In functions `snp_autoSVD()` and `bed_autoSVD()`, now perform the MAC thresholding before the clumping step. This reordering should not change results, but this should be faster now.
+
+## bigsnpr 1.12.10
+
+- In function `snp_ancestry_summary()`, add parameter `sum_to_one` to optionally allows for ancestry coefficients to have a sum lower than 1 (when `FALSE`; default is `TRUE`).
+
 ## bigsnpr 1.12.9
 
 - In function `snp_modifyBuild()`, you can now provide `local_chain` as a vector of two, for when using `check_reverse`. You can now also modify the `base_url` from where to download the chain files.

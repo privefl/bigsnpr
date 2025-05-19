@@ -8,7 +8,8 @@ snp_qq(gwas, lambdaGC = TRUE, coeff = 1)
 }
 \arguments{
 \item{gwas}{A \code{mhtest} object with the p-values associated with each SNP.
-Typically, the output of \link{big_univLinReg}, \link{big_univLogReg} or \link{snp_pcadapt}.}
+Typically, the output of \link[bigstatsr:big_univLinReg]{bigstatsr::big_univLinReg}, \link[bigstatsr:big_univLogReg]{bigstatsr::big_univLogReg}
+or \link{snp_pcadapt}.}
 
 \item{lambdaGC}{Add the Genomic Control coefficient as subtitle to the plot?}
 

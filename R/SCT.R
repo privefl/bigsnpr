@@ -254,10 +254,10 @@ snp_grid_PRS <- function(
 #'
 #' @param multi_PRS Output of `snp_grid_PRS()`.
 #' @param y.train Vector of phenotypes. If there are two levels (binary 0/1),
-#'   it uses [big_spLogReg()] for stacking, otherwise [big_spLinReg()].
-#' @param alphas Vector of values for grid-search. See [big_spLogReg()].
+#'   it uses [bigstatsr::big_spLogReg()] for stacking, otherwise [bigstatsr::big_spLinReg()].
+#' @param alphas Vector of values for grid-search. See [bigstatsr::big_spLogReg()].
 #'   Default for this function is `c(1, 0.01, 0.0001)`.
-#' @param ... Other parameters to be passed to [big_spLogReg()]. For example,
+#' @param ... Other parameters to be passed to [bigstatsr::big_spLogReg()]. For example,
 #'   using `covar.train`, you can add covariates in the model with all C+T scores.
 #'   You can also use `pf.covar` if you do not want to penalize these covariates.
 #'

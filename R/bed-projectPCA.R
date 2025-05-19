@@ -59,6 +59,15 @@ part_prod <- function(X, ind, ind.row, ind.col, center, scale, V, XV, X_norm) {
 
 ################################################################################
 
+OADP_proj <- function(XV, X_norm, sval, ncores) {
+  bigparallelr::split_parapply(function(XV, X_norm, sval, ind) {
+    bigutilsr::pca_OADP_proj2(XV[ind, , drop = FALSE], X_norm[ind], sval)
+  }, ind = rows_along(XV), XV = XV, X_norm = X_norm, sval = sval,
+  .combine = "rbind", ncores = ncores)
+}
+
+################################################################################
+
 #' Projecting PCA
 #'
 #' Computing and projecting PCA of reference dataset to a target dataset.
@@ -195,16 +204,16 @@ bed_projectSelfPCA <- function(obj.svd, obj.bed, ind.row,
 
   big_parallelize(
     obj.bed$light,
-    p.FUN = part_prod,
-    ind = seq_along(ind.col),
-    ncores = ncores,
+    p.FUN   = part_prod,
+    ind     = seq_along(ind.col),
+    ncores  = ncores,
     ind.row = ind.row,
     ind.col = ind.col,
-    center = obj.svd$center,
-    scale = obj.svd$scale,
-    V = obj.svd$v,
-    XV = XV,
-    X_norm = X_norm
+    center  = obj.svd$center,
+    scale   = obj.svd$scale,
+    V       = obj.svd$v,
+    XV      = XV,
+    X_norm  = X_norm
   )
 
   list(
@@ -216,11 +225,58 @@ bed_projectSelfPCA <- function(obj.svd, obj.bed, ind.row,
 
 ################################################################################
 
-OADP_proj <- function(XV, X_norm, sval, ncores) {
-  bigparallelr::split_parapply(function(XV, X_norm, sval, ind) {
-    bigutilsr::pca_OADP_proj2(XV[ind, , drop = FALSE], X_norm[ind], sval)
-  }, ind = rows_along(XV), XV = XV, X_norm = X_norm, sval = sval,
-  .combine = "rbind", ncores = ncores)
+part_prod2 <- function(X, ind, ind.row, ind.col, center, scale, V, XV, X_norm) {
+
+  res <- prod_and_rowSumsSq2(
+    BM      = X,
+    ind_row = ind.row,
+    ind_col = ind.col[ind],
+    center  = center[ind],
+    scale   = scale[ind],
+    V       = V[ind, , drop = FALSE]
+  )
+
+  big_increment(XV,     res[[1]], use_lock = TRUE)
+  big_increment(X_norm, res[[2]], use_lock = TRUE)
+}
+
+################################################################################
+
+#' @rdname bed_projectSelfPCA
+#'
+#' @param G The [FBM.code256][bigstatsr::FBM.code256-class] that was used to
+#'   compute `obj.svd`.
+#'
+#' @export
+snp_projectSelfPCA <- function(obj.svd, G, ind.row,
+                               ind.col = attr(obj.svd, "subset"),
+                               ncores = 1) {
+
+  check_args()
+  assert_lengths(rows_along(obj.svd$v), ind.col)
+
+  X_norm <- FBM(length(ind.row), 1,               init = 0)
+  XV     <- FBM(length(ind.row), ncol(obj.svd$v), init = 0)
+
+  big_parallelize(
+    G,
+    p.FUN   = part_prod2,
+    ind     = seq_along(ind.col),
+    ncores  = ncores,
+    ind.row = ind.row,
+    ind.col = ind.col,
+    center  = obj.svd$center,
+    scale   = obj.svd$scale,
+    V       = obj.svd$v,
+    XV      = XV,
+    X_norm  = X_norm
+  )
+
+  list(
+    obj.svd.ref = obj.svd,
+    simple_proj = XV[, , drop = FALSE],
+    OADP_proj   = OADP_proj(XV, X_norm, obj.svd$d, ncores = ncores)
+  )
 }
 
 ################################################################################

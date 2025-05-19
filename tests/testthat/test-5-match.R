@@ -148,6 +148,13 @@ test_that("snp_ancestry_summary() works (with no projection here)", {
   res <- snp_ancestry_summary(y, X, Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)))
   expect_equal(res, prop, check.attributes = FALSE)
   expect_equal(attr(res, "cor_pred"), 1)
+  expect_equal(sum(res), 1)
+
+  res.2 <- snp_ancestry_summary(y, X, Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)),
+                                sum_to_one = FALSE)
+  expect_equal(res.2, prop, check.attributes = FALSE)
+  expect_equal(attr(res.2, "cor_pred"), 1)
+  expect_equal(sum(res.2), 1)
 
   expect_warning(res2 <- snp_ancestry_summary(
     y, X[, -1], Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X))),
@@ -155,6 +162,24 @@ test_that("snp_ancestry_summary() works (with no projection here)", {
   expect_true(all(res2 > prop[-1]))
   expect_equal(res2, prop[-1], tolerance = 0.1, check.attributes = FALSE)
   expect_equal(attr(res2, "cor_pred"), drop(cor(y, X[, -1] %*% res2)))
+
+  expect_warning(res2.2 <- snp_ancestry_summary(
+    y, X[, -1], Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)), sum_to_one = FALSE),
+    "The solution does not perfectly match the frequencies.")
+  expect_true(all(res2.2 > prop[-1]))
+  expect_equal(res2.2, prop[-1], tolerance = 0.1, check.attributes = FALSE)
+  expect_equal(attr(res2.2, "cor_pred"), drop(cor(y, X[, -1] %*% res2.2)))
+  # better than when forced to sum to 1
+  expect_true(all(res2.2 < res2))
+  expect_gt(attr(res2.2, "cor_pred"), attr(res2, "cor_pred"))
+  expect_lt(sum(res2.2), 1)
+
+  res.3 <- snp_ancestry_summary(y, cbind(X, rbeta(1000, 1, 3)),
+                                Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)),
+                                sum_to_one = sample(c(TRUE, FALSE), 1))
+  expect_equal(res.3, c(prop, 0), check.attributes = FALSE)
+  expect_equal(attr(res.3, "cor_pred"), 1)
+  expect_equal(sum(res.3), 1)
 
   expect_error(res3 <- snp_ancestry_summary(
     y, X[, -3], Matrix::Diagonal(nrow(X), 1), rep(1, nrow(X)), min_cor = 0.6),

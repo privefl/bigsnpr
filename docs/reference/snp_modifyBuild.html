@@ -18,7 +18,7 @@ when converting genome build using executable liftOver."><!-- mathjax --><script
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ when converting genome build using executable liftOver."><!-- mathjax --><script
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Modify genome build</h1>
-    <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/HEAD/R/match-alleles.R" class="external-link"><code>R/match-alleles.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/privefl/bigsnpr/blob/HEAD/R/modify-positions.R" class="external-link"><code>R/modify-positions.R</code></a></small>
     <div class="hidden name"><code>snp_modifyBuild.Rd</code></div>
     </div>
 
@@ -104,7 +104,9 @@ when converting genome build using executable <em>liftOver</em>.</p>
 <span>  <span class="va">liftOver</span>,</span>
 <span>  from <span class="op">=</span> <span class="st">"hg18"</span>,</span>
 <span>  to <span class="op">=</span> <span class="st">"hg19"</span>,</span>
-<span>  check_reverse <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  check_reverse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  local_chain <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  base_url <span class="op">=</span> <span class="st">"https://hgdownload.soe.ucsc.edu/goldenPath/"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -132,6 +134,20 @@ for Linux.</p></dd>
 <dt>check_reverse</dt>
 <dd><p>Whether to discard positions for which we cannot go back
 to initial values by doing 'from -&gt; to -&gt; from'. Default is <code>TRUE</code>.</p></dd>
+
+
+<dt>local_chain</dt>
+<dd><p>Local chain file (e.g. <code>hg18ToHg19.over.chain.gz</code>) to use
+instead of downloading one from parameters <code>from</code> and <code>to</code> (the default).
+You can download one such file from e.g.
+<a href="https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/" class="external-link">https://hgdownload.soe.ucsc.edu/goldenPath/hg18/liftOver/</a>.
+Provide a vector of two when using <code>check_reverse</code>.</p></dd>
+
+
+<dt>base_url</dt>
+<dd><p>From where to download the chain files. Default is
+<code>"https://hgdownload.soe.ucsc.edu/goldenPath/"</code>. You can also try
+replacing <code>https</code> by <code>http</code>, and/or <code>soe</code> by <code>cse</code>.</p></dd>
 
 </dl></div>
     <div id="value">

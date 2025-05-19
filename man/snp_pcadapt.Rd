@@ -22,7 +22,7 @@ bed_pcadapt(
 )
 }
 \arguments{
-\item{G}{A \link[=FBM.code256-class]{FBM.code256}
+\item{G}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
@@ -39,7 +39,7 @@ If not specified, all columns are used.\cr
 \strong{Don't use negative indices.}}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{obj.bed}{Object of type \link{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}

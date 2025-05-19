@@ -6,7 +6,7 @@
 \title{Class bigSNP}
 \value{
 A named list with at least 3 slots: \describe{
-\item{genotypes}{A \link[=FBM.code256-class]{FBM.code256} which is
+\item{genotypes}{A \link[bigstatsr:FBM.code256-class]{FBM.code256} which is
 a special Filebacked Big Matrix encoded with type \code{raw} (one byte
 unsigned integer), representing genotype calls and possibly imputed
 allele dosages. Rows are individuals and columns are SNPs.}

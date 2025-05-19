@@ -11,7 +11,7 @@ snp_fastImputeSimple(
 )
 }
 \arguments{
-\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
+\item{Gna}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
@@ -20,7 +20,7 @@ You can have missing values in these data.}
 \code{"mode"} (most frequent call).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 A new \code{FBM.code256} object (same file, but different code).

@@ -15,14 +15,14 @@ snp_PRS(
 )
 }
 \arguments{
-\item{G}{A \link[=FBM.code256-class]{FBM.code256}
+\item{G}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 \strong{You shouldn't have missing values.} Also, remember to do quality control,
 e.g. some algorithms in this package won't work if you use SNPs with 0 MAF.}
 
 \item{betas.keep}{Numeric vector of weights associated with each SNP
-corresponding to \code{ind.keep}.
-You may want to see \link{big_univLinReg} or \link{big_univLogReg}.}
+corresponding to \code{ind.keep}. You may want to see \link[bigstatsr:big_univLinReg]{bigstatsr::big_univLinReg}
+or \link[bigstatsr:big_univLogReg]{bigstatsr::big_univLogReg}.}
 
 \item{ind.test}{The individuals on whom to project the scores. Default uses all.}
 

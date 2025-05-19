@@ -15,6 +15,8 @@
 #'   Default is 0.4. When correlation is lower, an error is returned.
 #'   For individual genotypes, this should be larger than 0.6.
 #'   For allele frequencies, this should be larger than 0.9.
+#' @param sum_to_one Whether to force ancestry coefficients to sum to 1?
+#'   Default is `TRUE` (otherwise, the sum can be lower than 1).
 #'
 #' @return Vector of coefficients representing the ancestry proportions.
 #'   Also (as attributes) `cor_each`, the correlation between input
@@ -27,7 +29,7 @@
 #' @example examples/example-ancestry-summary.R
 #'
 snp_ancestry_summary <- function(freq, info_freq_ref, projection, correction,
-                                 min_cor = 0.4) {
+                                 min_cor = 0.4, sum_to_one = TRUE) {
 
   assert_package("quadprog")
   assert_nona(freq)
@@ -53,9 +55,9 @@ snp_ancestry_summary <- function(freq, info_freq_ref, projection, correction,
   res <- quadprog::solve.QP(
     Dmat = cp_X_pd$mat,
     dvec = crossprod(y, X),
-    Amat = cbind(1, diag(ncol(X))),
-    bvec = c(1, rep(0, ncol(X))),
-    meq  = 1
+    Amat = cbind(-1, diag(ncol(X))),
+    bvec = c(-1, rep(0, ncol(X))),
+    meq  = `if`(sum_to_one, 1, 0)
   )
 
   cor_pred <- drop(cor(drop(X0 %*% res$solution), freq))

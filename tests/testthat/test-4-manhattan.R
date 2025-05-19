@@ -9,6 +9,9 @@ test_that("snp_manhattan() works with unordered data", {
   N <- ncol(G)
   CHR <- sort(rep_len(1:2, N))
   POS <- 1:N * 1000
+  expect_error(snp_manhattan(gwas, CHR[1:5], POS[1:5]),
+               "Incompatibility between dimensions")
+
   rand <- sample(N)
   # plot_grid(
   #   snp_manhattan(gwas, CHR, POS, dist.sep.chrs = 0),

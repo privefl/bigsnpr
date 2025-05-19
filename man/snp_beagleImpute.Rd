@@ -30,7 +30,7 @@ appending \code{"_impute"} to \code{prefix.in} (\code{bedfile.in} without extens
 to be an integer. Default is \code{3}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \link{nb_cores}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{extra.options}{Other options to be passed to Beagle as a string. More
 options can be found at Beagle's website.}

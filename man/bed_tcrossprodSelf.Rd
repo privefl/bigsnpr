@@ -20,7 +20,7 @@ Use \code{obj.bed <- bed(bedfile)} to get this object.}
 \code{ind.col}, and that returns a data.frame with \verb{$center} and \verb{$scale} for the
 columns corresponding to \code{ind.col}, to scale each of their elements such as followed:
 \deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
-You can also provide your own \code{center} and \code{scale} by using \code{\link[=as_scaling_fun]{as_scaling_fun()}}.}
+You can also provide your own \code{center} and \code{scale} by using \code{\link[bigstatsr:as_scaling_fun]{bigstatsr::as_scaling_fun()}}.}
 
 \item{ind.row}{An optional vector of the row indices (individuals) that
 are used. If not specified, all rows are used.\cr
@@ -48,11 +48,11 @@ of \code{G}. For example, this can be used to compute GRMs.
 
 
 Large matrix computations are made block-wise and won't be parallelized
-in order to not have to reduce the size of these blocks.
-Instead, you may use \href{https://mran.microsoft.com/open/}{Microsoft R Open}
+in order to not have to reduce the size of these blocks. Instead, you can use
+the \href{https://forum.posit.co/t/intel-mkl-integration-to-r-on-windows/176071}{MKL}
 or OpenBLAS in order to accelerate these block matrix computations.
-You can also control the number of cores used with
-\code{bigparallelr::set_blas_ncores()}.
+You can control the number of cores used by these optimized matrix libraries
+with \code{bigparallelr::set_blas_ncores()}.
 
 }
 

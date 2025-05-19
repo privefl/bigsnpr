@@ -18,7 +18,7 @@ snp_lassosum2(
 )
 }
 \arguments{
-\item{corr}{Sparse correlation matrix as an \link[=SFBM-class]{SFBM}.
+\item{corr}{Sparse correlation matrix as an \link[bigsparser:SFBM-class]{SFBM}.
 If \code{corr} is a dsCMatrix or a dgCMatrix, you can use \code{as_SFBM(corr)}.}
 
 \item{df_beta}{A data frame with 3 columns:
@@ -56,7 +56,7 @@ Default is \code{1e-5}.}
 \code{corr[ind.corr, ind.corr]} instead. No subsetting by default.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 A matrix of effect sizes, one vector (column) for each row in

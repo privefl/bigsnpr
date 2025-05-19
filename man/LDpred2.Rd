@@ -39,7 +39,7 @@ snp_ldpred2_auto(
 )
 }
 \arguments{
-\item{corr}{Sparse correlation matrix as an \link[=SFBM-class]{SFBM}.
+\item{corr}{Sparse correlation matrix as an \link[bigsparser:SFBM-class]{SFBM}.
 If \code{corr} is a dsCMatrix or a dgCMatrix, you can use \code{as_SFBM(corr)}.}
 
 \item{df_beta}{A data frame with 3 columns:
@@ -70,7 +70,7 @@ They can be run in parallel by changing \code{ncores}.
 \item{num_iter}{Number of iterations after burn-in.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{return_sampling_betas}{Whether to return all sampling betas (after
 burn-in)? This is useful for assessing the uncertainty of the PRS at the

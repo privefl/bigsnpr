@@ -17,7 +17,7 @@ A data frame with 34 rows (regions) and 4 variables:
 LD.wiki34
 }
 \description{
-34 long-range Linkage Disequilibrium (LD) regions for the human genome
-based on some \href{https://goo.gl/0Ou7uI}{wiki table}.
+34 long-range Linkage Disequilibrium (LD) regions for the human genome based on
+\href{https://genome.sph.umich.edu/wiki/Regions_of_high_linkage_disequilibrium_(LD)}{this wiki table}.
 }
 \keyword{datasets}

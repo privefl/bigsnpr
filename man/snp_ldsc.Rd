@@ -24,7 +24,8 @@ snp_ldsc2(
   intercept = 1,
   ncores = 1,
   ind.beta = cols_along(corr),
-  ...
+  chi2_thr1 = 30,
+  chi2_thr2 = Inf
 )
 }
 \arguments{
@@ -54,9 +55,9 @@ This is equivalent to parameter \code{--two-step}.}
 \item{chi2_thr2}{Threshold on \code{chi2} in step 2. Default is \code{Inf} (none).}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
-\item{corr}{Sparse correlation matrix. Can also be an \link[=SFBM-class]{SFBM}.}
+\item{corr}{Sparse correlation matrix. Can also be an \link[bigsparser:SFBM-class]{SFBM}.}
 
 \item{df_beta}{A data frame with 3 columns:
 \itemize{
@@ -72,12 +73,6 @@ as well, see \doi{10.1016/j.xhgg.2022.100136}.
 }}
 
 \item{ind.beta}{Indices in \code{corr} corresponding to \code{df_beta}. Default is all.}
-
-\item{...}{
-  Arguments passed on to \code{\link[=snp_ldsc]{snp_ldsc}}
-  \describe{
-    \item{\code{}}{}
-  }}
 }
 \value{
 Vector of 4 values (or only the first 2 if \code{blocks = NULL}):

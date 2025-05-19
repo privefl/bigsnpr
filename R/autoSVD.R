@@ -21,10 +21,10 @@ getIntervals <- function(x, n = 2) {
 #' indices of the remaining variants with `attr(*, "subset")`. If some of the
 #' variants removed are contiguous, the regions are reported in `attr(*, "lrldr")`.
 #'
-#' If you don't have any information about SNPs, you can try using
+#' If you don't have any information about variants, you can try using
 #'   - `infos.chr = rep(1, ncol(G))`,
-#'   - `size = ncol(G)` (if SNPs are not sorted),
-#'   - `roll.size = 0` (if SNPs are not sorted).
+#'   - `size = ncol(G)` (if variants are not sorted),
+#'   - `roll.size = 0` (if variants are not sorted).
 #'
 #' @inheritParams bigsnpr-package
 #' @inheritParams snp_clumping
@@ -32,20 +32,22 @@ getIntervals <- function(x, n = 2) {
 #'   `ind.col`, and that returns a data.frame with `$center` and `$scale` for the
 #'   columns corresponding to `ind.col`, to scale each of their elements such as followed:
 #'   \deqn{\frac{X_{i,j} - center_j}{scale_j}.} Default uses binomial scaling.
-#'   You can also provide your own `center` and `scale` by using [as_scaling_fun()].
+#'   You can also provide your own `center` and `scale` by using [bigstatsr::as_scaling_fun()].
 #' @param k Number of singular vectors/values to compute. Default is `10`.
 #'   **This algorithm should be used to compute a few singular vectors/values.**
 #' @param roll.size Radius of rolling windows to smooth log-p-values.
 #'   Default is `50`.
-#' @param int.min.size Minimum number of consecutive outlier SNPs
+#' @param int.min.size Minimum number of consecutive outlier variants
 #'   in order to be reported as long-range LD region. Default is `20`.
 #' @param verbose Output some information on the iterations? Default is `TRUE`.
-#' @param thr.r2 Threshold over the squared correlation between two SNPs.
+#' @param thr.r2 Threshold over the squared correlation between two variants.
 #'   Default is `0.2`. Use `NA` if you want to skip the clumping step.
 #' @param alpha.tukey Default is `0.1`. The type-I error rate in outlier
 #'   detection (that is further corrected for multiple testing).
 #' @param min.mac Minimum minor allele count (MAC) for variants to be included.
-#'   Default is `10`.
+#'   Default is `10`. Can actually be higher because of `min.maf`.
+#' @param min.maf Minimum minor allele frequency (MAF) for variants to be included.
+#'   Default is `0.02`. Can actually be higher because of `min.mac`.
 #' @param max.iter Maximum number of iterations of outlier detection.
 #'   Default is `5`.
 #'
@@ -75,6 +77,7 @@ snp_autoSVD <- function(G,
                         int.min.size = 20,
                         alpha.tukey = 0.05,
                         min.mac = 10,
+                        min.maf = 0.02,
                         max.iter = 5,
                         is.size.in.bp = NULL,
                         ncores = 1,
@@ -90,35 +93,37 @@ snp_autoSVD <- function(G,
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
+  if (min.mac > 0 && min.maf > 0) {
+    maf <- snp_MAF(G, ind.row, ind.col, ncores = ncores)
+    maf.nok <- (maf < max(min.maf, min.mac / (2 * length(ind.row))))
+    printf2("Discarding %d variant%s with MAC < %s or MAF < %s.\n",
+            sum(maf.nok), `if`(sum(maf.nok) > 1, "s", ""), min.mac, min.maf)
+    ind.keep <- ind.col[!maf.nok]
+  } else {
+    stop2("You cannot use variants with no variation; %s",
+          "set min.mac > 0 and min.maf > 0.")
+  }
+
   # First clumping
   if (is.na(thr.r2)) {
     printf2("\nSkipping clumping.\n")
-    ind.keep <- ind.col
   } else {
     printf2("\nPhase of clumping (on MAF) at r^2 > %s.. ", thr.r2)
     ind.keep <- snp_clumping(G, infos.chr,
                              ind.row = ind.row,
-                             exclude = setdiff(cols_along(G), ind.col),
+                             exclude = setdiff(cols_along(G), ind.keep),
                              thr.r2 = thr.r2,
                              size = size,
                              infos.pos = infos.pos,
                              ncores = ncores)
-    printf2("keep %d SNPs.\n", length(ind.keep))
-  }
-
-  if (min.mac > 0) {
-    maf <- snp_MAF(G, ind.row, ind.keep, ncores = ncores)
-    min.maf <- min.mac / (2 * length(ind.row))
-    mac.nok <- (maf < min.maf)
-    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
-            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
-    ind.keep <- ind.keep[!mac.nok]
+    printf2("keep %d variants.\n", length(ind.keep))
   }
 
   iter <- 0L
-  LRLDR <- LD.wiki34[0, 1:3]
+  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer(), Iter = integer())
   repeat {
-    printf2("\nIteration %d:\n", iter <- iter + 1L)
+    iter <- iter + 1L
+    printf2("\nIteration %d:\n", iter)
     printf2("Computing SVD..\n")
     # SVD
     obj.svd <- big_randomSVD(G,
@@ -137,7 +142,7 @@ snp_autoSVD <- function(G,
     S.col <- sqrt(bigutilsr::dist_ogk(obj.svd$v))
     # roll mean to get only consecutive outliers (by chromosome)
     ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
-    S2.col <- double(length(S.col))
+    S2.col <- rep(NA_real_, length(S.col))
     for (ind in ind.split)
       S2.col[ind] <- bigutilsr::rollmean(S.col[ind], roll.size)
     S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
@@ -148,8 +153,6 @@ snp_autoSVD <- function(G,
     # Stop or continue?
     if (length(ind.col.excl) > 0) {
 
-      ind.keep <- ind.keep[-ind.col.excl]
-
       # Detection of long-range LD regions
       if (!is.null(infos.pos)) {
         # Regroup them by intervals to return long-range LD regions
@@ -159,12 +162,16 @@ snp_autoSVD <- function(G,
         for (i in rows_along(ind.range)) {
           seq.range <- seq2(ind.range[i, ])
           seq.range.chr <- infos.chr[ind.keep[seq.range]]
-          chr <- stats::median(seq.range.chr)  ## to get mode
-          in.chr <- (infos.chr[ind.keep[seq.range]] == chr)
+          chr <- names(sort(table(seq.range.chr), decreasing = TRUE)[1])  ## mode
+          in.chr <- (seq.range.chr == chr)
           range.in.chr <- range(infos.pos[ind.keep[seq.range[in.chr]]])
-          LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)
+          LRLDR[nrow(LRLDR) + 1L, ] <-
+            data.frame(seq.range.chr[in.chr][1], range.in.chr[1], range.in.chr[2], iter)
         }
       }
+
+      ind.keep <- ind.keep[-ind.col.excl]
+
     } else {
       printf2("\nConverged!\n")
       break
@@ -227,6 +234,7 @@ bed_autoSVD <- function(obj.bed,
                         int.min.size = 20,
                         alpha.tukey = 0.05,
                         min.mac = 10,
+                        min.maf = 0.02,
                         max.iter = 5,
                         ncores = 1,
                         verbose = TRUE) {
@@ -239,33 +247,36 @@ bed_autoSVD <- function(obj.bed,
   # Verbose?
   printf2 <- function(...) if (verbose) printf(...)
 
+  if (min.mac > 0 && min.maf > 0) {
+    info <- bed_MAF(obj.bed, ind.row, ind.col, ncores = ncores)
+    maf.nok <- (info$mac < min.mac | info$maf < min.maf)
+    printf2("Discarding %d variant%s with MAC < %s or MAF < %s.\n",
+            sum(maf.nok), `if`(sum(maf.nok) > 1, "s", ""), min.mac, min.maf)
+    ind.keep <- ind.col[!maf.nok]
+  } else {
+    stop2("You cannot use variants with no variation; %s",
+          "set min.mac > 0 and min.maf > 0.")
+  }
+
   # First clumping
   if (is.na(thr.r2)) {
     printf2("\nSkipping clumping.\n")
-    ind.keep <- ind.col
   } else {
     printf2("\nPhase of clumping (on MAC) at r^2 > %s.. ", thr.r2)
     ind.keep <- bed_clumping(obj.bed,
                              ind.row = ind.row,
-                             exclude = setdiff(cols_along(obj.bed), ind.col),
+                             exclude = setdiff(cols_along(obj.bed), ind.keep),
                              thr.r2 = thr.r2,
                              size = size,
                              ncores = ncores)
     printf2("keep %d variants.\n", length(ind.keep))
   }
 
-  if (min.mac > 0) {
-    mac <- bed_MAF(obj.bed, ind.row, ind.keep, ncores = ncores)$mac
-    mac.nok <- (mac < min.mac)
-    printf2("Discarding %d variant%s with MAC < %s.\n", sum(mac.nok),
-            `if`(sum(mac.nok) > 1, "s", ""), min.mac)
-    ind.keep <- ind.keep[!mac.nok]
-  }
-
   iter <- 0L
-  LRLDR <- LD.wiki34[0, 1:3]
+  LRLDR <- data.frame(Chr = integer(), Start = integer(), Stop = integer(), Iter = integer())
   repeat {
-    printf2("\nIteration %d:\n", iter <- iter + 1L)
+    iter <- iter + 1L
+    printf2("\nIteration %d:\n", iter)
     printf2("Computing SVD..\n")
     # SVD
     obj.svd <- bed_randomSVD(obj.bed,
@@ -284,7 +295,7 @@ bed_autoSVD <- function(obj.bed,
     S.col <- sqrt(bigutilsr::dist_ogk(obj.svd$v))
     # roll mean to get only consecutive outliers (by chromosome)
     ind.split <- split(seq_along(S.col), infos.chr[ind.keep])
-    S2.col <- double(length(S.col))
+    S2.col <- rep(NA_real_, length(S.col))
     for (ind in ind.split)
       S2.col[ind] <- bigutilsr::rollmean(S.col[ind], roll.size)
     S2.col.thr <- bigutilsr::tukey_mc_up(S2.col, alpha = alpha.tukey)
@@ -295,8 +306,6 @@ bed_autoSVD <- function(obj.bed,
     # Stop or continue?
     if (length(ind.col.excl) > 0) {
 
-      ind.keep <- ind.keep[-ind.col.excl]
-
       # Detection of long-range LD regions
       if (!is.null(infos.pos)) {
         # Regroup them by intervals to return long-range LD regions
@@ -306,12 +315,16 @@ bed_autoSVD <- function(obj.bed,
         for (i in rows_along(ind.range)) {
           seq.range <- seq2(ind.range[i, ])
           seq.range.chr <- infos.chr[ind.keep[seq.range]]
-          chr <- stats::median(seq.range.chr)  ## to get mode
-          in.chr <- (infos.chr[ind.keep[seq.range]] == chr)
+          chr <- names(sort(table(seq.range.chr), decreasing = TRUE)[1])  ## mode
+          in.chr <- (seq.range.chr == chr)
           range.in.chr <- range(infos.pos[ind.keep[seq.range[in.chr]]])
-          LRLDR[nrow(LRLDR) + 1L, ] <- c(chr, range.in.chr)
+          LRLDR[nrow(LRLDR) + 1L, ] <-
+            data.frame(seq.range.chr[in.chr][1], range.in.chr[1], range.in.chr[2], iter)
         }
       }
+
+      ind.keep <- ind.keep[-ind.col.excl]
+
     } else {
       printf2("\nConverged!\n")
       break

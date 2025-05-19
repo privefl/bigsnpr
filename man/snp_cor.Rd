@@ -30,7 +30,7 @@ bed_cor(
 )
 }
 \arguments{
-\item{Gna}{A \link[=FBM.code256-class]{FBM.code256}
+\item{Gna}{A \link[bigstatsr:FBM.code256-class]{FBM.code256}
 (typically \verb{<bigSNP>$genotypes}).\cr
 You can have missing values in these data.}
 
@@ -59,7 +59,7 @@ on a chromosome (in base pairs) of each SNP.\cr
 Typically \verb{<bigSNP>$map$physical.pos}.}
 
 \item{ncores}{Number of cores used. Default doesn't use parallelism.
-You may use \code{\link[=nb_cores]{nb_cores()}}.}
+You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 
 \item{obj.bed}{Object of type \link{bed}, which is the mapping of some bed file.
 Use \code{obj.bed <- bed(bedfile)} to get this object.}
