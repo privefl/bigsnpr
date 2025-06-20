@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.18</span>
       </span>
     </div>
 
@@ -199,7 +199,7 @@ for robustness and extra speed gains (see <a href="https://doi.org/10.1016/j.xhg
 <p>Information about the HapMap3+ variants can be retrieved with</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># $pos is in build GRCh37 / hg19, but we provide positions in 2 other builds</span></span>
-<span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
+<span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"https://figshare.com/ndownloader/files/37802721"</span>,</span>
 <span>  dir <span class="op">=</span> <span class="st">"tmp-data"</span>, fname <span class="op">=</span> <span class="st">"map_hm3_plus.rds"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span></span></code></pre></div>
@@ -217,7 +217,7 @@ for robustness and extra speed gains (see <a href="https://doi.org/10.1016/j.xhg
 <p>Information about the HapMap3 variants can be retrieved with</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># $pos is in build GRCh37 / hg19, but we provide positions in 3 other builds</span></span>
-<span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
+<span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"https://figshare.com/ndownloader/files/36360900"</span>,</span>
 <span>  dir <span class="op">=</span> <span class="st">"tmp-data"</span>, fname <span class="op">=</span> <span class="st">"map_hm3.rds"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">info</span><span class="op">)</span></span></code></pre></div>
@@ -245,7 +245,7 @@ tutorial data</a> and unzip files in R. We store those files in a
 directory called <code>"tmp-data"</code> here.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("runonce")</span></span>
-<span><span class="va">zip</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
+<span><span class="va">zip</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip"</span>,</span>
 <span>  dir <span class="op">=</span> <span class="st">"tmp-data"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">zip</span><span class="op">)</span></span></code></pre></div>
@@ -258,7 +258,7 @@ files) as well as the text file containing summary statistics.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Read from bed/bim/fam, it generates .bk and .rds files.</span></span>
 <span><span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="st">"tmp-data/public-data3.bed"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\Desktop\\bigsnpr\\tmp-data\\public-data3.rds"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\OneDrive - Aarhus universitet\\Desktop\\bigsnpr\\tmp-data\\public-data3.rds"</span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Attach the "bigSNP" object in R session</span></span>
 <span><span class="va">obj.bigSNP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="st">"tmp-data/public-data3.rds"</span><span class="op">)</span></span>
@@ -316,7 +316,7 @@ the final models.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">ind.val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">350</span><span class="op">)</span></span>
-<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="matching-variants-between-genotype-data-and-summary-statistics">Matching variants between genotype data and summary statistics<a class="anchor" aria-label="anchor" href="#matching-variants-between-genotype-data-and-summary-statistics"></a>
@@ -395,6 +395,21 @@ e.g. <code>quantile(8 / df_beta$beta_se^2, 0.999)</code>.</p>
 <div class="section level2">
 <h2 id="computing-ldpred2-scores-genome-wide">Computing LDpred2 scores genome-wide<a class="anchor" aria-label="anchor" href="#computing-ldpred2-scores-genome-wide"></a>
 </h2>
+<p>LDpred2 [<a href="https://bit.ly/ldpred2-paper" class="external-link">bit.ly/ldpred2-paper</a>] assumes
+the following model for effect sizes,</p>
+<div class="math">
+<p><span class="math display">\[
+\beta_j \sim \left\{
+\begin{array}{ll}
+\mathcal N\left(0, \dfrac{h^2}{M p}\right) &amp; \mbox{with probability
+} p,\\
+0 &amp; \mbox{otherwise,}\end{array}
+\right.
+\]</span></p>
+</div>
+<p>where <span class="math inline">\(p\)</span> is the proportion of
+causal variants (aka the polygenicity), <span class="math inline">\(M\)</span> the number of variants and <span class="math inline">\(h^2\)</span> the SNP-heritability (the
+heritability capturing by the set of variants used).</p>
 <p>Note that you should <strong>run LDpred2 genome-wide</strong>. Just
 build the SFBM (the sparse LD matrix on disk) so that it contains
 selected variants for all chromosomes at once (see the for-loop
@@ -715,8 +730,8 @@ regularization).</p>
 <span><span class="co">## 1 0.06111003 0.001        2 0.00 0.9998895</span></span>
 <span><span class="co">## 2 0.05241382 0.001        3 0.02 0.9997128</span></span>
 <span><span class="co">## 3 0.04495512 0.001        4 0.00 0.9995361</span></span>
-<span><span class="co">## 4 0.03855782 0.001        7 0.00 0.9992489</span></span>
-<span><span class="co">## 5 0.03307088 0.001        8 0.02 0.9984095</span></span>
+<span><span class="co">## 4 0.03855782 0.001        7 0.02 0.9992489</span></span>
+<span><span class="co">## 5 0.03307088 0.001        8 0.00 0.9984095</span></span>
 <span><span class="co">## 6 0.02836476 0.001       13 0.02 0.9971061</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 114 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
@@ -751,9 +766,9 @@ regularization).</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="va">beta_lassosum2</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity    score id</span></span>
-<span><span class="co">## 1 0.02086632 0.001       21 0.03 0.9864584 9.715472  8</span></span>
-<span><span class="co">## 2 0.02086632 0.010       20 0.03 0.9864805 9.709865 38</span></span>
-<span><span class="co">## 3 0.02086632 0.100       16 0.01 0.9862375 9.667334 68</span></span>
+<span><span class="co">## 1 0.02086632 0.001       21 0.02 0.9864584 9.715472  8</span></span>
+<span><span class="co">## 2 0.02086632 0.010       20 0.02 0.9864805 9.709865 38</span></span>
+<span><span class="co">## 3 0.02086632 0.100       16 0.02 0.9862375 9.667334 68</span></span>
 <span><span class="co">## 4 0.02432834 0.001       19 0.01 0.9942564 9.404453  7</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
@@ -867,8 +882,8 @@ and <a href="https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d
 <code class="sourceCode R"><span><span class="co"># Some cleaning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span></span>
-<span><span class="co">## Ncells  3895939 208.1    7147978 381.8  7147978 381.8</span></span>
-<span><span class="co">## Vcells 40890231 312.0   71390344 544.7 71389651 544.7</span></span></code></pre>
+<span><span class="co">## Ncells  3912909 209.0    7166697 382.8  7166697 382.8</span></span>
+<span><span class="co">## Vcells 40917015 312.2   71422140 545.0 71421343 545.0</span></span></code></pre>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 <div class="section level2">
