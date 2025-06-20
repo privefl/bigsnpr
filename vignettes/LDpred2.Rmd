@@ -193,6 +193,20 @@ In that case, you can estimate the overall $N^\text{eff}$ using e.g. `quantile(8
 
 ## Computing LDpred2 scores genome-wide
 
+[LDpred2](https://bit.ly/ldpred2-paper) assumes the following model for effect sizes,
+
+<div class="math">
+\[
+\beta_j \sim \left\{
+\begin{array}{ll}
+\mathcal N\left(0, \dfrac{h^2}{M p}\right) & \mbox{with probability } p,\\
+0 & \mbox{otherwise,}\end{array}
+\right.
+\]
+</div>
+
+where $p$ is the proportion of causal variants (aka the polygenicity), $M$ the number of variants and $h^2$ the SNP-heritability (the heritability capturing by the set of variants used).
+
 Note that you should **run LDpred2 genome-wide**.
 Just build the SFBM (the sparse LD matrix on disk) so that it contains selected variants for all chromosomes at once (see the for-loop below).
 
