@@ -177,15 +177,11 @@ generally well imputed and available in most studies. In <a href="https://doi.or
 recently proposed an extension of this set, to provide an even better
 coverage of the genome by adding 37% more variants, and called it
 HapMap3+. This is the preferred set of variants to use with LDpred2 when
-power is sufficient.</p>
-<p>You should use these sets of variants only when your data is imputed
-so that the overlap is good. If you only have access to a chip of
-genotyped variants, you should use these. In that case, you should
-compute the LD information yourself (as done for the tutorial data
-below).</p>
-<p>If you use HM3/HM3+ variants with European summary statistics and do
-not have enough data to use as LD reference (e.g. at least 2000
-individuals), we provide LD matrices to be used directly:</p>
+power of the GWAS is sufficient (large <span class="math inline">\(N
+\cdot h^2 / p\)</span>, where <span class="math inline">\(N\)</span> is
+the (effective) GWAS sample size, <span class="math inline">\(h^2\)</span> the SNP-heritability and <span class="math inline">\(p\)</span> the proportion of causal variants).</p>
+<p>If you use HM3/HM3+ variants with European summary statistics, we
+provide precomputed LD matrices to be used directly:</p>
 <ul>
 <li>for <a href="https://doi.org/10.6084/m9.figshare.21305061" class="external-link">HapMap3+
 variants with independent LD blocks</a> (from <a href="https://doi.org/10.1016/j.ajhg.2023.10.010" class="external-link">this paper</a>)</li>
@@ -194,8 +190,16 @@ variants with independent LD blocks</a> (previously recommended in <a href="http
 <li>along with an <a href="https://github.com/privefl/paper-infer/blob/main/code/example-with-provided-LD.R" class="external-link">example
 R script</a> on how to use them</li>
 </ul>
-<p>Note that forming independent LD blocks in LD matrices can be useful
-for robustness and extra speed gains (see <a href="https://doi.org/10.1016/j.xhgg.2022.100136" class="external-link">this paper</a>).</p>
+<p>We recommend you to use one of these two predefined sets of variants
+(depending on GWAS power) when your data is imputed so that the overlap
+is good. If you only have access to a chip of genotyped variants, you
+should really consider imputation. If you really have access to
+genotyped variants only or want to derive some LD reference for a
+non-European population, you should compute the LD matrix yourself, as
+performed for the tutorial data below. We recommend using at least 2000
+individuals for computing LD.</p>
+<p>Note that forming independent LD blocks in LD matrices is useful for
+robustness and extra speed gains (see <a href="https://doi.org/10.1016/j.xhgg.2022.100136" class="external-link">this paper</a>).</p>
 <p>Information about the HapMap3+ variants can be retrieved with</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># $pos is in build GRCh37 / hg19, but we provide positions in 2 other builds</span></span>
@@ -238,8 +242,8 @@ for robustness and extra speed gains (see <a href="https://doi.org/10.1016/j.xhg
 <h2 id="downloading-genotype-data-and-summary-statistics-for-the-tutorial">Downloading genotype data and summary statistics for the
 tutorial<a class="anchor" aria-label="anchor" href="#downloading-genotype-data-and-summary-statistics-for-the-tutorial"></a>
 </h2>
-<p>This tutorial uses fake data for educational purposes only. Another
-tutorial using another dataset can be found at <a href="https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html" class="external-link uri">https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html</a>.</p>
+<p><em>This tutorial uses fake data for educational purposes only.</em>
+Another tutorial using another dataset can be found <a href="https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html" class="external-link">here</a>.</p>
 <p>You can download <a href="https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip" class="external-link">the
 tutorial data</a> and unzip files in R. We store those files in a
 directory called <code>"tmp-data"</code> here.</p>
@@ -307,12 +311,12 @@ files) as well as the text file containing summary statistics.</p>
 <span><span class="co">##  $ beta_se: num  0.0157 0.0167 0.0179 0.0199 0.0213 ...</span></span>
 <span><span class="co">##  $ N      : int  15155 15155 15155 15155 15155 15155 15155 15155 15155 15155 ...</span></span>
 <span><span class="co">##  $ p      : num  0.426 0.107 0.342 0.328 0.789 ...</span></span></code></pre>
-<p>We split the individuals from the genotype data into “validation” (to
-choose best-performing hyper-parameters) and “test” (to evaluate final
-polygenic scores). Here we consider that there are 350 individuals to be
-used as validation set to tune hyper-parameters for LDpred2-grid and
-lassosum2. The other 153 individuals are used as test set to evaluate
-the final models.</p>
+<p>We split the individuals from the genotype data into a “validation”
+set (to choose best-performing hyper-parameters, also called “tuning”
+set) and a “test” set (to evaluate final polygenic scores). Here we
+consider that there are 350 individuals to be used as validation set to
+tune hyper-parameters for LDpred2-grid and lassosum2. The other 153
+individuals are used as test set to evaluate the final models.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">ind.val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">350</span><span class="op">)</span></span>
@@ -455,6 +459,7 @@ on-the-fly:</p>
 <span>  <span class="va">corr0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_cor.html">snp_cor</a></span><span class="op">(</span><span class="va">G</span>, ind.col <span class="op">=</span> <span class="va">ind.chr2</span>, size <span class="op">=</span> <span class="fl">3</span> <span class="op">/</span> <span class="fl">1000</span>,</span>
 <span>                   infos.pos <span class="op">=</span> <span class="va">POS2</span><span class="op">[</span><span class="va">ind.chr2</span><span class="op">]</span>, ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span></span>
 <span>  </span>
+<span>  <span class="co"># build the genome-wide SFBM by adding the LD for one chromosome at once</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">chr</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">ld</span> <span class="op">&lt;-</span> <span class="fu">Matrix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">corr0</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigsparser/man/SFBM-class.html" class="external-link">as_SFBM</a></span><span class="op">(</span><span class="va">corr0</span>, <span class="va">tmp</span>, compact <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -465,21 +470,25 @@ on-the-fly:</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>To use the “compact” format for SFBMs, you need
 <code>packageVersion("bigsparser") &gt;= package_version("0.5")</code>.
-Make sure to reinstall {bigsnpr} after updating {bigsparser} to this new
-version (to avoid crashes).</p>
+If it is not the case, make sure to reinstall {bigsnpr} after updating
+{bigsparser} to this new version (to avoid crashes).</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.size</a></span><span class="op">(</span><span class="va">corr</span><span class="op">$</span><span class="va">sbk</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1024</span><span class="op">^</span><span class="fl">3</span>  <span class="co"># file size in GB</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.03195963</span></span></code></pre>
 <p>Note that you will need at least the same memory as this file size
 (to keep it cached for faster processing) + some other memory for all
-the results returned. If you do not have enough memory, processing will
-be very slow (because you would read the data from disk all the time).
-If using the one million HapMap3 variants, having 60 GB of memory should
-be enough.</p>
+the results returned by LDpred2. If you do not have enough memory,
+processing will be very slow (because you would have to read the data
+from disk all the time). If using the one million HapMap3 variants,
+having 60 GB of memory should be enough.</p>
 </div>
 <div class="section level3">
 <h3 id="ldpred2-inf-infinitesimal-model">LDpred2-inf: infinitesimal model<a class="anchor" aria-label="anchor" href="#ldpred2-inf-infinitesimal-model"></a>
 </h3>
+<p>The infinitesimal model assumes that all variants are causal
+(i.e. <span class="math inline">\(p = 1\)</span>). It is a simple model
+that has an analytical solution. However, in practice, phenotypes rarely
+have more than 10% variants that are causal (Privé et al. 2023).</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Estimate of h2 from LD Score regression</span></span>
 <span><span class="op">(</span><span class="va">ldsc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">df_beta</span>, <span class="fu"><a href="../reference/snp_ldsc.html">snp_ldsc</a></span><span class="op">(</span><span class="va">ld</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ld</span><span class="op">)</span>, chi2 <span class="op">=</span> <span class="op">(</span><span class="va">beta</span> <span class="op">/</span> <span class="va">beta_se</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,</span>
@@ -514,6 +523,8 @@ presented hereinafter. We actually recommend not to use it anymore.</p>
 <pre><code><span><span class="co">##  [1] 1.0e-05 1.8e-05 3.2e-05 5.6e-05 1.0e-04 1.8e-04 3.2e-04 5.6e-04</span></span>
 <span><span class="co">##  [9] 1.0e-03 1.8e-03 3.2e-03 5.6e-03 1.0e-02 1.8e-02 3.2e-02 5.6e-02</span></span>
 <span><span class="co">## [17] 1.0e-01 1.8e-01 3.2e-01 5.6e-01 1.0e+00</span></span></code></pre>
+<p>There is another parameter that can be used to enable a version of
+LDpred2 that outputs PGS effect sizes that can be sparse.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>p <span class="op">=</span> <span class="va">p_seq</span>, h2 <span class="op">=</span> <span class="va">h2_seq</span>, sparse <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          p    h2 sparse</span></span>
@@ -537,15 +548,13 @@ presented hereinafter. We actually recommend not to use it anymore.</p>
 <span><span class="va">params</span><span class="op">$</span><span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">pred_grid</span><span class="op">[</span><span class="va">ind.val</span>, <span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span><span class="op">[</span><span class="va">ind.val</span><span class="op">]</span> <span class="op">~</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">coef</span><span class="op">[</span><span class="st">"x"</span>, <span class="fl">3</span><span class="op">]</span></span>
-<span>  <span class="co"># summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]</span></span>
+<span>  <span class="co"># summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]  # for a binary phenotype</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>Note that missing values represent models that diverged
 substantially.</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: package 'ggplot2' was built under R version 4.2.3</span></span></code></pre>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">params</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">p</span>, y <span class="op">=</span> <span class="va">score</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">h2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">params</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">p</span>, y <span class="op">=</span> <span class="va">score</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">h2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/theme_bigstatsr.html" class="external-link">theme_bigstatsr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -553,8 +562,8 @@ substantially.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">sparse</span>, labeller <span class="op">=</span> <span class="va">label_both</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"GLM Z-Score"</span>, color <span class="op">=</span> <span class="st">"h2"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span>, panel.spacing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"lines"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="LDpred2_files/figure-html/unnamed-chunk-20-1.png" width="90%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<p><img src="LDpred2_files/figure-html/unnamed-chunk-21-1.png" width="90%" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="va">params</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>sparsity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">beta_grid</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span>, id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -580,7 +589,7 @@ paper). In practice, if you do not really care about sparsity, you could
 choose the best LDpred2-grid model among all sparse and non-sparse
 models. If you do, choose the best sparse one (if it is close enough to
 the best one).</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">best_beta_grid</span> <span class="op">&lt;-</span> <span class="va">params</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># filter(sparse) %&gt;% </span></span>
@@ -591,7 +600,7 @@ the best one).</p>
 <span>  <span class="va">beta_grid</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##       p     h2 sparse    score id</span></span>
 <span><span class="co">## 1 0.018 0.4152  FALSE 10.30816 77</span></span></code></pre>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodVec.html" class="external-link">big_prodVec</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">best_beta_grid</span>, ind.row <span class="op">=</span> <span class="va">ind.test</span>,</span>
 <span>                    ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/pcor.html" class="external-link">pcor</a></span><span class="op">(</span><span class="va">pred</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span>, <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
@@ -601,13 +610,13 @@ the best one).</p>
 <h3 id="ldpred2-auto-automatic-model">LDpred2-auto: automatic model<a class="anchor" aria-label="anchor" href="#ldpred2-auto-automatic-model"></a>
 </h3>
 <p>Contrary to LDpred2-grid, LDpred2-auto does not need a validation set
-because it can directly infer values for hyper-parameters <span class="math inline">\(h^2\)</span> and <span class="math inline">\(p\)</span>. We recommend to run many chains in
+because it can directly infer values for both hyper-parameters <span class="math inline">\(h^2\)</span> and <span class="math inline">\(p\)</span>. We recommend to run many chains in
 parallel with different initial values for <code>p</code>, which will be
 used for QC afterwards. In <a href="https://doi.org/10.1016/j.xhgg.2022.100136" class="external-link">this paper</a>, we
 have also introduced two new parameters in LDpred2-auto for improving
 its robustness, <code>allow_jump_sign</code> and
 <code>shrink_corr</code>, and recommend to use them.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coef_shrink</span> <span class="op">&lt;-</span> <span class="fl">0.95</span>  <span class="co"># reduce this up to 0.4 if you have some (large) mismatch with the LD ref</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>  <span class="co"># to get the same result every time</span></span>
@@ -615,7 +624,7 @@ its robustness, <code>allow_jump_sign</code> and
 <span><span class="va">multi_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LDpred2.html">snp_ldpred2_auto</a></span><span class="op">(</span></span>
 <span>  <span class="va">corr</span>, <span class="va">df_beta</span>, h2_init <span class="op">=</span> <span class="va">ldsc_h2_est</span>,</span>
 <span>  vec_p_init <span class="op">=</span> <span class="fu"><a href="../reference/seq_log.html">seq_log</a></span><span class="op">(</span><span class="fl">1e-4</span>, <span class="fl">0.2</span>, length.out <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>, ncores <span class="op">=</span> <span class="va">NCORES</span>,</span>
-<span>  <span class="co"># use_MLE = FALSE,  # uncomment if you have convergence issues or when power is low (need v1.11.9)</span></span>
+<span>  <span class="co"># use_MLE = FALSE,  # uncomment if you have convergence issues or when GWAS power is low (need v1.11.9)</span></span>
 <span>  allow_jump_sign <span class="op">=</span> <span class="cn">FALSE</span>, shrink_corr <span class="op">=</span> <span class="va">coef_shrink</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">multi_auto</span>, max.level <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## List of 30</span></span>
@@ -649,7 +658,7 @@ its robustness, <code>allow_jump_sign</code> and
 <span><span class="co">##  $ :List of 12</span></span>
 <span><span class="co">##  $ :List of 12</span></span>
 <span><span class="co">##  $ :List of 12</span></span></code></pre>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, max.level <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## List of 12</span></span>
 <span><span class="co">##  $ beta_est      : num [1:45268] 6.96e-05 3.40e-04 1.09e-04 -1.29e-04 2.69e-05 ...</span></span>
@@ -666,7 +675,7 @@ its robustness, <code>allow_jump_sign</code> and
 <span><span class="co">##  $ p_init        : num 1e-04</span></span></code></pre>
 <p>You can verify whether the chains “converged” by looking at the path
 of the chains:</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="va">auto</span> <span class="op">&lt;-</span> <span class="va">multi_auto</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>  <span class="co"># first chain</span></span>
 <span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span></span>
@@ -681,16 +690,12 @@ of the chains:</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"h2"</span><span class="op">)</span>,</span>
 <span>  ncol <span class="op">=</span> <span class="fl">1</span>, align <span class="op">=</span> <span class="st">"hv"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: `qplot()` was deprecated in ggplot2 3.4.0.</span></span>
-<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
-<p><img src="LDpred2_files/figure-html/unnamed-chunk-25-1.png" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="LDpred2_files/figure-html/unnamed-chunk-26-1.png" width="90%" style="display: block; margin: auto;"></p>
 <p>In the LDpred2 paper, we proposed an automatic way of filtering bad
 chains by comparing the scale of the resulting predictions. We have
 tested a somewhat equivalent and simpler alternative since, which we
 recommend here:</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># `range` should be between 0 and 2</span></span>
 <span><span class="op">(</span><span class="va">range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">auto</span><span class="op">$</span><span class="va">corr_est</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] 0.1204140 0.1201149 0.1203564 0.1186828 0.1200849 0.1204433 0.1212793</span></span>
@@ -698,16 +703,16 @@ recommend here:</p>
 <span><span class="co">## [15] 0.1204132 0.1203583 0.1184779 0.1189227 0.1202364 0.1199066 0.1191860</span></span>
 <span><span class="co">## [22] 0.1190776 0.1199808 0.1205954 0.1207522 0.1213208 0.1211963 0.1212839</span></span>
 <span><span class="co">## [29] 0.1195293 0.1209223</span></span></code></pre>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">range</span> <span class="op">&gt;</span> <span class="op">(</span><span class="fl">0.95</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">range</span>, <span class="fl">0.95</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23</span></span>
 <span><span class="co">## [24] 24 25 26 27 28 29 30</span></span></code></pre>
 <p>To get the final effects / predictions, <strong>you should only use
 chains that pass this filtering</strong>:</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">beta_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="va">auto</span><span class="op">$</span><span class="va">beta_est</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pred_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodVec.html" class="external-link">big_prodVec</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_auto</span>, ind.row <span class="op">=</span> <span class="va">ind.test</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/pcor.html" class="external-link">pcor</a></span><span class="op">(</span><span class="va">pred_auto</span>, <span class="va">y</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span>, <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.4979167 0.3683406 0.6085168</span></span></code></pre>
 </div>
@@ -722,10 +727,9 @@ Note that parameter ‘s’ from lassosum has been replaced by a new
 parameter ‘delta’ in lassosum2, in order to better reflect that the
 lassosum model also uses L2-regularization (therefore, elastic-net
 regularization).</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">beta_lassosum2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_lassosum2.html">snp_lassosum2</a></span><span class="op">(</span><span class="va">corr</span>, <span class="va">df_beta</span>, ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">params2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">beta_lassosum2</span>, <span class="st">"grid_param"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">beta_lassosum2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_lassosum2.html">snp_lassosum2</a></span><span class="op">(</span><span class="va">corr</span>, <span class="va">df_beta</span>, ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">params2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">beta_lassosum2</span>, <span class="st">"grid_param"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity</span></span>
 <span><span class="co">## 1 0.06111003 0.001        2 0.00 0.9998895</span></span>
 <span><span class="co">## 2 0.05241382 0.001        3 0.00 0.9997128</span></span>
@@ -734,14 +738,17 @@ regularization).</p>
 <span><span class="co">## 5 0.03307088 0.001        8 0.01 0.9984095</span></span>
 <span><span class="co">## 6 0.02836476 0.001       13 0.02 0.9971061</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 114 rows ]</span></span></code></pre>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<p>Compared to LDpred2 and many other PGS methods, lassosum and
+lassosum2 are very effective at providing very sparse PGS effect
+sizes.</p>
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred_grid2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodMat.html" class="external-link">big_prodMat</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_lassosum2</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">params2</span><span class="op">$</span><span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">pred_grid2</span><span class="op">[</span><span class="va">ind.val</span>, <span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span><span class="op">[</span><span class="va">ind.val</span><span class="op">]</span> <span class="op">~</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">coef</span><span class="op">[</span><span class="st">"x"</span>, <span class="fl">3</span><span class="op">]</span></span>
 <span>  <span class="co"># summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">params2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">lambda</span>, y <span class="op">=</span> <span class="va">score</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">delta</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/theme_bigstatsr.html" class="external-link">theme_bigstatsr</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -755,8 +762,8 @@ regularization).</p>
 <span><span class="co">## range (`geom_point()`).</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: Removed 10 rows containing missing values or values outside the scale</span></span>
 <span><span class="co">## range (`geom_line()`).</span></span></code></pre>
-<p><img src="LDpred2_files/figure-html/unnamed-chunk-31-1.png" width="90%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<p><img src="LDpred2_files/figure-html/unnamed-chunk-32-1.png" width="90%" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="va">best_grid_lassosum2</span> <span class="op">&lt;-</span> <span class="va">params2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -766,12 +773,12 @@ regularization).</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="va">beta_lassosum2</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity    score id</span></span>
-<span><span class="co">## 1 0.02086632 0.001       21 0.03 0.9864584 9.715472  8</span></span>
-<span><span class="co">## 2 0.02086632 0.010       20 0.03 0.9864805 9.709865 38</span></span>
-<span><span class="co">## 3 0.02086632 0.100       16 0.01 0.9862375 9.667334 68</span></span>
-<span><span class="co">## 4 0.02432834 0.001       19 0.03 0.9942564 9.404453  7</span></span>
+<span><span class="co">## 1 0.02086632 0.001       21 0.01 0.9864584 9.715472  8</span></span>
+<span><span class="co">## 2 0.02086632 0.010       20 0.02 0.9864805 9.709865 38</span></span>
+<span><span class="co">## 3 0.02086632 0.100       16 0.02 0.9862375 9.667334 68</span></span>
+<span><span class="co">## 4 0.02432834 0.001       19 0.02 0.9942564 9.404453  7</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></span></code></pre>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Choose the best among all LDpred2-grid and lassosum2 models</span></span>
 <span><span class="va">best_grid_overall</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu">`if`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">params2</span><span class="op">$</span><span class="va">score</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">score</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -808,7 +815,7 @@ the standard deviations of the genotypes, and <span class="math inline">\(\bolds
 scaled genotypes.</p>
 <p>Parameters <span class="math inline">\(h^2\)</span>, <span class="math inline">\(p\)</span>, and <span class="math inline">\(\alpha\)</span> (and 95% CIs) can be estimated
 using:</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># reduce this up to 0.4 if you have some (large) mismatch with the LD ref</span></span>
 <span><span class="co"># /!\ but the inference of h2 and p might be biased if you do this (see paper)</span></span>
 <span><span class="va">coef_shrink</span> <span class="op">&lt;-</span> <span class="fl">0.95</span>  </span>
@@ -819,7 +826,7 @@ using:</p>
 <span>  burn_in <span class="op">=</span> <span class="fl">500</span>, num_iter <span class="op">=</span> <span class="fl">500</span>, report_step <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  <span class="co"># use_MLE = FALSE,  # uncomment if you have convergence issues or when power is low (need v1.11.9)</span></span>
 <span>  allow_jump_sign <span class="op">=</span> <span class="cn">FALSE</span>, shrink_corr <span class="op">=</span> <span class="va">coef_shrink</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">auto</span><span class="op">$</span><span class="va">corr_est</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] 0.1206431 0.1196823 0.1200970 0.1206415 0.1201813 0.1201417 0.1202826</span></span>
 <span><span class="co">##  [8] 0.1200190 0.1198826 0.1200731 0.1201293 0.1208081 0.1200851 0.1210606</span></span>
@@ -827,29 +834,29 @@ using:</p>
 <span><span class="co">## [22] 0.1205446 0.1199081 0.1196137 0.1207115 0.1209532 0.1206560 0.1205325</span></span>
 <span><span class="co">## [29] 0.1202039 0.1191373</span></span>
 <span><span class="co">##  [ reached getOption("max.print") -- omitted 20 entries ]</span></span></code></pre>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">range</span> <span class="op">&gt;</span> <span class="op">(</span><span class="fl">0.95</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">range</span>, <span class="fl">0.95</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23</span></span>
 <span><span class="co">## [24] 24 25 26 27 28 29 30</span></span>
 <span><span class="co">##  [ reached getOption("max.print") -- omitted 20 entries ]</span></span></code></pre>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">all_h2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">auto</span><span class="op">$</span><span class="va">path_h2_est</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">all_h2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">auto</span><span class="op">$</span><span class="va">path_h2_est</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span> <span class="co"># num_iter</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">all_h2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       50%      2.5%     97.5% </span></span>
 <span><span class="co">## 0.2181211 0.1899359 0.2483795</span></span></code></pre>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">auto</span><span class="op">$</span><span class="va">path_p_est</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">all_p</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         50%        2.5%       97.5% </span></span>
 <span><span class="co">## 0.012380167 0.008710519 0.017203381</span></span></code></pre>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_alpha</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">auto</span><span class="op">$</span><span class="va">path_alpha_est</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">all_alpha</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         50%        2.5%       97.5% </span></span>
 <span><span class="co">## -0.49629449 -0.91317071 -0.04713767</span></span></code></pre>
 <p>Predictive performance <span class="math inline">\(r^2\)</span> can
 also be inferred from the Gibbs sampler:</p>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bsamp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="va">auto</span><span class="op">$</span><span class="va">sample_beta</span><span class="op">)</span></span>
 <span><span class="va">all_r2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="st">"cbind"</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">bsamp</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ic</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">b1</span> <span class="op">&lt;-</span> <span class="va">bsamp</span><span class="op">[[</span><span class="va">ic</span><span class="op">]</span><span class="op">]</span></span>
@@ -862,28 +869,31 @@ also be inferred from the Gibbs sampler:</p>
 <pre><code><span><span class="co">##       50%      2.5%     97.5% </span></span>
 <span><span class="co">## 0.1151870 0.1039609 0.1266073</span></span></code></pre>
 <p>and compared to</p>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">beta_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="va">auto</span><span class="op">$</span><span class="va">beta_est</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pred_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/big_prodVec.html" class="external-link">big_prodVec</a></span><span class="op">(</span><span class="va">G</span>, <span class="va">beta_auto</span>, ind.col <span class="op">=</span> <span class="va">df_beta</span><span class="op">[[</span><span class="st">"_NUM_ID_"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/pcor.html" class="external-link">pcor</a></span><span class="op">(</span><span class="va">pred_auto</span>, <span class="va">y</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.2377675 0.1747289 0.3041855</span></span></code></pre>
-<p>These are not exactly the same, which we attribute to the small
-number of variants used in this tutorial data.</p>
+<p>Here the estimation is not particularly good, which we attribute to
+the (too) small number of variants used in this tutorial data.</p>
 <p>You can also get per-variant probabilities of being causal (for
 fine-mapping purposes)</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">postp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">multi_auto</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">auto</span><span class="op">)</span> <span class="va">auto</span><span class="op">$</span><span class="va">postp_est</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html" class="external-link">qplot</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">postp</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/theme_bigstatsr.html" class="external-link">theme_bigstatsr</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="LDpred2_files/figure-html/unnamed-chunk-40-1.png" width="90%" style="display: block; margin: auto;"></p>
+<p><img src="LDpred2_files/figure-html/unnamed-chunk-41-1.png" width="90%" style="display: block; margin: auto;"></p>
 <p>You can also infer local per-block or per-annotation <span class="math inline">\(h^2\)</span> following the code <a href="https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/run-ldpred2-ukbb.R#L158-L165" class="external-link">here</a>
 and <a href="https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/height-meta-1600k.R#L170-L216" class="external-link">here</a>.</p>
+<p>A problem right now is that LDpred2-auto does not use enough variants
+for fine-mapping and enrichment results to really be meaningful, but
+this is planned.</p>
 <hr>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Some cleaning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span></span>
-<span><span class="co">## Ncells  3905699 208.6    7161980 382.5  7161980 382.5</span></span>
-<span><span class="co">## Vcells 40903501 312.1   71414446 544.9 71413991 544.9</span></span></code></pre>
+<span><span class="co">## Ncells  3906682 208.7    7162034 382.5  7162034 382.5</span></span>
+<span><span class="co">## Vcells 40907885 312.2   71415050 544.9 71414202 544.9</span></span></code></pre>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -899,7 +909,7 @@ and correcting for misspecifications in GWAS summary statistics and
 polygenic scores</a>. <em>Human Genetics and Genomics Advances</em>,
 3(4), 100136.</p></li>
 <li><p>Privé, F., Albiñana, C., Arbel, J., Pasaniuc, B., &amp;
-Vilhjálmsson, B. J. (2022). <a href="https://doi.org/10.1016/j.ajhg.2023.10.010" class="external-link">Inferring disease
+Vilhjálmsson, B. J. (2023). <a href="https://doi.org/10.1016/j.ajhg.2023.10.010" class="external-link">Inferring disease
 architecture and predictive ability with LDpred2-auto</a>. <em>The
 American Journal of Human Genetics</em>, 110(12), 2042-2055.</p></li>
 </ul>

@@ -55,17 +55,17 @@ To run LDpred2, you need
 You need to restrict to genetic variants in common between all these datasets.
 
 We previously recommended to use a set of 1,054,330 HapMap3 variants for LDpred2, because they provide a good coverage of the genome and are generally well imputed and available in most studies.
-In [this paper](https://doi.org/10.1016/j.ajhg.2023.10.010), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 when power is sufficient.
+In [this paper](https://doi.org/10.1016/j.ajhg.2023.10.010), we recently proposed an extension of this set, to provide an even better coverage of the genome by adding 37% more variants, and called it HapMap3+. This is the preferred set of variants to use with LDpred2 when power of the GWAS is sufficient (large $N \cdot h^2 / p$, where $N$ is the (effective) GWAS sample size, $h^2$ the SNP-heritability and $p$ the proportion of causal variants).
 
-You should use these sets of variants only when your data is imputed so that the overlap is good. If you only have access to a chip of genotyped variants, you should use these. In that case, you should compute the LD information yourself (as done for the tutorial data below).
-
-If you use HM3/HM3+ variants with European summary statistics and do not have enough data to use as LD reference (e.g. at least 2000 individuals), we provide LD matrices to be used directly:
+If you use HM3/HM3+ variants with European summary statistics, we provide precomputed LD matrices to be used directly:
 
 - for [HapMap3+ variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.21305061) (from [this paper](https://doi.org/10.1016/j.ajhg.2023.10.010))
 - for [HapMap3 variants with independent LD blocks](https://doi.org/10.6084/m9.figshare.19213299) (previously recommended in [this paper](https://doi.org/10.1016/j.xhgg.2022.100136))
 - along with an [example R script](https://github.com/privefl/paper-infer/blob/main/code/example-with-provided-LD.R) on how to use them
 
-Note that forming independent LD blocks in LD matrices can be useful for robustness and extra speed gains (see [this paper](https://doi.org/10.1016/j.xhgg.2022.100136)).
+We recommend you to use one of these two predefined sets of variants (depending on GWAS power) when your data is imputed so that the overlap is good. If you only have access to a chip of genotyped variants, you should really consider imputation. If you really have access to genotyped variants only or want to derive some LD reference for a non-European population, you should compute the LD matrix yourself, as performed for the tutorial data below. We recommend using at least 2000 individuals for computing LD.
+
+Note that forming independent LD blocks in LD matrices is useful for robustness and extra speed gains (see [this paper](https://doi.org/10.1016/j.xhgg.2022.100136)).
 
 Information about the HapMap3+ variants can be retrieved with
 
@@ -90,8 +90,8 @@ str(info)
 
 ## Downloading genotype data and summary statistics for the tutorial
 
-This tutorial uses fake data for educational purposes only.
-Another tutorial using another dataset can be found at https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html.
+*This tutorial uses fake data for educational purposes only.*
+Another tutorial using another dataset can be found [here](https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html).
 
 You can download [the tutorial data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data3.zip) and unzip files in R. We store those files in a directory called `"tmp-data"` here.
 
@@ -132,7 +132,7 @@ sumstats <- bigreadr::fread2("tmp-data/public-data3-sumstats.txt")
 str(sumstats)
 ```
 
-We split the individuals from the genotype data into "validation" (to choose best-performing hyper-parameters) and "test" (to evaluate final polygenic scores).
+We split the individuals from the genotype data into a "validation" set (to choose best-performing hyper-parameters, also called "tuning" set) and a "test" set (to evaluate final polygenic scores).
 Here we consider that there are 350 individuals to be used as validation set to tune hyper-parameters for LDpred2-grid and lassosum2. The other 153 individuals are used as test set to evaluate the final models.
 
 ```{r}
@@ -254,6 +254,7 @@ for (chr in 1:22) {
   corr0 <- snp_cor(G, ind.col = ind.chr2, size = 3 / 1000,
                    infos.pos = POS2[ind.chr2], ncores = NCORES)
   
+  # build the genome-wide SFBM by adding the LD for one chromosome at once
   if (chr == 1) {
     ld <- Matrix::colSums(corr0^2)
     corr <- as_SFBM(corr0, tmp, compact = TRUE)
@@ -265,16 +266,18 @@ for (chr in 1:22) {
 ```
 
 To use the "compact" format for SFBMs, you need `packageVersion("bigsparser") >= package_version("0.5")`. 
-Make sure to reinstall {bigsnpr} after updating {bigsparser} to this new version (to avoid crashes).
+If it is not the case, make sure to reinstall {bigsnpr} after updating {bigsparser} to this new version (to avoid crashes).
 
 ```{r}
 file.size(corr$sbk) / 1024^3  # file size in GB
 ```
 
-Note that you will need at least the same memory as this file size (to keep it cached for faster processing) + some other memory for all the results returned. If you do not have enough memory, processing will be very slow (because you would read the data from disk all the time). If using the one million HapMap3 variants, having 60 GB of memory should be enough.
+Note that you will need at least the same memory as this file size (to keep it cached for faster processing) + some other memory for all the results returned by LDpred2. If you do not have enough memory, processing will be very slow (because you would have to read the data from disk all the time). If using the one million HapMap3 variants, having 60 GB of memory should be enough.
 
 
 ### LDpred2-inf: infinitesimal model
+
+The infinitesimal model assumes that all variants are causal (i.e. $p = 1$). It is a simple model that has an analytical solution. However, in practice, phenotypes rarely have more than 10% variants that are causal (Privé et al. 2023).
 
 ```{r}
 # Estimate of h2 from LD Score regression
@@ -305,8 +308,14 @@ In practice, we recommend to test multiple values for h2 and p.
 ```{r}
 (h2_seq <- round(ldsc_h2_est * c(0.3, 0.7, 1, 1.4), 4))
 (p_seq <- signif(seq_log(1e-5, 1, length.out = 21), 2))
+```
+
+There is another parameter that can be used to enable a version of LDpred2 that outputs PGS effect sizes that can be sparse.
+
+```{r}
 (params <- expand.grid(p = p_seq, h2 = h2_seq, sparse = c(FALSE, TRUE)))
 ```
+
 
 ```{r}
 set.seed(1)  # to get the same result every time
@@ -319,13 +328,13 @@ pred_grid <- big_prodMat(G, beta_grid, ind.col = df_beta[["_NUM_ID_"]])
 params$score <- apply(pred_grid[ind.val, ], 2, function(x) {
   if (all(is.na(x))) return(NA)
   summary(lm(y[ind.val] ~ x))$coef["x", 3]
-  # summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]
+  # summary(glm(y[ind.val] ~ x, family = "binomial"))$coef["x", 3]  # for a binary phenotype
 })
 ```
 
 Note that missing values represent models that diverged substantially.
 
-```{r, fig.asp=0.5}
+```{r, fig.asp=0.5, warning=FALSE}
 library(ggplot2)
 ggplot(params, aes(x = p, y = score, color = as.factor(h2))) +
   theme_bigstatsr() +
@@ -370,7 +379,7 @@ pcor(pred, y[ind.test], NULL)
 
 ### LDpred2-auto: automatic model
 
-Contrary to LDpred2-grid, LDpred2-auto does not need a validation set because it can directly infer values for hyper-parameters $h^2$ and $p$.
+Contrary to LDpred2-grid, LDpred2-auto does not need a validation set because it can directly infer values for both hyper-parameters $h^2$ and $p$.
 We recommend to run many chains in parallel with different initial values for `p`, which will be used for QC afterwards. 
 In [this paper](https://doi.org/10.1016/j.xhgg.2022.100136), we have also introduced two new parameters in LDpred2-auto for improving its robustness, `allow_jump_sign` and `shrink_corr`, and recommend to use them.
 
@@ -382,7 +391,7 @@ set.seed(1)  # to get the same result every time
 multi_auto <- snp_ldpred2_auto(
   corr, df_beta, h2_init = ldsc_h2_est,
   vec_p_init = seq_log(1e-4, 0.2, length.out = 30), ncores = NCORES,
-  # use_MLE = FALSE,  # uncomment if you have convergence issues or when power is low (need v1.11.9)
+  # use_MLE = FALSE,  # uncomment if you have convergence issues or when GWAS power is low (need v1.11.9)
   allow_jump_sign = FALSE, shrink_corr = coef_shrink)
 str(multi_auto, max.level = 1)
 str(multi_auto[[1]], max.level = 1)
@@ -390,7 +399,7 @@ str(multi_auto[[1]], max.level = 1)
 
 You can verify whether the chains "converged" by looking at the path of the chains:
 
-```{r}
+```{r, warning=FALSE}
 library(ggplot2)
 auto <- multi_auto[[1]]  # first chain
 plot_grid(
@@ -434,10 +443,12 @@ Note that parameter 's' from lassosum has been replaced by a new parameter 'delt
 
 ```{r}
 beta_lassosum2 <- snp_lassosum2(corr, df_beta, ncores = NCORES)
+(params2 <- attr(beta_lassosum2, "grid_param"))
 ```
 
+Compared to LDpred2 and many other PGS methods, lassosum and lassosum2 are very effective at providing very sparse PGS effect sizes.
+
 ```{r}
-(params2 <- attr(beta_lassosum2, "grid_param"))
 pred_grid2 <- big_prodMat(G, beta_lassosum2, ind.col = df_beta[["_NUM_ID_"]])
 params2$score <- apply(pred_grid2[ind.val, ], 2, function(x) {
   if (all(is.na(x))) return(NA)
@@ -516,7 +527,7 @@ multi_auto <- snp_ldpred2_auto(
 ```
 
 ```{r}
-all_h2 <- sapply(multi_auto[keep], function(auto) tail(auto$path_h2_est, 500))
+all_h2 <- sapply(multi_auto[keep], function(auto) tail(auto$path_h2_est, 500)) # num_iter
 quantile(all_h2, c(0.5, 0.025, 0.975))
 all_p <- sapply(multi_auto[keep], function(auto) tail(auto$path_p_est, 500))
 quantile(all_p, c(0.5, 0.025, 0.975))
@@ -544,7 +555,7 @@ pred_auto <- big_prodVec(G, beta_auto, ind.col = df_beta[["_NUM_ID_"]])
 pcor(pred_auto, y, NULL)^2
 ```
 
-These are not exactly the same, which we attribute to the small number of variants used in this tutorial data.
+Here the estimation is not particularly good, which we attribute to the (too) small number of variants used in this tutorial data.
 
 You can also get per-variant probabilities of being causal (for fine-mapping purposes)
 ```{r}
@@ -553,6 +564,8 @@ qplot(y = postp, alpha = I(0.2)) + theme_bigstatsr()
 ```
 
 You can also infer local per-block or per-annotation $h^2$ following the code [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/run-ldpred2-ukbb.R#L158-L165) and [here](https://github.com/privefl/paper-infer/blob/3dcd2949f54d7f1fd5c346d1bbb35db4b84a719e/code/height-meta-1600k.R#L170-L216).
+
+A problem right now is that LDpred2-auto does not use enough variants for fine-mapping and enrichment results to really be meaningful, but this is planned.
 
 ***
 
@@ -568,4 +581,4 @@ rm(corr); gc(); file.remove(paste0(tmp, ".sbk"))
 
 - Privé, F., Arbel, J., Aschard, H., & Vilhjálmsson, B. J. (2022). [Identifying and correcting for misspecifications in GWAS summary statistics and polygenic scores](https://doi.org/10.1016/j.xhgg.2022.100136). *Human Genetics and Genomics Advances*, 3(4), 100136.
 
-- Privé, F., Albiñana, C., Arbel, J., Pasaniuc, B., & Vilhjálmsson, B. J. (2022). [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1016/j.ajhg.2023.10.010). *The American Journal of Human Genetics*, 110(12), 2042-2055.
+- Privé, F., Albiñana, C., Arbel, J., Pasaniuc, B., & Vilhjálmsson, B. J. (2023). [Inferring disease architecture and predictive ability with LDpred2-auto](https://doi.org/10.1016/j.ajhg.2023.10.010). *The American Journal of Human Genetics*, 110(12), 2042-2055.
