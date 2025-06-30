@@ -38,7 +38,10 @@ If not specified, all columns are used.\cr
 
 \item{size}{For one SNP, window size around this SNP to compute correlations.
 Default is \code{500}. If not providing \code{infos.pos} (\code{NULL}, the default), this is
-a window in number of SNPs, otherwise it is a window in kb (genetic distance).}
+a window in number of SNPs, otherwise it is a window in kb (physical distance).
+In case you provide \code{infos.pos} in centimorgans (genetic distance),
+you should divide this by 1000 because it is internally multiplied by 1000
+(i.e. use \code{3 / 1000} for 3 cM).}
 
 \item{infos.pos}{Vector of integers specifying the physical position
 on a chromosome (in base pairs) of each SNP.\cr

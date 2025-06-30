@@ -36,8 +36,8 @@ You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 }
 \value{
 The path to the RDS file that stores the \code{bigSNP} object.
-Note that this function creates one other file which stores the values of
-the Filebacked Big Matrix.\cr
+Note that this function creates another file (\emph{.bk}) that stores the values
+of the Filebacked Big Matrix.\cr
 \strong{You shouldn't read from PLINK files more than once.} Instead, use
 \link{snp_attach} to load the "bigSNP" object in any R session from backing files.
 }

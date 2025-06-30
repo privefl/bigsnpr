@@ -130,7 +130,7 @@ check_bgen_format <- function(bgenfile) {
 #'
 #' @return The path to the RDS file `<backingfile>.rds` that stores the `bigSNP`
 #'   object created by this function.\cr
-#'   Note that this function creates another file (*.bk*) which stores the values
+#'   Note that this function creates another file (*.bk*) that stores the values
 #'   of the FBM (`$genotypes`). The rows corresponds to the order of `ind_row`;
 #'   the columns to the order of `list_snp_id`. The `$map` component of the
 #'   `bigSNP` object stores some information on the variants (including allele

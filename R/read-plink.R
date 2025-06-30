@@ -17,8 +17,8 @@
 #' without the ".bed" extension.
 #'
 #' @return The path to the RDS file that stores the `bigSNP` object.
-#' Note that this function creates one other file which stores the values of
-#' the Filebacked Big Matrix.\cr
+#' Note that this function creates another file (*.bk*) that stores the values
+#' of the Filebacked Big Matrix.\cr
 #' __You shouldn't read from PLINK files more than once.__ Instead, use
 #' [snp_attach] to load the "bigSNP" object in any R session from backing files.
 #'

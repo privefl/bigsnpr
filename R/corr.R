@@ -65,8 +65,11 @@ cor0 <- function(Gna,
 #'
 #' @inheritParams bigsnpr-package
 #' @param size For one SNP, window size around this SNP to compute correlations.
-#' Default is `500`. If not providing `infos.pos` (`NULL`, the default), this is
-#' a window in number of SNPs, otherwise it is a window in kb (genetic distance).
+#'   Default is `500`. If not providing `infos.pos` (`NULL`, the default), this is
+#'   a window in number of SNPs, otherwise it is a window in kb (physical distance).
+#'   In case you provide `infos.pos` in centimorgans (genetic distance),
+#'   you should divide this by 1000 because it is internally multiplied by 1000
+#'   (i.e. use `3 / 1000` for 3 cM).
 #' @param alpha Type-I error for testing correlations.
 #'   Default is `1` (no threshold is applied).
 #' @param thr_r2 Threshold to apply on squared correlations. Default is `0`.

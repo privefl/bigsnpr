@@ -66,7 +66,7 @@ Default is \code{0.2}.}
 \item{size}{For one SNP, window size around this SNP to compute correlations.
 Default is \code{100 / thr.r2} for clumping (0.2 -> 500; 0.1 -> 1000; 0.5 -> 200).
 If not providing \code{infos.pos} (\code{NULL}, the default), this is a window in
-number of SNPs, otherwise it is a window in kb (genetic distance).
+number of SNPs, otherwise it is a window in kb (physical distance).
 I recommend that you provide the positions if available.}
 
 \item{exclude}{Vector of SNP indices to exclude anyway. For example,

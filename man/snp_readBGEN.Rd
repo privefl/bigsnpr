@@ -48,7 +48,7 @@ You may use \code{\link[bigstatsr:reexports]{bigstatsr::nb_cores()}}.}
 \value{
 The path to the RDS file \verb{<backingfile>.rds} that stores the \code{bigSNP}
 object created by this function.\cr
-Note that this function creates another file (\emph{.bk}) which stores the values
+Note that this function creates another file (\emph{.bk}) that stores the values
 of the FBM (\verb{$genotypes}). The rows corresponds to the order of \code{ind_row};
 the columns to the order of \code{list_snp_id}. The \verb{$map} component of the
 \code{bigSNP} object stores some information on the variants (including allele
