@@ -26,6 +26,8 @@ bed_tcrossprodSelf <- function(
   block.size = block_size(length(ind.row))
 ) {
 
+  check_args()
+
   n <- length(ind.row)
   K <- FBM(n, n, init = 0)
 

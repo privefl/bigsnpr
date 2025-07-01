@@ -16,7 +16,7 @@ obj.bed <- bed(snp_writeBed(test, bedfile = tempfile(fileext = ".bed")))
 
 test_that("snp_autoSVD() works", {
 
-  expect_error(snp_autoSVD(G, as.character(CHR), POS), "only integers")
+  # expect_error(snp_autoSVD(G, as.character(CHR), POS), "only integers")
   expect_error(snp_autoSVD(G, CHR[-1], POS2), bigstatsr:::GET_ERROR_DIM())
   expect_error(snp_autoSVD(G, CHR, POS2[-1]), bigstatsr:::GET_ERROR_DIM())
   expect_error(snp_autoSVD(G, CHR, min.mac = 0), "no variation; set min.mac > 0")

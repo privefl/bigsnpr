@@ -142,7 +142,8 @@ snp_fastImpute <- function(Gna, infos.chr,
                            seed = NA,
                            ncores = 1) {
 
-  check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")
+  check_args()
+  assert_lengths(infos.chr, cols_along(Gna))
   assert_package("xgboost")
 
   X  <- Gna$copy(code = CODE_IMPUTE_LABEL)

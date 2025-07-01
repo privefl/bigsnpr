@@ -28,6 +28,7 @@ Blum
 bp
 bty
 cbind
+centimorgan
 chr
 cM
 Cockerham
@@ -83,7 +84,6 @@ loadings
 LOF
 Luu
 MAF
-MAFs
 mahalanobis
 Maller
 Manichaikul
@@ -91,6 +91,7 @@ MAXL
 Mbp
 Mei
 mio
+misspecification
 MKL
 monomorphic
 monozygotic

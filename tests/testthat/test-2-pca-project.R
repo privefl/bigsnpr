@@ -13,6 +13,8 @@ obj.svd <- bed_randomSVD(obj.bed, ind.row = ind.row, ind.col = ind.col)
 
 ind.test <- setdiff(rows_along(obj.bed), ind.row)
 expect_error(bed_projectSelfPCA(obj.svd, obj.bed, ind.row = ind.test),
+             "'ind.col' can't be `NULL`.")
+expect_error(bed_projectSelfPCA(obj.svd, obj.bed, ind.row = ind.test, ind.col = ind.col[-1]),
              "Incompatibility between dimensions.")
 proj <- bed_projectSelfPCA(obj.svd, obj.bed,
                            ind.row = rows_along(obj.bed),
@@ -40,6 +42,8 @@ obj.svd <- bed_randomSVD(obj.bed, ind.row = ind.row)
 
 ind.test <- setdiff(rows_along(obj.bed), ind.row)
 expect_error(bed_projectSelfPCA(obj.svd, obj.bed, ind.row = ind.test),
+             "'ind.col' can't be `NULL`.")
+expect_error(bed_projectSelfPCA(obj.svd, obj.bed, ind.row = ind.test, ind.col = 1:5),
              "Incompatibility between dimensions.")
 proj <- bed_projectSelfPCA(obj.svd, obj.bed,
                            ind.row = rows_along(obj.bed),

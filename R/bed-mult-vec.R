@@ -24,6 +24,7 @@ bed_cprodVec <- function(obj.bed, y.row,
                          scale  = rep(1, length(ind.col)),
                          ncores = 1) {
 
+  check_args()
   assert_lengths(y.row, ind.row)
 
   center <- as_vec(center)
@@ -61,6 +62,7 @@ bed_prodVec <- function(obj.bed, y.col,
                         scale = rep(1, length(ind.col)),
                         ncores = 1) {
 
+  check_args()
   assert_lengths(y.col, ind.col)
 
   center <- as_vec(center)

@@ -42,7 +42,8 @@ obj.svd <- big_randomSVD(G, fun.scaling = snp_scaleBinom(), ind.col = ind.keep)
 
 # Try on bed file directly (still no missing value)
 obj.bed <- bed(system.file("extdata", "example.bed", package = "bigsnpr"))
-expect_error(bed_clumping(G))
+expect_error(bed_clumping(G), "not a valid field")
+expect_error(bed_clumping(obj.bed, ind.row = NULL), "'ind.row' can't be `NULL`.")
 ind.keep2 <- bed_clumping(obj.bed)
 expect_identical(ind.keep2, ind.keep)
 expect_gt(min(bed_clumping(obj.bed, exclude = 1:100)), 100)
@@ -51,6 +52,9 @@ expect_error(big_randomSVD(obj.bed, ind.col = ind.keep),
 obj.svd2 <- bed_randomSVD(obj.bed, ind.col = ind.keep)
 expect_equal(colMeans(obj.svd2$u), rep(0, 10))
 expect_equal(obj.svd2, obj.svd)
+expect_error(bed_randomSVD(G), "not a valid field")
+expect_error(bed_randomSVD(obj.bed, ind.row = NULL), "'ind.row' can't be `NULL`.")
+expect_error(bed_randomSVD(obj.bed, ind.col = NULL), "'ind.col' can't be `NULL`.")
 
 # Try with missing value (supported for bed files only)
 G[sample(length(G), length(G) / 20)] <- 3
@@ -66,6 +70,9 @@ expect_true(all(obj.svd3$d < obj.svd2$d))
 expect_identical(bed_clumping(obj.bed2, S = bed_MAF(obj.bed2)$mac), ind.keep3)
 
 # Compute whole eigen decomposition
+expect_error(bed_tcrossprodSelf(G), "'obj.bed' is not of class 'bed' or 'bed_light'.")
+expect_error(bed_tcrossprodSelf(obj.bed2, ind.row = NULL), "'ind.row' can't be `NULL`.")
+expect_error(bed_tcrossprodSelf(obj.bed2, ind.col = NULL), "'ind.col' can't be `NULL`.")
 K <- bed_tcrossprodSelf(obj.bed2, ind.col = ind.keep2)
 eig <- eigen(K[], symmetric = TRUE)
 expect_equal(sqrt(eig$values[1:10]), obj.svd3$d)
@@ -86,6 +93,9 @@ expect_identical(obj.bed3, obj.bed)
 expect_equal(length(obj.bed), prod(dim(obj.bed)))
 
 # Test counts and scaling
+expect_error(bed_counts(G), "'obj.bed' is not of class 'bed' or 'bed_light'.")
+expect_error(bed_counts(obj.bed2, ind.row = NULL), "'ind.row' can't be `NULL`.")
+expect_error(bed_counts(obj.bed2, ind.col = NULL), "'ind.col' can't be `NULL`.")
 ind.row <- sample(nrow(obj.bed), 300)
 ind.col <- sample(ncol(obj.bed), 4000)
 expect_identical(bed_counts(obj.bed2, ind.row, ind.col),
@@ -106,6 +116,10 @@ expect_identical(bed_MAF(obj.bed, ind.row, ind.col)$N,
                  rep(length(ind.row), length(ind.col)))
 expect_identical(bed_MAF(obj.bed, ind.row, ind.col)$maf,
                  snp_MAF(G_nona, ind.row, ind.col))
+
+expect_error(bed_MAF(G), "'obj.bed' is not of class 'bed' or 'bed_light'.")
+expect_error(bed_MAF(obj.bed2, ind.row = NULL), "'ind.row' can't be `NULL`.")
+expect_error(bed_MAF(obj.bed2, ind.col = NULL), "'ind.col' can't be `NULL`.")
 
 expect_identical(bed_MAF(obj.bed, ind.row, ind.col)$af,
                  bed_MAF(obj.bed, ind.row, ind.col)$ac / (2 * length(ind.row)))

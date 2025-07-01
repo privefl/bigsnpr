@@ -44,7 +44,7 @@ test_that("Incompatiblity between dimensions", {
   ind.row <- sample(N, size = 21)
   ind.col <- sample(M, size = 11)
   y.col <- rnorm(21)
-  expect_error(bed_prodVec(obj.svd, y.col, ind.row, ind.col), ERROR_DIM)
+  expect_error(bed_prodVec(obj.bed, y.col, ind.row, ind.col), ERROR_DIM)
   y.row <- rnorm(11)
   expect_error(bed_cprodVec(obj.bed, y.row, ind.row, ind.col), ERROR_DIM)
 })

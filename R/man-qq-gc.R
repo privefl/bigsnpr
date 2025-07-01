@@ -44,7 +44,7 @@ snp_manhattan <- function(gwas, infos.chr, infos.pos,
                           npoints = NULL,
                           coeff = 1) {
 
-  check_args(infos.chr = "")
+  check_args()
   assert_lengths(infos.chr, infos.pos, rows_along(gwas))
 
   # get ordering

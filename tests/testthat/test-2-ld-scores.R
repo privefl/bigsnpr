@@ -56,7 +56,7 @@ test_that("bed_ld_scores() works like snp_ld_scores()", {
   bedfile <- snp_writeBed(test, tempfile(fileext = ".bed"))
   obj_bed <- bed(bedfile)
   expect_error(bed_ld_scores(obj.bed = G),
-               "'obj.bed' is not of class 'bed'.", fixed = TRUE)
+               "'obj.bed' is not of class 'bed' or 'bed_light'.", fixed = TRUE)
   expect_equal(
     snp_ld_scores(Gna = G, size = 20),
     bed_ld_scores(obj.bed = obj_bed, size = 20)

@@ -29,8 +29,8 @@ test_that("snp_fst() works", {
     ind_pop_grp <- unlist(ind_pop[pop_grps])
     bigsnpr:::write.table2(cbind(obj.bed$fam[1:2], pop)[ind_pop_grp, ],
                            paste0(tmp, ".txt"))
-    system(paste(plink, "--bfile", sub_bed(bedfile),
-                 "--fst --within", paste0(tmp, ".txt"), "--out", tmp),
+    system(glue::glue("{plink} --bfile \"{sub_bed(bedfile)}\"",
+                      " --fst --within {tmp}.txt --out {tmp}"),
            ignore.stdout = TRUE, ignore.stderr = TRUE)
 
     all_fst <- bigreadr::fread2(paste0(tmp, ".fst"))$FST
@@ -57,8 +57,8 @@ test_that("snp_fst() works with missing values", {
   # PLINK to get Fst
   bigsnpr:::write.table2(cbind(obj.bed$fam[1:2], rep(1:2, each = 100)),
                          paste0(tmp, ".txt"))
-  system(paste(plink, "--bfile", sub_bed(bedfile),
-               "--fst --within", paste0(tmp, ".txt"), "--out", tmp),
+  system(glue::glue("{plink} --bfile \"{sub_bed(bedfile)}\"",
+                    " --fst --within {tmp}.txt --out {tmp}"),
          ignore.stdout = TRUE, ignore.stderr = TRUE)
 
   all_fst <- bigreadr::fread2(paste0(tmp, ".fst"))$FST

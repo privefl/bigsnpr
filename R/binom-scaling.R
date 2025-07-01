@@ -97,6 +97,8 @@ snp_MAF <- function(G,
                     nploidy = 2,
                     ncores = 1) {
 
+  check_args()
+
   af <- snp_colstats(G, ind.row, ind.col, ncores)$sumX /
     (length(ind.row) * nploidy)
 
@@ -167,6 +169,8 @@ bed_counts <- function(obj.bed,
                        byrow = FALSE,
                        ncores = 1) {
 
+  check_args()
+
   FUN <- if (byrow) bed_row_counts_cpp else bed_col_counts_cpp
   res <- FUN(obj.bed, ind.row, ind.col, ncores)
   rownames(res) <- c(0:2, NA)
@@ -200,6 +204,8 @@ bed_MAF <- function(obj.bed,
                     ind.row = rows_along(obj.bed),
                     ind.col = cols_along(obj.bed),
                     ncores = 1) {
+
+  check_args()
 
   counts <- bed_counts(obj.bed, ind.row, ind.col, byrow = FALSE, ncores = ncores)
   ac <- counts[2, ] + 2 * counts[3, ]

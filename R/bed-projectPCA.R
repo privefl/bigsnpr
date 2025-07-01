@@ -197,6 +197,7 @@ bed_projectSelfPCA <- function(obj.svd, obj.bed, ind.row,
                                ind.col = attr(obj.svd, "subset"),
                                ncores = 1) {
 
+  check_args()
   assert_lengths(rows_along(obj.svd$v), ind.col)
 
   X_norm <- FBM(length(ind.row), 1,               init = 0)
