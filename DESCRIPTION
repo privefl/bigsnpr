@@ -21,7 +21,8 @@ SystemRequirements: A few functions from package 'bigsnpr' wrap existing
     not work for some operating systems (e.g. 'PLINK' might not work on Solaris).
 Depends:
     R (>= 3.4), 
-    bigstatsr (>= 1.5.11)
+    bigstatsr (>= 1.6.2)
+Remotes: privefl/bigstatsr
 Imports:
     bigassertr (>= 0.1.7),
     bigparallelr,
