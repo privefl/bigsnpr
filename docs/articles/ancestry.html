@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.20</span>
       </span>
     </div>
 
@@ -68,13 +68,22 @@
       <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
-      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
+      <a href="../articles/PLR.html">Polygenic scores using individual-level data</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
       <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/bigsnpr-extdoc/" class="external-link">Extended documentation for bigsnpr &amp; bigstatsr</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/statgen-course/" class="external-link">Statistical Human Genetics course using R</a>
     </li>
   </ul>
 </li>
@@ -136,7 +145,8 @@ whose genotypes are available)</p></li>
 <div class="section level2">
 <h2 id="estimating-ancestry-proportions-from-allele-frequencies-only">Estimating ancestry proportions from allele frequencies only<a class="anchor" aria-label="anchor" href="#estimating-ancestry-proportions-from-allele-frequencies-only"></a>
 </h2>
-<p>This is the primary objective of the method presented in <a href="https://doi.org/10.1101/2021.10.27.466078" class="external-link">this preprint</a>.</p>
+<p>This is the primary objective of the method presented in <a href="http://dx.doi.org/10.1093/bioinformatics/btac348" class="external-link">this
+paper</a>.</p>
 <p>For this, let us download some GWAS summary statistics for Epilepsy
 (supposedly in EUR+EAS+AFR), where the allele frequencies are
 reported.</p>
@@ -144,7 +154,7 @@ reported.</p>
 <code class="sourceCode R"><span><span class="va">DIR</span> <span class="op">&lt;-</span> <span class="st">"../datasets"</span>  <span class="co"># you can replace by e.g. "data" or "tmp-data"</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># /!\ This downloads 160 Mb</span></span>
-<span><span class="va">gz</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
+<span><span class="va">gz</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"http://www.epigad.org/gwas_ilae2018_16loci/all_epilepsy_METAL.gz"</span>,</span>
 <span>  dir <span class="op">=</span> <span class="st">"../datasets"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">gz</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
@@ -166,10 +176,10 @@ corresponding PC loadings (for projection) provided from the paper.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># /!\ This downloads 850 Mb (each)</span></span>
 <span><span class="va">all_freq</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span>
-<span>  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620968"</span>,</span>
+<span>  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620968"</span>,</span>
 <span>                         dir <span class="op">=</span> <span class="va">DIR</span>, fname <span class="op">=</span> <span class="st">"ref_freqs.csv.gz"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">projection</span> <span class="op">&lt;-</span> <span class="fu">bigreadr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bigreadr/man/fread2.html" class="external-link">fread2</a></span><span class="op">(</span></span>
-<span>  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620953"</span>,</span>
+<span>  <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="st">"https://figshare.com/ndownloader/files/31620953"</span>,</span>
 <span>                         dir <span class="op">=</span> <span class="va">DIR</span>, fname <span class="op">=</span> <span class="st">"projection.csv.gz"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Then we need to match variants within the summary statistics with the
 ones from the reference, by chromosome, position and alleles.</p>
@@ -199,6 +209,19 @@ statistics) onto the PC space.</p>
 <span>  projection <span class="op">=</span> <span class="va">projection</span><span class="op">[</span><span class="va">matched</span><span class="op">$</span><span class="va">`_NUM_ID_`</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  correction <span class="op">=</span> <span class="va">correction</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>The <code>correction</code> factors are needed when projecting
+<em>new individuals</em> onto a PCA space to correct for the shrinkage
+that happens due to “overfitting” of the PCA. This happens particularly
+when the number of individuals used to derive the PCA is smaller than
+the number of variables. The amount of correction needed increases for
+later PCs. You can have a look at <a href="https://doi.org/10.1093/bioinformatics/btaa520" class="external-link">this paper</a> to
+read more about this.</p>
+<p>Note that the provided <code>correction</code> is specific to the PC
+loadings I provide, so that you don’t need to recompute it. It is based
+on the ratio between the projections using a method that corrects for
+this shrinkage and the simple projections (simply multiplying by the
+loadings on the right).</p>
+<hr>
 <p>Note that some ancestry groups from the reference are very close to
 one another, and should be merged a posteriori.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -236,9 +259,9 @@ space.</p>
 demonstration.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prefix</span> <span class="op">&lt;-</span> <span class="st">"https://sharehost.hms.harvard.edu/genetics/reich_lab/sgdp/variant_set/cteam_extended.v4.maf0.1perc"</span></span>
-<span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".bed"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
-<span><span class="va">famfile</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".fam"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
-<span><span class="va">bim_zip</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runonce/man/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".bim.zip"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
+<span><span class="va">bedfile</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".bed"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
+<span><span class="va">famfile</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".fam"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
+<span><span class="va">bim_zip</span> <span class="op">&lt;-</span> <span class="fu">runonce</span><span class="fu">::</span><span class="fu"><a href="https://privefl.github.io/runonce/reference/download_file.html" class="external-link">download_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="st">".bim.zip"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">DIR</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">bim_zip</span>, exdir <span class="op">=</span> <span class="va">DIR</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in unzip(bim_zip, exdir = DIR, overwrite = FALSE): not overwriting file</span></span>
 <span><span class="co">## '../datasets/cteam_extended.v4.maf0.1perc.bim</span></span></code></pre>
@@ -349,8 +372,8 @@ should not be matched to any of the 21 reference groups.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">PC_SGDP</span>, <span class="fl">2</span>, <span class="va">one_center</span>, <span class="st">'-'</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">THR</span> <span class="op">&lt;-</span> <span class="fl">0.005</span>  <span class="co"># you can adjust this threshold</span></span>
-<span><span class="va">thr_sq_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">all_centers</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="va">THR</span> <span class="op">/</span> <span class="fl">0.16</span></span>
+<span><span class="va">thr_fst</span> <span class="op">&lt;-</span> <span class="fl">0.005</span>  <span class="co"># you can adjust this threshold</span></span>
+<span><span class="va">thr_sq_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">all_centers</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="va">thr_fst</span> <span class="op">/</span> <span class="fl">0.16</span></span>
 <span></span>
 <span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="va">group</span><span class="op">[</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">all_sq_dist</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>

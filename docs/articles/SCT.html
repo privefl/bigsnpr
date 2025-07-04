@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.20</span>
       </span>
     </div>
 
@@ -68,13 +68,22 @@
       <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
-      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
+      <a href="../articles/PLR.html">Polygenic scores using individual-level data</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
       <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/bigsnpr-extdoc/" class="external-link">Extended documentation for bigsnpr &amp; bigstatsr</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/statgen-course/" class="external-link">Statistical Human Genetics course using R</a>
     </li>
   </ul>
 </li>
@@ -147,7 +156,7 @@ files) as well as the text file containing summary statistics.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Read from bed/bim/fam, it generates .bk and .rds files.</span></span>
 <span><span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="st">"tmp-data/public-data.bed"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\Desktop\\bigsnpr\\tmp-data\\public-data.rds"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\OneDrive - Aarhus universitet\\Desktop\\bigsnpr\\tmp-data\\public-data.rds"</span></span></code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Attach the "bigSNP" object in R session</span></span>
 <span><span class="va">obj.bigSNP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="st">"tmp-data/public-data.rds"</span><span class="op">)</span></span>
@@ -208,7 +217,7 @@ individuals in the training set.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">ind.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span></span>
-<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.train</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="matching-variants-between-genotype-data-and-summary-statistics">Matching variants between genotype data and summary statistics<a class="anchor" aria-label="anchor" href="#matching-variants-between-genotype-data-and-summary-statistics"></a>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.20</span>
       </span>
     </div>
 
@@ -68,13 +68,22 @@
       <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
-      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
+      <a href="../articles/PLR.html">Polygenic scores using individual-level data</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
       <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/bigsnpr-extdoc/" class="external-link">Extended documentation for bigsnpr &amp; bigstatsr</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/statgen-course/" class="external-link">Statistical Human Genetics course using R</a>
     </li>
   </ul>
 </li>
@@ -204,7 +213,7 @@ write corresponding PLINK files.</p>
 <span><span class="va">fake</span><span class="op">$</span><span class="va">genotypes</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">X</span></span>
 <span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/snp_writeBed.html">snp_writeBed</a></span><span class="op">(</span><span class="va">fake</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".bed"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpMPLB7m\\file57805eec32d.bed"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpyGoJPS\\file594823771ff3.bed"</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="pruning">Pruning<a class="anchor" aria-label="anchor" href="#pruning"></a>

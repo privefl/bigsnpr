@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.20</span>
       </span>
     </div>
 
@@ -50,13 +50,22 @@
       <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
-      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
+      <a href="../articles/PLR.html">Polygenic scores using individual-level data</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
       <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/bigsnpr-extdoc/" class="external-link">Extended documentation for bigsnpr &amp; bigstatsr</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/statgen-course/" class="external-link">Statistical Human Genetics course using R</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -136,16 +145,16 @@ with missing values.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $map</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    chromosome marker.ID genetic.dist physical.pos allele1 allele2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1           1     snp_1            0         1000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           1     snp_2            0         2000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           1     snp_2            0         2000       T       C</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3           1     snp_3            0         3000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           1     snp_4            0         4000       C       T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           1     snp_5            0         5000       T       C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           1     snp_4            0         4000       T       C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           1     snp_5            0         5000       C       T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6           1     snp_6            0         6000       C       T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           1     snp_7            0         7000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           1     snp_8            0         8000       C       T</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           1     snp_9            0         9000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7           1     snp_7            0         7000       C       T</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8           1     snp_8            0         8000       T       C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9           1     snp_9            0         9000       T       C</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10          1    snp_10            0        10000       T       C</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11          1    snp_11            0        11000       T       C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11          1    snp_11            0        11000       C       T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12          1    snp_12            0        12000       C       T</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
@@ -165,11 +174,11 @@ with missing values.</p>
 <span class="r-in"><span><span class="va">G</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/raw.html" class="external-link">as.raw</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">G</span><span class="op">[</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    0   NA    2    1    0   NA   NA    0    2     1     0    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    1    1    0    2   NA    0    1    1    2     1     1    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    2    2    0    1   NA    0    2    2    1     0     1    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    2    1    1    2    0    1    2    1    2     1     1     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    2   NA    2    0   NA    2    1    1    1     2     0    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    2   NA    0    1    1    2    1    1   NA    NA     2    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    1   NA    0    2    2    1    0    1   NA    NA     1    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    2    0    1    2    1    2    1    1    2     1     0     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    0   NA    2    1    1    1    2    0   NA     1     0     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    0   NA   NA    0    2    1    0   NA    0     1     0     1</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

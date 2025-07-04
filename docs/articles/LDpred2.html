@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.20</span>
       </span>
     </div>
 
@@ -68,13 +68,22 @@
       <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
-      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
+      <a href="../articles/PLR.html">Polygenic scores using individual-level data</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
       <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/bigsnpr-extdoc/" class="external-link">Extended documentation for bigsnpr &amp; bigstatsr</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/statgen-course/" class="external-link">Statistical Human Genetics course using R</a>
     </li>
   </ul>
 </li>
@@ -320,7 +329,7 @@ individuals are used as test set to evaluate the final models.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">ind.val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="fl">350</span><span class="op">)</span></span>
-<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ind.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/bigparallelr/man/seq-dim.html" class="external-link">rows_along</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>, <span class="va">ind.val</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="matching-variants-between-genotype-data-and-summary-statistics">Matching variants between genotype data and summary statistics<a class="anchor" aria-label="anchor" href="#matching-variants-between-genotype-data-and-summary-statistics"></a>
@@ -731,12 +740,12 @@ regularization).</p>
 <code class="sourceCode R"><span><span class="va">beta_lassosum2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_lassosum2.html">snp_lassosum2</a></span><span class="op">(</span><span class="va">corr</span>, <span class="va">df_beta</span>, ncores <span class="op">=</span> <span class="va">NCORES</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">params2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">beta_lassosum2</span>, <span class="st">"grid_param"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity</span></span>
-<span><span class="co">## 1 0.06111003 0.001        2 0.00 0.9998895</span></span>
+<span><span class="co">## 1 0.06111003 0.001        2 0.01 0.9998895</span></span>
 <span><span class="co">## 2 0.05241382 0.001        3 0.00 0.9997128</span></span>
-<span><span class="co">## 3 0.04495512 0.001        4 0.00 0.9995361</span></span>
-<span><span class="co">## 4 0.03855782 0.001        7 0.00 0.9992489</span></span>
-<span><span class="co">## 5 0.03307088 0.001        8 0.01 0.9984095</span></span>
-<span><span class="co">## 6 0.02836476 0.001       13 0.02 0.9971061</span></span>
+<span><span class="co">## 3 0.04495512 0.001        4 0.02 0.9995361</span></span>
+<span><span class="co">## 4 0.03855782 0.001        7 0.02 0.9992489</span></span>
+<span><span class="co">## 5 0.03307088 0.001        8 0.00 0.9984095</span></span>
+<span><span class="co">## 6 0.02836476 0.001       13 0.01 0.9971061</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 114 rows ]</span></span></code></pre>
 <p>Compared to LDpred2 and many other PGS methods, lassosum and
 lassosum2 are very effective at providing very sparse PGS effect
@@ -774,9 +783,9 @@ sizes.</p>
 <span>  <span class="va">beta_lassosum2</span><span class="op">[</span>, <span class="va">.</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##       lambda delta num_iter time  sparsity    score id</span></span>
 <span><span class="co">## 1 0.02086632 0.001       21 0.01 0.9864584 9.715472  8</span></span>
-<span><span class="co">## 2 0.02086632 0.010       20 0.02 0.9864805 9.709865 38</span></span>
-<span><span class="co">## 3 0.02086632 0.100       16 0.02 0.9862375 9.667334 68</span></span>
-<span><span class="co">## 4 0.02432834 0.001       19 0.02 0.9942564 9.404453  7</span></span>
+<span><span class="co">## 2 0.02086632 0.010       20 0.05 0.9864805 9.709865 38</span></span>
+<span><span class="co">## 3 0.02086632 0.100       16 0.04 0.9862375 9.667334 68</span></span>
+<span><span class="co">## 4 0.02432834 0.001       19 0.03 0.9942564 9.404453  7</span></span>
 <span><span class="co">##  [ reached 'max' / getOption("max.print") -- omitted 116 rows ]</span></span></code></pre>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Choose the best among all LDpred2-grid and lassosum2 models</span></span>
@@ -892,8 +901,8 @@ this is planned.</p>
 <code class="sourceCode R"><span><span class="co"># Some cleaning</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">".sbk"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            used  (Mb) gc trigger  (Mb) max used  (Mb)</span></span>
-<span><span class="co">## Ncells  3906682 208.7    7162034 382.5  7162034 382.5</span></span>
-<span><span class="co">## Vcells 40907885 312.2   71415050 544.9 71414202 544.9</span></span></code></pre>
+<span><span class="co">## Ncells  3916396 209.2    7207324 385.0  7207324 385.0</span></span>
+<span><span class="co">## Vcells 40918547 312.2   71444096 545.1 71444093 545.1</span></span></code></pre>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 <div class="section level2">

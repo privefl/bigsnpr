@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.20</span>
       </span>
     </div>
 
@@ -68,13 +68,22 @@
       <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
-      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
+      <a href="../articles/PLR.html">Polygenic scores using individual-level data</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
       <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/bigsnpr-extdoc/" class="external-link">Extended documentation for bigsnpr &amp; bigstatsr</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/statgen-course/" class="external-link">Statistical Human Genetics course using R</a>
     </li>
   </ul>
 </li>
@@ -145,7 +154,7 @@ Privé</h4>
 <span><span class="co"># Let's put them in an temporary directory for this demo.</span></span>
 <span><span class="va">tmpfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/snp_readBed.html">snp_readBed</a></span><span class="op">(</span><span class="va">bedfile</span>, backingfile <span class="op">=</span> <span class="va">tmpfile</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpaCRKmJ\\file58743ffd185.rds"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "C:\\Users\\au639593\\AppData\\Local\\Temp\\RtmpcpaDGH\\file6d9c7af67e82.rds"</span></span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Attach the "bigSNP" object in R session</span></span>
 <span><span class="va">obj.bigSNP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snp_attach.html">snp_attach</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmpfile</span>, <span class="st">".rds"</span><span class="op">)</span><span class="op">)</span></span>
@@ -265,7 +274,7 @@ Privé</h4>
 <span>                 covar.row <span class="op">=</span> <span class="va">obj.svd</span><span class="op">$</span><span class="va">u</span><span class="op">[</span><span class="va">ind.test</span>, <span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Check AUC</span></span>
 <span><span class="fu"><a href="https://privefl.github.io/bigstatsr/reference/AUC.html" class="external-link">AUC</a></span><span class="op">(</span><span class="va">preds</span>, <span class="va">y01</span><span class="op">[</span><span class="va">ind.test</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.8823529</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.837013</span></span></code></pre>
 </div>
   </div>
 

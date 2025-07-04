@@ -18,7 +18,7 @@ on each SNP, independently."><!-- mathjax --><script src="https://cdnjs.cloudfla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bigsnpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.12.20</span>
       </span>
     </div>
 
@@ -51,13 +51,22 @@ on each SNP, independently."><!-- mathjax --><script src="https://cdnjs.cloudfla
       <a href="../articles/ancestry.html">Ancestry proportions and ancestry grouping</a>
     </li>
     <li>
-      <a href="../articles/SCT.html">Computing polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
+      <a href="../articles/PLR.html">Polygenic scores using individual-level data</a>
+    </li>
+    <li>
+      <a href="../articles/SCT.html">Polygenic scores using Stacked Clumping and Thresholding (SCT)</a>
     </li>
     <li>
       <a href="../articles/LDpred2.html">Polygenic scores and inference using LDpred2</a>
     </li>
     <li>
       <a href="../articles/prs_uncertainty.html">Estimating uncertainty in polygenic scores using LDpred2</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/bigsnpr-extdoc/" class="external-link">Extended documentation for bigsnpr &amp; bigstatsr</a>
+    </li>
+    <li>
+      <a href="https://privefl.github.io/statgen-course/" class="external-link">Statistical Human Genetics course using R</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -158,7 +167,7 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     stop2("Pruning is deprecated; please use clumping (on MAF) instead..\n%s", </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         "See why at https://bit.ly/2uKo3MN.")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000001b46088c570&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000002020d214578&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
 <span class="r-in"><span><span class="va">snp_clumping</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (G, infos.chr, ind.row = rows_along(G), S = NULL, thr.r2 = 0.2, </span>
@@ -166,10 +175,13 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     exclude = NULL, ncores = 1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     check_args()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     assert_lengths(infos.chr, cols_along(G))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     if (!missing(is.size.in.bp)) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         warning2("Parameter 'is.size.in.bp' is deprecated.")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (!is.null(infos.pos)) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         assert_lengths(infos.pos, infos.chr)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     if (!is.null(S)) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         assert_lengths(infos.chr, S)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         assert_lengths(S, infos.chr)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     ind.noexcl &lt;- setdiff(seq_along(infos.chr), exclude)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     sort(unlist(lapply(split(ind.noexcl, infos.chr[ind.noexcl]), </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         function(ind.chr) {</span>
@@ -177,13 +189,14 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 thr.r2, ncores)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         }), use.names = FALSE))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000001b466b21ec8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000002020bfa4b68&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
 <span class="r-in"><span><span class="va">snp_fastImpute</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (Gna, infos.chr, alpha = 1e-04, size = 200, p.train = 0.8, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     n.cor = nrow(Gna), seed = NA, ncores = 1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     check_args(infos.chr = "assert_lengths(infos.chr, cols_along(Gna))")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     check_args()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     assert_lengths(infos.chr, cols_along(Gna))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     assert_package("xgboost")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     X &lt;- Gna$copy(code = CODE_IMPUTE_LABEL)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     X2 &lt;- Gna$copy(code = CODE_IMPUTE_PRED)</span>
@@ -195,7 +208,7 @@ to each part (chromosome) and finally combine the results.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     infos.imp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000001b4604673c8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000002020d278ec0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:bigsnpr&gt;</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
