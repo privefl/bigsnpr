@@ -23,7 +23,7 @@ In this tutorial, we show how to
 
 ## Estimating ancestry proportions from allele frequencies only
 
-This is the primary objective of the method presented in [this preprint](https://doi.org/10.1101/2021.10.27.466078).
+This is the primary objective of the method presented in [this paper](http://dx.doi.org/10.1093/bioinformatics/btac348).
 
 For this, let us download some GWAS summary statistics for Epilepsy (supposedly in EUR+EAS+AFR), where the allele frequencies are reported.
 
@@ -87,6 +87,11 @@ res <- snp_ancestry_summary(
 )
 ```
 
+The `correction` factors are needed when projecting *new individuals* onto a PCA space to correct for the shrinkage that happens due to "overfitting" of the PCA. This happens particularly when the number of individuals used to derive the PCA is smaller than the number of variables. The amount of correction needed increases for later PCs. You can have a look at [this paper](https://doi.org/10.1093/bioinformatics/btaa520) to read more about this.
+
+Note that the provided `correction` is specific to the PC loadings I provide, so that you don't need to recompute it. It is based on the ratio between the projections using a method that corrects for this shrinkage and the simple projections (simply multiplying by the loadings on the right).
+
+***
 
 Note that some ancestry groups from the reference are very close to one another, and should be merged a posteriori.
 
@@ -218,8 +223,8 @@ all_sq_dist <- apply(all_centers, 1, function(one_center) {
   rowSums(sweep(PC_SGDP, 2, one_center, '-')^2)
 })
 
-THR <- 0.005  # you can adjust this threshold
-thr_sq_dist <- max(dist(all_centers)^2) * THR / 0.16
+thr_fst <- 0.005  # you can adjust this threshold
+thr_sq_dist <- max(dist(all_centers)^2) * thr_fst / 0.16
 
 cluster <- group[
   apply(all_sq_dist, 1, function(x) {

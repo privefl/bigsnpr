@@ -21,12 +21,18 @@ navbar:
         href: articles/bedpca.html
       - text: "Ancestry proportions and ancestry grouping"
         href: articles/ancestry.html
-      - text: "Computing polygenic scores using Stacked Clumping and Thresholding (SCT)"
+      - text: "Polygenic scores using individual-level data"
+        href: articles/PLR.html
+      - text: "Polygenic scores using Stacked Clumping and Thresholding (SCT)"
         href: articles/SCT.html
       - text: "Polygenic scores and inference using LDpred2"
         href: articles/LDpred2.html
       - text: "Estimating uncertainty in polygenic scores using LDpred2"
         href: articles/prs_uncertainty.html
+      - text: "Extended documentation for bigsnpr & bigstatsr"
+        href: https://privefl.github.io/bigsnpr-extdoc/
+      - text: "Statistical Human Genetics course using R"
+        href: https://privefl.github.io/statgen-course/
   right:
     - text: "About"
       icon: fa-user

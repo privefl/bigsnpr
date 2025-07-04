@@ -11,12 +11,19 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
 ```
 
-```{r}
-library(bigsnpr)
-library(ggplot2)
+This vignette showcases the different steps and best practices recommended in [this paper](https://doi.org/10.1093/bioinformatics/btaa520).
+
+```{r, echo=FALSE, out.width="55%"}
+knitr::include_graphics("https://github.com/privefl/paper4-bedpca/raw/refs/heads/master/figures/PCA-pipeline.svg")
 ```
 
+
 ## Data
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(bigsnpr)
+```
 
 Let us use a subsetted version of the 1000 Genomes project data we provide. Some quality control has already been done; otherwise, you can use `snp_plinkQC()`.
 
@@ -28,10 +35,22 @@ bedfile <- download_1000G("tmp-data")
 
 First, let us detect all pairs of related individuals.
 
-```{r}
-plink2 <- download_plink2("tmp-data")
+```{r, echo=FALSE}
+rel <- runonce::save_run(
+  snp_plinkKINGQC(
+    plink2.path = download_plink2("tmp-data"),
+    bedfile.in = bedfile,
+    thr.king = 2^-4.5,
+    make.bed = FALSE,
+    ncores = nb_cores()
+  ),
+  file = "bedpca_cache/html/rel_1000G.rds", timing = FALSE
+)
+str(rel)
+```
+```{r, eval=FALSE}
 rel <- snp_plinkKINGQC(
-  plink2.path = plink2,
+  plink2.path = download_plink2("tmp-data"),
   bedfile.in = bedfile,
   thr.king = 2^-4.5,
   make.bed = FALSE,
@@ -42,15 +61,25 @@ str(rel)
 
 ## Principal Component Analysis (PCA)
 
-We then compute PCA without using the related individuals. Function `bed_autoSVD()` should take care of Linkage Disequilibrium (LD).
+We then compute PCA without using the related individuals. Function `bed_autoSVD()` should take care of Linkage Disequilibrium (LD). To read more about the problem of capturing LD in PCA, have look at [this vignette](https://privefl.github.io/bigsnpr/articles/how-to-PCA.html).
 
 ```{r}
 (obj.bed <- bed(bedfile))
-ind.rel <- match(c(rel$IID1, rel$IID2), obj.bed$fam$sample.ID)  # /!\ use $ID1 instead with old PLINK
+# /!\ use $ID1 instead with old PLINK
+# /!\ sometimes individual IDs are stored in the family IDs, not the sample IDs
+ind.rel <- match(c(rel$IID1, rel$IID2), obj.bed$fam$sample.ID)  
 ind.norel <- rows_along(obj.bed)[-ind.rel]
+```
 
+```{r, eval=FALSE}
 obj.svd <- bed_autoSVD(obj.bed, ind.row = ind.norel, k = 20, 
                        ncores = nb_cores())
+```
+```{r, echo=FALSE}
+obj.svd <- runonce::save_run(
+  bed_autoSVD(obj.bed, ind.row = ind.norel, k = 20, ncores = nb_cores()),
+  file = "bedpca_cache/html/obj_svd.rds", timing = FALSE
+)
 ```
 
 ## Outlier sample detection
@@ -88,9 +117,18 @@ We recompute PCA without outliers, starting with the previous set of variants ke
 ```{r}
 ind.row <- ind.norel[S < 0.6]
 ind.col <- attr(obj.svd, "subset")
-obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row, 
-                        ind.col = ind.col, thr.r2 = NA,
-                        k = 20, ncores = nb_cores())
+```
+
+```{r, eval=FALSE}
+obj.svd2 <- bed_autoSVD(obj.bed, ind.row = ind.row, ind.col = ind.col,
+                        thr.r2 = NA, k = 20, ncores = nb_cores())
+```
+```{r, echo=FALSE}
+obj.svd2 <- runonce::save_run(
+  bed_autoSVD(obj.bed, ind.row = ind.row, ind.col = ind.col,
+              thr.r2 = NA, k = 20, ncores = nb_cores()),
+  file = "bedpca_cache/html/obj_svd2.rds", timing = FALSE
+)
 ```
 
 ## Verification

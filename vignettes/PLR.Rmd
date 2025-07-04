@@ -1,0 +1,34 @@
+---
+title: "Polygenic scores from individual-level data"
+author: "Florian Privé"
+date: "July 4, 2025"
+output: html_document
+bibliography: refs.bib
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 75, max.print = 30)
+knitr::opts_knit$set(global.par = TRUE, root.dir = "..")
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = 'png', out.width = "90%")
+```
+
+If you have individual-level data (i.e. genotypes and phenotypes), you can basically use any supervised learning (machine learning) method to train a PGS.
+However, because of the size of the genetic data, you will quickly have scalability issues with these models.
+Moreover, it has been shown that effects for most diseases and traits are small and essentially additive, and that fancy methods such as deep learning are not much effective at constructing PGS [@kelemen2025performance].
+
+Therefore, using penalized linear/logistic regression (PLR) can be a very efficient and effective method to train PGS. In my R package bigstatsr, I have developed a very fast implementation with automatic choice of the two hyper-parameters [@prive2019efficient]. You can find a tutorial explaining its implementation and use [here](https://privefl.github.io/bigstatsr/articles/penalized-regressions.html).
+
+This is an example of using PLR for predicting height from genotypes in the UK Biobank
+
+- training on 350K individuals x 656K variants in less than 24H
+
+- within both males and females, PGS achieved a correlation of 65.5% ($r^2$ of 42.9%) between genetically predicted and true height
+
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("https://privefl.github.io/blog/images/UKB-final-pred.png")
+```
+
+
+### References
