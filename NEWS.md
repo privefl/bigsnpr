@@ -1,3 +1,7 @@
+## bigsnpr 1.12.20
+
+- Check that parameters ind.row/ind.col are not `NULL`.
+
 ## bigsnpr 1.12.18
 
 - Cope with new PLINK2 URLs in `download_plink2()`.
